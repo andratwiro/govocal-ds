@@ -142,6 +142,12 @@ dashboards, Build tab).
 - Managers as Badges with "Add a manager" beside them vs the person cells of Users and Projects → **a Data table with person cells in a Panel; remove from the row menu, with an Undo toast** → people read the same everywhere.
 - Settings as Cards with a card switch vs forms in Panels (Messaging) → **a Panel per sub-tab; on/off as a Switch with its description; Popup's Save in the Panel foot**; access as Choice cards; instant changes say so in a Toast with Undo; anonymizing asks first in an Alert dialog → it changes what is stored.
 
+**Redesign: Inspiration hub** (on the current components)
+- Four filter Selects, a tag row and "Reset filters" vs the Filter menu and Filter chips of every other list → **the Filter menu (Method, Country, Population, Topic; any of within a facet) with Filter chips, the count in the Table toolbar, search beside it** → one way to filter a list, now a gallery too.
+- "Seems like there are no more projects" at the end vs Pagination on every list → **Pagination, six cards a page; no matches is an Empty state with one Clear action**.
+- "Copied to your drafts" as a Status badge on the card vs instant changes elsewhere → **the button turns to a disabled "Copied", and a Toast with Undo** → one feedback channel.
+- Highlighted's country and the sort as labelled field Selects vs pill and quiet Selects in panel heads → **"Country: …" pill and "Sort: …" quiet Select in the Panel heads**; the preview's facts as a Property list.
+
 **Tokens everywhere** (the project lead, 29 Oct: every spacing, radius, type and shadow value is a token; a design value with no token snaps to the nearest, guarded by `tests/tokens-only.test.mjs`)
 
 - Sizes had no tokens → **a Not-in-Figma size set** (`--gv-size-icon-12…24`, `control-24…40`, `avatar-16…28`; Foundations/Size), like motion → icons, controls and avatars repeat a handful of sizes; naming them keeps the next screen on them.

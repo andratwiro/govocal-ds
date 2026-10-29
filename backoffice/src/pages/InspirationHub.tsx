@@ -1,40 +1,57 @@
 import {useMemo, useState} from 'react';
-import {BadgeCheck, Copy, ExternalLink, Users} from 'lucide-react';
+import {BadgeCheck, Check, Copy, ExternalLink, Globe, Lightbulb, SearchX, Sparkles, Tag, Users} from 'lucide-react';
 import {Button} from '../../../src/components/Button';
 import {Link} from '../../../src/components/Link';
-import {Modal} from '../../../src/components/gv/Modal';
 import {SearchField} from '../../../src/components/SearchField';
 import {Select, SelectItem} from '../../../src/components/Select';
-import {Tag, TagGroup} from '../../../src/components/TagGroup';
+import {ToastRegion, queue} from '../../../src/components/Toast';
+import {Modal} from '../../../src/components/gv/Modal';
 import {Avatar} from '../../../src/components/gv/Avatar';
 import {Banner} from '../../../src/components/gv/Banner';
 import {Card} from '../../../src/components/gv/Card';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {Badge} from '../../../src/components/gv/Badge';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
+import {Panel} from '../../../src/components/gv/Panel';
+import {Pagination} from '../../../src/components/gv/Pagination';
+import {TableToolbar} from '../../../src/components/gv/TableToolbar';
+import {EmptyState} from '../../../src/components/gv/EmptyState';
+import {PropertyList, PropertyListItem} from '../../../src/components/gv/PropertyList';
+import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
+import {FilterChips} from '../../../src/patterns/FilterChips';
 import {COUNTRIES, LIBRARY, METHODS, PHASE_TITLES, POPULATIONS, SORTS, TOPICS, type Country, type LibraryProject} from '../data-inspiration-hub';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
 
-const ANY = 'any';
-type FilterKey = 'method' | 'country' | 'population' | 'topic';
-const FILTERS: {key: FilterKey; label: string; any: string; options: readonly string[]}[] = [
-  {key: 'method', label: 'Method', any: 'Any method', options: METHODS},
-  {key: 'country', label: 'Country', any: 'Any country', options: COUNTRIES},
-  {key: 'population', label: 'Population', any: 'Any size', options: POPULATIONS},
-  {key: 'topic', label: 'Topic', any: 'Any topic', options: TOPICS}
+// The real admin's filters (method, city size, country) and topic, as the Filter menu's facets: a facet keeps the
+// projects with any of its ticked values, and facets add up, as on every other list (docs/DECISIONS.md).
+type FacetId = 'method' | 'country' | 'population' | 'topic';
+const facetValues: Record<FacetId, (p: LibraryProject) => readonly string[]> = {
+  method: p => p.methods,
+  country: p => [p.country],
+  population: p => [p.population],
+  topic: p => [p.topic]
+};
+const option = (facet: FacetId) => (id: string) =>
+  ({id, label: id, count: LIBRARY.filter(p => facetValues[facet](p).includes(id)).length});
+const FACETS: FilterFacet[] = [
+  {id: 'method', label: 'Method', icon: <Lightbulb aria-hidden size={16} />, options: METHODS.map(option('method'))},
+  {id: 'country', label: 'Country', icon: <Globe aria-hidden size={16} />, options: COUNTRIES.map(option('country'))},
+  {id: 'population', label: 'Population', icon: <Users aria-hidden size={16} />, options: POPULATIONS.map(option('population'))},
+  {id: 'topic', label: 'Topic', icon: <Tag aria-hidden size={16} />, options: TOPICS.map(option('topic'))}
 ];
-const NO_FILTERS: Record<FilterKey, string> = {method: ANY, country: ANY, population: ANY, topic: ANY};
+const projectsWord = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
+// Every list pages (docs/DECISIONS.md): two rows of three cards.
+const PAGE_SIZE = 6;
 
 function initials(platform: string) {
   return platform.replace(/^(City|Town) of /, '').split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
 }
 
-function matches(p: LibraryProject, f: Record<FilterKey, string>, query: string) {
-  if (f.method !== ANY && !p.methods.includes(f.method as LibraryProject['methods'][number])) return false;
-  if (f.country !== ANY && p.country !== f.country) return false;
-  if (f.population !== ANY && p.population !== f.population) return false;
-  if (f.topic !== ANY && p.topic !== f.topic) return false;
+function matches(p: LibraryProject, f: FilterValue, query: string) {
+  for (const id of Object.keys(facetValues) as FacetId[]) {
+    const ticked = f[id];
+    if (ticked?.length && !facetValues[id](p).some(v => ticked.includes(v))) return false;
+  }
   const q = query.trim().toLowerCase();
   return !q || `${p.title} ${p.platform}`.toLowerCase().includes(q);
 }
@@ -80,9 +97,9 @@ function ProjectCard({project, highlighted, copied, onCopy, onOpen}: {project: L
         </div>
         <div className="bo-inspiration-hub-actions">
           <Button variant="secondary" size={32} isDisabled={copied} onPress={onCopy}>
-            <Copy aria-hidden size={16} />Copy project
+            {copied ? <Check aria-hidden size={16} /> : <Copy aria-hidden size={16} />}{copied ? 'Copied' : 'Copy project'}
           </Button>
-          {copied && <StatusBadge state="live">Copied to your drafts</StatusBadge>}
+          {copied && <span className="bo-note">In your drafts</span>}
         </div>
       </div>
     </Card>
@@ -91,7 +108,7 @@ function ProjectCard({project, highlighted, copied, onCopy, onOpen}: {project: L
 
 const longDate = (iso: string) => new Date(`${iso}T12:00:00`).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
 
-/** The project's preview: what it asked, how (its phases, one per method), and how many took part. */
+/** The project's preview: what it asked, its facts as a Property list, how (its phases, one per method). */
 function ProjectPreview({project, copied, onCopy, onClose}: {project: LibraryProject | null; copied: boolean; onCopy: () => void; onClose: () => void}) {
   return (
     <Modal title={project?.title ?? 'Project'} size="wide" isOpen={project !== null} onOpenChange={o => { if (!o) onClose(); }}
@@ -103,17 +120,17 @@ function ProjectPreview({project, copied, onCopy, onClose}: {project: LibraryPro
       </>}>
       {project && (
         <div className="bo-inspiration-hub-preview">
-          <p className="bo-inspiration-hub-platform">
-            <Avatar initials={initials(project.platform)} size={24} />
-            <span className="bo-note">{project.platform} · {project.country} · {project.participants.toLocaleString('en')} participants</span>
-          </p>
           <p>{project.summary}</p>
-          <div className="bo-inspiration-hub-tags">{project.methods.map(m => <Badge key={m}>{m}</Badge>)}</div>
-          <dl className="bo-inspiration-hub-facts">
-            {[['Topic', project.topic], ['Population', project.population], ['Started', longDate(project.start)]].map(([k, v]) => (
-              <div key={k}><dt className="bo-note">{k}</dt><dd>{v}</dd></div>
-            ))}
-          </dl>
+          <PropertyList aria-label="About this project">
+            <PropertyListItem label="Platform">
+              <span className="bo-inspiration-hub-platform"><Avatar initials={initials(project.platform)} size={24} />{project.platform}</span>
+            </PropertyListItem>
+            <PropertyListItem label="Country">{project.country}</PropertyListItem>
+            <PropertyListItem label="Participants">{`${project.participants.toLocaleString('en')} participants`}</PropertyListItem>
+            <PropertyListItem label="Topic">{project.topic}</PropertyListItem>
+            <PropertyListItem label="Population">{project.population}</PropertyListItem>
+            <PropertyListItem label="Started">{longDate(project.start)}</PropertyListItem>
+          </PropertyList>
           <h3 className="bo-section-title">Phases</h3>
           <ol className="bo-inspiration-hub-phases">
             {project.methods.map((m, i) => (
@@ -130,78 +147,91 @@ function ProjectPreview({project, copied, onCopy, onClose}: {project: LibraryPro
 
 export function InspirationHub() {
   const [pinCountry, setPinCountry] = useState<Country>('Northmark');
-  const [filters, setFilters] = useState(NO_FILTERS);
+  const [filters, setFilters] = useState<FilterValue>({});
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<string>(SORTS[0]);
+  const [page, setPage] = useState(1);
   const [copied, setCopied] = useState<Set<string>>(new Set());
   const [preview, setPreview] = useState<LibraryProject | null>(null);
 
   const pinned = LIBRARY.filter(p => p.highlight && p.country === pinCountry);
-  const shown = useMemo(() => sortBy(LIBRARY.filter(p => matches(p, filters, query)), sort), [filters, query, sort]);
-  const active = FILTERS.filter(f => filters[f.key] !== ANY);
-  const copy = (id: string) => setCopied(prev => new Set(prev).add(id));
+  const rows = useMemo(() => sortBy(LIBRARY.filter(p => matches(p, filters, query)), sort), [filters, query, sort]);
+  const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  const current = Math.min(page, pageCount);
+  const shown = rows.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
+  // A new search, filter or sort goes back to the first page.
+  const fresh = <T,>(set: (v: T) => void) => (v: T) => { set(v); setPage(1); };
+  const clear = () => { setFilters({}); setQuery(''); setPage(1); };
+
+  // Copying is instant: the card says so, and a Toast offers Undo.
+  const copy = (p: LibraryProject) => {
+    setCopied(prev => new Set(prev).add(p.id));
+    queue.add({title: 'Copied to your drafts', description: p.title, action: 'Undo', onAction: () => setCopied(prev => {
+      const next = new Set(prev);
+      next.delete(p.id);
+      return next;
+    })}, {timeout: 5000});
+  };
   const card = (p: LibraryProject, highlighted?: boolean) => (
     <li key={p.id} className="bo-inspiration-hub-item">
-      <ProjectCard project={p} highlighted={highlighted} copied={copied.has(p.id)} onCopy={() => copy(p.id)} onOpen={() => setPreview(p)} />
+      <ProjectCard project={p} highlighted={highlighted} copied={copied.has(p.id)} onCopy={() => copy(p)} onOpen={() => setPreview(p)} />
     </li>
+  );
+
+  const toolbar = (
+    <div className="bo-inspiration-hub-toolbar">
+      <TableToolbar aria-label="Project tools" heading={projectsWord(rows.length)}>
+        <SearchField aria-label="Search projects" placeholder="Search projects" value={query} onChange={fresh(setQuery)} />
+        <FilterMenu aria-label="Filter projects" facets={FACETS} value={filters} onChange={fresh(setFilters)} countLabel={projectsWord} />
+      </TableToolbar>
+      <FilterChips aria-label="Active filters" facets={FACETS} value={filters} onChange={fresh(setFilters)} />
+    </div>
   );
 
   return (
     <Page title="Inspiration hub" description="Browse projects on other platforms for inspiration, and copy one to start your own.">
-      <Banner>Projects on your platform can show up here for other platforms. To keep one out, contact your success manager.</Banner>
+      <div className="bo-inspiration-hub-stack">
+        <Banner>Projects on your platform can show up here for other platforms. To keep one out, contact your success manager.</Banner>
 
-      <div className="bo-inspiration-hub-head">
-        <h2 className="bo-section-title" id="bo-inspiration-hub-highlighted">Highlighted</h2>
-        <Select label="Highlighted for" selectedKey={pinCountry} onSelectionChange={k => setPinCountry(k as Country)}>
-          {COUNTRIES.map(c => <SelectItem key={c} id={c}>{c}</SelectItem>)}
-        </Select>
-      </div>
-      {pinned.length ? (
-        <ul className="bo-inspiration-hub-grid" aria-label="Highlighted projects">
-          {pinned.map(p => card(p, true))}
-        </ul>
-      ) : <p className="bo-note">No projects are highlighted for this country yet.</p>}
+        <Panel title="Highlighted" headingLevel={2} description="Picked by the Go Vocal team, with a word on why."
+          actions={
+            <Select variant="pill" size={28} prefix="Country:" aria-label="Highlighted for" icon={<Sparkles aria-hidden size={16} />}
+              selectedKey={pinCountry} onSelectionChange={k => setPinCountry(k as Country)}>
+              {COUNTRIES.map(c => <SelectItem key={c} id={c}>{c}</SelectItem>)}
+            </Select>
+          }>
+          {pinned.length ? (
+            <ul className="bo-inspiration-hub-grid" aria-label="Highlighted projects">
+              {pinned.map(p => card(p, true))}
+            </ul>
+          ) : (
+            <EmptyState size="panel" icon={<Sparkles size={24} />} headingLevel={3} title="Nothing highlighted here yet"
+              description="Highlights for this country appear here as the Go Vocal team picks them." />
+          )}
+        </Panel>
 
-      <div className="bo-inspiration-hub-head">
-        <h2 className="bo-section-title" id="bo-inspiration-hub-all">All projects</h2>
-        <Select label="Sort by" selectedKey={sort} onSelectionChange={k => setSort(String(k))}>
-          {SORTS.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
-        </Select>
+        <Panel title="All projects" headingLevel={2} toolbar={toolbar}
+          actions={
+            <Select variant="quiet" prefix="Sort:" aria-label="Sort by" selectedKey={sort} onSelectionChange={k => fresh(setSort)(String(k))}>
+              {SORTS.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
+            </Select>
+          }
+          footer={rows.length > 0 && <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Project pages" />}>
+          {rows.length ? (
+            <ul className="bo-inspiration-hub-grid" aria-label="All projects">
+              {shown.map(p => card(p))}
+            </ul>
+          ) : (
+            <EmptyState size="panel" icon={<SearchX size={24} />} headingLevel={3} title="No projects match"
+              description="Try another search, or fewer filters."
+              action={<Button variant="secondary" size={32} onPress={clear}>Clear search and filters</Button>} />
+          )}
+        </Panel>
+        <GapLegend names={['project images', 'the highlight quote']} />
       </div>
-      <div className="bo-inspiration-hub-filters">
-        <SearchField label="Search" aria-label="Search projects" placeholder="Search projects" value={query} onChange={setQuery} />
-        {FILTERS.map(f => (
-          <Select key={f.key} label={f.label} selectedKey={filters[f.key]}
-            onSelectionChange={k => setFilters(prev => ({...prev, [f.key]: String(k)}))}>
-            <SelectItem id={ANY}>{f.any}</SelectItem>
-            {f.options.map(o => <SelectItem key={o} id={o}>{o}</SelectItem>)}
-          </Select>
-        ))}
-      </div>
-      <div className="bo-inspiration-hub-sortbar">
-        {active.length > 0 && (
-          <TagGroup aria-label="Active filters"
-            onRemove={keys => setFilters(prev => {
-              const next = {...prev};
-              for (const k of keys) next[k as FilterKey] = ANY;
-              return next;
-            })}>
-            {active.map(f => <Tag key={f.key} id={f.key}>{`${f.label}: ${filters[f.key]}`}</Tag>)}
-          </TagGroup>
-        )}
-        <span className="bo-note" aria-live="polite">{shown.length} {shown.length === 1 ? 'project' : 'projects'}</span>
-        <span className="bo-push" />
-        <Button variant="quiet" size={32} onPress={() => { setFilters(NO_FILTERS); setQuery(''); }}>Reset filters</Button>
-      </div>
-      <ul className="bo-inspiration-hub-grid" aria-label="All projects">
-        {shown.map(p => card(p))}
-      </ul>
-      <div className="bo-inspiration-hub-end">
-        <Banner>Seems like there are no more projects. Try changing the filters.</Banner>
-      </div>
-      <GapLegend names={['project images', 'the highlight quote']} />
       <ProjectPreview project={preview} copied={preview ? copied.has(preview.id) : false}
-        onCopy={() => { if (preview) copy(preview.id); }} onClose={() => setPreview(null)} />
+        onCopy={() => { if (preview) copy(preview); }} onClose={() => setPreview(null)} />
+      <ToastRegion />
     </Page>
   );
 }
