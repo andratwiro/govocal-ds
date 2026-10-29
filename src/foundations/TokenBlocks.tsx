@@ -1,8 +1,10 @@
-import type {ComponentProps} from 'react';
+import type {ComponentProps, CSSProperties} from 'react';
 import {Unstyled} from '@storybook/addon-docs/blocks';
 import {DesignTokenDocBlock} from 'storybook-design-token';
+import {Settings} from 'lucide-react';
 import usageJson from './usage.json';
 import tokensJson from '../../tokens/foundations.tokens.json';
+import sizeJson from '../../tokens/size.tokens.json';
 import './TokenBlocks.css';
 
 // The Foundations pages (src/foundations/*.mdx) share these blocks. Each block shows at full height: the page
@@ -97,6 +99,25 @@ export const ShadowSpecimens = () => <Unstyled>
   <ul className="gv-tokens-shadows">
     {shadows.map(name => <li key={name} className="gv-tokens-shadow" style={{boxShadow: `var(--gv-shadow-${name})`}}>
       <code>--gv-shadow-{name}</code>
+    </li>)}
+  </ul>
+</Unstyled>;
+
+type SizeKind = 'icon' | 'control' | 'avatar';
+const sizes = (sizeJson as {size: Record<SizeKind, Record<string, unknown>>}).size;
+
+// Every --gv-size-<kind>-* drawn at its size: an icon, a control's outline, an avatar. Above the kind's table, which
+// keeps the description and the components using each (a table cell is 32 tall: a 40 control would not fit).
+export const SizeSpecimens = ({kind}: {kind: SizeKind}) => <Unstyled>
+  <ul className={`gv-tokens-sizes gv-tokens-sizes--${kind}`}>
+    {Object.keys(sizes[kind]).map(n => <li key={n} className="gv-tokens-size"
+      style={{'--gv-tokens-size': `var(--gv-size-${kind}-${n})`} as CSSProperties}>
+      <div className="gv-tokens-size__sample" aria-hidden="true">
+        {kind === 'icon' && <Settings strokeWidth={1.75} />}
+        {kind === 'control' && 'Label'}
+        {kind === 'avatar' && 'G'}
+      </div>
+      <code>--gv-size-{kind}-{n}</code>
     </li>)}
   </ul>
 </Unstyled>;

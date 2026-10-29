@@ -15,7 +15,8 @@ const pages = [
   {id: 'foundations-typography', first: '--gv-font-family', last: '--gv-type-small-weight'},
   {id: 'foundations-spacing', first: '--gv-space-0', last: '--gv-space-104'},
   {id: 'foundations-radius', first: '--gv-radius-2', last: '--gv-radius-full'},
-  {id: 'foundations-shadows', first: '--gv-shadow-segment-selected', last: '--gv-shadow-dialog'}
+  {id: 'foundations-shadows', first: '--gv-shadow-segment-selected', last: '--gv-shadow-dialog'},
+  {id: 'foundations-size', first: '--gv-size-icon-12', last: '--gv-size-avatar-28'}
 ];
 for (const {id, first, last} of pages) {
   test(`${id} shows its first token block whole, with no scroll box inside`, async ({page}) => {
@@ -46,6 +47,15 @@ test('Typography draws each role in itself before the tables', async ({page}) =>
   await expect(page.getByText('--gv-type-small-weight', {exact: true}).first()).toBeVisible();
 });
 
+test('Size draws each size at its token, above its table', async ({page}) => {
+  await page.goto(docs('foundations-size'));
+  const control = page.locator('.gv-tokens-sizes--control .gv-tokens-size__sample');
+  await expect(control).toHaveCount(5);
+  await expect(control.nth(3)).toHaveCSS('height', '36px');
+  await expect(page.locator('.gv-tokens-sizes--icon svg').nth(2)).toHaveCSS('width', '16px');
+  await expect(page.locator('.gv-tokens-sizes--avatar .gv-tokens-size__sample').last()).toHaveCSS('width', '28px');
+});
+
 test('Icons lists the Figma names, with no scroll box inside', async ({page}) => {
   await page.goto(docs('foundations-icons'));
   await expect(page.getByText('In Figma', {exact: true}).first()).toBeVisible();
@@ -59,7 +69,8 @@ test('the sidebar has Foundations as its own section, in order', async ({page}) 
   await expect(tree.locator('[data-item-id="foundations-colour--docs"]')).toBeVisible();
   const ids = await tree.locator('[data-item-id^="foundations-"]').evaluateAll(els =>
     els.map(el => el.getAttribute('data-item-id')));
-  const order = ['colour', 'typography', 'spacing', 'radius', 'shadows', 'motion', 'icons', 'illustrations'];
+  // The named pages first (.storybook/preview.tsx), then the rest alphabetically.
+  const order = ['colour', 'typography', 'spacing', 'radius', 'shadows', 'motion', 'icons', 'illustrations', 'size'];
   const pagesShown = ids.map(id => id!.replace(/^foundations-|--docs$/g, ''));
   expect(pagesShown).toEqual(order.filter(name => pagesShown.includes(name)));
   expect(pagesShown).toEqual(expect.arrayContaining(['colour', 'typography', 'spacing', 'radius', 'shadows', 'icons']));

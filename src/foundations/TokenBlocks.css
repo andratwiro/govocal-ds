@@ -115,3 +115,65 @@
   background: var(--gv-surface-panel);
   border-radius: var(--gv-radius-8);
 }
+
+/* Sizes: each drawn at its token, on the stage, bottoms lined up, the token name under it. */
+.gv-tokens-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--gv-space-32);
+  margin: var(--gv-space-16) 0 var(--gv-space-24);
+  padding: var(--gv-space-24);
+  list-style: none;
+  background: var(--gv-surface-stage);
+  border-radius: var(--gv-radius-12);
+}
+
+.gv-tokens-size {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gv-space-8);
+}
+
+.gv-tokens-size code {
+  font-size: var(--gv-type-small-size);
+  line-height: var(--gv-type-small-line);
+  font-weight: var(--gv-type-small-weight);
+  color: var(--gv-text-secondary);
+}
+
+.gv-tokens-size__sample {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  color: var(--gv-icon-primary);
+}
+
+.gv-tokens-sizes--icon .gv-tokens-size__sample svg {
+  inline-size: var(--gv-tokens-size);
+  block-size: var(--gv-tokens-size);
+}
+
+.gv-tokens-sizes--control .gv-tokens-size__sample {
+  block-size: var(--gv-tokens-size);
+  padding-inline: var(--gv-space-12);
+  background: var(--gv-surface-panel);
+  border: var(--gv-space-1) solid var(--gv-border-control);
+  border-radius: var(--gv-radius-8);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-tokens-sizes--avatar .gv-tokens-size__sample {
+  inline-size: var(--gv-tokens-size);
+  block-size: var(--gv-tokens-size);
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-avatar-fill);
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-inverse);
+  overflow: hidden;
+}

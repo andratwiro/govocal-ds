@@ -1,0 +1,56 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import {SizeSpecimens, Tokens} from './TokenBlocks';
+
+<Meta title="Foundations/Size" />
+
+# Size
+
+**Not in Figma.** Our Figma export has no size variables, so the sizes are written by hand in
+`tokens/size.tokens.json` (DTCG `dimension`). `npm run tokens:build` merges them with the Figma tokens into
+`src/tokens.css`; `npm run tokens:pull` rewrites only the Figma files, so it never wipes them. When Figma gets size
+variables, these move there.
+
+They are the sizes the components already draw, three kinds: icons, control heights and avatars. Each token is named
+by its value in px. A width or height takes a size token wherever the box is an icon, a control or an avatar:
+
+```css
+.gv-icon-button { width: var(--gv-size-control-28); height: var(--gv-size-control-28); }
+.gv-icon-button > svg { width: var(--gv-size-icon-16); height: var(--gv-size-icon-16); }
+```
+
+What stays a number: one-off geometry (a popover's or modal's width, a chart's bars, the phone preview's frame,
+a progress track) and strokes. A border, a divider or a focus ring is 1, 1.5, 2 or 3 px wide: Figma binds stroke
+weights to two variables, 1 px and 2 px, which our export doesn't carry yet. Gaps and paddings are
+**Spacing**, not Size.
+
+## Icons
+
+Lucide icons, 1.75 stroke at every size. An icon set by a component's `size` prop (`<Search size={16} />`) uses
+the same steps.
+
+<SizeSpecimens kind="icon" />
+
+<Tokens category="Icon size @presenter Spacing" />
+
+## Controls
+
+The height of anything you press or type in. Fields, Select and the default Button are 36, so a field and the
+button beside it line up; an icon-only button is square, its width the same token as its height.
+
+<SizeSpecimens kind="control" />
+
+<Tokens category="Control height @presenter Spacing" />
+
+## Avatars
+
+<SizeSpecimens kind="avatar" />
+
+<Tokens category="Avatar size @presenter Spacing" />
+
+## Choosing a size
+
+- **An icon in a button, menu item, option, card or field**: `icon-16`. In a dense row or a 24 button: `icon-14`.
+  In the side nav or a toast: `icon-18`. On its own with room around it: `icon-20` or `icon-24`.
+- **A field or a button people use often**: `control-36`. A secondary, compact one: `control-32`. An icon button:
+  `control-28` (`control-24` for a dismiss × inside a banner or toast).
+- **A list, menu or tree row**: at least `control-32`, so every row is as easy to hit as a small button.
