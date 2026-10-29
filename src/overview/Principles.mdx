@@ -1,0 +1,41 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+
+<Meta title="Overview/Principles" />
+
+{/* Drawn from docs/DESIGN.md, "Rules", and docs/API.md. A principle here changes only when the rule there does. */}
+
+# Principles
+
+Six rules the whole system follows. When two choices look equally good, these decide.
+
+## 1. System first
+
+A screen is built from the system's parts. A part that a screen needs once stays in that screen; it joins the system
+on its second use, or when Figma draws it as a component (`docs/NAMING.md`, "What becomes a component"). Reach for a
+Component first, then a Pattern, and a Base part only when nothing else does the job.
+
+## 2. Tokens only
+
+Every colour, space, size, radius, shadow and type style is a `--gv-*` token. No raw values, no colours picked by eye.
+A value with no token snaps to the nearest one, and a real gap goes to the designer. The checks refuse anything else.
+
+## 3. Code wins
+
+When Figma and the code disagree, the code is the truth, and the call is written down in `docs/DECISIONS.md`. Tokens
+travel one way: from Figma into the code.
+
+## 4. Every state, in both directions
+
+A part shows every state it can be in (empty, loading, error, disabled, selected) and works left to right and right
+to left. Where Figma draws only one state, the system fills in the rest.
+
+## 5. Accessibility shown
+
+Every part is checked, and the results are shown on its page and on
+[Accessibility](?path=/docs/overview-accessibility--docs). Findings are reported, never hidden and never blocking.
+Keyboard and focus behaviour is tested and must pass.
+
+## 6. Words come from the page
+
+A part never translates and never writes its own sentences. Every word it shows arrives as a prop, and numbers and
+dates follow the locale ([Voice and tone](?path=/docs/foundations-voice-and-tone--docs)).

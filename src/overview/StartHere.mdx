@@ -1,0 +1,71 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+
+<Meta title="Overview/Start here" />
+
+{/* Mirrors README.md, "Start here" (one path per audience). Change both together. */}
+
+# Start here
+
+Two ways in: one for the designer who owns the system, one for a developer who uses it. Both read the same pages; they
+start from different ends. What the system stands for is on [Principles](?path=/docs/overview-principles--docs).
+
+## For designers
+
+**How to read a page.** Every component has a docs page and its stories in the sidebar.
+
+- The docs page opens with what the part is for, then every story: each one is a state you can copy.
+- The toolbar's **Direction** button shows the page right to left, in Arabic. Every part is drawn both ways.
+- The **Accessibility** panel under a story lists what axe found. Findings are reported; none blocks a change
+  ([Accessibility](?path=/docs/overview-accessibility--docs) gathers them all).
+- "no Figma" after a name in the sidebar means Figma doesn't draw that part yet: it was built from the prototype.
+- How sure each part is (draft, candidate, stable): [Lifecycle](?path=/docs/overview-lifecycle--docs).
+
+**How to propose and land a change.** You change the system by asking an agent, in the repo folder, with Figma at hand.
+
+1. Say what you want and point at Figma: "Make Badge match this frame", "Add a story showing Select with an error".
+2. The agent lists what it reuses and what is new, and waits for your go.
+3. It shows you the result in Storybook. When the checks pass, the change goes live.
+
+The five recipes, with what to ask and how to check, are in `docs/HOW-TO.md`. How to write the words on a screen:
+[Voice and tone](?path=/docs/foundations-voice-and-tone--docs) and the [Word list](?path=/docs/foundations-word-list--docs).
+
+**Where decisions live.**
+
+- `docs/DECISIONS.md`: calls already made, one line each (what disagreed → what we built → why).
+- `docs/OPEN-DECISIONS.md`: your queue, the calls only you can make.
+- `docs/DESIGN.md`: why the system is built the way it is.
+
+## For developers
+
+**What you import.** Three entry points, nothing else (`docs/API.md`, "Import only from the entry points"):
+
+```tsx
+import 'govocal-ds/tokens.css';                         // once, at the app's root
+import {AppProvider, Button, DataTable} from 'govocal-ds';  // Components and Patterns
+import {ComboBox} from 'govocal-ds/base';               // a Base part, only when no Component does the job
+```
+
+**The className rule.** `className` and `style` place a part (a grid area, a width, a margin); they never paint it.
+Colour, type and inner spacing come from the tokens, so a part looks the same everywhere (`docs/API.md`, "className
+and style place").
+
+**How to rerun the checks.**
+
+```sh
+npm ci
+npm run typecheck && npm test           # types and the guards, about a second
+npm run build                           # Storybook, the back office, the landing page
+E2E_PORT=4173 npx playwright test       # the browser tests, against dist/
+```
+
+**What's yours.**
+
+- [Who owns what](?path=/docs/overview-who-owns-what--docs): the line between design's work and yours.
+- [For developers](?path=/docs/overview-for-developers--docs): what the system is and isn't, how to adopt it, the CSS
+  caveat, providers, forms.
+- [Questions for developers](?path=/docs/overview-questions-for-developers--docs): the calls that are yours to make,
+  with what design has done and what it needs from the answer.
+- [What comes from React Aria](?path=/docs/overview-what-comes-from-react-aria--docs): per part, what React Aria gives
+  and what would survive a change of library.
+- Patterns › Recipes › [Integration seams](?path=/docs/patterns-recipes-integration-seams--docs): a router link, a form
+  library, translated strings and a table's loading and error states, each marked with who wires what.

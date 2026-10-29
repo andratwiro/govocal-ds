@@ -1,0 +1,110 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import {CssSizes} from './CssSizes';
+
+<Meta title="Overview/Questions for developers" />
+
+{/* Task 4 of docs/plans/2026-10-30-benchmark-gaps.md. These are the developers' calls: the page lays out what design
+    has done and what it needs from each answer, and decides none of them. A recommendation stays a recommendation.
+    The facts link to the file that proves them; How it plugs in today is Overview/For developers (docs/CONSUMING.md). */}
+
+# Questions for developers
+
+These are the calls that belong to developers ([Who owns what](?path=/docs/overview-who-owns-what--docs)). For each
+one: what design has already done, the options as design sees them, and what design needs from the answer. Nothing
+here is decided. Where design leans one way it says so, and it is still only a lean.
+
+How the system plugs into an app today, with recipes, is on [For developers](?path=/docs/overview-for-developers--docs).
+This page doesn't repeat it.
+
+## 1. The base library
+
+**What design has done.** Every interactive part is built on React Aria Components 1.22 (`package.json`), so keyboard
+behaviour, focus, ARIA roles, right to left and number and date formatting come from React Aria. The look comes only
+from the tokens and one plain CSS file per part. Per part, what comes from React Aria and what would survive a change
+of library is on [What comes from React Aria](?path=/docs/overview-what-comes-from-react-aria--docs).
+
+**The options.**
+
+- Keep React Aria as the base for the system and the apps.
+- Build the system on the platform's own component library instead (`front/app/component-library`), keeping the
+  tokens, CSS, stories and docs.
+- Another accessible base library, with the same carry-over.
+
+**What design needs from the answer.** Whether to keep writing behaviour on React Aria's terms. The tokens, the CSS,
+the stories, the docs and the role-based tests are written so they survive any of the three; the props and the
+behaviour wiring would not.
+
+## 2. How the components reach the apps
+
+**What design has done.**
+
+- Three entry points (`govocal-ds`, `govocal-ds/base`, `govocal-ds/tokens.css`) in `package.json` `exports`, and a
+  test that keeps the back office on them (`tests/system-first.test.mjs`).
+- Plain CSS on `--gv-*` custom properties. **No runtime CSS-in-JS** (`tests/no-css-in-js.test.mjs`), so nothing
+  styles at runtime and the CSS works next to styled-components.
+- **How the CSS is layered today:** not at all, apart from `src/components/utilities.css` (`@layer utilities`). Base
+  CSS selects its own `gv-base-*` classes, never React Aria's global ones (`tests/css-scope.test.mjs`).
+- The roads to adopt it (a tag, a workspace, `npm pack`, a copy) and what fights it in the platform's global styles
+  are written up on [For developers](?path=/docs/overview-for-developers--docs), "How to adopt it" and "CSS: the
+  scoping caveat".
+
+**How heavy is it.** The CSS each part brings, measured from the files as this page opens:
+
+<CssSizes />
+
+**The open calls.**
+
+- **A package, and versions.** A git tag, a workspace, or a published package (a library build, type files,
+  changesets, a registry). Design leans to a git tag first, because it needs no registry; the published package is
+  the end state the architecture review recommends.
+- **Cascade layers.** The proposed contract is `@layer gv.tokens, gv.base, gv.components, gv.patterns`, with the host
+  moving its own reset into a lower layer, so the system beats the reset by order and the host's own styles still win
+  where they mean to. Both sides have to move together, or neither.
+- **`:root` rules out of `theme.css`.** Today `src/components/theme.css`, which nearly every stylesheet imports, sets `color-scheme`, the font and letter spacing on the whole
+  page. They could move to an opt-in `global.css` that only the demo and Storybook import.
+- **Living beside styled-components.** The platform paints with styled-components and a global stylesheet
+  (`front/app/global-styles.ts`). Its reset rules that fight the system are listed on For developers. Who changes
+  what, and when?
+- **Splitting tsconfig** into one for the library, one for Node scripts and one for the apps, so each is checked with
+  the right settings. Today one `tsconfig.json` covers `src`, `backoffice/src`, `.storybook` and `e2e`.
+- **Prettier and ESLint.** Neither runs today. The proposal is Prettier for format and ESLint with only the
+  react-hooks rules.
+
+**What design needs from the answer.** Which road to prepare (a tag needs only a version; a package needs a library
+build and peer dependencies), and whether to wrap the CSS in layers now or wait for the host's reset to move.
+
+## 3. The integration seams
+
+Where the system stops and the app starts. Each seam has a working story with a test that runs in the browser,
+marked with who wires what: Patterns › Recipes › [Integration seams](?path=/docs/patterns-recipes-integration-seams--docs).
+
+| Seam | What the system gives | The open question |
+|---|---|---|
+| **Router links** | every `href` on a link, menu item or tab goes through `AppProvider`'s `navigate` (React Aria's router provider) | Which router, and does anything need more than `navigate` and `useHref`? |
+| **Form-library refs** | fields take `name`, `inputRef`, `isInvalid` and `errorMessage`; a react-hook-form recipe is on For developers | Which form library? Select and Number field take no ref yet: does that matter for focus on submit? |
+| **Translated strings** | every visible word is a prop or `labels`, with English defaults; counts take a function so the app's plurals apply | Is a `labels` object per part the shape you want, or a single provider of the system's words? |
+| **Data-driven states** | Skeleton for loading, Empty state for empty, error and no permission, Banner and Toast for messages | Where does the app's data layer decide which state to show, and does it need first load and refresh drawn apart? |
+
+**What design needs from the answer.** Any seam that doesn't fit how your apps work, so the API changes before it is
+stable rather than after.
+
+## 4. The terms of adoption
+
+**What design has done.** A demo back office built only from the system (`backoffice/`), with its gaps marked where
+a part is missing (`backoffice/src/Gap.tsx`). Every change passes typecheck, the guards, the browser tests and the
+build before it deploys (`CONTRIBUTING.md`).
+
+**The open calls.**
+
+- **First screens.** Which screens go first? A small pilot of one back-office screen built with developers is the
+  usual advice; the Users list and the ideation Manage tab already exist in the demo.
+- **Pace.** Screen by screen as they are touched, or a set of screens per release?
+- **Gates.** What a change to the system has to pass before it reaches an app: today the checks above, with
+  accessibility reported but never blocking. Should accessibility block for the front office? Should a developer
+  review every API change?
+- **Branch protection and auto-merge** on this repo (also in `docs/OPEN-DECISIONS.md`).
+- **Later options:** visual regression baselines (Chromatic or screenshots in the repo), a hosted MCP endpoint for
+  agents, contrast pairs as token data.
+
+**What design needs from the answer.** Which parts to take to stable first ([Lifecycle](?path=/docs/overview-lifecycle--docs)),
+and who on the developer side reviews their API.

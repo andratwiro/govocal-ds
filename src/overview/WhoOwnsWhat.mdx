@@ -1,0 +1,70 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+
+<Meta title="Overview/Who owns what" />
+
+{/* Task 4 of docs/plans/2026-10-30-benchmark-gaps.md. The three zones follow the design-side contract
+    (docs/research/storybook-benchmark/notes/designer-bible-and-language.md, "Designers owning the repo"). This page
+    states the line; it makes none of the developers' calls. Those are on Overview/Questions for developers. */}
+
+# Who owns what
+
+Design owns the components: how they look, how they behave, what they are called and how they are tested. Developers
+own everything around them in their app: data, state, routing, translation, performance, their build, and the
+decision to adopt the system at all. This page draws that line so nobody has to guess, and so neither side oversteps.
+
+The split follows a three-zone model: what design changes and developers review, what developers own and design only
+proposes, and what the two decide together.
+
+## Design changes, developers review
+
+The designer makes these changes, through an agent, and they live in this repo.
+
+| What | Where it lives | How a change is checked |
+|---|---|---|
+| The tokens: every colour, space, size, radius, shadow, type role and motion | `tokens/`, built into `src/tokens.css` | `npm test` refuses a raw value, an unknown token or a stale build |
+| The components and patterns, and their CSS | `src/components/`, `src/patterns/` | `npm run typecheck`, the token guards, the e2e keyboard and focus tests |
+| Each part's API: its props, their names, their defaults, the words it takes as `labels` | the props types, `docs/API.md` | `docs/API.md`'s rules; `tests/system-first.test.mjs` for the entry points |
+| The stories: every state, left to right and right to left | each part's `.stories.tsx` | `e2e/stories.spec.ts` renders every story |
+| The docs pages, these included | `src/**/*.mdx`, `docs/` | the copy check over docs pages (`tests/copy.test.mjs`) |
+| The components' own tests | `tests/`, `e2e/` | CI runs them before anything deploys |
+| The demo back office | `backoffice/` | built only from the entry points (`tests/system-first.test.mjs`) |
+
+**Developers review the API.** A part's props are what developers will write every day, so design proposes them and
+developers have the last word. Until a developer has reviewed a part's API, the part is not stable
+([Lifecycle](?path=/docs/overview-lifecycle--docs)).
+
+## Developers own, design proposes
+
+These stay in the developers' apps. The system leaves a seam for each, and the seam stories show who wires what
+(Patterns › Recipes › [Integration seams](?path=/docs/patterns-recipes-integration-seams--docs)).
+
+| What | What the system gives | What the app does |
+|---|---|---|
+| **Data** | parts that take data as props: rows, items, values | fetches it, caches it, decides what a screen shows |
+| **State** | controlled props (`value` / `onChange`, `isOpen` / `onOpenChange`) and uncontrolled defaults | holds the state, whatever store it uses |
+| **Routing** | every link, menu item and tab takes an `href`; `AppProvider`'s `navigate` routes them | hands its router's `navigate` and `useHref` to `AppProvider` |
+| **Translation** | every visible word arrives as a prop or `labels`; numbers and dates follow the locale | owns the message catalogues, the language switch and plurals |
+| **Forms** | fields take `name`, `inputRef`, `isInvalid`, `errorMessage` | picks the form library and owns the rules and submit |
+| **Loading and errors** | Skeleton, Empty state, Banner and Toast for each state | knows when it is loading, failed, empty or forbidden |
+| **Performance** | plain CSS, no runtime CSS-in-JS, a virtualised Data table | measures and tunes its own screens |
+| **The build** | source files and CSS, three entry points | compiles, bundles and ships them |
+| **The adoption decision** | this Storybook as the evidence | decides whether, where first, and on what terms |
+
+How the system plugs into an app today (the entry points, the CSS caveat, providers, a react-hook-form recipe):
+[For developers](?path=/docs/overview-for-developers--docs). It is not repeated here.
+
+## Decided together
+
+Some calls need both sides. Design brings the options and what it needs from the answer; developers decide. Each is a
+question on [Questions for developers](?path=/docs/overview-questions-for-developers--docs):
+
+- the base library (React Aria today);
+- how the components reach the apps: a package, versions, CSS layers, living beside styled-components;
+- which screens go first, at what pace, and what gates a change has to pass;
+- branch protection and who merges.
+
+## How changes reach `main`
+
+Every change goes through the same checks: typecheck, the unit guards, the browser tests and the build
+(`CONTRIBUTING.md`). A developer can review any change in this Storybook before it ships: each pull request's stories
+are the thing to look at.
