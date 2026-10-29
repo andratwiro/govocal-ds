@@ -1,4 +1,6 @@
 import {VolunteeringRow} from './VolunteeringRow';
+import {Download, List, Plus} from 'lucide-react';
+import {Card} from '../components/gv/Card';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof VolunteeringRow> = {
@@ -32,6 +34,9 @@ export const AllVariants: Story = () => (
       percent={22}
       isLast
     />
+    <div style={{height: 'var(--gv-space-24)'}} />
+    <VolunteeringRow variant="build" title="Tree-planting weekends" volunteerCount={0} />
+    <VolunteeringRow variant="build" title="Photograph the park" volunteerCount={4} />
   </div>
 );
 
@@ -61,7 +66,66 @@ export const Last: Story = () => (
 /** One sign-up reads "1 volunteer" (the prototype's singular). */
 export const OneVolunteer: Story = () => (
   <div style={{width: 500}}>
-    <VolunteeringRow title="Repaint the park benches" description="One Saturday morning, paint and brushes provided." volunteerCount={1} percent={5} isLast />
+    <VolunteeringRow
+      title="Repaint the park benches"
+      description="One Saturday morning, paint and brushes provided."
+      volunteerCount={1}
+      percent={5}
+      isLast
+    />
   </div>
 );
 OneVolunteer.storyName = 'One volunteer';
+
+/**
+ * Not in Figma (the prototype's Causes card): in a volunteering phase's Build tab each cause is a smaller row, the
+ * title over how many signed up, with Edit and Delete at the end.
+ */
+export const Build: Story = () => (
+  <div style={{width: 412}}>
+    <VolunteeringRow
+      variant="build"
+      title="Tree-planting weekends"
+      volunteerCount={0}
+      onEdit={() => {}}
+      onDelete={() => {}}
+    />
+  </div>
+);
+Build.tags = ['not-in-figma'];
+
+/**
+ * The Causes card in a volunteering phase's Build tab: its causes, Add a cause, and Download volunteers greyed until
+ * someone signs up (its tooltip says why).
+ */
+export const BuildInACard: Story = () => (
+  <div style={{width: 444}}>
+    <Card
+      title="Causes"
+      pills={[{label: '2 causes'}]}
+      iconActions={[
+        {icon: List, label: 'Reorder causes', tooltip: 'Reorder'},
+        {icon: Plus, label: 'Add a cause', tooltip: 'Add a cause'},
+        {icon: Download, label: 'Download volunteers', isDisabled: true, tooltip: 'Nobody has signed up yet'}
+      ]}>
+      <div>
+        <VolunteeringRow
+          variant="build"
+          title="Tree-planting weekends"
+          volunteerCount={0}
+          onEdit={() => {}}
+          onDelete={() => {}}
+        />
+        <VolunteeringRow
+          variant="build"
+          title="Photograph the park"
+          volunteerCount={0}
+          onEdit={() => {}}
+          onDelete={() => {}}
+        />
+      </div>
+    </Card>
+  </div>
+);
+BuildInACard.storyName = 'Build · in a card';
+BuildInACard.tags = ['not-in-figma'];

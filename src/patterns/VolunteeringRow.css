@@ -91,3 +91,42 @@
   letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-body);
 }
+
+/* Build (Not in Figma; the prototype's .pj-causerow, a phase's Causes card): a 40 thumbnail, radius 8; the title in
+   UI over how many signed up, Small secondary; Edit and Delete at the end; 8 above and below, no inline padding (the
+   card's body has its own); a hairline between rows. */
+.gv-cause-row[data-variant='build'] {
+  padding: var(--gv-space-8) 0;
+  border-block-end: none;
+
+  & + & {
+    border-block-start: 1px solid var(--gv-border-row);
+  }
+
+  .gv-cause-row__thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--gv-radius-8);
+  }
+
+  .gv-cause-row__cause {
+    gap: var(--gv-space-2);
+  }
+
+  .gv-cause-row__title {
+    font: var(--gv-type-ui);
+    letter-spacing: var(--gv-type-ui-tracking);
+  }
+}
+
+.gv-cause-row__signups {
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-cause-row__actions {
+  flex: none;
+  display: inline-flex;
+  gap: var(--gv-space-4);
+}

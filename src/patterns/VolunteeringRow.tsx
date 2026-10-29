@@ -1,17 +1,32 @@
 'use client';
+import {SquarePen, Trash2} from 'lucide-react';
+import {IconButton} from '../components/gv/IconButton';
+import {Tooltip, TooltipTrigger} from '../components/Tooltip';
 import './VolunteeringRow.css';
 
 export interface VolunteeringRowProps {
   /** The cause's title. */
   title: string;
-  /** A short description of the cause. */
-  description: string;
-  /** The thumbnail image, shown in a 52×52 rounded square. */
+  /** A short description of the cause (Manage). */
+  description?: string;
+  /** The thumbnail image: a 52 rounded square in Manage, 40 in Build. */
   image?: string;
   /** Number of volunteers signed up. */
   volunteerCount: number;
-  /** Percentage of the volunteer goal reached, 0–100. */
-  percent: number;
+  /** Percentage of the volunteer goal reached, 0–100 (Manage). @default 0 */
+  percent?: number;
+  /**
+   * Where the row sits. `manage`: the cause over its progress bar, the count at the end (Figma). `build`: the
+   * phase's Causes card (Not in Figma, the prototype's): a smaller thumbnail, the title over how many signed up
+   * ("No sign-ups yet"), Edit and Delete at the end.
+   *
+   * @default 'manage'
+   */
+  variant?: 'manage' | 'build';
+  /** Build: the Edit button (named "Edit <title>"). */
+  onEdit?: () => void;
+  /** Build: the Delete button (named "Delete <title>"). */
+  onDelete?: () => void;
   /**
    * Whether this is the last row in its list: drops the row divider.
    *
@@ -20,7 +35,61 @@ export interface VolunteeringRowProps {
   isLast?: boolean;
 }
 
-export function VolunteeringRow({title, description, image, volunteerCount, percent, isLast = false}: VolunteeringRowProps) {
+function Action({
+  label,
+  tip,
+  onPress,
+  children
+}: {
+  label: string;
+  tip: string;
+  onPress?: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <TooltipTrigger>
+      <IconButton aria-label={label} onPress={onPress}>
+        {children}
+      </IconButton>
+      <Tooltip>{tip}</Tooltip>
+    </TooltipTrigger>
+  );
+}
+
+export function VolunteeringRow({
+  title,
+  description,
+  image,
+  volunteerCount,
+  percent = 0,
+  variant = 'manage',
+  onEdit,
+  onDelete,
+  isLast = false
+}: VolunteeringRowProps) {
+  if (variant === 'build') {
+    return (
+      <div className="gv-cause-row" data-variant="build" data-last={isLast || undefined}>
+        <div className="gv-cause-row__thumb" aria-hidden="true">
+          {image && <img src={image} alt="" />}
+        </div>
+        <div className="gv-cause-row__cause">
+          <div className="gv-cause-row__title">{title}</div>
+          <div className="gv-cause-row__signups">
+            {volunteerCount ? `${volunteerCount} signed up` : 'No sign-ups yet'}
+          </div>
+        </div>
+        <div className="gv-cause-row__actions">
+          <Action label={`Edit ${title}`} tip="Edit" onPress={onEdit}>
+            <SquarePen aria-hidden size={16} />
+          </Action>
+          <Action label={`Delete ${title}`} tip="Delete" onPress={onDelete}>
+            <Trash2 aria-hidden size={16} />
+          </Action>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="gv-cause-row" data-last={isLast || undefined}>
       <div className="gv-cause-row__thumb" aria-hidden="true">
