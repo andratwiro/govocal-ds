@@ -16,11 +16,13 @@ const meta: Meta<typeof RailSectionLabel> = {
 export default meta;
 type Story = StoryObj<typeof RailSectionLabel>;
 
+/** The prototype's three sections of the Participation rail, each a 32 row. */
 export const AllVariants: Story = {
   render: () => (
-    <div style={{display: 'flex', flexDirection: 'column', gap: 16, width: 264}}>
+    <div style={{display: 'flex', flexDirection: 'column', width: 264}}>
       <RailSectionLabel>Timeline</RailSectionLabel>
-      <RailSectionLabel>Participation</RailSectionLabel>
+      <RailSectionLabel>Spotlight</RailSectionLabel>
+      <RailSectionLabel>Events</RailSectionLabel>
     </div>
   )
 };
