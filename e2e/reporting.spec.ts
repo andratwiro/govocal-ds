@@ -1,4 +1,5 @@
 import {test, expect} from '@playwright/test';
+import {headingJumps} from './headings';
 
 test('reporting follows the real admin: report list with search and report tabs', async ({page}) => {
   await page.goto('/backoffice/#/reporting');
@@ -98,4 +99,35 @@ test('a report row opens the report editor: Present, Export PDF and Save each an
   await expect(page.locator('.react-aria-Toast').filter({hasText: 'Report saved'})).toBeVisible();
   await page.getByRole('navigation', {name: 'Breadcrumbs'}).getByRole('link', {name: 'Reporting'}).click();
   await expect(page).toHaveURL(/#\/reporting$/);
+});
+
+test('the deck answers: Refine and Add slide add slides, Share gives a web link or a PDF', async ({page}) => {
+  await page.goto('/backoffice/#/reporting');
+  const builder = page.getByRole('region', {name: /^Report builder:/});
+  const slides = builder.getByRole('listbox', {name: 'Slides'}).getByRole('option');
+  await expect(slides).toHaveCount(7);
+  await expect(builder.getByRole('button', {name: 'Refine'})).toBeDisabled();
+  await builder.getByRole('textbox', {name: 'Refine the report'}).fill('Add a slide on the youngest participants');
+  await builder.getByRole('button', {name: 'Refine'}).click();
+  await expect(slides).toHaveCount(8);
+  await expect(slides.nth(7)).toHaveAttribute('aria-selected', 'true');
+  await expect(builder.getByRole('article', {name: /^Slide 8: Add a slide on the youngest/})).toBeVisible();
+  await expect(page.locator('.react-aria-Toast').filter({hasText: 'Report refined'})).toBeVisible();
+  await builder.getByRole('button', {name: 'Add slide'}).click();
+  await expect(slides).toHaveCount(9);
+  await expect(builder.getByRole('article', {name: 'Slide 9: New slide'})).toBeVisible();
+  await builder.getByRole('button', {name: 'Share'}).click();
+  await page.getByRole('menuitem', {name: 'Share as web link'}).click();
+  await expect(page.locator('.react-aria-Toast').filter({hasText: 'Web link ready'})).toBeVisible();
+  await builder.getByRole('button', {name: 'Share'}).click();
+  await page.getByRole('menuitem', {name: 'Print to PDF'}).click();
+  await expect(page.locator('.react-aria-Toast').filter({hasText: 'Preparing the PDF'})).toBeVisible();
+});
+
+test('the reporting pages keep their headings in order (h1 → h2 → h3)', async ({page}) => {
+  for (const route of ['reporting', 'reporting/report-builder/r2/editor']) {
+    await page.goto(`/backoffice/#/${route}`);
+    await expect(page.getByRole('heading', {level: 1})).toBeVisible();
+    expect(await headingJumps(page), route).toEqual([]);
+  }
 });

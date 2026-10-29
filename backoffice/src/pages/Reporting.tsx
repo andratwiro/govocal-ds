@@ -28,10 +28,12 @@ import {MyToastRegion, queue} from '../../../src/components/Toast';
 import {CONTENTS, DECK, REPORTS, SLIDES, type Report, type Slide} from '../data-reporting';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
+import {SectionHeading} from '../SectionHeading';
 
 const n = (v: number) => v.toLocaleString('en');
 const modified = (d: number) => `Modified ${d} ${d === 1 ? 'day' : 'days'} ago`;
 
+const toast = (title: string, description?: string) => queue.add({title, description}, {timeout: 5000});
 const editorHref = (r: Report) => `#/reporting/report-builder/${r.id}/editor`;
 
 // ── Report list (the real admin's report builder page, laid out as the prototype's overview) ─────
@@ -205,6 +207,8 @@ function SlideBody({slide}: {slide: Slide}) {
       );
     case 'recommendations':
       return <ul className="bo-reporting-bullets">{DECK.recommendations.map(r => <li key={r}>{r}</li>)}</ul>;
+    case 'blank':
+      return <p className="bo-note">An empty slide: choose its data source in the slide settings.</p>;
   }
 }
 
@@ -236,9 +240,26 @@ function Presenter({slides, title, onClose}: {slides: Slide[]; title: string; on
   );
 }
 
+let added = 0;
+const pad = (v: number) => String(v).padStart(2, '0');
+
 function DeckBuilder({title, ai}: {title: string; ai: boolean}) {
-  const slides = ai ? SLIDES : SLIDES.slice(0, 4);
+  const [slides, setSlides] = useState(() => (ai ? SLIDES : SLIDES.slice(0, 4)));
   const [current, setCurrent] = useState(slides[2].id);
+  const [request, setRequest] = useState('');
+  // A new slide goes at the end of the deck and opens on the stage.
+  const addSlide = (slideTitle: string, kind: Slide['kind']) => {
+    const slide: Slide = {id: `added-${++added}`, n: pad(slides.length + 1), title: slideTitle, kind};
+    setSlides(list => [...list, slide]);
+    setCurrent(slide.id);
+    return slide;
+  };
+  const refine = () => {
+    const ask = request.trim();
+    const slide = addSlide(ask.length > 48 ? `${ask.slice(0, 47)}…` : ask, 'summary');
+    setRequest('');
+    toast('Report refined', `Go Vocal AI added slide ${slide.n}: ${slide.title}`);
+  };
   const i = Math.max(0, slides.findIndex(s => s.id === current));
   const slide = slides[i];
   const go = (d: number) => setCurrent(slides[Math.min(slides.length - 1, Math.max(0, i + d))].id);
@@ -252,8 +273,8 @@ function DeckBuilder({title, ai}: {title: string; ai: boolean}) {
             <strong>Built by Go Vocal AI</strong> from your project data. {slides.length} slides: edit anything, or ask for changes.
           </Banner>
           <div className="bo-reporting-refine">
-            <TextField aria-label="Refine the report" placeholder="For example: add a slide on demographics" />
-            <Button variant="secondary" size={32}><Sparkles aria-hidden size={16} />Refine</Button>
+            <TextField aria-label="Refine the report" placeholder="For example: add a slide on demographics" value={request} onChange={setRequest} />
+            <Button variant="secondary" size={32} isDisabled={!request.trim()} onPress={refine}><Sparkles aria-hidden size={16} />Refine</Button>
           </div>
         </div>
       )}
@@ -267,7 +288,10 @@ function DeckBuilder({title, ai}: {title: string; ai: boolean}) {
               </ListBoxItem>
             ))}
           </ListBox>
-          <Button variant="quiet" size={32}><Plus aria-hidden size={16} />Add slide</Button>
+          <Button variant="quiet" size={32} onPress={() => {
+            const slide = addSlide('New slide', 'blank');
+            toast('Slide added', `Slide ${slide.n} is at the end of the deck.`);
+          }}><Plus aria-hidden size={16} />Add slide</Button>
         </div>
         <div className="bo-reporting-center">
           <Gap name="Slide stage"><SlideCard slide={slide} i={i} count={slides.length} title={title} /></Gap>
@@ -297,16 +321,18 @@ function DeckBuilder({title, ai}: {title: string; ai: boolean}) {
           </Card>
           <div className="bo-reporting-cta">
             <Button variant="secondary" size={32}
-              onPress={() => queue.add({title: 'Export started', description: `${title}.pdf`}, {timeout: 5000})}>
+              onPress={() => toast('Export started', `${title}.pdf`)}>
               <Download aria-hidden size={16} />Export PDF</Button>
             <Button variant="primary" size={32}
-              onPress={() => queue.add({title: 'Report saved', description: title}, {timeout: 5000})}>Save</Button>
+              onPress={() => toast('Report saved', title)}>Save</Button>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+const slug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 type Open = {title: string; state: 'blank' | 'deck' | 'ai'};
 
@@ -315,13 +341,16 @@ function Builder({open, setOpen, hideTitle}: {open: Open; setOpen: (o: Open) => 
     <section aria-label={`Report builder: ${open.title}`} className="bo-reporting-builder">
       <div className="bo-reporting-head">
         <div className="bo-reporting-title">
-          {!hideTitle && <h2 className="bo-section-title">{open.title}</h2>}
+          {/* The editor's page title already names the report: a hidden h2 keeps headings in order (h1 → h2 → h3). */}
+          {hideTitle ? <SectionHeading>Slide deck</SectionHeading> : <h2 className="bo-section-title">{open.title}</h2>}
           <Status state="draft">Draft</Status>
         </div>
         {open.state !== 'blank' && (
           <MenuTrigger>
             <Button variant="secondary" size={32}><Share2 aria-hidden size={16} />Share</Button>
-            <Menu aria-label="Share">
+            <Menu aria-label="Share" onAction={k => (k === 'link'
+              ? toast('Web link ready', `Anyone with the link can view ${open.title}: example.org/reports/${slug(open.title)}`)
+              : toast('Preparing the PDF', `${open.title}.pdf downloads when it is ready.`))}>
               <MenuItem id="link"><Copy aria-hidden size={16} />Share as web link</MenuItem>
               <MenuItem id="pdf"><Download aria-hidden size={16} />Print to PDF</MenuItem>
             </Menu>

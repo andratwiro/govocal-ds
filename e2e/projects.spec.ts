@@ -1,5 +1,6 @@
 import {test, expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import {settled} from './axe';
 
 test('projects follows the real admin: views, filters, a full project table', async ({page}) => {
   await page.goto('/backoffice/#/projects');
@@ -59,6 +60,7 @@ const bodyRows = (page: import('@playwright/test').Page) =>
   page.getByRole('grid', {name: 'Projects'}).getByRole('rowgroup').nth(1).getByRole('row');
 const axe = async (page: import('@playwright/test').Page, selector: string) => {
   // The Gap marker's own label is scaffolding of the demo, not the page: it is left out of the check.
+  await settled(page);
   const {violations} = await new AxeBuilder({page}).include(selector).exclude('.bo-gap-label')
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
   expect(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`)).toEqual([]);
@@ -173,4 +175,47 @@ test('Folders, Spaces, Calendar and Arrange projects tabs show their views', asy
   await page.getByRole('button', {name: 'Move Green Corridors for Larkvale down'}).click();
   await expect(order.getByRole('listitem').first()).toContainText('Harbour Plan 2030');
   await expect(order.getByRole('listitem').nth(1)).toContainText('Green Corridors for Larkvale');
+});
+
+test('the Dates range keeps the projects running in it', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  await expect(bodyRows(page)).toHaveCount(8);
+  const dates = page.getByRole('group', {name: 'Dates'});
+  await dates.getByRole('spinbutton').first().click();
+  await page.keyboard.type('01012027');
+  await dates.getByRole('spinbutton').nth(3).click();
+  await page.keyboard.type('01312027');
+  // January 2027: the project running since August and the one starting on the 1st.
+  await expect(bodyRows(page)).toHaveCount(2);
+  await expect(bodyRows(page).first()).toContainText('Green Corridors for Larkvale');
+});
+
+test('Add filter adds a real filter, which narrows the list and can be removed', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  await page.getByRole('button', {name: 'Add filter'}).click();
+  await page.getByRole('menuitem', {name: 'Visibility'}).click();
+  await page.getByRole('button', {name: /^Visibility: any/}).click();
+  await page.getByRole('option', {name: 'Draft'}).click();
+  for (const row of await bodyRows(page).all()) await expect(row.locator('.gv-status')).toHaveText('Draft');
+  await expect(bodyRows(page)).not.toHaveCount(8);
+  await page.getByRole('button', {name: 'Add filter'}).click();
+  await expect(page.getByRole('menuitem', {name: 'Visibility'})).toBeDisabled();
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', {name: 'Remove filter: Visibility'}).click();
+  await expect(bodyRows(page)).toHaveCount(8);
+});
+
+test('From scratch keeps the chosen Space on the new draft', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  await page.getByRole('button', {name: 'New project'}).click();
+  await page.getByRole('menuitem', {name: 'From scratch'}).click();
+  const modal = page.getByRole('dialog', {name: 'New project'});
+  await modal.getByRole('button', {name: /Space/}).click();
+  await page.getByRole('option', {name: 'Waterfront'}).click();
+  await modal.getByRole('button', {name: 'Create project'}).click();
+  await expect(page.getByText(/in the Waterfront space/)).toBeVisible();
+  await page.getByRole('tab', {name: 'Spaces'}).click();
+  const row = page.getByRole('grid', {name: 'Spaces'}).getByRole('row', {name: /Waterfront/});
+  await expect(row).toContainText('2 projects');
+  await expect(row).toContainText('Untitled project');
 });

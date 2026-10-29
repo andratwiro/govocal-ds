@@ -19,8 +19,9 @@ import {IconButton} from '../../../src/components/gv/IconButton';
 import {Kpi} from '../../../src/components/gv/Kpi';
 import {Banner} from '../../../src/components/gv/Banner';
 import {Divider} from '../../../src/components/gv/Divider';
-import {MyToastRegion} from '../../../src/components/Toast';
-import {AUTOMATED, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
+import {MyToastRegion, queue} from '../../../src/components/Toast';
+import {Modal} from '../../../src/components/gv/Modal';
+import {AUTOMATED, GROUP_SIZES, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
 import {emailStore} from './MessagingPages';
@@ -28,11 +29,20 @@ import {SectionHeading} from '../SectionHeading';
 
 const n = (v: number) => v.toLocaleString('en');
 const pct = (v?: number) => (v == null ? '—' : `${v}%`);
+const toast = (title: string, description?: string) => queue.add({title, description}, {timeout: 5000});
+
+/** The custom emails as state, written through to the shared store (so the composer's route sees them). */
+function useEmails() {
+  const [emails, set] = useState(emailStore.emails);
+  const setEmails = (f: (e: CustomEmail[]) => CustomEmail[]) => set(e => (emailStore.emails = f(e)));
+  return [emails, setEmails] as const;
+}
 
 // ── Custom emails ──────────────────────────────────────────────────────────
 
-function CustomEmailTable({onEdit}: {onEdit: (id: string) => void}) {
-  const navigate = useNavigate();
+type RowAction = 'stats' | 'edit' | 'copy' | 'delete';
+
+function CustomEmailTable({emails, onAction}: {emails: CustomEmail[]; onAction: (e: CustomEmail, a: RowAction) => void}) {
   return (
     <DataTable aria-label="Custom emails">
       <DataTableHeader>
@@ -41,7 +51,7 @@ function CustomEmailTable({onEdit}: {onEdit: (id: string) => void}) {
         <DataTableColumn align="number">Opened</DataTableColumn><DataTableColumn align="number">Clicked</DataTableColumn>
         <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
       </DataTableHeader>
-      <DataTableBody>{emailStore.emails.map(e => (
+      <DataTableBody>{emails.map(e => (
         // A sent email opens its statistics; a draft opens from its menu.
         <DataTableRow key={e.id} id={e.id} textValue={e.subject} href={e.status === 'Sent' ? `#/messaging/emails/custom/${e.id}` : undefined}>
           <DataTableCell>
@@ -52,7 +62,7 @@ function CustomEmailTable({onEdit}: {onEdit: (id: string) => void}) {
           <DataTableCell align="number">{pct(e.opened)}</DataTableCell>
           <DataTableCell align="number">{pct(e.clicked)}</DataTableCell>
           <DataTableCell align="options">
-            <DataTableOptions aria-label={`Actions for ${e.subject}`} onAction={k => (k === 'edit' ? onEdit(e.id) : k === 'stats' && navigate(`/messaging/emails/custom/${e.id}`))}>
+            <DataTableOptions aria-label={`Actions for ${e.subject}`} onAction={k => onAction(e, k as RowAction)}>
               {e.status === 'Sent'
                 ? <><MenuItem id="stats">Statistics</MenuItem><MenuItem id="copy">Duplicate</MenuItem></>
                 : <><MenuItem id="edit">Edit</MenuItem><MenuItem id="copy">Duplicate</MenuItem><MenuItem id="delete">Delete</MenuItem></>}
@@ -65,7 +75,11 @@ function CustomEmailTable({onEdit}: {onEdit: (id: string) => void}) {
 }
 
 /** The draft being written: sender and recipients, then subject and message (the real admin's campaign form). */
-function DraftComposer({email}: {email: CustomEmail}) {
+function DraftComposer({email, onSave, onSend}: {
+  email: CustomEmail; onSave: (patch: Partial<CustomEmail>) => void; onSend: (patch: Partial<CustomEmail>) => void;
+}) {
+  const [to, setTo] = useState(email.to);
+  const [subject, setSubject] = useState(email.subject);
   const [body, setBody] = useState(email.body);
   const [bold, setBold] = useState(false);
   const [italic, setItalic] = useState(false);
@@ -79,21 +93,23 @@ function DraftComposer({email}: {email: CustomEmail}) {
             <TextField label="From" defaultValue={SENDER.from} />
             <TextField label="Replies should go to" defaultValue={SENDER.replyTo} />
           </div>
-          <Select label="To" defaultSelectedKey={email.to}>
+          <Select label="To" selectedKey={to} onSelectionChange={k => setTo(String(k))}>
             {GROUPS.map(g => <SelectItem key={g} id={g}>{g}</SelectItem>)}
           </Select>
           <Divider />
-          <TextField label="Subject" defaultValue={email.subject} />
+          <TextField label="Subject" value={subject} onChange={setSubject} />
           <div className="bo-messaging-field">
             <Label aria-hidden>Email message</Label>
             <Editor aria-label="Email message" placeholder="Write your message" value={body} onChange={setBody}
               bold={bold} onBoldChange={setBold} italic={italic} onItalicChange={setItalic} list={list} onListChange={setList} />
           </div>
           <div className="bo-messaging-buttons">
-            <Button variant="quiet" size={32}>Save as draft</Button>
+            <Button variant="quiet" size={32} onPress={() => onSave({to, subject: subject.trim() || 'Untitled email', body})}>Save as draft</Button>
             <span className="bo-push" />
-            <Button variant="secondary" size={32}><Mail aria-hidden size={16} />Send a preview</Button>
-            <Button variant="primary" size={32}><Send aria-hidden size={16} />Send now</Button>
+            <Button variant="secondary" size={32} onPress={() => toast('Preview sent', `To ${SENDER.replyTo}`)}>
+              <Mail aria-hidden size={16} />Send a preview</Button>
+            <Button variant="primary" size={32} onPress={() => onSend({to, subject: subject.trim() || 'Untitled email', body})}>
+              <Send aria-hidden size={16} />Send now</Button>
           </div>
         </div>
       </Card>
@@ -101,10 +117,47 @@ function DraftComposer({email}: {email: CustomEmail}) {
   );
 }
 
+let copies = 0;
+
 function CustomEmails() {
   const navigate = useNavigate();
-  const [draftId, setDraftId] = useState(emailStore.emails.find(e => e.status === 'Draft' && e.body)!.id);
-  const draft = emailStore.emails.find(e => e.id === draftId)!;
+  const [emails, setEmails] = useEmails();
+  const [draftId, setDraftId] = useState(emails.find(e => e.status === 'Draft' && e.body)?.id);
+  const [deleting, setDeleting] = useState<CustomEmail | null>(null);
+  const draft = emails.find(e => e.id === draftId && e.status !== 'Sent');
+  const update = (id: string, patch: Partial<CustomEmail>) => setEmails(list => list.map(e => (e.id === id ? {...e, ...patch} : e)));
+  const onAction = (e: CustomEmail, a: RowAction) => {
+    if (a === 'stats') navigate(`/messaging/emails/custom/${e.id}`);
+    else if (a === 'edit') setDraftId(e.id);
+    else if (a === 'delete') setDeleting(e);
+    else {
+      const copy: CustomEmail = {...e, id: `${e.id}-copy-${++copies}`, subject: `Copy of ${e.subject}`, status: 'Draft',
+        date: 'Edited 29 Oct 2026', opened: undefined, clicked: undefined};
+      setEmails(list => {
+        const i = list.findIndex(x => x.id === e.id);
+        return [...list.slice(0, i + 1), copy, ...list.slice(i + 1)];
+      });
+      toast('Email duplicated', `${copy.subject} is a draft.`);
+    }
+  };
+  const save = (patch: Partial<CustomEmail>) => {
+    if (!draft) return;
+    update(draft.id, {...patch, date: 'Edited 29 Oct 2026'});
+    toast('Draft saved', patch.subject);
+  };
+  const send = (patch: Partial<CustomEmail>) => {
+    if (!draft) return;
+    update(draft.id, {...patch, status: 'Sent', date: '29 Oct 2026, just now', opened: 0, clicked: 0});
+    const to = patch.to ?? draft.to;
+    toast('Email sent', `“${patch.subject}” is on its way to ${n(GROUP_SIZES[to] ?? 0)} recipients.`);
+    setDraftId(undefined);
+  };
+  const remove = () => {
+    if (!deleting) return;
+    setEmails(list => list.filter(e => e.id !== deleting.id));
+    toast('Draft deleted', deleting.subject);
+    setDeleting(null);
+  };
   return (
     <>
       <div className="bo-messaging-intro">
@@ -112,9 +165,18 @@ function CustomEmails() {
         <Button variant="primary" size={32} onPress={() => navigate('/messaging/emails/custom/new')}><Plus aria-hidden size={16} />Create email</Button>
       </div>
       <div className="bo-messaging-stack">
-        <CustomEmailTable onEdit={setDraftId} />
-        <DraftComposer key={draft.id} email={draft} />
+        <CustomEmailTable emails={emails} onAction={onAction} />
+        {draft
+          ? <DraftComposer key={draft.id} email={draft} onSave={save} onSend={send} />
+          : <p className="bo-note">Choose Edit on a draft to open it here.</p>}
       </div>
+      <Modal title="Delete this draft?" isOpen={deleting !== null} onOpenChange={o => { if (!o) setDeleting(null); }}
+        footer={<>
+          <Button variant="secondary" slot="close">Cancel</Button>
+          <Button variant="primary" onPress={remove}>Delete draft</Button>
+        </>}>
+        <p>{deleting?.subject} will be deleted. This cannot be undone.</p>
+      </Modal>
     </>
   );
 }
@@ -192,7 +254,8 @@ function AutomatedEditor({email}: {email: AutomatedEmail}) {
           <div className="bo-messaging-buttons">
             <span className="bo-note">Preview</span>
             <span className="bo-push" />
-            <Button variant="secondary" size={32}><Send aria-hidden size={16} />Send me a test email</Button>
+            <Button variant="secondary" size={32} onPress={() => toast('Test email sent', `“${subject}” to ${SENDER.replyTo}`)}>
+              <Send aria-hidden size={16} />Send me a test email</Button>
           </div>
           <Gap name="Email preview">
             <dl className="bo-messaging-mailhead">

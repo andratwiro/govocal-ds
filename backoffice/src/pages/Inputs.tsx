@@ -19,6 +19,7 @@ import {Pill} from '../../../src/components/gv/Pill';
 import {Status} from '../../../src/components/gv/Status';
 import {NewDot} from '../../../src/components/gv/NewDot';
 import {IconButton} from '../../../src/components/gv/IconButton';
+import {Modal} from '../../../src/components/gv/Modal';
 import {PanelSection} from '../../../src/patterns/PanelSection';
 import {ChevronDown, ChevronLeft, ChevronRight, Download, Trash2, TriangleAlert, X} from 'lucide-react';
 import {ASSIGNEES, ME, PROJECTS, STATUSES} from '../data';
@@ -51,37 +52,42 @@ function InputPreview({input, onChange, onClose}: {input: ManagedInput; onChange
     setDraft('');
   };
   return (
-    <aside className="bo-inputs-preview" aria-label="Input preview" onKeyDown={e => { if (e.key === 'Escape') onClose(); }}>
-      <div className="bo-inputs-preview-head">
-        <h2 className="bo-section-title">{input.title}</h2>
-        <IconButton aria-label="Close the preview" onPress={onClose}><X aria-hidden size={16} /></IconButton>
-      </div>
-      <p className="bo-note">{input.author} · Registered user · {input.published}</p>
-      <p className="bo-inputs-preview-body">{input.body}</p>
-      <div className="bo-inputs-preview-meta">
-        <Link href={`#/projects/${input.project}`}>{title(input.project)}</Link>
-        <Pill>{input.topic}</Pill>
-      </div>
-      <div className="bo-inputs-preview-fields">
-        <Select label="Status" selectedKey={input.status} onSelectionChange={k => onChange(input.id, {status: String(k)})}>
-          {STATUSES.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
-        </Select>
-        <Select label="Assignee" selectedKey={input.assignee} onSelectionChange={k => onChange(input.id, {assignee: String(k)})}>
-          {ASSIGNEES.map(a => <SelectItem key={a} id={a}>{a}</SelectItem>)}
-        </Select>
-      </div>
-      <PanelSection title="Official feedback" level={3} aside={input.needsFeedback ? 'Waiting for feedback' : undefined}>
-        <div className="bo-inputs-preview-feedback">
-          {input.feedback.length > 0 && (
-            <ul aria-label="Posted feedback" className="bo-inputs-preview-posted">
-              {input.feedback.map((f, n) => <li key={n}><span className="bo-note">{ME} · just now</span><p>{f}</p></li>)}
-            </ul>
-          )}
-          <TextArea label="Feedback" value={draft} onChange={setDraft} placeholder="Write an official update" />
-          <span><Button variant="primary" size={32} isDisabled={!draft.trim()} onPress={post}>Post feedback</Button></span>
-        </div>
-      </PanelSection>
-    </aside>
+    // The system has no side panel (drawer) yet: the preview sits in a grid column beside the list, framed as a gap.
+    <div className="bo-inputs-side">
+      <Gap name="Side panel">
+        <aside className="bo-inputs-preview" aria-label="Input preview" onKeyDown={e => { if (e.key === 'Escape') onClose(); }}>
+          <div className="bo-inputs-preview-head">
+            <h2 className="bo-section-title">{input.title}</h2>
+            <IconButton aria-label="Close the preview" onPress={onClose}><X aria-hidden size={16} /></IconButton>
+          </div>
+          <p className="bo-note">{input.author} · Registered user · {input.published}</p>
+          <p className="bo-inputs-preview-body">{input.body}</p>
+          <div className="bo-inputs-preview-meta">
+            <Link href={`#/projects/${input.project}`}>{title(input.project)}</Link>
+            <Pill>{input.topic}</Pill>
+          </div>
+          <div className="bo-inputs-preview-fields">
+            <Select label="Status" selectedKey={input.status} onSelectionChange={k => onChange(input.id, {status: String(k)})}>
+              {STATUSES.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
+            </Select>
+            <Select label="Assignee" selectedKey={input.assignee} onSelectionChange={k => onChange(input.id, {assignee: String(k)})}>
+              {ASSIGNEES.map(a => <SelectItem key={a} id={a}>{a}</SelectItem>)}
+            </Select>
+          </div>
+          <PanelSection title="Official feedback" level={3} aside={input.needsFeedback ? 'Waiting for feedback' : undefined}>
+            <div className="bo-inputs-preview-feedback">
+              {input.feedback.length > 0 && (
+                <ul aria-label="Posted feedback" className="bo-inputs-preview-posted">
+                  {input.feedback.map((f, n) => <li key={n}><span className="bo-note">{ME} · just now</span><p>{f}</p></li>)}
+                </ul>
+              )}
+              <TextArea label="Feedback" value={draft} onChange={setDraft} placeholder="Write an official update" />
+              <span><Button variant="primary" size={32} isDisabled={!draft.trim()} onPress={post}>Post feedback</Button></span>
+            </div>
+          </PanelSection>
+        </aside>
+      </Gap>
+    </div>
   );
 }
 
@@ -97,6 +103,7 @@ export function Inputs() {
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<Set<Key>>(new Set());
   const [open, setOpen] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const rows = useMemo(() => {
     const list = inputs.filter(i =>
@@ -111,6 +118,9 @@ export function Inputs() {
   const pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
   const current = Math.min(page, pages);
   const shown = rows.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
+  // Bulk actions only ever reach rows on screen: a new filter, tab, search, sort or page clears the selection.
+  const shownKey = shown.map(i => i.id).join(' ');
+  useEffect(() => setSelected(new Set()), [shownKey]);
 
   const waiting = inputs.filter(i => i.needsFeedback).length;
   // Each sortable column has one order (titles A-Z, counts and dates highest/newest first), as before.
@@ -123,7 +133,8 @@ export function Inputs() {
     setInputs(list => list.filter(i => !selected.has(i.id)));
     if (open && selected.has(open)) setOpen(null);
     setSelected(new Set());
-    queue.add({title: `${n} inputs deleted`}, {timeout: 5000});
+    setConfirmDelete(false);
+    queue.add({title: n === 1 ? '1 input deleted' : `${n} inputs deleted`}, {timeout: 5000});
   };
   const select = (keys: Selection) => setSelected(keys === 'all' ? new Set(shown.map(i => i.id)) : new Set(keys));
   const exportFile = (key: Key) => queue.add({
@@ -155,7 +166,7 @@ export function Inputs() {
         </MenuTrigger>
       </div>
       <div className="bo-inputs-body">
-        <Tabs defaultSelectedKey="projects">
+        <Tabs defaultSelectedKey="projects" onSelectionChange={() => setSelected(new Set())}>
           <TabList aria-label="Filter by">
             <Tab id="projects">Projects</Tab><Tab id="topics">Topics</Tab><Tab id="status">Status</Tab>
           </TabList>
@@ -203,7 +214,7 @@ export function Inputs() {
                       {ASSIGNEES.map(a => <MenuItem key={a} id={a}>{a}</MenuItem>)}
                     </Menu>
                   </MenuTrigger>
-                  <Button variant="quiet" size={32} onPress={deleteSelected}><Trash2 aria-hidden size={16} />Delete</Button>
+                  <Button variant="quiet" size={32} onPress={() => setConfirmDelete(true)}><Trash2 aria-hidden size={16} />Delete</Button>
                 </Toolbar>
               )}
             </div>
@@ -267,6 +278,13 @@ export function Inputs() {
           {preview && <InputPreview key={preview.id} input={preview} onChange={change} onClose={() => setOpen(null)} />}
         </div>
       </div>
+      <Modal title="Delete these inputs?" isOpen={confirmDelete} onOpenChange={setConfirmDelete}
+        footer={<>
+          <Button variant="secondary" slot="close">Cancel</Button>
+          <Button variant="primary" onPress={deleteSelected}>Delete {selected.size === 1 ? 'input' : `${selected.size} inputs`}</Button>
+        </>}>
+        <p>{selected.size === 1 ? 'The selected input' : `The ${selected.size} selected inputs`} and their comments will be deleted. This cannot be undone.</p>
+      </Modal>
       <MyToastRegion />
     </Page>
   );

@@ -18,6 +18,7 @@ import {PhoneFrame} from '../../../src/patterns/PhonePreview';
 import {CUSTOM_EMAILS, GROUP_SIZES, GROUPS, RECIPIENTS, SENDER, type CustomEmail} from '../data-messaging';
 import {Gap} from '../Gap';
 import {Page} from './Page';
+import {SectionHeading} from '../SectionHeading';
 
 // Messaging's first clicks, each on its own route as in the real admin: a new email, a sent email's
 // statistics, a new SMS.
@@ -48,6 +49,7 @@ export function EmailComposer() {
   };
   return (
     <Page title="New email" crumbs={MESSAGING_CRUMB}>
+      <SectionHeading>Message and recipients</SectionHeading>
       <Card tone="manage" layout="stacked" title="Write a message and choose who gets it">
         <div className="bo-messaging-form">
           <div className="bo-messaging-pair">
@@ -100,6 +102,7 @@ export function EmailStats() {
           <Kpi label="Opened" value={`${email.opened ?? 0}%`} note={`${n(pctOf(email.opened))} people`} />
           <Kpi label="Clicked" value={`${email.clicked ?? 0}%`} note={`${n(pctOf(email.clicked))} people`} />
         </div>
+        <SectionHeading>Who got it</SectionHeading>
         <Card tone="manage" title="Recipients" pills={[{label: `${RECIPIENTS.length} of ${n(sent)} shown`}]}>
           <div className="bo-messaging-scroll">
             <DataTable aria-label="Recipients">
@@ -134,6 +137,7 @@ export function SmsComposer() {
   const parts = Math.max(1, Math.ceil(body.length / SMS_LENGTH));
   return (
     <Page title="New SMS" crumbs={MESSAGING_CRUMB}>
+      <SectionHeading>Message and preview</SectionHeading>
       <div className="bo-messaging-split">
         <Card tone="manage" layout="stacked" title="Write a text message">
           <div className="bo-messaging-form">

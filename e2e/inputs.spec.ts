@@ -109,9 +109,52 @@ test('checking rows shows a bulk bar: change status, assign, delete', async ({pa
   await bar.getByRole('button', {name: 'Assign', exact: true}).click();
   await page.getByRole('menuitem', {name: 'Manager C'}).click();
   await expect(page.getByRole('button', {name: /Manager C.*Assignee for More trees on Elm Lane/})).toBeVisible();
+  // Delete asks first; Cancel keeps the inputs, Delete removes them.
   await bar.getByRole('button', {name: 'Delete', exact: true}).click();
+  const confirm = page.getByRole('dialog', {name: 'Delete these inputs?'});
+  await expect(confirm).toContainText('The 2 selected inputs');
+  await confirm.getByRole('button', {name: 'Cancel'}).click();
+  await expect(confirm).toHaveCount(0);
+  await expect(page.getByText('12 inputs')).toBeVisible();
+  await bar.getByRole('button', {name: 'Delete', exact: true}).click();
+  await confirm.getByRole('button', {name: 'Delete 2 inputs'}).click();
   await expect(page.getByText('10 inputs')).toBeVisible();
   await expect(bar).toHaveCount(0);
+});
+
+test('the selection is cleared whenever the visible rows change: filter, tab, search, page', async ({page}) => {
+  await page.goto('/backoffice/#/inputs');
+  const bar = page.getByRole('toolbar', {name: 'Bulk actions'});
+  const pick = async () => {
+    await inputRows(page).first().locator('.indicator').click();
+    await expect(bar).toContainText('1 selected');
+  };
+  await pick();
+  await page.getByRole('listbox', {name: 'Projects'}).getByRole('option', {name: 'Harbour Plan 2030'}).click();
+  await expect(bar).toHaveCount(0);
+  await pick();
+  await page.getByRole('tab', {name: 'Topics'}).click();
+  await expect(bar).toHaveCount(0);
+  await page.getByRole('tab', {name: 'Projects'}).click();
+  await page.getByRole('listbox', {name: 'Projects'}).getByRole('option', {name: 'All projects'}).click();
+  await pick();
+  await page.getByRole('searchbox', {name: 'Search inputs'}).fill('bike');
+  await expect(bar).toHaveCount(0);
+  await page.getByRole('searchbox', {name: 'Search inputs'}).fill('');
+  await pick();
+  await page.getByRole('button', {name: 'Next page'}).click();
+  await expect(bar).toHaveCount(0);
+  await expect(inputRows(page).locator('[aria-selected="true"]')).toHaveCount(0);
+});
+
+test('the input preview is a column beside the list, marked as a missing side panel', async ({page}) => {
+  await page.goto('/backoffice/#/inputs');
+  await inputRows(page).filter({hasText: 'Bike lane by the school'}).getByText('Bike lane by the school').click();
+  const gap = page.locator('[data-gap="Side panel"]');
+  await expect(gap.getByRole('complementary', {name: 'Input preview'})).toBeVisible();
+  // Beside the table, not over it.
+  const [list, side] = [await page.locator('.bo-inputs-list').boundingBox(), await gap.boundingBox()];
+  expect(side!.x).toBeGreaterThanOrEqual(list!.x + list!.width);
 });
 
 test('the Topics tab filters by topic, and Edit projects leads to the projects', async ({page}) => {

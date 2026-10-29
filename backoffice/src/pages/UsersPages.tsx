@@ -14,8 +14,9 @@ import {Kpi} from '../../../src/components/gv/Kpi';
 import {Avatar} from '../../../src/components/gv/Avatar';
 import {Status} from '../../../src/components/gv/Status';
 import {Banner} from '../../../src/components/gv/Banner';
-import {GROUPS, INVITATIONS, PARTICIPATION, PEOPLE, SEATS, type Invitation, type Person, type Role} from '../data-users';
-import {date, initials} from './Users';
+import {GROUPS, INVITATIONS, PARTICIPATION, SEATS, type Invitation, type Person, type Role} from '../data-users';
+import {date, initials, peopleStore} from './Users';
+import {SectionHeading} from '../SectionHeading';
 import {Page} from './Page';
 
 // The Users page's first clicks, each on its own route as in the real admin: invitations, seats, a profile.
@@ -103,8 +104,8 @@ export function UserInvitations() {
           <Tab id="invite">Invite users</Tab>
           <Tab id="all">All invitations</Tab>
         </TabList>
-        <TabPanel id="invite"><div className="bo-users-panel"><InviteForm onSend={send} /></div></TabPanel>
-        <TabPanel id="all"><div className="bo-users-panel"><InvitationTable invitations={invitations} /></div></TabPanel>
+        <TabPanel id="invite"><SectionHeading>Invite users</SectionHeading><div className="bo-users-panel"><InviteForm onSend={send} /></div></TabPanel>
+        <TabPanel id="all"><SectionHeading>All invitations</SectionHeading><div className="bo-users-panel"><InvitationTable invitations={invitations} /></div></TabPanel>
       </Tabs>
       <MyToastRegion />
     </Page>
@@ -139,8 +140,9 @@ function PeopleTable({label, people}: {label: string; people: Person[]}) {
 }
 
 export function SeatsOverview() {
-  const admins = PEOPLE.filter(p => p.role === 'Platform admin');
-  const managers = PEOPLE.filter(p => p.role.endsWith('manager'));
+  const people = peopleStore.people.filter(p => !p.blocked);
+  const admins = people.filter(p => p.role === 'Platform admin');
+  const managers = people.filter(p => p.role.endsWith('manager'));
   return (
     <Page title="Seats overview" crumbs={USERS_CRUMB}
       description="Your plan includes a number of admin and manager seats. Everyone else takes part for free.">
@@ -156,6 +158,7 @@ export function SeatsOverview() {
           <Meter label="Manager seats" value={managers.length} maxValue={SEATS.managers} valueLabel={`${managers.length} of ${SEATS.managers}`} />
         </div>
         <Banner>Need more seats? Your Go Vocal success manager can add them to your plan.</Banner>
+        <SectionHeading>Who holds a seat</SectionHeading>
         <PeopleTable label="Admins" people={admins} />
         <PeopleTable label="Managers" people={managers} />
       </div>
@@ -167,13 +170,16 @@ export function SeatsOverview() {
 
 export function UserProfile() {
   const {userId} = useParams();
-  const person = PEOPLE.find(p => p.id === userId);
+  // The list's changes (a role, a deletion) show here too.
+  const person = peopleStore.people.find(p => p.id === userId);
   const [role, setRole] = useState<Role | undefined>(person?.role);
   if (!person) return <Page title="User not found" crumbs={USERS_CRUMB}><p className="bo-note">This user is not on the platform.</p></Page>;
   const done = PARTICIPATION[person.id] ?? {ideas: 0, comments: 0, votes: 0, projects: 0};
   const admin = role === 'Platform admin';
   const toggleAdmin = () => {
-    setRole(admin ? 'Registered user' : 'Platform admin');
+    const next: Role = admin ? 'Registered user' : 'Platform admin';
+    setRole(next);
+    peopleStore.people = peopleStore.people.map(p => (p.id === person.id ? {...p, role: next} : p));
     toast(admin ? `${person.name} is no longer a platform admin` : `${person.name} is now a platform admin`);
   };
   return (
@@ -181,6 +187,7 @@ export function UserProfile() {
       actions={<Button variant="secondary" size={32} onPress={toggleAdmin}><ShieldCheck aria-hidden size={16} />
         {admin ? 'Remove platform admin rights' : 'Make platform admin'}</Button>}>
       <div className="bo-users-stack">
+        <SectionHeading>About this user</SectionHeading>
         <Card tone="manage" layout="stacked" title="Profile">
           <div className="bo-users-profile">
             <Avatar initials={initials(person.name)} />

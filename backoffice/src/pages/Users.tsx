@@ -7,7 +7,7 @@ import {ListBox, ListBoxItem} from '../../../src/components/ListBox';
 import {SearchField} from '../../../src/components/SearchField';
 import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
 import {Button} from '../../../src/components/Button';
-import {Card} from '../../../src/components/gv/Card';
+import {Card, CardRadio, CardRadioGroup} from '../../../src/components/gv/Card';
 import {Checkbox} from '../../../src/components/gv/Checkbox';
 import {Modal} from '../../../src/components/gv/Modal';
 import {TextField} from '../../../src/components/TextField';
@@ -35,6 +35,16 @@ function useGroups() {
   return [groups, setGroups] as const;
 }
 
+// The people, as changed here (a role, a block, a deletion): they outlive a change of route, until a reload.
+export type Member = Person & {blocked?: boolean};
+export const peopleStore: {people: Member[]} = {people: [...PEOPLE]};
+function usePeople() {
+  const [people, set] = useState(peopleStore.people);
+  const setPeople = (f: (p: Member[]) => Member[]) => set(p => (peopleStore.people = f(p)));
+  return [people, setPeople] as const;
+}
+const toast = (title: string, description?: string) => queue.add({title, description}, {timeout: 5000});
+
 // "Resident E" → "RE".
 export const initials = (name: string) => name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
@@ -49,11 +59,14 @@ function ago(minutes?: number) {
 export const date = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US',
   {month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC'});
 
-function inView(view: string, groups: Group[]): Person[] {
+function inView(view: string, groups: Group[], people: Member[]): Member[] {
+  // A blocked user leaves every list but Banned emails.
+  if (view === 'banned') return people.filter(p => p.blocked);
+  const active = people.filter(p => !p.blocked);
   const group = groups.find(g => g.id === view);
-  if (group) return PEOPLE.filter(p => group.members.includes(p.id));
+  if (group) return active.filter(p => group.members.includes(p.id));
   const roles = SEGMENTS.find(s => s.id === view)?.roles;
-  return roles ? PEOPLE.filter(p => roles.includes(p.role)) : PEOPLE;
+  return roles ? active.filter(p => roles.includes(p.role)) : active;
 }
 
 function compare(a: Person, b: Person, column: string) {
@@ -73,8 +86,8 @@ function Count({label, count, icon, kind}: {label: string; count: number; icon?:
   );
 }
 
-function Sidebar({view, setView, all, onAddGroup}: {
-  view: string; setView: (v: string) => void; all: Group[]; onAddGroup: () => void;
+function Sidebar({view, setView, all, people, onAddGroup}: {
+  view: string; setView: (v: string) => void; all: Group[]; people: Member[]; onAddGroup: () => void;
 }) {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
@@ -84,7 +97,7 @@ function Sidebar({view, setView, all, onAddGroup}: {
     <aside className="bo-users-side">
       <ListBox aria-label="Users" selectionMode="single" selectedKeys={[view]} onSelectionChange={pick}>
         {SEGMENTS.map(s => (
-          <ListBoxItem key={s.id} id={s.id} textValue={s.label}><Count label={s.label} count={inView(s.id, all).length} /></ListBoxItem>
+          <ListBoxItem key={s.id} id={s.id} textValue={s.label}><Count label={s.label} count={inView(s.id, all, people).length} /></ListBoxItem>
         ))}
       </ListBox>
       <div className="bo-users-groups-head">
@@ -98,7 +111,7 @@ function Sidebar({view, setView, all, onAddGroup}: {
           const Icon = g.kind === 'smart' ? Zap : UsersIcon;
           return (
             <ListBoxItem key={g.id} id={g.id} textValue={g.label}>
-              <Count label={g.label} count={g.members.length}
+              <Count label={g.label} count={inView(g.id, all, people).length}
                 kind={`${g.kind} group`} icon={<Icon aria-hidden size={16} />} />
             </ListBoxItem>
           );
@@ -109,27 +122,30 @@ function Sidebar({view, setView, all, onAddGroup}: {
   );
 }
 
-function RowOptions({person}: {person: Person}) {
+type RowAction = 'admin' | 'group' | 'block' | 'delete';
+
+function RowOptions({person, onAction}: {person: Person; onAction: (a: RowAction) => void}) {
   const admin = person.role === 'Platform admin';
   return (
-    <DataTableOptions aria-label={`Options for ${person.name}`}>
-      <MenuItem>{admin ? 'Remove platform admin rights' : 'Make platform admin'}</MenuItem>
-      <MenuItem>Add to group</MenuItem>
-      <MenuItem>Block user</MenuItem>
-      <MenuItem>Delete user</MenuItem>
+    <DataTableOptions aria-label={`Options for ${person.name}`} onAction={k => onAction(k as RowAction)}>
+      <MenuItem id="admin">{admin ? 'Remove platform admin rights' : 'Make platform admin'}</MenuItem>
+      <MenuItem id="group">Add to group</MenuItem>
+      <MenuItem id="block">Block user</MenuItem>
+      <MenuItem id="delete">Delete user</MenuItem>
     </DataTableOptions>
   );
 }
 
-function UserTable({view, groups, onEditGroup, onDeleteGroup}: {
-  view: string; groups: Group[]; onEditGroup: () => void; onDeleteGroup: () => void;
+function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowAction, onAddToGroup}: {
+  view: string; groups: Group[]; people: Member[]; onEditGroup: () => void; onDeleteGroup: () => void;
+  onRowAction: (p: Person, a: RowAction) => void; onAddToGroup: (ids: string[], groupId: string) => void;
 }) {
   const group = groups.find(g => g.id === view);
   const title = SEGMENTS.find(s => s.id === view)?.label ?? group?.label ?? '';
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<Selection>(new Set());
   const [sort, setSort] = useState<Sort>({column: 'joined', direction: 'descending'});
-  const all = inView(view, groups);
+  const all = inView(view, groups, people);
   const rows = useMemo(() => {
     const q = query.toLowerCase();
     const found = all.filter(p => p.name.toLowerCase().includes(q) || p.email?.toLowerCase().includes(q));
@@ -141,7 +157,9 @@ function UserTable({view, groups, onEditGroup, onDeleteGroup}: {
   const onSort = ({column, direction}: {column: string | number; direction: Sort['direction']}) =>
     setSort(s => s.column === column ? {column: s.column, direction}
       : {column: column as Sort['column'], direction: column === 'name' ? 'ascending' : 'descending'});
-  const count = selected === 'all' ? rows.length : rows.filter(r => selected.has(r.id)).length;
+  const ids = selected === 'all' ? rows.map(r => r.id) : rows.filter(r => selected.has(r.id)).map(r => r.id);
+  const count = ids.length;
+  const exportUsers = (n: number) => toast('Export started', `${n === 1 ? '1 user' : `${n} users`} in users.xlsx`);
 
   const toolbar = (
     <div className="bo-users-toolbar">
@@ -154,13 +172,13 @@ function UserTable({view, groups, onEditGroup, onDeleteGroup}: {
         <>
           <MenuTrigger>
             <Button variant="secondary" size={32} hasMenu><UsersIcon aria-hidden size={16} />Add to group</Button>
-            <Menu aria-label="Manual groups">
-              {groups.filter(g => g.kind === 'manual').map(g => <MenuItem key={g.id}>{g.label}</MenuItem>)}
+            <Menu aria-label="Manual groups" onAction={k => { onAddToGroup(ids, String(k)); setSelected(new Set()); }}>
+              {groups.filter(g => g.kind === 'manual').map(g => <MenuItem key={g.id} id={g.id}>{g.label}</MenuItem>)}
             </Menu>
           </MenuTrigger>
-          <Button variant="quiet" size={32}><Download aria-hidden size={16} />Export selected</Button>
+          <Button variant="quiet" size={32} onPress={() => exportUsers(count)}><Download aria-hidden size={16} />Export selected</Button>
         </>
-      ) : <Button variant="quiet" size={32}><Download aria-hidden size={16} />Export all</Button>}
+      ) : <Button variant="quiet" size={32} onPress={() => exportUsers(all.length)}><Download aria-hidden size={16} />Export all</Button>}
       <SearchField aria-label="Search users" placeholder="Search" value={query} onChange={setQuery} />
     </div>
   );
@@ -199,7 +217,7 @@ function UserTable({view, groups, onEditGroup, onDeleteGroup}: {
               </DataTableCell>
               <DataTableCell><span className="bo-users-nowrap">{ago(p.lastActive)}</span></DataTableCell>
               <DataTableCell><span className="bo-users-nowrap">{date(p.joined)}</span></DataTableCell>
-              <DataTableCell align="options"><RowOptions person={p} /></DataTableCell>
+              <DataTableCell align="options"><RowOptions person={p} onAction={a => onRowAction(p, a)} /></DataTableCell>
             </DataTableRow>))}
           </DataTableBody>
         </DataTable>
@@ -222,8 +240,8 @@ function HeaderActions() {
 
 /** The real admin's two kinds of group: hand-picked members, or rules that fill the group by themselves. */
 const KINDS = [
-  {kind: 'manual' as const, title: 'Create a normal group', note: 'Add users to it by hand, from the users list.', icon: UsersIcon},
-  {kind: 'smart' as const, title: 'Create a smart group', note: 'Users who meet its rules join it by themselves.', icon: Zap}
+  {kind: 'manual' as const, title: 'Create a normal group', note: 'Add users to it by hand, from the users list.'},
+  {kind: 'smart' as const, title: 'Create a smart group', note: 'Users who meet its rules join it by themselves.'}
 ];
 
 /** Add a new group (choose the kind, then name it) and Edit Group (rename it): one modal, two starts. */
@@ -233,24 +251,27 @@ function GroupModal({editing, onClose, onSave}: {
   const [kind, setKind] = useState<Group['kind'] | null>(editing?.kind ?? null);
   const [name, setName] = useState(editing?.label ?? '');
   const title = editing ? 'Edit Group' : 'Add a new group';
-  const footer = kind && (
+  const footer = (
     <>
-      {!editing && <Button variant="quiet" size={32} onPress={() => setKind(null)}>Back</Button>}
-      <Button variant="primary" size={32} isDisabled={!name.trim()} onPress={() => onSave(name.trim(), kind)}>Save group</Button>
+      <Button variant="quiet" size={32} onPress={onClose}>Cancel</Button>
+      <Button variant="primary" size={32} isDisabled={!kind || !name.trim()} onPress={() => kind && onSave(name.trim(), kind)}>Save group</Button>
     </>
   );
   return (
-    <Modal title={title} isOpen onOpenChange={open => !open && onClose()} footer={footer || undefined}>
-      {!kind ? (
-        <div className="bo-users-kinds">
-          {KINDS.map(({kind: k, title: t, note, icon: Icon}) => (
-            <Button key={k} variant="secondary" size={36} onPress={() => setKind(k)}>
-              <Icon aria-hidden size={16} />
-              <span className="bo-users-kind"><span>{t}</span><span className="bo-note">{note}</span></span>
-            </Button>
-          ))}
-        </div>
-      ) : (
+    <Modal title={title} isOpen onOpenChange={open => !open && onClose()} footer={footer}>
+      <div className="bo-users-modal">
+      {/* The choice cards (the gv Card, stacked, with its radio list), as the phase's Survey options. */}
+      {!editing && (
+        <Card layout="stacked" title="Kind of group">
+          <CardRadioGroup aria-label="Kind of group" value={kind} onChange={v => setKind(v as Group['kind'])}>
+            {/* The note in the page's meta grey: the Card's own description grey is under 4.5:1 on white. */}
+            {KINDS.map(({kind: k, title: t, note}) => (
+              <CardRadio key={k} value={k} description={<span className="bo-note">{note}</span>}>{t}</CardRadio>
+            ))}
+          </CardRadioGroup>
+        </Card>
+      )}
+      {kind && (
         <div className="bo-users-form">
           <TextField label="Name of the group" value={name} onChange={setName} autoFocus />
           {kind === 'smart' && (
@@ -262,6 +283,7 @@ function GroupModal({editing, onClose, onSave}: {
           )}
         </div>
       )}
+      </div>
     </Modal>
   );
 }
@@ -278,6 +300,46 @@ function DeleteGroupModal({group, onClose, onDelete}: {group: Group; onClose: ()
   );
 }
 
+/** A row's Add to group: one of the manual groups (smart groups fill themselves). */
+function AddToGroupModal({person, groups, onClose, onAdd}: {
+  person: Person; groups: Group[]; onClose: () => void; onAdd: (groupId: string) => void;
+}) {
+  const manual = groups.filter(g => g.kind === 'manual');
+  const [groupId, setGroupId] = useState(manual[0]?.id);
+  return (
+    <Modal title="Add to group" isOpen onOpenChange={open => !open && onClose()} footer={
+      <>
+        <Button variant="quiet" size={32} onPress={onClose}>Cancel</Button>
+        <Button variant="primary" size={32} isDisabled={!groupId} onPress={() => groupId && onAdd(groupId)}>Add to group</Button>
+      </>}>
+      <div className="bo-users-modal">
+        <p>Add {person.name} to a manual group.</p>
+        <Select label="Group" selectedKey={groupId} onSelectionChange={k => setGroupId(String(k))}>
+          {manual.map(g => <SelectItem key={g.id} id={g.id}>{g.label}</SelectItem>)}
+        </Select>
+      </div>
+    </Modal>
+  );
+}
+
+/** Block user and Delete user ask first: one is undone from Banned emails, the other cannot be undone. */
+function ConfirmUserModal({person, kind, onClose, onConfirm}: {
+  person: Person; kind: 'block' | 'delete'; onClose: () => void; onConfirm: () => void;
+}) {
+  const block = kind === 'block';
+  return (
+    <Modal title={block ? 'Block this user?' : 'Delete this user?'} isOpen onOpenChange={open => !open && onClose()} footer={
+      <>
+        <Button variant="quiet" size={32} onPress={onClose}>Cancel</Button>
+        <Button variant="primary" size={32} onPress={onConfirm}>{block ? 'Block user' : 'Delete user'}</Button>
+      </>}>
+      <p>{block
+        ? `${person.name} can no longer sign in or take part. They move to Banned emails.`
+        : `${person.name} and their account are deleted. Their inputs stay, without a name. This cannot be undone.`}</p>
+    </Modal>
+  );
+}
+
 const slug = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'group';
 
 export function Users() {
@@ -285,7 +347,9 @@ export function Users() {
   const {groupId} = useParams();
   const [groups, setGroups] = useGroups();
   const [segment, setSegment] = useState('all');
+  const [people, setPeople] = usePeople();
   const [modal, setModal] = useState<'add' | 'edit' | 'delete' | null>(null);
+  const [ask, setAsk] = useState<{kind: 'group' | 'block' | 'delete'; person: Person} | null>(null);
   const group = groups.find(g => g.id === groupId);
   const view = group ? group.id : segment;
   // A group has its own page (the real admin's /users/:groupId); the role lists stay on /users.
@@ -311,18 +375,52 @@ export function Users() {
     queue.add({title: 'Group deleted'}, {timeout: 5000});
     setModal(null); setSegment('all'); navigate('/users');
   };
+  const addToGroup = (ids: string[], groupId: string) => {
+    const target = groups.find(g => g.id === groupId);
+    if (!target) return;
+    setGroups(gs => gs.map(g => (g.id === groupId ? {...g, members: [...new Set([...g.members, ...ids])]} : g)));
+    toast(ids.length === 1 ? `1 user added to ${target.label}` : `${ids.length} users added to ${target.label}`);
+    setAsk(null);
+  };
+  const onRowAction = (person: Person, a: RowAction) => {
+    if (a !== 'admin') { setAsk({kind: a, person}); return; }
+    // As on the profile page: the admin rights go on and off from the same item.
+    const admin = person.role === 'Platform admin';
+    setPeople(ps => ps.map(p => (p.id === person.id ? {...p, role: admin ? 'Registered user' : 'Platform admin'} : p)));
+    toast(admin ? `${person.name} is no longer a platform admin` : `${person.name} is now a platform admin`);
+  };
+  const confirm = () => {
+    if (!ask) return;
+    const {kind, person} = ask;
+    if (kind === 'block') {
+      setPeople(ps => ps.map(p => (p.id === person.id ? {...p, blocked: true} : p)));
+      toast(`${person.name} is blocked`, 'They are listed under Banned emails.');
+    } else {
+      setPeople(ps => ps.filter(p => p.id !== person.id));
+      setGroups(gs => gs.map(g => ({...g, members: g.members.filter(m => m !== person.id)})));
+      toast(`${person.name} is deleted`);
+    }
+    setAsk(null);
+  };
   return (
     <Page title="Users" actions={<HeaderActions />}>
       <GapLegend names={['Pagination']} />
       <div className="bo-split">
-        <Sidebar view={view} setView={setView} all={groups} onAddGroup={() => setModal('add')} />
+        <Sidebar view={view} setView={setView} all={groups} people={people} onAddGroup={() => setModal('add')} />
         {/* A fresh table per view: search and selection belong to the list they were made in. */}
-        <UserTable key={view} view={view} groups={groups} onEditGroup={() => setModal('edit')} onDeleteGroup={() => setModal('delete')} />
+        <UserTable key={view} view={view} groups={groups} people={people} onEditGroup={() => setModal('edit')}
+          onDeleteGroup={() => setModal('delete')} onRowAction={onRowAction} onAddToGroup={addToGroup} />
       </div>
       {(modal === 'add' || (modal === 'edit' && group)) && (
         <GroupModal key={modal} editing={modal === 'edit' ? group : undefined} onClose={() => setModal(null)} onSave={save} />
       )}
       {modal === 'delete' && group && <DeleteGroupModal group={group} onClose={() => setModal(null)} onDelete={remove} />}
+      {ask?.kind === 'group' && (
+        <AddToGroupModal person={ask.person} groups={groups} onClose={() => setAsk(null)} onAdd={id => addToGroup([ask.person.id], id)} />
+      )}
+      {(ask?.kind === 'block' || ask?.kind === 'delete') && (
+        <ConfirmUserModal person={ask.person} kind={ask.kind} onClose={() => setAsk(null)} onConfirm={confirm} />
+      )}
       <MyToastRegion />
     </Page>
   );

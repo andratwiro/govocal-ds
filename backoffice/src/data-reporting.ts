@@ -25,7 +25,8 @@ export const REPORTS: Report[] = [
   {id: 'r9', title: 'First quarter progress', created: '02/04/2026', modifiedDays: 210, owner: 'team', kind: 'progress'}
 ];
 
-export type SlideKind = 'cover' | 'summary' | 'kpis' | 'timeline' | 'phases' | 'demographics' | 'recommendations';
+export type SlideKind = 'cover' | 'summary' | 'kpis' | 'timeline' | 'phases' | 'demographics' | 'recommendations' |
+  'blank';
 export interface Slide {id: string; n: string; title: string; kind: SlideKind}
 
 export const SLIDES: Slide[] = [

@@ -1,7 +1,7 @@
-import {useMemo, useState} from 'react';
+import {useMemo, useState, type ComponentProps} from 'react';
 import {useNavigate} from 'react-router';
 import {ArrowDown, ArrowUp, Calendar, ChevronDown, ChevronLeft, ChevronRight, FileText, Folder, FolderPlus, GripVertical,
-  LayoutGrid, MapPin, Orbit, Plus, Users} from 'lucide-react';
+  LayoutGrid, MapPin, Orbit, Plus, Users, X} from 'lucide-react';
 import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableOptions,
   DataTableEmpty}
   from '../../../src/components/gv/DataTable';
@@ -36,6 +36,12 @@ const SORTS = ['Recently viewed', 'Phase starting or ending soon', 'Recently cre
   'Recently created (old-new)', 'Alphabetically (a-z)', 'Alphabetically (z-a)'];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
   'November', 'December'];
+type Range = NonNullable<ComponentProps<typeof DateRangePicker>['value']>;
+type Space = (typeof SPACES)[number];
+// The filters Add filter can add, each a Select of its values ("Any" keeps every project).
+type ExtraFilter = 'visibility' | 'folder';
+const EXTRA_FILTERS: {id: ExtraFilter; label: string}[] = [{id: 'visibility', label: 'Visibility'}, {id: 'folder', label: 'Folder'}];
+const ANY = 'Any';
 const KNOWN = new Set(PROJECTS.map(p => p.id)); // projects that have an overview screen
 const NO_FOLDER = 'No folder';
 
@@ -116,17 +122,19 @@ const folderItems = (folders: FolderRow[]) =>
   [NO_FOLDER, ...folders.map(f => f.name)].map(f => <SelectItem key={f} id={f}>{f}</SelectItem>);
 
 /** From scratch, as in the prototype: a Space and a Folder, neither required; the project starts as a draft. */
-function ScratchModal({folders, onClose, onCreate}: {folders: FolderRow[]; onClose: () => void; onCreate: (folder?: string) => void}) {
+function ScratchModal({folders, spaces, onClose, onCreate}: {folders: FolderRow[]; spaces: Space[]; onClose: () => void;
+  onCreate: (folder?: string, space?: string) => void}) {
   const [folder, setFolder] = useState(NO_FOLDER);
+  const [space, setSpace] = useState('none');
   return (
     <Modal title="New project" isOpen onOpenChange={o => { if (!o) onClose(); }}
       footer={<>
         <Button variant="secondary" slot="close">Cancel</Button>
-        <Button variant="primary" onPress={() => onCreate(folder === NO_FOLDER ? undefined : folder)}>Create project</Button>
+        <Button variant="primary" onPress={() => onCreate(folder === NO_FOLDER ? undefined : folder, space === 'none' ? undefined : space)}>Create project</Button>
       </>}>
       <div className="bo-projects-form">
-        <Select label="Space" defaultSelectedKey="none">
-          {[<SelectItem key="none" id="none">No space</SelectItem>, ...SPACES.map(s => <SelectItem key={s.name} id={s.name}>{s.name}</SelectItem>)]}
+        <Select label="Space" selectedKey={space} onSelectionChange={k => setSpace(String(k))}>
+          {[<SelectItem key="none" id="none">No space</SelectItem>, ...spaces.map(s => <SelectItem key={s.name} id={s.name}>{s.name}</SelectItem>)]}
         </Select>
         <Select label="Folder" selectedKey={folder} onSelectionChange={k => setFolder(String(k))}>{folderItems(folders)}</Select>
         <p className="bo-note">Both are optional. The project opens as an untitled draft: name it from its overview.</p>
@@ -259,14 +267,14 @@ function FoldersView({folders, projects}: {folders: FolderRow[]; projects: Proje
   );
 }
 
-function SpacesView({projects}: {projects: Project[]}) {
+function SpacesView({projects, spaces}: {projects: Project[]; spaces: Space[]}) {
   return (
     <DataTable aria-label="Spaces" framed>
       <DataTableHeader>
         <DataTableColumn isRowHeader>Space</DataTableColumn><DataTableColumn>Projects</DataTableColumn>
         <DataTableColumn>Managers</DataTableColumn>
       </DataTableHeader>
-      <DataTableBody>{SPACES.map(s => {
+      <DataTableBody>{spaces.map(s => {
         const inside = projects.filter(p => s.projects.includes(p.id));
         return (
           <DataTableRow key={s.name} id={s.name}>
@@ -362,6 +370,9 @@ type Dialog = {kind: 'scratch'} | {kind: 'gallery'} | {kind: 'template'; templat
 export function Projects() {
   const [projects, setProjects] = useState(PROJECTS);
   const [folders, setFolders] = useState(FOLDERS);
+  const [spaces, setSpaces] = useState<Space[]>(SPACES);
+  const [range, setRange] = useState<Range | null>(null);
+  const [extra, setExtra] = useState<Partial<Record<ExtraFilter, string>>>({});
   const [dialog, setDialog] = useState<Dialog>(null);
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState(SORTS[0]);
@@ -369,7 +380,16 @@ export function Projects() {
   const close = () => setDialog(null);
 
   const rows = useMemo(() => {
-    const list = projects.filter(p => p.title.toLowerCase().includes(query.toLowerCase()) && (!pending || PENDING.has(p.id)));
+    // The date range keeps the projects running at some point in it (a project with no dates yet never matches).
+    const from = range && new Date(range.start.year, range.start.month - 1, range.start.day).getTime();
+    const to = range && new Date(range.end.year, range.end.month - 1, range.end.day).getTime();
+    const inRange = (p: Project) => from === null || to === null ||
+      (time(p.start) <= to && (Number.isNaN(time(p.end)) || time(p.end) >= from));
+    const visibility = extra.visibility, folder = extra.folder;
+    const list = projects.filter(p => p.title.toLowerCase().includes(query.toLowerCase()) && (!pending || PENDING.has(p.id)) &&
+      inRange(p) &&
+      (!visibility || visibility === ANY || (visibility === 'Published') === (p.status === 'Live')) &&
+      (!folder || folder === ANY || (p.folder ?? NO_FOLDER) === folder));
     const by = (f: (a: Project, b: Project) => number) => [...list].sort(f);
     switch (sort) {
       case 'Alphabetically (a-z)': return by((a, b) => a.title.localeCompare(b.title));
@@ -378,17 +398,21 @@ export function Projects() {
       case 'Recently created (old-new)': return [...list].reverse();
       default: return list;
     }
-  }, [projects, query, sort, pending]);
+  }, [projects, query, sort, pending, range, extra]);
 
   const add = (p: Project, after?: string) => setProjects(list => {
     if (!after) return [p, ...list];
     const i = list.findIndex(x => x.id === after);
     return [...list.slice(0, i + 1), p, ...list.slice(i + 1)];
   });
-  const create = (title: string, folder?: string) => {
-    add(draft(title, folder));
+  const create = (title: string, folder?: string, space?: string) => {
+    const project = draft(title, folder);
+    add(project);
+    // The chosen Space keeps the new draft: it shows in the Spaces view.
+    if (space) setSpaces(list => list.map(s => (s.name === space ? {...s, projects: [...s.projects, project.id]} : s)));
     close();
-    queue.add({title: 'Project created', description: `${title} is a draft until you publish it.`}, {timeout: 5000});
+    queue.add({title: 'Project created',
+      description: `${title} is a draft until you publish it${space ? `, in the ${space} space` : ''}.`}, {timeout: 5000});
   };
   const onRowAction = (p: Project, a: RowAction) => {
     if (a === 'duplicate') {
@@ -432,15 +456,33 @@ export function Projects() {
               {SORTS.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
             </Select>
             <ToggleButton isSelected={pending} onChange={setPending}>Pending approval</ToggleButton>
-            <DateRangePicker aria-label="Dates" />
-            <Button variant="secondary" size={32}><Plus aria-hidden size={16} />Add filter</Button>
+            <DateRangePicker aria-label="Dates" value={range} onChange={setRange} />
+            {EXTRA_FILTERS.filter(f => f.id in extra).map(f => (
+              <span key={f.id} className="bo-projects-extra">
+                <Select aria-label={f.label} selectedKey={extra[f.id]} onSelectionChange={k => setExtra(e => ({...e, [f.id]: String(k)}))}>
+                  {(f.id === 'visibility' ? [ANY, 'Published', 'Draft'] : [ANY, NO_FOLDER, ...folders.map(x => x.name)])
+                    .map(v => <SelectItem key={v} id={v}>{v === ANY ? `${f.label}: any` : v}</SelectItem>)}
+                </Select>
+                <IconButton aria-label={`Remove filter: ${f.label}`} onPress={() => setExtra(({[f.id]: _, ...rest}) => rest)}>
+                  <X aria-hidden size={16} />
+                </IconButton>
+              </span>
+            ))}
+            <MenuTrigger>
+              <Button variant="secondary" size={32} isDisabled={EXTRA_FILTERS.every(f => f.id in extra)}>
+                <Plus aria-hidden size={16} />Add filter</Button>
+              <Menu aria-label="Add filter" disabledKeys={Object.keys(extra)}
+                onAction={k => setExtra(e => ({...e, [k as ExtraFilter]: ANY}))}>
+                {EXTRA_FILTERS.map(f => <MenuItem key={f.id} id={f.id}>{f.label}</MenuItem>)}
+              </Menu>
+            </MenuTrigger>
           </div>
           <GapLegend names={['Project thumbnail']} />
           <ProjectTable rows={rows} onRowAction={onRowAction} />
           <p className="bo-note bo-projects-foot">All projects have been loaded</p>
         </TabPanel>
         <TabPanel id="Folders"><FoldersView folders={folders} projects={projects} /></TabPanel>
-        <TabPanel id="Spaces"><SpacesView projects={projects} /></TabPanel>
+        <TabPanel id="Spaces"><SpacesView projects={projects} spaces={spaces} /></TabPanel>
         <TabPanel id="Calendar"><CalendarView projects={projects} /></TabPanel>
         <TabPanel id="Arrange projects">
           <GapLegend names={['Drag-and-drop reordering']} />
@@ -448,7 +490,7 @@ export function Projects() {
         </TabPanel>
       </Tabs>
 
-      {dialog?.kind === 'scratch' && <ScratchModal folders={folders} onClose={close} onCreate={f => create('Untitled project', f)} />}
+      {dialog?.kind === 'scratch' && <ScratchModal folders={folders} spaces={spaces} onClose={close} onCreate={(f, sp) => create('Untitled project', f, sp)} />}
       {dialog?.kind === 'gallery' && <TemplateGallery onClose={close} onUse={t => setDialog({kind: 'template', template: t})} />}
       {dialog?.kind === 'template' && <TemplateCreate template={dialog.template} folders={folders} onClose={close} onCreate={create} />}
       {dialog?.kind === 'folder' && <FolderModal onClose={close} onCreate={name => {

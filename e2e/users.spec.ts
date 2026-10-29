@@ -1,5 +1,6 @@
 import {test, expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import {headingJumps} from './headings';
 
 test('users follows the real admin: segments, groups, a selectable user table', async ({page}) => {
   await page.goto('/backoffice/#/users');
@@ -160,10 +161,14 @@ test('Add a new group: choose normal or smart, name it, and it joins the list wi
   await page.goto('/backoffice/#/users');
   await page.getByRole('button', {name: 'Add a new group'}).click();
   const modal = page.getByRole('dialog', {name: 'Add a new group'});
-  await expect(modal.getByRole('button', {name: /Create a normal group/})).toBeVisible();
-  await expect(modal.getByRole('button', {name: /Create a smart group/})).toBeVisible();
+  // The kinds are the gv Card's choice cards (a stacked Card with its radio list), not restyled buttons.
+  const kinds = modal.locator('.gv-card[data-layout="stacked"]').getByRole('radiogroup', {name: 'Kind of group'});
+  await expect(kinds.getByRole('radio', {name: /Create a normal group/})).toBeVisible();
+  await expect(kinds.getByRole('radio', {name: /Create a smart group/})).toBeVisible();
+  await expect(modal.getByRole('button', {name: 'Save group'})).toBeDisabled();
   expect(await axeOn(page, '.gv-modal')).toEqual([]);
-  await modal.getByRole('button', {name: /Create a smart group/}).click();
+  await kinds.getByText('Create a smart group').click();
+  await expect(kinds.getByRole('radio', {name: /Create a smart group/})).toBeChecked();
   await modal.getByRole('textbox', {name: 'Name of the group'}).fill('Cyclists');
   await expect(modal.getByRole('button', {name: /Rule/})).toBeVisible();
   await modal.getByRole('button', {name: 'Save group'}).click();
@@ -223,4 +228,71 @@ test('a row opens the user profile: name, email, role, joined and participation'
   expect(await axeOn(page, '.bo-page')).toEqual([]);
   await page.getByRole('button', {name: 'Make platform admin'}).click();
   await expect(toast(page).first()).toContainText('Manager C is now a platform admin');
+});
+
+test('a row menu answers: admin rights toggle, add to group, block and delete ask first', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  const grid = page.getByRole('grid', {name: 'Registered users'});
+  const options = (name: string) => grid.getByRole('button', {name: `Options for ${name}`});
+
+  await options('Resident E').click();
+  await page.getByRole('menuitem', {name: 'Make platform admin'}).click();
+  await expect(toast(page).first()).toContainText('Resident E is now a platform admin');
+  await expect(grid.getByRole('row', {name: /Resident E/})).toContainText('Platform admin');
+  await options('Resident E').click();
+  await page.getByRole('menuitem', {name: 'Remove platform admin rights'}).click();
+  await expect(grid.getByRole('row', {name: /Resident E/})).toContainText('Registered user');
+
+  await options('Resident G').click();
+  await page.getByRole('menuitem', {name: 'Add to group'}).click();
+  const add = page.getByRole('dialog', {name: 'Add to group'});
+  await add.getByRole('button', {name: 'Add to group'}).click();
+  await expect(toast(page).filter({hasText: '1 user added to Youth panel'})).toBeVisible();
+  await expect(page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Youth panel/})).toContainText('4');
+
+  await options('Resident H').click();
+  await page.getByRole('menuitem', {name: 'Block user'}).click();
+  const block = page.getByRole('dialog', {name: 'Block this user?'});
+  await block.getByRole('button', {name: 'Cancel'}).click();
+  await expect(grid.getByRole('row', {name: /Resident H/})).toBeVisible();
+  await options('Resident H').click();
+  await page.getByRole('menuitem', {name: 'Block user'}).click();
+  await block.getByRole('button', {name: 'Block user'}).click();
+  await expect(grid.getByRole('row', {name: /Resident H/})).toHaveCount(0);
+  await page.getByRole('listbox', {name: 'Users'}).getByRole('option', {name: /^Banned emails/}).click();
+  await expect(page.getByRole('grid', {name: 'Banned emails'}).getByRole('row', {name: /Resident H/})).toBeVisible();
+
+  await page.getByRole('listbox', {name: 'Users'}).getByRole('option', {name: /^Registered users/}).click();
+  await options('Resident K').click();
+  await page.getByRole('menuitem', {name: 'Delete user'}).click();
+  await page.getByRole('dialog', {name: 'Delete this user?'}).getByRole('button', {name: 'Delete user'}).click();
+  await expect(toast(page).filter({hasText: 'Resident K is deleted'})).toBeVisible();
+  await expect(page.getByRole('grid', {name: 'Registered users'}).getByRole('row')).toHaveCount(11); // header + ten
+});
+
+test('the selection actions answer: Add to group adds the users, the exports start', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  await page.getByRole('button', {name: 'Export all'}).click();
+  await expect(toast(page).first()).toContainText('12 users in users.xlsx');
+  const grid = page.getByRole('grid', {name: 'Registered users'});
+  for (const n of ['Resident G', 'Resident I']) await grid.getByRole('row', {name: new RegExp(n)}).locator('.gv-checkbox .indicator').click();
+  await page.getByRole('button', {name: 'Export selected'}).click();
+  await expect(page.getByRole('alertdialog', {name: 'Export started', description: '2 users in users.xlsx', exact: true})).toBeVisible();
+  await page.getByRole('button', {name: 'Add to group'}).click();
+  await page.getByRole('menuitem', {name: 'Youth panel'}).click();
+  await expect(toast(page).filter({hasText: '2 users added to Youth panel'})).toBeVisible();
+  await page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Youth panel/}).click();
+  await expect(page.getByRole('grid', {name: 'Youth panel'}).getByRole('row')).toHaveCount(6); // header + five
+});
+
+test('the users pages keep their headings in order (h1 → h2 → h3)', async ({page}) => {
+  for (const route of ['users', 'users/invitations', 'users/seats', 'users/u3']) {
+    await page.goto(`/backoffice/#/${route}`);
+    await expect(page.getByRole('heading', {level: 1})).toBeVisible();
+    expect(await headingJumps(page), route).toEqual([]);
+  }
+  await page.goto('/backoffice/#/users/invitations');
+  await page.getByRole('tab', {name: 'All invitations'}).click();
+  await expect(page.getByRole('grid', {name: 'All invitations'})).toBeVisible();
+  expect(await headingJumps(page)).toEqual([]);
 });

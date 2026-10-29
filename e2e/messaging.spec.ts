@@ -1,5 +1,6 @@
 import {test, expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import {headingJumps} from './headings';
 
 test('messaging follows the real admin: custom emails, automated emails and SMS tabs', async ({page}) => {
   await page.goto('/backoffice/#/messaging');
@@ -114,4 +115,57 @@ test('Create SMS opens the SMS composer with a character count and a phone previ
   await expect(page.locator('.react-aria-Toast').first()).toContainText('Test SMS sent');
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
   expect(gaps).toEqual(['SMS bubble']);
+});
+
+// ── Behaviour fixes: every control answers ──
+
+const toasts = (page: import('@playwright/test').Page) => page.locator('.react-aria-Toast');
+
+test('the draft composer saves, previews and sends the draft into the list', async ({page}) => {
+  await page.goto('/backoffice/#/messaging');
+  const draft = page.getByRole('region', {name: 'Draft: Bike parking survey: tell us where'});
+  await draft.getByRole('textbox', {name: 'Subject'}).fill('Bike parking: mark your street');
+  await draft.getByRole('button', {name: 'Save as draft'}).click();
+  await expect(toasts(page).filter({hasText: 'Draft saved'})).toBeVisible();
+  const table = page.getByRole('grid', {name: 'Custom emails'});
+  await expect(table.getByRole('row', {name: /Bike parking: mark your street/})).toContainText('Draft');
+  // The saved subject renames the draft's card.
+  const saved = page.getByRole('region', {name: 'Draft: Bike parking: mark your street'});
+  await saved.getByRole('button', {name: 'Send a preview'}).click();
+  await expect(toasts(page).filter({hasText: 'Preview sent'})).toBeVisible();
+  await saved.getByRole('button', {name: 'Send now'}).click();
+  await expect(toasts(page).filter({hasText: 'Email sent'})).toBeVisible();
+  await expect(table.getByRole('row', {name: /Bike parking: mark your street/})).toContainText('Sent');
+  await expect(saved).toHaveCount(0);
+});
+
+test('a row menu duplicates an email, and deletes a draft after asking', async ({page}) => {
+  await page.goto('/backoffice/#/messaging');
+  const table = page.getByRole('grid', {name: 'Custom emails'});
+  await table.getByRole('button', {name: /^Actions for Library opening hours/}).click();
+  await page.getByRole('menuitem', {name: 'Duplicate'}).click();
+  await expect(toasts(page).filter({hasText: 'Email duplicated'})).toBeVisible();
+  await expect(table.getByRole('row', {name: /Copy of Library opening hours/})).toContainText('Draft');
+  await table.getByRole('button', {name: /^Actions for Market Square/}).click();
+  await page.getByRole('menuitem', {name: 'Delete'}).click();
+  const confirm = page.getByRole('dialog', {name: 'Delete this draft?'});
+  await confirm.getByRole('button', {name: 'Delete draft'}).click();
+  await expect(confirm).toHaveCount(0);
+  await expect(table.getByRole('row', {name: /Market Square/})).toHaveCount(0);
+  await expect(toasts(page).filter({hasText: 'Draft deleted'})).toBeVisible();
+});
+
+test('an automated email sends a test email to the sender', async ({page}) => {
+  await page.goto('/backoffice/#/messaging');
+  await page.getByRole('tab', {name: 'Automated emails'}).click();
+  await page.getByRole('button', {name: 'Send me a test email'}).click();
+  await expect(toasts(page).first()).toContainText('Test email sent');
+});
+
+test('the messaging pages keep their headings in order (h1 → h2 → h3)', async ({page}) => {
+  for (const route of ['messaging', 'messaging/emails/custom/new', 'messaging/emails/custom/e4', 'messaging/texting/new']) {
+    await page.goto(`/backoffice/#/${route}`);
+    await expect(page.getByRole('heading', {level: 1})).toBeVisible();
+    expect(await headingJumps(page), route).toEqual([]);
+  }
 });
