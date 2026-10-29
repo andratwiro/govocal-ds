@@ -47,3 +47,62 @@
   padding: var(--gv-space-8) var(--spacing-3);
   resize: vertical;
 }
+
+/* With a prefix or suffix (the slug's "internal.govocal.com/en/projects/", € on a budget field): the
+   border moves to the group, the input loses its own so the affix sits flush beside it. */
+.gv-text-field-group {
+  display: flex;
+  align-items: center;
+  min-height: var(--spacing-9);
+  box-sizing: border-box;
+
+  &[data-focus-within] {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: -1px;
+  }
+
+  .react-aria-Input {
+    flex: 1;
+    min-width: 0;
+
+    &[data-focused] {
+      outline: none;
+    }
+  }
+}
+
+.gv-text-field-affix {
+  flex: none;
+  padding: 0 var(--spacing-1);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-secondary);
+  white-space: nowrap;
+
+  &:first-child {
+    padding-inline-start: var(--spacing-3);
+  }
+
+  &:last-child {
+    padding-inline-end: var(--spacing-3);
+  }
+}
+
+.gv-text-field-foot {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gv-space-8);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.gv-text-field-counter {
+  flex: none;
+  margin-top: var(--spacing-1);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-tertiary);
+}
