@@ -1,0 +1,43 @@
+/* The recipe's frame: the demo beside the "who wires what" box. Story chrome, not a part. */
+.gv-seam {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gv-space-24);
+  align-items: start;
+  max-inline-size: 960px;
+}
+@media (max-width: 720px) {
+  .gv-seam { grid-template-columns: minmax(0, 1fr); }
+}
+.gv-seam__demo {
+  display: grid;
+  gap: var(--gv-space-16);
+  align-content: start;
+}
+.gv-seam__who {
+  display: grid;
+  gap: var(--gv-space-16);
+  padding: var(--gv-space-16);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-secondary);
+  font: var(--gv-type-ui);
+  color: var(--gv-text-secondary);
+}
+.gv-seam__heading {
+  margin: 0 0 var(--gv-space-4);
+  font: var(--gv-type-ui-strong);
+  color: var(--gv-text-primary);
+}
+.gv-seam__list {
+  margin: 0;
+  padding-inline-start: var(--gv-space-16);
+  display: grid;
+  gap: var(--gv-space-4);
+}
+.gv-seam__row { display: flex; flex-wrap: wrap; gap: var(--gv-space-16); }
+.gv-seam__stack, .gv-seam__form { display: grid; gap: var(--gv-space-12); }
+.gv-seam__status {
+  margin: 0;
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+}

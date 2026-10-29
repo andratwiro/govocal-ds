@@ -145,6 +145,7 @@ part's `<Name>.guide.md`) names the part to use instead.
 
 ## Patterns / Recipes
 - **Form validation** `Form` (not in Figma): Form validation, a recipe: every field in its invalid state, and a form that checks itself on submit and moves focus to the first field to fix. Stories: All Invalid, Submit To Validate.
+- **Integration seams** (not in Figma): Integration seams, a recipe: the four places where the system stops and an app starts (a router, a form library, translated words, data that loads or fails),… Stories: Router Link, Form Library Field, Translated Strings, Table Loading Error Data.
 
 ## Base
 React Aria parts painted with the tokens. Primitives: don't use them directly in pages; prefer the Components entry; when a page truly needs one, import it from `govocal-ds/base`.
@@ -174,4 +175,4 @@ React Aria parts painted with the tokens. Primitives: don't use them directly in
 - **Tree** `Tree` (primitive) Stories: Example.
 
 ## Not in Figma yet
-Tagged `not-in-figma` in their stories (62): Alert dialog, App provider, Banner, Card, Checkbox group, Choice card, Coachmark, Data table, Date range field, Empty state, File list, Grid, Help popover, Illustration, Inline, Link, Locale switcher, Map view, Menu, Multilingual rich text editor, Multilingual text field, Option list, Page header, Pagination, Panel, Property list, Radio group, Reaction counts, Search field, Select, Side panel, Skeleton, Stack, Table toolbar, Tabs, Tag picker, Text, Tile grid, Toast, Tooltip, Visually hidden, Access rights, Action row, Comment thread, Filter chips, Filter menu, Form field summary, Notification list, Notification row, Official update, Panel section, Participant action row, Phase timeline, Phone preview, Rail phase, Section toggle, Selection bar, Side nav, Stat card, View option row, Volunteering row, Form validation.
+Tagged `not-in-figma` in their stories (63): Alert dialog, App provider, Banner, Card, Checkbox group, Choice card, Coachmark, Data table, Date range field, Empty state, File list, Grid, Help popover, Illustration, Inline, Link, Locale switcher, Map view, Menu, Multilingual rich text editor, Multilingual text field, Option list, Page header, Pagination, Panel, Property list, Radio group, Reaction counts, Search field, Select, Side panel, Skeleton, Stack, Table toolbar, Tabs, Tag picker, Text, Tile grid, Toast, Tooltip, Visually hidden, Access rights, Action row, Comment thread, Filter chips, Filter menu, Form field summary, Notification list, Notification row, Official update, Panel section, Participant action row, Phase timeline, Phone preview, Rail phase, Section toggle, Selection bar, Side nav, Stat card, View option row, Volunteering row, Form validation, Integration seams.
