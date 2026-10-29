@@ -1,0 +1,358 @@
+@import '../theme.css';
+
+/* Tali's Card (Figma 14:879, 23 types). Build cards: 1px border-card, no fill, radius 8.
+   Manage / Insights cards: panel fill, 1px border-subtle. */
+.gv-card {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid var(--gv-border-card);
+  border-radius: var(--gv-radius-8);
+  background: transparent;
+  font-family: var(--gv-font-family);
+  color: var(--gv-text-primary);
+
+  &[data-tone='manage'] {
+    border-color: var(--gv-border-subtle);
+    background: var(--gv-surface-panel);
+  }
+}
+
+.gv-card__heading {
+  margin: 0;
+  font: inherit;
+}
+
+/* Header: min 44 tall, padding 8 8 8 12, gap 10. With compact buttons: padding 12 all round (56 tall). */
+.gv-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-10);
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: var(--gv-space-8) var(--gv-space-8) var(--gv-space-8) var(--gv-space-12);
+
+  &[data-roomy] {
+    padding: var(--gv-space-12);
+  }
+}
+
+/* An expand card's whole header is the Disclosure trigger. */
+.gv-card__header--trigger {
+  appearance: none;
+  border: none;
+  border-radius: var(--gv-radius-8);
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+  outline: none;
+
+  &[data-hovered] .gv-card__chevron {
+    background: var(--gv-surface-hover-strong);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: -2px;
+  }
+}
+
+.gv-card__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Required (Figma "Required · Placement=Card"): a 6 dot + the word, gap 8. */
+.gv-card__required {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  flex: none;
+  font: var(--gv-type-small);
+  color: var(--gv-text-tertiary);
+  white-space: nowrap;
+}
+
+.gv-card__required-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-icon-default);
+}
+
+/* Review slot: 8 of breathing room before the pills. */
+.gv-card__review {
+  display: inline-flex;
+  flex: none;
+
+  &:has(+ .gv-card__pills) {
+    padding-inline-end: var(--gv-space-8);
+  }
+}
+
+.gv-card__summary {
+  flex: none;
+  font: var(--gv-type-small);
+  color: var(--gv-text-tertiary);
+  white-space: nowrap;
+}
+
+.gv-card__pills {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-4);
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+/* Pill: 22 tall, padding 0 10, gap 4, a 14 icon, Small strong. */
+.gv-card__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-4);
+  height: 22px;
+  min-width: 0;
+  padding: 0 var(--gv-space-10);
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-pill);
+  font: var(--gv-type-small-strong);
+  color: var(--gv-text-pill);
+  white-space: nowrap;
+
+  svg {
+    flex: none;
+    color: var(--gv-icon-pill);
+  }
+}
+
+/* An open card hides its summary: the body says it (prototype .pjsec.is-open). */
+.gv-card[data-expanded] > .gv-card__heading .gv-card__pills,
+.gv-card[data-expanded] > .gv-card__heading .gv-card__summary {
+  display: none;
+}
+
+.gv-card__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  flex: none;
+}
+
+/* Icon button · Ghost: 28, radius 8, a 16 icon. Also the chevron's box. */
+.gv-card__icon-button,
+.gv-card__chevron {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: var(--gv-radius-8);
+  background: transparent;
+  color: var(--gv-icon-default);
+}
+
+.gv-card__icon-button {
+  cursor: pointer;
+  outline: none;
+
+  &[data-hovered] {
+    background: var(--gv-surface-hover-strong);
+    color: var(--gv-icon-strong);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
+  }
+}
+
+.gv-card__chevron svg {
+  transition: rotate 200ms;
+}
+
+.gv-card[data-expanded] .gv-card__chevron svg {
+  rotate: 180deg;
+}
+
+/* Body: padding 0 12 12, gap 2; Small secondary words (Manage · Toggle). */
+.gv-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-2);
+  padding: 0 var(--gv-space-12) var(--gv-space-12);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+}
+
+/* Stacked (choice cards): padding 14 12, the title line then the body 24 below. */
+.gv-card[data-layout='stacked'] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-24);
+  padding: var(--gv-space-14) var(--gv-space-12);
+}
+
+.gv-card__title-line {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-12);
+}
+
+/* Switch (Figma "Toggle" in Manage · Toggle): 26 × 16, a 12 knob. */
+.gv-card__switch {
+  display: inline-flex;
+  flex: none;
+  cursor: pointer;
+  outline: none;
+
+  &[data-focus-visible] .gv-card__switch-track {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
+  }
+
+  &[data-disabled] {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+.gv-card__switch-track {
+  position: relative;
+  display: block;
+  width: 26px;
+  height: 16px;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-control-toggle-off);
+  transition: background 150ms;
+}
+
+.gv-card__switch-knob {
+  position: absolute;
+  inset-block-start: var(--gv-space-2);
+  inset-inline-start: var(--gv-space-2);
+  width: 12px;
+  height: 12px;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-control-knob);
+  box-shadow: var(--gv-shadow-subtle);
+  transition: translate 150ms;
+}
+
+.gv-card__switch[data-selected] {
+  .gv-card__switch-track {
+    background: var(--gv-control-toggle-on);
+  }
+
+  .gv-card__switch-knob {
+    translate: 10px 0;
+  }
+}
+
+[dir='rtl'] .gv-card__switch[data-selected] .gv-card__switch-knob {
+  translate: -10px 0;
+}
+
+/* Radios: options 20 apart in a list, 24 apart in a row; a 16 circle, gap 8, Small title + tertiary line. */
+.gv-card__radios {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-20);
+
+  &[data-orientation='horizontal'] {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--gv-space-24);
+  }
+}
+
+.gv-card__radio {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gv-space-8);
+  border-radius: var(--gv-radius-8);
+  cursor: pointer;
+  outline: none;
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
+  }
+}
+
+.gv-card__radio-dot {
+  position: relative;
+  flex: none;
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--gv-border-radio);
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-panel);
+}
+
+.gv-card__radio[data-hovered] .gv-card__radio-dot {
+  border-color: var(--gv-border-control-hover);
+}
+
+.gv-card__radio[data-selected] .gv-card__radio-dot {
+  border-color: var(--gv-border-selected);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: var(--gv-radius-full);
+    background: var(--gv-action-checked);
+  }
+}
+
+.gv-card__radio-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-2);
+  min-width: 0;
+}
+
+.gv-card__radio-title {
+  font: var(--gv-type-small);
+  color: var(--gv-text-primary);
+}
+
+.gv-card__radio-description {
+  font: var(--gv-type-small);
+  color: var(--gv-text-tertiary);
+}
+
+/* Compact buttons in a card (Figma "Button · compact": 32 tall, padding 0 14, gap 8, Small strong).
+   Painted here on the starter Button until G1's CompactButton lands. */
+.gv-card .react-aria-Button[data-size='32'] {
+  padding: 0 var(--gv-space-14);
+  gap: var(--gv-space-8);
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+
+  > svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* A full-width button inside a choice list (Survey options' "Add questions"). */
+.gv-card__radios > .react-aria-Button {
+  width: 100%;
+}
