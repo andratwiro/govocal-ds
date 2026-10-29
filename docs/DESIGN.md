@@ -55,16 +55,26 @@ dev walking the back office sees one consistent system with every main component
 ## Repo
 
 ```
-tokens/            Figma variables export (JSON) → built into src/tokens.css (--gv-*)
-src/components/    React Aria Components, painted with the tokens (the starter: Storybook's Base)
-  gv/              the design system's components (Storybook's Components), one file name per export
-  *.stories.tsx    every state, LTR + Arabic RTL
-src/patterns/      compositions of components (timeline, stat card…), tokens only, same stories
-docs/NAMING.md     how components and patterns are named and grouped, in Storybook and Figma
-backoffice/        Vite app: sidebar + one route per nav item, invented data
-.storybook/        a11y addon (WCAG 2.2 AA + target size), Components page with counts
-AGENTS.md          the rules for the designer's agent
-.github/workflows/ push to main → build both → GitHub Pages
+src/index.ts         the `govocal-ds` entry: Components, Patterns, AppProvider (package.json "exports")
+src/base.ts          the `govocal-ds/base` entry: Base, React Aria's starter parts painted with the tokens
+src/tokens.css       the `govocal-ds/tokens.css` entry, generated from tokens/ (npm run tokens:build)
+src/components/      the Base parts (Storybook's Base), each with its .css and .stories.tsx
+  gv/                the Components (Storybook's Components), one file name per export
+src/patterns/        the Patterns (grouped in Storybook by the screen they belong to); recipes/ is markup to copy
+src/foundations/     the Foundations pages: colour, type, spacing, size, radius, shadows, motion, icons, focus
+src/illustrations/   the illustration SVGs
+src/*.mdx            Overview pages: Welcome, Accessibility, For developers (docs/CONSUMING.md)
+tokens/              Figma variables (JSON) + the hand-written motion, size and semantic sets
+public/              tokens.json (tokens:build) and llms.txt (components:index), copied to the site's root
+scripts/             token build and renames, the Figma pull and spec, the docs index, the a11y scan, the site
+backoffice/          the demo back office (Vite + React Router), built only from the three entries
+.storybook/          docgen + the components manifest, the a11y addon (WCAG 2.2 AA + target size), theme, redirects
+tests/               Vitest guards (npm test): tokens, names, the public API, the docs index
+e2e/                 Playwright against dist/: every story, the site, the back office, keyboard; axe reported
+docs/                the rules, decisions and recipes; COMPONENTS.md is generated
+site/index.html      the landing page at the site's root
+AGENTS.md            the agent's map (CLAUDE.md imports it); .mcp.json: the Storybook, Figma, React Aria servers
+.github/workflows/   checks.yml on every pull request; deploy.yml on main: build, e2e + a11y, GitHub Pages
 ```
 
 ## The designer's loop

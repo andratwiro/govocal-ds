@@ -91,7 +91,7 @@ is written, it says so.
 |---|---|---|---|
 | **A git dependency on a tag** (recommended) | `"govocal-ds": "github:andratwiro/govocal-ds#v0.1.0"` | One reviewed version; the designer's next change reaches the platform only when the platform bumps the tag. No registry needed. | Needs a tag (none yet) and a build that compiles the source (below). |
 | An npm workspace | the repo as a folder of the platform's workspace | Edit both in one pull request. | Every designer change lands on the platform's `main` at once; the platform's lint and Jest run over it. |
-| `npm pack` | `npm pack` here, then `npm i ./govocal-ds-*.tgz` there | Try it without a tag or a registry. | A file to carry by hand; nothing tracks the version. |
+| `npm pack` | `npm pack` here, then `npm i ./govocal-ds-*.tgz` there | Try it without a tag or a registry. | A file to carry by hand; nothing tracks the version. It packs the whole repo (639 files, about 800 kB: no `files` list yet). |
 | Copy the folder | `src/` into `front/app/` | No dependency at all. | A fork: the designer's next change never reaches it. Only if the team absorbs the system whole and retires this repo. |
 
 A published package (Vite library mode, `.d.ts`, Changesets, the GitHub registry) is the end state the architecture
