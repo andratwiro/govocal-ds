@@ -261,6 +261,10 @@
   display: block;
   block-size: 100%;
   background: var(--chart-color);
+  transition: opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+}
+.gv-dashboard-demographic__bar > span[data-dimmed] {
+  opacity: 0.4;
 }
 .gv-dashboard-demographic__legend {
   display: flex;
@@ -271,21 +275,49 @@
   list-style: none;
 }
 
-/* ── Empty: no data yet (prototype .pj-dempty; Not in Figma) ── */
-/* The placeholder sits right under the title, as the prototype's: the card drops its gap. */
-.gv-dashboard-card:has(> .gv-dashboard-card__body > .gv-dashboard-empty) {
-  gap: 0;
-}
-.gv-dashboard-empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-block-size: 90px;
-  box-sizing: border-box;
+/* ── List (Most liked): title, who and when, reactions; the status at the end (prototype .pj-mlrow; Not in Figma) ── */
+.gv-dashboard-list {
   margin: 0;
-  padding: var(--gv-space-14);
+  padding: 0;
+  list-style: none;
+}
+.gv-dashboard-list__row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gv-space-12);
+  padding-block: var(--gv-space-11);
+  border-block-start: 1px solid var(--gv-border-row);
+}
+.gv-dashboard-list__row:first-child {
+  border-block-start: 0;
+}
+.gv-dashboard-list__main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-inline-size: 0;
+}
+.gv-dashboard-list__title {
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-primary);
+  overflow-wrap: anywhere;
+}
+.gv-dashboard-list__meta {
+  margin-block-start: var(--gv-space-2);
   font: var(--gv-type-small);
   letter-spacing: var(--gv-type-small-tracking);
-  color: var(--gv-text-tertiary);
-  text-align: center;
+  color: var(--gv-text-secondary);
+}
+.gv-dashboard-list__reactions {
+  margin-block-start: var(--gv-space-6);
+}
+.gv-dashboard-list__status {
+  flex: none;
+}
+
+/* ── Empty: no data yet (an EmptyState) ── */
+/* The placeholder sits right under the title, as the prototype's: the card drops its gap. */
+.gv-dashboard-card:has(> .gv-dashboard-card__body > .gv-empty-state) {
+  gap: 0;
 }

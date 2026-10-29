@@ -1,14 +1,16 @@
 import type {Decorator, Meta, StoryObj} from '@storybook/react-vite';
 import {Sparkles} from 'lucide-react';
 import {ChartLegend, LineChart, Sparkline} from './Chart';
+import {Badge} from './Badge';
 import {CompactButton} from './CompactButton';
+import {EmptyState} from './EmptyState';
 import {StatTile} from './StatTile';
 import {SegmentedControlItem, SegmentedControl} from './SegmentedControl';
 import {
   DashboardBars,
   DashboardCard,
   DashboardDemographic,
-  DashboardEmpty,
+  DashboardList,
   DashboardRanking,
   DashboardStatements,
   DashboardTopics
@@ -48,6 +50,13 @@ const OPTIONS = [
   {title: 'Community fridge at the library', votes: 42}
 ];
 const VOTES = [12, 18, 24, 28, 35, 48, 62, 71, 78, 89, 94, 108, 124, 142, 168, 198, 228, 258, 291, 318, 342];
+const DAYS = VOTES.map((_, i) => `${i + 1} May`);
+/** The most liked inputs of the Riverside park consultation; authors stay anonymous in story data. */
+const MOST_LIKED = [
+  {id: 'court', title: 'Basketball court', meta: 'Anonymous · 11 months ago', reactions: {likes: 124, dislikes: 4, comments: 3}},
+  {id: 'stage', title: 'Concert stage, with a built-in hill for the audience', meta: 'Anonymous · 11 months ago', reactions: {likes: 95, dislikes: 12, comments: 7}},
+  {id: 'wifi', title: 'Free wifi and more charging outlets', meta: 'Anonymous · 11 months ago', reactions: {likes: 45, dislikes: 14, comments: 2}}
+];
 const AGES = [
   {label: '18–24', percent: 16, color: 'blue-1'},
   {label: '25–34', percent: 29, color: 'blue-2'},
@@ -123,12 +132,17 @@ const cards = {
           <SegmentedControlItem id="weekly">Weekly</SegmentedControlItem>
         </SegmentedControl>
       }>
-      <Sparkline label="Votes cast" values={VOTES} />
+      <Sparkline label="Votes cast" labels={DAYS} values={VOTES} />
     </DashboardCard>
   ),
   ranking: (
     <DashboardCard type="live-ranking" title="Live ranking" subtitle="By votes · updating live">
       <DashboardRanking items={OPTIONS} />
+    </DashboardCard>
+  ),
+  list: (
+    <DashboardCard title="Most liked" subtitle="These conversation threads got the most traction">
+      <DashboardList items={MOST_LIKED.map(it => ({...it, status: <Badge>Viewed</Badge>}))} />
     </DashboardCard>
   ),
   age: (
@@ -175,6 +189,7 @@ export const AllVariants: Story = {
       {cards.status}
       {cards.votes}
       {cards.ranking}
+      {cards.list}
       <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14}}>
         {cards.age}
         {cards.commute}
@@ -191,21 +206,28 @@ export const TopicBreakdown: Story = {name: 'Topic breakdown', render: () => car
 export const StatusBreakdown: Story = {name: 'Status breakdown', render: () => cards.status, decorators: [wide], parameters: figma('25-383')};
 export const VotesOverTime: Story = {name: 'Votes over time', render: () => cards.votes, decorators: [wide], parameters: figma('26-507')};
 export const LiveRanking: Story = {name: 'Live ranking', render: () => cards.ranking, decorators: [wide], parameters: figma('26-516')};
+/**
+ * Not in Figma. List (Most liked): each input's title, who and when, its reactions (Reaction counts) and its status
+ * (a Badge). The prototype's Ideation and Proposals Insights.
+ */
+export const List: Story = {name: 'List (Most liked)', render: () => cards.list, decorators: [wide]};
+/** Hover or focus a legend row (or hover a segment) to pick a share out; the others dim. */
 export const DemographicAge: Story = {name: 'Demographic · age', render: () => cards.age, decorators: [half], parameters: figma('26-561')};
 export const DemographicCommute: Story = {name: 'Demographic · commute', render: () => cards.commute, decorators: [half], parameters: figma('26-593')};
 
 /**
  * Not in Figma. A card with no data yet, as the prototype's freshly published phase and its "Demographics and audience"
- * card: the title over one centred line.
+ * card: an EmptyState (`size="panel"`, no heading: the card has one) right under the title. The prototype draws one
+ * muted line; the EmptyState's strong title is a step louder, kept so every empty place reads the same.
  */
 export const Empty: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 14}}>
       <DashboardCard type="participation-over-time" title="Participation over time">
-        <DashboardEmpty>No participation yet. The trend will appear here.</DashboardEmpty>
+        <EmptyState size="panel" headingLevel="none" title="No participation yet" description="The trend will appear here." />
       </DashboardCard>
       <DashboardCard title="Demographics and audience">
-        <DashboardEmpty>No demographic data available for this phase.</DashboardEmpty>
+        <EmptyState size="panel" headingLevel="none" title="No demographic data yet" description="It appears once participants fill in their profile." />
       </DashboardCard>
     </div>
   ),

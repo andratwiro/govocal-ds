@@ -127,3 +127,21 @@ test('statement row: four shares, and a hover card with every share and its coun
   await bar.hover();
   await expect(card.locator('.gv-chart-card__row')).toHaveText(['Agree21 · 3%', 'Disagree88 · 14%', 'Unsure12 · 2%', 'Not seen yet519 · 81%']);
 });
+
+test('dashboard card: a demographic legend row picks its share out of the stacked bar', async ({page}) => {
+  await open(page, 'components-charts-dashboard-card--demographic-age');
+  await page.locator('.gv-legend-row', {hasText: '35–44'}).hover();
+  await expect(page.locator('.gv-dashboard-demographic__bar > span[data-dimmed]')).toHaveCount(4);
+  await expect(page.locator('.gv-legend-row[data-highlighted]')).toContainText('35–44');
+  await page.mouse.move(0, 0);
+  await expect(page.locator('.gv-dashboard-demographic__bar > span[data-dimmed]')).toHaveCount(0);
+});
+
+test('dashboard card: the Most liked list reads each input with its reactions', async ({page}) => {
+  await open(page, 'components-charts-dashboard-card--list');
+  const rows = page.getByRole('region', {name: 'Most liked'}).getByRole('listitem');
+  await expect(rows).toHaveCount(3);
+  await expect(rows.first()).toContainText('Basketball court');
+  await expect(rows.first()).toContainText('124 likes');
+  await expect(rows.first()).toContainText('Viewed');
+});

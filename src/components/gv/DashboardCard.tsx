@@ -1,9 +1,10 @@
-import {useId, type HTMLAttributes, type Key, type ReactNode} from 'react';
+import {useId, useState, type HTMLAttributes, type Key, type ReactNode} from 'react';
 import {Button} from 'react-aria-components/Button';
 import {ChevronRight} from 'lucide-react';
 import type {ChartColor} from './Chart';
 import {BarRow} from './BarRow';
 import {LegendRow} from './LegendRow';
+import {ReactionCounts, type ReactionCountsProps} from './ReactionCounts';
 import {StatementRow} from './StatementRow';
 import './Chart.css';
 import './DashboardCard.css';
@@ -31,7 +32,10 @@ export interface DashboardCardProps extends Omit<HTMLAttributes<HTMLElement>, 't
   icon?: ReactNode;
   /** Header, inline end: a control for the whole card (Votes over time: Daily / Weekly). */
   action?: ReactNode;
-  /** The card's content: a LineChart, Sparkline, StatTile row or one of the Dashboard* lists below. */
+  /**
+   * The card's content: a LineChart, Sparkline, StatTile row or one of the Dashboard* lists below. With no data yet,
+   * an EmptyState (`size="panel"`, `headingLevel="none"`): the card drops its gap so it sits under the title.
+   */
   children?: ReactNode;
   /** Under the body: a ChartLegend. */
   legend?: ReactNode;
@@ -208,27 +212,76 @@ export interface DashboardDemographicItem {
   color: ChartColor;
 }
 
-/**
- * A card with no data yet: one centred line where the chart or list will be ("No participation yet. The trend will
- * appear here."). Prototype `.pj-dempty`; Not in Figma.
- */
-export function DashboardEmpty({children}: {children: ReactNode}) {
-  return <div className="gv-dashboard-empty">{children}</div>;
+export interface DashboardListItem {
+  id: Key;
+  /** The input's title. */
+  title: ReactNode;
+  /** Who and when, in words ("Anonymous · 11 months ago"). */
+  meta?: ReactNode;
+  /** Likes, dislikes and comments, under the meta (Reaction counts). */
+  reactions?: ReactionCountsProps;
+  /** At the end: the input's status, a Badge ("Viewed"). */
+  status?: ReactNode;
 }
 
-/** Demographic · age / commute: a labelled stacked bar over its legend rows. */
+/**
+ * List (Most liked): the inputs that got the most traction, each its title, who and when, its reactions and its
+ * status. Rows 11 apart over a hairline (prototype `.pj-mlrow`). Not in Figma.
+ */
+export function DashboardList({items}: {items: DashboardListItem[]}) {
+  return (
+    <ul className="gv-dashboard-list">
+      {items.map(it => (
+        <li key={it.id} className="gv-dashboard-list__row">
+          <div className="gv-dashboard-list__main">
+            <span className="gv-dashboard-list__title">{it.title}</span>
+            {it.meta != null && <span className="gv-dashboard-list__meta">{it.meta}</span>}
+            {it.reactions && (
+              <span className="gv-dashboard-list__reactions">
+                <ReactionCounts {...it.reactions} />
+              </span>
+            )}
+          </div>
+          {it.status != null && <div className="gv-dashboard-list__status">{it.status}</div>}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/**
+ * Demographic · age / commute: a labelled stacked bar over its legend rows. Hovering or focusing a row (or hovering a
+ * segment) picks that share out: the other segments and rows dim (Not in Figma).
+ */
 export function DashboardDemographic({label, items}: {label: ReactNode; items: DashboardDemographicItem[]}) {
   const id = useId();
+  const [picked, setPicked] = useState<number | null>(null);
   return (
     <div className="gv-dashboard-demographic">
       <div id={id} className="gv-dashboard-demographic__label">{label}</div>
       <div className="gv-dashboard-demographic__bar" aria-hidden>
-        {items.map((it, i) => <span key={i} data-chart-color={it.color} style={{inlineSize: pct(it.percent)}} />)}
+        {items.map((it, i) => (
+          <span
+            key={i}
+            data-chart-color={it.color}
+            data-dimmed={(picked != null && picked !== i) || undefined}
+            style={{inlineSize: pct(it.percent)}}
+            onPointerEnter={() => setPicked(i)}
+            onPointerLeave={() => setPicked(null)}
+          />
+        ))}
       </div>
       <ul className="gv-dashboard-demographic__legend" aria-labelledby={id}>
         {items.map((it, i) => (
           <li key={i}>
-            <LegendRow color={`--gv-chart-${it.color}`} label={it.label} value={`${Math.round(it.percent)}%`} />
+            <LegendRow
+              color={`--gv-chart-${it.color}`}
+              label={it.label}
+              value={`${Math.round(it.percent)}%`}
+              highlighted={picked === i}
+              dimmed={picked != null && picked !== i}
+              onHighlightChange={on => setPicked(on ? i : null)}
+            />
           </li>
         ))}
       </ul>
