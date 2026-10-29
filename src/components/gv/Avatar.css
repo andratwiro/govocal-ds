@@ -1,0 +1,37 @@
+@import '../theme.css';
+@import '../utilities.css';
+
+.gv-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-avatar-fill);
+  border: 2px solid var(--gv-border-avatar);
+  color: var(--gv-text-inverse);
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  overflow: hidden;
+
+  &[data-size='24'] {
+    width: 24px;
+    height: 24px;
+  }
+
+  &[data-size='16'] {
+    width: 16px;
+    height: 16px;
+    font-size: 11px;
+    border-width: 1px;
+  }
+
+  &[data-unassigned] {
+    background: none;
+    border-style: dashed;
+    border-color: var(--gv-border-control);
+  }
+}
