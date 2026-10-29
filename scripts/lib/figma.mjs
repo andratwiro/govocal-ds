@@ -1,5 +1,9 @@
 import {readFile, writeFile, mkdir} from 'node:fs/promises';
 import {homedir} from 'node:os';
+import https from 'node:https';
+
+// FIGMA_API points at a gateway that adds the token itself (client cert from FIGMA_CERT/FIGMA_KEY/FIGMA_CA).
+const API = process.env.FIGMA_API ?? 'https://api.figma.com/v1';
 
 export const config = JSON.parse(await readFile(new URL('../../tokens/figma.config.json', import.meta.url), 'utf8'));
 
@@ -9,12 +13,33 @@ async function token() {
   catch { throw new Error('No Figma token: set FIGMA_TOKEN or write one to ~/.creds/figma_token'); }
 }
 
+async function get(url) {
+  if (!process.env.FIGMA_API) {
+    const res = await fetch(url, {headers: {'X-Figma-Token': await token()}});
+    return {status: res.status, body: await res.text()};
+  }
+  const home = homedir();
+  const [cert, key, ca] = await Promise.all([
+    readFile(process.env.FIGMA_CERT ?? `${home}/.gateway/cert.pem`),
+    readFile(process.env.FIGMA_KEY ?? `${home}/.gateway/key.pem`),
+    readFile(process.env.FIGMA_CA ?? '/etc/clankers/gateway-ca.pem'),
+  ]);
+  return new Promise((resolve, reject) => {
+    https.get(url, {cert, key, ca}, res => {
+      let body = '';
+      res.setEncoding('utf8');
+      res.on('data', c => body += c);
+      res.on('end', () => resolve({status: res.statusCode, body}));
+    }).on('error', reject);
+  });
+}
+
 export async function fetchFile(fileKey = config.fileKey, {fresh = process.argv.includes('--fresh')} = {}) {
   const cache = `.cache/figma-${fileKey}.json`;
   if (!fresh) { try { return JSON.parse(await readFile(cache, 'utf8')); } catch {} }
-  const res = await fetch(`https://api.figma.com/v1/files/${fileKey}`, {headers: {'X-Figma-Token': await token()}});
-  if (!res.ok) throw new Error(`Figma said ${res.status}: ${await res.text()}`);
-  const file = await res.json();
+  const {status, body} = await get(`${API}/files/${fileKey}`);
+  if (status !== 200) throw new Error(`Figma said ${status}: ${body}`);
+  const file = JSON.parse(body);
   await mkdir('.cache', {recursive: true});
   await writeFile(cache, JSON.stringify(file));
   return file;
