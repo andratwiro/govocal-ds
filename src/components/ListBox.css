@@ -1,15 +1,19 @@
 @import './theme.css';
 
+/* A list box reads as one of the prototype's dropdowns (augur-design.html #pj-dd-canon): white, 1px control
+   border, radius 12, padding 6; rows 32 tall, padding 0 8, radius 8, UI regular primary, no lines between them;
+   hover the hover surface, the chosen row the stronger hover grey (the prototype's .ph-lrow.is-cur). */
 .react-aria-ListBox {
   max-height: inherit;
   overflow: auto;
-  border: 0.5px solid var(--border-color);
-  border-radius: calc(var(--radius) + var(--spacing-1));
+  border: 1px solid var(--gv-border-control);
+  border-radius: var(--radius-lg);
   background: var(--overlay-background);
   forced-color-adjust: none;
   outline: none;
   box-sizing: border-box;
-  font: var(--font-size) var(--gv-font-family);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--text-color);
 
   &:has(.react-aria-ListBoxSection) {
@@ -24,72 +28,66 @@
   &[data-empty] {
     align-items: center;
     justify-content: center;
-    font-style: italic;
+    color: var(--gv-text-tertiary);
   }
 
   &[data-drop-target] {
-    outline: 2px solid var(--highlight-background);
+    outline: 2px solid var(--focus-ring-color);
     outline-offset: -1px;
     background: var(--highlight-overlay);
   }
 
   .react-aria-DropIndicator[data-drop-target] {
     z-index: 3;
-    outline: 1px solid var(--highlight-background);
+    outline: 1px solid var(--focus-ring-color);
   }
 }
 
+/* Section label: Small secondary, padding 8 8 4. */
 .react-aria-ListBoxSection {
   .react-aria-Header {
     position: sticky;
-    top: -0.5px;
+    top: 0;
     z-index: 2;
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    font-variation-settings: initial;
-    padding: var(--spacing-1) var(--spacing-4);
-    background: var(--gray-100);
-    border-block: 0.5px solid var(--gray-400);
+    padding: var(--gv-space-8) var(--gv-space-8) var(--gv-space-4);
+    background: var(--overlay-background);
+    font: var(--gv-type-small);
+    letter-spacing: var(--gv-type-small-tracking);
+    color: var(--gv-text-secondary);
     cursor: default;
     user-select: none;
-    box-shadow:
-      inset 0px 1px 0px var(--gv-color-neutral-0),
-      inset 0px -4px 8px var(--gray-200);
-  }
-
-  &:first-child .react-aria-Header {
-    margin-top: -0.5px;
   }
 }
 
 .react-aria-ListBoxItem {
-  padding: var(--spacing-1) var(--spacing-3);
-  border-radius: var(--radius);
+  padding: 0 var(--gv-space-8);
+  border-radius: var(--gv-radius-8);
   outline: none;
   cursor: default;
-  color: var(--text-color);
-  font: var(--font-size) var(--gv-font-family);
+  color: var(--gv-text-primary);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: var(--spacing-8);
+  min-height: var(--gv-space-32);
   box-sizing: border-box;
-  position: relative;
-  transition-property: background, color, border-radius;
-  transition-duration: 200ms;
+  transition-property: background, color;
+  transition-duration: 120ms;
   -webkit-tap-highlight-color: transparent;
 
-  --border-color: var(--gray-300);
-  &:not(:last-child)::after {
-    content: '';
-    display: block;
-    position: absolute;
+  &:has([slot='description']) {
+    padding-block: var(--gv-space-6);
+  }
+
+  &[data-hovered],
+  &[data-focused] {
+    background: var(--gv-surface-hover);
   }
 
   &[data-pressed] {
-    background: var(--highlight-hover);
-    border-radius: var(--radius);
+    background: var(--gv-surface-hover-strong);
   }
 
   &[data-focus-visible] {
@@ -99,31 +97,14 @@
   }
 
   &[data-selected] {
-    background: var(--highlight-background);
-    color: var(--highlight-foreground);
-    --border-color: transparent;
-
-    &[data-focus-visible] {
-      outline-color: var(--highlight-foreground);
-      outline-offset: -4px;
-    }
-
-    &[data-pressed] {
-      background: var(--highlight-background-pressed);
-    }
-
-    &:has(+ [data-selected]),
-    &:has(+ .react-aria-DropIndicator + [data-selected]) {
-      --border-color: var(--gv-color-neutral-0);
-    }
-  }
-
-  [slot='label'] {
-    font-weight: 500;
+    background: var(--gv-surface-hover-strong);
+    color: var(--gv-text-primary);
   }
 
   [slot='description'] {
-    font-size: var(--font-size-sm);
+    font: var(--gv-type-small);
+    letter-spacing: var(--gv-type-small-tracking);
+    color: var(--gv-text-secondary);
   }
 
   &[href] {
@@ -141,7 +122,7 @@
   }
 
   &[data-drop-target] {
-    outline: 2px solid var(--highlight-background);
+    outline: 2px solid var(--focus-ring-color);
     background: var(--highlight-overlay);
   }
 }
@@ -149,95 +130,33 @@
 .react-aria-ListBox {
   &[data-layout='stack'] {
     display: flex;
+    gap: 0;
+    padding: var(--gv-space-6);
 
     &[data-orientation='vertical'] {
       flex-direction: column;
       width: 250px;
       max-height: 300px;
       min-height: 100px;
-
-      .react-aria-ListBoxItem {
-        margin-inline: var(--spacing-1);
-
-        &:where(:nth-child(1 of .react-aria-ListBoxItem)) {
-          margin-top: var(--spacing);
-        }
-
-        &:where(:nth-last-child(1 of .react-aria-ListBoxItem)) {
-          margin-bottom: var(--spacing);
-        }
-
-        [role='presentation'] > & {
-          margin: 0; /* virtualizer */
-        }
-
-        &:not(:last-child)::after {
-          bottom: 0;
-          width: calc(100% - var(--spacing-6));
-          border-bottom: 0.5px solid var(--border-color);
-        }
-
-        &[data-selected] {
-          &:has(+ [data-selected]),
-          &:has(+ .react-aria-DropIndicator + [data-selected]) {
-            border-end-start-radius: 0;
-            border-end-end-radius: 0;
-          }
-
-          + [data-selected],
-          + .react-aria-DropIndicator + [data-selected] {
-            border-start-start-radius: 0;
-            border-start-end-radius: 0;
-          }
-        }
-      }
     }
 
     &[data-orientation='horizontal'] {
       flex-direction: row;
+      gap: var(--gv-space-2);
       width: 100%;
 
       .react-aria-ListBoxItem {
         min-width: max-content;
-        margin-block: var(--spacing-1);
-
-        &:nth-child(1 of .react-aria-ListBoxItem) {
-          margin-inline-start: var(--spacing);
-        }
-
-        &:nth-last-child(1 of .react-aria-ListBoxItem) {
-          margin-inline-end: var(--spacing);
-        }
-
-        &:not(:last-child)::after {
-          inset-inline-end: 0;
-          height: calc(100% - var(--spacing-2));
-          border-inline-end: 0.5px solid var(--border-color);
-        }
-
-        &[data-selected] {
-          &:has(+ [data-selected]),
-          &:has(+ .react-aria-DropIndicator + [data-selected]) {
-            border-start-end-radius: 0;
-            border-end-end-radius: 0;
-          }
-
-          + [data-selected],
-          + .react-aria-DropIndicator + [data-selected] {
-            border-start-start-radius: 0;
-            border-end-start-radius: 0;
-          }
-        }
       }
     }
   }
 
   &[data-layout='grid'] {
     display: grid;
-    gap: var(--spacing-1);
+    gap: var(--gv-space-4);
     width: fit-content;
     max-width: 100%;
-    padding: var(--spacing-1);
+    padding: var(--gv-space-6);
 
     &[data-orientation='vertical'] {
       grid-template-columns: 1fr 1fr;
@@ -260,83 +179,92 @@
   width: 100%;
 }
 
+/* Select and ComboBox options: the dropdown rows, the chosen one marked by a 16 check at the end (the prototype's
+   .pjdd__chk), never a fill. */
 .dropdown-listbox {
   display: block;
   max-height: inherit;
   overflow: auto;
+  padding: var(--gv-space-6);
   border-radius: inherit;
   forced-color-adjust: none;
   outline: none;
   box-sizing: border-box;
-  font: var(--font-size) var(--gv-font-family);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--text-color);
 
   &[data-empty] {
-    min-height: var(--spacing-8);
-    padding: var(--spacing-2);
-  }
-
-  .react-aria-Header {
-    padding-left: var(--spacing-7);
+    display: flex;
+    align-items: center;
+    min-height: var(--gv-space-32);
+    padding-inline: var(--gv-space-14);
+    color: var(--gv-text-tertiary);
   }
 }
 
 .dropdown-item {
-  padding: calc((var(--spacing-8) - 1lh) / 2) var(--spacing-3) calc((var(--spacing-8) - 1lh) / 2)
-    var(--spacing-6);
+  display: grid;
+  grid-template-areas:
+    'label check'
+    'desc check';
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  align-content: center;
+  column-gap: var(--gv-space-10);
+  min-height: var(--gv-space-32);
+  padding: 0 var(--gv-space-8);
   box-sizing: border-box;
-  border-radius: var(--radius);
+  border-radius: var(--gv-radius-8);
   outline: none;
   cursor: default;
-  color: var(--text-color);
-  font: var(--font-size) var(--gv-font-family);
-  font-weight: 500;
+  color: var(--gv-text-primary);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: var(--spacing-8);
-  margin-inline: var(--spacing-1);
   -webkit-tap-highlight-color: transparent;
 
-  &:first-of-type {
-    margin-top: var(--spacing);
+  &:has([slot='description']) {
+    padding-block: var(--gv-space-6);
   }
 
-  &:last-of-type {
-    margin-bottom: var(--spacing);
+  .lucide-check {
+    grid-area: check;
+    width: var(--gv-space-16);
+    height: var(--gv-space-16);
+    color: var(--gv-action-checked);
+  }
+
+  &[data-hovered],
+  &[data-focused],
+  &[data-pressed] {
+    background: var(--gv-surface-hover);
   }
 
   &[data-selected] {
-    font-weight: 500;
-    color: var(--text-color);
+    background: none;
+    color: var(--gv-text-primary);
 
-    .lucide-check {
-      position: absolute;
-      top: 50%;
-      left: var(--spacing-1);
-      translate: 0 -50%;
-      stroke-width: 3px;
-      width: var(--spacing-4);
-      height: var(--spacing-4);
+    &[data-hovered],
+    &[data-focused] {
+      background: var(--gv-surface-hover);
     }
   }
 
-  &[data-pressed] {
-    background: var(--highlight-hover);
-  }
-
-  &[data-focused] {
-    background: var(--highlight-background);
-    color: var(--highlight-foreground);
+  &[data-focus-visible] {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: -2px;
   }
 
   [slot='label'] {
-    font-weight: 500;
+    grid-area: label;
   }
 
   [slot='description'] {
-    font-size: var(--font-size-sm);
+    grid-area: desc;
+    font: var(--gv-type-small);
+    letter-spacing: var(--gv-type-small-tracking);
+    color: var(--gv-text-secondary);
   }
 
   &[data-disabled] {

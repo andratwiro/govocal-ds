@@ -15,8 +15,12 @@
     }
   }
 
+  /* The value reads as a field's text (UI regular primary), not a button label. */
   .react-aria-SelectValue {
     flex: 1;
+    font: var(--gv-type-ui);
+    letter-spacing: var(--gv-type-ui-tracking);
+    color: var(--field-text-color);
     text-align: start;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -29,7 +33,15 @@
   }
 
   .lucide-chevron-down {
+    flex: none;
+    width: var(--gv-space-16);
+    height: var(--gv-space-16);
     margin-inline-start: var(--spacing-2);
+    color: var(--gv-icon-default);
+  }
+
+  &[data-disabled] .lucide-chevron-down {
+    color: var(--gv-icon-quiet);
   }
 
   .react-aria-SelectValue {
