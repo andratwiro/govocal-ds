@@ -13,9 +13,10 @@
   border-radius: var(--radius);
   outline: none;
   box-sizing: border-box;
-  font: var(--font-size) var(--gv-font-family);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   line-height: 1.5em;
-  color: var(--text-color);
+  color: var(--field-text-color);
 
   &:empty::before {
     content: attr(data-placeholder);
@@ -38,10 +39,13 @@
   }
 }
 
+/* A token is the Figma Pill (gv/Pill): pill grey, the pill text colour, round, medium weight; chosen = the checked
+   blue with white text. */
 .react-aria-Token {
-  background-color: var(--tint-200);
-  color: var(--tint-1200);
-  border-radius: 9999px;
+  background-color: var(--gv-surface-pill);
+  color: var(--gv-text-pill);
+  font-weight: var(--gv-type-small-strong-weight);
+  border-radius: var(--gv-radius-full);
   height: var(--spacing-5);
   padding: 1px var(--spacing-2);
   margin: 0 2px;
@@ -50,7 +54,7 @@
   -webkit-tap-highlight-color: transparent;
 
   &[data-selected] {
-    background-color: var(--highlight-background);
+    background-color: var(--gv-action-checked);
     color: var(--gv-text-inverse);
   }
 
@@ -59,7 +63,7 @@
   }
 
   &[data-disabled] {
-    background-color: var(--gray-200);
+    background-color: var(--gv-surface-hover);
     color: var(--text-color-disabled);
   }
 }
