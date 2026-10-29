@@ -4,6 +4,51 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Building from the prototype review (29 Oct 2026)
+
+Calls made while planning the build of the review's findings (selectors, tables, side panel, feedback, forms,
+dashboards, Build tab).
+
+- Five names for one pill selector (Property picker, Select with search, Pill select, Selector, Option row with description) → **Select** with pill/field triggers and search, icon, avatar and description options as stories → React Aria's name; the reviewers saw one popover body.
+- Filter options' body is also what Select with search, Tag picker, Topic tags and Area need → **it moves up as Option list**; Filter menu uses it → a pattern a second place needs moves up, and components can't build on patterns.
+- "A Base entry moves up when Figma draws it" (the naming plan) vs "generic and used on 2+ screens = a component" (docs/NAMING.md) → **a Base entry used on 2+ screens moves up to Components** (Select, Menu, Search field, Tabs, Toast, Tooltip, Switch, Text field, Number field) → the newer rule wins; Figma can draw them after.
+- Drawer modal (one reviewer) vs non-modal (another) → **non-modal Side panel**: focus moves in, Esc closes back to the row, the table stays usable → the pager and row clicks walk the list while it's open.
+- Record pager as its own entry vs part of the drawer → **part of Side panel** (`position` prop) → it lives nowhere else.
+- Inline alert (new) vs Banner (in Figma), plus a phase status strip → **Banner** gains neutral, warning, success and AI tones, icon, title, action and dismiss; phase status is a Banner story → one message box, Figma's name.
+- Sort mark chevron (Storybook) vs arrow + "Order by X" tooltip (prototype) → **arrow ↑/↓ on the sorted column and on hover of a sortable one, no tooltip** → arrows mean order, chevrons mean open; `aria-sort` says the rest.
+- Select-all in the header (Manage) vs a "Select" checkbox in a toolbar (Audience) → **header only**, shown on hover, indeterminate when partial → React Aria Table's selection column, one place.
+- "Scroll down to load more" (Projects list) vs numbered pages (Audience) → **Pagination on every admin table** → stable positions, bulk selection of a known page; the back office already marks Pagination gaps.
+- Three table card heads (Audience card, Messaging panel, card head with count) → **one Panel** (title, count Badge, description, actions, footer); Data table `framed` stays for a bare table.
+- Search icon missing (Space), leading (Topic tags), trailing (Projects list, Audience) → **leading magnifier, clear × at the end, everywhere** → React Aria SearchField's convention.
+- ApexCharts bar and pie charts (Audience) vs hand-drawn Bar rows (phase Insights, back-office Dashboard) → **Bar rows and Dashboard card bodies, no pie, no second chart library** → bars compare 3–8 shares better than slices; one chart system.
+- Info icon with a hover tooltip vs Help popover → **Help popover** (moves to Components/Overlays) → a tooltip on a non-focusable icon can't be reached by touch or keyboard.
+- Locale switcher as one new component → **none**: Tabs with status dots (field languages), Select quiet (top bar "EN ▾"), Title field's language slot → three configurations of existing parts.
+- Section labels sentence case vs UPPERCASE tracked → **sentence case** (Rail section label's look, moved up as Section label) → easier to read and to translate.
+- Stat tile label over value (Figma) vs value over label (AI modal, 360 view) → **Figma's order everywhere**; trend, empty and info are additions → one tile.
+- Offline votes' round − n + stepper vs Number field's square buttons → **square** → every icon-only button is square, radius 8.
+- Danger buttons filled, text and outlined → **`tone="danger"` on primary (confirm) and quiet (inline Delete), no outlined** → two looks cover every case.
+- Confirms with and without ×, type-to-confirm on one → **Alert dialog: no ×, Esc = Cancel, quiet Cancel + primary or danger; type to confirm only where data is lost for good** → friction only where it protects.
+- Two toasts (title + body + Undo vs a white one-liner) → **one Toast**; the one-liner is a Toast without a body, same look → one feedback channel.
+- Settings needs a tall modal, the method picker and gallery a bigger one → **widths stay 420 and 866; Modal gains a fixed height (640, body scrolls) for tabbed dialogs; galleries reflow in 866** → the fidelity widths stand.
+- Side nav folded with hover peek and no tooltips (prototype) vs Open state + tooltips (Storybook) → **Storybook's, no hover peek** → an edge that opens on hover catches stray pointers and no keyboard reaches it.
+- Comment thread as a Component (one reviewer) vs a Pattern (another) → **Pattern, Manage tab** → team replies, internal notes and content warnings are Go Vocal moderation.
+- Volunteering Manage in an older layout (no table, search, filter, panel) → **built like the other Manage tabs** → one Manage.
+- Open-ended dates ("Add end date") → **Date range field from two DatePickers**, not the starter DateRangePicker → it can't leave the end empty.
+- Phone preview's Before · Open · Ended switch (two reviewers unsure) → **treated as demo tooling, not built** → other methods show a caption in that slot; the designer can say otherwise.
+- Build tab rows (notifications, participant actions, access, views) had no place in Patterns → **new place "Build tab"**, beside "Manage tab" → patterns grouped by place.
+
+**Prototype bugs found on the way** (not copied into the system):
+- Space and Folder search: an empty popover with no "No results" text, arrow keys don't move, no search icon.
+- Ideation Manage: with every column on, columns run into the "+" column; the count heading ignores the search.
+- Report builder: any click, the AI tab included, opens "Download the results (PDF)" (the body carries `[data-pj-report]`); the project rail covers the widget palette.
+- Content builder: the locale select collapses to 16px. Share popover: the role menu is clipped by the popover.
+- Charts: last x label clipped ("23 Ma"); the report builder clips its right y-axis labels; the "92" label overlaps its bar; status-bar tracks don't line up across rows.
+- Common ground "Where people stand": numbers fall back to a monospace font.
+- Audience: scrolled content runs under the breadcrumb. Insights: the 6-tile grid leaves "Participation rate" alone on a second row.
+- Poll Build shows Ideation's setup and has no question editor; Survey, Poll and Volunteering Insights show the generic ideation dashboard.
+- Volunteering Manage is an older layout; "Add a cause" opens a "Coming soon" placeholder.
+- Dead controls: side-nav entries (all but Projects), Projects list tabs and row "…", template "More details", form-builder rows and menus, tag tree expand and Add tag, floating rail Hide panel, Daily/Weekly, Audience select-all and row ⋯, Stats overview / User insights, the AI card pager, Messaging "Automated emails".
+
 ## Prototype review (29 Oct 2026)
 
 - Single-choice pickers mark the chosen value with a checkbox in some places, a check in others → **a check mark** →
