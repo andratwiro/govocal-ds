@@ -23,6 +23,14 @@
   overflow-wrap: anywhere;
 }
 
+/* With info: a 28 help icon after the label, pulled into the label's 24 line so the tile keeps its height. */
+.gv-kpi__info {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-block: calc(-1 * var(--gv-space-2));
+  margin-inline-start: var(--gv-space-2);
+}
+
 /* Stat type on a 28 line, as the prototype draws it (line-height 28px; Figma's Stat line is 32). Tabular figures, as
    the prototype's .pj-kpi__v. */
 .gv-kpi__value {
@@ -45,6 +53,36 @@
   font: var(--gv-type-small-strong);
   letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-secondary);
+}
+
+/* Trend (prototype .pj-kpi__delta): 7 under the number, Small strong, a 14 arrow 4 before the change; up in the live
+   green, down in red (no text token for it: the notification red), flat in the secondary grey. The arrow and the
+   hidden words say the direction, so colour is never the only sign. */
+.gv-kpi__trend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: var(--gv-space-4);
+  margin-block-start: var(--gv-space-7);
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  font-variant-numeric: tabular-nums;
+
+  & > svg {
+    flex: none;
+  }
+
+  &[data-direction='up'] {
+    color: var(--gv-text-live);
+  }
+
+  &[data-direction='down'] {
+    color: var(--gv-state-notification);
+  }
+
+  &[data-direction='flat'] {
+    color: var(--gv-text-secondary);
+  }
 }
 
 .gv-kpi__slot {

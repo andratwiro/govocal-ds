@@ -76,3 +76,53 @@ export const WithSparkline: Story = {
     </div>
   )
 };
+
+/**
+ * `trend` puts the change under the number (the prototype's Document tab: "↑ 12% 7-day change"): green up, red down,
+ * grey flat. The arrow and the words a screen reader hears ("Up 12%, 7-day change") say the direction, so it never
+ * rests on colour alone. Not in Figma.
+ */
+export const WithTrend: Story = {
+  name: 'With trend',
+  render: () => (
+    <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 200px)', gap: 24, alignItems: 'start'}}>
+      <StatTile label="Visitors" value="48" trend={{direction: 'up', value: '12%', label: '7-day change'}} />
+      <StatTile label="Comments" value="31" trend={{direction: 'down', value: '8%', label: '7-day change'}} />
+      <StatTile label="Reactions" value="112" trend={{direction: 'flat', value: '0%', label: '7-day change'}} />
+    </div>
+  )
+};
+
+/**
+ * A phase with nothing counted yet (the prototype's freshly published Ideation tab): every tile shows 0, the same tile
+ * as with data, so the band keeps its shape and fills in place. Not in Figma.
+ */
+export const Empty: Story = {
+  render: () => (
+    <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10, width: 764}}>
+      <StatTile label="Visitors" value="0" />
+      <StatTile label="Phase participants" value="0" />
+      <StatTile label="Ideas" value="0" />
+      <StatTile label="Comments" value="0" />
+      <StatTile label="Reactions" value="0" />
+      <StatTile label="Participation rate" value="0%" />
+    </div>
+  )
+};
+
+/**
+ * `info` puts a help icon after the label; pressing it opens a Help popover with what the number means (never a
+ * hover-only tip, which touch and keyboard can't reach). Not in Figma.
+ */
+export const WithInfo: Story = {
+  name: 'With info',
+  render: () => (
+    <div style={{width: 220}}>
+      <StatTile
+        label="Participation rate"
+        value="56.5%"
+        info="Phase participants as a share of the people who visited the project while this phase was open."
+      />
+    </div>
+  )
+};
