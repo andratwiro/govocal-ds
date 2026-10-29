@@ -1,0 +1,60 @@
+@import '../components/theme.css';
+
+/* Recipe: a form's questions at a glance (prototype .pjfq), in a phase's Idea form / Proposal form card. Numbered
+   rows, one line each (a long question ends in …), the type at the end; hairlines above, between and under; up to six,
+   then "N more"; Edit form under them. The page keeps its own copy until a second page needs it. */
+.gv-form-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gv-space-12);
+  font-family: var(--gv-font-family);
+}
+
+.gv-form-summary__list {
+  align-self: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--gv-border-row);
+}
+
+.gv-form-summary__question {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gv-space-12);
+  padding-block: var(--gv-space-10);
+  border-block-end: 1px solid var(--gv-border-row);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-form-summary__number {
+  flex: none;
+  width: 16px;
+  color: var(--gv-text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.gv-form-summary__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gv-form-summary__type {
+  flex: none;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+  white-space: nowrap;
+}
+
+/* "3 more": on the names' x (number 16 + 12). */
+.gv-form-summary__more {
+  padding-inline-start: calc(16px + var(--gv-space-12));
+  color: var(--gv-text-secondary);
+}
