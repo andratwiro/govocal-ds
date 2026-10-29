@@ -1,0 +1,85 @@
+@import '../theme.css';
+
+.gv-list-row-cg {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 38px;
+  padding: var(--gv-space-9) var(--gv-space-28);
+  border-bottom: 1px solid var(--gv-border-row);
+}
+
+.gv-list-row-cg__statement-cell {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gv-space-16);
+  flex: 1 1 404px;
+  min-width: 0;
+  padding: 0 var(--gv-space-16) 0 var(--gv-space-8);
+}
+
+.gv-list-row-cg__statement {
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+  min-width: 0;
+}
+
+.gv-list-row-cg[data-warning] .gv-list-row-cg__statement {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--gv-space-6);
+}
+
+.gv-list-row-cg__warning {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--gv-icon-warning);
+}
+
+.gv-list-row-cg__new {
+  flex-shrink: 0;
+  font: var(--gv-type-small-strong);
+  color: var(--gv-text-accent);
+}
+
+.gv-list-row-cg__cell {
+  flex: 0 0 88px;
+  padding: 0 var(--gv-space-8);
+  font: var(--gv-type-ui);
+  color: var(--gv-text-secondary);
+}
+
+.gv-list-row-cg__assignee-cell {
+  flex-basis: 88px;
+}
+
+.gv-list-row-cg__number-cell {
+  flex-basis: 72px;
+  color: var(--gv-text-body);
+}
+
+.gv-list-row-cg__number-cell--secondary {
+  flex-basis: 88px;
+  color: var(--gv-text-secondary);
+}
+
+.gv-list-row-cg__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--gv-radius-full);
+  font: var(--gv-type-small-strong);
+  color: var(--gv-text-body);
+  border: 1px solid var(--gv-border-control);
+
+  &[data-filled='true'] {
+    background: var(--gv-surface-pill);
+    border-color: transparent;
+  }
+}
+
+.gv-list-row-cg__none {
+  color: var(--gv-text-tertiary);
+}
