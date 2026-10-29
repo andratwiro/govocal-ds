@@ -1,0 +1,219 @@
+@import '../components/theme.css';
+
+/* Comment thread (the prototype's .pj-cmts, .pj-cmt, .pj-ctabs, .pj-ccompose). Today's Tabs carry the two
+   conversations; each comment is a block of 12 padding, radius 8, a 28 avatar 12 from its words; a new one sits on the
+   stage grey (the prototype's grey-50 has no token: the nearest). */
+.gv-comment-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  color: var(--gv-text-primary);
+}
+
+.gv-comment-thread__title {
+  margin: 0 0 var(--gv-space-12);
+  font: var(--gv-type-body-strong);
+  letter-spacing: var(--gv-type-body-strong-tracking);
+}
+
+.gv-comment-thread .gv-comment-thread__panel {
+  padding: var(--gv-space-12) 0 0;
+}
+
+.gv-comment-thread__list,
+.gv-comment-thread__replies {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gv-comment-thread__list {
+  margin-block-end: var(--gv-space-16);
+}
+
+/* Replies sit under their comment's words: 40 in (the avatar and its gap). */
+.gv-comment-thread__replies {
+  margin-block-start: var(--gv-space-4);
+  padding-inline-start: calc(var(--gv-space-28) + var(--gv-space-12));
+}
+
+.gv-comment-thread__comment {
+  display: flex;
+  gap: var(--gv-space-12);
+  padding: var(--gv-space-12);
+  border-radius: var(--gv-radius-8);
+
+  &[data-new] {
+    background: var(--gv-surface-stage);
+  }
+}
+
+.gv-comment-thread__avatar {
+  display: inline-flex;
+  flex: none;
+}
+
+.gv-comment-thread__body {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Name · time · New, Small: the name strong primary, the time secondary, "New" strong in the accent. */
+.gv-comment-thread__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--gv-space-8);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+}
+
+.gv-comment-thread__author {
+  font-weight: var(--gv-type-small-strong-weight);
+  color: var(--gv-text-primary);
+}
+
+.gv-comment-thread__time {
+  color: var(--gv-text-secondary);
+}
+
+.gv-comment-thread__new {
+  font-weight: var(--gv-type-small-strong-weight);
+  color: var(--gv-text-accent);
+}
+
+/* The warning line: a 14 amber triangle and Small secondary words, 8 under the head. */
+.gv-comment-thread__warning {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gv-space-6);
+  margin: var(--gv-space-8) 0 0;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+
+  svg {
+    flex: none;
+    margin-block-start: var(--gv-space-1);
+    color: var(--gv-icon-warning);
+  }
+}
+
+.gv-comment-thread__text {
+  margin-block-start: var(--gv-space-4);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  overflow-wrap: anywhere;
+
+  p {
+    margin: 0;
+  }
+}
+
+/* Reply · Dismiss warning · Delete: bare Small words 16 apart, secondary until hovered, as drawn. The press area is
+   24 tall; the extra 4 above and below is taken back by the margin, so the line doesn't move. */
+.gv-comment-thread__actions {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--gv-space-16);
+  margin-block-start: var(--gv-space-8);
+}
+
+.gv-comment-thread__action {
+  min-block-size: 24px;
+  margin-block: calc(-1 * var(--gv-space-4));
+  padding: var(--gv-space-4) 0;
+  border: 0;
+  border-radius: var(--gv-radius-4);
+  background: none;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+  cursor: pointer;
+  outline: none;
+  transition: color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  &[data-hovered] {
+    color: var(--gv-text-primary);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+  }
+}
+
+.gv-comment-thread__empty {
+  margin: 0 0 var(--gv-space-16);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-secondary);
+}
+
+/* Composer: the writer's 28 avatar, the field (one line that grows to about seven), Post. */
+.gv-comment-thread__composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-8);
+}
+
+.gv-comment-thread__replying {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-4);
+  margin: 0;
+  padding-inline-start: calc(var(--gv-space-28) + var(--gv-space-12));
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-comment-thread__cancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 24px;
+  block-size: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--gv-radius-4);
+  background: none;
+  color: var(--gv-icon-default);
+  cursor: pointer;
+  outline: none;
+
+  &[data-hovered] {
+    color: var(--gv-icon-strong);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--focus-ring-color);
+  }
+}
+
+.gv-comment-thread__compose-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gv-space-10);
+
+  > .gv-comment-thread__avatar {
+    margin-block-start: var(--gv-space-4);
+  }
+}
+
+.gv-comment-thread__field {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.gv-comment-thread .gv-comment-thread__input {
+  min-height: 36px;
+  max-height: 160px;
+  field-sizing: content;
+  resize: none;
+}
