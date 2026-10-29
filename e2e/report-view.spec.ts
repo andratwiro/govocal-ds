@@ -248,7 +248,7 @@ test('a new blank report is empty until the assistant generates it', async ({pag
   const errors = watch(page);
   await page.goto('/backoffice/#/reporting');
   await page.getByRole('button', {name: 'Create a report'}).click();
-  const builder = page.getByRole('region', {name: 'Report builder: New report'});
+  const builder = page.getByRole('dialog', {name: 'Create a report'});
   await builder.getByRole('textbox', {name: 'Report title'}).fill('Harbour walk survey report');
   await builder.getByRole('radiogroup', {name: 'Report template'}).getByText('Start blank').click();
   await builder.getByRole('button', {name: 'Create report'}).click();

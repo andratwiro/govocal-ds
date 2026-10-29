@@ -69,6 +69,13 @@ list; change any line and the agent follows. Newest first within each section.
 - "Copied!", "API key saved" and "Report template ready" as status lines beside the button → **a Toast for saves and downloads; inside a dialog the button turns to a disabled "Copied!"** → one feedback channel, the Inspiration hub's copy.
 - Esri key, Widget settings and Power BI templates as Cards → **Panels, the save or download in the foot; Esri's connection as a Status badge in the head; Power BI's API note a Banner linking to the tokens** → forms sit in Panels, as Settings.
 
+### Reporting
+
+- Report tabs over a bare Data table, one search above the tabs for all three → **each tab a Panel (title, description), its count and search in the Table toolbar, Pagination in the foot; the tab's count as Tab `count`** → one list shape, as Projects' tabs.
+- Create a report as two stacked Cards opening under the list (template as Choice cards, contents as checkbox cards) → **a wide Modal: title, the template as Choice cards with icons in a RadioGroup, the contents under their group headings, Length; Cancel and Create report in the foot** → a start screen is a dialog, as New project; the list stays where it was.
+- Delete removed a row silently, Duplicate added one silently → **Delete confirms in an Alert dialog, then a Toast with Undo; Duplicate a Toast with Undo; the row menu's icons in Menu's icon slot, Delete after a separator** → Projects' row actions.
+- No match as an empty table row ("No reports match your search.") → **the Empty state in the Panel body; an empty tab offers Create a report** → the shape every admin list uses.
+
 ## Building from the prototype review (29 Oct 2026)
 
 Calls made while planning the build of the review's findings (selectors, tables, side panel, feedback, forms,

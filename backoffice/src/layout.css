@@ -166,22 +166,15 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-tools-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: var(--gv-space-16); }
 .bo-tools-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: var(--gv-space-16); align-items: start; }
 /* ── Reporting ── */
-.bo-reporting-stack { display: grid; gap: var(--gv-space-16); }
-.bo-reporting-list { display: grid; gap: var(--gv-space-12); }
-.bo-reporting-list > .react-aria-SearchField { max-width: 280px; }
-.bo-reporting-list .react-aria-TabPanel { padding-block-start: var(--gv-space-12); }
+.bo-reporting-view { padding-block-start: var(--gv-space-16); }
+.bo-reporting-scroll { overflow-x: auto; }
+.bo-reporting-note { padding: var(--gv-space-12) var(--gv-space-20) 0; }
 .bo-reporting-title { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-8); }
-.bo-reporting-title .bo-section-title { margin: 0; }
 .bo-reporting-nowrap { white-space: nowrap; }
-.bo-reporting-builder { display: grid; gap: var(--gv-space-16); padding-block-start: var(--gv-space-16); }
-.bo-reporting-blank { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 380px); gap: var(--gv-space-16); align-items: start; }
-.bo-reporting-form { display: grid; gap: var(--gv-space-16); justify-items: stretch; }
-.bo-reporting-form > p { margin: 0; }
-.bo-reporting-form > .react-aria-Button { justify-self: stretch; justify-content: center; }
+.bo-reporting-create { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gv-space-24); align-items: start; }
+.bo-reporting-form { display: grid; gap: var(--gv-space-16); }
+.bo-reporting-form p { margin: 0; }
 .bo-reporting-field { display: grid; gap: var(--gv-space-8); justify-items: start; }
-@media (max-width: 1080px) {
-  .bo-reporting-blank { grid-template-columns: 1fr; }
-}
 
 /* ── Community monitor ── */
 .bo-community-monitor-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-8); }

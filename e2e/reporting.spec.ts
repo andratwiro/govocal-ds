@@ -13,6 +13,15 @@ test('reporting follows the real admin: report list with search and report tabs'
   const table = page.getByRole('grid', {name: 'All reports'});
   for (const c of ['Report', 'Created', 'Last edited']) await expect(table.getByRole('columnheader', {name: c, exact: true})).toBeVisible();
   await expect(table.getByText(/Modified \d+ days? ago/).first()).toBeVisible();
+  // Each tab is a Panel (title, description), its count and search in the Table toolbar, Pagination in its foot.
+  await expect(tabs.getByRole('tab', {name: 'All reports (13)'})).toBeVisible();
+  const panel = page.getByRole('tabpanel', {name: /^All reports/});
+  await expect(panel.getByRole('heading', {level: 2, name: 'All reports'})).toBeVisible();
+  await expect(panel.getByRole('heading', {level: 3, name: '13 reports'})).toBeVisible();
+  await expect(table.getByRole('row')).toHaveCount(11);
+  const pages = panel.getByRole('navigation', {name: 'Report pages'});
+  await pages.getByRole('button', {name: /2/}).click();
+  await expect(table.getByRole('row')).toHaveCount(4);
 });
 
 test('search filters the list, and an empty search says so', async ({page}) => {
@@ -21,8 +30,11 @@ test('search filters the list, and an empty search says so', async ({page}) => {
   const before = await table.getByRole('row').count();
   await page.getByRole('searchbox', {name: 'Search reports'}).fill('survey');
   await expect.poll(() => table.getByRole('row').count()).toBeLessThan(before);
+  await expect(page.getByRole('heading', {level: 3, name: /^\d reports?$/})).toBeVisible();
   await page.getByRole('searchbox', {name: 'Search reports'}).fill('zzz no match');
-  await expect(page.getByText('No reports match your search.')).toBeVisible();
+  // No match is the Empty state in the Panel body, with no table under it.
+  await expect(page.getByRole('heading', {level: 3, name: 'No reports match'})).toBeVisible();
+  await expect(table).toHaveCount(0);
 });
 
 test('progress reports explain who makes them; each row has edit, duplicate and delete', async ({page}) => {
@@ -31,11 +43,31 @@ test('progress reports explain who makes them; each row has edit, duplicate and 
   await expect(page.getByRole('note').filter({hasText: 'created by your Go Vocal success manager'})).toBeVisible();
   await page.getByRole('tab', {name: /^All reports/}).click();
   const table = page.getByRole('grid', {name: 'All reports'});
-  const rows = await table.getByRole('row').count();
+  const count = page.getByRole('tabpanel', {name: /^All reports/}).getByRole('heading', {level: 3, name: / reports$/});
+  await expect(count).toHaveText('13 reports');
   await page.getByRole('button', {name: /^Actions for Bike lanes survey results/}).click();
+  // Menu items carry their icons in the icon slot; Delete sits after a separator.
   for (const m of ['Edit', 'Duplicate', 'Delete']) await expect(page.getByRole('menuitem', {name: m})).toBeVisible();
+  await expect(page.getByRole('menu').locator('.gv-menu-icon')).toHaveCount(3);
+  await expect(page.getByRole('menu').getByRole('separator')).toHaveCount(1);
+  // Delete asks first in an Alert dialog, then says so in a Toast with Undo.
   await page.getByRole('menuitem', {name: 'Delete'}).click();
-  await expect(table.getByRole('row')).toHaveCount(rows - 1);
+  const confirm = page.getByRole('alertdialog', {name: 'Delete this report?'});
+  await expect(confirm).toBeVisible();
+  await confirm.getByRole('button', {name: 'Delete report'}).click();
+  await expect(count).toHaveText('12 reports');
+  await expect(table.getByRole('row', {name: /Bike lanes survey results/})).toHaveCount(0);
+  await expect(page.getByRole('tab', {name: 'All reports (12)'})).toBeVisible();
+  const toast = page.locator('.react-aria-Toast').filter({hasText: 'Report deleted'});
+  await toast.getByRole('button', {name: 'Undo'}).click();
+  await expect(count).toHaveText('13 reports');
+  // Duplicate is instant, with Undo.
+  await page.getByRole('button', {name: /^Actions for Bike lanes survey results/}).click();
+  await page.getByRole('menuitem', {name: 'Duplicate'}).click();
+  await expect(table.getByRole('row', {name: /Bike lanes survey results \(copy\)/})).toBeVisible();
+  await expect(count).toHaveText('14 reports');
+  await page.locator('.react-aria-Toast').filter({hasText: 'Report duplicated'}).getByRole('button', {name: 'Undo'}).click();
+  await expect(count).toHaveText('13 reports');
 });
 
 test('editing a report opens the report view (outline, pages, side panel)', async ({page}) => {
@@ -53,7 +85,9 @@ test('editing a report opens the report view (outline, pages, side panel)', asyn
 test('creating a report starts blank: title, template, contents, then the report view', async ({page}) => {
   await page.goto('/backoffice/#/reporting');
   await page.getByRole('button', {name: 'Create a report'}).first().click();
-  const builder = page.getByRole('region', {name: /^Report builder:/});
+  // The start screen is a wide Modal: the template as Choice cards in a RadioGroup, the contents as checkbox cards.
+  const builder = page.getByRole('dialog', {name: 'Create a report'});
+  await expect(builder.getByRole('textbox', {name: 'Report title'})).toBeFocused();
   await expect(builder.getByRole('textbox', {name: 'Report title'})).toBeVisible();
   const tpl = builder.getByRole('radiogroup', {name: 'Report template'});
   for (const t of ['Start blank', 'Use a template', 'Create with AI']) await expect(tpl.getByRole('radio', {name: new RegExp(`^${t}`)})).toBeVisible();
@@ -69,7 +103,7 @@ test('creating a report starts blank: title, template, contents, then the report
   }
   await contents.getByText('Demographics').click();
   await expect(contents.getByRole('checkbox', {name: /Demographics/})).toBeChecked();
-  a11yReport(await axeViolations(page, '.bo-reporting-blank'));
+  a11yReport(await axeViolations(page, '.bo-reporting-create'));
   await expect(builder.getByRole('radiogroup', {name: 'Length'})).toBeVisible();
   await tpl.getByText('Create with AI').click();
   await expect(tpl.getByRole('radio', {name: /^Create with AI/})).toBeChecked();
@@ -77,6 +111,15 @@ test('creating a report starts blank: title, template, contents, then the report
   // The new report opens in the report view, and the assistant offers to write it.
   await expect(page).toHaveURL(/#\/reporting\/report-builder\/new\/editor$/);
   await expect(page.getByRole('dialog', {name: 'Generate the report'})).toBeVisible();
+});
+
+test('the Create a report dialog cancels back to the list', async ({page}) => {
+  await page.goto('/backoffice/#/reporting');
+  await page.getByRole('button', {name: 'Create a report'}).first().click();
+  const dialog = page.getByRole('dialog', {name: 'Create a report'});
+  await dialog.getByRole('button', {name: 'Cancel'}).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(page).toHaveURL(/#\/reporting$/);
 });
 
 test('the report list has no gaps; the report view names its own (e2e/report-view.spec.ts)', async ({page}) => {
