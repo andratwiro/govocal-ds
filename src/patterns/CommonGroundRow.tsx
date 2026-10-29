@@ -4,6 +4,7 @@ import {Checkbox} from '../components/gv/Checkbox';
 import type {ListRowSelect} from '../components/gv/ListRow';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {useNumberFormatter, usePercentFormatter} from '../components/format';
 import './CommonGroundRow.css';
 
 export interface CommonGroundRowProps extends PlacementProps {
@@ -46,6 +47,8 @@ export function CommonGroundRow({
   className,
   style
 }: CommonGroundRowProps) {
+  const number = useNumberFormatter();
+  const percent = usePercentFormatter();
   return (
     <div
       className={clsx('gv-list-row-cg', className)} style={style}
@@ -84,13 +87,13 @@ export function CommonGroundRow({
           )}
         </div>
         <div className="gv-list-row-cg__cell" data-num data-tone="secondary">
-          {likes == null ? <span className="gv-list-row-cg__none">–</span> : likes}
+          {likes == null ? <span className="gv-list-row-cg__none">–</span> : number.format(likes)}
         </div>
         <div className="gv-list-row-cg__cell" data-num>
-          {agreePercent}%
+          {percent(agreePercent)}
         </div>
         <div className="gv-list-row-cg__cell" data-num data-tone="secondary">
-          {reactions}
+          {reactions != null && number.format(reactions)}
         </div>
       </div>
     </div>

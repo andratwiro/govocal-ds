@@ -6,6 +6,7 @@ import {Link} from 'react-aria-components/Link';
 import {Tooltip, TooltipTrigger} from '../components/Tooltip';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {useNumberFormatter} from '../components/format';
 import './SideNav.css';
 
 /**
@@ -76,11 +77,13 @@ interface RowContent {
 }
 
 function Content({icon, label, sub, count, countLabel, hasMenu, hasAccentIcon}: RowContent) {
+  const number = useNumberFormatter();
+  const shown = count ? number.format(count) : '';
   return (
     <>
       <span className="gv-side-nav__icon" data-accent={hasAccentIcon || undefined} aria-hidden>
         {icon}
-        {!!count && <span className="gv-side-nav__count" data-on-icon>{count}</span>}
+        {!!count && <span className="gv-side-nav__count" data-on-icon>{shown}</span>}
       </span>
       <span className="gv-side-nav__text">
         <span className="gv-side-nav__label">{label}</span>
@@ -88,8 +91,8 @@ function Content({icon, label, sub, count, countLabel, hasMenu, hasAccentIcon}: 
       </span>
       {!!count && (
         <span className="gv-side-nav__count">
-          <span aria-hidden>{count}</span>
-          <span className="gv-side-nav__hidden">{countLabel ?? String(count)}</span>
+          <span aria-hidden>{shown}</span>
+          <span className="gv-side-nav__hidden">{countLabel ?? shown}</span>
         </span>
       )}
       {hasMenu && <ChevronRight aria-hidden size={16} className="gv-side-nav__chevron" />}

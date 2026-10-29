@@ -4,6 +4,7 @@ import {clsx} from 'clsx';
 import {Dialog} from 'react-aria-components/Dialog';
 import {Toolbar} from 'react-aria-components/Toolbar';
 import {useLocale} from 'react-aria-components';
+import {useNumberFormatter} from '../format';
 import {ChevronLeft, ChevronRight, X} from 'lucide-react';
 import {IconButton} from './IconButton';
 import {Tooltip, TooltipTrigger} from '../Tooltip';
@@ -109,7 +110,8 @@ export function SidePanel({
   // The last open render's `returnFocus`: by the closing render the record is often gone (`open` is null).
   const returnRef = useRef(returnFocus);
   if (isOpen) returnRef.current = returnFocus;
-  const {direction, locale} = useLocale();
+  const {direction} = useLocale();
+  const number = useNumberFormatter();
 
   // Remember what had focus when the panel opened (before the dialog takes it), and give focus back on close
   // when it was inside the panel, or lost with it.
@@ -169,7 +171,6 @@ export function SidePanel({
     if (atEnd) document.getElementById(`${id}-prev`)?.focus();
     onPositionChange?.(to);
   };
-  const number = new Intl.NumberFormat(locale);
   const [Back, Forward] = direction === 'rtl' ? [ChevronRight, ChevronLeft] : [ChevronLeft, ChevronRight];
 
   return (

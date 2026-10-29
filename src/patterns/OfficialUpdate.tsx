@@ -1,12 +1,12 @@
 'use client';
 import {useId, useState, type FormEvent, type KeyboardEvent, type ReactNode} from 'react';
-import {useLocale} from 'react-aria-components';
 import {TextArea as AriaTextArea, TextField as AriaTextField} from 'react-aria-components/TextField';
 import {Button} from '../components/Button';
 import {TextField} from '../components/TextField';
 import {Modal} from '../components/gv/Modal';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {useNumberFormatter} from '../components/format';
 import './OfficialUpdate.css';
 
 export interface PostedUpdate {
@@ -137,8 +137,7 @@ export interface BulkOfficialUpdateProps extends PlacementProps {
 export function BulkOfficialUpdate({count, itemName = 'idea', itemsName = `${itemName}s`, isOpen, onOpenChange, onSend, className, style}: BulkOfficialUpdateProps) {
   const id = useId();
   const [ready, setReady] = useState(false);
-  const {locale} = useLocale();
-  const n = new Intl.NumberFormat(locale).format(count);
+  const n = useNumberFormatter().format(count);
   return (
     <Modal title="Official update" className={className} style={style} isOpen={isOpen} onOpenChange={o => { onOpenChange(o); if (!o) setReady(false); }}
       footer={(

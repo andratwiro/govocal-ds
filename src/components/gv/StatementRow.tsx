@@ -3,6 +3,7 @@ import type {ReactNode} from 'react';
 import type {ChartColor} from './Chart';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {useNumberFormatter, usePercentFormatter} from '../format';
 import './Chart.css';
 import './StatementRow.css';
 
@@ -34,9 +35,6 @@ export interface StatementRowProps extends PlacementProps {
   passLabel?: string;
 }
 
-const round = (n: number) => Math.round(n);
-const group = (n: number) => n.toLocaleString('en-GB');
-
 /**
  * A single Common Ground statement with its agree/disagree/pass bar —
  * the compact row used in results and summary views (as opposed to the
@@ -57,6 +55,8 @@ export function StatementRow({
   className,
   style
 }: StatementRowProps) {
+  const group = useNumberFormatter().format;
+  const percent = usePercentFormatter();
   const shares: {kind: 'agree' | 'disagree' | 'pass' | 'unseen'; label: string; percent: number; count?: number; color?: ChartColor}[] = [
     {kind: 'agree', label: 'Agree', percent: agreePercent, count: counts?.agree, color: 'agree'},
     {kind: 'disagree', label: 'Disagree', percent: disagreePercent, count: counts?.disagree, color: 'disagree'},
@@ -65,7 +65,7 @@ export function StatementRow({
   if (unseenPercent != null) shares.push({kind: 'unseen', label: 'Not seen yet', percent: unseenPercent, count: counts?.unseen});
   const four = unseenPercent != null;
   const words = shares
-    .map(s => (s.count != null ? `${group(s.count)} ${s.label.toLowerCase()} (${round(s.percent)}%)` : `${round(s.percent)}% ${s.label.toLowerCase()}`))
+    .map(s => (s.count != null ? `${group(s.count)} ${s.label.toLowerCase()} (${percent(s.percent)})` : `${percent(s.percent)} ${s.label.toLowerCase()}`))
     .join(', ');
 
   return (
@@ -87,7 +87,7 @@ export function StatementRow({
                 <span className="gv-chart-card__label">{s.label}</span>
                 <span className="gv-chart-card__value">
                   {s.count != null ? `${group(s.count)} · ` : ''}
-                  {round(s.percent)}%
+                  {percent(s.percent)}
                 </span>
               </span>
             ))}

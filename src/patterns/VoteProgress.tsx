@@ -2,6 +2,7 @@
 import {ProgressBar, type ProgressBarProps} from 'react-aria-components/ProgressBar';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {useNumberFormatter} from '../components/format';
 import './VoteProgress.css';
 
 interface VoteProgressBase
@@ -31,6 +32,7 @@ export interface VoteProgressCountProps extends VoteProgressBase {
 export type VoteProgressProps = VoteProgressThresholdProps | VoteProgressCountProps;
 
 export function VoteProgress(props: VoteProgressProps) {
+  const number = useNumberFormatter();
   if (props.kind === 'threshold') {
     const {kind, label, count, threshold, className, style, ...rest} = props;
     const percent = threshold > 0 ? Math.min(100, (count / threshold) * 100) : 0;
@@ -43,8 +45,8 @@ export function VoteProgress(props: VoteProgressProps) {
         maxValue={threshold}
         className={clsx('gv-vote-progress gv-vote-progress--threshold', className)}
         style={style}>
-        <span className="gv-vote-progress__count">{count}</span>
-        <span className="gv-vote-progress__of">/ {threshold}</span>
+        <span className="gv-vote-progress__count">{number.format(count)}</span>
+        <span className="gv-vote-progress__of">/ {number.format(threshold)}</span>
         <span className="gv-vote-progress__track">
           <span
             className="gv-vote-progress__fill"
@@ -67,7 +69,7 @@ export function VoteProgress(props: VoteProgressProps) {
       maxValue={maxCount}
       className={clsx('gv-vote-progress gv-vote-progress--count', className)}
       style={style}>
-      <span className="gv-vote-progress__count">{count}</span>
+      <span className="gv-vote-progress__count">{number.format(count)}</span>
       <span className="gv-vote-progress__track">
         <span className="gv-vote-progress__fill" style={{width: `${percent}%`}} />
       </span>

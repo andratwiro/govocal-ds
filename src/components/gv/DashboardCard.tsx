@@ -8,6 +8,7 @@ import {ReactionCounts, type ReactionCountsProps} from './ReactionCounts';
 import {StatementRow} from './StatementRow';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {useNumberFormatter, usePercentFormatter} from '../format';
 import './Chart.css';
 import './DashboardCard.css';
 
@@ -108,6 +109,7 @@ export interface DashboardStatement {
 export interface DashboardStatementsProps extends PlacementProps {items: DashboardStatement[]}
 
 export function DashboardStatements({items, className, style}: DashboardStatementsProps) {
+  const percent = usePercentFormatter();
   return (
     <ul className={clsx('gv-dashboard-statements', className)} style={style}>
       {items.map((s, i) => {
@@ -120,7 +122,7 @@ export function DashboardStatements({items, className, style}: DashboardStatemen
               agreePercent={share(s.agree)}
               disagreePercent={share(s.disagree)}
               passPercent={share(s.pass)}
-              summary={`${Math.round(share(s.agree))}% agree`}
+              summary={`${percent(share(s.agree))} agree`}
             />
           </li>
         );
@@ -142,6 +144,8 @@ export interface DashboardBar {
 export interface DashboardBarsProps extends PlacementProps {items: DashboardBar[]}
 
 export function DashboardBars({items, className, style}: DashboardBarsProps) {
+  const percent = usePercentFormatter();
+  const number = useNumberFormatter();
   return (
     <ul className={clsx('gv-dashboard-bars', className)} style={style}>
       {items.map((b, i) => (
@@ -149,7 +153,7 @@ export function DashboardBars({items, className, style}: DashboardBarsProps) {
           <BarRow
             label={b.label}
             percent={Math.max(0, Math.min(100, b.percent))}
-            value={`${Math.round(b.percent)}%${b.count != null ? ` · ${b.count.toLocaleString('en-GB')}` : ''}`}
+            value={`${percent(b.percent)}${b.count != null ? ` · ${number.format(b.count)}` : ''}`}
             barColor={`--gv-chart-${b.color ?? 'bar'}`}
           />
         </li>
@@ -174,6 +178,8 @@ export interface DashboardRankingProps extends PlacementProps {
 export function DashboardRanking({items, unit = 'votes', className, style}: DashboardRankingProps) {
   const total = items.reduce((s, o) => s + o.count, 0) || 1;
   const ranked = [...items].sort((x, y) => y.count - x.count);
+  const percent = usePercentFormatter();
+  const number = useNumberFormatter();
   return (
     <ol className={clsx('gv-dashboard-ranking', className)} style={style}>
       {ranked.map((o, i) => {
@@ -188,7 +194,7 @@ export function DashboardRanking({items, unit = 'votes', className, style}: Dash
               </span>
             </div>
             <span className="gv-dashboard-ranking__value">
-              {share}%<small>{o.count.toLocaleString('en-GB')} {unit}</small>
+              {percent(share)}<small>{number.format(o.count)} {unit}</small>
             </span>
           </li>
         );
@@ -275,6 +281,7 @@ export interface DashboardDemographicProps extends PlacementProps {label: ReactN
 export function DashboardDemographic({label, items, className, style}: DashboardDemographicProps) {
   const id = useId();
   const [picked, setPicked] = useState<number | null>(null);
+  const percent = usePercentFormatter();
   return (
     <div className={clsx('gv-dashboard-demographic', className)} style={style}>
       <div id={id} className="gv-dashboard-demographic__label">{label}</div>
@@ -296,7 +303,7 @@ export function DashboardDemographic({label, items, className, style}: Dashboard
             <LegendRow
               color={`--gv-chart-${it.color}`}
               label={it.label}
-              value={`${Math.round(it.percent)}%`}
+              value={percent(it.percent)}
               isHighlighted={picked === i}
               isDimmed={picked != null && picked !== i}
               onHighlightChange={on => setPicked(on ? i : null)}

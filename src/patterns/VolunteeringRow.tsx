@@ -4,6 +4,7 @@ import {IconButton} from '../components/gv/IconButton';
 import {Tooltip, TooltipTrigger} from '../components/Tooltip';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {useNumberFormatter} from '../components/format';
 import './VolunteeringRow.css';
 
 export interface VolunteeringRowProps extends PlacementProps {
@@ -71,6 +72,7 @@ export function VolunteeringRow({
   className,
   style
 }: VolunteeringRowProps) {
+  const number = useNumberFormatter();
   if (layout === 'build') {
     return (
       <div className={clsx('gv-cause-row', className)} style={style} data-layout="build" data-last={isLast || undefined}>
@@ -107,7 +109,7 @@ export function VolunteeringRow({
         </div>
       </div>
       <div className="gv-cause-row__volunteers">
-        <div className="gv-cause-row__count">{volunteerCount}</div>
+        <div className="gv-cause-row__count">{number.format(volunteerCount)}</div>
         <div className="gv-cause-row__word">{volunteerCount === 1 ? 'volunteer' : 'volunteers'}</div>
       </div>
     </div>

@@ -9,6 +9,7 @@ import {Popover} from '../components/Popover';
 import {IconButton} from '../components/gv/IconButton';
 import {OptionList, type OptionListItem} from '../components/gv/OptionList';
 import type {PlacementProps} from '../components/className';
+import {useNumberFormatter} from '../components/format';
 import clsx from 'clsx';
 import './FilterMenu.css';
 
@@ -51,6 +52,7 @@ export interface FilterMenuProps extends PlacementProps {
  */
 export function FilterMenu({facets, value, onChange, countLabel, 'aria-label': label = 'Filter', defaultOpen, className, style}: FilterMenuProps) {
   const on = activeFacets(facets, value).length;
+  const number = useNumberFormatter();
   const options = (f: FilterFacet) => (
     <OptionList aria-label={f.label} items={f.items} icon={f.icon} countLabel={countLabel}
       isSearchable={f.isSearchable ?? f.items.length > 5} value={value[f.id] ?? []}
@@ -73,7 +75,7 @@ export function FilterMenu({facets, value, onChange, countLabel, 'aria-label': l
                 <MenuItem id={f.id} textValue={f.label}>
                   <span className="gv-filter-menu__icon" aria-hidden>{f.icon}</span>
                   <span className="gv-filter-menu__label">{f.label}</span>
-                  {n > 0 && <span className="gv-filter-menu__count">{n}</span>}
+                  {n > 0 && <span className="gv-filter-menu__count">{number.format(n)}</span>}
                 </MenuItem>
                 {/* A long list gets its search: a dialog submenu holding the Autocomplete. A short one is a plain submenu. */}
                 {(f.isSearchable ?? f.items.length > 5) ? (

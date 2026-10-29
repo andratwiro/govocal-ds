@@ -38,7 +38,12 @@ describe('a point in words (the value card and the keyboard explorer)', () => {
     expect(describePoint(series, ['16 Feb', '23 Feb', '02 Mar', '09 Mar'], 3)).toBe('09 Mar: Participants 10, Visitors 9');
   });
   it('leaves out a series with no value there, and the date when there is none', () => {
-    expect(describePoint([{label: 'Votes', values: [1284]}, {label: 'Comments', values: []}], undefined, 0)).toBe('Votes 1,284');
+    expect(describePoint([{label: 'Votes', values: [1284]}, {label: 'Comments', values: []}], undefined, 0)).toBe('Votes 1284');
+  });
+  it('writes numbers as the locale does (the parts pass the React Aria locale\'s formatter)', () => {
+    const votes = [{label: 'Votes', values: [1284.5]}];
+    expect(describePoint(votes, undefined, 0, {format: new Intl.NumberFormat('en-GB').format})).toBe('Votes 1,284.5');
+    expect(describePoint(votes, undefined, 0, {format: new Intl.NumberFormat('de-DE').format})).toBe('Votes 1.284,5');
   });
   it('picks the nearest point across the plot', () => {
     expect(nearestIndex(0, 6)).toBe(0);

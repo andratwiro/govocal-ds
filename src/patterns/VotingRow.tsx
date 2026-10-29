@@ -3,6 +3,7 @@ import {TriangleAlert} from 'lucide-react';
 import {VoteProgress} from './VoteProgress';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {useNumberFormatter} from '../components/format';
 import './VotingRow.css';
 
 export interface VotingRowProps extends PlacementProps {
@@ -42,6 +43,7 @@ export function VotingRow({
   style
 }: VotingRowProps) {
   // Vote progress scales the bar by the leading option's count: recover it from this row's relative fill.
+  const number = useNumberFormatter();
   const maxCount = fillPercent > 0 ? Math.round((voteCount * 100) / fillPercent) : Math.max(voteCount, 1);
   return (
     <div className={clsx('gv-list-row-voting', className)} style={style}>
@@ -71,13 +73,13 @@ export function VotingRow({
           />
         </div>
         <div className="gv-list-row-voting__cell" data-num>
-          {onlineCount}
+          {number.format(onlineCount)}
         </div>
         <div className="gv-list-row-voting__cell" data-num>
-          <span className={offlineCount === 0 ? 'gv-list-row-voting__none' : undefined}>{offlineCount}</span>
+          <span className={offlineCount === 0 ? 'gv-list-row-voting__none' : undefined}>{number.format(offlineCount)}</span>
         </div>
         <div className="gv-list-row-voting__cell gv-list-row-voting__comments-cell" data-num>
-          {commentCount}
+          {number.format(commentCount)}
           {Boolean(newCommentCount) && <span className="gv-list-row-voting__new">{newCommentCount} new</span>}
         </div>
       </div>

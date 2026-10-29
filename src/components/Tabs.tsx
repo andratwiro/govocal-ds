@@ -15,7 +15,8 @@ import {
 } from 'react-aria-components/Tabs';
 import {ListBox, ListBoxItem, ListBoxSection, Header} from 'react-aria-components/ListBox';
 import {VisuallyHidden} from 'react-aria-components/VisuallyHidden';
-import {useLocale, type Key} from 'react-aria-components';
+import type {Key} from 'react-aria-components';
+import {useNumberFormatter} from './format';
 import {composeRenderProps} from 'react-aria-components/composeRenderProps';
 import {clsx} from 'clsx';
 import './Tabs.css';
@@ -68,14 +69,14 @@ export interface TabProps extends RACTabProps {
  * add the prototype's "(18)" and the language dot.
  */
 export function Tab({count, status, statusLabel, className, ...props}: TabProps) {
-  const {locale} = useLocale();
+  const number = useNumberFormatter();
   return (
     <RACTab {...props} className={composeRenderProps(className, c => clsx('react-aria-Tab', c))}>
       {composeRenderProps(props.children, children => (
         <>
           {status && <span className="gv-tab__status" data-status={status} aria-hidden />}
           {children}
-          {count != null && <span className="gv-tab__count"> ({new Intl.NumberFormat(locale).format(count)})</span>}
+          {count != null && <span className="gv-tab__count"> ({number.format(count)})</span>}
           {status && <VisuallyHidden>, {statusLabel ?? STATUS_WORDS[status]}</VisuallyHidden>}
           <SelectionIndicator />
         </>

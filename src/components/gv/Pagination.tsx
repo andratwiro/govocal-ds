@@ -3,6 +3,7 @@ import {useEffect, useRef} from 'react';
 import {Button} from 'react-aria-components/Button';
 import {ChevronLeft, ChevronRight} from 'lucide-react';
 import {useLocale} from 'react-aria-components/I18nProvider';
+import {useNumberFormatter} from '../format';
 import {useControlledState} from '../useControlledState';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
@@ -52,6 +53,7 @@ export function Pagination({page: pageProp, defaultPage = 1, pageCount, onPageCh
   const nav = useRef<HTMLElement>(null);
   const toCurrent = useRef(false);
   const {direction} = useLocale();
+  const number = useNumberFormatter();
   const [Back, Forward] = direction === 'rtl' ? [ChevronRight, ChevronLeft] : [ChevronLeft, ChevronRight];
 
   useEffect(() => {
@@ -74,7 +76,7 @@ export function Pagination({page: pageProp, defaultPage = 1, pageCount, onPageCh
       {pageItems(current, count).map(item => typeof item === 'number' ? (
         <Button key={item} className="gv-pagination__page" aria-label={`Page ${item}`}
           aria-current={item === current ? 'page' : undefined} onPress={() => item !== current && setPage(item)}>
-          {item}
+          {number.format(item)}
         </Button>
       ) : (
         <span key={item} className="gv-pagination__gap" aria-hidden>…</span>

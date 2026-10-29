@@ -1,6 +1,7 @@
 import {useId, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode} from 'react';
 import './Chart.css';
 import type {PlacementProps} from '../className';
+import {useNumberFormatter} from '../format';
 
 /**
  * The chart palette, one name per `--gv-chart-*` token. Anything that draws data (lines, bars,
@@ -24,7 +25,12 @@ export interface ChartSeries {
   color?: ChartColor;
 }
 
-const fmt = (n: number) => n.toLocaleString('en-GB', {maximumFractionDigits: 2});
+/** How a chart writes a number. The parts pass the locale's (`useNumberFormatter`); called directly (the unit
+ * tests), up to two decimals with no grouping. */
+type Format = (n: number) => string;
+const plain: Format = n => String(Math.round(n * 100) / 100);
+/** The chart parts' number format: up to two decimals, grouped as the locale groups. */
+const useChartFormat = (): Format => useNumberFormatter({maximumFractionDigits: 2}).format;
 
 /** A y axis from 0 in `steps` equal, round steps (Figma: 0·3·6·9·12, 0·4·8·12·16). */
 export function niceScale(dataMax: number, steps = 4): {max: number; ticks: number[]} {
@@ -36,7 +42,7 @@ export function niceScale(dataMax: number, steps = 4): {max: number; ticks: numb
 }
 
 /** One series in words: where it started, where it ended, and an inner peak if there was one. */
-export function describeSeries(label: string, values: number[], labels?: string[]): string {
+export function describeSeries(label: string, values: number[], labels?: string[], {format: fmt = plain}: {format?: Format} = {}): string {
   if (!values.length) return `${label}: no data`;
   const first = values[0], last = values[values.length - 1];
   const max = Math.max(...values), at = values.indexOf(max);
@@ -48,14 +54,15 @@ export function describeSeries(label: string, values: number[], labels?: string[
 }
 
 /** The whole chart in words: the default aria-label of a LineChart. */
-export function describeChart(series: ChartSeries[], labels: string[]): string {
+export function describeChart(series: ChartSeries[], labels: string[], say: {format?: Format} = {}): string {
   const range = labels.length > 1 ? `, ${labels[0]} to ${labels[labels.length - 1]}` : '';
-  return `Line chart${range}. ${series.map(s => describeSeries(s.label, s.values, labels) + '.').join(' ')}`;
+  return `Line chart${range}. ${series.map(s => describeSeries(s.label, s.values, labels, say) + '.').join(' ')}`;
 }
 
 
 /** One point in words, for the value card and the keyboard explorer: "23 Feb: Participants 0, Visitors 3". */
-export function describePoint(series: {label: string; values: number[]}[], labels: string[] | undefined, i: number): string {
+export function describePoint(series: {label: string; values: number[]}[], labels: string[] | undefined, i: number,
+  {format: fmt = plain}: {format?: Format} = {}): string {
   const values = series.filter(s => s.values[i] != null).map(s => `${s.label} ${fmt(s.values[i])}`).join(', ');
   return labels?.[i] ? `${labels[i]}: ${values}` : values;
 }
@@ -163,6 +170,7 @@ function ChartStage({className, style, children, interactive, name, series, labe
   /** Who shows the card: the pointer, the keyboard, or nobody. */
   const [shown, setShown] = useState<'pointer' | 'keyboard' | null>(null);
   const keyboard = useRef(false);
+  const fmt = useChartFormat();
 
   const show = (i: number, by: 'pointer' | 'keyboard') => {
     setIndex(i);
@@ -213,7 +221,7 @@ function ChartStage({className, style, children, interactive, name, series, labe
   };
 
   const x = xAt(index);
-  const text = describePoint(series, labels, index);
+  const text = describePoint(series, labels, index, {format: fmt});
   const picked = emphasis;
 
   return (
@@ -321,7 +329,8 @@ export function LineChart({series, labels, max, height = 141, showLegend = false
   const n = Math.max(labels.length, ...series.map(s => s.values.length));
   const x = (i: number) => (n > 1 ? (i / (n - 1)) * VB_W : VB_W / 2);
   const y = (v: number) => height * (1 - v / (scale.max || 1));
-  const label = rest['aria-label'] ?? describeChart(series, labels);
+  const fmt = useChartFormat();
+  const label = rest['aria-label'] ?? describeChart(series, labels, {format: fmt});
   // Outside first (a Legend row beside the chart), then the chart's own legend, then the line under the pointer.
   const picked = highlightedSeries ?? legendPick ?? hovered;
   const colors: ChartColor[] = series.map((s, i) =>
@@ -414,7 +423,8 @@ export function Sparkline({values, label = 'Trend', labels, height = 110, showGr
   const n = values.length;
   const pts = values.map((v, i) => [n > 1 ? (i / (n - 1)) * VB_W : VB_W / 2, height - pad - ((v - lo) / (hi - lo)) * (height - pad * 2)]);
   const line = pts.map(([px, py], i) => `${i ? 'L' : 'M'}${px.toFixed(1)} ${py.toFixed(1)}`).join(' ');
-  const words = rest['aria-label'] ?? describeSeries(label, values, labels);
+  const fmt = useChartFormat();
+  const words = rest['aria-label'] ?? describeSeries(label, values, labels, {format: fmt});
 
   const svg = (
     <svg

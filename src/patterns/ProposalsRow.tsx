@@ -3,6 +3,7 @@ import {TriangleAlert} from 'lucide-react';
 import {VoteProgress} from './VoteProgress';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {useNumberFormatter} from '../components/format';
 import './ProposalsRow.css';
 
 export interface ProposalsRowProps extends PlacementProps {
@@ -42,6 +43,7 @@ export function ProposalsRow({
   className,
   style
 }: ProposalsRowProps) {
+  const number = useNumberFormatter();
   return (
     <div className={clsx('gv-list-row-proposals', className)} style={style}>
       <div className="gv-list-row-proposals__cells">
@@ -72,7 +74,7 @@ export function ProposalsRow({
         </div>
         <div className="gv-list-row-proposals__cell gv-list-row-proposals__status-cell">{statusLabel}</div>
         <div className="gv-list-row-proposals__cell gv-list-row-proposals__comments-cell" data-num>
-          {commentCount}
+          {number.format(commentCount)}
           {Boolean(newCommentCount) && (
             <span className="gv-list-row-proposals__new">{newCommentCount} new</span>
           )}

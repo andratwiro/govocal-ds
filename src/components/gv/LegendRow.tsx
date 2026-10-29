@@ -1,6 +1,7 @@
 import type {ReactNode} from 'react';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {useNumberFormatter} from '../format';
 import './LegendRow.css';
 
 export interface LegendRowProps extends PlacementProps {
@@ -12,7 +13,7 @@ export interface LegendRowProps extends PlacementProps {
   value: string;
   /**
    * A count before the value, in its own column ("88" then "14%"): the Common Ground panel's "Where people stand".
-   * A number is grouped for reading (1,284).
+   * A number is written as the locale writes it (1,284; 1.284 in German).
    */
   count?: number | string;
   /** Its series is picked out (in the chart beside it): the label goes primary. */
@@ -28,6 +29,7 @@ export interface LegendRowProps extends PlacementProps {
 
 /** A swatch, a label and its value: the key under a stacked bar or beside a chart (Figma "Legend row"). */
 export function LegendRow({color, label, value, count, isHighlighted, isDimmed, onHighlightChange: on, className, style}: LegendRowProps) {
+  const number = useNumberFormatter();
   return (
     <div
       className={clsx('gv-legend-row', className)} style={style}
@@ -41,7 +43,7 @@ export function LegendRow({color, label, value, count, isHighlighted, isDimmed, 
       <span className="gv-legend-row__swatch" aria-hidden="true" style={{background: `var(${color})`}} />
       <span className="gv-legend-row__label">{label}</span>
       {count != null && (
-        <span className="gv-legend-row__count">{typeof count === 'number' ? count.toLocaleString('en-GB') : count}</span>
+        <span className="gv-legend-row__count">{typeof count === 'number' ? number.format(count) : count}</span>
       )}
       <span className="gv-legend-row__value">{value}</span>
     </div>
