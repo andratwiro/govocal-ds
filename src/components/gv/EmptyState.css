@@ -1,0 +1,83 @@
+@import '../theme.css';
+
+/* Empty state (Not in Figma). Prototype: the empty Manage and Insights tabs (.pj-tabempty, l.8813: a centred column,
+   gap 8, padding 40 24, drawing 160 x 120 with 12 below, title Body 500, text UI grey up to 360, action 12 above),
+   the side panel (.pj-tabempty--side: padding 24 20, drawing 96, UI title, text up to 240) and the input list
+   (.pj-mirempty: a dashed frame, gap 4, padding 28 24). */
+.gv-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gv-space-8);
+  box-sizing: border-box;
+  padding: 40px var(--gv-space-24);
+  text-align: center;
+  font-family: var(--gv-font-family);
+}
+
+.gv-empty-state__art {
+  margin-block-end: var(--gv-space-12);
+}
+
+.gv-empty-state__icon {
+  display: flex;
+  margin-block-end: var(--gv-space-4);
+  color: var(--gv-icon-default);
+}
+
+.gv-empty-state__title {
+  margin: 0;
+  font: var(--gv-type-body-strong);
+  letter-spacing: var(--gv-type-body-strong-tracking);
+  color: var(--gv-text-primary);
+  text-wrap: balance;
+}
+
+/* Balanced lines, as the prototype's paragraphs: two even lines, never one word left on the second. */
+.gv-empty-state__text {
+  max-width: 360px;
+  margin: 0;
+  text-wrap: balance;
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-empty-state__action {
+  margin-block-start: var(--gv-space-12);
+}
+
+.gv-empty-state[data-size='panel'] {
+  padding: var(--gv-space-24) var(--gv-space-20);
+}
+
+.gv-empty-state[data-size='panel'] .gv-empty-state__title {
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+}
+
+.gv-empty-state[data-size='panel'] .gv-empty-state__text {
+  max-width: 240px;
+}
+
+/* The input list (.pj-mirempty, l.1225): an empty list someone fills, so a dashed frame and a quieter title. Its text
+   stays in the secondary grey: the prototype's lighter grey (slate 500) is 3.2:1 on white, under AA for 13 px. */
+.gv-empty-state[data-framed] {
+  gap: var(--gv-space-4);
+  padding: var(--gv-space-28) var(--gv-space-24);
+  border: 1px dashed var(--gv-border-radio);
+  border-radius: var(--gv-radius-12);
+}
+
+.gv-empty-state[data-framed] .gv-empty-state__icon {
+  color: var(--gv-icon-quiet);
+}
+
+.gv-empty-state[data-framed] .gv-empty-state__title {
+  color: var(--gv-text-secondary);
+}
+
+.gv-empty-state[data-framed] .gv-empty-state__text {
+  max-width: 34ch;
+}

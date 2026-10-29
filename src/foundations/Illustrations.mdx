@@ -1,0 +1,58 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import {IllustrationTiles} from './IllustrationGallery';
+
+<Meta title="Foundations/Illustrations" />
+
+# Illustrations
+
+**Not in Figma: drawn from the prototype; the designer owns the drawings.** Each is content, not a component: one SVG
+file in `src/illustrations/`, drawn inline by [Illustration](?path=/docs/components-data-display-illustration--docs)
+so it paints with the page's tokens, and used by [Empty state](?path=/docs/components-status-feedback-empty-state--docs).
+
+```tsx
+<Illustration name="ideation-map" />                       // plays when on screen, rests on its still
+<Illustration name="survey-pages" size={320} height={168} /> // a method scene cropped to its cover
+<EmptyState illustration="empty-notebook" title="Ideas will appear here" />
+```
+
+## How they move
+
+A drawing's still is its resting picture: the method picker's cover for a scene. Its story plays from the still and
+ends on it, so it can stop at any time. `motion` picks when it plays:
+
+- `auto` (the default) plays once it is on screen and rests within 5 s. A story longer than that, like every method
+  scene, rests until it is hovered: nothing moves on its own for more than 5 s.
+- `hover` plays while the pointer is over the card around it (`data-illustration-host`) or focus is inside it.
+- `once` plays the story one time; `loop` plays until paused, only next to a pause control (the tiles' Still switch).
+- `still` never moves, and neither does anything when the system asks for reduced motion.
+
+Every duration and easing is a motion token: a story lasts `calc(var(--gv-motion-duration-loop) * N)`.
+
+## Empty states
+
+<IllustrationTiles group="Empty states" />
+
+## Method scenes
+
+The method picker's cards: a square stage whose middle band (320 × 168) is the cover.
+
+<IllustrationTiles group="Method scenes" />
+
+## Other
+
+<IllustrationTiles group="Other" />
+
+## A new drawing
+
+One file, `src/illustrations/<name>.svg` (kebab-case), listed in `src/illustrations/names.ts`:
+
+- Real SVG shapes and `<text>`: no `foreignObject`, images, links, ids or `url()`, so two copies on a page never clash.
+- Colour only through `var(--gv-*)` (or `currentColor`), set in its own `<style>`. Where the prototype's
+  "animation - colors" palette has no token yet, the file mixes one from tokens with `color-mix()` under a local
+  `--gvi-*` name; those are the tokens the palette is missing.
+- Every selector under its root class `gvi-<name>`, every keyframe named `gvi-<name>-…`, a reduced-motion block that
+  turns animation off, and the still as the base styles.
+- The root says where it belongs: `data-group`, `data-motion`, `data-sizes` and `data-source` (its place in the
+  prototype).
+
+`tests/illustrations.test.mjs` checks all of it.

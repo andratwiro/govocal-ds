@@ -1,0 +1,74 @@
+@import '../components/theme.css';
+
+/* Foundations/Illustrations: a tile per drawing (IllustrationGallery.tsx). Paint only through var(--gv-*). */
+.gv-illus-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--gv-space-24);
+  margin: var(--gv-space-16) 0 var(--gv-space-32);
+  font-family: var(--gv-font-family);
+}
+
+.gv-illus-tile {
+  display: grid;
+  align-content: start;
+  gap: var(--gv-space-12);
+  margin: 0;
+  padding: var(--gv-space-16);
+  border: 1px solid var(--gv-border-card);
+  border-radius: var(--gv-radius-12);
+  background: var(--gv-surface-panel);
+}
+
+/* The drawing on the stage grey, centred; a method scene brings its own stage and fills the tile. */
+.gv-illus-tile__stage {
+  display: grid;
+  place-items: center;
+  min-block-size: 200px;
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-stage);
+  overflow: hidden;
+}
+
+.gv-illus-tile__caption {
+  display: grid;
+  gap: var(--gv-space-8);
+}
+
+.gv-illus-tile__name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-8);
+}
+
+.gv-illus-tile__name code {
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-primary);
+  user-select: all;
+}
+
+.gv-illus-tile__facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--gv-space-2) var(--gv-space-12);
+  margin: 0;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+}
+
+.gv-illus-tile__facts dt {
+  color: var(--gv-text-secondary);
+}
+
+.gv-illus-tile__facts dd {
+  margin: 0;
+  color: var(--gv-text-primary);
+}
+
+.gv-illus-none {
+  margin: var(--gv-space-8) 0 var(--gv-space-32);
+  font: var(--gv-type-ui);
+  color: var(--gv-text-secondary);
+}
