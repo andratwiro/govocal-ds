@@ -119,6 +119,24 @@ dashboards, Build tab).
 - Token snaps: the 16 avatar's initials 11 → 12px; compact table rows' 18px line → 20 (UI line).
 - Candidates for new Figma tokens: project tile fills by method (teal, blue).
 
+**Built in the dashboards package**
+
+- Tabs' group headings vs React Aria's TabList (headings would take focus) → **a single-select ListBox with sections drives the panel**, same look → headings stay out of the focus order and name their groups.
+- Settings dialog at 420 (the story) vs 866 (the prototype) → **`size="wide"`** → a 200 side list leaves a usable panel only at 866.
+- Tab count with a 7 gap vs the prototype's plain space → **one space ("All reports (18)")** → it reads as one label.
+- Value card as a React Aria Tooltip vs drawn inside the chart → **drawn inside** (hidden from screen readers; the explorer's value text says the same) → it follows the pointer point by point, needs no portal and can't leave the chart.
+- Keyboard explorer: a button per point vs one slider → **one slider** → one tab stop; arrows, Home and End are what a slider already means to screen readers.
+- Sparkline interactive always vs with dates → **on when `labels` are given** → a card has to name its point.
+- Bar and Statement row cards: focusable rows vs hover only → **hover only, the card's words also in the accessible text** → a dashboard of bars would be a long run of tab stops; nothing is lost to the keyboard or screen readers.
+- Legend rows linked to a chart: static vs focusable → **focusable when linked** → the keyboard reaches the emphasis too.
+- Hover on bars: brighten vs darken → **darken toward the primary text colour** → visible on the dark brand bar and the light grey alike.
+- Last x label: centred and clipped (the prototype's "23 Ma") → **centred while it fits, else flush with the chart** → never cut.
+- Dashboard card empty: the prototype's muted line vs Empty state → **Empty state** → one empty state across the system.
+- Stat tile empty as a greyed state vs the prototype's zeros → **a story with zeros, no prop** → the prototype shows 0 in the normal colour.
+- Status dot green and trend-down red have no tokens → **`--gv-chart-agree` and `--gv-state-notification` for now** → the nearest drawn colours; named status tokens come with the token review.
+- List / Map switch: white track and grey selected (the prototype) vs the small Segmented control → **the small Segmented control** → one small look.
+- Statement row: Figma's three shares vs the Manage panel's four with gaps → **`unseenPercent`, gaps only with four shares** → Figma's bar stays as drawn.
+
 **Tokens everywhere** (the project lead, 29 Oct: every spacing, radius, type and shadow value is a token; a design value with no token snaps to the nearest, guarded by `tests/tokens-only.test.mjs`)
 
 - Sizes had no tokens → **a Not-in-Figma size set** (`--gv-size-icon-12…24`, `control-24…40`, `avatar-16…28`; Foundations/Size), like motion → icons, controls and avatars repeat a handful of sizes; naming them keeps the next screen on them.
@@ -132,7 +150,7 @@ dashboards, Build tab).
 
 **Charts are interactive** (the project lead, 29 Oct; Figma draws them static)
 
-- Figma's charts are static → **hover and keyboard value cards on every chart, a legend row that emphasises its series, hover states on bar and statement rows** → the prototype's dashboards have them, and a back-office reader needs exact values. React Aria has no charts and the system keeps one chart system (no chart library): built on our SVG with React Aria's hooks.
+- Figma's charts are static → **hover and keyboard value cards on every chart, a legend row that emphasises its series, hover states on bar and statement rows** → the prototype's dashboards have them, and a back-office reader needs exact values. React Aria has no charts and the system keeps one chart system (no chart library): our own SVG with pointer and key events, a slider as the keyboard explorer, and `:focus-visible` rings.
 
 **Prototype bugs found on the way** (not copied into the system):
 - Space and Folder search: an empty popover with no "No results" text, arrow keys don't move, no search icon.

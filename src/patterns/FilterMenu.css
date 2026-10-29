@@ -15,8 +15,8 @@
     &::after {
       content: '';
       position: absolute;
-      inset-block-start: -3px;
-      inset-inline-end: -3px;
+      inset-block-start: calc(var(--gv-space-3) * -1);
+      inset-inline-end: calc(var(--gv-space-3) * -1);
       inline-size: 7px;
       block-size: 7px;
       box-sizing: content-box;

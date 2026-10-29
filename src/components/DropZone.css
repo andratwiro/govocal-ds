@@ -8,12 +8,12 @@
   border-radius: var(--radius);
   appearance: none;
   vertical-align: middle;
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: var(--gv-type-body-size);
+  line-height: var(--gv-type-body-line);
   text-align: center;
   margin: 0;
   outline: none;
-  padding: 24px 12px;
+  padding: var(--gv-space-24) var(--gv-space-12);
   width: 30%;
   min-height: 96px;
   display: flex;

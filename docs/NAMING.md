@@ -51,7 +51,7 @@ Components              src/components/gv/
                         · Rich text editor · Rich text toolbar · Rich text toolbar button · Search field · Select · Switch
                         · Tag picker · Text field · Title field
   Layout & containers   Card · Divider · Panel
-  Navigation            Breadcrumbs · Pagination
+  Navigation            Breadcrumbs · Pagination · Tabs
   Overlays              Alert dialog · Coachmark · Help popover · Modal · Side panel · Tooltip
   Status & feedback     Badge · Banner · Empty state · New dot · Review status · Skeleton · Status badge · Toast
 Patterns                src/patterns/

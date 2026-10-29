@@ -53,7 +53,7 @@
     &[data-invalid]::after {
       content: '';
       position: absolute;
-      inset: 1px;
+      inset: var(--gv-space-1);
       z-index: 2;
       pointer-events: none;
       border-radius: inherit;
@@ -63,7 +63,7 @@
     &[data-focus-within]::after {
       content: '';
       position: absolute;
-      inset: 1px;
+      inset: var(--gv-space-1);
       z-index: 2;
       pointer-events: none;
       border-radius: inherit;
@@ -76,7 +76,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin-inline-start: -1px;
+    margin-inline-start: calc(var(--gv-space-1) * -1);
 
     &[slot='decrement'] {
       border-radius: 0;

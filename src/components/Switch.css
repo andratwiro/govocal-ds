@@ -31,7 +31,7 @@
     height: 20px;
     width: 36px;
     box-sizing: border-box;
-    padding: 2px;
+    padding: var(--gv-space-2);
     border-radius: var(--gv-radius-full);
     background: var(--gv-control-toggle-off);
     box-shadow: none;
