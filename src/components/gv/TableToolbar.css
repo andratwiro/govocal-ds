@@ -1,0 +1,39 @@
+@import '../theme.css';
+
+/*
+ * Table toolbar (the prototype's `.pj-inlist__tools`): the count at the start, the tools at the end 8 apart, one row
+ * 32 tall (the Selection bar's height, so the row doesn't jump when rows are selected) and 8 above the table.
+ */
+.gv-table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-16);
+  min-block-size: var(--gv-space-32);
+  font-family: var(--gv-font-family);
+}
+
+.gv-table-toolbar__start {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+/* The count: the Title size, at regular weight (the prototype's `.pj-incount`). */
+.gv-table-toolbar__heading {
+  margin: 0;
+  font: var(--gv-type-title);
+  font-weight: var(--gv-type-body-weight);
+  letter-spacing: var(--gv-type-title-tracking);
+  color: var(--gv-text-primary);
+  white-space: nowrap;
+}
+
+.gv-table-toolbar__end {
+  flex: none;
+}
+
+.gv-table-toolbar__tools {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+}
