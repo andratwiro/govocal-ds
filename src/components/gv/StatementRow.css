@@ -1,25 +1,28 @@
 @import '../theme.css';
 
-/* Figma: 430 statement + 200 bar + 72 value in a 730 row, so 14 between them. */
+/* Figma: 430 statement + 200 bar + 72 value in a 730 row, 14 between them. The prototype
+   (Insights › Statements) is the same grid with the statement taking what is left; its text
+   wraps rather than cutting off. The value column grows past 72 rather than wrap ("71% disagree"). */
 .gv-statement-row {
-  display: flex;
-  align-items: center;
-  gap: var(--gv-space-14);
+  container-type: inline-size;
   width: 100%;
 }
 
+.gv-statement-row__in {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 200px minmax(72px, max-content);
+  align-items: center;
+  gap: var(--gv-space-14);
+}
+
 .gv-statement-row__statement {
-  flex: 1 1 430px;
   min-width: 0;
   font: var(--gv-type-ui);
   color: var(--gv-text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .gv-statement-row__bar {
-  flex: 0 0 200px;
   display: flex;
   height: 8px;
   border-radius: var(--gv-radius-full);
@@ -45,8 +48,21 @@
 }
 
 .gv-statement-row__value {
-  flex: 0 0 72px;
   text-align: right;
+  white-space: nowrap;
   font: var(--gv-type-small-strong);
   color: var(--gv-text-secondary);
+}
+
+/* Not in Figma: the prototype stacks the row when there is no room (statement, then the bar,
+   then the value on the left). Here it follows the row's own width, not the window's. */
+@container (max-width: 480px) {
+  .gv-statement-row__in {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gv-space-6);
+  }
+
+  .gv-statement-row__value {
+    text-align: left;
+  }
 }
