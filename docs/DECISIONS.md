@@ -4,6 +4,38 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Words and locales (29 Oct 2026, strings)
+
+Calls made while taking every fixed English word and fixed locale out of the parts (docs/API.md point 11).
+
+- A translation layer in the system (message ids, its own provider) vs words handed in by the page → **no translation
+  layer: every part takes its words from the page, as content props or `labels` over English defaults (`xLabels`),
+  and numbers, lists and dates follow React Aria's locale (`AppProvider`'s `locale`)** → the platform's own component
+  library already works this way: `front/app/component-library/components/SearchInput/index.tsx` takes its words as
+  plain string props (`ariaLabel`, `a11y_closeIconTitle`), and nothing in `front/app/component-library` calls
+  `formatMessage`. The platform owns its messages and its translation pipeline (about 30 locales); the system owns
+  none, so a part never goes stale against them.
+- Where a word goes: a prop or `labels` → **what belongs to the instance stays a prop (`title`, `label`,
+  `aria-label`, `placeholder`, `emptyLabel`, `children`), its English default moves into `xLabels`; the part's own
+  words (a control's name, a state, a count, a join) are `labels` keys** → a page sets its content where it uses the
+  part and its labels once, from its i18n. The one-off word props (`closeLabel`, `dismissLabel`, `cancelLabel`,
+  `backLabel`, `togglePanelLabel`, `addLabel`, `removeLabel`, `searchLabel`, `deleteLabel`, `openLabel`, `maxLabel`,
+  `submitLabel`, `postedByLabel`, `passLabel`, `statusLabel` on Tab, `itemName`, Help popover's `label`, the ranking's
+  `unit`) fold into `labels`, call sites renamed in the same commit (no aliases).
+- A count's words → **`CountLabel = (count, formatted) => string`**: the host's plural rules need the number, and the
+  English defaults print the locale's "1,284" / "1.284". Other values arrive formatted (names, "42%", "3 of 124"); a
+  phrase around markup is a `ReactNode` function (Alert dialog's "Type **Reset** to confirm", which now names the
+  field by `aria-labelledby`; the record head's "Posted by").
+- LineChart's and Sparkline's `labels` (the x axis) vs `labels` (words) everywhere else → **the axis is `xAxis`** →
+  one meaning for `labels` across the system; the back office's call sites renamed.
+- React Aria's `useNumberFormatter` lives in `react-aria`, which the system doesn't depend on (only
+  `react-aria-components`) → **`src/components/format.ts` rebuilds the number, percent and list formatters on
+  `useLocale`, cached per locale** → no new dependency, the same locale React Aria lays parts out in.
+- `ACCESS_WHO_VALUE` (the participant action row's "Sign-in required"…) is a word table the page reads, not words a
+  part says → **kept, in English, documented as such**: the page that speaks another language passes its own `value`.
+- Symbols drawn as text (–, /, ·, …, the "#" of a rank) → **stay, listed in the guard's allow-list** → punctuation
+  between values, not words; the list may only shrink.
+
 ## Composition contracts in code (29 Oct 2026, architecture review)
 
 Calls made while putting the review's invisible contracts into the parts themselves (rv-contracts).
