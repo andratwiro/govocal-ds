@@ -89,7 +89,7 @@ test('the sidebar has Foundations as its own section, in order', async ({page}) 
     els.map(el => el.getAttribute('data-item-id')));
   // The named pages first (.storybook/preview.tsx), then the rest alphabetically.
   const order = ['colour', 'typography', 'spacing', 'radius', 'shadows', 'motion', 'icons', 'illustrations',
-    'focus-and-states', 'size'];
+    'focus-and-states', 'size', 'voice-and-tone', 'word-list'];
   const pagesShown = ids.map(id => id!.replace(/^foundations-|--docs$/g, ''));
   expect(pagesShown).toEqual(order.filter(name => pagesShown.includes(name)));
   expect(pagesShown).toEqual(expect.arrayContaining(['colour', 'typography', 'spacing', 'radius', 'shadows', 'icons']));

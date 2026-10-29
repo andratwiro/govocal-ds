@@ -56,7 +56,7 @@ const preview: Preview = {
         method: 'alphabetical',
         order: ['Overview', ['Welcome', 'Start here', 'Principles', 'Who owns what', 'For developers', 'Questions for developers',
           'What comes from React Aria', 'Lifecycle', 'Accessibility'], 'Foundations',
-          ['Colour', 'Typography', 'Spacing', 'Radius', 'Shadows', 'Motion', 'Icons', 'Illustrations', 'Voice and tone', 'Word list'],
+          ['Colour', 'Typography', 'Spacing', 'Radius', 'Shadows', 'Motion', 'Icons', 'Illustrations'],
           'Components', 'Patterns', 'Back office', 'Base', ['Introduction']]
       }
     }

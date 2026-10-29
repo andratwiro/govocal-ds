@@ -42,7 +42,7 @@ test('the React Aria table has a row per part, Data table among them', async ({p
 
 test('the word list comes from its JSON, with an Avoid column', async ({page}) => {
   await page.goto(docs('foundations-word-list'));
-  await expect(page.getByRole('row').filter({hasText: 'resident'}).first()).toContainText('citizen');
+  await expect(page.getByRole('row').filter({has: page.getByRole('cell', {name: 'resident', exact: true})})).toContainText('citizen');
 });
 
 test('Colour, Spacing and Typography each say which token does which job', async ({page}) => {

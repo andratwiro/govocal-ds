@@ -1,4 +1,4 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import {Markdown, Meta} from '@storybook/addon-docs/blocks';
 
 <Meta title="Foundations/Voice and tone" />
 
@@ -37,11 +37,14 @@ names (Input manager, Community monitor), a person's name. The copy check flags 
 
 An error says what is wrong and how to fix it, in the field's own words, without blame:
 
-| Instead of | Write |
-|---|---|
-| Invalid input | Give the project a title. |
-| Error 500 | The ideas didn't load. Check your connection and try again. |
-| Field required | Pick a folder. |
+{/* A table goes through the Markdown block: MDX here has no GitHub tables. */}
+<Markdown>{[
+  "| Instead of | Write |",
+  "|---|---|",
+  "| Invalid input | Give the project a title. |",
+  "| Error 500 | The ideas didn't load. Check your connection and try again. |",
+  "| Field required | Pick a folder. |",
+].join('\n')}</Markdown>
 
 Put the message next to what it is about: under the field, in the panel that failed. A form moves focus to the first
 field to fix.

@@ -1,4 +1,4 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import {Markdown, Meta} from '@storybook/addon-docs/blocks';
 import {Renamed, Tokens} from './TokenBlocks';
 
 <Meta title="Foundations/Spacing" />
@@ -16,17 +16,20 @@ token: `tests/tokens-only.test.mjs` refuses it and names the steps.
 
 The space tokens are the scale itself: there is no second, named tier. Pick by the job, most used first.
 
-| The job | Token |
-|---|---|
-| Between things that belong together: an icon and its label, a row's parts, a button group | `--gv-space-8` |
-| A card's or panel's padding; between cards; between sections inside a panel | `--gv-space-16` |
-| A control's inline padding; a compact card's padding; between fields in a form | `--gv-space-12` |
-| Inside a control (a chip's padding, an icon to its count); tight stacks of text | `--gv-space-4`, `--gv-space-6` |
-| A panel's or page section's padding; between groups | `--gv-space-24` |
-| A nudge inside a small control: a segmented control's track, a badge, a breadcrumb | `--gv-space-2`, `--gv-space-10` |
-| Roomier panels and tables, an indent, the space above a section | `--gv-space-20`, `--gv-space-28`, `--gv-space-32` |
-| An empty state's room; between page regions; a page header's room | `--gv-space-40`, `--gv-space-48`, `--gv-space-56` |
-| The Title field's clear zone | `--gv-space-104` |
+{/* A table goes through the Markdown block: MDX here has no GitHub tables. */}
+<Markdown>{[
+  "| The job | Token |",
+  "|---|---|",
+  "| Between things that belong together: an icon and its label, a row's parts, a button group | `--gv-space-8` |",
+  "| A card's or panel's padding; between cards; between sections inside a panel | `--gv-space-16` |",
+  "| A control's inline padding; a compact card's padding; between fields in a form | `--gv-space-12` |",
+  "| Inside a control (a chip's padding, an icon to its count); tight stacks of text | `--gv-space-4`, `--gv-space-6` |",
+  "| A panel's or page section's padding; between groups | `--gv-space-24` |",
+  "| A nudge inside a small control: a segmented control's track, a badge, a breadcrumb | `--gv-space-2`, `--gv-space-10` |",
+  "| Roomier panels and tables, an indent, the space above a section | `--gv-space-20`, `--gv-space-28`, `--gv-space-32` |",
+  "| An empty state's room; between page regions; a page header's room | `--gv-space-40`, `--gv-space-48`, `--gv-space-56` |",
+  "| The Title field's clear zone | `--gv-space-104` |",
+].join('\n')}</Markdown>
 
 `--gv-space-64` is the next step on the ladder and unused so far; `--gv-space-0` is no gap.
 

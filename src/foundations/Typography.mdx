@@ -1,4 +1,4 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import {Markdown, Meta} from '@storybook/addon-docs/blocks';
 import {Tokens, TypeRoles} from './TokenBlocks';
 
 <Meta title="Foundations/Typography" />
@@ -28,17 +28,20 @@ Letter spacing is set once, `--gv-font-tracking` (0) on `:root`, and every eleme
 Set text with one of the nine roles below (`font: var(--gv-type-ui)`), never with the size, line height and weight primitives one by
 one.
 
-| The job | Role |
-|---|---|
-| Buttons, the current breadcrumb, a selected segment, a row's title | `--gv-type-ui-strong` |
-| The control text: list rows, table cells, menu options, breadcrumbs | `--gv-type-ui` |
-| Reading text: descriptions, banners, a metric's label | `--gv-type-body` |
-| Emphasised reading text: an alert dialog's title | `--gv-type-body-strong` |
-| Panel, modal and dashboard card titles | `--gv-type-title` |
-| Captions and meta: To review, Required, rail labels | `--gv-type-small` |
-| Pills, a phase name, a sorted column header | `--gv-type-small-strong` |
-| Big numbers in KPI tiles and stat rows | `--gv-type-stat` |
-| Small number tiles, counts in rows | `--gv-type-stat-small` |
+{/* A table goes through the Markdown block: MDX here has no GitHub tables. */}
+<Markdown>{[
+  "| The job | Role |",
+  "|---|---|",
+  "| Buttons, the current breadcrumb, a selected segment, a row's title | `--gv-type-ui-strong` |",
+  "| The control text: list rows, table cells, menu options, breadcrumbs | `--gv-type-ui` |",
+  "| Reading text: descriptions, banners, a metric's label | `--gv-type-body` |",
+  "| Emphasised reading text: an alert dialog's title | `--gv-type-body-strong` |",
+  "| Panel, modal and dashboard card titles | `--gv-type-title` |",
+  "| Captions and meta: To review, Required, rail labels | `--gv-type-small` |",
+  "| Pills, a phase name, a sorted column header | `--gv-type-small-strong` |",
+  "| Big numbers in KPI tiles and stat rows | `--gv-type-stat` |",
+  "| Small number tiles, counts in rows | `--gv-type-stat-small` |",
+].join('\n')}</Markdown>
 
 ## Roles
 

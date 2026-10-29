@@ -1,4 +1,4 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import {Markdown, Meta} from '@storybook/addon-docs/blocks';
 
 <Meta title="Overview/Who owns what" />
 
@@ -19,15 +19,18 @@ proposes, and what the two decide together.
 
 The designer makes these changes, through an agent, and they live in this repo.
 
-| What | Where it lives | How a change is checked |
-|---|---|---|
-| The tokens: every colour, space, size, radius, shadow, type role and motion | `tokens/`, built into `src/tokens.css` | `npm test` refuses a raw value, an unknown token or a stale build |
-| The components and patterns, and their CSS | `src/components/`, `src/patterns/` | `npm run typecheck`, the token guards, the e2e keyboard and focus tests |
-| Each part's API: its props, their names, their defaults, the words it takes as `labels` | the props types, `docs/API.md` | `docs/API.md`'s rules; `tests/system-first.test.mjs` for the entry points |
-| The stories: every state, left to right and right to left | each part's `.stories.tsx` | `e2e/stories.spec.ts` renders every story |
-| The docs pages, these included | `src/**/*.mdx`, `docs/` | the copy check over docs pages (`tests/copy.test.mjs`) |
-| The components' own tests | `tests/`, `e2e/` | CI runs them before anything deploys |
-| The demo back office | `backoffice/` | built only from the entry points (`tests/system-first.test.mjs`) |
+{/* A table goes through the Markdown block: MDX here has no GitHub tables. */}
+<Markdown>{[
+  "| What | Where it lives | How a change is checked |",
+  "|---|---|---|",
+  "| The tokens: every colour, space, size, radius, shadow, type role and motion | `tokens/`, built into `src/tokens.css` | `npm test` refuses a raw value, an unknown token or a stale build |",
+  "| The components and patterns, and their CSS | `src/components/`, `src/patterns/` | `npm run typecheck`, the token guards, the e2e keyboard and focus tests |",
+  "| Each part's API: its props, their names, their defaults, the words it takes as `labels` | the props types, `docs/API.md` | `docs/API.md`'s rules; `tests/system-first.test.mjs` for the entry points |",
+  "| The stories: every state, left to right and right to left | each part's `.stories.tsx` | `e2e/stories.spec.ts` renders every story |",
+  "| The docs pages, these included | `src/**/*.mdx`, `docs/` | the copy check over docs pages (`tests/copy.test.mjs`) |",
+  "| The components' own tests | `tests/`, `e2e/` | CI runs them before anything deploys |",
+  "| The demo back office | `backoffice/` | built only from the entry points (`tests/system-first.test.mjs`) |",
+].join('\n')}</Markdown>
 
 **Developers review the API.** A part's props are what developers will write every day, so design proposes them and
 developers have the last word. Until a developer has reviewed a part's API, the part is not stable
@@ -38,17 +41,19 @@ developers have the last word. Until a developer has reviewed a part's API, the 
 These stay in the developers' apps. The system leaves a seam for each, and the seam stories show who wires what
 (Patterns › Recipes › [Integration seams](?path=/docs/patterns-recipes-integration-seams--docs)).
 
-| What | What the system gives | What the app does |
-|---|---|---|
-| **Data** | parts that take data as props: rows, items, values | fetches it, caches it, decides what a screen shows |
-| **State** | controlled props (`value` / `onChange`, `isOpen` / `onOpenChange`) and uncontrolled defaults | holds the state, whatever store it uses |
-| **Routing** | every link, menu item and tab takes an `href`; `AppProvider`'s `navigate` routes them | hands its router's `navigate` and `useHref` to `AppProvider` |
-| **Translation** | every visible word arrives as a prop or `labels`; numbers and dates follow the locale | owns the message catalogues, the language switch and plurals |
-| **Forms** | fields take `name`, `inputRef`, `isInvalid`, `errorMessage` | picks the form library and owns the rules and submit |
-| **Loading and errors** | Skeleton, Empty state, Banner and Toast for each state | knows when it is loading, failed, empty or forbidden |
-| **Performance** | plain CSS, no runtime CSS-in-JS, a virtualised Data table | measures and tunes its own screens |
-| **The build** | source files and CSS, three entry points | compiles, bundles and ships them |
-| **The adoption decision** | this Storybook as the evidence | decides whether, where first, and on what terms |
+<Markdown>{[
+  "| What | What the system gives | What the app does |",
+  "|---|---|---|",
+  "| **Data** | parts that take data as props: rows, items, values | fetches it, caches it, decides what a screen shows |",
+  "| **State** | controlled props (`value` / `onChange`, `isOpen` / `onOpenChange`) and uncontrolled defaults | holds the state, whatever store it uses |",
+  "| **Routing** | every link, menu item and tab takes an `href`; `AppProvider`'s `navigate` routes them | hands its router's `navigate` and `useHref` to `AppProvider` |",
+  "| **Translation** | every visible word arrives as a prop or `labels`; numbers and dates follow the locale | owns the message catalogues, the language switch and plurals |",
+  "| **Forms** | fields take `name`, `inputRef`, `isInvalid`, `errorMessage` | picks the form library and owns the rules and submit |",
+  "| **Loading and errors** | Skeleton, Empty state, Banner and Toast for each state | knows when it is loading, failed, empty or forbidden |",
+  "| **Performance** | plain CSS, no runtime CSS-in-JS, a virtualised Data table | measures and tunes its own screens |",
+  "| **The build** | source files and CSS, three entry points | compiles, bundles and ships them |",
+  "| **The adoption decision** | this Storybook as the evidence | decides whether, where first, and on what terms |",
+].join('\n')}</Markdown>
 
 How the system plugs into an app today (the entry points, the CSS caveat, providers, a react-hook-form recipe):
 [For developers](?path=/docs/overview-for-developers--docs). It is not repeated here.

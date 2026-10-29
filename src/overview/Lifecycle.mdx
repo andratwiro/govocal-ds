@@ -1,4 +1,4 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import {Markdown, Meta} from '@storybook/addon-docs/blocks';
 
 <Meta title="Overview/Lifecycle" />
 
@@ -10,11 +10,14 @@ import {Meta} from '@storybook/addon-docs/blocks';
 Every part sits at one of three stages. The stage says how much you can lean on it: whether its look, its props and
 its behaviour will stay as they are.
 
-| Stage | What it means | What it promises | What it takes to move on |
-|---|---|---|---|
-| **Draft** | Built, but its shape is still being worked out. | Nothing yet: props, look and behaviour may change in any update. Fine in the demo back office, not in a product screen. | Every state has a story, it works in both directions, its keyboard behaviour is tested, and its page is written. |
-| **Candidate** | Complete as far as design can take it. | Its look and behaviour hold. Its props may still change after a developer's review, and each change is written in `CHANGELOG.md`. | A developer has reviewed its API and it is used in at least one real screen. |
-| **Stable** | Reviewed by both sides. | Props are not renamed or removed without notice: a change that breaks a screen comes with a note on how to move. | Stays stable until it is replaced; then it is marked deprecated. |
+{/* A table goes through the Markdown block: MDX here has no GitHub tables. */}
+<Markdown>{[
+  "| Stage | What it means | What it promises | What it takes to move on |",
+  "|---|---|---|---|",
+  "| **Draft** | Built, but its shape is still being worked out. | Nothing yet: props, look and behaviour may change in any update. Fine in the demo back office, not in a product screen. | Every state has a story, it works in both directions, its keyboard behaviour is tested, and its page is written. |",
+  "| **Candidate** | Complete as far as design can take it. | Its look and behaviour hold. Its props may still change after a developer's review, and each change is written in `CHANGELOG.md`. | A developer has reviewed its API and it is used in at least one real screen. |",
+  "| **Stable** | Reviewed by both sides. | Props are not renamed or removed without notice: a change that breaks a screen comes with a note on how to move. | Stays stable until it is replaced; then it is marked deprecated. |",
+].join('\n')}</Markdown>
 
 A part on its way out is **deprecated**: the sidebar says so after its name, and its page names what to use instead.
 
