@@ -1,8 +1,7 @@
 @import './theme.css';
 
 /* The prototype's "undo snackbar" (augur-design.html .pj-toast--success): a light success-tinted
-   card, bottom-right, title + body + text action, no icon slot in this starter's markup
-   (Toast.tsx is G1's file to touch; this file paints the existing structure only). */
+   card, bottom-right: a check in a green circle, title + body, a text action ("Undo"), and ×. */
 .react-aria-ToastRegion {
   position: fixed;
   bottom: var(--gv-space-16);
@@ -40,6 +39,25 @@
     outline-offset: 2px;
   }
 
+  /* .pj-toast__ic: an 18 circle, green-400, a white 11 check, on the title's first line. */
+  .toast-icon {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    border-radius: var(--gv-radius-full);
+    background: var(--gv-color-green-400);
+    color: var(--gv-icon-inverse);
+
+    > svg {
+      width: 11px;
+      height: 11px;
+    }
+  }
+
   .react-aria-ToastContent {
     display: flex;
     flex-direction: column;
@@ -56,6 +74,36 @@
       margin-top: var(--gv-space-4);
       font: var(--gv-type-ui) var(--gv-font-family);
       color: var(--gv-text-secondary);
+    }
+
+    /* .pj-toast__action (success): a 28-tall outlined text button under the words, in the toast's green. */
+    .toast-action {
+      appearance: none;
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      margin-top: var(--gv-space-11);
+      padding: 0 var(--gv-space-12);
+      border: 1px solid var(--gv-color-green-400);
+      border-radius: var(--gv-radius-2);
+      background: transparent;
+      font: var(--gv-type-ui-strong);
+      letter-spacing: var(--gv-type-ui-strong-tracking);
+      color: var(--gv-text-reviewed);
+      cursor: pointer;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+
+      &[data-hovered],
+      &[data-pressed] {
+        background: var(--gv-color-alpha-green-12);
+      }
+
+      &[data-focus-visible] {
+        outline: 2px solid var(--gv-text-reviewed);
+        outline-offset: 2px;
+      }
     }
   }
 

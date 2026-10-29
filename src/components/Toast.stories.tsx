@@ -1,3 +1,4 @@
+import {useEffect} from 'react';
 import {MyToastRegion, queue} from './Toast';
 import {Button} from './Button';
 import type {Meta, StoryObj} from '@storybook/react-vite';
@@ -5,6 +6,7 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 interface ToastStoryArgs {
   title: string;
   description?: string;
+  action?: string;
   timeout?: number;
   buttonLabel: string;
 }
@@ -28,6 +30,10 @@ const meta: Meta<ToastStoryArgs> = {
       control: 'number',
       description: 'Auto-dismiss timeout in milliseconds.'
     },
+    action: {
+      control: 'text',
+      description: 'Optional text action under the words, e.g. "Undo". Pressing it closes the toast, then calls onAction.'
+    },
     buttonLabel: {
       control: 'text',
       description: 'Label for the trigger button.'
@@ -36,6 +42,7 @@ const meta: Meta<ToastStoryArgs> = {
   args: {
     title: '"Green Corridors for Riverside" deleted',
     description: '',
+    action: 'Undo',
     buttonLabel: 'Show toast'
   }
 };
@@ -66,9 +73,38 @@ export const AllStates: Story = {
           }>
           Delete idea
         </Button>
+        <Button
+          onPress={() =>
+            queue.add({
+              title: 'Idea archived',
+              body: '"Shade sails over the Lagoon playground" moved to the archive.',
+              action: 'Undo',
+              onAction: () => queue.add({title: 'Idea restored', icon: null})
+            })
+          }>
+          Archive idea
+        </Button>
       </div>
     </>
   )
+};
+
+/** The prototype's undo snackbar, shown on load: check icon, title, body, Undo and ×. */
+export const WithUndo: Story = {
+  name: 'With undo',
+  render: () => {
+    useEffect(() => {
+      queue.clear(); // the queue is global: start this story from an empty one
+      const key = queue.add({
+        title: 'Idea archived',
+        body: '"Shade sails over the Lagoon playground" moved to the archive.',
+        action: 'Undo',
+        onAction: () => queue.add({title: 'Idea restored', icon: null}, {timeout: 5000})
+      });
+      return () => queue.close(key);
+    }, []);
+    return <MyToastRegion />;
+  }
 };
 
 export const Example: Story = {
@@ -78,7 +114,7 @@ export const Example: Story = {
       <Button
         onPress={() =>
           queue.add(
-            {title: args.title, description: args.description},
+            {title: args.title, description: args.description, action: args.action || undefined},
             args.timeout ? {timeout: args.timeout} : undefined
           )
         }>
@@ -102,10 +138,21 @@ function MyToastRegion() {
     <ToastRegion queue={queue}>
       {({toast}) => (
         <MyToast toast={toast}>
+          {toast.content.icon !== null && (
+            <span className="toast-icon" aria-hidden="true">{toast.content.icon ?? <Check strokeWidth={2.6} />}</span>
+          )}
           <ToastContent>
             <Text slot="title">{toast.content.title}</Text>
             {toast.content.description && (
               <Text slot="description">{toast.content.description}</Text>
+            )}
+            {toast.content.action && (
+              <Button className="toast-action" onPress={() => {
+                queue.close(toast.key);
+                toast.content.onAction?.();
+              }}>
+                {toast.content.action}
+              </Button>
             )}
           </ToastContent>
           <Button slot="close" aria-label="Close" variant="quiet">
@@ -120,7 +167,7 @@ function MyToastRegion() {
 <>
   <MyToastRegion />
   <Button onPress={() => queue.add(
-    {title: args.title, description: args.description},
+    {title: args.title, description: args.description, action: 'Undo', onAction: () => restore()},
     args.timeout ? {timeout: args.timeout} : undefined
   )}>
     {args.buttonLabel}
