@@ -8,6 +8,7 @@ export interface MeterProps extends AriaMeterProps {
   label?: string;
 }
 
+/** A bar showing a value within a known range, such as space used; React Aria's Meter. For votes against a threshold, use Vote progress. */
 export function Meter({label, ...props}: MeterProps) {
   return (
     <AriaMeter {...props} className={keepClass(props.className, 'gv-base-meter')}>

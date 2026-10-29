@@ -22,6 +22,7 @@ import {mergeLabels} from './labels';
  * `toast(title, body, {action: 'Undo', onAction})`.
  */
 export interface ToastMessage {
+  /** The toast's main line, e.g. "Idea archived". */
   title: string;
   /** A line under the title, e.g. what moved where. */
   description?: string;
@@ -31,6 +32,7 @@ export interface ToastMessage {
   icon?: ReactNode;
   /** A text action under the words, e.g. "Undo". Pressing it closes the toast, then calls `onAction`. */
   action?: string;
+  /** Called after `action` is pressed and the toast has closed. */
   onAction?: () => void;
 }
 
@@ -57,6 +59,7 @@ export interface ToastOptions {
   icon?: ReactNode;
   /** A text action under the words, e.g. "Undo". Pressing it closes the toast, then calls `onAction`. */
   action?: string;
+  /** Called after `action` is pressed and the toast has closed. */
   onAction?: () => void;
   /** How long the toast stays, in milliseconds; `0` keeps it until it is closed. @default 5000 */
   timeout?: number;
@@ -87,6 +90,7 @@ export const toastRegionLabels: ToastRegionLabels = {close: 'Close'};
 export interface ToastRegionProps {
   /** Places the region (it sits fixed at the window's bottom end); never paints it. */
   className?: string;
+  /** Places the region; layout only. */
   style?: CSSProperties;
   /** The toasts' own words, over `toastRegionLabels`. */
   labels?: Partial<ToastRegionLabels>;

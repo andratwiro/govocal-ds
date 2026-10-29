@@ -16,6 +16,7 @@ export interface ColorFieldProps extends AriaColorFieldProps {
   placeholder?: string;
 }
 
+/** A text field to type a colour as hex; React Aria's ColorField. Use it for a colour setting, with ColorSwatch to show the result. */
 export function ColorField({
   label,
   description,

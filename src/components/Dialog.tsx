@@ -18,6 +18,7 @@ export interface DialogProps extends RACDialogProps {
   isFlush?: boolean;
 }
 
+/** The content of a pop-up dialog (title, body, close); React Aria's Dialog. Use Modal for a form, or Alert dialog to confirm a risky action. */
 export function Dialog({isFlush, ...props}: DialogProps) {
   return <RACDialog {...props} className={clsx('react-aria-Dialog gv-base-dialog', props.className)} data-flush={isFlush || undefined} />;
 }

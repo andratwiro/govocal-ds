@@ -14,9 +14,13 @@ import './utilities.css';
 import {keepClass} from './className';
 
 export interface RadioGroupProps extends Omit<AriaRadioGroupProps, 'children'> {
+  /** The options: a `Radio` (or a `ChoiceCard`) per option. */
   children?: React.ReactNode;
+  /** The group's name, shown above the options. */
   label?: string;
+  /** A grey line under the options. */
   description?: string;
+  /** The error shown under it when it is invalid: text, or a function of React Aria's validation result. */
   errorMessage?: string | ((validation: ValidationResult) => string);
 }
 
@@ -44,6 +48,7 @@ export function RadioGroup({
 }
 
 export interface RadioProps extends RadioFieldProps {
+  /** A grey line under this option's words. */
   description?: string;
 }
 

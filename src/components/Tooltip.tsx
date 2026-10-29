@@ -11,6 +11,7 @@ import './Tooltip.css';
 import {keepClass} from './className';
 
 export interface TooltipProps extends Omit<AriaTooltipProps, 'children'> {
+  /** The tooltip's words. */
   children: React.ReactNode;
   /**
    * Draw the tail. The prototype's tooltips have none, except on the project's step cards, where the tail shows

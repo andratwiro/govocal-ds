@@ -52,7 +52,10 @@ export function Menu<T>(props: MenuProps<T>) {
 }
 
 /** The spinner a Menu shows while its next page loads; its name is `labels.loading` (`loadMoreLabels`). */
-export function MenuLoadMoreItem({labels, ...props}: MenuLoadMoreItemProps & {labels?: Partial<LoadMoreLabels>}) {
+export function MenuLoadMoreItem({labels, ...props}: MenuLoadMoreItemProps & {
+  /** Its own words (the spinner's name), over `loadMoreLabels`. */
+  labels?: Partial<LoadMoreLabels>;
+}) {
   return (
     <AriaMenuLoadMoreItem {...props} className={clsx('react-aria-MenuLoadingIndicator gv-base-menu-loading-indicator', props.className)}>
       <ProgressCircle isIndeterminate aria-label={mergeLabels(loadMoreLabels, labels).loading} />
@@ -61,6 +64,7 @@ export function MenuLoadMoreItem({labels, ...props}: MenuLoadMoreItemProps & {la
 }
 
 export interface MenuItemProps extends Omit<AriaMenuItemProps, 'children'> {
+  /** The item's name; plain text also serves as its type-ahead text. */
   children?: ReactNode;
   /** A leading 16 icon, or a 16 Avatar for a person. */
   icon?: ReactNode;

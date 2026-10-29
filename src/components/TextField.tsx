@@ -15,10 +15,15 @@ import {keepClass} from './className';
 import {useNumberFormatter} from './format';
 
 export interface TextFieldProps<T = HTMLInputElement> extends AriaTextFieldProps {
+  /** The field's name, above it. */
   label?: string;
+  /** A grey line under the field. */
   description?: string;
+  /** The error shown under it when it is invalid: text, or a function of React Aria's validation result. */
   errorMessage?: string | ((validation: ValidationResult) => string);
+  /** Hint text shown while the field is empty. */
   placeholder?: string;
+  /** A ref to the input element (the textarea, in `TextArea`). */
   inputRef?: React.Ref<T>;
   /** Text before the input, inside the field (e.g. the slug's "internal.govocal.com/en/projects/"). */
   prefix?: ReactNode;
@@ -28,6 +33,10 @@ export interface TextFieldProps<T = HTMLInputElement> extends AriaTextFieldProps
   showCounter?: boolean;
 }
 
+/**
+ * A one-line text field, with optional prefix, suffix and counter. Long text: TextArea. A number: Number field.
+ * A search: Search field.
+ */
 export function TextField({
   label,
   description,

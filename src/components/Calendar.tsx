@@ -20,6 +20,7 @@ export interface CalendarProps<T extends DateValue> extends AriaCalendarProps<T>
   errorMessage?: string;
 }
 
+/** A month grid to pick one date; React Aria's Calendar. For a date in a form, use DatePicker or Date range field. */
 export function Calendar<T extends DateValue>({errorMessage, ...props}: CalendarProps<T>) {
   let months = props.visibleDuration?.months || 1;
   return (

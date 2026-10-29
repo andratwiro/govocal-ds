@@ -19,6 +19,7 @@ export interface DateFieldProps<T extends DateValue> extends AriaDateFieldProps<
   errorMessage?: string | ((validation: ValidationResult) => string);
 }
 
+/** Typed date entry in segments (day, month, year); React Aria's DateField. For picking from a grid too, use DatePicker. */
 export function DateField<T extends DateValue>({
   label,
   description,

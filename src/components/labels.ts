@@ -31,6 +31,7 @@ export function mergeLabels<T extends object>(defaults: T, labels?: Partial<T>):
 /** The words of the five load-more items (`ListBoxLoadMoreItem`, `MenuLoadMoreItem`, `GridListLoadMoreItem`,
  * `TableLoadMoreItem`, `TreeLoadMoreItem`): the spinner's name while the next page loads. */
 export interface LoadMoreLabels {
+  /** The spinner's name while the next page loads. */
   loading: string;
 }
 

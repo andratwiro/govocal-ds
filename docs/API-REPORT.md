@@ -949,11 +949,11 @@ Component, from `src/components/gv/Checkbox.tsx`.
 
 Component, from `src/components/CheckboxGroup.tsx`.
 
-- `children?: React.ReactNode` (no description)
-- `description?: string` (no description)
-- `errorMessage?: string | ((validation: ValidationResult) => string)` (no description)
-- `label?: string` (no description)
-- `orientation?: 'horizontal' | 'vertical'` (no description)
+- `children?: React.ReactNode`
+- `description?: string`
+- `errorMessage?: string | ((validation: ValidationResult) => string)`
+- `label?: string`
+- `orientation?: 'horizontal' | 'vertical'`
 - Passed through from @react-types/shared (89): `aria-describedby`, `aria-details`, `aria-errormessage`, `aria-label`, `aria-labelledby`, `defaultValue`, `dir`, `form`, `hidden`, `id`, `inert`, `isDisabled`, `isInvalid`, `isReadOnly`, `isRequired`, `lang`, `name`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onBlur`, `onChange`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onFocus`, `onFocusChange`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`, `validate`, `value`
 - Passed through from react-aria-components (5): `className`, `render`, `slot`, `style`, `validationBehavior`
 
@@ -1504,7 +1504,7 @@ DataTableBodyLabels
 
 Interface, from `src/components/gv/DataTable.tsx`.
 
-- `loading: string` (no description)
+- `loading: string`
 
 ### `DataTableBodyProps`
 
@@ -2021,18 +2021,18 @@ Interface, from `src/components/gv/Grid.tsx`. The props of `Grid`, listed there.
 Component, from `src/components/Tabs.tsx`.
 
 - `children: ReactNode`
-- `id: Key` (no description)
-- `isDisabled?: boolean` (no description)
+- `id: Key`
+- `isDisabled?: boolean`
 - `textValue?: string`
 
 ### `GroupedTabList`
 
 Component, from `src/components/Tabs.tsx`.
 
-- `aria-label?: string` (no description)
-- `aria-labelledby?: string` (no description)
+- `aria-label?: string`
+- `aria-labelledby?: string`
 - `children: ReactNode`
-- `className?: string` (no description)
+- `className?: string`
 - `style?: CSSProperties`
 
 ### `GroupedTabListProps`
@@ -2043,8 +2043,8 @@ Interface, from `src/components/Tabs.tsx`. The props of `GroupedTabList`, listed
 
 Component, from `src/components/Tabs.tsx`.
 
-- `children: ReactNode` (no description)
-- `className?: string` (no description)
+- `children: ReactNode`
+- `className?: string`
 - `id: Key`
 - `style?: CSSProperties`
 
@@ -2061,9 +2061,9 @@ Interface, from `src/components/Tabs.tsx`. The props of `GroupedTab`, listed the
 Component, from `src/components/Tabs.tsx`.
 
 - `children: ReactNode`
-- `className?: string` (no description)
+- `className?: string`
 - `defaultSelectedKey?: Key`
-- `onSelectionChange?: (key: Key) => void` (no description)
+- `onSelectionChange?: (key: Key) => void`
 - `selectedKey?: Key`
 - `style?: CSSProperties`
 
@@ -2497,7 +2497,7 @@ LoadMoreLabels
 
 Interface, from `src/components/labels.ts`.
 
-- `loading: string` (no description)
+- `loading: string`
 
 ### `localeDirection`
 
@@ -2809,7 +2809,7 @@ Component, from `src/components/Menu.tsx`.
 Component, from `src/components/Menu.tsx`.
 
 - `badge?: ReactNode`
-- `children?: ReactNode` (no description)
+- `children?: ReactNode`
 - `description?: ReactNode`
 - `icon?: ReactNode`
 - Passed through from @react-types/shared (89): `dir`, `download`, `hidden`, `href`, `hrefLang`, `inert`, `lang`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onBlur`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onFocus`, `onFocusChange`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onHoverChange`, `onHoverEnd`, `onHoverStart`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onPress`, `onPressChange`, `onPressEnd`, `onPressStart`, `onPressUp`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `ping`, `referrerPolicy`, `rel`, `routerOptions`, `suppressHydrationWarning`, `target`, `translate`
@@ -2823,7 +2823,7 @@ Interface, from `src/components/Menu.tsx`. The props of `MenuItem`, listed there
 
 Component, from `src/components/Menu.tsx`.
 
-- `labels?: Partial<LoadMoreLabels>` (no description)
+- `labels?: Partial<LoadMoreLabels>`
 - Passed through from @react-types/shared (71): `dir`, `hidden`, `inert`, `lang`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onLoadMore`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`
 - Passed through from react-aria (1): `scrollOffset`
 - Passed through from react-aria-components (5): `children`, `className`, `isLoading`, `render`, `style`
@@ -3256,14 +3256,14 @@ Interface, from `src/patterns/NotificationRow.tsx`. The props of `NotificationRo
 
 Component, from `src/components/NumberField.tsx`.
 
-- `className?: string` (no description)
-- `description?: string` (no description)
-- `errorMessage?: string | ((validation: ValidationResult) => string)` (no description)
-- `label?: string` (no description)
+- `className?: string`
+- `description?: string`
+- `errorMessage?: string | ((validation: ValidationResult) => string)`
+- `label?: string`
 - `labelPosition?: 'top' | 'side'`
-- `placeholder?: string` (no description)
+- `placeholder?: string`
 - `prefix?: ReactNode`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 - Passed through from @react-types/shared (103): `aria-describedby`, `aria-details`, `aria-label`, `aria-labelledby`, `autoFocus`, `defaultValue`, `dir`, `form`, `hidden`, `id`, `inert`, `isDisabled`, `isInvalid`, `isReadOnly`, `isRequired`, `lang`, `maxValue`, `minValue`, `name`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onBeforeInput`, `onBlur`, `onChange`, `onClick`, `onClickCapture`, `onCompositionEnd`, `onCompositionStart`, `onCompositionUpdate`, `onContextMenu`, `onContextMenuCapture`, `onCopy`, `onCut`, `onDoubleClick`, `onDoubleClickCapture`, `onFocus`, `onFocusChange`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onInput`, `onKeyDown`, `onKeyUp`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPaste`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onScroll`, `onScrollCapture`, `onSelect`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `step`, `suppressHydrationWarning`, `translate`, `validate`, `value`
 - Passed through from react-aria (3): `decrementAriaLabel`, `incrementAriaLabel`, `isWheelDisabled`
 - Passed through from react-aria-components (4): `children`, `render`, `slot`, `validationBehavior`
@@ -4019,7 +4019,7 @@ ToastQueue<ToastMessage>
 
 Component, from `src/components/RadioGroup.tsx`.
 
-- `description?: string` (no description)
+- `description?: string`
 - Passed through from @react-types/shared (86): `aria-describedby`, `aria-details`, `aria-label`, `aria-labelledby`, `autoFocus`, `dir`, `hidden`, `id`, `inert`, `lang`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onBlur`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onFocus`, `onFocusChange`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onKeyDown`, `onKeyUp`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onPress`, `onPressChange`, `onPressEnd`, `onPressStart`, `onPressUp`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`
 - Passed through from react-aria (2): `isDisabled`, `value`
 - Passed through from react-aria-components (6): `children`, `className`, `inputRef`, `render`, `slot`, `style`
@@ -4028,10 +4028,10 @@ Component, from `src/components/RadioGroup.tsx`.
 
 Component, from `src/components/RadioGroup.tsx`.
 
-- `children?: React.ReactNode` (no description)
-- `description?: string` (no description)
-- `errorMessage?: string | ((validation: ValidationResult) => string)` (no description)
-- `label?: string` (no description)
+- `children?: React.ReactNode`
+- `description?: string`
+- `errorMessage?: string | ((validation: ValidationResult) => string)`
+- `label?: string`
 - Passed through from @react-types/shared (89): `aria-describedby`, `aria-details`, `aria-errormessage`, `aria-label`, `aria-labelledby`, `defaultValue`, `dir`, `form`, `hidden`, `id`, `inert`, `isDisabled`, `isInvalid`, `isReadOnly`, `isRequired`, `lang`, `name`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onBlur`, `onChange`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onFocus`, `onFocusChange`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`, `validate`, `value`
 - Passed through from react-aria-components (5): `className`, `render`, `slot`, `style`, `validationBehavior`
 - Passed through from react-stately (1): `orientation`
@@ -4322,13 +4322,13 @@ Interface, from `src/components/gv/RichTextToolbar.tsx`. The props of `RichTextT
 Component, from `src/components/SearchField.tsx`.
 
 - `defaultExpanded?: boolean`
-- `description?: string` (no description)
-- `errorMessage?: string | ((validation: ValidationResult) => string)` (no description)
+- `description?: string`
+- `errorMessage?: string | ((validation: ValidationResult) => string)`
 - `isCollapsible?: boolean`
-- `label?: string` (no description)
+- `label?: string`
 - `labels?: Partial<SearchFieldLabels>`
 - `onExpandedChange?: (isExpanded: boolean) => void`
-- `placeholder?: string` (no description)
+- `placeholder?: string`
 - Passed through from @react-types/shared (109): `aria-describedby`, `aria-details`, `aria-errormessage`, `aria-label`, `aria-labelledby`, `autoComplete`, `autoCorrect`, `autoFocus`, `defaultValue`, `dir`, `excludeFromTabOrder`, `form`, `hidden`, `id`, `inert`, `inputMode`, `isDisabled`, `isInvalid`, `isReadOnly`, `isRequired`, `lang`, `maxLength`, `minLength`, `name`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onBeforeInput`, `onBlur`, `onChange`, `onClick`, `onClickCapture`, `onCompositionEnd`, `onCompositionStart`, `onCompositionUpdate`, `onContextMenu`, `onContextMenuCapture`, `onCopy`, `onCut`, `onDoubleClick`, `onDoubleClickCapture`, `onFocus`, `onFocusChange`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onInput`, `onKeyDown`, `onKeyUp`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPaste`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onScroll`, `onScrollCapture`, `onSelect`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `pattern`, `spellCheck`, `suppressHydrationWarning`, `translate`, `validate`, `value`
 - Passed through from react-aria (6): `aria-activedescendant`, `aria-autocomplete`, `aria-controls`, `aria-haspopup`, `enterKeyHint`, `type`
 - Passed through from react-aria-components (6): `children`, `className`, `render`, `slot`, `style`, `validationBehavior`
@@ -5085,9 +5085,9 @@ Interface, from `react-aria-components`. The props of `SubmenuTrigger`, listed t
 
 Component, from `src/components/Switch.tsx`.
 
-- `children: ReactNode` (no description)
-- `description?: string` (no description)
-- `errorMessage?: string | ((validation: ValidationResult) => string)` (no description)
+- `children: ReactNode`
+- `description?: string`
+- `errorMessage?: string | ((validation: ValidationResult) => string)`
 - Passed through from @react-types/shared (95): `aria-describedby`, `aria-details`, `aria-errormessage`, `aria-label`, `aria-labelledby`, `autoFocus`, `dir`, `excludeFromTabOrder`, `form`, `hidden`, `id`, `inert`, `isDisabled`, `isInvalid`, `isReadOnly`, `isRequired`, `lang`, `name`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onBlur`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onFocus`, `onFocusChange`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onKeyDown`, `onKeyUp`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onPress`, `onPressChange`, `onPressEnd`, `onPressStart`, `onPressUp`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`, `validate`
 - Passed through from react-aria (1): `aria-controls`
 - Passed through from react-aria-components (6): `className`, `inputRef`, `render`, `slot`, `style`, `validationBehavior`
@@ -5119,9 +5119,9 @@ TabLabels
 
 Interface, from `src/components/Tabs.tsx`.
 
-- `complete: string` (no description)
-- `incomplete: string` (no description)
-- `missing: string` (no description)
+- `complete: string`
+- `incomplete: string`
+- `missing: string`
 
 ### `TableToolbar`
 
@@ -5206,7 +5206,7 @@ Component, from `src/components/Tabs.tsx`.
 
 Component, from `src/components/Tabs.tsx`.
 
-- `children: ReactNode` (no description)
+- `children: ReactNode`
 - `title: ReactNode`
 
 ### `TabSectionProps`
@@ -5279,11 +5279,11 @@ Component, from `src/components/gv/Text.tsx`.
 
 Component, from `src/components/TextField.tsx`.
 
-- `description?: string` (no description)
-- `errorMessage?: string | ((validation: ValidationResult) => string)` (no description)
-- `inputRef?: React.Ref<T>` (no description)
-- `label?: string` (no description)
-- `placeholder?: string` (no description)
+- `description?: string`
+- `errorMessage?: string | ((validation: ValidationResult) => string)`
+- `inputRef?: React.Ref<T>`
+- `label?: string`
+- `placeholder?: string`
 - `prefix?: ReactNode`
 - `showCounter?: boolean`
 - `suffix?: ReactNode`
@@ -5303,11 +5303,11 @@ type TextColor = 'primary' | 'secondary' | 'meta' | 'tertiary'
 
 Component, from `src/components/TextField.tsx`.
 
-- `description?: string` (no description)
-- `errorMessage?: string | ((validation: ValidationResult) => string)` (no description)
-- `inputRef?: React.Ref<T>` (no description)
-- `label?: string` (no description)
-- `placeholder?: string` (no description)
+- `description?: string`
+- `errorMessage?: string | ((validation: ValidationResult) => string)`
+- `inputRef?: React.Ref<T>`
+- `label?: string`
+- `placeholder?: string`
 - `prefix?: ReactNode`
 - `showCounter?: boolean`
 - `suffix?: ReactNode`
@@ -5457,8 +5457,8 @@ Interface, from `src/components/Toast.tsx`.
 - `action?: string`
 - `description?: string`
 - `icon?: ReactNode`
-- `onAction?: () => void` (no description)
-- `title: string` (no description)
+- `onAction?: () => void`
+- `title: string`
 
 ### `ToastOptions`
 
@@ -5466,7 +5466,7 @@ Interface, from `src/components/Toast.tsx`.
 
 - `action?: string`
 - `icon?: ReactNode`
-- `onAction?: () => void` (no description)
+- `onAction?: () => void`
 - `timeout?: number`
 
 ### `ToastRegion`
@@ -5475,7 +5475,7 @@ Component, from `src/components/Toast.tsx`.
 
 - `className?: string`
 - `labels?: Partial<ToastRegionLabels>`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 
 ### `ToastRegionContext`
 
@@ -5523,7 +5523,7 @@ Function, from `src/components/gv/DataTable.tsx`.
 
 Component, from `src/components/Tooltip.tsx`.
 
-- `children: React.ReactNode` (no description)
+- `children: React.ReactNode`
 - `showArrow?: boolean`
 - Passed through from @react-types/shared (74): `aria-describedby`, `aria-details`, `aria-label`, `aria-labelledby`, `dir`, `hidden`, `inert`, `lang`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`
 - Passed through from react-aria (6): `arrowBoundaryOffset`, `containerPadding`, `crossOffset`, `isOpen`, `offset`, `shouldFlip`

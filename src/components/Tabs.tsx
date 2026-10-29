@@ -53,8 +53,11 @@ export type TabStatus = 'success' | 'warning' | 'danger';
 
 /** The words a Tab says itself (docs/API.md rule 11): what its status dot means, read after the label. */
 export interface TabLabels {
+  /** What the status dot says for `success`, read after the label. */
   complete: string;
+  /** What the status dot says for `warning`, read after the label. */
   incomplete: string;
+  /** What the status dot says for `danger`, read after the label. */
   missing: string;
 }
 
@@ -147,9 +150,11 @@ export interface GroupedTabsProps {
   selectedKey?: Key;
   /** The tab chosen first (uncontrolled). Pass this or `selectedKey`. */
   defaultSelectedKey?: Key;
+  /** Fires with the tab's key when the person picks a tab. */
   onSelectionChange?: (key: Key) => void;
   /** A GroupedTabList and one GroupedTabPanel per tab. */
   children: ReactNode;
+  /** Places the tabs; never paints them. */
   className?: string;
   /** Layout only. */
   style?: CSSProperties;
@@ -181,10 +186,13 @@ export function GroupedTabs({selectedKey, defaultSelectedKey, onSelectionChange,
 }
 
 export interface GroupedTabListProps {
+  /** The list's name for screen readers. Pass this or `aria-labelledby`. */
   'aria-label'?: string;
+  /** The id of an element that names the list. */
   'aria-labelledby'?: string;
   /** TabSections (or GroupedTabs between them). */
   children: ReactNode;
+  /** Places the list; never paints it. */
   className?: string;
   /** Layout only (the list's width beside the panel). */
   style?: CSSProperties;
@@ -217,6 +225,7 @@ export function GroupedTabList({children, className, style, ...aria}: GroupedTab
 export interface TabSectionProps {
   /** The group's heading ("Project"): plain text, never focused; it names the group. */
   title: ReactNode;
+  /** The section's `GroupedTab`s. */
   children: ReactNode;
 }
 
@@ -231,11 +240,13 @@ export function TabSection({title, children}: TabSectionProps) {
 }
 
 export interface GroupedTabProps {
+  /** The tab's key; its `GroupedTabPanel` has the same `id`. */
   id: Key;
   /** An icon (16, `aria-hidden`) and the label. */
   children: ReactNode;
   /** The label as text, for type-ahead, when the children aren't a plain string. */
   textValue?: string;
+  /** Whether the tab is greyed out and cannot be chosen. */
   isDisabled?: boolean;
 }
 
@@ -256,7 +267,9 @@ export function GroupedTab({id, children, textValue, isDisabled}: GroupedTabProp
 export interface GroupedTabPanelProps {
   /** The tab it belongs to. */
   id: Key;
+  /** What the tab shows. */
   children: ReactNode;
+  /** Places the panel; never paints it. */
   className?: string;
   /** Layout only (the panel's padding in a dialog). */
   style?: CSSProperties;

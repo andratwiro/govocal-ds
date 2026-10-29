@@ -21,6 +21,7 @@ import './Tree.css';
 import {keepClass} from './className';
 import clsx from 'clsx';
 
+/** A nested list that expands and collapses, with selectable rows; React Aria's Tree. Use it for folders or hierarchies. */
 export function Tree<T>(props: TreeProps<T>) {
   return <AriaTree {...props} className={keepClass(props.className, 'gv-base-tree')} />;
 }

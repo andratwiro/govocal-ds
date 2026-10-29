@@ -16,6 +16,7 @@ interface CheckboxProps extends CheckboxFieldProps {
   errorMessage?: string | ((validation: ValidationResult) => string);
 }
 
+/** One tick box with a label; React Aria's Checkbox. In pages use the Checkbox component, or Checkbox group for several options. */
 export function Checkbox({children, description, errorMessage, ...props}: CheckboxProps) {
   return (
     <CheckboxField {...props} className={keepClass(props.className, 'gv-base-checkbox-field')}>

@@ -80,7 +80,7 @@ part's `<Name>.guide.md`) names the part to use instead.
 - **Locale switcher** `LocaleSwitcher` (not in Figma): A language switcher: the row of language codes above a multilingual field (EN · NL-BE · FR-BE) that picks which language the field shows, each with a mark fo… Stories: Default, Required, Invalid, Without Marks, Disabled, Menu, Many Languages.
 - **Multilingual rich text editor** `MultilingualRichTextEditor` (not in Figma): A multilingual rich text editor: a description or a page's text in each of the platform's languages, the language switcher over the editor, as the platform's… Stories: Default, Required, Invalid, Right To Left, Controlled.
 - **Multilingual text field** `MultilingualTextField` (not in Figma): A multilingual text field: one text in each of the platform's languages, with the language switcher over the field (a code per language, marked filled or emp… Stories: Default, Filled, Required, Invalid, Error Per Language, Disabled, Right To Left, Dutch Interface, Multi Line, Many Languages, Without Label, Controlled.
-- **Number field** `NumberField` Stories: Default, Label At The Side, With Prefix.
+- **Number field** `NumberField`: A field for a number, with minus and plus buttons. Stories: Default, Label At The Side, With Prefix.
 - **Option list** `OptionList` (not in Figma): A list of options to pick from, in a popover (a filter's submenu, a tag picker, a setup step): an optional search over rows of box · icon · value · count. Stories: All Variants, Single, Multiple, With Counts, Searchable, People, With Footer, Empty, Right To Left.
 - **Radio group** `RadioGroup` (not in Figma): Pick exactly one of a few options, all in view. Stories: Example, Keyboard.
   - Not for: For options that are tiles with an icon, a description or fields that open under them: use **Choice card** inside For more than about six options, or when space is tight: use **Select**. To switch between views of the same content: use **Segmented control**. For a yes-or-no: use a **Checkbox**, or a **Switch** when it takes effect at once. To pick several: use **Checkbox group**.
@@ -91,10 +91,10 @@ part's `<Name>.guide.md`) names the part to use instead.
 - **Rich text toolbar button** `RichTextToolbarButton` Stories: All Variants, Default, Selected, Disabled.
 - **Search field** `SearchField` (not in Figma): Search field: a field like the others with the magnifier at the start and a quiet × at the end once there is text (Esc clears it too). Stories: All Variants, Example, With Label, Collapsible Story, Collapsible Open, Filled, Disabled, Right To Left.
 - **Select** `Select` (not in Figma): Pick one value (or several) from a list in a popover: React Aria's Select, its options the dropdown rows (a 16 icon or avatar, a description line, a check at… Stories: All Variants, Field, Pill, Quiet, With Search, With Icons, With Avatars, With Descriptions, Disabled, Empty Search.
-- **Switch** `Switch`: Turn one setting on or off: a 36×20 track and knob with its label after it, an optional description line under the label and an error. Stories: All Variants, With Description, With Revealed Fields, With Badge, Disabled, Keyboard.
+- **Switch** `Switch`: A switch for one setting that is on or off and takes effect at once; a choice saved with the form's Save is a Checkbox. Stories: All Variants, With Description, With Revealed Fields, With Badge, Disabled, Keyboard.
   - Not for: For an answer that only counts once a form is submitted (agree to terms, pick topics): use **Checkbox**. To pick between two named options that aren't on and off ("Public" or "Private"): use **Radio group** or For an action that runs once (publish, send): use **Button**. For the on/off on a setup card: use **Card**, whose own switch is drawn at the card's size.
 - **Tag picker** `TagPicker` (not in Figma): The tags on an item, each removable, then "+ Add tag", which opens the Option list (several, searchable) in a popover. ←→ move between the tags, Delete or Ba… Stories: All Variants, Default, Empty, Many, Disabled.
-- **Text field** `TextField` Stories: Default, With Prefix, With Counter, With Counter And Help, Read Only.
+- **Text field** `TextField`: A one-line text field, with optional prefix, suffix and counter. Stories: Default, With Prefix, With Counter, With Counter And Help, Read Only.
 - **Title field** `TitleField`: Title field (Figma node 4:123): the big project/page name input at the top of an editor. Stories: All Variants, Empty, Required, Filled, Invalid, Multilingual.
 
 ## Components / Layout & containers
@@ -215,7 +215,7 @@ part's `<Name>.guide.md`) names the part to use instead.
 - **Rail phase** `RailPhase` (not in Figma): A phase in the project rail. Stories: All Variants, Upcoming, Live, Completed, Meta Only, With Delete.
 
 ## Patterns / Recipes
-- **Form validation** `Form` (not in Figma): Form validation, a recipe: every field in its invalid state, and a form that checks itself on submit and moves focus to the first field to fix. Stories: All Invalid, Submit To Validate.
+- **Form validation** `Form` (not in Figma): A form wrapper that shows validation errors on its fields; Stories: All Invalid, Submit To Validate.
 - **Integration seams** (not in Figma): Integration seams, a recipe: the four places where the system stops and an app starts (a router, a form library, translated words, data that loads or fails),… Stories: Router Link, Form Library Field, Translated Strings, Table Loading Error Data.
 
 ## Patterns / Report builder
@@ -225,29 +225,29 @@ part's `<Name>.guide.md`) names the part to use instead.
 ## Base
 React Aria parts painted with the tokens. Primitives: don't use them directly in pages; prefer the Components entry; when a page truly needs one, import it from `govocal-ds/base`.
 
-- **Calendar** `Calendar` (primitive) Stories: Example.
-- **Checkbox** `Checkbox` (primitive; hidden: a Component replaces it) Stories: Example.
-- **ColorField** `ColorField` (primitive) Stories: Example.
-- **ColorSwatch** `ColorSwatch` (primitive) Stories: Example.
-- **DateField** `DateField` (primitive) Stories: Example.
-- **DatePicker** `DatePicker` (primitive) Stories: Example.
-- **DateRangePicker** `DateRangePicker` (primitive) Stories: Example.
-- **Dialog** `Dialog` (primitive; hidden: a Component replaces it) Stories: Example.
-- **Disclosure** `Disclosure` (primitive) Stories: Example.
-- **DisclosureGroup** `DisclosureGroup` (primitive) Stories: Example.
-- **Form** `Form` (primitive) Stories: Example.
-- **GridList** `GridList` (primitive) Stories: Example, Sections.
-- **ListBox** `ListBox` (primitive) Stories: Example, Sections.
-- **Meter** `Meter` (primitive) Stories: Example.
-- **Modal** `Modal` (primitive; hidden: a Component replaces it) Stories: Example.
-- **Popover** `Popover` (primitive) Stories: Example.
-- **RangeCalendar** `RangeCalendar` (primitive) Stories: Example.
-- **Table** `Table` (primitive; hidden: a Component replaces it) Stories: Example.
-- **TagGroup** `TagGroup` (primitive) Stories: Example.
-- **TimeField** `TimeField` (primitive) Stories: Example.
-- **ToggleButton** `ToggleButton` (primitive) Stories: Example.
-- **Toolbar** `Toolbar` (primitive) Stories: Example.
-- **Tree** `Tree` (primitive) Stories: Example.
+- **Calendar** `Calendar` (primitive): A month grid to pick one date; Stories: Example.
+- **Checkbox** `Checkbox` (primitive; hidden: a Component replaces it): One tick box with a label; Stories: Example.
+- **ColorField** `ColorField` (primitive): A text field to type a colour as hex; Stories: Example.
+- **ColorSwatch** `ColorSwatch` (primitive): A small square showing one colour; Stories: Example.
+- **DateField** `DateField` (primitive): Typed date entry in segments (day, month, year); Stories: Example.
+- **DatePicker** `DatePicker` (primitive): A date field with a button that opens a Calendar; Stories: Example.
+- **DateRangePicker** `DateRangePicker` (primitive): A start and end date in one field with a RangeCalendar; Stories: Example.
+- **Dialog** `Dialog` (primitive; hidden: a Component replaces it): The content of a pop-up dialog (title, body, close); Stories: Example.
+- **Disclosure** `Disclosure` (primitive): One heading that shows or hides a panel; Stories: Example.
+- **DisclosureGroup** `DisclosureGroup` (primitive): A stack of Disclosures where one or several are open; Stories: Example.
+- **Form** `Form` (primitive): A form wrapper that shows validation errors on its fields; Stories: Example.
+- **GridList** `GridList` (primitive): A list or grid of selectable, keyboard-friendly items with actions; Stories: Example, Sections.
+- **ListBox** `ListBox` (primitive): A list of options to pick one or several from, always in view; Stories: Example, Sections.
+- **Meter** `Meter` (primitive): A bar showing a value within a known range, such as space used; Stories: Example.
+- **Modal** `Modal` (primitive; hidden: a Component replaces it): The dimmed overlay and box that holds a Dialog; Stories: Example.
+- **Popover** `Popover` (primitive): A floating panel anchored to a button; Stories: Example.
+- **RangeCalendar** `RangeCalendar` (primitive): A month grid to pick a start and end date; Stories: Example.
+- **Table** `Table` (primitive; hidden: a Component replaces it): A table with sortable columns and row selection; Stories: Example.
+- **TagGroup** `TagGroup` (primitive): A row of tags that can be selected or removed; Stories: Example.
+- **TimeField** `TimeField` (primitive): Typed time entry in segments (hour, minute); Stories: Example.
+- **ToggleButton** `ToggleButton` (primitive): A button that stays pressed or not, such as bold; Stories: Example.
+- **Toolbar** `Toolbar` (primitive): A row of controls moved through with the arrow keys; Stories: Example.
+- **Tree** `Tree` (primitive): A nested list that expands and collapses, with selectable rows; Stories: Example.
 
 ## Not in Figma yet
 Tagged `not-in-figma` in their stories (71): Activity feed, Alert dialog, App provider, Banner, Card, Chat message, Chat progress, Chat thread, Checkbox group, Choice card, Coachmark, Data table, Date range field, Empty state, File list, Grid, Help popover, Illustration, Inline, Item chip, Link, Locale switcher, Map view, Menu, Multilingual rich text editor, Multilingual text field, Option list, Page header, Pagination, Panel, Prompt composer, Prompt suggestions, Property list, Radio group, Reaction counts, Search field, Select, Side panel, Skeleton, Stack, Table toolbar, Tabs, Tag picker, Text, Tile grid, Toast, Tooltip, Visually hidden, Access rights, Action row, Assistant panel, Comment thread, Filter chips, Filter menu, Form field summary, Notification list, Notification row, Official update, Panel section, Participant action row, Phase timeline, Phone preview, Rail phase, Section toggle, Selection bar, Side nav, Stat card, View option row, Volunteering row, Form validation, Integration seams.

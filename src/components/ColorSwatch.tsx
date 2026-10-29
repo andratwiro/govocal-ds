@@ -6,6 +6,7 @@ import {
 import './ColorSwatch.css';
 import {keepClass} from './className';
 
+/** A small square showing one colour; React Aria's ColorSwatch. Pair it with ColorField when a person picks a colour. */
 export function ColorSwatch(props: ColorSwatchProps) {
   return (
     <AriaColorSwatch

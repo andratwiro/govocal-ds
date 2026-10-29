@@ -26,9 +26,13 @@ export interface SearchFieldLabels {
 export const searchFieldLabels: SearchFieldLabels = {search: 'Search'};
 
 export interface SearchFieldProps extends AriaSearchFieldProps {
+  /** The field's name, above it. Leave it out and pass an `aria-label` for a bare search box. */
   label?: string;
+  /** A grey line under the field. */
   description?: string;
+  /** The error shown under it when it is invalid: text, or a function of React Aria's validation result. */
   errorMessage?: string | ((validation: ValidationResult) => string);
+  /** Hint text shown while the field is empty, e.g. "Search projects". */
   placeholder?: string;
   /**
    * Starts as a bordered search icon button that opens into the field, as the prototype's Manage tables do. Esc

@@ -15,11 +15,17 @@ import './NumberField.css';
 
 /** `className` and `style` place the field's outer box (grid area, width, margin); they never paint it. */
 export interface NumberFieldProps extends Omit<AriaNumberFieldProps, 'className' | 'style'> {
+  /** Places the field's outer box (grid area, width, margin); never paints it. */
   className?: string;
+  /** Places the field's outer box; layout only. */
   style?: CSSProperties;
+  /** The field's name, above it (or beside it with `labelPosition="side"`). */
   label?: string;
+  /** A grey line under the field. */
   description?: string;
+  /** The error shown under it when it is invalid: text, or a function of React Aria's validation result. */
   errorMessage?: string | ((validation: ValidationResult) => string);
+  /** Hint text shown while the field is empty. */
   placeholder?: string;
   /** Puts the label beside the field instead of above it (Proposal requirements, Voting Min / Max). */
   labelPosition?: 'top' | 'side';
@@ -27,6 +33,11 @@ export interface NumberFieldProps extends Omit<AriaNumberFieldProps, 'className'
   prefix?: ReactNode;
 }
 
+/**
+ * A field for a number, with minus and plus buttons. Free text is Text field; a search is Search field.
+ *
+ * React Aria's NumberField (`value` / `minValue` / `maxValue` / `step`), with an optional `prefix` such as "€".
+ */
 export function NumberField({
   label,
   description,

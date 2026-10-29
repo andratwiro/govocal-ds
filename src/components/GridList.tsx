@@ -20,6 +20,7 @@ import './GridList.css';
 import clsx from 'clsx';
 import {keepClass} from './className';
 
+/** A list or grid of selectable, keyboard-friendly items with actions; React Aria's GridList. For picking from options, use Option list or ListBox. */
 export function GridList<T>({children, layout = 'grid', ...props}: GridListProps<T>) {
   return (
     <AriaGridList {...props} className={keepClass(props.className, 'gv-base-grid-list')} layout={layout}>

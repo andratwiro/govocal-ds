@@ -13,6 +13,7 @@ import './Disclosure.css';
 import {keepClass} from './className';
 import clsx from 'clsx';
 
+/** One heading that shows or hides a panel; React Aria's Disclosure. Use Section toggle or Switch with revealed fields for a page section. */
 export function Disclosure(props: DisclosureProps) {
   return <AriaDisclosure {...props} className={keepClass(props.className, 'gv-base-disclosure')} />;
 }
