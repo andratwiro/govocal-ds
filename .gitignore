@@ -4,4 +4,7 @@ dist/
 test-results/
 playwright-report/
 *.log
-.superpowers/
+.superpowers/*
+!.superpowers/sdd/
+.superpowers/sdd/*
+!.superpowers/sdd/progress.md
