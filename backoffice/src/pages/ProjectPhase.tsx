@@ -18,7 +18,7 @@ import {ACCESS_WHO_VALUE, AccessRightsModal, type AccessWho, ActionRow, ActionRo
   TabSection, TextField, type ThreadComment, type ThreadTab, type ThreadTarget, type TimelinePhase, TitleField,
   ToastRegion, ViewOptionList, ViewOptionRow, VolunteeringRow, VotingRow} from 'govocal-ds';
 import {Dialog, Form, Tag as TagItem, TagGroup} from 'govocal-ds/base';
-import {PICTURES} from '../../../src/components/gv/story-images';
+import {PICTURES} from '../../../src/stories/images';
 // Form field summary is a recipe (a story and its CSS): the page keeps its markup and uses the recipe's stylesheet.
 import {ME, METHODS, PROJECTS, type Method, type Phase, type Project} from '../data';
 import {IDEAS, IDEA_ASSIGNEES, IDEA_REPLIES, IDEA_SOURCES, IDEA_STATUSES, IDEA_TAGS, AREAS, TOPICS, PHASE_FILES, SCREENING_PHASES, TEAM, addedTimeline,

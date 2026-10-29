@@ -3,7 +3,7 @@ import {TileGrid} from './TileGrid';
 import {StatTile} from './StatTile';
 import {Card} from './Card';
 import {Panel} from './Panel';
-import {PICTURES} from './story-images';
+import {PICTURES} from '../../stories/images';
 
 const meta: Meta<typeof TileGrid> = {
   title: 'Components/Layout & containers/Tile grid',

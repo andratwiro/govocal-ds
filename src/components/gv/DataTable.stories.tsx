@@ -36,7 +36,7 @@ import {IDEA_FACETS} from '../../patterns/FilterMenu.stories';
 import {
   DISMISS_WARNINGS, ExportMenu, IDEA_ACTIONS, IDEAS as MANAGE_IDEAS, METRICS, filterIdeas, ideaCount,
   type Idea as ManageIdea, type Metric
-} from './story-data/ideas';
+} from '../../stories/data/ideas';
 
 type Direction = 'ascending' | 'descending';
 type SortDescriptor = {column: string | number; direction: Direction};

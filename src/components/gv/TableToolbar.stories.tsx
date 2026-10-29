@@ -6,7 +6,7 @@ import {FilterMenu, type FilterValue} from '../../patterns/FilterMenu';
 import {FilterChips} from '../../patterns/FilterChips';
 import {SelectionBar} from '../../patterns/SelectionBar';
 import {IDEA_FACETS} from '../../patterns/FilterMenu.stories';
-import {ExportMenu, IDEA_ACTIONS, IDEAS, filterIdeas, ideaCount} from './story-data/ideas';
+import {ExportMenu, IDEA_ACTIONS, IDEAS, filterIdeas, ideaCount} from '../../stories/data/ideas';
 
 /** A live toolbar over the invented ideas: the count follows the search and the filters. */
 function Demo({initial = {}, query: initialQuery = '', withExport, selected: initialSelected = 0}: {
