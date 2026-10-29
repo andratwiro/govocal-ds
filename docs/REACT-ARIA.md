@@ -36,7 +36,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Actions › Segmented control | `ToggleButtonGroup`, `SelectionIndicator`, `ToggleButton` through `components/Tooltip` | `ToggleButtonGroupProps` | – | yes | 7 |
 | Charts › Bar row | `VisuallyHidden` | – | – | yes | 6 |
 | Charts › Chart | None: plain React and CSS | – | yes | yes | 11 |
-| Charts › Dashboard card | `Button` through `components/gv/BarRow` | – | yes | yes | 13 |
+| Charts › Dashboard card | `Button` through `components/gv/BarRow` | – | yes | yes | 14 |
 | Charts › Legend row | None: plain React and CSS | – | yes | yes | 4 |
 | Charts › Statement row | None: plain React and CSS | – | yes | yes | 6 |
 | Data display › Avatar | None: plain React and CSS | – | – | yes | 6 |

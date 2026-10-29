@@ -1,5 +1,7 @@
 import type {Decorator, Meta, StoryObj} from '@storybook/react-vite';
 import {Sparkles} from 'lucide-react';
+import {useState} from 'react';
+import {expect, userEvent, within} from 'storybook/test';
 import {ChartLegend, LineChart, Sparkline} from './Chart';
 import {Badge} from './Badge';
 import {CompactButton} from './CompactButton';
@@ -232,4 +234,51 @@ export const Empty: Story = {
     </div>
   ),
   decorators: [wide]
+};
+
+/**
+ * The keys a dashboard card takes: Tab reaches each topic row, Enter or Space opens it; Tab reaches each legend row of
+ * a demographic card, which picks its share out. Its play function proves the component page's keyboard table.
+ */
+export const Keyboard: Story = {
+  render: function Render() {
+    const [opened, setOpened] = useState('Nothing opened yet');
+    return (
+      <div style={{display: 'flex', flexDirection: 'column', gap: 14, width: 375}}>
+        <DashboardCard kind="topic-breakdown" title="Topic breakdown">
+          <DashboardTopics
+            items={[
+              {id: 'ai', label: 'AI topic distribution', meta: '34 inputs · 0 topics'},
+              {id: 'manual', label: 'Manual tags by participants', meta: '78 inputs · 37 topics'}
+            ]}
+            onAction={id => setOpened(`Opened ${String(id)}`)}
+          />
+        </DashboardCard>
+        <span role="status">{opened}</span>
+        <DashboardCard kind="demographic-age">
+          <DashboardDemographic label="Age group" items={[...AGES]} />
+        </DashboardCard>
+      </div>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: /AI topic distribution/})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Opened ai');
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: /Manual tags by participants/})).toHaveFocus();
+    await userEvent.keyboard(' ');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Opened manual');
+    await userEvent.tab();
+    const [first, second] = within(canvas.getByRole('list', {name: 'Age group'})).getAllByRole('listitem');
+    const row = first.firstElementChild as HTMLElement;
+    await expect(row).toHaveFocus();
+    await expect(row).toHaveAttribute('data-highlighted');
+    await expect(second.firstElementChild).toHaveAttribute('data-dimmed');
+    await userEvent.tab();
+    await expect(second.firstElementChild).toHaveFocus();
+    await expect(row).toHaveAttribute('data-dimmed');
+  }
 };
