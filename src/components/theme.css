@@ -47,12 +47,12 @@
   --popover-shadow: var(--gv-shadow-dialog);
 
   /* type: UI 13/20 is the control size, Small 12/16, Title 16/24 */
-  --font-size-sm: 12px;
-  --font-size: 13px;
-  --font-size-lg: 16px;
+  --font-size-sm: var(--gv-type-small-size);
+  --font-size: var(--gv-type-ui-size);
+  --font-size-lg: var(--gv-type-title-size);
 
-  /* spacing: 4px grid on the Figma scale */
-  --spacing: 4px;
+  /* spacing: 4px grid on the Figma scale; the starter's 9 and 10 are control heights (Foundations/Size) */
+  --spacing: var(--gv-space-4);
   --spacing-1: var(--gv-space-4);
   --spacing-2: var(--gv-space-8);
   --spacing-3: var(--gv-space-12);
@@ -61,8 +61,8 @@
   --spacing-6: var(--gv-space-24);
   --spacing-7: var(--gv-space-28);
   --spacing-8: var(--gv-space-32);
-  --spacing-9: calc(var(--spacing) * 9);
-  --spacing-10: calc(var(--spacing) * 10);
+  --spacing-9: var(--gv-size-control-36);
+  --spacing-10: var(--gv-size-control-40);
 
   /* neutral scale the starter uses for tracks, wells and separators */
   --gray-50: var(--gv-color-slate-50);
