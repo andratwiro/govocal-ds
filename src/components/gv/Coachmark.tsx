@@ -33,8 +33,9 @@ export interface CoachmarkProps
 }
 
 /**
- * Onboarding coachmark. Not in Figma: from the prototype (augur-design.html #pj-coach / .pj-coach__bubble): a dark
- * popover with a tail, shown once per new PM, pointing at the UI it explains.
+ * A dark onboarding bubble with a tail that points at one control and explains it once, with Skip and Got it. Not in
+ * Figma: from the prototype (augur-design.html #pj-coach / .pj-coach__bubble), shown once per new PM. Got it calls
+ * `onDismiss`, Skip calls `onSkip`, the × calls both; a short hint that comes back on demand is a Help popover.
  */
 export function Coachmark({
   title,

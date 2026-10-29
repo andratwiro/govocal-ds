@@ -39,6 +39,19 @@ function hug(el: HTMLElement | null) {
   if (longest > 0) el.style.width = `${Math.ceil(longest + padding)}px`;
 }
 
+/**
+ * A short dark label that names a control or adds a hint while the pointer rests on it or it has keyboard focus: an
+ * icon button's name, why an action is disabled. Put the control and the Tooltip in a `TooltipTrigger`. One line up
+ * to 320 wide, then balanced lines; `showArrow` draws a tail. Never the only place words live: touch can't hover, so
+ * help someone must read is a Help popover. Not in Figma yet.
+ *
+ * ```tsx
+ * <TooltipTrigger>
+ *   <IconButton aria-label="Export"><Download aria-hidden size={16} /></IconButton>
+ *   <Tooltip>Export</Tooltip>
+ * </TooltipTrigger>
+ * ```
+ */
 export function Tooltip({children, showArrow, className, ...props}: TooltipProps) {
   const ref = useCallback((el: HTMLDivElement | null) => hug(el), []);
   return (

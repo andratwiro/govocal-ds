@@ -1,4 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {useState, type ReactNode} from 'react';
 import {DialogTrigger} from 'react-aria-components';
 import {Link as LinkIcon, Settings, Paperclip, Tag, Sparkles} from 'lucide-react';
@@ -300,4 +301,42 @@ export const Paged: Story = {
 export const WithSideTabs: Story = {
   name: 'With side tabs',
   render: () => <Open label="With side tabs"><SideTabsModal /></Open>
+};
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Enter on the button opens the modal
+ * with focus on the dialog; Tab walks the ×, the body and the footer, and wraps round without leaving; Esc closes it
+ * and puts focus back on the button. */
+export const Keyboard: Story = {
+  render: () => (
+    <Open label="Add a phase" open={false}>
+      <Modal title="Add a phase" footer={<>
+        <Button variant="secondary" slot="close">Cancel</Button>
+        <Button slot="close">Add phase</Button>
+      </>}>
+        <TextField label="Phase name" />
+      </Modal>
+    </Open>
+  ),
+  play: async ({canvasElement}) => {
+    const trigger = within(canvasElement).getByRole('button', {name: 'Add a phase'});
+    await userEvent.tab();
+    await expect(trigger).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    const dialog = await screen.findByRole('dialog', {name: 'Add a phase'});
+    await waitFor(() => expect(dialog).toHaveFocus());
+    const close = within(dialog).getByRole('button', {name: 'Close'});
+    await userEvent.tab();
+    await expect(close).toHaveFocus();
+    await userEvent.tab();
+    await expect(within(dialog).getByRole('textbox', {name: 'Phase name'})).toHaveFocus();
+    await userEvent.tab();
+    await expect(within(dialog).getByRole('button', {name: 'Cancel'})).toHaveFocus();
+    await userEvent.tab();
+    await expect(within(dialog).getByRole('button', {name: 'Add phase'})).toHaveFocus();
+    await userEvent.tab();
+    await expect(close).toHaveFocus();
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    await waitFor(() => expect(trigger).toHaveFocus());
+  }
 };

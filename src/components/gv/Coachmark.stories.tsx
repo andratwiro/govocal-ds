@@ -2,6 +2,7 @@ import {useRef, useState} from 'react';
 import {Coachmark} from './Coachmark';
 import {Button} from '../Button';
 import type {Meta, StoryFn} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 
 const meta: Meta<typeof Coachmark> = {
   title: 'Components/Overlays/Coachmark',
@@ -76,4 +77,51 @@ export const Example: Story = () => {
       </Coachmark>
     </div>
   );
+};
+
+/** The keyboard, proved by this story's play function (the Interactions panel): once open, focus is in the coachmark;
+ * Tab walks ×, Skip and Got it and stays inside; Enter on Got it closes it and focus goes back; Esc closes it too. */
+export const Keyboard: Story = () => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [isOpen, setOpen] = useState(false);
+  const [said, setSaid] = useState('');
+  return (
+    <div style={{padding: 120, display: 'grid', gap: 12, justifyItems: 'start'}}>
+      <span ref={ref} style={{display: 'inline-block'}}>
+        <Button onPress={() => setOpen(true)}>Publish project</Button>
+      </span>
+      <Coachmark triggerRef={ref} isOpen={isOpen} onOpenChange={setOpen} title="Ready when you are"
+        onDismiss={() => { setSaid('Got it'); setOpen(false); }} onSkip={() => { setSaid('Skipped'); setOpen(false); }}>
+        Publishing makes the project visible to residents.
+      </Coachmark>
+      <output>{said}</output>
+    </div>
+  );
+};
+Keyboard.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  const trigger = canvas.getByRole('button', {name: 'Publish project'});
+  await userEvent.tab();
+  await userEvent.keyboard('{Enter}');
+  const coachmark = await screen.findByRole('dialog');
+  await waitFor(() => expect(coachmark).toHaveFocus());
+  await userEvent.tab();
+  await expect(within(coachmark).getByRole('button', {name: 'Dismiss'})).toHaveFocus();
+  await userEvent.tab();
+  await expect(within(coachmark).getByRole('button', {name: 'Skip'})).toHaveFocus();
+  await userEvent.tab();
+  const gotIt = within(coachmark).getByRole('button', {name: 'Got it'});
+  await expect(gotIt).toHaveFocus();
+  await userEvent.tab();
+  await expect(within(coachmark).getByRole('button', {name: 'Dismiss'})).toHaveFocus();
+  await userEvent.tab({shift: true});
+  await expect(gotIt).toHaveFocus();
+  await userEvent.keyboard('{Enter}');
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+  await expect(canvas.getByText('Got it')).toBeInTheDocument();
+  await waitFor(() => expect(trigger).toHaveFocus());
+  await userEvent.keyboard('{Enter}');
+  await screen.findByRole('dialog');
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
 };

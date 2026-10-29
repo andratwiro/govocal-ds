@@ -2,6 +2,7 @@ import {Tooltip, TooltipTrigger} from '../Tooltip';
 import {Button} from '../Button';
 import {Save} from 'lucide-react';
 import type {Meta, StoryFn} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 
 const meta: Meta<typeof Tooltip> = {
   title: 'Components/Overlays/Tooltip',
@@ -53,3 +54,34 @@ export const TwoLines: StoryFn<typeof Tooltip> = () => (
   </div>
 );
 TwoLines.storyName = 'Two lines';
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Tab onto a control shows its tooltip at
+ * once, Esc hides it while focus stays, and Tab away hides it. */
+export const Keyboard: StoryFn<typeof Tooltip> = () => (
+  <div style={{display: 'flex', gap: 8, paddingTop: 48}}>
+    <Button variant="secondary">Cancel</Button>
+    <TooltipTrigger>
+      <Button aria-label="Save"><Save aria-hidden size={16} /></Button>
+      <Tooltip>Save</Tooltip>
+    </TooltipTrigger>
+    <Button variant="secondary">Share</Button>
+  </div>
+);
+Keyboard.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  const save = canvas.getByRole('button', {name: 'Save'});
+  await userEvent.tab();
+  await expect(canvas.getByRole('button', {name: 'Cancel'})).toHaveFocus();
+  await userEvent.tab();
+  await expect(save).toHaveFocus();
+  await waitFor(() => expect(screen.getByRole('tooltip')).toHaveTextContent('Save'));
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(screen.queryByRole('tooltip')).toBeNull());
+  await expect(save).toHaveFocus();
+  await userEvent.tab({shift: true});
+  await userEvent.tab();
+  await waitFor(() => expect(screen.getByRole('tooltip')).toBeInTheDocument());
+  await userEvent.tab();
+  await expect(canvas.getByRole('button', {name: 'Share'})).toHaveFocus();
+  await waitFor(() => expect(screen.queryByRole('tooltip')).toBeNull());
+};

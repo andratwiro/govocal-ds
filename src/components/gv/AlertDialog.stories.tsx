@@ -1,4 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {useState, type ReactNode} from 'react';
 import {DialogTrigger} from 'react-aria-components';
 import {Button} from '../Button';
@@ -131,4 +132,48 @@ export const TypeToConfirm: Story = {
 export const WithImpactList: Story = {
   name: 'With impact list',
   render: () => <Open label="With impact list"><ImpactListDialog /></Open>
+};
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Enter on the button opens the dialog
+ * with focus on the dialog itself; Tab reaches Cancel first, then the confirm, and stays inside; Enter on the confirm
+ * closes it and puts focus back on the button. */
+export const Keyboard: Story = {
+  render: function KeyboardDemo() {
+    const [said, setSaid] = useState('');
+    return (
+      <div style={{display: 'grid', gap: 'var(--gv-space-12)', justifyItems: 'start'}}>
+        <DialogTrigger>
+          <Button variant="secondary">Download results</Button>
+          <AlertDialog title="Download the results (PDF)" confirmLabel="Download PDF"
+            onCancel={() => setSaid('Cancelled')} onConfirm={() => setSaid('Downloading')}>
+            <p>We'll build a shareable PDF with the participation snapshot and each phase's results.</p>
+          </AlertDialog>
+        </DialogTrigger>
+        <output>{said}</output>
+      </div>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', {name: 'Download results'});
+    await userEvent.tab();
+    await expect(trigger).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    const dialog = await screen.findByRole('alertdialog', {name: 'Download the results (PDF)'});
+    await waitFor(() => expect(dialog).toHaveFocus());
+    const cancel = within(dialog).getByRole('button', {name: 'Cancel'});
+    const confirm = within(dialog).getByRole('button', {name: 'Download PDF'});
+    await userEvent.tab();
+    await expect(cancel).toHaveFocus();
+    await userEvent.tab();
+    await expect(confirm).toHaveFocus();
+    await userEvent.tab();
+    await expect(cancel).toHaveFocus();
+    await userEvent.tab({shift: true});
+    await expect(confirm).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+    await expect(canvas.getByText('Downloading')).toBeInTheDocument();
+    await waitFor(() => expect(trigger).toHaveFocus());
+  }
 };

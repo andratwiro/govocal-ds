@@ -1,4 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {HelpPopover} from './HelpPopover';
 
 const meta: Meta<typeof HelpPopover> = {
@@ -23,5 +24,26 @@ export const Open: Story = {
   args: {title: 'Public API Access', children: help},
   play: async ({canvasElement}) => {
     canvasElement.querySelector<HTMLButtonElement>('button')?.click();
+  }
+};
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Tab reaches the help icon; Enter opens
+ * the popover with focus in it; Esc closes it and puts focus back on the icon. Space opens it too. */
+export const Keyboard: Story = {
+  args: {title: 'Public API Access', children: help},
+  play: async ({canvasElement}) => {
+    const icon = within(canvasElement).getByRole('button', {name: 'Help: Public API Access'});
+    await userEvent.tab();
+    await expect(icon).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    const dialog = await screen.findByRole('dialog', {name: 'Public API Access'});
+    await waitFor(() => expect(dialog).toHaveFocus());
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    await waitFor(() => expect(icon).toHaveFocus());
+    await userEvent.keyboard(' ');
+    await screen.findByRole('dialog', {name: 'Public API Access'});
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
   }
 };

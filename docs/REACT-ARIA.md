@@ -84,10 +84,10 @@ what would survive a change of base library. It decides nothing: the base librar
 | Navigation › Link | `Link` | `LinkProps` | – | yes | 1 |
 | Navigation › Pagination | `Button` | – | yes | yes | 7 |
 | Navigation › Tabs | `Tabs`, `TabList`, `Tab`, `TabPanels`, `TabPanel`, `SelectionIndicator`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `Header`, `VisuallyHidden` | – | yes | yes | 7 |
-| Overlays › Alert dialog | `Heading`, `Dialog` through `components/Modal`, `components/Button`, `components/TextField` | – | yes | yes | 5 |
-| Overlays › Coachmark | `OverlayArrow`, `Popover` | `PopoverProps` | – | yes | 2 |
-| Overlays › Help popover | `Heading`, `Dialog`, `DialogTrigger` through `components/Popover`, `components/Button` | – | – | yes | 3 |
-| Overlays › Modal | `Button`, `Heading`, `Dialog` through `components/Modal` | – | – | yes | 8 |
+| Overlays › Alert dialog | `Heading`, `Dialog` through `components/Modal`, `components/Button`, `components/TextField` | – | yes | yes | 6 |
+| Overlays › Coachmark | `OverlayArrow`, `Popover` | `PopoverProps` | – | yes | 3 |
+| Overlays › Help popover | `Heading`, `Dialog`, `DialogTrigger` through `components/Popover`, `components/Button` | – | – | yes | 4 |
+| Overlays › Modal | `Button`, `Heading`, `Dialog` through `components/Modal` | – | – | yes | 9 |
 | Overlays › Side panel | `Dialog`, `Toolbar` through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 11 |
 | Overlays › Tooltip | `OverlayArrow`, `Tooltip`, `TooltipTrigger` | `TooltipProps` | – | yes | 1 |
 | Status & feedback › Badge | `Button` | – | – | yes | 7 |
