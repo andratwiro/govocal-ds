@@ -11,6 +11,12 @@ export interface LinkProps extends RACLinkProps {
   size?: 'small' | 'medium';
 }
 
+/**
+ * A text link to another page, a section or a file, in a sentence or as a row's or a section's small action. Blue
+ * words ("Make default", "+ New phase"); React Aria's Link: `href` navigates, `isDisabled` greys it out. An action
+ * that stays on the page is a quiet Button, not a Link. `className` and `style` place it (margin, alignment); they
+ * never paint it.
+ */
 export function Link({size, ...props}: LinkProps) {
   return <RACLink {...props} className={keepClass(props.className)} data-size={size} />;
 }

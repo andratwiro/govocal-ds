@@ -1,12 +1,13 @@
 /**
  * govocal-ds/base: React Aria's starter parts, painted with the tokens, that stay public beside the Components.
  *
- *   import {Link, RadioGroup, Radio, Popover, Dialog, DialogTrigger} from 'govocal-ds/base';
+ *   import {DatePicker, Popover, Dialog, DialogTrigger} from 'govocal-ds/base';
  *
- * Use a Component from 'govocal-ds' first. Reach here for a React Aria part no Component covers yet: dates, colour
- * fields and swatches, radio and checkbox groups, list boxes, trees, links, popovers with a dialog. Storybook shows
- * them under Base. Not here, because a Component replaces them under the same name: Checkbox and Modal (the
- * Components' versions, in 'govocal-ds'). Table stays until the last page that uses it moves to Data table.
+ * Primitives: use a Component from 'govocal-ds' first. Reach here for a React Aria part no Component covers yet:
+ * dates, colour fields and swatches, list boxes, trees, popovers with a dialog. Storybook shows them under Base.
+ * Not here, because a Component replaces them under the same name: Checkbox and Modal (the Components' versions, in
+ * 'govocal-ds'). Not here any more, because pages use them as Components: Link, RadioGroup and CheckboxGroup (in
+ * 'govocal-ds'). Table stays until the last page that uses it moves to Data table.
  */
 
 // Dates
@@ -22,11 +23,9 @@ export {ColorField, type ColorFieldProps} from './components/ColorField';
 export {ColorSwatch, type ColorSwatchProps} from './components/ColorSwatch';
 
 // Fields and choices
-export {CheckboxGroup, type CheckboxGroupProps} from './components/CheckboxGroup';
 export {
   Form, Label, FieldError, Description, FieldButton, type FormProps, type LabelProps, type FieldErrorProps
 } from './components/Form';
-export {RadioGroup, Radio, type RadioGroupProps, type RadioProps} from './components/RadioGroup';
 export {TagGroup, Tag, type TagGroupProps} from './components/TagGroup';
 export {ToggleButton, type ToggleButtonProps} from './components/ToggleButton';
 
@@ -57,8 +56,7 @@ export {
 } from './components/Disclosure';
 export {DisclosureGroup, type DisclosureGroupProps} from './components/DisclosureGroup';
 
-// Navigation and status
-export {Link, type LinkProps} from './components/Link';
+// Status and toolbars
 export {Meter, type MeterProps} from './components/Meter';
 export {ProgressCircle, type ProgressCircleProps} from './components/ProgressCircle';
 export {Toolbar, type ToolbarProps} from './components/Toolbar';

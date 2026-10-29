@@ -4,9 +4,10 @@
  *   import {Button, Modal, DataTable, SideNav} from 'govocal-ds';
  *   import 'govocal-ds/tokens.css'; // once, at the app's root
  *
- * React Aria's starter parts that stay public (Link, RadioGroup, ListBox, Popover, DialogTrigger, …) come from
- * 'govocal-ds/base'. Each component imports its own CSS, so importing a part is enough to paint it.
- * Grouped as Storybook's tree: Components by group, then Patterns by place. docs/API.md is the prop convention.
+ * React Aria's starter parts that stay public (ListBox, Popover, DialogTrigger, DatePicker, …) come from
+ * 'govocal-ds/base': primitives, for what no Component covers yet. Each component imports its own CSS, so importing
+ * a part is enough to paint it. Grouped as Storybook's tree: Components by group, then Patterns by place.
+ * docs/API.md is the prop convention.
  */
 
 // Components / Actions
@@ -71,6 +72,7 @@ export {
 
 // Components / Forms
 export {Checkbox, type CheckboxProps} from './components/gv/Checkbox';
+export {CheckboxGroup, type CheckboxGroupProps} from './components/CheckboxGroup';
 export {
   ChoiceCard, ChoiceCardCheckbox, ChoiceCardGroupHeading, type ChoiceCardProps, type ChoiceCardCheckboxProps,
   type ChoiceCardGroupHeadingProps
@@ -81,6 +83,7 @@ export {
 export {DropZone, type DropZoneProps} from './components/gv/DropZone';
 export {NumberField, type NumberFieldProps} from './components/NumberField';
 export {OptionList, type OptionListItem, type OptionListProps} from './components/gv/OptionList';
+export {RadioGroup, Radio, type RadioGroupProps, type RadioProps} from './components/RadioGroup';
 export {RequiredMarker, type RequiredMarkerProps} from './components/gv/RequiredMarker';
 export {RichTextEditor, type RichTextEditorProps} from './components/gv/RichTextEditor';
 export {RichTextToolbar, type RichTextToolbarProps} from './components/gv/RichTextToolbar';
@@ -105,6 +108,7 @@ export {TileGrid, type TileGridProps} from './components/gv/TileGrid';
 
 // Components / Navigation
 export {Breadcrumbs, type BreadcrumbItem, type BreadcrumbsProps} from './components/gv/Breadcrumbs';
+export {Link, type LinkProps} from './components/Link';
 export {Pagination, type PageItem, type PaginationProps} from './components/gv/Pagination';
 export {
   Tabs, TabList, Tab, TabPanels, TabPanel, GroupedTabs, GroupedTabList, TabSection, GroupedTab, GroupedTabPanel,

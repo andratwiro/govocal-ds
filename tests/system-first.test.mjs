@@ -49,8 +49,8 @@ const exportedValues = f => [...readFileSync(f, 'utf8').matchAll(/^export\s+(?:f
 const fromModule = f => './' + relative('src', f).replace(/\.tsx?$/, '');
 
 // The starter files painted as Components (Storybook's Components tree), and the content parts they compose.
-const STARTER_COMPONENTS = ['Button', 'Menu', 'NumberField', 'SearchField', 'Select', 'Switch', 'Tabs', 'TextField',
-  'Toast', 'Tooltip', 'Content', 'Separator'];
+const STARTER_COMPONENTS = ['Button', 'CheckboxGroup', 'Link', 'Menu', 'NumberField', 'RadioGroup', 'SearchField',
+  'Select', 'Switch', 'Tabs', 'TextField', 'Toast', 'Tooltip', 'Content', 'Separator'];
 // Starter files a Component replaces under the same name, kept out of both entry points.
 const REPLACED = ['Checkbox', 'Modal'];
 // Exported for the file's own tests, stories or siblings, never for a page.

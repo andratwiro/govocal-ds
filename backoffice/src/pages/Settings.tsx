@@ -1,8 +1,8 @@
 import {useId, useState} from 'react';
-import {Button, Checkbox, ChoiceCard, DropZone, FileList, type FileListItemData, NumberField, Panel, SegmentedControl,
-  SegmentedControlItem, Select, SelectItem, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, TextArea, TextField,
-  TitleField, ToastRegion} from 'govocal-ds';
-import {CheckboxGroup, ColorField, RadioGroup} from 'govocal-ds/base';
+import {Button, Checkbox, CheckboxGroup, ChoiceCard, DropZone, FileList, type FileListItemData, NumberField, Panel,
+  RadioGroup, SegmentedControl, SegmentedControlItem, Select, SelectItem, Switch, Tab, TabList, TabPanel, TabPanels,
+  Tabs, TextArea, TextField, TitleField, ToastRegion} from 'govocal-ds';
+import {ColorField} from 'govocal-ds/base';
 import {APPROVERS, LOCALES, PLATFORM_NAME} from '../data-settings';
 import {AreasTab, PoliciesTab, StatusesTab, TagsTab, toast} from './SettingsLists';
 import {Page} from './Page';

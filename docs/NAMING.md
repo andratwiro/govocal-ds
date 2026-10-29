@@ -47,11 +47,11 @@ Components              src/components/gv/
   Charts                Bar row · Chart · Dashboard card · Legend row · Statement row
   Data display          Avatar (with Avatar group) · Data table · File list · Illustration · List header · List header cell · List row
                         · Property list · Reaction counts · Stat row · Stat tile · Table toolbar
-  Forms                 Checkbox · Choice card · Date range field · Drop zone · Number field · Option list · Required marker
-                        · Rich text editor · Rich text toolbar · Rich text toolbar button · Search field · Select · Switch
-                        · Tag picker · Text field · Title field
+  Forms                 Checkbox · Checkbox group · Choice card · Date range field · Drop zone · Number field · Option list
+                        · Radio group · Required marker · Rich text editor · Rich text toolbar · Rich text toolbar button
+                        · Search field · Select · Switch · Tag picker · Text field · Title field
   Layout & containers   Card · Divider · Panel · Section label
-  Navigation            Breadcrumbs · Pagination · Tabs
+  Navigation            Breadcrumbs · Link · Pagination · Tabs
   Overlays              Alert dialog · Coachmark · Help popover · Modal · Side panel · Tooltip
   Status & feedback     Badge · Banner · Empty state · New dot · Review status · Skeleton · Status badge · Toast
 Patterns                src/patterns/
@@ -162,6 +162,7 @@ below). Rows without a rename say "same".
 | Patterns/Action row · Panel section · Stat card | Patterns/Project page/… (same names) | none |
 | Patterns/Phone preview | Patterns/Project page/Phone preview | PhoneFrame → PhonePreview; AvatarStack → AvatarGroup, now in Avatar.tsx |
 | Patterns/Phase timeline | Patterns/Project rail/Phase timeline | none |
+| Base/Link · RadioGroup · CheckboxGroup | Components/Navigation/Link · Components/Forms/Radio group · Components/Forms/Checkbox group (29 Oct: pages use them; files stay in `src/components/`) | none; imported from `govocal-ds`, no longer `govocal-ds/base` |
 
 Kept for a later pass (after Figma mirrors this): Compact button stays its own entry (not yet a Button size), Stat card
 stays apart from Stat tile, Status badge keeps `state` (draft/live) and Card keeps its Figma Type values, List header,

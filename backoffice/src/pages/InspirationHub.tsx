@@ -1,9 +1,8 @@
 import {useMemo, useState} from 'react';
 import {BadgeCheck, Check, Copy, ExternalLink, Globe, Lightbulb, SearchX, Sparkles, Tag, Users} from 'lucide-react';
 import {Avatar, Badge, Banner, Button, Card, EmptyState, FilterChips, type FilterFacet, FilterMenu, type FilterValue,
-  IconButton, Modal, Pagination, Panel, PropertyList, PropertyListItem, queue, SearchField, Select, SelectItem,
+  IconButton, Link, Modal, Pagination, Panel, PropertyList, PropertyListItem, queue, SearchField, Select, SelectItem,
   TableToolbar, ToastRegion} from 'govocal-ds';
-import {Link} from 'govocal-ds/base';
 import {COUNTRIES, LIBRARY, METHODS, PHASE_TITLES, POPULATIONS, SORTS, TOPICS, type Country, type LibraryProject} from '../data-inspiration-hub';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';

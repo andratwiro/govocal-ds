@@ -16,6 +16,11 @@ export interface CheckboxGroupProps extends Omit<AriaCheckboxGroupProps, 'childr
   orientation?: 'horizontal' | 'vertical';
 }
 
+/**
+ * Pick any number of a few options, all in view. A label, a `Checkbox` per option (each with a `value`) in a column
+ * or a row (`orientation`), an optional description and an error. React Aria's CheckboxGroup (`value` /
+ * `defaultValue` / `onChange` hold the ticked values). `className` and `style` place it; they never paint it.
+ */
 export function CheckboxGroup({
   label,
   description,

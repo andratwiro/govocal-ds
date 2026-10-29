@@ -34,11 +34,13 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 
 ## Components / Forms
 - **Checkbox** `Checkbox`: Checkbox: a 15x15 rounded box, token-fill when checked/indeterminate. Stories: All Variants, Default, Selected, Indeterminate, With Description, Quiet, Disabled.
+- **Checkbox group** `CheckboxGroup` (not in Figma): Pick any number of a few options, all in view. Stories: Example.
 - **Choice card** `ChoiceCard` (not in Figma): Choice card: a bordered, selectable tile — one component for radio tiles (inside a RadioGroup) and checkbox tiles (`ChoiceCardCheckbox`, inside a CheckboxGro… Stories: All Variants, With Icon, With Revealed Content, Checkbox Group With Group Headings, Long List.
 - **Date range field** `DateRangeField` (not in Figma): Date range field: two DatePickers joined by an "Add end date" button, never the starter DateRangePicker, because a phase or event's end may stay open. Stories: Start Only, Start And End, With Times, With Timezone, Required, Invalid, Controlled.
 - **Drop zone** `DropZone`: Drop zone: an upload icon with "Drop a file here or browse". Stories: All Variants, Default, Disabled, Custom Label, Compact.
 - **Number field** `NumberField` Stories: Default, Label At The Side, With Prefix.
 - **Option list** `OptionList` (not in Figma): A list of options to pick from, in a popover (a filter's submenu, a tag picker, a setup step): an optional search over rows of box · icon · value · count. Stories: All Variants, Single, Multiple, With Counts, Searchable, People, With Footer, Empty, Right To Left.
+- **Radio group** `RadioGroup` (not in Figma): Pick exactly one of a few options, all in view. Stories: Example.
 - **Required marker** `RequiredMarker`: Required marker (Figma node 14:878): a small dot + "Required" label. Stories: All Variants, Card, Field.
 - **Rich text editor** `RichTextEditor` Stories: All Variants, Empty, Filled.
 - **Rich text toolbar** `RichTextToolbar`: The rich-text toolbar (Figma "Rich text toolbar"): bold, italic and list hold a pressed state; link, image and video are plain buttons that open a picker (as… Stories: All Variants, Default.
@@ -61,6 +63,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 
 ## Components / Navigation
 - **Breadcrumbs** `Breadcrumbs`: Breadcrumbs. Stories: All Variants, Project, Phase Draft, Phase Live.
+- **Link** `Link` (not in Figma): A text link to another page, a section or a file, in a sentence or as a row's or a section's small action. Stories: Example.
 - **Pagination** `Pagination` (not in Figma): The pager at the foot of a table: "‹ 1 2 3 4 5 … 12 ›", the current page filled. Stories: All Variants, First, Middle, Last, Few Pages, One Page, Right To Left.
 - **Tabs** `Tabs` (not in Figma): Tabs: a `TabList` of `Tab`s, then one `TabPanels` holding a `TabPanel` per tab (same `id`). Stories: All Variants, Underline, With Count, With Icons, With Status Dots, Vertical, Vertical With Group Headings.
 
@@ -134,7 +137,6 @@ React Aria parts painted with the tokens. Primitives: don't use them directly in
 
 - **Calendar** `Calendar` (primitive) Stories: Example.
 - **Checkbox** `Checkbox` (primitive; hidden: a Component replaces it) Stories: Example.
-- **CheckboxGroup** `CheckboxGroup` (primitive) Stories: Example.
 - **ColorField** `ColorField` (primitive) Stories: Example.
 - **ColorSwatch** `ColorSwatch` (primitive) Stories: Example.
 - **DateField** `DateField` (primitive) Stories: Example.
@@ -145,12 +147,10 @@ React Aria parts painted with the tokens. Primitives: don't use them directly in
 - **DisclosureGroup** `DisclosureGroup` (primitive) Stories: Example.
 - **Form** `Form` (primitive) Stories: Example.
 - **GridList** `GridList` (primitive) Stories: Example, Sections.
-- **Link** `Link` (primitive) Stories: Example.
 - **ListBox** `ListBox` (primitive) Stories: Example, Sections.
 - **Meter** `Meter` (primitive) Stories: Example.
 - **Modal** `Modal` (primitive; hidden: a Component replaces it) Stories: Example.
 - **Popover** `Popover` (primitive) Stories: Example.
-- **RadioGroup** `RadioGroup` (primitive) Stories: Example.
 - **RangeCalendar** `RangeCalendar` (primitive) Stories: Example.
 - **Table** `Table` (primitive; hidden: a Component replaces it) Stories: Example.
 - **TagGroup** `TagGroup` (primitive) Stories: Example.
@@ -160,4 +160,4 @@ React Aria parts painted with the tokens. Primitives: don't use them directly in
 - **Tree** `Tree` (primitive) Stories: Example.
 
 ## Not in Figma yet
-Tagged `not-in-figma` in their stories (51): Alert dialog, App provider, Banner, Card, Choice card, Coachmark, Data table, Date range field, Empty state, File list, Help popover, Illustration, Menu, Option list, Page header, Pagination, Panel, Property list, Reaction counts, Search field, Select, Side panel, Skeleton, Table toolbar, Tabs, Tag picker, Text, Tile grid, Toast, Tooltip, Visually hidden, Access rights, Action row, Comment thread, Filter chips, Filter menu, Form field summary, Notification list, Notification row, Official update, Panel section, Participant action row, Phase timeline, Phone preview, Rail phase, Section toggle, Selection bar, Side nav, Stat card, View option row, Volunteering row.
+Tagged `not-in-figma` in their stories (54): Alert dialog, App provider, Banner, Card, Checkbox group, Choice card, Coachmark, Data table, Date range field, Empty state, File list, Help popover, Illustration, Link, Menu, Option list, Page header, Pagination, Panel, Property list, Radio group, Reaction counts, Search field, Select, Side panel, Skeleton, Table toolbar, Tabs, Tag picker, Text, Tile grid, Toast, Tooltip, Visually hidden, Access rights, Action row, Comment thread, Filter chips, Filter menu, Form field summary, Notification list, Notification row, Official update, Panel section, Participant action row, Phase timeline, Phone preview, Rail phase, Section toggle, Selection bar, Side nav, Stat card, View option row, Volunteering row.

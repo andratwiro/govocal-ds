@@ -1,12 +1,13 @@
-import {RadioGroup, Radio} from './RadioGroup';
+import {RadioGroup, Radio} from '../RadioGroup';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof RadioGroup> = {
+  title: 'Components/Forms/Radio group',
   component: RadioGroup,
   parameters: {
     layout: 'centered'
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'not-in-figma']
 };
 
 export default meta;

@@ -1,11 +1,11 @@
 import {useState, type ReactNode} from 'react';
 import {ArrowLeft, ArrowRight, Download, Eye, Plus, Upload, Pencil, FileText, ShieldCheck} from 'lucide-react';
-import {AlertDialog, Avatar, Badge, Banner, BarRow, Button, Checkbox, ChoiceCard, DashboardCard, DashboardDemographic,
-  DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableOptions, DataTablePerson,
-  DataTableRow, DataTableStack, Divider, DropZone, EmptyState, FileList, HelpPopover, LegendRow, LineChart, MenuItem,
-  Modal, NumberField, Pagination, Panel, PropertyList, PropertyListItem, queue, Select, SelectItem, Sparkline, StatRow,
-  StatTile, StatusBadge, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, TextField, ToastRegion} from 'govocal-ds';
-import {CheckboxGroup, Radio, RadioGroup} from 'govocal-ds/base';
+import {AlertDialog, Avatar, Badge, Banner, BarRow, Button, Checkbox, CheckboxGroup, ChoiceCard, DashboardCard,
+  DashboardDemographic, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableOptions,
+  DataTablePerson, DataTableRow, DataTableStack, Divider, DropZone, EmptyState, FileList, HelpPopover, LegendRow,
+  LineChart, MenuItem, Modal, NumberField, Pagination, Panel, PropertyList, PropertyListItem, queue, Radio, RadioGroup,
+  Select, SelectItem, Sparkline, StatRow, StatTile, StatusBadge, Switch, Tab, TabList, TabPanel, TabPanels, Tabs,
+  TextField, ToastRegion} from 'govocal-ds';
 import {CANDIDATES, CATEGORIES, CURRENT, MANAGERS, POPUP_CONDITIONS, POPUP_SHOWN, QUARTERS, QUESTIONS, REPORTS, RESPONDENTS,
   SENTIMENT, SURVEY_ACCESS, WHO, type Report} from '../data-community-monitor';
 import {Page} from './Page';
