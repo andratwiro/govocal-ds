@@ -1,0 +1,70 @@
+@import '../theme.css';
+@import '../utilities.css';
+
+.gv-icon-button {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid transparent;
+  border-radius: var(--gv-radius-8);
+  background: transparent;
+  color: var(--gv-icon-default);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+
+  &[data-size='24'] {
+    width: 24px;
+    height: 24px;
+
+    > svg {
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  > svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &[data-tone='strong'] {
+    color: var(--gv-icon-strong);
+  }
+
+  &[data-variant='ghost'][data-hovered] {
+    background: var(--gv-surface-hover);
+    color: var(--gv-icon-strong);
+  }
+
+  &[data-variant='bordered'] {
+    background: var(--gv-surface-panel);
+    border-color: var(--gv-border-control);
+
+    &[data-hovered] {
+      border-color: var(--gv-border-control-hover);
+      background: var(--gv-surface-panel);
+    }
+  }
+
+  &[data-pressed] {
+    scale: 0.95;
+  }
+
+  &[data-disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+  }
+}
