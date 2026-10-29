@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" class="gvi-empty-notebook" data-group="Empty states" data-motion="still" data-sizes="160 96" data-source="augur-design.html PJ_EMPTY_NOTEBOOK (markup l.29536, CSS .pj-emptyart l.8815): Manage and Insights tabs, side panel" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice" direction="ltr">
+  <style>
+    /* An open blank notebook and a pencil: the idea of "empty", not of a method. Still. */
+    .gvi-empty-notebook .ground { fill: var(--gv-color-slate-50); }
+    .gvi-empty-notebook .cover { fill: var(--gv-color-slate-150); }
+    .gvi-empty-notebook .page { fill: var(--gv-color-neutral-0); stroke: var(--gv-color-neutral-200); stroke-width: 1; }
+    .gvi-empty-notebook .spine { stroke: var(--gv-color-neutral-200); stroke-width: 1; }
+    .gvi-empty-notebook .rule { stroke: var(--gv-color-slate-150); stroke-width: 1.5; stroke-linecap: round; }
+    .gvi-empty-notebook .wood { fill: var(--gv-color-neutral-0); stroke: var(--gv-color-slate-400); stroke-width: 1; stroke-linejoin: round; }
+    .gvi-empty-notebook .lead { fill: var(--gv-color-slate-500); }
+  </style>
+  <ellipse class="ground" cx="80" cy="106" rx="60" ry="5"/>
+  <path class="cover" d="M22 26 Q22 20 28 20 L78 22 L80 24 L82 22 L132 20 Q138 20 138 26 L138 96 Q138 100 134 100 L82 100 L80 102 L78 100 L26 100 Q22 100 22 96 Z"/>
+  <path class="page" d="M28 25 L77 27 L77 95 L28 95 Z"/>
+  <path class="page" d="M83 27 L132 25 L132 95 L83 95 Z"/>
+  <line class="spine" x1="80" y1="26" x2="80" y2="99"/>
+  <line class="rule" x1="36" y1="42" x2="70" y2="42"/>
+  <line class="rule" x1="36" y1="54" x2="70" y2="54"/>
+  <line class="rule" x1="36" y1="66" x2="70" y2="66"/>
+  <line class="rule" x1="36" y1="78" x2="70" y2="78"/>
+  <line class="rule" x1="90" y1="42" x2="124" y2="42"/>
+  <line class="rule" x1="90" y1="54" x2="124" y2="54"/>
+  <line class="rule" x1="90" y1="66" x2="124" y2="66"/>
+  <line class="rule" x1="90" y1="78" x2="124" y2="78"/>
+  <g transform="translate(118 18) rotate(35)">
+    <rect class="wood" x="0" y="0" width="7" height="30" rx="1.5"/>
+    <path class="wood" d="M0 30 L7 30 L3.5 38 Z"/>
+    <path class="lead" d="M2.3 35.2 L4.7 35.2 L3.5 38 Z"/>
+  </g>
+</svg>

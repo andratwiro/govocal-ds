@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" class="gvi-proposal-threshold" data-group="Method scenes" data-motion="hover" data-sizes="320 400" data-source="augur-design.html .pp-stage: CSS l.9248-9316 (keyframes pp*), markup l.20607; picker card Proposals and petitions" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice" direction="ltr">
+  <style>
+    /* Proposals and petitions. Still (the picker card's cover): a proposal with 128 of 300 votes, 34 days left.
+       Story (9 s): "Proposed" sticks on, the votes climb to the threshold as the bar fills, "Proposed" peels off and
+       "Threshold reached" lands, the card rises away, the official response comes in and "Answered" sticks on, then
+       the cover returns. Stickers sway gently, never still. The prototype's light sweep over the growing bar is a
+       soft white band here (an SVG file has no clip without ids). */
+    .gvi-proposal-threshold {
+      --gvi-cycle: calc(var(--gv-motion-duration-loop) * 5.625);
+      --gvi-sticker: color-mix(in oklch, var(--gv-color-teal-400) 25%, var(--gv-color-teal-75));
+      --gvi-avatar: color-mix(in oklch, var(--gv-color-teal-400) 20%, var(--gv-color-neutral-25));
+      font-family: var(--gv-font-family);
+    }
+    .gvi-proposal-threshold .stage { fill: var(--gv-surface-stage); }
+    .gvi-proposal-threshold .card { fill: var(--gv-surface-panel); stroke: var(--gv-border-card); stroke-width: 1; }
+    .gvi-proposal-threshold .av { fill: var(--gvi-avatar); }
+    .gvi-proposal-threshold .av-t { font-size: 12px; font-weight: 500; fill: var(--gv-color-slate-800); text-anchor: middle; }
+    .gvi-proposal-threshold .small { font-size: 12px; fill: var(--gv-text-secondary); }
+    .gvi-proposal-threshold .ink { font-size: 12px; fill: var(--gv-text-primary); }
+    .gvi-proposal-threshold .title { font-size: 13px; fill: var(--gv-text-primary); }
+    .gvi-proposal-threshold .num { font-size: 12px; fill: var(--gv-text-primary); font-variant-numeric: tabular-nums; text-anchor: end; }
+    .gvi-proposal-threshold .track { fill: var(--gv-border-card); }
+    .gvi-proposal-threshold .fill { fill: var(--gv-color-teal-400); transform-box: fill-box; transform-origin: left center; scale: .1805 1; }
+    .gvi-proposal-threshold .shine { opacity: 0; }
+    .gvi-proposal-threshold .v1, .gvi-proposal-threshold .v2, .gvi-proposal-threshold .v3, .gvi-proposal-threshold .v4 { opacity: 0; }
+    .gvi-proposal-threshold .shine rect { fill: var(--gv-color-neutral-0); }
+    .gvi-proposal-threshold .ic { fill: none; stroke: var(--gv-text-secondary); stroke-width: 1.1667; stroke-linecap: round; stroke-linejoin: round; }
+    .gvi-proposal-threshold .pill { fill: var(--gvi-sticker); }
+    .gvi-proposal-threshold .pill-t { font-size: 12px; font-weight: 500; fill: var(--gv-color-slate-800); text-anchor: middle; }
+    .gvi-proposal-threshold .live { opacity: 0; }
+    .gvi-proposal-threshold .stk { opacity: 0; }
+    .gvi-proposal-threshold .prop .stk { rotate: -12.85deg; }
+    .gvi-proposal-threshold .ans .stk { rotate: -14.97deg; }
+    .gvi-proposal-threshold .resp { opacity: 0; }
+
+    .gvi-proposal-threshold .cardg { animation: gvi-proposal-threshold-card var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-proposal-threshold .fill { animation: gvi-proposal-threshold-fill var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-proposal-threshold .shine { animation: gvi-proposal-threshold-shine-on var(--gvi-cycle) var(--gv-motion-easing-standard) infinite both; }
+    .gvi-proposal-threshold .shine g { animation: gvi-proposal-threshold-shine calc(var(--gv-motion-duration-loop) * 0.875) var(--gv-motion-easing-move) infinite; }
+    .gvi-proposal-threshold .v0 { animation: gvi-proposal-threshold-v0 var(--gvi-cycle) var(--gv-motion-easing-standard) infinite both; }
+    .gvi-proposal-threshold .v1 { animation: gvi-proposal-threshold-v1 var(--gvi-cycle) var(--gv-motion-easing-standard) infinite both; }
+    .gvi-proposal-threshold .v2 { animation: gvi-proposal-threshold-v2 var(--gvi-cycle) var(--gv-motion-easing-standard) infinite both; }
+    .gvi-proposal-threshold .v3 { animation: gvi-proposal-threshold-v3 var(--gvi-cycle) var(--gv-motion-easing-standard) infinite both; }
+    .gvi-proposal-threshold .v4 { animation: gvi-proposal-threshold-v4 var(--gvi-cycle) var(--gv-motion-easing-standard) infinite both; }
+    .gvi-proposal-threshold .live { animation: gvi-proposal-threshold-live var(--gvi-cycle) var(--gv-motion-easing-standard) infinite both; }
+    .gvi-proposal-threshold .prop .stk { animation: gvi-proposal-threshold-prop var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-proposal-threshold .thr .stk { animation: gvi-proposal-threshold-thr var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-proposal-threshold .ans .stk { animation: gvi-proposal-threshold-ans var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-proposal-threshold .resp { animation: gvi-proposal-threshold-resp var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-proposal-threshold .sway { animation: gvi-proposal-threshold-sway calc(var(--gv-motion-duration-loop) * 1.625) var(--gv-motion-easing-move) infinite alternate; }
+    .gvi-proposal-threshold .thr .sway { animation-duration: calc(var(--gv-motion-duration-loop) * 1.9375); animation-delay: calc(var(--gv-motion-duration-loop) * -0.5); }
+    .gvi-proposal-threshold .ans .sway { animation-duration: calc(var(--gv-motion-duration-loop) * 1.8125); animation-delay: calc(var(--gv-motion-duration-loop) * -0.875); }
+
+    @keyframes gvi-proposal-threshold-card { 0%, 44% { translate: 0 0; opacity: 1; } 56% { translate: 0 -155px; opacity: .25; } 64%, 90% { translate: 0 -170px; opacity: 0; } 92% { translate: 0 0; opacity: 0; } 96%, 100% { translate: 0 0; opacity: 1; } }
+    @keyframes gvi-proposal-threshold-fill { 0%, 6% { scale: .1805 1; } 22%, 92% { scale: 1 1; } 93%, 100% { scale: .1805 1; } }
+    @keyframes gvi-proposal-threshold-shine-on { 0%, 5% { opacity: 0; } 7%, 42% { opacity: 1; } 44%, 100% { opacity: 0; } }
+    @keyframes gvi-proposal-threshold-shine { from { translate: -12px 0; } to { translate: 170px 0; } }
+    /* The count climbs with the bar (6–22 %); the cover's numbers come back while the card is away. */
+    @keyframes gvi-proposal-threshold-v0 { 0%, 7.9% { opacity: 1; } 8%, 92.9% { opacity: 0; } 93%, 100% { opacity: 1; } }
+    @keyframes gvi-proposal-threshold-v1 { 0%, 7.9% { opacity: 0; } 8%, 11.9% { opacity: 1; } 12%, 100% { opacity: 0; } }
+    @keyframes gvi-proposal-threshold-v2 { 0%, 11.9% { opacity: 0; } 12%, 15.9% { opacity: 1; } 16%, 100% { opacity: 0; } }
+    @keyframes gvi-proposal-threshold-v3 { 0%, 15.9% { opacity: 0; } 16%, 19.9% { opacity: 1; } 20%, 100% { opacity: 0; } }
+    @keyframes gvi-proposal-threshold-v4 { 0%, 19.9% { opacity: 0; } 20%, 92.9% { opacity: 1; } 93%, 100% { opacity: 0; } }
+    @keyframes gvi-proposal-threshold-live { 0%, 100% { opacity: 1; } }
+    @keyframes gvi-proposal-threshold-prop { 0% { opacity: 0; scale: 1.18; rotate: -24deg; translate: 6px -10px; } 5%, 22% { opacity: 1; scale: 1; rotate: -12.85deg; translate: 0 0; } 30%, 100% { opacity: 0; scale: .96; rotate: -30deg; translate: 14px -22px; } }
+    @keyframes gvi-proposal-threshold-thr { 0%, 25% { opacity: 0; translate: 0 -12px; } 33%, 91% { opacity: 1; translate: 0 0; } 92%, 100% { opacity: 0; translate: 0 0; } }
+    @keyframes gvi-proposal-threshold-resp { 0%, 47% { opacity: 0; translate: 0 28px; } 57%, 88% { opacity: 1; translate: 0 0; } 91%, 100% { opacity: 0; translate: 0 10px; } }
+    @keyframes gvi-proposal-threshold-ans { 0%, 57% { opacity: 0; scale: 1.18; rotate: -26deg; translate: 6px -10px; } 62%, 88% { opacity: 1; scale: 1; rotate: -14.97deg; translate: 0 0; } 91%, 100% { opacity: 0; scale: 1; rotate: -14.97deg; translate: 0 0; } }
+    @keyframes gvi-proposal-threshold-sway { from { rotate: -1.6deg; translate: 0 0; } to { rotate: 1.6deg; translate: 0 -1px; } }
+    @media (prefers-reduced-motion: reduce) {
+      .gvi-proposal-threshold * { animation: none !important; }
+    }
+  </style>
+  <rect class="stage" width="320" height="320"/>
+
+  <g class="cardg">
+    <rect class="card" x="44.5" y="105.5" width="230" height="109" rx="12"/>
+    <circle class="av" cx="66" cy="127" r="10"/>
+    <text class="av-t" x="66" y="131.2">R</text>
+    <text class="ink" x="82" y="131.2">Rosa</text>
+    <text class="title" x="56" y="161.5">Close the road to cars on Sundays</text>
+    <rect class="track" x="56" y="175" width="205" height="4" rx="2"/>
+    <rect class="fill" x="56" y="175" width="205" height="4" rx="2"/>
+    <g class="shine" transform="translate(56 175)"><g>
+      <rect x="0" y="0" width="16" height="4" opacity=".25"/>
+      <rect x="16" y="0" width="16" height="4" opacity=".55"/>
+      <rect x="32" y="0" width="16" height="4" opacity=".25"/>
+    </g></g>
+    <text class="num v0" x="81.2" y="199.2">128</text>
+    <text class="num v1" x="81.2" y="199.2">167</text>
+    <text class="num v2" x="81.2" y="199.2">214</text>
+    <text class="num v3" x="81.2" y="199.2">262</text>
+    <text class="num v4" x="81.2" y="199.2">300</text>
+    <text class="small" x="84.4" y="199.2">/ 300 votes</text>
+    <text class="num v0" x="209" y="199.2">34</text>
+    <text class="num v1" x="209" y="199.2">31</text>
+    <text class="num v2" x="209" y="199.2">27</text>
+    <text class="num v3" x="209" y="199.2">23</text>
+    <text class="num v4" x="209" y="199.2">20</text>
+    <text class="small" x="212.2" y="199.2">days left</text>
+    <g class="live">
+      <g class="prop" transform="translate(227.7 107)"><g class="stk"><g class="sway">
+        <rect class="pill" x="-34.7" y="-10" width="69.3" height="20" rx="10"/>
+        <text class="pill-t" x="0" y="4.2">Proposed</text>
+      </g></g></g>
+      <g class="thr" transform="translate(103.3 81)"><g class="stk"><g class="sway">
+        <rect class="pill" x="-60.3" y="-10" width="120.6" height="20" rx="10"/>
+        <text class="pill-t" x="0" y="4.2">Threshold reached</text>
+      </g></g></g>
+    </g>
+  </g>
+
+  <g class="resp">
+    <rect class="card" x="59.5" y="131.5" width="201" height="67" rx="12"/>
+    <g transform="translate(71 144)"><path class="ic" d="M1.75 12.25H12.25M2.91667 12.25V5.83333M11.0833 12.25V5.83333M5.25 12.25V8.16667M8.75 12.25V8.16667M1.16667 5.83333L7 2.33333L12.8333 5.83333"/></g>
+    <text class="small" x="91" y="155.2">Official response</text>
+    <text class="ink" x="71" y="183.2">Our mobility team will assess it.</text>
+    <g class="ans" transform="translate(252.2 133)"><g class="stk"><g class="sway">
+      <rect class="pill" x="-36.2" y="-10" width="72.4" height="20" rx="10"/>
+      <text class="pill-t" x="0" y="4.2">Answered</text>
+    </g></g></g>
+  </g>
+</svg>

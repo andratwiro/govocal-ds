@@ -1,0 +1,39 @@
+@import '../theme.css';
+
+/* Illustration: one SVG file from src/illustrations/ drawn inline, so it paints with the page's tokens. The box is
+   the wrapper (its width, and its height from the drawing or a crop); the drawing fills it. Not in Figma. */
+.gv-illustration {
+  display: inline-block;
+  flex: none;
+  max-width: 100%;
+  line-height: 0;
+  vertical-align: middle;
+  overflow: hidden;
+}
+
+.gv-illustration > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* At rest the drawing shows its still: the base styles, every animation off. Turning it back on starts the story
+   from the beginning. */
+.gv-illustration[data-state='rest'] svg,
+.gv-illustration[data-state='rest'] svg * {
+  animation: none !important;
+}
+
+/* Paused: frozen where it is. */
+.gv-illustration[data-paused] svg,
+.gv-illustration[data-paused] svg * {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gv-illustration svg,
+  .gv-illustration svg * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

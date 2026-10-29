@@ -9,7 +9,7 @@ const NAMES = new Set(['6fa29cc695ff56e2', 'ad4b388c696c4250', 'f074d7b772fd6204
   '0267b4de6d285df3', '3dfbf1fbdbf9d2eb', '0ab2e6e613f5649e', '7a282d3b73dd053d', 'c30d8b13bcc759e8',
   '78e0b1fdb55ecbc6', '84313ef39b0a979f', '72534c4a93ddc043']);
 const HER = /\bher (prototype|Figma|tokens|system|look|spec|frames?|file|seat|account|agent)\b/i;
-const TEXT = /\.(tsx?|jsx?|mjs|mdx?|css|html|json|ya?ml|txt)$/;
+const TEXT = /\.(tsx?|jsx?|mjs|mdx?|css|html|json|ya?ml|txt|svg)$/; // svg: illustrations carry text (invented people)
 
 const hash = w => createHash('sha256').update(w).digest('hex').slice(0, 16);
 export const named = (line, names = NAMES) =>

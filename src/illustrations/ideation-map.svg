@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" class="gvi-ideation-map" data-group="Method scenes" data-motion="hover" data-sizes="320 400" data-source="augur-design.html .ia-stage: CSS l.9156-9245 (keyframes ia*), markup l.20577; picker card Ideation and geo mapping" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice" direction="ltr">
+  <style>
+    /* Ideation and geo mapping. Still (the picker card's cover): three sticky notes on the stage's middle band.
+       Story (9 s): the pile fills up to six, leaves, List · Map appear and the cursor picks Map, the empty map
+       comes in, a dot falls for each note in its colour, two notes hang from their dots, then the cover returns.
+       The note colours are the prototype's "animation - colors" frame, mixed from tokens until the designer
+       makes them variables. */
+    .gvi-ideation-map {
+      --gvi-cycle: calc(var(--gv-motion-duration-loop) * 5.625);
+      --gvi-mint: color-mix(in oklch, var(--gv-color-green-400) 35%, var(--gv-color-neutral-0));
+      --gvi-lilac: color-mix(in oklch, var(--gv-color-red-500) 35%, var(--gv-color-slate-300));
+      --gvi-lilac-light: color-mix(in oklch, color-mix(in oklch, var(--gv-color-red-500) 25%, var(--gv-color-slate-300)) 80%, var(--gv-color-neutral-0));
+      --gvi-sky: color-mix(in oklch, var(--gv-color-blue-300) 45%, var(--gv-color-neutral-0));
+      --gvi-sand: color-mix(in oklch, var(--gv-color-olive-500) 35%, var(--gv-color-neutral-0));
+      --gvi-rose: color-mix(in oklch, color-mix(in oklch, var(--gv-color-orange-400) 55%, var(--gv-color-blue-300)) 70%, var(--gv-color-neutral-0));
+      --gvi-peach: color-mix(in oklch, var(--gv-color-orange-400) 65%, var(--gv-color-neutral-0));
+      --gvi-land: color-mix(in oklch, color-mix(in oklch, var(--gv-color-olive-500) 10%, var(--gv-color-neutral-200)) 30%, var(--gv-color-neutral-25));
+      --gvi-river: color-mix(in oklch, var(--gv-color-blue-300) 45%, var(--gv-color-teal-50));
+      --gvi-picked: color-mix(in oklch, var(--gv-color-slate-150) 85%, var(--gv-color-slate-300));
+      font-family: var(--gv-font-family);
+    }
+    .gvi-ideation-map .stage { fill: var(--gv-surface-stage); }
+
+    /* Sticky notes 75 × 64, radius 1.33, padding 8; name 7.33 at 72 %, text 7.33/8.67, both in the note's own ink. */
+    .gvi-ideation-map .n1 { --gvi-paper: var(--gvi-mint); }
+    .gvi-ideation-map .n2 { --gvi-paper: var(--gvi-lilac); }
+    .gvi-ideation-map .n3 { --gvi-paper: var(--gvi-sky); }
+    .gvi-ideation-map .n4 { --gvi-paper: var(--gvi-sand); }
+    .gvi-ideation-map .n5 { --gvi-paper: var(--gvi-rose); }
+    .gvi-ideation-map .n6 { --gvi-paper: var(--gvi-peach); }
+    .gvi-ideation-map .pa { --gvi-paper: var(--gvi-lilac-light); }
+    .gvi-ideation-map .pb { --gvi-paper: var(--gvi-sky); }
+    .gvi-ideation-map .paper { fill: var(--gvi-paper); }
+    .gvi-ideation-map .who { font-size: 7.33px; fill: color-mix(in oklch, var(--gvi-paper) 50%, var(--gv-color-neutral-900)); opacity: .72; }
+    .gvi-ideation-map .say { font-size: 7.33px; fill: color-mix(in oklch, var(--gvi-paper) 28%, var(--gv-color-neutral-900)); }
+    .gvi-ideation-map .in { transform-box: fill-box; transform-origin: center; }
+    .gvi-ideation-map .n1 .in { rotate: 3deg; }
+    .gvi-ideation-map .n2 .in { rotate: -2deg; }
+    .gvi-ideation-map .n3 .in { rotate: 2deg; }
+    .gvi-ideation-map .n4 .in { rotate: -4deg; opacity: 0; }
+    .gvi-ideation-map .n5 .in { rotate: 3deg; opacity: 0; }
+    .gvi-ideation-map .n6 .in { rotate: -3deg; opacity: 0; }
+
+    /* The map: warm land, white streets, a river (the Manage map's colours), inset 32, radius 12. */
+    .gvi-ideation-map .map { opacity: 0; }
+    .gvi-ideation-map .land { fill: var(--gvi-land); }
+    .gvi-ideation-map .street { fill: none; stroke: var(--gv-color-neutral-0); stroke-width: 3; }
+    .gvi-ideation-map .road { fill: none; stroke: var(--gv-color-neutral-0); stroke-width: 7; }
+    .gvi-ideation-map .river { fill: none; stroke: var(--gvi-river); stroke-width: 18; stroke-linecap: round; }
+    .gvi-ideation-map .q1 { --gvi-paper: var(--gvi-mint); }
+    .gvi-ideation-map .q2 { --gvi-paper: var(--gvi-lilac); }
+    .gvi-ideation-map .q3 { --gvi-paper: var(--gvi-sky); }
+    .gvi-ideation-map .q4 { --gvi-paper: var(--gvi-sand); }
+    .gvi-ideation-map .q5 { --gvi-paper: var(--gvi-rose); }
+    .gvi-ideation-map .q6 { --gvi-paper: var(--gvi-peach); }
+    .gvi-ideation-map .q circle { fill: var(--gvi-paper); }
+    .gvi-ideation-map .qa { transform-box: fill-box; transform-origin: center; }
+
+    /* List · Map, and the cursor that picks Map. */
+    .gvi-ideation-map .modes { opacity: 0; }
+    .gvi-ideation-map .mode rect { fill: var(--gv-color-neutral-0); stroke: var(--gv-border-card); stroke-width: 1; }
+    .gvi-ideation-map .mode text { font-size: 13px; fill: var(--gv-text-primary); text-anchor: middle; }
+    .gvi-ideation-map .mode .ic { fill: none; stroke: var(--gv-text-secondary); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .gvi-ideation-map .pick { transform-box: fill-box; transform-origin: center; }
+    .gvi-ideation-map .cur { opacity: 0; transform-box: fill-box; transform-origin: center; }
+    .gvi-ideation-map .cur path { fill: var(--gv-color-neutral-900); stroke: var(--gv-color-neutral-0); stroke-width: 2; stroke-linejoin: round; }
+    .gvi-ideation-map .pg { opacity: 0; }
+
+    .gvi-ideation-map .board { transform-origin: 160px 160px; animation: gvi-ideation-map-board var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-ideation-map .n1 { animation: gvi-ideation-map-n1 var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-ideation-map .n2 { animation: gvi-ideation-map-n2 var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-ideation-map .n3 { animation: gvi-ideation-map-n3 var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-ideation-map .n3 .in { animation: gvi-ideation-map-tilt var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-ideation-map .n4 .in { animation: gvi-ideation-map-n4 var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-ideation-map .n5 .in { animation: gvi-ideation-map-n5 var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-ideation-map .n6 .in { animation: gvi-ideation-map-n6 var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-ideation-map .modes { animation: gvi-ideation-map-modes var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-ideation-map .pick { animation: gvi-ideation-map-press var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-ideation-map .pick rect { animation: gvi-ideation-map-picked var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-ideation-map .pick text { animation: gvi-ideation-map-picked-ink var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-ideation-map .cur { animation: gvi-ideation-map-cursor var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-ideation-map .map { animation: gvi-ideation-map-map var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-ideation-map .q1 .qa { animation: gvi-ideation-map-q1 var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-ideation-map .q2 .qa { animation: gvi-ideation-map-q2 var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-ideation-map .q3 .qa { animation: gvi-ideation-map-q3 var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-ideation-map .q4 .qa { animation: gvi-ideation-map-q4 var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-ideation-map .q5 .qa { animation: gvi-ideation-map-q5 var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-ideation-map .q6 .qa { animation: gvi-ideation-map-q6 var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-ideation-map .q circle { animation: gvi-ideation-map-bob calc(var(--gv-motion-duration-loop) * 1.125) var(--gv-motion-easing-move) infinite alternate; }
+    .gvi-ideation-map .q1 circle { animation-delay: calc(var(--gv-motion-duration-loop) * 0.2375); }
+    .gvi-ideation-map .q2 circle { animation-delay: calc(var(--gv-motion-duration-loop) * 0.1375); }
+    .gvi-ideation-map .q3 circle { animation-delay: calc(var(--gv-motion-duration-loop) * 0.6); }
+    .gvi-ideation-map .q4 circle { animation-delay: calc(var(--gv-motion-duration-loop) * 0.475); }
+    .gvi-ideation-map .q5 circle { animation-delay: calc(var(--gv-motion-duration-loop) * 0.65); }
+    .gvi-ideation-map .q6 circle { animation-delay: calc(var(--gv-motion-duration-loop) * 0.30625); }
+    .gvi-ideation-map .pa .pg { animation: gvi-ideation-map-pop-a var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-ideation-map .pb .pg { animation: gvi-ideation-map-pop-b var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+
+    @keyframes gvi-ideation-map-board { 0%, 15% { opacity: 1; scale: 1; } 20%, 93% { opacity: 0; scale: .96; } 100% { opacity: 1; scale: 1; } }
+    @keyframes gvi-ideation-map-n1 { 0% { translate: 0 0; } 6.7%, 91% { translate: -9px -26px; } 92%, 100% { translate: 0 0; } }
+    @keyframes gvi-ideation-map-n2 { 0% { translate: 0 0; } 6.7%, 91% { translate: 4px -40px; } 92%, 100% { translate: 0 0; } }
+    @keyframes gvi-ideation-map-n3 { 0% { translate: 0 0; } 6.7%, 91% { translate: 16px -26px; } 92%, 100% { translate: 0 0; } }
+    @keyframes gvi-ideation-map-tilt { 0% { rotate: 2deg; } 6.7%, 91% { rotate: 4deg; } 92%, 100% { rotate: 2deg; } }
+    @keyframes gvi-ideation-map-n4 { 0%, 6.5% { opacity: 0; scale: 1.12; translate: 0 -14px; } 7.7% { opacity: 1; scale: .98; translate: 0 2px; } 8.5%, 91% { opacity: 1; scale: 1; translate: 0 0; } 92%, 100% { opacity: 0; } }
+    @keyframes gvi-ideation-map-n5 { 0%, 8% { opacity: 0; scale: 1.12; translate: 0 -14px; } 9.2% { opacity: 1; scale: .98; translate: 0 2px; } 10%, 91% { opacity: 1; scale: 1; translate: 0 0; } 92%, 100% { opacity: 0; } }
+    @keyframes gvi-ideation-map-n6 { 0%, 9.5% { opacity: 0; scale: 1.12; translate: 0 -14px; } 10.7% { opacity: 1; scale: .98; translate: 0 2px; } 11.5%, 91% { opacity: 1; scale: 1; translate: 0 0; } 92%, 100% { opacity: 0; } }
+    @keyframes gvi-ideation-map-modes { 0%, 19% { opacity: 0; translate: 0 10px; } 24%, 35% { opacity: 1; translate: 0 0; } 39%, 100% { opacity: 0; translate: 0 0; } }
+    @keyframes gvi-ideation-map-press { 0%, 31.5% { scale: 1; } 32.5% { scale: .955; } 33.5%, 100% { scale: 1; } }
+    @keyframes gvi-ideation-map-picked { 0%, 31.5% { fill: var(--gv-color-neutral-0); stroke: var(--gv-border-card); } 33.5%, 100% { fill: var(--gvi-picked); stroke: var(--gvi-picked); } }
+    @keyframes gvi-ideation-map-picked-ink { 0%, 31.5% { fill: var(--gv-text-primary); } 33.5%, 100% { fill: var(--gv-text-segment); } }
+    @keyframes gvi-ideation-map-cursor { 0%, 22% { opacity: 0; translate: 124px 112px; scale: 1; } 25% { opacity: 1; translate: 114px 100px; } 31% { opacity: 1; translate: 80px 21px; scale: 1; } 32.5% { scale: .85; } 34% { scale: 1; opacity: 1; translate: 80px 21px; } 37%, 100% { opacity: 0; translate: 88px 30px; } }
+    @keyframes gvi-ideation-map-map { 0%, 36% { opacity: 0; } 42%, 91% { opacity: 1; } 97%, 100% { opacity: 0; } }
+    @keyframes gvi-ideation-map-bob { from { translate: 0 1px; } to { translate: 0 -3px; } }
+    @keyframes gvi-ideation-map-q1 { 0%, 47.8% { opacity: 0; scale: .2; translate: 0 -10px; } 49.6% { opacity: 1; scale: 1.12; translate: 0 1px; } 50.8%, 100% { opacity: 1; scale: 1; translate: 0 0; } }
+    @keyframes gvi-ideation-map-q2 { 0%, 46% { opacity: 0; scale: .2; translate: 0 -10px; } 47.8% { opacity: 1; scale: 1.12; translate: 0 1px; } 49%, 100% { opacity: 1; scale: 1; translate: 0 0; } }
+    @keyframes gvi-ideation-map-q3 { 0%, 55% { opacity: 0; scale: .2; translate: 0 -10px; } 56.8% { opacity: 1; scale: 1.12; translate: 0 1px; } 58%, 100% { opacity: 1; scale: 1; translate: 0 0; } }
+    @keyframes gvi-ideation-map-q4 { 0%, 52.6% { opacity: 0; scale: .2; translate: 0 -10px; } 54.4% { opacity: 1; scale: 1.12; translate: 0 1px; } 55.6%, 100% { opacity: 1; scale: 1; translate: 0 0; } }
+    @keyframes gvi-ideation-map-q5 { 0%, 56% { opacity: 0; scale: .2; translate: 0 -10px; } 57.8% { opacity: 1; scale: 1.12; translate: 0 1px; } 59%, 100% { opacity: 1; scale: 1; translate: 0 0; } }
+    @keyframes gvi-ideation-map-q6 { 0%, 49.2% { opacity: 0; scale: .2; translate: 0 -10px; } 51% { opacity: 1; scale: 1.12; translate: 0 1px; } 52.2%, 100% { opacity: 1; scale: 1; translate: 0 0; } }
+    @keyframes gvi-ideation-map-pop-a { 0%, 60% { opacity: 0; scale: .2; } 63% { opacity: 1; scale: 1.08; } 65%, 91% { opacity: 1; scale: 1; } 97%, 100% { opacity: 0; scale: 1; } }
+    @keyframes gvi-ideation-map-pop-b { 0%, 66% { opacity: 0; scale: .2; } 69% { opacity: 1; scale: 1.08; } 71%, 91% { opacity: 1; scale: 1; } 97%, 100% { opacity: 0; scale: 1; } }
+    @media (prefers-reduced-motion: reduce) {
+      .gvi-ideation-map * { animation: none !important; }
+    }
+  </style>
+  <rect class="stage" width="320" height="320"/>
+
+  <g class="map">
+    <rect class="land" x="32" y="32" width="256" height="256" rx="12"/>
+    <svg x="32" y="32" width="256" height="256" viewBox="0 0 320 320" preserveAspectRatio="xMidYMid slice">
+      <path class="street" d="M0 36 L320 26 M0 160 L320 154 M0 212 L320 208 M54 0 L62 320 M200 0 L204 320 M266 0 L270 320"/>
+      <path class="road" d="M0 90 L320 76 M126 0 L136 320"/>
+      <path class="river" d="M-20 270 C 50 244, 110 296, 180 266 S 280 226, 340 240"/>
+    </svg>
+    <g class="q q1" transform="translate(110 237)"><g class="qa"><circle r="7"/></g></g>
+    <g class="q q2" transform="translate(76 99)"><g class="qa"><circle r="7"/></g></g>
+    <g class="q q3" transform="translate(241 69)"><g class="qa"><circle r="7"/></g></g>
+    <g class="q q4" transform="translate(197 177)"><g class="qa"><circle r="7"/></g></g>
+    <g class="q q5" transform="translate(259 194)"><g class="qa"><circle r="7"/></g></g>
+    <g class="q q6" transform="translate(135 76)"><g class="qa"><circle r="7"/></g></g>
+  </g>
+
+  <g class="board">
+    <g class="n n1" transform="translate(65 124)"><g class="in">
+      <rect class="paper" width="75" height="64" rx="1.33"/>
+      <text class="who" x="8" y="15.2">Noor</text>
+      <text class="say" x="8" y="27.2">More shade by<tspan x="8" dy="8.67">the river</tspan></text>
+    </g></g>
+    <g class="n n2" transform="translate(119 134)"><g class="in">
+      <rect class="paper" width="75" height="64" rx="1.33"/>
+      <text class="who" x="8" y="15.2">Kai</text>
+      <text class="say" x="8" y="27.2">Fix the potholes<tspan x="8" dy="8.67">on Mill Road</tspan></text>
+    </g></g>
+    <g class="n n3" transform="translate(174 126)"><g class="in">
+      <rect class="paper" width="75" height="64" rx="1.33"/>
+      <text class="who" x="8" y="15.2">Ada</text>
+      <text class="say" x="8" y="27.2">Slow the cars<tspan x="8" dy="8.67">near the school</tspan></text>
+    </g></g>
+    <g class="n n4" transform="translate(60 154)"><g class="in">
+      <rect class="paper" width="75" height="64" rx="1.33"/>
+      <text class="who" x="8" y="15.2">Femi</text>
+      <text class="say" x="8" y="27.2">Keep the park<tspan x="8" dy="8.67">open at night</tspan></text>
+    </g></g>
+    <g class="n n5" transform="translate(127 158)"><g class="in">
+      <rect class="paper" width="75" height="64" rx="1.33"/>
+      <text class="who" x="8" y="15.2">Rosa</text>
+      <text class="say" x="8" y="27.2">Bike racks at the<tspan x="8" dy="8.67">station</tspan></text>
+    </g></g>
+    <g class="n n6" transform="translate(194 152)"><g class="in">
+      <rect class="paper" width="75" height="64" rx="1.33"/>
+      <text class="who" x="8" y="15.2">Theo</text>
+      <text class="say" x="8" y="27.2">Safer crossing<tspan x="8" dy="8.67">on Main Street</tspan></text>
+    </g></g>
+  </g>
+
+  <g class="modes">
+    <g class="mode">
+      <rect x="42.5" y="118.5" width="111" height="83" rx="12"/>
+      <g transform="translate(90 138) scale(.6667)"><path class="ic" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></g>
+      <text x="98" y="176.5">List</text>
+    </g>
+    <g class="mode pick">
+      <rect x="166.5" y="118.5" width="111" height="83" rx="12"/>
+      <g transform="translate(214 138) scale(.6667)"><path class="ic" d="M14.1 5.6a2 2 0 0 0 1.8 0l3.7-1.9A1 1 0 0 1 21 4.6v12.8a1 1 0 0 1-.6.9l-4.5 2.3a2 2 0 0 1-1.8 0l-4.2-2.1a2 2 0 0 0-1.8 0l-3.7 1.8A1 1 0 0 1 3 19.4V6.6a1 1 0 0 1 .6-.9l4.5-2.3a2 2 0 0 1 1.8 0zM15 5.8v15M9 3.2v15"/></g>
+      <text x="222" y="176.5">Map</text>
+    </g>
+  </g>
+
+  <g class="pop pa" transform="translate(76 98) rotate(10.5)"><g class="pg"><g transform="translate(-21 7)">
+    <rect class="paper" width="75" height="64" rx="1.33"/>
+    <text class="who" x="8" y="15.2">Kai</text>
+    <text class="say" x="8" y="27.2">Fix the potholes<tspan x="8" dy="8.67">on Mill Road</tspan></text>
+  </g></g></g>
+  <g class="pop pb" transform="translate(241 69) rotate(-9.5)"><g class="pg"><g transform="translate(-43 6)">
+    <rect class="paper" width="75" height="64" rx="1.33"/>
+    <text class="who" x="8" y="15.2">Ada</text>
+    <text class="say" x="8" y="27.2">Slow the cars<tspan x="8" dy="8.67">near the school</tspan></text>
+  </g></g></g>
+
+  <g transform="translate(160 160)"><g class="cur"><g transform="scale(.9167)"><path d="M4 2.5l15 8.6-6.7 1.6-3.6 6.2z"/></g></g></g>
+</svg>

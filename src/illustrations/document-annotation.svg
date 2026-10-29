@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" class="gvi-document-annotation" data-group="Method scenes" data-motion="hover" data-sizes="320 400" data-source="augur-design.html .dc-stage: CSS l.9744-9757 (keyframes dc*, xCover, xLive), markup l.20672; picker card Document annotation" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice" direction="ltr">
+  <style>
+    /* Document annotation: a comment anchored to a passage of the document, not a separate form. Still (the picker
+       card's cover): a draft with one highlighted phrase and its comment. Story (9 s): the cursor drags over a
+       sentence, it lights up, the comment appears under it; then someone else's on the next paragraph; the cover
+       returns. */
+    .gvi-document-annotation {
+      --gvi-cycle: calc(var(--gv-motion-duration-loop) * 5.625);
+      --gvi-mark: color-mix(in oklch, var(--gv-color-teal-400) 25%, var(--gv-color-teal-75));
+      --gvi-avatar: color-mix(in oklch, var(--gv-color-teal-400) 20%, var(--gv-color-neutral-25));
+      font-family: var(--gv-font-family);
+    }
+    .gvi-document-annotation .stage { fill: var(--gv-surface-stage); }
+    .gvi-document-annotation .card { fill: var(--gv-surface-panel); stroke: var(--gv-border-card); stroke-width: 1; }
+    .gvi-document-annotation .title { font-size: 13px; fill: var(--gv-text-primary); }
+    .gvi-document-annotation .txt { font-size: 12px; fill: var(--gv-text-secondary); }
+    .gvi-document-annotation .mark { fill: var(--gvi-mark); }
+    .gvi-document-annotation .sweep { transform-box: fill-box; transform-origin: left center; scale: 0 1; }
+    .gvi-document-annotation .av { fill: var(--gvi-avatar); }
+    .gvi-document-annotation .av-t { font-size: 12px; font-weight: 500; fill: var(--gv-color-slate-800); text-anchor: middle; }
+    .gvi-document-annotation .say { font-size: 12px; fill: var(--gv-text-primary); }
+    .gvi-document-annotation .live { opacity: 0; }
+    .gvi-document-annotation .pop { opacity: 0; }
+    .gvi-document-annotation .cur { opacity: 0; transform-box: fill-box; transform-origin: center; }
+    .gvi-document-annotation .cur path { fill: var(--gv-color-neutral-900); stroke: var(--gv-color-neutral-0); stroke-width: 2; stroke-linejoin: round; }
+
+    .gvi-document-annotation .cover { animation: gvi-document-annotation-cover var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-document-annotation .live { animation: gvi-document-annotation-live var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-document-annotation .m1a { animation: gvi-document-annotation-m1a var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-document-annotation .m1b { animation: gvi-document-annotation-m1b var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-document-annotation .m2a { animation: gvi-document-annotation-m2a var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-document-annotation .m2b { animation: gvi-document-annotation-m2b var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+    .gvi-document-annotation .c1 .pop { animation: gvi-document-annotation-c1 var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-document-annotation .c2 .pop { animation: gvi-document-annotation-c2 var(--gvi-cycle) var(--gv-motion-easing-enter) infinite both; }
+    .gvi-document-annotation .cur { animation: gvi-document-annotation-cursor var(--gvi-cycle) var(--gv-motion-easing-move) infinite both; }
+
+    @keyframes gvi-document-annotation-cover { 0% { opacity: 1; translate: 0 0; } 1.8%, 93% { opacity: 0; translate: 0 -8px; } 100% { opacity: 1; translate: 0 0; } }
+    @keyframes gvi-document-annotation-live { 0%, 1.5% { opacity: 0; } 4%, 90% { opacity: 1; } 95%, 100% { opacity: 0; } }
+    /* The drag lights the sentence: the rest of line 2 (16–22.4 %), then line 3 (23–26 %). */
+    @keyframes gvi-document-annotation-m1a { 0%, 16% { scale: 0 1; } 22.4%, 100% { scale: 1 1; } }
+    @keyframes gvi-document-annotation-m1b { 0%, 23% { scale: 0 1; } 26%, 100% { scale: 1 1; } }
+    @keyframes gvi-document-annotation-m2a { 0%, 50% { scale: 0 1; } 52.1%, 100% { scale: 1 1; } }
+    @keyframes gvi-document-annotation-m2b { 0%, 52.1% { scale: 0 1; } 54%, 100% { scale: 1 1; } }
+    @keyframes gvi-document-annotation-c1 { 0%, 28% { opacity: 0; scale: .85; } 30.4% { opacity: 1; scale: 1.03; } 32%, 100% { opacity: 1; scale: 1; } }
+    @keyframes gvi-document-annotation-c2 { 0%, 54% { opacity: 0; scale: .85; } 56.4% { opacity: 1; scale: 1.03; } 58%, 100% { opacity: 1; scale: 1; } }
+    @keyframes gvi-document-annotation-cursor { 0%, 4% { opacity: 0; translate: 106px 128px; } 6% { opacity: 1; } 14% { translate: -52px -50px; scale: 1; } 15% { scale: .88; } 16% { translate: -52px -50px; scale: .88; } 22.4% { translate: 93px -50px; } 23% { translate: -115px -32px; } 26% { translate: -34px -32px; scale: .88; } 27% { scale: 1; translate: -34px -32px; } 36% { opacity: 1; } 39%, 100% { opacity: 0; translate: -14px -2px; } }
+    @media (prefers-reduced-motion: reduce) {
+      .gvi-document-annotation * { animation: none !important; }
+    }
+  </style>
+  <rect class="stage" width="320" height="320"/>
+
+  <g class="cover">
+    <rect class="card" x="36.5" y="106.5" width="247" height="93" rx="12"/>
+    <text class="title" x="52" y="136.5">Draft mobility plan</text>
+    <rect class="mark" x="51" y="151" width="175.8" height="14" rx="2"/>
+    <rect class="mark" x="51" y="167" width="51.3" height="14" rx="2"/>
+    <text class="txt" x="52" y="162.2">Car lanes narrow to one in each</text>
+    <text class="txt" x="52" y="178.2">direction, and trees line both sides.</text>
+    <rect class="card" x="125.8" y="186.5" width="141.7" height="27" rx="13.5"/>
+    <circle class="av" cx="139.3" cy="200" r="10"/>
+    <text class="av-t" x="139.3" y="204.2">S</text>
+    <text class="say" x="155.3" y="204.2">Will buses still fit?</text>
+  </g>
+
+  <g class="live">
+    <rect class="card" x="32.5" y="40.5" width="255" height="239" rx="12"/>
+    <text class="title" x="48" y="70.5">Draft mobility plan</text>
+    <rect class="mark sweep m1a" x="110.5" y="101" width="146.3" height="14" rx="2"/>
+    <rect class="mark sweep m1b" x="47" y="117" width="83.4" height="14" rx="2"/>
+    <rect class="mark sweep m2a" x="166.8" y="173" width="97.9" height="14" rx="2"/>
+    <rect class="mark sweep m2b" x="47" y="189" width="91" height="14" rx="2"/>
+    <text class="txt" x="48" y="96.2">Mill Road gets a new crossing near</text>
+    <text class="txt" x="48" y="112.2">the school. Car lanes narrow to one in</text>
+    <text class="txt" x="48" y="128.2">each direction.</text>
+    <text class="txt" x="48" y="184.2">Trees line both sides. Parking moves to</text>
+    <text class="txt" x="48" y="200.2">the side streets.</text>
+    <g class="c1" transform="translate(49 143)"><g class="pop">
+      <rect class="card" x=".5" y=".5" width="141.7" height="27" rx="13.5"/>
+      <circle class="av" cx="14" cy="14" r="10"/>
+      <text class="av-t" x="14" y="18.2">S</text>
+      <text class="say" x="30" y="18.2">Will buses still fit?</text>
+    </g></g>
+    <g class="c2" transform="translate(49 219)"><g class="pop">
+      <rect class="card" x=".5" y=".5" width="191.1" height="27" rx="13.5"/>
+      <circle class="av" cx="14" cy="14" r="10"/>
+      <text class="av-t" x="14" y="18.2">L</text>
+      <text class="say" x="30" y="18.2">More bike parking here too.</text>
+    </g></g>
+  </g>
+
+  <g transform="translate(160 160)"><g class="cur"><g transform="scale(.9167)"><path d="M4 2.5l15 8.6-6.7 1.6-3.6 6.2z"/></g></g></g>
+</svg>
