@@ -130,7 +130,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 
 ## Patterns / Build tab
 - **Access rights** `AccessRights` (not in Figma): Who can take one participant action: following the platform's defaults (read-only, with Override) or set for this phase. Stories: All Variants, Using Defaults, Override, Security Requirements, Two Choices, In The Modal, Modal.
-- **Form field summary** (not in Figma) Stories: All Variants, Default, With More, In A Card.
+- **Form field summary** (not in Figma): A recipe, not a component (NAMING: a pattern used on one page): a form's questions at a glance, in a phase's Idea form or Proposal form card, with Edit form… Stories: All Variants, Default, With More, In A Card.
 - **Notification row** `NotificationRow` (not in Figma): One email in a phase's Notifications card: a switch, then the email's name with who it goes to and what sends it, and a chevron to its page. Stories: All Variants, On, Off, In A Card, Ideation Emails.
 - **Participant action row** `ParticipantActionRow` (not in Figma): One action in a phase's Participant actions card: a switch, the action, and who can take it with a chevron to Access rights. Stories: All Variants, On, Sign In Required, Limited, Locked, In A Card.
 - **View option row** `ViewOptionRow` (not in Figma): One view in a phase's Available views card: a switch (or a check for the view that is always on), the view's name and words, and Make default. Stories: All Variants, Default, Off, With Options, In A Card.
@@ -171,5 +171,8 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 ## Patterns / Pages & menu
 - **Section toggle** `SectionToggle` (not in Figma): One page section in a builder's section list: the name and a line about it, whether it is shown on the page, and the switch that shows or hides it. Stories: Shown, Hidden, Locked, List.
 
+## Patterns / Recipes
+- **Form validation** `Form` (not in Figma): Form validation, a recipe: every field in its invalid state, and a form that checks itself on submit and moves focus to the first field to fix. Stories: All Invalid, Submit To Validate.
+
 ## Not in Figma yet
-Tagged `not-in-figma` in their stories (51): Alert dialog, App provider, Banner, Card, Choice card, Coachmark, Data table, Date range field, Empty state, File list, Help popover, Illustration, Menu, Option list, Page header, Pagination, Panel, Property list, Reaction counts, Search field, Select, Side panel, Skeleton, Table toolbar, Tabs, Tag picker, Text, Tile grid, Toast, Tooltip, Visually hidden, Access rights, Action row, Comment thread, Filter chips, Filter menu, Form field summary, Notification list, Notification row, Official update, Panel section, Participant action row, Phase timeline, Phone preview, Rail phase, Section toggle, Selection bar, Side nav, Stat card, View option row, Volunteering row.
+Tagged `not-in-figma` in their stories (52): Alert dialog, App provider, Banner, Card, Choice card, Coachmark, Data table, Date range field, Empty state, File list, Help popover, Illustration, Menu, Option list, Page header, Pagination, Panel, Property list, Reaction counts, Search field, Select, Side panel, Skeleton, Table toolbar, Tabs, Tag picker, Text, Tile grid, Toast, Tooltip, Visually hidden, Access rights, Action row, Comment thread, Filter chips, Filter menu, Form field summary, Notification list, Notification row, Official update, Panel section, Participant action row, Phase timeline, Phone preview, Rail phase, Section toggle, Selection bar, Side nav, Stat card, View option row, Volunteering row, Form validation.

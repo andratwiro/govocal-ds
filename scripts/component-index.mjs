@@ -26,7 +26,9 @@ for (const f of files) {
   const from = component && s.match(new RegExp(`import\\s*\\{[^}]*\\b${component}\\b[^}]*\\}\\s*from\\s*'(\\.[^']+)'`))?.[1];
   const srcFile = from && [`.tsx`, `/index.tsx`].map(ext => `src/${f.replace(/[^/]+$/, '')}${from}${ext}`)
     .map(p => p.replace(/\/\.\//g, '/')).find(p => existsSync(p));
-  const what = srcFile ? purpose(readFileSync(srcFile, 'utf8'), component) : '';
+  // A recipe (a story file with no component of its own) says what it is for in the doc comment above its meta.
+  const what = (srcFile ? purpose(readFileSync(srcFile, 'utf8'), component) : '') ||
+    purpose(s.replace(/\*\/\s*const meta\b/, '*/\nexport const meta'), 'meta');
   const stories = [...s.matchAll(/^export const ([A-Z]\w*)\s*:\s*Story\b/gm)].map(m => m[1].replace(/(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/g, ' '));
   const parts = title.split('/');
   const group = parts.slice(0, -1).join(' / ');
