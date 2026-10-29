@@ -1,0 +1,75 @@
+@import '../theme.css';
+
+/*
+ * Panel (the prototype's `.aud-tablecard` / `.pj-msg__panel`): white, a 1px card border, radius 12. The head is 16 20
+ * with a hairline under it: the title (Title type) and its count Badge 8 apart, the description 3 under it, the
+ * actions at the end. The body is 20 in, or flush for a table. The foot is 12 20 over a lighter hairline, its content
+ * at the end.
+ */
+.gv-panel {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  border: 1px solid var(--gv-border-card);
+  border-radius: var(--gv-radius-12);
+  background: var(--gv-surface-panel);
+  color: var(--gv-text-primary);
+  font-family: var(--gv-font-family);
+  overflow: hidden;
+}
+
+.gv-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-16);
+  padding: var(--gv-space-16) var(--gv-space-20);
+  border-bottom: 1px solid var(--gv-border-card);
+}
+
+.gv-panel__titles {
+  min-inline-size: 0;
+}
+
+.gv-panel__title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gv-space-8);
+  margin: 0;
+  font: var(--gv-type-title);
+  letter-spacing: var(--gv-type-title-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-panel__description {
+  margin: var(--gv-space-3) 0 0;
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-panel__actions {
+  display: flex;
+  align-items: center;
+  flex: none;
+  gap: var(--gv-space-8);
+}
+
+.gv-panel__body {
+  min-inline-size: 0;
+  padding: var(--gv-space-20);
+
+  &[data-flush] {
+    padding: 0;
+  }
+}
+
+.gv-panel__foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gv-space-8);
+  padding: var(--gv-space-12) var(--gv-space-20);
+  border-top: 1px solid var(--gv-divider-default);
+}
