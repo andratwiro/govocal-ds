@@ -1,5 +1,5 @@
 import type {ReactNode} from 'react';
-import './RailSectionLabel.css';
+import './SectionLabel.css';
 
 export interface RailSectionLabelProps {
   /** e.g. "Timeline". */

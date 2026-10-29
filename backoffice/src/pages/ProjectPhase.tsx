@@ -33,7 +33,7 @@ import {PropertyList, PropertyListItem} from '../../../src/components/gv/Propert
 import {ReactionCounts} from '../../../src/components/gv/ReactionCounts';
 import {SidePanel, SidePanelActions, SidePanelDecision, SidePanelSection} from '../../../src/components/gv/SidePanel';
 import {RailHeader} from '../../../src/patterns/RailHeader';
-import {RailSectionLabel} from '../../../src/patterns/RailSectionLabel';
+import {RailSectionLabel} from '../../../src/components/gv/SectionLabel';
 import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
 import {SetupStep} from '../../../src/patterns/SetupStep';
 import {StatRow} from '../../../src/components/gv/StatRow';

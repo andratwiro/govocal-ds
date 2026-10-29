@@ -1,4 +1,4 @@
-import {RailSectionLabel} from './RailSectionLabel';
+import {RailSectionLabel} from './SectionLabel';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
 const meta: Meta<typeof RailSectionLabel> = {

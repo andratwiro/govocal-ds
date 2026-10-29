@@ -11,7 +11,7 @@ import {Divider} from '../../../src/components/gv/Divider';
 import {ProjectHeader} from '../../../src/patterns/ProjectHeader';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {RailHeader} from '../../../src/patterns/RailHeader';
-import {RailSectionLabel} from '../../../src/patterns/RailSectionLabel';
+import {RailSectionLabel} from '../../../src/components/gv/SectionLabel';
 import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {ActionRow} from '../../../src/patterns/ActionRow';
 import {PanelSection} from '../../../src/patterns/PanelSection';

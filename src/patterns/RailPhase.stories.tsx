@@ -1,6 +1,6 @@
 import {RailPhase} from './RailPhase';
 import {RailHeader} from './RailHeader';
-import {RailSectionLabel} from './RailSectionLabel';
+import {RailSectionLabel} from '../components/gv/SectionLabel';
 import {Divider} from '../components/gv/Divider';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 

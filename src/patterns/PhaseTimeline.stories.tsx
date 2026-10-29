@@ -1,6 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {PhaseTimeline, type TimelinePhase} from './PhaseTimeline';
-import {RailSectionLabel} from './RailSectionLabel';
+import {RailSectionLabel} from '../components/gv/SectionLabel';
 
 const PHASES: TimelinePhase[] = [
   {id: 'a', title: 'Project background', state: 'done', dates: '10 to 30 Aug', method: 'Sharing', count: '1,890 visits', href: '#a'},
