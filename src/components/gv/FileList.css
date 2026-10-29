@@ -32,7 +32,7 @@
   gap: var(--gv-space-12);
   width: 100%;
   max-width: none;
-  padding: var(--gv-space-9) 2px;
+  padding: var(--gv-space-9) var(--gv-space-2);
   border-top: 1px solid var(--gv-border-row);
   border-radius: 0;
   background: none;
@@ -88,7 +88,7 @@
 
 .gv-file-list__empty {
   margin: 0;
-  padding: var(--gv-space-16) 2px;
+  padding: var(--gv-space-16) var(--gv-space-2);
   text-align: center;
   font: var(--gv-type-ui);
   letter-spacing: var(--gv-type-ui-tracking);
