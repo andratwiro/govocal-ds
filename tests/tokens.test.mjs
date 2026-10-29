@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest';
-import {readFileSync} from 'node:fs';
+import {readFileSync, existsSync} from 'node:fs';
 import {parseFoundations} from '../scripts/lib/foundations.mjs';
 import {toCss} from '../scripts/lib/css.mjs';
 import {mergeTokens} from '../scripts/lib/merge.mjs';
@@ -55,10 +55,73 @@ describe('parseFoundations', () => {
     expect(variableIds['VariableID:1:100']).toBe('--gv-space-14');
     expect(variableIds['VariableID:1:119']).toBe('--gv-radius-full');
   });
+  it('names nothing differently from Figma when the id map agrees, so the report is empty', () => {
+    expect(parseFoundations(page, {names: variableIds}).report).toEqual([]);
+  });
   it('refuses one primitive with two values', () => {
     const bad = structuredClone(page);
     bad.children[0].children[0].children[0].children[0].children[1].children[0].fills[0].color.r = 0.5;
     expect(() => parseFoundations(bad)).toThrow(/slate\/100/);
+  });
+});
+
+describe('parseFoundations names tokens by Figma variable id', () => {
+  const names = {'VariableID:1:38': '--gv-surface-app', 'VariableID:1:43': '--gv-surface-pressed',
+    'VariableID:10:4': '--gv-surface-success', 'VariableID:1:100': '--gv-space-14', 'VariableID:1:119': '--gv-radius-full'};
+  it('takes the name the id map gives, whatever the frame is called, and reports where Figma differs', () => {
+    const {tokens, report} = parseFoundations(page, {names});
+    expect(tokens.surface.pressed.$value).toBe('{color.slate.100}');
+    expect(tokens.surface['hover-strong']).toBeUndefined();
+    expect(report.map(r => r.text)).toEqual([
+      'Figma still calls VariableID:1:43 `surface/hover-strong`; code calls it `--gv-surface-pressed`',
+      'Figma still calls VariableID:10:4 `surface/live`; code calls it `--gv-surface-success`']);
+  });
+  it('gives an id the map lacks its frame name, adds it to the map and says so', () => {
+    const {tokens, variableIds, report} = parseFoundations(page, {names: {}});
+    expect(tokens.surface.live.$value).toBe('{color.alpha.green-12}');
+    expect(variableIds['VariableID:10:4']).toBe('--gv-surface-live');
+    expect(report.filter(r => r.kind === 'new')).toHaveLength(5);
+  });
+  it('drops a merged or dropped id (the target wins) and reports it until Figma deletes it', () => {
+    const renames = [
+      {from: '--gv-surface-pressed', to: '--gv-surface-app', figmaId: 'VariableID:1:43', merge: true, why: 'same value'},
+      {from: '--gv-space-14', drop: '14px', figmaId: 'VariableID:1:100', why: 'not on the scale'}];
+    const {tokens, report} = parseFoundations(page, {names, renames});
+    expect(Object.keys(tokens.surface)).toEqual(['app', 'success']);
+    expect(tokens.space['14']).toBeUndefined();
+    expect(report.map(r => r.text)).toEqual(expect.arrayContaining([
+      'Figma still has VariableID:1:43 `surface/hover-strong` (slate/100); code merged it into `--gv-surface-app` (same value)',
+      'Figma still has VariableID:1:100 `space/14`; code dropped it (not on the scale)']));
+  });
+  it('renames what has no variable id (primitives, shadows) by the rename map', () => {
+    const renames = [{from: '--gv-color-slate-100', to: '--gv-color-grey-100'}, {from: '--gv-shadow-dialog', to: '--gv-shadow-overlay'}];
+    const {tokens, report} = parseFoundations(page, {names, renames});
+    expect(tokens.color.grey['100'].$value.hex).toBe('#edeff0');
+    expect(tokens.surface.app.$value).toBe('{color.grey.100}');
+    expect(tokens.shadow.overlay.$value[0].blur).toEqual({value: 60, unit: 'px'});
+    expect(report.map(r => r.text)).toEqual(expect.arrayContaining([
+      'Figma still calls `slate/100`; code calls it `--gv-color-grey-100`',
+      'Figma still calls `shadow/dialog`; code calls it `--gv-shadow-overlay`']));
+  });
+  it('refuses two variables that would share one name unless one is marked a merge', () => {
+    expect(() => parseFoundations(page, {names: {...names, 'VariableID:1:43': '--gv-surface-app'}}))
+      .toThrow(/VariableID:1:38 and VariableID:1:43 are both named --gv-surface-app/);
+  });
+});
+
+// The cached Figma file (.cache/, linked from the main checkout; never downloaded by a test). CI has no cache: skipped.
+const cache = 'tokens/figma.config.json';
+const cacheFile = existsSync(cache) && `.cache/figma-${JSON.parse(readFileSync(cache, 'utf8')).fileKey}.json`;
+describe.skipIf(!cacheFile || !existsSync(cacheFile))('the cached Figma file', () => {
+  it('pulls to exactly the committed Figma token files and report (npm run tokens:pull -- --cached)', async () => {
+    const {page: pageOf, config} = await import('../scripts/lib/figma.mjs');
+    const file = JSON.parse(readFileSync(cacheFile, 'utf8'));
+    const read = path => JSON.parse(readFileSync(path, 'utf8'));
+    const renames = existsSync('tokens/renames.json') ? read('tokens/renames.json').renames : [];
+    const pulled = parseFoundations(pageOf(file, config.foundationsPage), {names: read('tokens/variable-ids.json'), renames});
+    expect(pulled.tokens).toEqual(read('tokens/foundations.tokens.json'));
+    expect(pulled.variableIds).toEqual(read('tokens/variable-ids.json'));
+    expect(pulled.report).toEqual(read('tokens/figma-report.json').report);
   });
 });
 
@@ -126,8 +189,15 @@ describe('mergeTokens', () => {
     expect(merged.$description).toBeUndefined();
     expect(figma.motion).toBeUndefined();
   });
-  it('refuses a group that both files define', () => {
-    expect(() => mergeTokens({...figma, motion: {}}, motionFile)).toThrow(/motion/);
+  it('merges by token path: a hand-written token joins a Figma group', () => {
+    const merged = mergeTokens(figma, {surface: {danger: {$type: 'color', $value: '{color.slate.100}'}}});
+    expect(Object.keys(merged.surface)).toEqual(['app', 'hover-strong', 'live', 'danger']);
+    expect(figma.surface.danger).toBeUndefined();
+  });
+  it('refuses a token path that two files define, naming it', () => {
+    expect(() => mergeTokens(figma, {surface: {app: {$type: 'color', $value: '{color.slate.100}'}}}))
+      .toThrow(/token "surface.app" is in two token files/);
+    expect(() => mergeTokens(figma, {surface: {app: {deeper: {$type: 'color', $value: '{x}'}}}})).toThrow(/surface.app/);
   });
   it('a Figma pull writes only the Figma files', () => {
     const pull = readFileSync('scripts/figma-pull.mjs', 'utf8');
