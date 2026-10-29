@@ -61,8 +61,8 @@
   max-width: 240px;
 }
 
-/* The input list (.pj-mirempty, l.1225): an empty list someone fills, so a dashed frame and a quieter title. Its text
-   stays in the secondary grey: the prototype's lighter grey (slate 500) is 3.2:1 on white, under AA for 13 px. */
+/* The input list (.pj-mirempty, l.1225): an empty list someone fills, so a dashed frame, a quieter title and the
+   prototype's lighter text (the back office follows the design as drawn; contrast is reported, docs/DESIGN.md). */
 .gv-empty-state[data-framed] {
   gap: var(--gv-space-4);
   padding: var(--gv-space-28) var(--gv-space-24);
@@ -76,6 +76,10 @@
 
 .gv-empty-state[data-framed] .gv-empty-state__title {
   color: var(--gv-text-secondary);
+}
+
+.gv-empty-state[data-framed] .gv-empty-state__text {
+  color: var(--gv-text-tertiary);
 }
 
 .gv-empty-state[data-framed] .gv-empty-state__text {

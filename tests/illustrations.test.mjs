@@ -9,11 +9,6 @@ const files = readdirSync(DIR).filter(f => f.endsWith('.svg')).sort();
 const svgs = files.map(f => [f.replace(/\.svg$/, ''), readFileSync(`${DIR}/${f}`, 'utf8')]);
 const tokenCss = readFileSync('src/tokens.css', 'utf8');
 const tokens = new Set([...tokenCss.matchAll(/(--gv-[\w-]+)\s*:/g)].map(m => m[1]));
-// The motion tokens (main 049da75, tests/motion.test.mjs there): this branch's tokens.css predates them; the names
-// stand in until the merge brings the file, after which they come from tokens.css like every other token.
-if (!tokens.has('--gv-motion-duration-loop')) {
-  for (const t of ['duration-fast', 'duration-medium', 'duration-slow', 'duration-loop', 'easing-standard', 'easing-enter', 'easing-exit', 'easing-move']) tokens.add(`--gv-motion-${t}`);
-}
 
 // The motion guard's rule (tests/motion.test.mjs on main), held here for the <style> inside each .svg: a duration or
 // an easing only through var(--gv-motion-*). A scene's story declares --gvi-cycle: calc(var(--gv-motion-duration-loop) * N)
