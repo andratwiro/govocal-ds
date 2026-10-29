@@ -45,6 +45,7 @@ Sizes.args = {
   onPress: () => alert('Hello world!')
 };
 
+/** Not in Figma: the prototype's tertiary text action. */
 export const Quiet: Story = args => <Button {...args}>Edit</Button>;
 Quiet.args = {
   variant: 'quiet',
@@ -73,6 +74,7 @@ Pending.args = {
   isPending: true
 };
 
+/** Not in Figma as a Button (Figma's icon-only control is Icon button): square, radius 8. */
 export const IconPlusTextVsIconOnly: Story = () => (
   <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
     <Button variant="primary" onPress={() => {}}>
@@ -85,14 +87,18 @@ export const IconPlusTextVsIconOnly: Story = () => (
   </div>
 );
 
+/** Figma's Style × Size × Menu × State, plus pending; the quiet row is Not in Figma. */
 export const AllStates: Story = () => (
   <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
     {(['primary', 'secondary'] as const).map(variant => (
-      <div key={variant} style={{display: 'flex', alignItems: 'center', gap: 12}}>
+      <div key={variant} style={{display: 'flex', alignItems: 'center', gap: 24}}>
         {([32, 36] as const).map(size => (
-          <div key={size} style={{display: 'flex', gap: 8}}>
+          <div key={size} style={{display: 'flex', alignItems: 'center', gap: 8}}>
             <Button variant={variant} size={size} onPress={() => {}}>
               Save
+            </Button>
+            <Button variant={variant} size={size} hasMenu onPress={() => {}}>
+              {variant === 'primary' ? 'Publish' : 'Share'}
             </Button>
             <Button variant={variant} size={size} isDisabled>
               Save
@@ -104,5 +110,17 @@ export const AllStates: Story = () => (
         ))}
       </div>
     ))}
+    <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
+      <Button variant="quiet" size={32} onPress={() => {}}>
+        Show all
+      </Button>
+      <Button variant="quiet" size={32} onPress={() => {}}>
+        <Plus aria-hidden size={16} />
+        Add a manager
+      </Button>
+      <Button variant="quiet" size={32} isDisabled>
+        Show all
+      </Button>
+    </div>
   </div>
 );

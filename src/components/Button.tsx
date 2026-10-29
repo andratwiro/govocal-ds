@@ -29,7 +29,7 @@ interface ButtonProps extends RACButtonProps {
    */
   hasMenu?: boolean;
   /**
-   * Forces the round, icon-only treatment (a single square button, no visible
+   * Forces the icon-only treatment (a square button, no visible
    * text). Leave unset to let the Button detect it itself: it looks only right
    * when a text node (or anything else that isn't a single element, such as an
    * icon + text pair) would make the CSS `:has(> svg:only-child)` rule used to
@@ -69,7 +69,7 @@ export function Button(props: ButtonProps) {
       {composeRenderProps(props.children, (children, {isPending}) => (
         <>
           {!isPending && children}
-          {!isPending && hasMenu && <ChevronDown aria-hidden size={16} />}
+          {!isPending && hasMenu && <ChevronDown aria-hidden size={16} className="react-aria-Button-chevron" />}
           {isPending && <ProgressCircle aria-label="Saving..." isIndeterminate />}
         </>
       ))}

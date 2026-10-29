@@ -1,6 +1,12 @@
 @import './theme.css';
 @import './utilities.css';
 
+/*
+ * Button (Figma "Button" 14:877; the prototype's `.btn` / `.pj-hbtn`).
+ * Figma: 36 = padding 12, gap 6; 32 = padding 16, gap 8; radius 8; UI strong.
+ * The prototype adds what Figma leaves out: hover (secondary lifts to a near-white fill with the
+ * darker border, primary brightens), disabled at .45, a .75 menu chevron, no press scale.
+ */
 .react-aria-Button {
   appearance: none;
   font: var(--gv-type-ui-strong);
@@ -11,10 +17,13 @@
   padding: 0 var(--gv-space-12);
   gap: var(--gv-space-6);
   text-decoration: none;
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, filter 0.15s;
   -webkit-tap-highlight-color: transparent;
 
   &[data-size='32'] {
@@ -27,6 +36,11 @@
     background: var(--gv-action-primary);
     color: var(--gv-text-inverse);
     border: none;
+
+    /* Prototype `.btn--primary:hover`: the same fill, a touch lighter. */
+    &[data-hovered] {
+      filter: brightness(1.12);
+    }
   }
 
   &[data-variant='secondary'] {
@@ -34,18 +48,27 @@
     color: var(--gv-text-primary);
     border: 1px solid var(--gv-border-control);
 
+    /* Prototype `.btn--secondary:hover`: border darkens, fill goes to the near-white neutral-25. */
     &[data-hovered] {
       border-color: var(--gv-border-control-hover);
+      background: var(--gv-surface-toolbar);
     }
   }
 
+  /* Figma: the 36 secondary ("Done") carries shadow/subtle; the 32 one ("Share") doesn't. */
+  &[data-variant='secondary'][data-size='36'] {
+    box-shadow: var(--gv-shadow-subtle);
+  }
+
+  /* Not in Figma: the prototype's tertiary (`.btn--tertiary`), a text action with no chrome. */
   &[data-variant='quiet'] {
     background: transparent;
-    color: var(--gv-icon-primary);
+    color: var(--gv-text-secondary);
     border: none;
 
     &[data-hovered] {
       background: var(--gv-surface-hover);
+      color: var(--gv-text-primary);
     }
 
     &[data-pressed] {
@@ -53,28 +76,34 @@
     }
   }
 
+  /* Icons: 16, drawn at Figma's stroke (1.17 at 16 = 1.75 on Lucide's 24 grid). */
   > svg {
-    width: calc(var(--spacing) * 4.5);
-    height: calc(var(--spacing) * 4.5);
+    width: 16px;
+    height: 16px;
+    stroke-width: 1.75;
   }
 
+  > .react-aria-Button-chevron {
+    opacity: 0.75;
+  }
+
+  /* Icon-only: square with the same radius 8 as Figma's Icon button and the prototype's
+     `.btn-icon` (neither draws a round button). */
   &[data-icon-only] {
     width: 36px;
     flex-shrink: 0;
     padding: 0;
-    border-radius: var(--gv-radius-full);
 
     &[data-size='32'] {
       width: 32px;
     }
   }
 
-  &[data-pressed] {
-    scale: 0.95;
-  }
-
   &[data-disabled] {
-    opacity: 0.5;
+    opacity: 0.45;
+    cursor: not-allowed;
+    filter: none;
+    box-shadow: none;
   }
 
   &[data-focus-visible] {
