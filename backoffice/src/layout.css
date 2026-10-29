@@ -39,3 +39,11 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-projects-visibility { display: grid; justify-items: start; gap: var(--gv-space-2); }
 .bo-projects-foot { text-align: center; margin-block: var(--gv-space-16) 0; }
 .bo-projects-nowrap { white-space: nowrap; }
+
+/* ── Dashboard ── */
+.bo-dashboard-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--gv-space-12); margin-block-end: var(--gv-space-16); }
+.bo-dashboard-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gv-space-8); }
+.bo-dashboard-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: var(--gv-space-16); align-items: start; }
+.bo-dashboard-stack { display: grid; gap: var(--gv-space-16); }
+.bo-dashboard-body { display: grid; gap: var(--gv-space-16); padding-block-start: var(--gv-space-4); }
+.bo-dashboard-rows { display: grid; gap: var(--gv-space-8); }
