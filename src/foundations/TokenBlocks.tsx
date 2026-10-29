@@ -88,10 +88,13 @@ const FontSize: Presenter = ({token}) =>
   <div className="gv-tokens-type" style={{fontSize: `var(${token.name})`}}>
     {rolesWith(r => r.size === pxOf(token.name)) || 'No role'}
   </div>;
-const FontWeight: Presenter = ({token}) =>
-  <div className="gv-tokens-type" style={{fontWeight: `var(${token.name})`}}>
-    {rolesWith(r => r.weight === weightOf(token.name)) || 'No role'}
+// A weight serves up to five roles, too many names for the cell: its name and how many roles use it.
+const FontWeight: Presenter = ({token}) => {
+  const n = roles.filter(r => r.weight === weightOf(token.name)).length;
+  return <div className="gv-tokens-type" style={{fontWeight: `var(${token.name})`}}>
+    {WEIGHT[weightOf(token.name)] ?? weightOf(token.name)} · {n} {n === 1 ? 'role' : 'roles'}
   </div>;
+};
 const presenters: Presenters = {BorderRadius: Radius, LineHeight, FontSize, FontWeight};
 
 // One category from tokens.css, by its @tokens name (e.g. "Space @presenter Spacing"). Right-click a row: the
