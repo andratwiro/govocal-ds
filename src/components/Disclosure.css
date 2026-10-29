@@ -1,5 +1,8 @@
 @import './theme.css';
 
+/* The prototype's accordion (.pj-acc): the header Body strong primary at 12 15, 10 apart from a 14px chevron in the
+   strong icon grey that turns a quarter when open; hover the stronger wash, an open header the light wash; the body
+   UI type at 6 15 16. In a DisclosureGroup the items are split by 1px dividers (DisclosureGroup.css). */
 .react-aria-Disclosure {
   width: calc(var(--spacing) * 50);
 
@@ -13,56 +16,70 @@
     box-shadow: none;
     text-shadow: none;
     width: 100%;
-    color: var(--text-color);
-    font: var(--font-size) var(--gv-font-family);
-    font-weight: 600;
+    color: var(--gv-text-primary);
+    font: var(--gv-type-body-strong);
+    letter-spacing: var(--gv-type-body-strong-tracking);
     display: flex;
     align-items: center;
     text-align: start;
-    gap: var(--spacing-1);
-    padding: var(--spacing-2) var(--spacing-3);
+    gap: var(--gv-space-10);
+    padding: var(--gv-space-12) var(--gv-space-15);
     border-radius: var(--radius);
-    transition:
-      background 200ms,
-      color 200ms,
-      scale 200ms;
+    transition: background 150ms;
     outline: none;
+    cursor: pointer;
     -webkit-tap-highlight-color: transparent;
 
     &[data-hovered],
     &[data-pressed] {
-      background: var(--gray-300);
-      color: var(--text-color-hover);
-    }
-
-    &[data-pressed] {
-      scale: 0.97;
+      background: var(--gv-surface-hover-strong);
     }
 
     &[data-focus-visible] {
       outline: 2px solid var(--focus-ring-color);
+      outline-offset: -2px;
     }
 
     &[data-disabled] {
       color: var(--text-color-disabled);
+      cursor: default;
+    }
+
+    span {
+      flex: 1;
     }
 
     svg {
+      flex: none;
+      width: 14px;
+      height: 14px;
+      color: var(--gv-icon-strong);
       rotate: 0deg;
-      transition: rotate 200ms;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 3px;
+      transition: rotate 150ms;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
     }
   }
 
-  &[data-expanded] .disclosure-button svg {
-    rotate: 90deg;
+  &[data-expanded] .disclosure-button {
+    background: var(--gv-surface-hover);
+
+    &[data-hovered] {
+      background: var(--gv-surface-hover-strong);
+    }
+
+    svg {
+      rotate: 90deg;
+    }
   }
 }
 
 .react-aria-DisclosurePanel {
-  color: var(--text-color);
+  color: var(--gv-text-primary);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   height: var(--disclosure-panel-height);
   transition: height 250ms;
   overflow: clip;
@@ -71,7 +88,11 @@
     transition: none;
   }
 
-  div {
-    padding: var(--spacing-2) var(--spacing-4);
+  > div {
+    padding: var(--gv-space-6) var(--gv-space-15) var(--gv-space-16);
+  }
+
+  p {
+    margin: 0;
   }
 }
