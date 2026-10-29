@@ -112,28 +112,17 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-settings-modal { display: grid; gap: var(--gv-space-16); }
 .bo-settings-policy { display: grid; gap: var(--gv-space-8); padding-block-end: var(--gv-space-8); }
 /* ── Messaging ── */
-.bo-messaging-tab { display: inline-flex; align-items: center; gap: var(--gv-space-6); }
 .bo-messaging-intro { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--gv-space-16); margin-block: var(--gv-space-16); }
 .bo-messaging-intro p { margin: 0; }
 .bo-messaging-stack { display: grid; gap: var(--gv-space-16); }
 .bo-messaging-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: var(--gv-space-16); align-items: start; }
 .bo-messaging-nowrap { white-space: nowrap; }
-.bo-messaging-section { display: grid; }
 .bo-messaging-lists { margin-block-start: var(--gv-space-16); }
-.bo-messaging-form { display: grid; gap: var(--gv-space-16); padding-block-start: var(--gv-space-8); }
 .bo-messaging-fields { display: grid; gap: var(--gv-space-16); }
 .bo-messaging-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--gv-space-16); }
 .bo-messaging-field { display: grid; gap: var(--gv-space-4); }
-.bo-messaging-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-8); }
-.bo-messaging-groups { display: grid; gap: var(--gv-space-16); padding-block-start: var(--gv-space-8); }
-.bo-messaging-group { display: grid; gap: var(--gv-space-4); }
-.bo-messaging-rows, .bo-messaging-list { list-style: none; margin: 0; padding: 0; display: grid; }
-/* A flex parent lets the list row shrink to fit, padding included. */
-.bo-messaging-list > li { display: flex; }
-.bo-messaging-row { display: flex; align-items: center; justify-content: space-between; gap: var(--gv-space-12); padding-block: var(--gv-space-8); }
-.bo-messaging-name { display: grid; gap: var(--gv-space-2); }
-.bo-messaging-meta { display: grid; gap: var(--gv-space-2); }
-.bo-messaging-meta-item { display: inline-flex; align-items: center; gap: var(--gv-space-4); }
+.bo-messaging-groups { display: grid; gap: var(--gv-space-16); }
+.bo-messaging-group { display: grid; }
 .bo-messaging-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--gv-space-12); }
 .bo-messaging-mailhead { display: grid; grid-template-columns: auto 1fr; gap: var(--gv-space-4) var(--gv-space-12); margin: 0; }
 .bo-messaging-mailhead dd { margin: 0; }
@@ -285,9 +274,6 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-users-profile { display: flex; align-items: flex-start; gap: var(--gv-space-16); }
 .bo-users-facts { display: grid; grid-template-columns: auto 1fr; gap: var(--gv-space-8) var(--gv-space-16); margin: 0; }
 .bo-users-facts dd { margin: 0; }
-.bo-messaging-scroll { overflow-x: auto; }
-.bo-messaging-sms { display: grid; gap: var(--gv-space-4); padding: var(--gv-space-12); }
-.bo-messaging-sms p { margin: 0; }
 /* ── Project phase · Manage ── */
 .bo-phase-manage-nowrap { white-space: nowrap; }
 /* ── Feedback: project settings side tabs, phase status ── */

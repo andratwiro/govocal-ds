@@ -62,30 +62,62 @@ test('custom emails: the list Panel carries Create email and its pages; the comp
   await expect(page.getByRole('row', {name: /Not kept/})).toHaveCount(0);
 });
 
-test('automated emails are grouped by recipient, switch on and off, and an on email opens its editor', async ({page}) => {
+test('automated emails are grouped by recipient, switch on and off with Undo, and an on email opens its page', async ({page}) => {
   await page.goto('/backoffice/#/messaging');
   await page.getByRole('tab', {name: 'Automated emails'}).click();
-  for (const g of ['Residents', 'Admins and managers']) await expect(page.getByRole('heading', {name: g})).toBeVisible();
+  // One Panel per recipient group, the Build tab's Notification rows inside, a Section label per kind.
+  for (const g of ['Residents', 'Admins and managers']) {
+    const panel = page.getByRole('region', {name: g, exact: true});
+    await expect(panel).toHaveClass(/gv-panel/);
+    await expect(panel.locator('.gv-notification-row').first()).toBeVisible();
+  }
+  await expect(page.getByRole('region', {name: 'Residents', exact: true}).locator('.gv-panel__description')).toHaveText('5 of 6 emails on');
+  await expect(page.getByRole('group', {name: 'Residents: Your inputs'})).toBeVisible();
+  // Nothing open yet: the preview's Empty state.
+  await expect(page.getByRole('region', {name: 'Preview'}).getByText('No email open')).toBeVisible();
   const sw = page.getByRole('switch', {name: /Weekly digest/});
   await expect(sw).toBeChecked();
   await sw.click({force: true});
   await expect(sw).not.toBeChecked();
-  // As in the prototype, an email that is off can't be edited.
-  await expect(page.getByRole('button', {name: 'Edit Weekly digest'})).toBeDisabled();
+  await expect(page.getByRole('region', {name: 'Residents', exact: true}).locator('.gv-panel__description')).toHaveText('4 of 6 emails on');
+  // As in the prototype, an email that is off opens nothing.
+  await expect(page.getByRole('button', {name: 'Edit Weekly digest'})).toHaveCount(0);
+  // An instant change says so, with Undo.
+  const off = toasts(page).filter({hasText: 'Email off'});
+  await expect(off).toContainText('Weekly digest is no longer sent.');
+  await off.getByRole('button', {name: 'Undo'}).click();
+  await expect(sw).toBeChecked();
   await page.getByRole('button', {name: 'Edit Comment on your input'}).click();
+  // The email's page takes the list's place (Notification row's "Email open" story); the email shows beside it.
   const editor = page.getByRole('region', {name: 'Comment on your input'});
+  await expect(editor.getByRole('heading', {level: 2, name: 'Comment on your input'})).toBeVisible();
+  await expect(editor.getByRole('switch', {name: 'Send this email'})).toBeChecked();
   for (const f of ['Replies should go to', 'Subject', 'Title', 'Button text']) await expect(editor.getByRole('textbox', {name: f, exact: true})).toBeVisible();
   await expect(editor.getByRole('textbox', {name: 'Introduction'})).toBeVisible();
-  await expect(editor.getByRole('button', {name: 'Send me a test email'})).toBeVisible();
+  await expect(page.getByRole('region', {name: 'Residents', exact: true})).toHaveCount(0);
+  const preview = page.getByRole('region', {name: 'Preview'});
+  await expect(preview.getByRole('button', {name: 'Send me a test email'})).toBeVisible();
+  await expect(preview.locator('[data-gap="Email preview"]')).toContainText('New comment on your input');
+  // ← goes back to the list.
+  await editor.getByRole('button', {name: 'Back to automated emails'}).click();
+  await expect(editor).toHaveCount(0);
+  await expect(page.getByRole('region', {name: 'Residents', exact: true})).toBeVisible();
 });
 
-test('SMS shows the credit balance and the campaigns', async ({page}) => {
+test('SMS shows the credit balance and the campaigns in a list Panel', async ({page}) => {
   await page.goto('/backoffice/#/messaging');
   await page.getByRole('tab', {name: 'SMS'}).click();
   await expect(page.getByText('SMS credits remaining')).toBeVisible();
   for (const k of ['SMS campaigns', 'Test messages', 'Total used']) await expect(page.getByText(k, {exact: true}).first()).toBeVisible();
-  await expect(page.getByRole('button', {name: 'Create SMS'})).toBeVisible();
-  await expect(page.getByRole('list', {name: 'SMS campaigns'}).getByRole('listitem')).toHaveCount(4);
+  // The list shape every admin table shares: Panel, Table toolbar count, Data table, Pagination.
+  const list = page.getByRole('region', {name: 'SMS campaigns', exact: true});
+  await expect(list).toHaveClass(/gv-panel/);
+  await expect(list.locator('.gv-panel__actions').getByRole('button', {name: 'Create SMS'})).toBeVisible();
+  await expect(list.getByRole('heading', {level: 4, name: '4 messages'})).toBeVisible();
+  const grid = list.getByRole('grid', {name: 'SMS campaigns'});
+  for (const c of ['Message', 'Status', 'Date', 'Delivered', 'Failed']) await expect(grid.getByRole('columnheader', {name: c, exact: true})).toBeVisible();
+  await expect(grid.getByRole('row')).toHaveCount(5);
+  await expect(list.locator('.gv-panel__foot').getByRole('navigation', {name: 'SMS pages'})).toBeVisible();
 });
 
 test('messaging names what the system still lacks', async ({page}) => {
@@ -130,6 +162,14 @@ test('a sent email row opens its statistics: recipients, opened, clicked, and wh
   for (const k of ['Recipients', 'Delivered', 'Opened', 'Clicked']) await expect(page.getByText(k, {exact: true}).first()).toBeVisible();
   const grid = page.getByRole('grid', {name: 'Recipients'});
   for (const c of ['Recipient', 'Status']) await expect(grid.getByRole('columnheader', {name: c})).toBeVisible();
+  // Who got it: a list Panel, its count, search and status filter in the toolbar, its pages in the foot.
+  const recipients = page.getByRole('region', {name: 'Recipients', exact: true});
+  await expect(recipients).toHaveClass(/gv-panel/);
+  await expect(recipients.getByRole('heading', {level: 4, name: '6 recipients'})).toBeVisible();
+  await recipients.getByRole('searchbox', {name: 'Search recipients'}).fill('resident6');
+  await expect(recipients.getByRole('heading', {level: 4, name: '1 recipient'})).toBeVisible();
+  await expect(grid.getByRole('row', {name: /Resident F/})).toContainText('Bounced');
+  await expect(recipients.locator('.gv-panel__foot').getByRole('navigation', {name: 'Recipient pages'})).toBeVisible();
   const {violations} = await new AxeBuilder({page}).include('.bo-page')
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
   a11yReport(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`));
@@ -143,6 +183,10 @@ test('Create SMS opens the SMS composer with a character count and a phone previ
   await page.getByRole('button', {name: 'Create SMS'}).click();
   await expect(page).toHaveURL(/#\/messaging\/texting\/new$/);
   await expect(page.getByRole('heading', {level: 1, name: 'New SMS'})).toBeVisible();
+  // The same composer shape as a new email: a Panel, the actions in its foot.
+  const composer = page.getByRole('region', {name: 'Write a text message'});
+  await expect(composer).toHaveClass(/gv-panel/);
+  for (const b of ['Cancel', 'Send test SMS', 'Send now']) await expect(composer.locator('.gv-panel__foot').getByRole('button', {name: b})).toBeVisible();
   await page.getByRole('textbox', {name: 'Message'}).fill('The library is open late on Thursday.');
   await expect(page.getByText('37 / 160 characters · 1 SMS per recipient')).toBeVisible();
   await expect(page.getByRole('group', {name: 'SMS preview'})).toContainText('The library is open late');
@@ -193,12 +237,45 @@ test('a row menu duplicates an email, and deletes a draft after asking', async (
   await confirm.getByRole('button', {name: 'Delete draft'}).click();
   await expect(confirm).toHaveCount(0);
   await expect(table.getByRole('row', {name: /Market Square/})).toHaveCount(0);
-  await expect(toasts(page).filter({hasText: 'Draft deleted'})).toBeVisible();
+  // Delete asked first, then offers Undo too; Undo puts the draft back in its place.
+  const deleted = toasts(page).filter({hasText: 'Draft deleted'});
+  await deleted.getByRole('button', {name: 'Undo'}).click();
+  await expect(table.getByRole('row', {name: /Market Square/})).toContainText('Draft');
+  // Duplicate's Undo takes the copy away again.
+  await toasts(page).filter({hasText: 'Email duplicated'}).getByRole('button', {name: 'Undo'}).click();
+  await expect(table.getByRole('row', {name: /Copy of Library opening hours/})).toHaveCount(0);
+});
+
+test('custom emails: the toolbar counts, searches and filters the list', async ({page}) => {
+  await page.goto('/backoffice/#/messaging');
+  const list = page.getByRole('region', {name: 'Custom emails', exact: true});
+  const toolbar = list.locator('.gv-panel__toolbar');
+  await expect(toolbar.getByRole('heading', {level: 4, name: '6 emails'})).toBeVisible();
+  await toolbar.getByRole('searchbox', {name: 'Search emails'}).fill('library');
+  await expect(toolbar.getByRole('heading', {level: 4, name: '1 email'})).toBeVisible();
+  await expect(list.getByRole('grid', {name: 'Custom emails'}).getByRole('row', {name: /Library opening hours/})).toBeVisible();
+  await toolbar.getByRole('searchbox', {name: 'Search emails'}).fill('nothing like this');
+  await expect(list.getByText('No emails match. Clear the search or the filters to see them all.')).toBeVisible();
+  await toolbar.getByRole('searchbox', {name: 'Search emails'}).fill('');
+  // The Filter menu: Status › Draft leaves the two drafts, and a chip says so.
+  const filter = toolbar.getByRole('button', {name: /^Filter emails/});
+  await filter.click();
+  await page.getByRole('menu', {name: 'Filter emails'}).getByRole('menuitem', {name: /^Status/}).hover();
+  await page.getByRole('menuitemcheckbox', {name: /^Draft/}).click();
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('Escape');
+  await expect(filter).toHaveAccessibleName('Filter emails (1 on)');
+  await expect(toolbar.getByRole('heading', {level: 4, name: '2 emails'})).toBeVisible();
+  const chips = toolbar.getByRole('grid', {name: 'Active filters'});
+  await expect(chips).toContainText('Draft');
+  await chips.getByRole('button', {name: 'Remove the Status filter'}).click();
+  await expect(toolbar.getByRole('heading', {level: 4, name: '6 emails'})).toBeVisible();
 });
 
 test('an automated email sends a test email to the sender', async ({page}) => {
   await page.goto('/backoffice/#/messaging');
   await page.getByRole('tab', {name: 'Automated emails'}).click();
+  await page.getByRole('button', {name: 'Edit Your input is published'}).click();
   await page.getByRole('button', {name: 'Send me a test email'}).click();
   await expect(toasts(page).first()).toContainText('Test email sent');
 });

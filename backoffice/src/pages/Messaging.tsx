@@ -1,37 +1,44 @@
-import {useState} from 'react';
+import {useMemo, useState} from 'react';
 import {useNavigate} from 'react-router';
-import {Clock, Mail, MessageSquare, Pencil, Plus, Send, User} from 'lucide-react';
+import {BarChart3, CircleCheck, Clock, Copy, Mail, MessageSquare, Pencil, Plus, Send, Trash2} from 'lucide-react';
 import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
 import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableStack,
-  DataTableOptions} from '../../../src/components/gv/DataTable';
+  DataTableOptions, DataTableEmpty} from '../../../src/components/gv/DataTable';
 import {MenuItem} from '../../../src/components/Menu';
 import {Button} from '../../../src/components/Button';
-import {Switch} from '../../../src/components/Switch';
 import {TextField} from '../../../src/components/TextField';
 import {Select, SelectItem} from '../../../src/components/Select';
+import {SearchField} from '../../../src/components/SearchField';
 import {Label} from '../../../src/components/Form';
-import {Card} from '../../../src/components/gv/Card';
 import {Panel} from '../../../src/components/gv/Panel';
 import {Pagination} from '../../../src/components/gv/Pagination';
+import {TableToolbar} from '../../../src/components/gv/TableToolbar';
 import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {Badge} from '../../../src/components/gv/Badge';
-import {ListRow} from '../../../src/components/gv/ListRow';
 import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
-import {IconButton} from '../../../src/components/gv/IconButton';
 import {StatTile} from '../../../src/components/gv/StatTile';
 import {Banner} from '../../../src/components/gv/Banner';
 import {Divider} from '../../../src/components/gv/Divider';
+import {EmptyState} from '../../../src/components/gv/EmptyState';
+import {SectionLabel} from '../../../src/components/gv/SectionLabel';
 import {ToastRegion, queue} from '../../../src/components/Toast';
 import {AlertDialog} from '../../../src/components/gv/AlertDialog';
+import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
+import {FilterChips} from '../../../src/patterns/FilterChips';
+import {NotificationEmail, NotificationList, NotificationRow} from '../../../src/patterns/NotificationRow';
 import {AUTOMATED, GROUP_SIZES, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
-import {emailStore, sentText} from './MessagingPages';
+import {emailStore, sentText, usePages} from './MessagingPages';
 import {SectionHeading} from '../SectionHeading';
 
 const n = (v: number) => v.toLocaleString('en');
 const pct = (v?: number) => (v == null ? '—' : `${v}%`);
 const toast = (title: string, description?: string) => queue.add({title, description}, {timeout: 5000});
+/** An instant change says so with Undo (docs/DECISIONS.md). */
+const undoable = (title: string, description: string, onUndo: () => void) =>
+  queue.add({title, description, action: 'Undo', onAction: onUndo}, {timeout: 5000});
+const emailsWord = (v: number) => `${n(v)} ${v === 1 ? 'email' : 'emails'}`;
+const smsWord = (v: number) => `${n(v)} ${v === 1 ? 'message' : 'messages'}`;
 
 /** The custom emails as state, written through to the shared store (so the composer's route sees them). */
 function useEmails() {
@@ -46,17 +53,53 @@ type RowAction = 'stats' | 'edit' | 'copy' | 'delete';
 
 // Every admin table pages (docs/DECISIONS.md).
 const PAGE_SIZE = 10;
+const STATUSES: CustomEmail['status'][] = ['Sent', 'Scheduled', 'Draft'];
 
-/** The list's Panel (Panel's "With actions" story): Create email at the head's end, the table flush, its pages below. */
+const emailFacets = (emails: CustomEmail[]): FilterFacet[] => [
+  {id: 'status', label: 'Status', icon: <CircleCheck aria-hidden size={16} />,
+    options: STATUSES.map(s => ({id: s, label: s, count: emails.filter(e => e.status === s).length}))},
+  {id: 'to', label: 'Recipients', icon: <Mail aria-hidden size={16} />,
+    options: GROUPS.map(g => ({id: g, label: g, count: emails.filter(e => e.to === g).length}))}
+];
+
+/**
+ * The list's Panel (Panel's "With a toolbar" story): Create email at the head's end; the count, the Filter menu and
+ * the search in the toolbar row, the chips under it; the table flush; its pages in the foot.
+ */
 function CustomEmailTable({emails, onAction, onCreate}: {
   emails: CustomEmail[]; onAction: (e: CustomEmail, a: RowAction) => void; onCreate: () => void;
 }) {
-  const [page, setPage] = useState(1);
-  const pageCount = Math.max(1, Math.ceil(emails.length / PAGE_SIZE));
-  const current = Math.min(page, pageCount);
+  const [query, setQuery] = useState('');
+  const [filters, setFilters] = useState<FilterValue>({});
+  const facets = useMemo(() => emailFacets(emails), [emails]);
+  const q = query.trim().toLowerCase();
+  const rows = emails.filter(e => (!q || e.subject.toLowerCase().includes(q))
+    && (!filters.status?.length || filters.status.includes(e.status))
+    && (!filters.to?.length || filters.to.includes(e.to)));
+  const {current, pageCount, setPage, shown} = usePages(rows, PAGE_SIZE);
+  // A new search or filter starts again from the first page.
+  const fresh = <T,>(set: (v: T) => void) => (v: T) => { set(v); setPage(1); };
+  const create = <Button variant="primary" size={32} onPress={onCreate}><Plus aria-hidden size={16} />Create email</Button>;
+  if (emails.length === 0) {
+    // Nothing sent or drafted yet: the real admin's first-email screen.
+    return (
+      <Panel title="Custom emails" headingLevel={3} description="Send out custom emails and check statistics.">
+        <EmptyState icon={<Mail aria-hidden size={24} />} title="Send your first email" headingLevel={4}
+          description="Easily connect with your participants by sending them emails. Choose who to contact and track your engagement."
+          action={create} />
+      </Panel>
+    );
+  }
   return (
     <Panel title="Custom emails" headingLevel={3} description="Send out custom emails and check statistics." flush
-      actions={<Button variant="primary" size={32} onPress={onCreate}><Plus aria-hidden size={16} />Create email</Button>}
+      actions={create}
+      toolbar={<>
+        <TableToolbar aria-label="Email tools" headingLevel={4} heading={emailsWord(rows.length)}>
+          <FilterMenu aria-label="Filter emails" facets={facets} value={filters} onChange={fresh(setFilters)} countLabel={emailsWord} />
+          <SearchField aria-label="Search emails" placeholder="Search" value={query} onChange={fresh(setQuery)} />
+        </TableToolbar>
+        <FilterChips aria-label="Active filters" facets={facets} value={filters} onChange={fresh(setFilters)} />
+      </>}
       footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Email pages" />}>
     <div className="bo-messaging-scroll">
     <DataTable aria-label="Custom emails">
@@ -66,7 +109,8 @@ function CustomEmailTable({emails, onAction, onCreate}: {
         <DataTableColumn align="number">Opened</DataTableColumn><DataTableColumn align="number">Clicked</DataTableColumn>
         <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
       </DataTableHeader>
-      <DataTableBody>{emails.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE).map(e => (
+      <DataTableBody renderEmptyState={() => <DataTableEmpty>No emails match. Clear the search or the filters to see them all.</DataTableEmpty>}>
+        {shown.map(e => (
         // A sent email opens its statistics; a draft opens from its menu.
         <DataTableRow key={e.id} id={e.id} textValue={e.subject} href={e.status === 'Sent' ? `#/messaging/emails/custom/${e.id}` : undefined}>
           <DataTableCell>
@@ -79,8 +123,15 @@ function CustomEmailTable({emails, onAction, onCreate}: {
           <DataTableCell align="options">
             <DataTableOptions aria-label={`Actions for ${e.subject}`} onAction={k => onAction(e, k as RowAction)}>
               {e.status === 'Sent'
-                ? <><MenuItem id="stats">Statistics</MenuItem><MenuItem id="copy">Duplicate</MenuItem></>
-                : <><MenuItem id="edit">Edit</MenuItem><MenuItem id="copy">Duplicate</MenuItem><MenuItem id="delete">Delete</MenuItem></>}
+                ? <>
+                  <MenuItem id="stats" icon={<BarChart3 aria-hidden size={16} />}>Statistics</MenuItem>
+                  <MenuItem id="copy" icon={<Copy aria-hidden size={16} />}>Duplicate</MenuItem>
+                </>
+                : <>
+                  <MenuItem id="edit" icon={<Pencil aria-hidden size={16} />}>Edit</MenuItem>
+                  <MenuItem id="copy" icon={<Copy aria-hidden size={16} />}>Duplicate</MenuItem>
+                  <MenuItem id="delete" icon={<Trash2 aria-hidden size={16} />}>Delete</MenuItem>
+                </>}
             </DataTableOptions>
           </DataTableCell>
         </DataTableRow>))}
@@ -120,7 +171,8 @@ function DraftComposer({email, onSave, onSend, onCancel}: {
             <TextField label="From" defaultValue={SENDER.from} />
             <TextField label="Replies should go to" defaultValue={SENDER.replyTo} />
           </div>
-          <Select label="To" selectedKey={to} onSelectionChange={k => setTo(String(k))}>
+          <Select label="To" selectedKey={to} onSelectionChange={k => setTo(String(k))}
+            description={`${n(GROUP_SIZES[to] ?? 0)} recipients`}>
             {GROUPS.map(g => <SelectItem key={g} id={g}>{g}</SelectItem>)}
           </Select>
           <Divider />
@@ -147,6 +199,7 @@ function CustomEmails() {
   const confirmSent = (text?: string) => setSent(emailStore.sent = text);
   const draft = emails.find(e => e.id === draftId && e.status !== 'Sent');
   const update = (id: string, patch: Partial<CustomEmail>) => setEmails(list => list.map(e => (e.id === id ? {...e, ...patch} : e)));
+  const insertAt = (email: CustomEmail, at: number) => setEmails(list => [...list.slice(0, at), email, ...list.slice(at)]);
   const onAction = (e: CustomEmail, a: RowAction) => {
     if (a === 'stats') navigate(`/messaging/emails/custom/${e.id}`);
     else if (a === 'edit') setDraftId(e.id);
@@ -154,11 +207,8 @@ function CustomEmails() {
     else {
       const copy: CustomEmail = {...e, id: `${e.id}-copy-${++copies}`, subject: `Copy of ${e.subject}`, status: 'Draft',
         date: 'Edited 29 Oct 2026', opened: undefined, clicked: undefined};
-      setEmails(list => {
-        const i = list.findIndex(x => x.id === e.id);
-        return [...list.slice(0, i + 1), copy, ...list.slice(i + 1)];
-      });
-      toast('Email duplicated', `${copy.subject} is a draft.`);
+      insertAt(copy, emails.findIndex(x => x.id === e.id) + 1);
+      undoable('Email duplicated', `${copy.subject} is a draft.`, () => setEmails(list => list.filter(x => x.id !== copy.id)));
     }
   };
   const save = (patch: Partial<CustomEmail>) => {
@@ -173,10 +223,13 @@ function CustomEmails() {
     confirmSent(sentText(patch.subject ?? draft.subject, GROUP_SIZES[to] ?? 0));
     setDraftId(undefined);
   };
+  // Delete asks first, then offers Undo too (as Projects).
   const remove = () => {
     if (!deleting) return;
-    setEmails(list => list.filter(e => e.id !== deleting.id));
-    toast('Draft deleted', deleting.subject);
+    const gone = deleting;
+    const at = emails.findIndex(e => e.id === gone.id);
+    setEmails(list => list.filter(e => e.id !== gone.id));
+    undoable('Draft deleted', gone.subject, () => insertAt(gone, at));
     setDeleting(null);
   };
   return (
@@ -186,11 +239,14 @@ function CustomEmails() {
         <CustomEmailTable emails={emails} onAction={onAction} onCreate={() => navigate('/messaging/emails/custom/new')} />
         {draft
           ? <DraftComposer key={draft.id} email={draft} onSave={save} onSend={send} onCancel={() => setDraftId(undefined)} />
-          : <p className="bo-note">Choose Edit on a draft to open it here.</p>}
+          : emails.some(e => e.status !== 'Sent') && (
+            <EmptyState size="panel" framed headingLevel="none" icon={<Pencil aria-hidden size={24} />}
+              title="No draft open" description="Choose Edit on a draft to open it here." />
+          )}
       </div>
       <AlertDialog tone="danger" title="Delete this draft?" confirmLabel="Delete draft" isOpen={deleting !== null}
         onOpenChange={o => { if (!o) setDeleting(null); }} onConfirm={remove}>
-        <p>{deleting?.subject} will be deleted. This cannot be undone.</p>
+        <p>{deleting?.subject} will be deleted.</p>
       </AlertDialog>
     </>
   );
@@ -198,120 +254,102 @@ function CustomEmails() {
 
 // ── Automated emails ───────────────────────────────────────────────────────
 
-/** Who gets it and what sends it, on two lines with the product's person and clock icons (prototype). */
-function WhoAndWhen({email}: {email: AutomatedEmail}) {
-  return (
-    <span className="bo-messaging-meta bo-note">
-      <span className="bo-messaging-meta-item"><User aria-hidden size={12} />{email.who}</span>
-      <span className="bo-messaging-meta-item"><Clock aria-hidden size={12} />{email.trigger}</span>
-    </span>
-  );
-}
+const ALL_AUTOMATED = AUTOMATED.flatMap(g => g.types.flatMap(t => t.emails));
 
-function AutomatedList({on, setOn, onEdit}: {on: Record<string, boolean>; setOn: (id: string, v: boolean) => void; onEdit: (id: string) => void}) {
+/**
+ * One Panel per recipient group, its emails as the Build tab's Notification rows under a Section label per kind
+ * (Notification row's "In a card" story): a switch, the name with who gets it and what sends it, a way to its page.
+ */
+function AutomatedList({on, setOn, onEdit}: {on: Record<string, boolean>; setOn: (e: AutomatedEmail, v: boolean) => void; onEdit: (id: string) => void}) {
   return (
     <div className="bo-messaging-stack">
       {AUTOMATED.map(g => {
         const all = g.types.flatMap(t => t.emails);
         const count = all.filter(e => on[e.id]).length;
         return (
-          <Card key={g.role} tone="manage" title={g.role} summary={`${count} of ${all.length} on`}>
+          <Panel key={g.role} title={g.role} headingLevel={3} description={`${count} of ${all.length} emails on`}>
             <div className="bo-messaging-groups">
               {g.types.map(t => (
                 <div key={t.type} className="bo-messaging-group">
-                  <span><Badge>{t.type}</Badge></span>
-                  <ul className="bo-messaging-rows" aria-label={`${g.role}: ${t.type}`}>
+                  <SectionLabel level={4}>{t.type}</SectionLabel>
+                  <NotificationList aria-label={`${g.role}: ${t.type}`}>
                     {t.emails.map(e => (
-                      <li key={e.id} className="bo-messaging-row">
-                        <Switch aria-label={e.name} isSelected={on[e.id]} onChange={v => setOn(e.id, v)}>
-                          <span className="bo-messaging-name">
-                            <span>{e.name}</span>
-                            <WhoAndWhen email={e} />
-                          </span>
-                        </Switch>
-                        <IconButton aria-label={`Edit ${e.name}`} isDisabled={!on[e.id]} onPress={() => onEdit(e.id)}>
-                          <Pencil aria-hidden size={16} />
-                        </IconButton>
-                      </li>
+                      <NotificationRow key={e.id} who={e.who} when={e.trigger} isSelected={on[e.id]}
+                        onChange={v => setOn(e, v)} onOpen={() => onEdit(e.id)}>
+                        {e.name}
+                      </NotificationRow>
                     ))}
-                  </ul>
+                  </NotificationList>
                 </div>
               ))}
             </div>
-          </Card>
+          </Panel>
         );
       })}
     </div>
   );
 }
 
-/** One automated email: its fields on the left, the email itself on the right (the prototype's edit + stage). */
-function AutomatedEditor({email}: {email: AutomatedEmail}) {
-  const [subject, setSubject] = useState(email.subject);
-  const [title, setTitle] = useState(email.title ?? '');
-  const [intro, setIntro] = useState(email.intro);
-  const [button, setButton] = useState(email.button ?? '');
+/** The email as it lands: a stand-in until the system draws an email preview. */
+function EmailPreview({email}: {email: AutomatedEmail}) {
   return (
-    <section aria-label={email.name} className="bo-messaging-section">
-      <Card tone="manage" title={email.name}>
-        <div className="bo-messaging-form">
-          <WhoAndWhen email={email} />
-          <TextField label="Replies should go to" defaultValue={SENDER.replyTo} />
-          <Divider />
-          <TextField label="Subject" value={subject} onChange={setSubject} />
-          {email.title != null && <TextField label="Title" value={title} onChange={setTitle} />}
-          <div className="bo-messaging-field">
-            <Label aria-hidden>Introduction</Label>
-            <RichTextEditor aria-label="Introduction" placeholder="Write an introduction" value={intro} onChange={setIntro} />
-          </div>
-          {email.button != null && <TextField label="Button text" value={button} onChange={setButton} />}
-          <Divider />
-          <div className="bo-messaging-buttons">
-            <span className="bo-note">Preview</span>
-            <span className="bo-push" />
-            <Button variant="secondary" size={32} onPress={() => toast('Test email sent', `“${subject}” to ${SENDER.replyTo}`)}>
-              <Send aria-hidden size={16} />Send me a test email</Button>
-          </div>
-          <Gap name="Email preview">
-            <dl className="bo-messaging-mailhead">
-              <dt className="bo-note">To</dt><dd>{email.who}</dd>
-              <dt className="bo-note">From</dt><dd>{SENDER.from}</dd>
-              <dt className="bo-note">Reply-To</dt><dd>{SENDER.replyTo}</dd>
-              <dt className="bo-note">Subject</dt><dd>{subject}</dd>
-            </dl>
-            <Divider />
-            <div className="bo-messaging-mailbody">
-              <strong>{title || subject}</strong>
-              {intro && <p>{intro}</p>}
-              {button && <span><Button variant="primary" size={32}>{button}</Button></span>}
-            </div>
-          </Gap>
-        </div>
-      </Card>
-    </section>
+    <Gap name="Email preview">
+      <dl className="bo-messaging-mailhead">
+        <dt className="bo-note">To</dt><dd>{email.who}</dd>
+        <dt className="bo-note">From</dt><dd>{SENDER.from}</dd>
+        <dt className="bo-note">Reply-To</dt><dd>{SENDER.replyTo}</dd>
+        <dt className="bo-note">Subject</dt><dd>{email.subject}</dd>
+      </dl>
+      <Divider />
+      <div className="bo-messaging-mailbody">
+        <strong>{email.title || email.subject}</strong>
+        {email.intro && <p>{email.intro}</p>}
+        {email.button && <span><Button variant="primary" size={32}>{email.button}</Button></span>}
+      </div>
+    </Gap>
   );
 }
 
+/**
+ * The Build tab's notification layout: the list, or an open email's page in its place (Notification row's "Email
+ * open" story: ←, "Send this email", its fields); the email itself on the stage beside it, with the test send.
+ */
 function AutomatedEmails() {
-  const emails = AUTOMATED.flatMap(g => g.types.flatMap(t => t.emails));
-  const [on, setOnMap] = useState<Record<string, boolean>>(() => Object.fromEntries(emails.map(e => [e.id, e.on])));
-  const [editing, setEditing] = useState<string | null>('pub');
-  const setOn = (id: string, v: boolean) => {
-    setOnMap(m => ({...m, [id]: v}));
-    if (!v && editing === id) setEditing(null);
+  const [on, setOnMap] = useState<Record<string, boolean>>(() => Object.fromEntries(ALL_AUTOMATED.map(e => [e.id, e.on])));
+  const [editing, setEditing] = useState<string | null>(null);
+  const write = (id: string, v: boolean) => setOnMap(m => ({...m, [id]: v}));
+  const setOn = (e: AutomatedEmail, v: boolean) => {
+    write(e.id, v);
+    undoable(v ? 'Email on' : 'Email off', `${e.name} ${v ? 'goes out again' : 'is no longer sent'}.`, () => write(e.id, !v));
   };
-  const current = emails.find(e => e.id === editing);
+  const current = ALL_AUTOMATED.find(e => e.id === editing);
   return (
     <>
       <div className="bo-messaging-intro">
-        <p className="bo-note">Emails sent automatically when something happens on the platform. Turn one off, or edit its content.</p>
+        <p className="bo-note">Emails sent automatically when something happens on the platform. Turn one off, or open it to edit its content.</p>
       </div>
       <GapLegend names={['Email preview']} />
       <div className="bo-messaging-split">
-        <AutomatedList on={on} setOn={setOn} onEdit={setEditing} />
         {current
-          ? <AutomatedEditor key={current.id} email={current} />
-          : <p className="bo-note">Choose an email that is on to edit it.</p>}
+          ? (
+            <NotificationEmail key={current.id} name={current.name} who={current.who} when={current.trigger}
+                backLabel="Back to automated emails" onBack={() => setEditing(null)}
+                isSelected={on[current.id]} onChange={v => setOn(current, v)}
+                replyTo={SENDER.replyTo} subject={current.subject} title={current.title} introduction={current.intro}
+                buttonText={current.button} />
+          )
+          : <AutomatedList on={on} setOn={setOn} onEdit={setEditing} />}
+        <Panel title="Preview" headingLevel={3}
+          description={current ? `Sent to: ${current.who}` : undefined}
+          actions={current && (
+            <Button variant="secondary" size={32} onPress={() => toast('Test email sent', `“${current.subject}” to ${SENDER.replyTo}`)}>
+              <Send aria-hidden size={16} />Send me a test email</Button>
+          )}>
+          {current
+            ? <EmailPreview email={current} />
+            : <EmptyState size="panel" headingLevel="none" icon={<Mail aria-hidden size={24} />} title="No email open"
+              description="Open an email that is on to edit it and see it here." />}
+        </Panel>
       </div>
     </>
   );
@@ -319,35 +357,44 @@ function AutomatedEmails() {
 
 // ── SMS ────────────────────────────────────────────────────────────────────
 
+/** The credits as Stat tiles, then the campaigns in the list shape every admin table shares. */
 function Sms() {
   const navigate = useNavigate();
   const used = SMS_BALANCE.usedCampaigns + SMS_BALANCE.usedTests;
+  const {current, pageCount, setPage, shown} = usePages(SMS, PAGE_SIZE);
   return (
-    <>
-      <div className="bo-messaging-intro">
-        <p className="bo-note">Send text messages to your participants.</p>
-        <Button variant="primary" size={32} onPress={() => navigate('/messaging/texting/new')}><Plus aria-hidden size={16} />Create SMS</Button>
+    <div className="bo-messaging-stack bo-messaging-lists">
+      <div className="bo-messaging-kpis">
+        <StatTile label="SMS credits remaining" value={n(SMS_BALANCE.purchased - used)} note={`of ${n(SMS_BALANCE.purchased)} credits purchased`} />
+        <StatTile label="SMS campaigns" value={n(SMS_BALANCE.usedCampaigns)} type="tall" />
+        <StatTile label="Test messages" value={n(SMS_BALANCE.usedTests)} type="tall" />
+        <StatTile label="Total used" value={n(used)} type="tall" />
       </div>
-      <div className="bo-messaging-stack">
-        <div className="bo-messaging-kpis">
-          <StatTile label="SMS credits remaining" value={n(SMS_BALANCE.purchased - used)} note={`of ${n(SMS_BALANCE.purchased)} credits purchased`} />
-          <StatTile label="SMS campaigns" value={n(SMS_BALANCE.usedCampaigns)} type="tall" />
-          <StatTile label="Test messages" value={n(SMS_BALANCE.usedTests)} type="tall" />
-          <StatTile label="Total used" value={n(used)} type="tall" />
+      <Banner>A message too long for one SMS is sent in several parts, and each part costs a credit for every recipient.</Banner>
+      <Panel title="SMS campaigns" headingLevel={3} description="Send text messages to your participants." flush
+        actions={<Button variant="primary" size={32} onPress={() => navigate('/messaging/texting/new')}><Plus aria-hidden size={16} />Create SMS</Button>}
+        toolbar={<TableToolbar aria-label="SMS tools" headingLevel={4} heading={smsWord(SMS.length)} />}
+        footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="SMS pages" />}>
+        <div className="bo-messaging-scroll">
+          <DataTable aria-label="SMS campaigns">
+            <DataTableHeader>
+              <DataTableColumn isRowHeader>Message</DataTableColumn>
+              <DataTableColumn>Status</DataTableColumn><DataTableColumn>Date</DataTableColumn>
+              <DataTableColumn align="number">Delivered</DataTableColumn><DataTableColumn align="number">Failed</DataTableColumn>
+            </DataTableHeader>
+            <DataTableBody>{shown.map(s => (
+              <DataTableRow key={s.id} id={s.id} textValue={s.label}>
+                <DataTableCell><DataTableStack strong sub={s.body}>{s.label}</DataTableStack></DataTableCell>
+                <DataTableCell><StatusBadge state={s.status === 'Sent' ? 'live' : 'draft'}>{s.status}</StatusBadge></DataTableCell>
+                <DataTableCell><span className="bo-messaging-nowrap">{s.date}</span></DataTableCell>
+                <DataTableCell align="number">{s.delivered == null ? '—' : n(s.delivered)}</DataTableCell>
+                <DataTableCell align="number">{s.failed == null ? '—' : n(s.failed)}</DataTableCell>
+              </DataTableRow>))}
+            </DataTableBody>
+          </DataTable>
         </div>
-        <Banner>A message too long for one SMS is sent in several parts, and each part costs a credit for every recipient.</Banner>
-        <Card tone="manage" title="Campaigns" summary={`${SMS.length} messages`}>
-          <ul className="bo-messaging-list" aria-label="SMS campaigns">
-            {SMS.map(s => (
-              <li key={s.id}>
-                <ListRow title={`${s.label}: ${s.body}`}
-                  status={s.status === 'Sent' ? `Sent ${s.date} · ${n(s.delivered!)} delivered` : `Draft · ${s.date.replace('Edited ', '')}`} />
-              </li>
-            ))}
-          </ul>
-        </Card>
-      </div>
-    </>
+      </Panel>
+    </div>
   );
 }
 
@@ -362,9 +409,8 @@ export function Messaging() {
     <Page title="Messaging">
       <Tabs defaultSelectedKey="custom">
         <TabList aria-label="Messaging channels">
-          {CHANNELS.map(({id, label, icon: Icon}) => (
-            <Tab key={id} id={id}><span className="bo-messaging-tab"><Icon aria-hidden size={16} />{label}</span></Tab>
-          ))}
+          {/* Tab lays out its own leading icon (Tabs' "With icons" story). */}
+          {CHANNELS.map(({id, label, icon: Icon}) => <Tab key={id} id={id}><Icon aria-hidden size={16} />{label}</Tab>)}
         </TabList>
         <TabPanels>
           {CHANNELS.map(c => <TabPanel key={c.id} id={c.id}><SectionHeading>{c.label}</SectionHeading>{c.body}</TabPanel>)}

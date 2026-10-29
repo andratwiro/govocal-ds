@@ -37,6 +37,13 @@ list; change any line and the agent follows. Newest first within each section.
 - Voting and Proposals Manage as a note → **a Panel over the method's List header and rows (Voting row, Proposals row)** → the Figma rows for those methods; other methods keep a note until drawn.
 - The rail sent a non-ideation Manage to Build → **the rail keeps the tab it is on** → every method has a Manage tab now.
 
+### Messaging
+
+- Automated emails as Cards of Switch rows with a pencil each (ours) vs the Build tab's Notification rows (a phase's emails) → **Notification rows in a Panel per recipient group, a Section label per kind; an open email takes the list's place (Notification email, ← back) and shows on a Preview Panel beside it, with the test send** → one way to list and edit an email that sends itself, here and on a phase.
+- Custom emails, SMS campaigns and a sent email's recipients drawn three ways (Data table in a Panel, List rows in a Card, Data table in a Card) → **Panel, Table toolbar (the count; the Filter menu and search on emails and recipients), Data table, Pagination for all three** → one list shape on every admin table.
+- The SMS composer as a Card with its buttons inline vs the email composer's Panel → **both Panels, Cancel (secondary) and the sends in the foot; the recipient count as the To Select's description** → one composer.
+- Switching an automated email, duplicating an email and deleting a draft changed things silently → **a Toast with Undo for each; Delete still confirms first** → "This cannot be undone" leaves the confirm.
+
 ## Building from the prototype review (29 Oct 2026)
 
 Calls made while planning the build of the review's findings (selectors, tables, side panel, feedback, forms,

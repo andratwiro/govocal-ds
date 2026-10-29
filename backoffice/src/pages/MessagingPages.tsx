@@ -1,14 +1,18 @@
 import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router';
-import {Mail, Send, Smartphone} from 'lucide-react';
+import {CircleCheck, Mail, Send, Smartphone} from 'lucide-react';
 import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell,
-  DataTablePerson} from '../../../src/components/gv/DataTable';
+  DataTablePerson, DataTableEmpty} from '../../../src/components/gv/DataTable';
 import {Button} from '../../../src/components/Button';
 import {TextField, TextArea} from '../../../src/components/TextField';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {Label} from '../../../src/components/Form';
 import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Card} from '../../../src/components/gv/Card';
+import {SearchField} from '../../../src/components/SearchField';
+import {TableToolbar} from '../../../src/components/gv/TableToolbar';
+import {Pagination} from '../../../src/components/gv/Pagination';
+import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
+import {FilterChips} from '../../../src/patterns/FilterChips';
 import {Panel} from '../../../src/components/gv/Panel';
 import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
 import {Divider} from '../../../src/components/gv/Divider';
@@ -32,6 +36,14 @@ const toast = (title: string, description?: string) => queue.add({title, descrip
  * route, until a reload.
  */
 export const emailStore: {emails: CustomEmail[]; sent?: string} = {emails: [...CUSTOM_EMAILS]};
+
+/** A list's page of rows; every admin table pages (docs/DECISIONS.md). */
+export function usePages<T>(rows: T[], size: number) {
+  const [page, setPage] = useState(1);
+  const pageCount = Math.max(1, Math.ceil(rows.length / size));
+  const current = Math.min(page, pageCount);
+  return {current, pageCount, setPage, shown: rows.slice((current - 1) * size, current * size)};
+}
 
 /** The "sent" confirmation's text (the Banner's Success story). */
 export const sentText = (subject: string, recipients: number) =>
@@ -72,10 +84,9 @@ export function EmailComposer() {
             <TextField label="From" defaultValue={SENDER.from} />
             <TextField label="Replies should go to" defaultValue={SENDER.replyTo} />
           </div>
-          <Select label="To" selectedKey={to} onSelectionChange={k => setTo(String(k))}>
+          <Select label="To" selectedKey={to} onSelectionChange={k => setTo(String(k))} description={`${n(GROUP_SIZES[to])} recipients`}>
             {GROUPS.map(g => <SelectItem key={g} id={g}>{g}</SelectItem>)}
           </Select>
-          <span className="bo-note">{n(GROUP_SIZES[to])} recipients</span>
           <Divider />
           <TextField label="Subject" placeholder="Add a subject line" value={subject} onChange={setSubject} />
           <div className="bo-messaging-field">
@@ -92,6 +103,50 @@ export function EmailComposer() {
 
 // ── A sent email's statistics ────────────────────────────────────────────────
 
+const RECIPIENT_STATUSES = ['Clicked', 'Opened', 'Delivered', 'Bounced'] as const;
+const RECIPIENT_FACETS: FilterFacet[] = [{id: 'status', label: 'Status', icon: <CircleCheck aria-hidden size={16} />,
+  options: RECIPIENT_STATUSES.map(st => ({id: st, label: st, count: RECIPIENTS.filter(r => r.status === st).length}))}];
+const recipientsWord = (v: number) => `${n(v)} ${v === 1 ? 'recipient' : 'recipients'}`;
+
+/** Who got it, in the list shape every admin table shares: count, filter and search over the table, pages below. */
+function RecipientList({sent}: {sent: number}) {
+  const [query, setQuery] = useState('');
+  const [filters, setFilters] = useState<FilterValue>({});
+  const q = query.trim().toLowerCase();
+  const rows = RECIPIENTS.filter(r => (!q || `${r.name} ${r.email}`.toLowerCase().includes(q))
+    && (!filters.status?.length || filters.status.includes(r.status)));
+  const {current, pageCount, setPage, shown} = usePages(rows, 10);
+  const fresh = <T,>(set: (v: T) => void) => (v: T) => { set(v); setPage(1); };
+  return (
+    <Panel title="Recipients" headingLevel={3} description={`A sample of the ${n(sent)} people it went to.`} flush
+      toolbar={<>
+        <TableToolbar aria-label="Recipient tools" headingLevel={4} heading={recipientsWord(rows.length)}>
+          <FilterMenu aria-label="Filter recipients" facets={RECIPIENT_FACETS} value={filters} onChange={fresh(setFilters)} countLabel={recipientsWord} />
+          <SearchField aria-label="Search recipients" placeholder="Search" value={query} onChange={fresh(setQuery)} />
+        </TableToolbar>
+        <FilterChips aria-label="Active filters" facets={RECIPIENT_FACETS} value={filters} onChange={fresh(setFilters)} />
+      </>}
+      footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Recipient pages" />}>
+      <div className="bo-messaging-scroll">
+        <DataTable aria-label="Recipients">
+          <DataTableHeader>
+            <DataTableColumn isRowHeader>Recipient</DataTableColumn>
+            <DataTableColumn>Status</DataTableColumn>
+          </DataTableHeader>
+          <DataTableBody renderEmptyState={() => <DataTableEmpty>No recipients match.</DataTableEmpty>}>
+            {shown.map(r => (
+              <DataTableRow key={r.id} id={r.id} textValue={r.name}>
+                <DataTableCell><DataTablePerson name={r.name} initials={r.name.split(' ').map(w => w[0]).join('')} sub={r.email} /></DataTableCell>
+                <DataTableCell><Badge>{r.status}</Badge></DataTableCell>
+              </DataTableRow>
+            ))}
+          </DataTableBody>
+        </DataTable>
+      </div>
+    </Panel>
+  );
+}
+
 export function EmailStats() {
   const {emailId} = useParams();
   const email = emailStore.emails.find(e => e.id === emailId);
@@ -103,6 +158,7 @@ export function EmailStats() {
     <Page title={email.subject} crumbs={MESSAGING_CRUMB}
       description={<>Sent {email.date} to {email.to}{email.project && <> · Project: {email.project}</>}</>}>
       <div className="bo-messaging-stack">
+        <SectionHeading>How it did</SectionHeading>
         <div className="bo-messaging-kpis">
           <StatTile label="Recipients" value={n(sent)} type="tall" />
           <StatTile label="Delivered" value={n(delivered)} note={`${n(sent - delivered)} bounced`} />
@@ -110,24 +166,7 @@ export function EmailStats() {
           <StatTile label="Clicked" value={`${email.clicked ?? 0}%`} note={`${n(pctOf(email.clicked))} people`} />
         </div>
         <SectionHeading>Who got it</SectionHeading>
-        <Card tone="manage" title="Recipients" summary={`${RECIPIENTS.length} of ${n(sent)} shown`}>
-          <div className="bo-messaging-scroll">
-            <DataTable aria-label="Recipients">
-              <DataTableHeader>
-                <DataTableColumn isRowHeader>Recipient</DataTableColumn>
-                <DataTableColumn>Status</DataTableColumn>
-              </DataTableHeader>
-              <DataTableBody>
-                {RECIPIENTS.map(r => (
-                  <DataTableRow key={r.id} id={r.id} textValue={r.name}>
-                    <DataTableCell><DataTablePerson name={r.name} initials={r.name.split(' ').map(w => w[0]).join('')} sub={r.email} /></DataTableCell>
-                    <DataTableCell><Badge>{r.status}</Badge></DataTableCell>
-                  </DataTableRow>
-                ))}
-              </DataTableBody>
-            </DataTable>
-          </div>
-        </Card>
+        <RecipientList sent={sent} />
       </div>
     </Page>
   );
@@ -146,27 +185,29 @@ export function SmsComposer() {
     <Page title="New SMS" crumbs={MESSAGING_CRUMB}>
       <SectionHeading>Message and preview</SectionHeading>
       <div className="bo-messaging-split">
-        <Card tone="manage" layout="stacked" title="Write a text message">
-          <div className="bo-messaging-form">
-            <Select label="To" selectedKey={to} onSelectionChange={k => setTo(String(k))}>
+        {/* The same composer as a new email (Panel's "In a composer" story): the form in the body, the actions in the foot. */}
+        <Panel title="Write a text message" headingLevel={3}
+          footer={<>
+            <Button variant="secondary" size={32} onPress={() => navigate('/messaging')}>Cancel</Button>
+            <Button variant="secondary" size={32} isDisabled={!body.trim()} onPress={() => toast('Test SMS sent', 'To your own phone number')}>
+              <Smartphone aria-hidden size={16} />Send test SMS</Button>
+            <Button variant="primary" size={32} isDisabled={!body.trim()}
+              onPress={() => { toast('SMS sent', `To ${to}`); navigate('/messaging'); }}><Send aria-hidden size={16} />Send now</Button>
+          </>}>
+          <div className="bo-messaging-fields">
+            <Select label="To" selectedKey={to} onSelectionChange={k => setTo(String(k))}
+              description={`Only the ${n(Math.round(GROUP_SIZES[to] * 0.4))} people with a phone number get it.`}>
               {GROUPS.map(g => <SelectItem key={g} id={g}>{g}</SelectItem>)}
             </Select>
-            <span className="bo-note">Only the {n(Math.round(GROUP_SIZES[to] * 0.4))} people with a phone number get it.</span>
-            <TextArea label="Message" placeholder="Write your message" value={body} onChange={setBody} />
-            <span className="bo-note" aria-live="polite">
-              {body.length} / {SMS_LENGTH * parts} characters · {parts} SMS per recipient
-            </span>
-            {parts > 1 && <Banner>This message is sent in {parts} parts, and each part costs a credit for every recipient.</Banner>}
-            <div className="bo-messaging-buttons">
-              <Button variant="quiet" size={32} onPress={() => navigate('/messaging')}>Cancel</Button>
-              <span className="bo-push" />
-              <Button variant="secondary" size={32} isDisabled={!body.trim()} onPress={() => toast('Test SMS sent', 'To your own phone number')}>
-                <Smartphone aria-hidden size={16} />Send test SMS</Button>
-              <Button variant="primary" size={32} isDisabled={!body.trim()}
-                onPress={() => { toast('SMS sent', `To ${to}`); navigate('/messaging'); }}><Send aria-hidden size={16} />Send now</Button>
+            <div className="bo-messaging-field">
+              <TextArea label="Message" placeholder="Write your message" value={body} onChange={setBody} />
+              <span className="bo-note" aria-live="polite">
+                {body.length} / {SMS_LENGTH * parts} characters · {parts} SMS per recipient
+              </span>
             </div>
+            {parts > 1 && <Banner tone="warning">This message is sent in {parts} parts, and each part costs a credit for every recipient.</Banner>}
           </div>
-        </Card>
+        </Panel>
         <PhonePreview aria-label="SMS preview">
           <Gap name="SMS bubble">
             <div className="bo-messaging-sms">
