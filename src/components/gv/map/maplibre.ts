@@ -33,7 +33,11 @@ export function createMapLibreEngine({container, view, isInteractive, label}: Ma
   const listeners = new Set<(event: MapEngineEvent) => void>();
   const emit = (event: MapEngineEvent) => listeners.forEach(l => l(event));
   map.on('move', () => emit({type: 'move'}));
-  map.on('moveend', () => emit({type: 'moveend'}));
+  let zoomTarget: number | null = null;
+  map.on('moveend', () => {
+    zoomTarget = null;
+    emit({type: 'moveend'});
+  });
   map.on('click', e => emit({type: 'press', point: {lat: e.lngLat.lat, lng: e.lngLat.lng}}));
   // A source's credits arrive with its metadata (a vector source's TileJSON), after the style.
   map.on('sourcedata', e => e.sourceDataType === 'metadata' && emit({type: 'attribution'}));
@@ -58,7 +62,12 @@ export function createMapLibreEngine({container, view, isInteractive, label}: Ma
       map.easeTo({...(center && {center: [center.lng, center.lat] as [number, number]}), ...(zoom != null && {zoom}),
         ...(!animate && {duration: 0})});
     },
-    zoomBy: delta => map.easeTo({zoom: map.getZoom() + delta}),
+    // Quick presses add up: a zoom while the last one still eases starts from where that one was going.
+    zoomBy: delta => {
+      const target = Math.min(map.getMaxZoom(), Math.max(map.getMinZoom(), (zoomTarget ?? map.getZoom()) + delta));
+      map.easeTo({zoom: target});
+      zoomTarget = target;
+    },
     get minZoom() {
       return map.getMinZoom();
     },
