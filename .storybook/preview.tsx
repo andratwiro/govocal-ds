@@ -25,6 +25,11 @@ const preview: Preview = {
       test: 'todo',
       options: {runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']},
         rules: {'target-size': {enabled: true}}}
+    },
+    options: {
+      storySort: {
+        order: ['Overview', ['Foundations', 'Icons'], 'Components', 'Patterns', 'Back office']
+      }
     }
   }
 };

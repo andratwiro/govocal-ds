@@ -1,0 +1,55 @@
+import {Meta, IconGallery, IconItem} from '@storybook/addon-docs/blocks';
+import * as lucide from 'lucide-react';
+import {toPascalCase} from '../scripts/lib/icons.mjs';
+import iconsJson from '../tokens/icons.json';
+
+<Meta title="Overview/Icons" />
+
+# Icons
+
+Lucide icons. Tali's Figma names them; the full set is at [lucide.dev](https://lucide.dev).
+
+export const figmaNames = iconsJson.figma;
+export const hasLucide = name => Boolean(lucide[toPascalCase(name)]);
+export const inFigma = figmaNames.filter(hasLucide);
+export const noMatch = figmaNames.filter(name => !hasLucide(name));
+export const prototypeOnly = ['map-pin', 'map', 'layout-grid', 'eye-off', 'grip-vertical', 'calendar', 'clock',
+  'globe', 'flag', 'lock', 'message-circle', 'megaphone', 'thumbs-up', 'trash-2', 'pencil', 'external-link',
+  'panel-left-close', 'panel-left-open'];
+export const IconPair = ({name}) => {
+  const Icon = lucide[toPascalCase(name)];
+  return <>
+    <Icon size={16} aria-hidden="true" />
+    <span style={{marginInlineStart: 8}}><Icon size={20} aria-hidden="true" /></span>
+  </>;
+};
+
+## In Tali's Figma
+
+Named on Tali's `Icons` page, with a `lucide-react` match.
+
+<IconGallery>
+  {inFigma.map(name => (
+    <IconItem key={name} name={name}><IconPair name={name} /></IconItem>
+  ))}
+</IconGallery>
+
+## Drawn in Figma, no Lucide match
+
+Named on Tali's `Icons` page, but `lucide-react` has nothing by that name yet — rename or replace in Figma.
+
+<IconGallery>
+  {noMatch.map(name => (
+    <IconItem key={name} name={name}><lucide.CircleDashed size={16} aria-hidden="true" style={{opacity: 0.35}} /></IconItem>
+  ))}
+</IconGallery>
+
+## Used by Tali's prototype, not in Figma yet
+
+Her [augur prototype](https://govocal.augur.page/ux-ui-audit/design/?theme=0) already draws these; Figma hasn't named them.
+
+<IconGallery>
+  {prototypeOnly.map(name => (
+    <IconItem key={name} name={name}><IconPair name={name} /></IconItem>
+  ))}
+</IconGallery>

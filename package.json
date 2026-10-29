@@ -4,9 +4,12 @@
   "type": "module",
   "scripts": {
     "storybook": "storybook dev -p 6006",
+    "prestorybook": "node scripts/token-usage.mjs",
     "tokens:pull": "node scripts/figma-pull.mjs",
     "tokens:build": "node scripts/build-tokens.mjs",
+    "tokens:usage": "node scripts/token-usage.mjs",
     "figma:spec": "node scripts/figma-spec.mjs",
+    "prebuild:storybook": "node scripts/token-usage.mjs",
     "build:storybook": "storybook build -o dist/storybook --quiet",
     "build:backoffice": "vite build --config backoffice/vite.config.ts",
     "build:site": "node scripts/assemble-site.mjs",
@@ -28,6 +31,7 @@
     "@axe-core/playwright": "^4.14.0",
     "@playwright/test": "^1.64.1",
     "@storybook/addon-a11y": "10.6",
+    "@storybook/addon-designs": "^12.0.0",
     "@storybook/addon-docs": "10.6",
     "@storybook/addon-mcp": "10.6",
     "@storybook/react-vite": "10.6",
@@ -37,6 +41,7 @@
     "@vitejs/plugin-react": "^6.1.2",
     "playwright": "^1.64.1",
     "storybook": "10.6",
+    "storybook-design-token": "^5.0.0",
     "typescript": "5.9",
     "vite": "^8.3.5",
     "vitest": "^5.0.5"

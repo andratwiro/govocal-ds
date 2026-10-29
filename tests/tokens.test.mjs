@@ -1,6 +1,7 @@
 import {describe, it, expect} from 'vitest';
 import {parseFoundations} from '../scripts/lib/foundations.mjs';
 import {toCss} from '../scripts/lib/css.mjs';
+import {parseIcons} from '../scripts/lib/icons.mjs';
 
 const text = (name, chars, style = {}) => ({type: 'TEXT', name, characters: chars, style});
 const swatch = (path, prim, color, opacity, id) => ({type: 'FRAME', name: path, children: [
@@ -70,5 +71,32 @@ describe('toCss', () => {
     expect(css).toContain("--gv-type-stat-small: 500 20px/24px var(--gv-font-family);");
     expect(css).toContain("--gv-font-family: 'Public Sans', system-ui, sans-serif;");
     expect(css).toMatch(/--gv-shadow-dialog: 0px 24px 60px 0px rgb\(15 20 35 \/ 0\.24\);/);
+  });
+});
+
+describe('toCss annotations for storybook-design-token', () => {
+  const css = toCss(parseFoundations(page).tokens);
+  it('opens one annotated category per kind', () => {
+    for (const c of ['Colour primitives @presenter Color', 'surface @presenter Color', 'Space @presenter Spacing',
+      'Radius @presenter BorderRadius', 'Font size @presenter FontSize', 'Line height @presenter LineHeight',
+      'Font weight @presenter FontWeight', 'Shadow @presenter Shadow'])
+      expect(css).toContain(`/** @tokens ${c} */`);
+  });
+  it('splits type roles for the presenters', () => {
+    expect(css).toContain('--gv-type-stat-small-size: 20px;');
+    expect(css).toContain('--gv-type-stat-small-line: 24px;');
+    expect(css).toContain('--gv-type-stat-small-weight: 500;');
+  });
+});
+
+describe('parseIcons', () => {
+  it('drops size suffixes and the Icon/ prefix, and dedupes', () => {
+    const iconsPage = {type: 'CANVAS', name: 'Icons', children: [{type: 'FRAME', name: 'Icons', children: [
+      {type: 'COMPONENT', name: 'x'},
+      {type: 'COMPONENT', name: 'link/16'},
+      {type: 'COMPONENT', name: 'link/20'},
+      {type: 'COMPONENT', name: 'chevron-right-thin'}
+    ]}]};
+    expect(parseIcons(iconsPage)).toEqual(['chevron-right-thin', 'link', 'x']);
   });
 });
