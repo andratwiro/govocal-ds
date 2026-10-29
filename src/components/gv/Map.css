@@ -2,22 +2,24 @@
 
 /* Map (the prototype's Manage map view `.pj-mgmap` and Configure map `.pj-mapstage`). The tiles are the engine's;
    everything on them is drawn here from tokens: pins, the open pin's card, the zoom buttons, overlays, the credits.
-   The root fills the height the page gives it (320 at the least, until layout size tokens exist). The pins sit in
+   The root fills the height the page gives it (240 at the least, until layout size tokens exist). The pins sit in
    screen pixels (a map is not mirrored right to left); the chrome around them follows the reading direction. */
 .gv-map {
   position: relative;
   isolation: isolate;
-  overflow: hidden;
+  /* clip, not hidden: focus moving to a pin or the card must never scroll the map's layers out of line. */
+  overflow: clip;
   container-type: inline-size;
   box-sizing: border-box;
-  min-height: 320px; /* raw: no layout size token yet (as Tile grid's widths) */
+  min-height: 240px; /* raw: no layout size token yet (as Tile grid's widths) */
   border-radius: var(--gv-radius-8);
   background: var(--gv-surface-stage);
   font-family: var(--gv-font-family);
   color: var(--gv-text-primary);
 }
 
-.gv-map__canvas {
+/* Two classes: MapLibre's own sheet (loaded with the engine, later) makes its container `position: relative`. */
+.gv-map > .gv-map__canvas {
   position: absolute;
   inset: 0;
 

@@ -112,11 +112,11 @@ interface Marker {
 }
 
 /**
- * A map with pins: places as pins on map tiles, a card for the open pin, zoom buttons and the tiles' credits;
- * overlays (a Banner, a count of items without a place, a legend) sit in its corners. Pins are buttons with their
- * label: Tab reaches the map's pins once and the arrow keys move between them (to the nearest one that way), Enter or
- * a click opens a pin's card and Esc closes it. The chrome is the system's (tokens); the tiles come from an engine
- * (MapLibre, OpenFreeMap's tiles) loaded only when a map draws. Not in Figma.
+ * A map with pins: places on map tiles, a card for the open pin, overlays in its corners. Zoom buttons and the
+ * tiles' credits come with it; a Banner, a count of items without a place or a legend go in `MapOverlay`s. Pins are
+ * buttons named by their label: Tab reaches the map's pins once and the arrow keys move between them (to the nearest
+ * one that way), Enter or a click opens a pin's card and Esc closes it. The chrome is the system's (tokens); the tiles
+ * come from an engine (MapLibre with OpenFreeMap's tiles) loaded only when a map draws. Not in Figma.
  *
  * ```tsx
  * <Map aria-label="Ideas on the map" items={located} selectedKey={open} onSelectionChange={setOpen} hoveredKey={hot}>
@@ -292,7 +292,8 @@ export function Map<T extends MapItem = MapItem>({
   }, [selected, status, isInside]);
 
   // ── Keyboard ──
-  const focusMarker = (key: string) => markerEls.current[key]?.querySelector<HTMLElement>('.gv-map-pin')?.focus();
+  const focusMarker = (key: string) =>
+    markerEls.current[key]?.querySelector<HTMLElement>('.gv-map-pin')?.focus({preventScroll: true});
   const onPinKeyDown = (key: string) => (e: KeyboardEvent) => {
     const direction = ARROWS[e.key];
     if (direction) {
@@ -359,11 +360,11 @@ export function Map<T extends MapItem = MapItem>({
       {children}
       {isInteractive && (
         <div className="gv-map__zoom" role="group" aria-label="Zoom">
-          <IconButton aria-label="Zoom in" isDisabled={!zoomControls || viewZoom >= zoomControls.maxZoom}
+          <IconButton aria-label="Zoom in" tone="strong" isDisabled={!zoomControls || viewZoom >= zoomControls.maxZoom}
             onPress={() => engineRef.current?.zoomBy(1)}>
             <Plus aria-hidden size={16} />
           </IconButton>
-          <IconButton aria-label="Zoom out" isDisabled={!zoomControls || viewZoom <= zoomControls.minZoom}
+          <IconButton aria-label="Zoom out" tone="strong" isDisabled={!zoomControls || viewZoom <= zoomControls.minZoom}
             onPress={() => engineRef.current?.zoomBy(-1)}>
             <Minus aria-hidden size={16} />
           </IconButton>
