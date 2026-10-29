@@ -47,6 +47,8 @@ Calls made while emptying the words guard's `TO_CONVERT` list, adding the Locale
 ## Back office: the project lead's asks (30 Oct 2026)
 
 - Users: "Pagination on every admin table" (below, prototype review) vs the project lead's virtualised Users tab → **the Users list is one virtualised table (5,012 people, the twelve and 5,000 invented residents), no pages; the header's select-all ticks every row the list and search leave (`toKeySet`), the table as tall as its rows up to 70% of the window** → a real platform's users run to thousands; the Data table's "Virtualized" story is the recipe. The other admin lists keep their pages.
+- Manage tab, Map: the story's map has a fixed centre and zoom, the page's ideas spread wider → **the page's map has no `center`, so it opens fitted to every idea with a place; a List / Map Segmented control in the toolbar; in Map the whole filtered list sits beside the map in one column (no pages, no checkboxes; the selection made in List stays); no add-by-click Banner** → every pin in view on arrival; the page has no "add an input here" flow behind a click yet, so it doesn't promise one.
+- Manage tab, Map: the open idea opens the Side panel in List, but the floating panel would cover the map's list → **in Map an open idea is its pin's card and its row's mark; the card's "Open idea" opens the Side panel** → the list stays usable for hover and picking; one open idea for the map, the list and the panel.
 
 ## Maps (29 Oct 2026)
 

@@ -1,14 +1,15 @@
-import {useState, type Dispatch, type ReactNode, type SetStateAction} from 'react';
+import {useMemo, useState, type Dispatch, type ReactNode, type SetStateAction} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router';
-import {CalendarDays, CircleCheck, Copy, Download, ExternalLink, FileChartColumn, FileText, Inbox, Lightbulb, Link2, Lock, Mail,
-  MessageSquareText, Paperclip, MapPin, Plus, Settings, Sparkles, SquarePen, Tag, Trash2, TriangleAlert, Upload, User, Users} from 'lucide-react';
+import {CalendarDays, CircleCheck, Copy, Download, ExternalLink, FileChartColumn, FileText, Inbox, Lightbulb, Link2, List, Lock, Mail,
+  Map as MapIcon, MessageSquareText, Paperclip, MapPin, Plus, Settings, Sparkles, SquarePen, Tag, Trash2, TriangleAlert, Upload, User, Users} from 'lucide-react';
 import {ACCESS_WHO_VALUE, AccessRightsModal, type AccessWho, ActionRow, ActionRowList, Avatar, Badge, Banner,
   BulkOfficialUpdate, Button, Card, type ChartColor, CommentThread, CompactButton, DashboardBars, DashboardCard,
   DashboardDemographic, DashboardList, DashboardRanking, DashboardTopics, DataTable, DataTableAddColumn,
   DataTableAssignee, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader, DataTableRow,
-  DataTableTags, DataTableText, DataTableThumbnail, DateRangeField, DropZone, EmptyState, FileList,
+  DataTableStack, DataTableTags, DataTableText, DataTableThumbnail, DateRangeField, DropZone, EmptyState, FileList,
   type FileListItemData, FilterChips, type FilterFacet, FilterMenu, type FilterValue, GroupedTab, GroupedTabList,
-  GroupedTabPanel, GroupedTabs, IconButton, LineChart, ListHeader, type ListHeaderColumn, Menu, MenuItem, MenuSection,
+  GroupedTabPanel, GroupedTabs, IconButton, type Key, LineChart, ListHeader, type ListHeaderColumn, MapCard, MapChip,
+  type MapItem, MapOverlay, MapView, Menu, MenuItem, MenuSection,
   MenuTrigger, Modal, NotificationEmail, NotificationRow, NotificationRowList, OfficialUpdate, OptionList, Pagination,
   Panel, PanelSection, ParticipantActionList, ParticipantActionRow, ParticipantLimit, PhaseTimeline, PhoneHeader,
   PhoneImage, PhonePreview, PhoneStage, type PostedUpdate, ProjectHeader, PropertyList, PropertyListItem, ProposalsRow,
@@ -482,6 +483,9 @@ const PICTURE_LIST = Object.values(PICTURES);
 const pictureOf = (i: Idea) => (i.hasPicture ? PICTURE_LIST[(Number(i.id.replace(/\D/g, '')) - 1) / 3 % PICTURE_LIST.length] : undefined);
 const person = (name: string) => (name === 'Unassigned' ? undefined : name);
 type Sort = {column: string | number; direction: 'ascending' | 'descending'};
+// The Map view's "In the Manage tab" story: a pin per idea with a place, its card with the idea's counts.
+type IdeaPin = MapItem & {idea: Idea};
+const countsOf = (i: Idea) => [`${i.likes} ${i.likes === 1 ? 'like' : 'likes'}`, `${i.comments} ${i.comments === 1 ? 'comment' : 'comments'}`];
 
 // A change in the side panel (or the Selection bar's Official update) applies at once; its toast can undo it.
 const undoToast = (title: string, undo: () => void, body?: string) =>
@@ -531,6 +535,15 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
   const [extra, setExtra] = useState<Set<string | number>>(new Set());
   const [updating, setUpdating] = useState(false);
   const [note, setNote] = useState('');
+  // List or Map (the toolbar's switch); the idea a row of the map's list is hovering, to mark its pin.
+  const [mode, setMode] = useState<'list' | 'map'>('list');
+  const [hot, setHot] = useState<Key | null>(null);
+  // In Map the open idea is its pin's card; the side panel, which would cover the list, opens from the card.
+  const [reading, setReading] = useState(false);
+  const pinCard = ({idea: i}: IdeaPin) => (
+    <MapCard title={i.text} status={i.status} details={countsOf(i)} location={i.place?.where}
+      actions={<Button variant="secondary" size={32} onPress={() => setReading(true)}>Open idea</Button>} />
+  );
   // A new search, filter or quick view starts again from the first page, with nothing selected.
   const setFilters = (v: FilterValue) => { setFiltersRaw(v); setSelected(new Set()); setPage(1); };
   const setQuery = (v: string) => { setQueryRaw(v); setPage(1); };
@@ -552,6 +565,10 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
   const current = Math.min(page, pageCount);
   const rows = shown.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
   const picked = shown.filter(i => selected.has(i.id)).map(i => i.id);
+  const pins = useMemo<IdeaPin[]>(() => shown.flatMap(i => (i.place
+    ? [{id: i.id, lat: i.place.lat, lng: i.place.lng, label: i.text, status: i.status, idea: i}] : [])),
+  [shown.map(i => `${i.id}:${i.status}`).join()]); // eslint-disable-line react-hooks/exhaustive-deps
+  const unplaced = shown.length - pins.length;
   const edit = (change: (i: Idea) => Idea) => setIdeas(all => all.map(i => (picked.includes(i.id) ? change(i) : i)));
   const pickedIdeas = ideas.filter(i => picked.includes(i.id));
   const sharedTags = IDEA_TAGS.filter(t => pickedIdeas.length > 0 && pickedIdeas.every(i => i.tags.includes(t)));
@@ -668,6 +685,11 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
                 <TableToolbarHeading>{ideasWord(shown.length)}</TableToolbarHeading>
               </SelectionBar>
             )}>
+              <SegmentedControl size={30} aria-label="View" disallowEmptySelection selectedKeys={[mode]}
+                onSelectionChange={k => { setMode([...k][0] as 'list' | 'map'); setReading(false); }}>
+                <SegmentedControlItem id="list"><List aria-hidden />List</SegmentedControlItem>
+                <SegmentedControlItem id="map"><MapIcon aria-hidden />Map</SegmentedControlItem>
+              </SegmentedControl>
               <SearchField isCollapsible aria-label="Search ideas" placeholder="Search" value={query} onChange={setQuery} />
               <FilterMenu aria-label="Filter ideas" facets={facets} value={filters} onChange={setFilters} countLabel={ideasWord} />
             </TableToolbar>
@@ -676,10 +698,47 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
             {note && <p role="status" className="bo-note bo-phase-flush">{note}</p>}
           </>
         )}
-        footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Idea pages" />}>
-        {/* The checkboxes keep the bulk selection, so the open idea can't also be the table's selection (the Side panel
+        footer={mode === 'list' && <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Idea pages" />}>
+        {/* Map: the Map view's "In the Manage tab" story, opening on all the ideas (no centre: it fits its pins). The map beside a one-column list of the same ideas (the whole
+            filtered list, no pages); one open idea for both (the map's value, the list's openKey, the side panel), a
+            hovered row marks its pin and a hovered pin its row. The chip counts the ideas the map can't show. */}
+        {mode === 'map' ? (
+          <div className="bo-phase-map">
+            <MapView aria-label="Ideas on the map" items={pins} className="bo-phase-map-view"
+              value={open} onChange={k => { setReading(false); setOpen(k == null ? null : String(k)); }} hoveredKey={hot} onHoverChange={setHot}
+              renderCard={pinCard}>
+              {unplaced > 0 && (
+                <MapOverlay placement="bottom-start">
+                  <MapChip>{unplaced} {unplaced === 1 ? 'idea' : 'ideas'} without a location</MapChip>
+                </MapOverlay>
+              )}
+            </MapView>
+            <div className="bo-phase-map-list">
+              {/* A row reports its hover only when it does something: its action opens the idea. */}
+              <DataTable aria-label="Ideas" density="compact" openKey={open}
+                onRowAction={k => { setReading(false); setOpen(o => (o === String(k) ? null : String(k))); }}>
+                <DataTableHeader>
+                  <DataTableColumn isRowHeader>Idea</DataTableColumn>
+                </DataTableHeader>
+                <DataTableBody renderEmptyState={() => (
+                  <DataTableEmpty>{ideas.length ? 'No ideas match. Clear the filters to see them all.' : 'No ideas here yet.'}</DataTableEmpty>
+                )}>
+                  {shown.map(i => (
+                    <DataTableRow key={i.id} id={i.id} textValue={i.text} onHoverChange={h => setHot(h ? i.id : null)}>
+                      <DataTableCell>
+                        <DataTableStack sub={[i.screening ? 'Waiting for approval' : i.status, ...countsOf(i),
+                          ...(i.place ? [] : ['No location'])].join(' · ')}>{i.text}</DataTableStack>
+                      </DataTableCell>
+                    </DataTableRow>
+                  ))}
+                </DataTableBody>
+              </DataTable>
+            </div>
+          </div>
+        ) : (
+        /* The checkboxes keep the bulk selection, so the open idea can't also be the table's selection (the Side panel
             story's single-select `selectedKeys=[open]`): a row's action opens it instead, as in the Data table's
-            "In a panel" story. */}
+            "In a panel" story. */
         <DataTable aria-label="Ideas" showChecksOnHover selectionMode="multiple"
           selectedKeys={selected} onSelectionChange={k => setSelected(new Set(k === 'all' ? [...selected, ...rows.map(r => r.id)] : k))}
           sortDescriptor={sort} onSortChange={d => { setSort(d as Sort); setPage(1); }}
@@ -719,8 +778,10 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
             })}
           </DataTableBody>
         </DataTable>
+        )}
       </Panel>
-      <SidePanel label={phase.title} labels={{previous: 'Previous idea', next: 'Next idea'}} isOpen={!!idea} onOpenChange={o => !o && setOpen(null)}
+      <SidePanel label={phase.title} labels={{previous: 'Previous idea', next: 'Next idea'}} isOpen={!!idea && (mode === 'list' || reading)}
+        onOpenChange={o => { if (o) return; setReading(false); if (mode === 'list') setOpen(null); }}
         position={at >= 0 ? {current: at + 1, total: shown.length} : undefined}
         onPositionChange={openAt}
         returnFocus={() => (open ? rowOf(open) : null)}>

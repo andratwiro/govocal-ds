@@ -587,3 +587,68 @@ test('the rail deletes any phase but the one on screen', async ({page}) => {
   await expect(rail.getByRole('link')).toHaveCount(6);
   await expect(page.getByText('Recruit volunteers deleted')).toBeVisible();
 });
+
+// The Map view's "In the Manage tab" story. Nothing leaves the machine (as e2e/map.spec.ts): the tile style is answered
+// with a tiny local one, anything else off the local server is refused. The pins, card and list need no tiles.
+const MAP_STYLE = {version: 8, sources: {credits: {type: 'geojson', data: {type: 'FeatureCollection', features: []},
+  attribution: '&copy; OpenStreetMap'}}, layers: [{id: 'ground', type: 'background', paint: {'background-color': '#eef0ec'}}]};
+
+test('Map: a List / Map switch; the map beside a one-column list, one open idea, a hovered row marks its pin', async ({page, baseURL}) => {
+  const local = new globalThis.URL(baseURL!).host;
+  const offsite: string[] = [];
+  await page.context().route(url => url.host !== local, route => {
+    const url = route.request().url();
+    offsite.push(url);
+    return url.startsWith('https://tiles.openfreemap.org/styles/')
+      ? route.fulfill({contentType: 'application/json', body: JSON.stringify(MAP_STYLE)})
+      : route.abort();
+  });
+  await page.goto(URL);
+  await expect(page.getByRole('radio', {name: 'List'})).toBeChecked();
+  await page.getByRole('radio', {name: 'Map'}).click();
+  await expect(page.getByRole('radio', {name: 'Map'})).toBeChecked();
+  const map = page.locator('.gv-map');
+  await expect(map).toHaveAttribute('data-status', 'ready');
+  // No pages in Map: the list beside the map holds every idea, in one column.
+  await expect(page.getByRole('navigation', {name: 'Idea pages'})).toHaveCount(0);
+  await expect(table(page).getByRole('columnheader')).toHaveCount(1);
+  await expect(rows(page)).toHaveCount(IDEAS.length);
+  // The chip counts the ideas the map can't show.
+  const unplaced = IDEAS.filter(i => !i.place).length;
+  expect(unplaced).toBeGreaterThan(0);
+  await expect(map.getByText(`${unplaced} ideas without a location`)).toBeVisible();
+  await expect(map.locator('.gv-map-pin')).toHaveCount(IDEAS.length - unplaced);
+
+  // A hovered row marks its pin.
+  const first = IDEAS[0];
+  await rows(page).first().hover();
+  await expect(map.locator('.gv-map__marker[data-hot]')).toHaveCount(1);
+  await expect(map.locator('.gv-map__marker[data-hot] .gv-map-pin')).toHaveAttribute('aria-label', first.text);
+  // The map opens on all the ideas: every pin in view.
+  await expect(map.locator('.gv-map__marker[data-outside]')).toHaveCount(0);
+  // A row opens its idea: its pin opens with its card (the side panel would cover the list: it opens from the card).
+  await rows(page).first().click();
+  await expect(map.getByRole('button', {name: first.text, exact: true})).toHaveAttribute('aria-expanded', 'true');
+  await expect(rows(page).first()).toHaveAttribute('aria-current', 'true');
+  await expect(panel(page)).toHaveCount(0);
+  await map.getByRole('button', {name: 'Open idea'}).click();
+  await expect(panel(page)).toContainText(first.text);
+  await page.keyboard.press('Escape');
+  await expect(panel(page)).toHaveCount(0);
+  await expect(map.getByRole('button', {name: first.text, exact: true})).toHaveAttribute('aria-expanded', 'true');
+  // Pressing the row again closes the idea.
+  await rows(page).first().click();
+  await expect(rows(page).first()).not.toHaveAttribute('aria-current', 'true');
+  a11yReport(await new AxeBuilder({page}).include('.bo-phase-map')
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze()
+    .then(r => r.violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`)));
+
+  // Back to List: the table with its pages.
+  await page.getByRole('radio', {name: 'List'}).click();
+  await expect(page.getByRole('navigation', {name: 'Idea pages'})).toBeVisible();
+  await expect(rows(page)).toHaveCount(onPage(IDEAS.length));
+  // Every request off the machine was answered here or refused; the map asked for nothing but its style (the page's
+  // web font is refused too).
+  const asked = offsite.filter(u => !/^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(u));
+  expect(asked.every(u => u.startsWith('https://tiles.openfreemap.org/styles/')), asked.join('\n')).toBe(true);
+});

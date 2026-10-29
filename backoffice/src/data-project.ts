@@ -65,7 +65,20 @@ export type Idea = {
   screening?: boolean;
   /** The author added a picture (the page draws one of the invented illustrations). */
   hasPicture: boolean;
+  /** Where it is: a point and the street it names. Left out: the author gave no location. */
+  place?: {lat: number; lng: number; where: string};
 };
+
+/** The invented town the ideas sit in (the Map view stories' centre), and where each street runs from it. */
+const IDEA_MAP_CENTRE = {lat: 52.0907, lng: 5.1214};
+const STREET_AT: [number, number][] = [[0.004, -0.008], [-0.005, 0.006], [0.006, 0.009], [-0.003, -0.011], [0.001, 0.002], [-0.007, -0.002]];
+/** A point near street `s`, the same every time (a hash of the idea's number). */
+function near(s: number, n: number) {
+  const seed = Math.imul(n + 1, 2654435761) >>> 0;
+  const [dLat, dLng] = STREET_AT[s];
+  return {lat: IDEA_MAP_CENTRE.lat + dLat + ((seed % 1000) / 1000 - 0.5) * 0.003,
+    lng: IDEA_MAP_CENTRE.lng + dLng + (((seed >>> 10) % 1000) / 1000 - 0.5) * 0.005};
+}
 
 const PLACES = ['Wrenfield Avenue', 'Quillmoor Road', 'Tamsel Park', 'Brindle Street', 'Hollowbrook Square', 'Orchard Reach'];
 const TEMPLATES: [string, string[]][] = [
@@ -110,9 +123,10 @@ export const IDEAS: Idea[] = Array.from({length: 124}, (_, n) => {
   const t = n % TEMPLATES.length;
   const [text, tags] = TEMPLATES[t];
   const status = IDEA_STATUSES[(n * 5 + Math.floor(n / 7)) % IDEA_STATUSES.length];
+  const street = (t + Math.floor(n / TEMPLATES.length)) % PLACES.length;
   return {
     id: `idea-${n + 1}`,
-    text: text.replace('{p}', PLACES[(t + Math.floor(n / TEMPLATES.length)) % PLACES.length]),
+    text: text.replace('{p}', PLACES[street]),
     status, tags,
     assignee: IDEA_ASSIGNEES[n % 5 < 2 ? 0 : (n % 5) - 1] ?? 'Unassigned',
     source: n % 9 === 4 ? 'Imported' : 'Online',
@@ -122,7 +136,9 @@ export const IDEAS: Idea[] = Array.from({length: 124}, (_, n) => {
     warning: WARNINGS[n],
     author: AUTHORS[n % AUTHORS.length], date: `${21 - (n % 21)} September 2026`, dislikes: (n * 7) % 9,
     screening: SCREENING.has(n) || undefined,
-    hasPicture: n % 3 === 0
+    hasPicture: n % 3 === 0,
+    // One in four came without a location.
+    place: n % 4 === 1 ? undefined : {...near(street, n), where: PLACES[street]}
   };
 });
 
