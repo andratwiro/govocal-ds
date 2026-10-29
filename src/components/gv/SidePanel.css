@@ -5,7 +5,7 @@
    token: the nearest), the panel fill and the dialog shadow. No scrim: the list behind stays usable. It slides in
    24 from the end edge as it arrives. Inline, it fills its column in the page's flow and doesn't move. */
 .gv-side-panel {
-  --gv-side-panel-shift: 24px;
+  --gv-side-panel-shift: var(--gv-space-24);
   position: fixed;
   inset-block: var(--gv-space-16);
   inset-inline-end: var(--gv-space-16);
@@ -23,7 +23,7 @@
   animation: gv-side-panel-in var(--gv-motion-duration-slow) var(--gv-motion-easing-enter);
 
   &:dir(rtl) {
-    --gv-side-panel-shift: -24px;
+    --gv-side-panel-shift: calc(-1 * var(--gv-space-24));
   }
 
   &[data-inline] {

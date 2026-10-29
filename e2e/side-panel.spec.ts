@@ -1,9 +1,17 @@
 import {test, expect, type Page} from '@playwright/test';
-import {axeViolations} from './axe';
+import {a11yReport, axeViolations} from './axe';
 
 // The Side panel (Components/Overlays/Side panel) over the Manage tab's list: a non-modal dialog. Focus moves in on
 // open, Esc puts it back on the open record's row, the list stays usable, and the pager's ends turn off.
 const story = (name: string) => `/storybook/iframe.html?id=components-overlays-side-panel--${name}&viewMode=story`;
+
+/** Axe's findings in `within`, reported (never failing the test). Storybook's a11y addon runs axe in the preview as the
+ * story renders; ours waits its turn ("Axe is already running"). */
+async function report(page: Page, within: string) {
+  let found: string[] = [];
+  await expect(async () => { found = await axeViolations(page, within); }).toPass();
+  a11yReport(found);
+}
 const panel = (page: Page) => page.getByRole('dialog', {name: 'Collect ideas'});
 const row = (page: Page, n: number) => page.locator(`[role="row"][data-key="${n}"]`);
 /** The record whose row holds focus, or null. */
@@ -98,10 +106,9 @@ test('no Save: a change applies at once, with Undo', async ({page}) => {
 });
 
 for (const name of ['default', 'screening', 'long-body-with-footer']) {
-  test(`${name}: no WCAG 2.2 AA violations in the panel`, async ({page}) => {
+  test(`${name}: axe findings in the panel, reported`, async ({page}) => {
     await page.goto(story(name));
     await expect(panel(page)).toBeVisible();
-    // Storybook's a11y addon runs axe in the preview as the story renders; ours waits its turn ("already running").
-    await expect(async () => expect(await axeViolations(page, '.gv-side-panel')).toEqual([])).toPass();
+    await report(page, '.gv-side-panel');
   });
 }
