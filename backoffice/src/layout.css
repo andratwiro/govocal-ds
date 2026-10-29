@@ -149,3 +149,12 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-users-nowrap { white-space: nowrap; }
 .bo-users-scroll { overflow-x: auto; }
 .bo-users-toolbar > .gv-checkbox { flex: none; white-space: nowrap; }
+/* ── Tools ── */
+.bo-tools-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: var(--gv-space-16); }
+.bo-tools-item { display: flex; }
+.bo-tools-body { display: grid; gap: var(--gv-space-12); align-content: start; }
+.bo-tools-body > .bo-gap-inline { display: block; }
+.bo-tools-art { display: grid; place-items: center; height: 132px; border-radius: var(--gv-radius-8); background: var(--gv-surface-stage); color: var(--gv-text-meta); }
+.bo-tools-tags { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-8); }
+.bo-tools-text { margin: 0; }
+.bo-tools-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-16); margin-block-start: auto; }
