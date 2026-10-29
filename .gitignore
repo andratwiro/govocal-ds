@@ -6,7 +6,5 @@ playwright-report/
 *.log
 src/foundations/usage.json
 public/design-tokens.source.json
-.superpowers/*
-!.superpowers/sdd/
-.superpowers/sdd/*
-!.superpowers/sdd/progress.md
+# Build notes and the build ledger stay local: process scratch, and they name people.
+.superpowers/

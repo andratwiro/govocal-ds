@@ -3,7 +3,7 @@ import {readFileSync, readdirSync} from 'node:fs';
 
 // Illustrations are content: one self-contained SVG per file in src/illustrations/, painted only with the page's
 // --gv-* tokens (the paint test's rule, held here for .svg), animated in its own <style> under its own root class.
-// The recipe: .superpowers/sdd/illustration-guide.md.
+// The recipe: docs/ILLUSTRATIONS.md.
 const DIR = 'src/illustrations';
 const files = readdirSync(DIR).filter(f => f.endsWith('.svg')).sort();
 const svgs = files.map(f => [f.replace(/\.svg$/, ''), readFileSync(`${DIR}/${f}`, 'utf8')]);
