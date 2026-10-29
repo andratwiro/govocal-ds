@@ -1,32 +1,46 @@
 @import './theme.css';
 
-/* The prototype's text/link button (augur-design.html .pj-textbtn / .btn--tertiary): quiet grey
-   text, no underline at rest, darkens on hover — never the default blue underlined link. */
+/* The prototype's one tertiary (augur-design.html "Terciario unificado", 29 Sep): text (and icon) in the DS blue,
+   a near-black blue on hover, never a fill or an underline; weight 500. Two sizes, small 12/16 and medium 14/20;
+   without a size the link takes the size of its sentence. */
 .react-aria-Link {
-  color: var(--gv-text-secondary);
-  font: var(--gv-type-ui) var(--gv-font-family);
+  display: inline;
+  color: var(--gv-text-accent);
+  font-family: var(--gv-font-family);
   font-weight: 500;
-  transition-property: color, text-decoration-thickness;
-  transition-duration: 200ms;
   text-decoration: none;
   cursor: pointer;
   outline: none;
-  position: relative;
   border-radius: var(--gv-radius-4);
+  transition: color 120ms ease;
   -webkit-tap-highlight-color: transparent;
 
-  &[data-hovered] {
-    color: var(--gv-text-primary);
-    text-decoration: underline;
-    text-decoration-thickness: 1.5px;
+  &[data-size='small'] {
+    font: var(--gv-type-small-strong);
+    letter-spacing: var(--gv-type-small-strong-tracking);
   }
 
+  &[data-size='medium'] {
+    font: var(--gv-type-body-strong);
+    letter-spacing: var(--gv-type-body-strong-tracking);
+  }
+
+  svg {
+    flex: none;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    color: currentColor;
+  }
+
+  &[data-hovered],
   &[data-pressed] {
-    color: var(--gv-action-primary);
+    color: var(--gv-color-brand-900);
   }
 
   &[data-focus-visible] {
     outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
   }
 
   &[data-disabled] {
