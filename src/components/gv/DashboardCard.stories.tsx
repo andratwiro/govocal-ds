@@ -8,6 +8,7 @@ import {
   DashboardBars,
   DashboardCard,
   DashboardDemographic,
+  DashboardEmpty,
   DashboardRanking,
   DashboardStatements,
   DashboardTopics
@@ -154,10 +155,10 @@ type Story = StoryObj<typeof DashboardCard>;
 const wide: Decorator = Story => <div style={{width: 764}}><Story /></div>;
 const half: Decorator = Story => <div style={{width: 375}}><Story /></div>;
 
-/** Every Figma variant, laid out the way the prototype's Insights tab stacks them. */
+/** Every Figma variant, laid out the way the prototype's Insights tab stacks them (14 apart, 764 wide). */
 export const AllVariants: Story = {
   render: () => (
-    <div style={{display: 'flex', flexDirection: 'column', gap: 24, width: 764}}>
+    <div style={{display: 'flex', flexDirection: 'column', gap: 14, width: 764}}>
       <div style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14}}>
         <Kpi label="Voters" value="384" note="updating live" />
         <Kpi label="Votes" value="622" note="updating live" />
@@ -192,3 +193,21 @@ export const VotesOverTime: Story = {name: 'Votes over time', render: () => card
 export const LiveRanking: Story = {name: 'Live ranking', render: () => cards.ranking, decorators: [wide], parameters: figma('26-516')};
 export const DemographicAge: Story = {name: 'Demographic · age', render: () => cards.age, decorators: [half], parameters: figma('26-561')};
 export const DemographicCommute: Story = {name: 'Demographic · commute', render: () => cards.commute, decorators: [half], parameters: figma('26-593')};
+
+/**
+ * Not in Figma. A card with no data yet, as the prototype's freshly published phase and its "Demographics and audience"
+ * card: the title over one centred line.
+ */
+export const Empty: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 14}}>
+      <DashboardCard type="participation-over-time" title="Participation over time">
+        <DashboardEmpty>No participation yet. The trend will appear here.</DashboardEmpty>
+      </DashboardCard>
+      <DashboardCard title="Demographics and audience">
+        <DashboardEmpty>No demographic data available for this phase.</DashboardEmpty>
+      </DashboardCard>
+    </div>
+  ),
+  decorators: [wide]
+};

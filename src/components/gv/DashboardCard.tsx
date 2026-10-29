@@ -208,6 +208,14 @@ export interface DashboardDemographicItem {
   color: ChartColor;
 }
 
+/**
+ * A card with no data yet: one centred line where the chart or list will be ("No participation yet. The trend will
+ * appear here."). Prototype `.pj-dempty`; Not in Figma.
+ */
+export function DashboardEmpty({children}: {children: ReactNode}) {
+  return <div className="gv-dashboard-empty">{children}</div>;
+}
+
 /** Demographic · age / commute: a labelled stacked bar over its legend rows. */
 export function DashboardDemographic({label, items}: {label: ReactNode; items: DashboardDemographicItem[]}) {
   const id = useId();
