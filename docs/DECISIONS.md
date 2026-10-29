@@ -49,6 +49,30 @@ Calls made building Components › AI, the Activity feed, the Assistant panel an
 - Activity feed changes → **all shown up to `changesPerPage` (10); past that, behind "Show N changes" with a
   Pagination** → the prototype's run lists 146 chips behind a pager.
 
+## Proof anyone can rerun (30 Oct 2026)
+
+Calls made while building `npm run check`, `npm run break-it`, Overview › Checks and Overview › AI assistance, and
+describing every prop (the benchmark plan's Task 7).
+
+- Where Overview › Checks gets its words and counts: read each test file's own comments at build time, or a list →
+  **a hand-written plain-words line per guard in `src/overview/guards.json`; the counts in JSON written by the scripts
+  (`checks-last-run.json` by `npm run check`, `break-it.json` by `npm run break-it`)** → the files' comments are
+  written for developers and vary; `tests/checks-page.test.mjs` fails on a guard with no line, so the page never hides
+  one, and rerunning either script refreshes the page.
+- What `npm run break-it` runs: everything, or the cheapest check that catches each fault → **the typecheck and every
+  unit guard, one after the other, on a copy (no build, no browser, about a minute and a quarter), after a clean run
+  that leaves out any check already red** → each of the four faults is caught by one of them; running all of them shows
+  every guard that bites, not only the one we expected. Side by side they raced for memory once and read as red.
+- "A missing label" → **an icon-only button with its `aria-label` dropped** → the commonest unlabelled control in the
+  back office; Icon button's types require the label, so the typecheck catches it before any browser.
+- `npm run check` and the shared machine's lock → **the script takes no lock and honours `E2E_PORT`** → the lock is this
+  machine's habit, not the repo's; the brief wraps the call.
+- Props that pass a library's prop through under the same name → **described in our words, with a link to React
+  Aria's page where its behaviour is React Aria's** → the plan allows the link; the report lists pure pass-throughs by
+  name already.
+- The index's name-only lines → **Base included: every Base part's doc comment says what it is for and which Component
+  to use instead** → an agent searching docs/COMPONENTS.md reads Base lines too; the guard covers every entry.
+
 ## Developers' side and orientation (30 Oct 2026)
 
 Calls made while building Overview's developer and orientation pages, the seam stories, Voice and tone, the Word list

@@ -38,7 +38,9 @@
     "typecheck": "tsc --noEmit",
     "api:imports": "node scripts/use-public-api.mjs backoffice/src",
     "css:scope": "node scripts/scope-base-css.mjs",
-    "api:report": "node scripts/api-report.mjs"
+    "api:report": "node scripts/api-report.mjs",
+    "check": "node scripts/check.mjs",
+    "break-it": "node scripts/break-it.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

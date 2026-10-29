@@ -1,0 +1,386 @@
+{
+  "e2e/a11y.spec.ts": {
+    "group": "Site and Storybook",
+    "what": "The accessibility overview page lists the components with their scan results, and a right-to-left story really flips the page direction."
+  },
+  "e2e/ai-assistant.spec.ts": {
+    "group": "Components behave",
+    "what": "The Assistant panel sends a prompt, shows it thinking, answers with a change that Undo takes back, and the Activity feed and scope chip work by keyboard."
+  },
+  "e2e/alert-dialog.spec.ts": {
+    "group": "Components behave",
+    "what": "In the Alert dialog, type-to-confirm keeps the button off until the exact words are typed, and Cancel, Esc and focus return work."
+  },
+  "e2e/app-provider.spec.ts": {
+    "group": "Components behave",
+    "what": "The App provider shows one toast at a time with its Undo, and draws every icon inside it at the same line weight."
+  },
+  "e2e/backoffice.spec.ts": {
+    "group": "Back office screens",
+    "what": "Every item in the back office's side navigation opens its own page without errors, and projects and phases open with the right tabs."
+  },
+  "e2e/base.spec.ts": {
+    "group": "Site and Storybook",
+    "what": "The Base intro page and each Base entry's docs page say what Base is, and Base sits last in the Storybook sidebar."
+  },
+  "e2e/build-tab.spec.ts": {
+    "group": "Back office screens",
+    "what": "On a phase's Build tab, the setup rows (access rights, participant actions, phone preview, notifications) open, change and undo by keyboard as expected."
+  },
+  "e2e/charts.spec.ts": {
+    "group": "Components behave",
+    "what": "Line charts, sparklines and bar rows show the right values on hover, walk by arrow keys, and highlight the series under the pointer."
+  },
+  "e2e/checks.spec.ts": {
+    "group": "Site and Storybook",
+    "what": "Overview › Checks shows the last run, the four faults the break-it demo caught, and every guard with its rerun command."
+  },
+  "e2e/comment-thread.spec.ts": {
+    "group": "Components behave",
+    "what": "In a Comment thread, Reply, Post, Delete with Undo and the internal tab all work, and Esc in a side panel keeps typed words."
+  },
+  "e2e/community-monitor.spec.ts": {
+    "group": "Back office screens",
+    "what": "The back office's Community monitor shows its health score, quarter picker, results by category and settings tabs, with no gaps left in the system."
+  },
+  "e2e/component-page.spec.ts": {
+    "group": "Site and Storybook",
+    "what": "A component's docs page shows its thirteen sections in order, each filled in, and a part named in bold links to its page."
+  },
+  "e2e/dashboard.spec.ts": {
+    "group": "Back office screens",
+    "what": "The back office's Dashboard shows its sections, filters, cards and charts, and each tab has its own web address."
+  },
+  "e2e/data-table-open.spec.ts": {
+    "group": "Components behave",
+    "what": "In the Data table, pressing a row opens it while ticks stay, the checkbox only ticks, and Shift ticks a range."
+  },
+  "e2e/data-table-virtual.spec.ts": {
+    "group": "Components behave",
+    "what": "A Data table with 5,000 rows draws only a few at a time, scrolls under its header, walks by keyboard, and select-all ticks every row."
+  },
+  "e2e/file-list.spec.ts": {
+    "group": "Components behave",
+    "what": "In the File list, Delete removes its file, one after another."
+  },
+  "e2e/for-developers.spec.ts": {
+    "group": "Site and Storybook",
+    "what": "The For developers page shows the developer guide to the reader, without the notes meant only for merging."
+  },
+  "e2e/form-validation.spec.ts": {
+    "group": "Components behave",
+    "what": "Submitting a form with mistakes moves focus to the first field to fix, then the next, and every field shows its message."
+  },
+  "e2e/forms.spec.ts": {
+    "group": "Components behave",
+    "what": "Date range field, Choice card, File list and Text field behave as designed: invalid end date message, Add end date, arrow keys, revealed content."
+  },
+  "e2e/foundations.spec.ts": {
+    "group": "Site and Storybook",
+    "what": "The Foundations pages (Colour, Typography, Size, Focus and states, Icons) show their tokens whole and in the right order in the sidebar."
+  },
+  "e2e/illustrations.spec.ts": {
+    "group": "Site and Storybook",
+    "what": "The Illustrations gallery shows every drawing grouped, shows still pictures under reduced motion, and the Empty state draws its notebook."
+  },
+  "e2e/inputs.spec.ts": {
+    "group": "Back office screens",
+    "what": "In the back office's Input manager, filters, sorting and search narrow the inputs, and a row opens in a Side panel with undoable status changes."
+  },
+  "e2e/inspiration-hub.spec.ts": {
+    "group": "Back office screens",
+    "what": "The back office's Inspiration hub shows highlighted and all projects with filters, pages of six cards, copy with Undo, and a preview."
+  },
+  "e2e/layout.spec.ts": {
+    "group": "Components behave",
+    "what": "Grid, Stack and Inline lay parts out as designed: 16 apart, a list beside its detail, wrapping topics, and fields spanning all columns."
+  },
+  "e2e/locale-toolbar.spec.ts": {
+    "group": "Words and locale",
+    "what": "Switching the Storybook language shows German or Dutch numbers and months and right-to-left Arabic, while the words stay English."
+  },
+  "e2e/map.spec.ts": {
+    "group": "Components behave",
+    "what": "The Map draws with credits and no network use, pins are keyboard-reachable buttons that open cards, and zoom and list hover work."
+  },
+  "e2e/menu.spec.ts": {
+    "group": "Components behave",
+    "what": "In a multiple-choice Menu with a footer action, Enter and Space tick items and keep it open, and the action closes it."
+  },
+  "e2e/messaging.spec.ts": {
+    "group": "Back office screens",
+    "what": "The back office's Messaging screens (custom emails, automated emails, SMS) list, switch, compose and send as the real admin does."
+  },
+  "e2e/motion.spec.ts": {
+    "group": "Tokens and paint",
+    "what": "The Motion page lists the motion tokens, the Modal moves on them, and under reduced motion the durations collapse while the Modal still works."
+  },
+  "e2e/multilingual-text-field.spec.ts": {
+    "group": "Components behave",
+    "what": "The Multilingual text field switches language by keyboard, fills only that language, flags a missing required one, and runs Arabic right to left."
+  },
+  "e2e/official-update.spec.ts": {
+    "group": "Components behave",
+    "what": "In the Official update form, Publish stays off until there are words, publishing can be undone, and the bulk Modal returns focus."
+  },
+  "e2e/orientation.spec.ts": {
+    "group": "Site and Storybook",
+    "what": "The orientation and developer pages render their sections, and Welcome links to every one of them."
+  },
+  "e2e/pages-menu.spec.ts": {
+    "group": "Back office screens",
+    "what": "The back office's Pages and menu screen orders menu items, switches pages, asks before deleting and opens the editors."
+  },
+  "e2e/pages.spec.ts": {
+    "group": "Back office screens",
+    "what": "A project's Build, Manage and Phases rail screens show the setup cards and selectable inputs, and move between phases."
+  },
+  "e2e/paint.spec.ts": {
+    "group": "Tokens and paint",
+    "what": "Primary, secondary and quiet buttons and the select trigger wear the colours the Figma design gives them."
+  },
+  "e2e/play.spec.ts": {
+    "group": "Components behave",
+    "what": "Every story that acts itself out (the keyboard tables cite them) plays to its end without a failed step."
+  },
+  "e2e/project-overview.spec.ts": {
+    "group": "Back office screens",
+    "what": "A project's overview has its own address and three columns, shows the live phase and next actions, and keeps the publish checklist for drafts."
+  },
+  "e2e/project-phase.spec.ts": {
+    "group": "Back office screens",
+    "what": "A phase's Manage and Build tabs list ideas with metrics and filters, select rows, and pass the accessibility check."
+  },
+  "e2e/projects.spec.ts": {
+    "group": "Back office screens",
+    "what": "The back office's Projects list shows views, filters, a full table, paging, row menus, and the New project flow."
+  },
+  "e2e/report-view.spec.ts": {
+    "group": "Back office screens",
+    "what": "The back office's report view has outline, pages and assistant; selecting, keyboard use and block edits with Undo all work."
+  },
+  "e2e/reporting.spec.ts": {
+    "group": "Back office screens",
+    "what": "The back office's Reporting list searches, edits, duplicates and deletes reports, and creating a report starts blank and opens the report view."
+  },
+  "e2e/seams.spec.ts": {
+    "group": "Components behave",
+    "what": "The integration seam recipes (a router link, a form library, translated words, data that loads and fails) each play through."
+  },
+  "e2e/segmented-control.spec.ts": {
+    "group": "Components behave",
+    "what": "The Segmented control puts icons before its words, and its unread dot says what it means on hover and focus."
+  },
+  "e2e/selectors.spec.ts": {
+    "group": "Components behave",
+    "what": "Select, Option list, Tag picker and Setup step choose, tick and remove options correctly by keyboard, and say when nothing is found."
+  },
+  "e2e/settings.spec.ts": {
+    "group": "Back office screens",
+    "what": "The back office's Settings has its seven tabs, a multilingual platform name, Save that waits for a change, and undoable switches."
+  },
+  "e2e/side-panel.spec.ts": {
+    "group": "Components behave",
+    "what": "The Side panel opens with focus inside, keeps its 560 or 440 width, closes by Esc or the close button, and returns focus to the row."
+  },
+  "e2e/sidebar.spec.ts": {
+    "group": "Back office screens",
+    "what": "The back office's side navigation lists items in the real order, shows the count badge, and opens notifications and the account menu."
+  },
+  "e2e/site.spec.ts": {
+    "group": "Site and Storybook",
+    "what": "The landing page links both the Storybook and the back office and is hidden from search, and a story renders."
+  },
+  "e2e/stat-tile.spec.ts": {
+    "group": "Components behave",
+    "what": "A Stat tile says its trend direction in words, not colour alone, and its info icon opens a Help popover by press and keyboard."
+  },
+  "e2e/stories.spec.ts": {
+    "group": "Site and Storybook",
+    "what": "Every story in the built Storybook opens without breaking."
+  },
+  "e2e/table.spec.ts": {
+    "group": "Components behave",
+    "what": "The table toolbar's collapsible search, Pagination and caret keys work by keyboard, and a table in a panel updates its count."
+  },
+  "e2e/tabs.spec.ts": {
+    "group": "Components behave",
+    "what": "Tabs include a count and status dot in their name, and grouped side tabs skip headings and let arrow keys cross groups."
+  },
+  "e2e/tools.spec.ts": {
+    "group": "Back office screens",
+    "what": "The back office's Tools page shows one card per tool; tokens, webhooks and the Esri key can be created, edited and deleted with a confirmation."
+  },
+  "e2e/users.spec.ts": {
+    "group": "Back office screens",
+    "what": "In the back office's Users tab, 5,000 people scroll in one list, and select-all ticks them all."
+  },
+  "tests/a11y.test.mjs": {
+    "group": "Site and Storybook",
+    "what": "The accessibility overview groups problems by component, worst first, keeps where each one is on the page, and says which colour palette was checked."
+  },
+  "tests/api-report.test.mjs": {
+    "group": "Public API and docs",
+    "what": "The written list of every public name and component option is up to date, so any API change shows as a change developers can review."
+  },
+  "tests/backoffice-motion.test.mjs": {
+    "group": "Tokens and paint",
+    "what": "The back office stylesheet uses the motion tokens for every speed and easing, never raw values."
+  },
+  "tests/backoffice-places.test.mjs": {
+    "group": "Structure and CSS",
+    "what": "The back office's own styles may only place things (where, how big, how far apart), never colour, type, borders or shadows; the paint list only shrinks."
+  },
+  "tests/card.test.mjs": {
+    "group": "Components behave",
+    "what": "The Card is outlined unless filled, shows media first, shows review status and menu values as a pill, and can be placed by the page."
+  },
+  "tests/checks-page.test.mjs": {
+    "group": "Public API and docs",
+    "what": "Overview › Checks says in plain words what every guard proves, and its break-it run shows all four faults caught."
+  },
+  "tests/component-pages.test.mjs": {
+    "group": "Public API and docs",
+    "what": "Every component page that is written has all its sections, each 'use instead' names a real part, and interactive parts have a keyboard table."
+  },
+  "tests/components-described.test.mjs": {
+    "group": "Public API and docs",
+    "what": "Every component and pattern has a one-line description in the component list, and none is left marked as not yet described."
+  },
+  "tests/components-index.test.mjs": {
+    "group": "Public API and docs",
+    "what": "The component list and the site's text index for AI readers match the stories, so a changed story or doc comment is never missed."
+  },
+  "tests/copy.test.mjs": {
+    "group": "Words and locale",
+    "what": "Docs page headings are in sentence case, and no page uses a word the word list says to avoid."
+  },
+  "tests/css-scope.test.mjs": {
+    "group": "Structure and CSS",
+    "what": "Base's styles only paint the system's own parts, so an app's own React Aria elements keep the look the app gives them."
+  },
+  "tests/data-table.test.mjs": {
+    "group": "Components behave",
+    "what": "The Data table's select-all, its row heights for long lists, and the invented people in the long-list stories give the expected numbers."
+  },
+  "tests/date-range-field.test.mjs": {
+    "group": "Components behave",
+    "what": "The Date range field reads dates as year-month-day text, offers Add end date, and calls an end before the start invalid in words."
+  },
+  "tests/figma-spec.test.mjs": {
+    "group": "Public API and docs",
+    "what": "Looking up a component for its Figma spec finds it by its last name, prefers an exact match, and never matches a variant or part of a name."
+  },
+  "tests/gv-chart.test.mjs": {
+    "group": "Components behave",
+    "what": "Charts pick round axis steps, describe trends and single points in plain words in the viewer's number format, and find the nearest point."
+  },
+  "tests/icons-documented.test.mjs": {
+    "group": "Public API and docs",
+    "what": "The Icons page lists every icon the components and the back office actually use."
+  },
+  "tests/illustrations.test.mjs": {
+    "group": "Tokens and paint",
+    "what": "Each illustration is one self-contained drawing painted only with tokens, with motion only from the motion tokens, and named and sized in the agreed format."
+  },
+  "tests/layout-parts.test.mjs": {
+    "group": "Components behave",
+    "what": "Stack, Inline and Grid turn their gap, padding, columns and areas into the right spacing tokens and nothing else, and stay placeable by the page."
+  },
+  "tests/layout-text.test.mjs": {
+    "group": "Components behave",
+    "what": "Text, Visually hidden, Page header and Tile grid draw the right element, heading level, defaults and kind or colour."
+  },
+  "tests/map.test.mjs": {
+    "group": "Components behave",
+    "what": "The Map fits its pins into view, groups nearby pins as it zooms, moves between pins by arrow keys, and places the card and credits line correctly."
+  },
+  "tests/menu-icons.test.mjs": {
+    "group": "Back office screens",
+    "what": "Back office menu items put their icon in the Menu's icon slot, so it sits before the words instead of after them."
+  },
+  "tests/motion.test.mjs": {
+    "group": "Tokens and paint",
+    "what": "Every speed and easing in the stylesheets comes from a motion token, and every endless animation stops under reduced motion."
+  },
+  "tests/multiloc.test.mjs": {
+    "group": "Words and locale",
+    "what": "The language switcher knows which languages are filled, empty, required or invalid, keeps the platform order, runs Arabic, Hebrew, Persian and Urdu right to left, and names languages."
+  },
+  "tests/no-css-in-js.test.mjs": {
+    "group": "Structure and CSS",
+    "what": "No styled-components or similar code-based styling is installed or imported anywhere; all styling stays in stylesheets using tokens."
+  },
+  "tests/no-names.test.mjs": {
+    "group": "Public API and docs",
+    "what": "No file in the repo names a person, the site or the docs; they say Figma, the prototype or the designer instead."
+  },
+  "tests/no-outer-margin.test.mjs": {
+    "group": "Structure and CSS",
+    "what": "No component sets space outside itself; the page that places it owns the space, and the short list of exceptions only shrinks."
+  },
+  "tests/own-block.test.mjs": {
+    "group": "Structure and CSS",
+    "what": "A component's stylesheet only styles its own parts, so a change inside Badge cannot silently change the Data table; the exceptions list only shrinks."
+  },
+  "tests/pagination.test.mjs": {
+    "group": "Components behave",
+    "what": "Pagination shows every page up to seven, then keeps seven slots with first, last and an ellipsis, always including the current page."
+  },
+  "tests/paint.test.mjs": {
+    "group": "Tokens and paint",
+    "what": "Every colour in the stylesheets comes from a token: no raw colours, no named colours, no dark-mode blocks, and the token font is used."
+  },
+  "tests/react-aria-table.test.mjs": {
+    "group": "Public API and docs",
+    "what": "The table of what comes from React Aria matches the code, part by part."
+  },
+  "tests/rename-tokens.test.mjs": {
+    "group": "Tokens and paint",
+    "what": "The tool that renames old token names in stylesheets renames only whole names, splits by what is painted, snaps spaces to the scale, and flags the rest."
+  },
+  "tests/side-panel.test.mjs": {
+    "group": "Components behave",
+    "what": "The Side panel opens as the page says, takes its preset width, and its record head shows the title as a heading, Posted by, date and actions."
+  },
+  "tests/sidebar-public.test.mjs": {
+    "group": "Site and Storybook",
+    "what": "Entries that exist only for a test stay out of the public Storybook sidebar."
+  },
+  "tests/system-first.test.mjs": {
+    "group": "Structure and CSS",
+    "what": "The back office builds only from the design system's public entry points, borrows no story data beyond a short list, and has one layout-only stylesheet."
+  },
+  "tests/tabs.test.mjs": {
+    "group": "Components behave",
+    "what": "A Tab panel placed outside Tab panels warns developers, and a caller's own class is added to Tabs, never replacing the system's."
+  },
+  "tests/toast.test.mjs": {
+    "group": "Components behave",
+    "what": "A toast carries a title and description for 5 seconds by default, can take an action, icon and timeout, and the App provider draws no markup of its own."
+  },
+  "tests/token-names.test.mjs": {
+    "group": "Tokens and paint",
+    "what": "Every token name follows the naming rules, with no colour names outside colour and chart tokens and no component names outside the side navigation."
+  },
+  "tests/token-usage.test.mjs": {
+    "group": "Tokens and paint",
+    "what": "The map of which tokens each component uses is worked out correctly from the stylesheets."
+  },
+  "tests/tokens-defined.test.mjs": {
+    "group": "Tokens and paint",
+    "what": "Every token a file uses really exists; a guessed or retired token name fails here instead of showing as a missing colour in a browser."
+  },
+  "tests/tokens-only.test.mjs": {
+    "group": "Tokens and paint",
+    "what": "Every space, radius, text size, line height, weight and shadow in the stylesheets comes from a token, and only the base-4 steps are used."
+  },
+  "tests/tokens.test.mjs": {
+    "group": "Tokens and paint",
+    "what": "The tokens are read from the Figma foundations correctly: names follow Figma, colours, type, space and shadows are kept, and clashing names are refused."
+  },
+  "tests/words.test.mjs": {
+    "group": "Words and locale",
+    "what": "No component carries its own words or fixed language: every word comes from the page or editable labels, and numbers and dates follow the viewer's locale."
+  }
+}

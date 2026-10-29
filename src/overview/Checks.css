@@ -1,0 +1,12 @@
+.gv-checks { font: var(--gv-type-body); color: var(--gv-text-body); }
+.gv-checks table { border-collapse: collapse; width: 100%; margin-block: var(--gv-space-12); }
+.gv-checks th { font: var(--gv-type-small-strong); color: var(--gv-text-secondary); text-align: start; }
+.gv-checks th, .gv-checks td { padding: var(--gv-space-8) var(--gv-space-12); border-block-end: 1px solid var(--gv-border-row); vertical-align: top; }
+.gv-checks h3 { font: var(--gv-type-body-strong); margin-block: var(--gv-space-24) 0; }
+.gv-checks code { font: var(--gv-type-small); overflow-wrap: anywhere; }
+.gv-checks__status[data-status="failed"] { color: var(--gv-text-danger); }
+.gv-checks__status[data-status="passed"] { color: var(--gv-text-success); }
+.gv-checks__caught { display: flex; flex-direction: column; gap: var(--gv-space-4); margin-block-end: var(--gv-space-8); }
+.gv-checks__caught code { color: var(--gv-text-danger); }
+.gv-checks__message { font: var(--gv-type-small); color: var(--gv-text-secondary); }
+.gv-checks__meta { font: var(--gv-type-small); color: var(--gv-text-secondary); }

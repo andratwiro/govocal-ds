@@ -1,0 +1,60 @@
+{
+  "ranAt": "2026-10-29T23:50:27.273Z",
+  "commit": "1d39d1e",
+  "seconds": 96,
+  "faults": [
+    {
+      "name": "An undefined token",
+      "file": "src/components/gv/Badge.css",
+      "says": "a guessed token name, `--gv-text-…-strong`, that tokens.css never defines",
+      "caughtBy": [
+        {
+          "check": "tests/tokens-defined.test.mjs",
+          "test": "every --gv- name in use is a token in src, backoffice/src, .storybook, e2e",
+          "message": "AssertionError: expected [ Array(1) ] to deeply equal []"
+        }
+      ]
+    },
+    {
+      "name": "A raw hex colour",
+      "file": "src/components/gv/Panel.css",
+      "says": "a colour typed as `#e8eaed` instead of a token",
+      "caughtBy": [
+        {
+          "check": "tests/paint.test.mjs",
+          "test": "paint comes only from tokens has no raw colours outside tokens.css",
+          "message": "AssertionError: expected [ 'src/components/gv/Panel.css' ] to deeply equal []"
+        }
+      ]
+    },
+    {
+      "name": "A renamed prop",
+      "file": "src/components/gv/Panel.tsx",
+      "says": "Panel's `title` prop renamed `heading`, while pages still pass `title`",
+      "caughtBy": [
+        {
+          "check": "tests/api-report.test.mjs",
+          "test": "docs/API-REPORT.md is current",
+          "message": "AssertionError: run `npm run api:report` and review the diff in docs/API-REPORT.md: expected true to be false // Object.is equality"
+        },
+        {
+          "check": "npm run typecheck",
+          "test": "tsc --noEmit",
+          "message": "backoffice/src/pages/CommunityMonitor.tsx(261,14): error TS2322: Type '{ children: Element; title: string; headingLevel: 3; count: number; isFlush: true; actions: Element; description: string; footer: false | Element; }'"
+        }
+      ]
+    },
+    {
+      "name": "A missing label",
+      "file": "backoffice/src/pages/ProjectPhase.tsx",
+      "says": "an icon-only button with its `aria-label` dropped, so a screen reader announces nothing",
+      "caughtBy": [
+        {
+          "check": "npm run typecheck",
+          "test": "tsc --noEmit",
+          "message": "backoffice/src/pages/ProjectPhase.tsx(239,19): error TS2741: Property ''aria-label'' is missing in type '{ children: Element; onPress: () => void; }' but required in type 'IconButtonProps'."
+        }
+      ]
+    }
+  ]
+}

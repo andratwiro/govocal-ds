@@ -1,0 +1,58 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import {BreakItResults, ChecksLastRun, GuardList} from './overview/Checks';
+import './tokens.css';
+
+<Meta title="Overview/Checks" />
+
+# Checks
+
+What this system proves about itself, and how anyone can prove it again. Every rule on these pages that can be
+checked by a machine has a guard: a small test that fails when the rule is broken. You don't have to trust the docs;
+you can rerun them.
+
+## Rerun everything
+
+One command runs every check, in the order a failure is cheapest to find: the typecheck, the unit guards, the build,
+then the browser tests against the build.
+
+```sh
+npm ci
+npx playwright install chromium   # once, for the browser tests
+E2E_PORT=4173 npm run check       # pick a free port if something else uses 4173
+```
+
+It stops at the first step that fails and, when it passes, writes its counts below. The same steps run on every push
+before the site deploys (the repo's CI), so a red commit never reaches the live site. One part only:
+`npm run typecheck`, `npm test` (the unit guards, seconds), or `npm run build` then
+`E2E_PORT=4173 npx playwright test e2e/<file>`.
+
+### The last run
+
+<ChecksLastRun />
+
+## Break it on purpose
+
+`npm run break-it` shows the guards bite. It copies the repo to a temporary folder, makes four mistakes a person or
+an agent could make, one at a time, and runs the cheap checks (the unit guards and the typecheck, no build, no
+browser) after each. The repo itself is never touched. This is its last output:
+
+<BreakItResults />
+
+A check that is already red on a clean copy proves nothing, so the demo checks the clean copy first and leaves any
+red one out.
+
+## Every guard
+
+The unit guards (`tests/`) read the code and the docs: tokens, names, the public API, the docs index. They take
+seconds. The browser tests (`e2e/`) open the built Storybook and back office and use them the way a person does: by
+role and label, with the keyboard. They need `npm run build` first.
+
+<GuardList />
+
+## What the checks don't prove
+
+- **Accessibility is reported, never blocking.** Every story is scanned with axe in both directions on each deploy
+  (Overview › Accessibility). A finding never fails a build. Axe finds roughly half of real issues; keyboard and
+  focus behaviour is asserted by the browser tests, and the rest needs a person.
+- **How things look.** No screenshot comparison yet: the tool is a hosting and cost call for developers.
+- **That a page reads well.** The words are reviewed by people; the guards only check that the sections exist.

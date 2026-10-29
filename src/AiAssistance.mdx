@@ -1,0 +1,72 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+
+<Meta title="Overview/AI assistance" />
+
+# AI assistance
+
+This system is built to be used by coding agents as well as people. An agent that follows the steps below builds
+screens from the parts that exist, with the props and tokens that exist, and stops where a part is the wrong one. This
+page says what an agent reads, in what order, and what it must never do. It is written for the person who briefs the
+agent; the agent reads the same things.
+
+## Where an agent starts
+
+| Read | What it gives | Where |
+| --- | --- | --- |
+| `AGENTS.md` | The map: the three tiers, the entry points, how to find a part, the tokens, the commands, the hard rules. Every claim names the file or command that proves it. | the repo's root (`CLAUDE.md` points to it) |
+| `llms.txt` | The same map in short, for an agent that starts from the live site: the tiers, the entry points, the links below. | [/llms.txt](https://andratwiro.github.io/govocal-ds/llms.txt) |
+| `docs/COMPONENTS.md` | One line per Storybook entry: its name, its export, what it is for, what not to use it for, its stories. The first place to search. | [COMPONENTS.md](https://raw.githubusercontent.com/andratwiro/govocal-ds/main/docs/COMPONENTS.md) |
+| The components manifest | Every entry's props (its own and the React Aria ones a page sets), with their descriptions, and every story's code. | [components.json](https://andratwiro.github.io/govocal-ds/storybook/manifests/components.json) |
+| `tokens.json` | Every `--gv-*` token, with what it is for. The closed set to paint with. | [tokens.json](https://andratwiro.github.io/govocal-ds/tokens.json) |
+| `docs/API-REPORT.md` | Every exported name and its props, as TypeScript reads them. | [API-REPORT.md](https://raw.githubusercontent.com/andratwiro/govocal-ds/main/docs/API-REPORT.md) |
+
+`docs/COMPONENTS.md`, `llms.txt`, the manifest and the API report are generated from the code (stories, doc comments,
+types), so they can't drift from it: `npm test` fails while one is stale.
+
+## How an agent should use the system
+
+1. **Import only from the entry points:** `govocal-ds` (Components, Patterns, `AppProvider`), `govocal-ds/base`
+   (Base parts, only when no Component does the job) and `govocal-ds/tokens.css` (once, at the app's root). Never a
+   file path.
+2. **Find the part before drawing anything.** Search `docs/COMPONENTS.md` for the job ("status", "filter",
+   "confirm"), then open that entry's stories: each story is a configuration to copy. Reach for a Component first, a
+   Pattern when the screen is that place, Base last.
+3. **Read the part's "When not to use" before using it.** Each component page has one, and each line names the part
+   to use instead. The same lines are in the manifest and in `docs/COMPONENTS.md`, so an agent sees them without
+   opening Storybook.
+4. **Never invent a prop.** Use the props the part declares (its doc comments, the manifest, the API report). If a
+   prop is missing, the part doesn't do that yet: say so, don't add a `className` that paints or a wrapper that
+   restyles it.
+5. **Never invent a token.** Paint only with `var(--gv-*)` names from `tokens.json`, semantic tokens first
+   (`--gv-surface-*`, `--gv-text-*`, `--gv-border-*`). A guessed name fails `npm test`.
+6. **Words come in as props.** A part's own words are its `labels`, with English defaults; numbers and dates follow
+   `AppProvider`'s locale. Never stitch a sentence together from pieces.
+7. **Prove it.** Run `npm run typecheck` and `npm test` (seconds); `npm run check` runs everything (Overview ›
+   Checks). The guards catch a guessed token, a raw colour, a renamed prop and a missing label: `npm run break-it`
+   shows it.
+
+When nothing fits, the screen is built from smaller Components and the gap is named (the back office marks one with
+`<Gap name="…">`). The system adds a part on its second use, not its first.
+
+## The MCP servers
+
+`.mcp.json` in the repo declares three servers an agent can call:
+
+- **storybook** (`http://localhost:6006/mcp`): lists every entry, gives a part's props and its stories' code, and
+  returns links to look at. **It works only while Storybook runs on the same machine** (`npm run storybook`). It is
+  not hosted: when Storybook is down, an agent uses `docs/COMPONENTS.md`, the stories files and the built manifest
+  (linked above), which carry the same props. A hosted endpoint, so an agent could call it without running
+  Storybook, is a later call for developers, not made yet.
+- **figma** (Figma's remote server): the design files, once the person signs in to Figma with a Full or Dev seat.
+  About 200 calls a day.
+- **react-aria** (Adobe's server for React Aria's docs): how a React Aria prop the system passes through behaves.
+
+## The hard rules an agent must keep
+
+The full list is in `AGENTS.md`. The ones an agent breaks most easily:
+
+- No person's name anywhere: code, stories, story data, docs, commit messages. Use roles ("the designer").
+- No raw colours or values; tokens only. `className` and `style` place a part, never paint it.
+- No new npm dependencies, no change to CI or the accessibility settings: those are developers' calls.
+- Never invent facts about Go Vocal (what a phase is, who uses a screen). They come from the repo's docs, doc
+  comments and story data.
