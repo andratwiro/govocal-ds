@@ -1,0 +1,62 @@
+@import '../components/theme.css';
+
+/* Official update (the prototype's .pj-upd and .pj-update): posted updates on the stage grey (the prototype's grey-50
+   has no token: the nearest), radius 8, padding 10 12, 10 apart; the form's fields 8 apart, Publish at the end. */
+.gv-official-update {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-10);
+  min-width: 0;
+  color: var(--gv-text-primary);
+}
+
+.gv-official-update__posted {
+  padding: var(--gv-space-10) var(--gv-space-12);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-stage);
+}
+
+.gv-official-update__key {
+  margin: 0 0 var(--gv-space-4);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-official-update__text {
+  font: var(--gv-type-body);
+  letter-spacing: var(--gv-type-body-tracking);
+  overflow-wrap: anywhere;
+
+  p {
+    margin: 0;
+  }
+}
+
+.gv-official-update__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-8);
+}
+
+/* The words: three lines to start (72), growing with them up to about ten. */
+.gv-official-update__form .gv-official-update__words {
+  min-height: 72px;
+  max-height: 240px;
+  field-sizing: content;
+}
+
+.gv-official-update__actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gv-space-8);
+}
+
+/* In the bulk Modal's footer: who the update goes to, at the start, Small secondary. */
+.gv-official-update__reach {
+  margin-inline-end: auto;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+}
