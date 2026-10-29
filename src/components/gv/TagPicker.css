@@ -1,0 +1,42 @@
+@import '../theme.css';
+
+/* The tags, then "+ Add tag" on the same line (the prototype's input tags: `.pj-bdg--rm` pills, 6 apart). */
+.gv-tag-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gv-space-6) var(--gv-space-8);
+  min-width: 0;
+
+  > .react-aria-Button[data-variant='quiet'] {
+    padding: 0 var(--gv-space-8);
+  }
+}
+
+.gv-tag-picker__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gv-space-6);
+  outline: none;
+}
+
+.gv-tag-picker__tag {
+  outline: none;
+  cursor: default;
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+  }
+}
+
+/* The Option list brings its own frame padding. */
+.react-aria-Popover.gv-tag-picker__popover {
+  padding: 0;
+}
+
+.gv-tag-picker__dialog {
+  padding: 0;
+  outline: none;
+  max-height: inherit;
+}
