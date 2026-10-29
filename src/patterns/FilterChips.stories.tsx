@@ -4,12 +4,14 @@ import {FilterChips} from './FilterChips';
 import type {FilterValue} from './FilterMenu';
 import {IDEA_FACETS} from './FilterMenu.stories';
 
-function Demo({initial, showClear}: {initial: FilterValue; showClear?: boolean}) {
+function Demo({initial, showClear, metric: initialMetric}: {initial: FilterValue; showClear?: boolean; metric?: string}) {
   const [value, setValue] = useState<FilterValue>(initial);
-  const on = Object.values(value).some(v => v.length);
+  const [metric, setMetric] = useState(initialMetric);
+  const on = Object.values(value).some(v => v.length) || !!metric;
   return (
     <div style={{width: 720, display: 'grid', gap: 8}}>
-      <FilterChips facets={IDEA_FACETS} value={value} onChange={setValue} showClear={showClear} />
+      <FilterChips facets={IDEA_FACETS} value={value} onChange={setValue} showClear={showClear}
+        metric={metric} onMetricRemove={() => setMetric(undefined)} />
       {!on && <p style={{margin: 0, font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>No filter on: the bar is gone.</p>}
     </div>
   );
@@ -38,6 +40,12 @@ export const Wrapping: Story = {
 
 /** Without the Clear button, for bars that put it elsewhere. */
 export const WithoutClear: Story = {name: 'Without Clear', render: () => <Demo initial={{tags: ['Housing']}} showClear={false} />};
+
+/**
+ * A quick view picked from the stats above the table ("New ideas") filters it too: a chip with its name only, first
+ * in the bar, beside the facet chips. Its × turns the view off; Clear turns off everything.
+ */
+export const MetricChip: Story = {name: 'Metric chip', render: () => <Demo initial={{assignee: ['Unassigned']}} metric="New ideas" />};
 
 /** Empty: no filter on, nothing renders. */
 export const Empty: Story = {render: () => <Demo initial={{}} />};
