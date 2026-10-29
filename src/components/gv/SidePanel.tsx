@@ -34,7 +34,9 @@ export interface SidePanelProps {
   itemName?: string;
   /**
    * Whether the panel shows (controlled). A floating panel is a dialog: closed until the page opens it. An inline one
-   * is a column of the page: shown unless the page says otherwise. Pair it with `onOpenChange`.
+   * is a column of the page: shown unless the page says otherwise. Pair it with `onOpenChange`. Left out, × and Esc
+   * hide the panel by themselves; a page that decides what follows a close (another record, another view in the same
+   * panel) controls it: `<SidePanel isInline isOpen onOpenChange={close}>`.
    */
   isOpen?: boolean;
   /**
