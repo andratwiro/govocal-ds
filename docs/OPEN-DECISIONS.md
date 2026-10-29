@@ -28,7 +28,7 @@ question for each: add a Figma variable (code then names it), or keep the stand-
 - Danger: a fill for the danger button and a surface for the Alert dialog's icon badge? — the red 500 primitive, and a mix — see `components-actions-button--danger`, `components-overlays-alert-dialog--destructive`.
 - Warning: a surface and a border (Banner warning, the side panel's screening strip)? — mixes of the warning icon colour — see `components-status-feedback-banner--warning`, `components-overlays-side-panel--screening`.
 - Neutral message surface? — Banner neutral uses the hover grey — see `components-status-feedback-banner--neutral`.
-- Status green and red for small marks (a status dot, a downward trend)? — the chart's "agree" green and the notification red — see `components-navigation-tabs--with-status-dots`, `components-data-display-stat-tile--with-trend`.
+- Status green and red for small marks (a status dot, a language's mark, a downward trend)? — the chart's "agree" green and the notification red — see `components-navigation-tabs--with-status-dots`, `components-forms-locale-switcher--invalid`, `components-data-display-stat-tile--with-trend`.
 - Phase states in the rail (the done dot, the live dot, the guide line after a done phase, the state word, the upcoming name's green-grey)? — the nearest chart greens, a mix for the light live dot, and the primary text colour for upcoming names — see `patterns-project-rail-rail-phase--all-variants`.
 - A value badge's surface and text (the prototype's pale blue)? — the teal 75 and teal 700 primitives — see `components-status-feedback-badge--value`.
 - A pill's hover surface? — the slate 200 primitive — see `components-forms-select--pill`.
@@ -56,7 +56,7 @@ question for each: add a Figma variable (code then names it), or keep the stand-
 - Select: how does it look when it picks several? — the earlier look, unstyled beyond it; no story yet — see the back office's Settings page ("Select approvers", `backoffice/src/pages/Settings.tsx`).
 - Stat card and Stat tile: one entry or two? — two (Stat card is a pattern) — see `patterns-project-page-stat-card--pressable`, `components-data-display-stat-tile--all-variants`.
 - Status badge: only draft and live (its `state`), or more? — two states — see `components-status-feedback-status-badge--all-variants`.
-- Title field: a slot for the content-language button at its reserved right end? — not built — see `components-forms-title-field--all-variants`.
+- Multilingual fields: how do the designer's drawings show them (the language chips over a field, the language menu in a Title field's end, the marks' green, grey, amber and red)? — built from the platform and the prototype, the look in tokens only; the Title field takes the menu in the end it keeps clear — see `components-forms-multilingual-text-field--required`, `components-forms-locale-switcher--invalid`, `components-forms-title-field--multilingual`.
 
 ## Patterns
 

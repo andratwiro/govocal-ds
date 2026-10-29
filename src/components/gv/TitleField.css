@@ -62,3 +62,72 @@
   height: var(--gv-size-control-36);
   pointer-events: none;
 }
+
+/*
+ * With the content-language button (`localeSwitcher`, the prototype's title fields): the end holds the Required
+ * marker and the button side by side, 6 from the edge, in the field's own row, and the text stops where they start,
+ * whatever the language code's width. The border moves to a frame drawn behind the input and the end.
+ */
+.gv-title-field-wrap[data-locale-switcher] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+
+  &::before {
+    content: '';
+    grid-row: 1;
+    grid-column: 1 / -1;
+    align-self: stretch;
+    border: 1px solid var(--gv-border-control);
+    border-radius: var(--gv-radius-8);
+    background: var(--gv-surface-panel);
+  }
+
+  &:has(.react-aria-Input[data-focused])::before {
+    border-color: var(--gv-border-selected);
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: -1px;
+  }
+
+  &:has(.react-aria-Input[data-invalid])::before {
+    border-color: var(--gv-state-notification);
+  }
+
+  .gv-title-field {
+    display: contents;
+  }
+
+  .gv-title-field .react-aria-Input {
+    grid-row: 1;
+    grid-column: 1;
+    min-width: 0;
+    padding-inline-end: var(--gv-space-8);
+    border-color: transparent;
+    background: transparent;
+
+    &[data-focused],
+    &[data-invalid] {
+      border-color: transparent;
+      outline: none;
+    }
+  }
+
+  .gv-title-field .react-aria-FieldError {
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  .gv-title-field-required {
+    position: static;
+    height: auto;
+  }
+}
+
+.gv-title-field-end {
+  grid-row: 1;
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  padding-inline-end: var(--gv-space-6);
+}

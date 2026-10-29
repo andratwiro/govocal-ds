@@ -121,3 +121,30 @@ test('multilingual rich text editor: the switcher picks the language the editor 
   await expect(page.getByRole('textbox', {name: 'Description, English'})).toHaveValue(/^Add a short introduction here/);
   await report(page, '#storybook-root');
 });
+
+test('title field: the language menu in its end drives the title and the description under it', async ({page}) => {
+  await open(page, 'components-forms-title-field--multilingual');
+  const title = page.getByRole('textbox', {name: 'Phase title'});
+  await expect(title).toHaveValue('Share your ideas');
+  await page.keyboard.press('Tab');
+  await expect(title).toBeFocused();
+  await page.keyboard.press('Tab');
+  const menu = page.getByRole('button', {name: /Content language/});
+  await expect(menu).toBeFocused();
+  await expect(menu).toHaveAccessibleName(/^EN ?1\/3 ?, English, 1 of 3 languages filled/);
+
+  await page.keyboard.press('ArrowDown');
+  const list = page.getByRole('listbox', {name: 'Content language'});
+  await expect(list).toBeVisible();
+  await expect(list.getByRole('option', {name: 'English'})).toHaveAccessibleDescription('filled');
+  await expect(list.getByRole('option', {name: 'French (Belgium)'})).toHaveAccessibleDescription('empty, required');
+  await report(page, '.gv-locale-switcher__popover');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect(list).toHaveCount(0);
+  await expect(menu).toHaveAccessibleName(/^NL-BE 1\/3 ?, Dutch \(Belgium\)/);
+  await expect(title).toHaveValue('Deel je ideeën');
+  await expect(title).toHaveAttribute('lang', 'nl-BE');
+  await expect(page.getByRole('textbox', {name: 'Phase description, Dutch (Belgium)'})).toHaveValue('');
+  await report(page, '#storybook-root');
+});

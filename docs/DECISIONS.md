@@ -23,6 +23,7 @@ list; change any line and the agent follows. Newest first within each section.
 - Codes only on the platform's chips → **the code shows; its name ("Dutch (Belgium)", Intl.DisplayNames in the interface's language) and its mark are read, and the input is named "Title, Dutch (Belgium)"** → codes suit admins who know them; the name tells everyone else.
 - One language: the platform hides its switcher → **the same: no switcher, and no language in the input's name** → nothing to switch.
 - The Rich text editor takes no `lang`, `dir`, `isInvalid` or description → **the Multilingual rich text editor turns its text area right to left from its own stylesheet, names it by `aria-label`, and says its error in an alert under it** → a stopgap until the editor takes them (a follow-up for its owner).
+- Title field: a slot for the content-language button in the end Figma keeps clear (open decision) vs a Multilingual text field over titles → **the Title field takes `localeSwitcher` (a Locale switcher `kind="menu"`: language icon, code, "1/3" while languages are empty, chevron, the languages in a menu) and `lang`; the end becomes a row, Required marker then the button, and the text stops before it** → where Figma and the prototype put it; the prototype's one button also drives the description under the title.
 
 ## Back office redesign on the current components (29 Oct 2026)
 

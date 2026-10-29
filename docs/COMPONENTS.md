@@ -122,7 +122,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Switch** `Switch` Stories: All Variants, With Description, With Revealed Fields, With Badge, Disabled.
 - **Tag picker** `TagPicker` (not in Figma): The tags on an item, each removable, then "+ Add tag", which opens the Option list (several, searchable) in a popover. ←→ move between the tags, Delete or Ba… Stories: All Variants, Default, Empty, Many, Disabled.
 - **Text field** `TextField` Stories: Default, With Prefix, With Counter, Read Only.
-- **Title field** `TitleField`: Title field (Figma node 4:123): the big project/page name input at the top of an editor. Stories: All Variants, Empty, Required, Filled, Invalid.
+- **Title field** `TitleField`: Title field (Figma node 4:123): the big project/page name input at the top of an editor. Stories: All Variants, Empty, Required, Filled, Invalid, Multilingual.
 
 ## Patterns / Build tab
 - **Access rights** `AccessRights` (not in Figma): Who can take one participant action: following the platform's defaults (read-only, with Override) or set for this phase. Stories: All Variants, Using Defaults, Override, Security Requirements, Two Choices, In The Modal, Modal.
