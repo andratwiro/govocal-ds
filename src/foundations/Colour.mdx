@@ -31,6 +31,41 @@ A semantic name holds no hue (`red`, `teal`: those are primitives), no component
 nav has its own tier) and no Go Vocal word (`live`, `reviewed`). Two tokens of one property that look the same keep
 apart only when their jobs differ, and their descriptions say which to pick.
 
+## Which token for which job
+
+Start here when you paint something. Each line is a job and the semantic token for it; the sections below list every
+token. A job that isn't here and that no token's description covers is a question for the designer, not a primitive.
+
+| The job | Fill | Words | Icon | Border |
+|---|---|---|---|---|
+| The page behind the panels | `surface-app` | | | |
+| A panel, card, menu, popover, field or modal | `surface-panel` | `text-primary` | `icon-secondary` | `border-default` |
+| A band a step off white inside a panel: a modal's footer, a toolbar | `surface-secondary` | | | |
+| A grey stage under a group of panels | `surface-tertiary` | | | |
+| Headings, labels, values | | `text-primary` | `icon-primary` | |
+| Long reading text: a description, a comment | | `text-body` | | |
+| Helper text, meta, column headers | | `text-secondary` | `icon-secondary` | |
+| Counts beside a label, timestamps | | `text-tertiary` | `icon-tertiary` | |
+| A field's placeholder | | `text-placeholder` | | |
+| A field or control's edge | | | | `border-control` (`-hovered`) |
+| A divider inside a panel; lines between table rows | | | | `border-subtle`; `border-row` |
+| A row or quiet button under the pointer; pressed | `surface-hovered`; `surface-pressed` | | | |
+| A selected row, cell or range | `surface-selected` | | | |
+| Something checked or selected, solid | `surface-selected-strong` | `text-inverse` | `icon-inverse` | `border-selected` |
+| The main button | `surface-brand-strong` | `text-inverse` | `icon-inverse` | |
+| A link | | `text-link` (`-hovered`, `-pressed`) | | |
+| A destructive button | `surface-danger-strong` | `text-inverse` | `icon-inverse` | |
+| A field error | | `text-danger` | `icon-danger` | `border-danger` |
+| An info message | `surface-info` | `text-info` | `icon-info` | |
+| A warning message | `surface-warning` | `text-primary` | `icon-warning` | `border-warning` |
+| A success message | `surface-success` | `text-success-strong` | `icon-success` | `border-success` |
+| A neutral pill or track | `surface-neutral` | `text-neutral` | `icon-neutral` | |
+| Something that can't be used | `surface-disabled` | `text-disabled` | `icon-disabled` | `border-disabled` |
+| The scrim behind a modal | `surface-backdrop` | | | |
+| Keyboard focus | | | | the whole ring: `--gv-focus-ring` |
+
+Every name here starts with `--gv-`: `surface-panel` is `var(--gv-surface-panel)`.
+
 ## Intents
 
 A row per role, a column per property. An empty cell has no token: nothing paints it yet. A name that isn't here is
