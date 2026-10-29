@@ -21,8 +21,25 @@ test('a row has its actions menu', async ({page}) => {
   await expect(page.getByRole('menuitem', {name: 'Duplicate'})).toBeVisible();
 });
 
+test('rows use Tali\'s Status, Avatar and icon button; New project opens its menu', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  const row = page.getByRole('row', {name: /Green Corridors for Riverside/});
+  await expect(row.getByRole('link', {name: 'Green Corridors for Riverside'}))
+    .toHaveAttribute('href', '#/projects/green-corridors/phases/p1/build');
+  await expect(row.locator('.gv-status')).toHaveText('Published');
+  await expect(row.locator('.gv-avatar')).toHaveText('A');
+  await expect(page.getByRole('row', {name: /Harbour Plan 2030/}).locator('.gv-status')).toHaveText('Draft');
+  await expect(page.getByRole('row', {name: /Harbour Plan 2030/}).locator('.gv-avatar[data-unassigned]')).toBeVisible();
+  await expect(page.getByRole('button', {name: 'Actions for Harbour Plan 2030'})).toHaveClass(/gv-icon-button/);
+  await expect(page.getByRole('tab', {name: 'Spaces', exact: true}).locator('.gv-pill')).toHaveText('New');
+  await page.getByRole('button', {name: 'New project'}).click();
+  await expect(page.getByRole('menuitem', {name: 'From scratch'})).toBeVisible();
+  await expect(page.getByRole('menuitem', {name: 'Use a template'})).toBeVisible();
+});
+
 test('projects names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/projects');
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
-  expect(gaps).toEqual(expect.arrayContaining(['Status', 'Avatar', 'Icon button', 'Pill']));
+  // Avatar, Status, Icon button and Pill now exist in src/components/gv; only the project thumbnail is missing.
+  expect(gaps).toEqual(['Project thumbnail']);
 });

@@ -26,3 +26,16 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-page-description { margin: calc(-1 * var(--gv-space-8)) 0 var(--gv-space-16); }
 .bo-push { flex: 1; }
 .bo-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 260px) minmax(0, 1fr)); gap: var(--gv-space-24); align-items: start; }
+
+/* ── Projects ── */
+.bo-projects-actions { display: flex; align-items: center; gap: var(--gv-space-8); }
+.bo-projects-tab { display: inline-flex; align-items: center; gap: var(--gv-space-6); }
+.bo-projects-filters { align-items: center; gap: var(--gv-space-8); }
+.bo-projects-table { width: 100%; }
+.bo-projects-icon-head { display: inline-flex; align-items: center; }
+.bo-projects-name { display: flex; align-items: center; gap: var(--gv-space-12); }
+.bo-projects-folder { display: flex; align-items: center; gap: var(--gv-space-4); margin-block-start: var(--gv-space-2); }
+.bo-projects-person { display: inline-flex; align-items: center; gap: var(--gv-space-8); }
+.bo-projects-visibility { display: grid; justify-items: start; gap: var(--gv-space-2); }
+.bo-projects-foot { text-align: center; margin-block: var(--gv-space-16) 0; }
+.bo-projects-nowrap { white-space: nowrap; }
