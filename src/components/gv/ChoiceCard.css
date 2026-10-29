@@ -1,0 +1,169 @@
+@import '../theme.css';
+@import '../utilities.css';
+
+/*
+ * Choice card (Figma not yet drawn; the prototype's `.pj-repopt` / `.pj-pick`): a bordered tile,
+ * radius 12, 14/16 padding; selected = a 2px primary ring drawn inset (no layout shift). The radio
+ * or checkbox mark sits at the top-left of the title line; a media slot (icon or, later, an
+ * Illustration) sits above it when given.
+ */
+.gv-choice-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--gv-border-control);
+  border-radius: var(--gv-radius-12);
+  background: var(--gv-surface-panel);
+  transition: border-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+    box-shadow var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  &[data-hovered] {
+    border-color: var(--gv-border-control-hover);
+  }
+
+  &[data-selected] {
+    border-color: var(--gv-border-selected);
+    box-shadow: inset 0 0 0 1px var(--gv-border-selected);
+  }
+
+  &[data-disabled] {
+    opacity: 0.45;
+  }
+
+  &:has(.gv-choice-card__button[data-focus-visible]) {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+  }
+}
+
+.gv-choice-card__button {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gv-space-12);
+  width: 100%;
+  padding: var(--gv-space-14) var(--gv-space-16);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  /* The radio dot / checkbox mark, drawn to match RadioGroup/Checkbox so one visual language runs
+     through the system; Checkbox.css and RadioGroup.css set its size, border and selected fill. */
+  .indicator {
+    margin-top: var(--gv-space-2);
+  }
+
+  &[data-disabled] {
+    cursor: not-allowed;
+  }
+}
+
+.gv-choice-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-3);
+  min-width: 0;
+}
+
+.gv-choice-card__media {
+  margin-bottom: var(--gv-space-8);
+  color: var(--gv-icon-default);
+
+  > svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.75;
+  }
+}
+
+.gv-choice-card__title {
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-choice-card__description {
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-choice-card__revealed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-12);
+  padding: 0 var(--gv-space-16) var(--gv-space-14) calc(var(--gv-space-16) + 16px + var(--gv-space-12));
+}
+
+/* A plain heading over a group of cards (Create report's "Project context", "Phases", "Surveys",
+   "Files attached"). Section label swaps in once `pk-project` lands (docs/NAMING.md). */
+.gv-choice-card-group-heading {
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-tertiary);
+  margin: var(--gv-space-4) 0 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+/* The radio dot and checkbox mark: the same look as RadioGroup.css / Checkbox.css draw them, so a
+   Choice card never carries a third style of dot or box. */
+.gv-choice-card__button--radio .indicator {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--gv-border-radio);
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-panel);
+  box-sizing: border-box;
+  position: relative;
+  flex-shrink: 0;
+  transition: border-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: inherit;
+    background: transparent;
+    transition: background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+  }
+}
+
+.gv-choice-card__button--radio[data-selected] .indicator {
+  border-color: var(--gv-border-selected);
+
+  &::after {
+    background: var(--gv-border-selected);
+  }
+}
+
+.gv-choice-card__button--checkbox .indicator {
+  width: var(--gv-space-15);
+  height: var(--gv-space-15);
+  box-sizing: border-box;
+  border: 1px solid var(--gv-border-control);
+  border-radius: var(--gv-radius-4);
+  background: var(--gv-surface-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+    border-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  svg {
+    width: 11px;
+    height: 11px;
+    fill: none;
+    stroke: var(--gv-text-inverse);
+    stroke-width: 3px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+.gv-choice-card__button--checkbox[data-selected] .indicator {
+  background: var(--gv-action-checked);
+  border-color: var(--gv-action-checked);
+}
