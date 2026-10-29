@@ -24,7 +24,7 @@
     "tokens:rename": "node scripts/rename-tokens.mjs",
     "tokens:usage": "node scripts/token-usage.mjs",
     "icons:in-use": "node scripts/icons-in-use.mjs",
-    "components:index": "node scripts/component-index.mjs",
+    "components:index": "node scripts/component-index.mjs && node scripts/react-aria-table.mjs",
     "figma:spec": "node scripts/figma-spec.mjs",
     "prebuild:storybook": "node scripts/token-usage.mjs",
     "build:storybook": "storybook build -o dist/storybook --quiet",

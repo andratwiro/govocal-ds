@@ -79,7 +79,7 @@ import {ComboBox, ComboBoxItem} from 'govocal-ds/base';  // a Base part, only wh
 | `npm test` | Vitest guards in `tests/` (about a second): tokens, names, the public API, the docs index. |
 | `npm run build` | Storybook, the back office and the landing page into `dist/`. |
 | `E2E_PORT=<port> npx playwright test` | Browser tests against `dist/` (build first). Pick a free port; one run at a time. |
-| `npm run components:index` | Regenerates `docs/COMPONENTS.md` and `public/llms.txt` from the stories. Run after any story or doc-comment change: `npm test` fails if stale. |
+| `npm run components:index` | Regenerates `docs/COMPONENTS.md` and `public/llms.txt` from the stories, and `docs/REACT-ARIA.md` (what each part takes from React Aria) from the code. Run after any story or doc-comment change: `npm test` fails if stale. |
 | `npm run api:report` | Regenerates `docs/API-REPORT.md` (every export and its props, from TypeScript). Run after any API change: `npm test` fails if stale. |
 | `npm run api:imports` | Moves the back office's deep imports onto the entry points (`--check` to test). |
 | `npm run tokens:rename` | Moves every file onto today's token names. |
