@@ -46,16 +46,16 @@ Components              src/components/gv/
   Actions               Button · Compact button · Icon button · Segmented control (with Segmented control item)
   Charts                Bar row · Chart · Dashboard card · Legend row · Statement row
   Data display          Avatar (with Avatar group) · Data table · List header · List header cell · List row · Stat row
-                        · Stat tile
+                        · Property list · Reaction counts · Stat tile
   Forms                 Checkbox · Drop zone · Required marker · Rich text editor · Rich text toolbar
                         · Rich text toolbar button · Title field
   Layout & containers   Card · Divider
   Navigation            Breadcrumbs
-  Overlays              Alert dialog · Coachmark · Help popover · Modal · Tooltip
+  Overlays              Alert dialog · Coachmark · Help popover · Modal · Side panel · Tooltip
   Status & feedback     Badge · Banner · New dot · Review status · Skeleton · Status badge · Toast
 Patterns                src/patterns/
   App shell             Notification list · Side nav
-  Manage tab            Filter chips · Filter menu · Filter options · Selection bar
+  Manage tab            Comment thread · Filter chips · Filter menu · Filter options · Official update · Selection bar
   Pages & menu          Section toggle
   Participation methods Common ground row · Proposals row · Vote progress · Volunteering row · Voting row
   Project page          Action row · Panel section · Phone preview · Project header · Setup step · Stat card

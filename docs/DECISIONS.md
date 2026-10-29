@@ -49,6 +49,22 @@ dashboards, Build tab).
 - Candidates for new Figma tokens: danger action (Button uses red-500), danger surface (Alert dialog's icon badge),
   warning surface (Banner warning), neutral surface (Banner neutral uses the hover grey).
 
+**Built in the side panel package**
+- The drawer has a scrim and a Save footer → **no scrim, no Save; an optional "Changes are saved as you make them" with
+  Done** → the list stays usable, and the line answers "did it save?".
+- Comments as a grid (plan) → **a list of articles with plain buttons** → a grid stops screen readers reading a long
+  comment word by word.
+- The drawer slides in and out → **slides in (slow, enter), leaves at once** → a closing panel shouldn't hold the list up.
+- Panel radius 18, no token → **14**. Panel type: labels and meta Small 12, comment words UI 13, record words Body 14.
+- Quick-action and pager buttons 30 with 18 icons → **the Icon button's 28 with 16** → one icon-button size.
+- Comment tabs with their own look (24 gap, 3px teal line) → **the system's Tabs** → one tab look.
+- Publish on an empty update focuses the field → **Publish stays off until there are words**.
+- Esc closes the drawer even mid-sentence → **Esc in a field with words keeps them and leaves the field; the next Esc
+  closes** → a half-written update isn't lost to one key.
+- Focus is lost on close → **back to the open record's row** (the pager may have walked away from the opener).
+- Reply does nothing → **it points the composer at the comment ("Replying to …")**; replies go one level deep.
+- Candidates for new Figma tokens: warning surface and border (screening strip), radius 18, grey-50 block.
+
 **Prototype bugs found on the way** (not copied into the system):
 - Space and Folder search: an empty popover with no "No results" text, arrow keys don't move, no search icon.
 - Ideation Manage: with every column on, columns run into the "+" column; the count heading ignores the search.

@@ -3,7 +3,7 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 import type {Selection} from 'react-aria-components';
 import {Check, ExternalLink, SquarePen, Trash2} from 'lucide-react';
 import {Button} from '../Button';
-import {MyToastRegion, queue} from '../Toast';
+import {ToastRegion, queue} from '../Toast';
 import {DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableRow, DataTableText} from './DataTable';
 import {PropertyList, PropertyListItem} from './PropertyList';
 import {DemoAssignee, DemoPhase, DemoStatus, DemoTags} from './PropertyList.stories';
@@ -184,7 +184,7 @@ function Manage({start = 3, footer}: {start?: number | null; footer?: boolean}) 
         )}>
         {idea && (footer ? <LongBody idea={idea} patch={patch} /> : <IdeaBody idea={idea} patch={patch} />)}
       </SidePanel>
-      <MyToastRegion />
+      <ToastRegion />
     </div>
   );
 }

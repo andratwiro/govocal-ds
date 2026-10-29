@@ -2,7 +2,7 @@ import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {MessageSquareText} from 'lucide-react';
 import {Button} from '../components/Button';
-import {MyToastRegion, queue} from '../components/Toast';
+import {ToastRegion, queue} from '../components/Toast';
 import {BulkOfficialUpdate, OfficialUpdate, OfficialUpdateForm, PostedOfficialUpdate, type PostedUpdate} from './OfficialUpdate';
 
 export const FIRST_UPDATE: PostedUpdate = {
@@ -37,7 +37,7 @@ const meta: Meta<typeof OfficialUpdate> = {
   tags: ['autodocs', 'not-in-figma'],
   excludeStories: /^(Demo[A-Z]\w*|[A-Z_]+)$/,
   parameters: {layout: 'padded'},
-  decorators: [Story => <><Story /><MyToastRegion /></>]
+  decorators: [Story => <><Story /><ToastRegion /></>]
 };
 export default meta;
 type Story = StoryObj<typeof OfficialUpdate>;

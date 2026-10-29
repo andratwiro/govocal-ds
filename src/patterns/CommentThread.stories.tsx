@@ -1,7 +1,7 @@
 import {useState, type ReactNode} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {ExternalLink, SquarePen, Trash2} from 'lucide-react';
-import {MyToastRegion, queue} from '../components/Toast';
+import {ToastRegion, queue} from '../components/Toast';
 import {PropertyList, PropertyListItem} from '../components/gv/PropertyList';
 import {DemoAssignee, DemoPhase, DemoStatus, DemoTags} from '../components/gv/PropertyList.stories';
 import {ReactionCounts} from '../components/gv/ReactionCounts';
@@ -96,7 +96,7 @@ const meta: Meta<typeof CommentThread> = {
   tags: ['autodocs', 'not-in-figma'],
   excludeStories: /^(Demo[A-Z]\w*|[A-Z_]+)$/,
   parameters: {layout: 'padded'},
-  decorators: [Story => <><Story /><MyToastRegion /></>]
+  decorators: [Story => <><Story /><ToastRegion /></>]
 };
 export default meta;
 type Story = StoryObj<typeof CommentThread>;
