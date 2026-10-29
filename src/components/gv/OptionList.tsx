@@ -4,11 +4,11 @@ import {Check} from 'lucide-react';
 import {Autocomplete, useFilter} from 'react-aria-components/Autocomplete';
 import {OverlayTriggerStateContext} from 'react-aria-components/Dialog';
 import {MenuItem} from 'react-aria-components/Menu';
-import {Menu} from '../components/Menu';
-import {SearchField} from '../components/SearchField';
-import './FilterOptions.css';
+import {Menu} from '../Menu';
+import {SearchField} from '../SearchField';
+import './OptionList.css';
 
-export interface FilterOption {
+export interface OptionListItem {
   id: string;
   label: string;
   /** Overrides the list's `icon` for this option, e.g. a gv Avatar for a person. */
@@ -17,10 +17,10 @@ export interface FilterOption {
   count?: number;
 }
 
-export interface FilterOptionsProps {
+export interface OptionListProps {
   /** Names the list, e.g. "Tags". */
   'aria-label': string;
-  options: FilterOption[];
+  options: OptionListItem[];
   /** The ids that are ticked. */
   selected: readonly string[];
   onChange: (selected: string[]) => void;
@@ -43,8 +43,8 @@ export interface FilterOptionsProps {
  * Autocomplete with the system's SearchField, so typing narrows the list and the arrows still move through it.
  * Not in Figma yet.
  */
-export function FilterOptions({'aria-label': label, options, selected, onChange, icon, countLabel = String,
-  searchable = options.length > 5, placeholder = 'Filter...', emptyLabel = 'No matches'}: FilterOptionsProps) {
+export function OptionList({'aria-label': label, options, selected, onChange, icon, countLabel = String,
+  searchable = options.length > 5, placeholder = 'Filter...', emptyLabel = 'No matches'}: OptionListProps) {
   const {contains} = useFilter({sensitivity: 'base'});
   const [query, setQuery] = useState('');
   const overlay = useContext(OverlayTriggerStateContext);

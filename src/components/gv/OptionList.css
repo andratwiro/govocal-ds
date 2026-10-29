@@ -1,4 +1,4 @@
-@import '../components/theme.css';
+@import '../theme.css';
 
 /* The prototype's filter submenu (.pj-fsub): 240 wide, a search field over rows of
    box · icon · value · count. Rows keep the system Menu's rhythm (32 tall, radius 8, UI type). */

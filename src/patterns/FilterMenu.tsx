@@ -6,7 +6,7 @@ import {Dialog} from 'react-aria-components/Dialog';
 import {Menu, MenuItem, Separator, SubmenuTrigger} from '../components/Menu';
 import {Popover} from '../components/Popover';
 import {IconButton} from '../components/gv/IconButton';
-import {FilterOptions, type FilterOption} from './FilterOptions';
+import {OptionList, type OptionListItem} from '../components/gv/OptionList';
 import './FilterMenu.css';
 
 /** One thing a list can be filtered by ("Tags"), with the values it can take. */
@@ -15,7 +15,7 @@ export interface FilterFacet {
   label: string;
   /** The facet's icon, in the menu, the chip and (unless an option has its own) in front of every option. */
   icon: ReactNode;
-  options: FilterOption[];
+  options: OptionListItem[];
   /** A "Filter..." search over the options. @default more than five options */
   searchable?: boolean;
 }
@@ -41,14 +41,14 @@ export interface FilterMenuProps {
 /**
  * The filter button and its menu (the prototype's Manage filter, after Linear): a bordered funnel icon button that
  * wears a dot while any filter is on; its menu lists the facets, each with how many values are ticked and a
- * submenu of options (`FilterOptions`, searchable when long); "Clear all filters" follows a divider once something
+ * submenu of options (`OptionList`, searchable when long); "Clear all filters" follows a divider once something
  * is on. Ticking an option keeps the menus open. React Aria's MenuTrigger, Menu and SubmenuTrigger underneath.
  * Pair it with `FilterChips` on the same `value` so the two stay in sync. Not in Figma yet.
  */
 export function FilterMenu({facets, value, onChange, countLabel, 'aria-label': label = 'Filter', defaultOpen}: FilterMenuProps) {
   const on = activeFacets(facets, value).length;
   const options = (f: FilterFacet) => (
-    <FilterOptions aria-label={f.label} options={f.options} icon={f.icon} countLabel={countLabel}
+    <OptionList aria-label={f.label} options={f.options} icon={f.icon} countLabel={countLabel}
       searchable={f.searchable ?? f.options.length > 5} selected={value[f.id] ?? []}
       onChange={next => onChange({...value, [f.id]: next})} />
   );
