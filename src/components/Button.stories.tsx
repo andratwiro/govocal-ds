@@ -1,11 +1,16 @@
 import {Button} from './Button';
+import {Plus} from 'lucide-react';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof Button> = {
   title: 'Button',
   component: Button,
   parameters: {
-    layout: 'centered'
+    layout: 'centered',
+    design: {
+      type: 'figma',
+      url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=14-877'
+    }
   },
   tags: ['autodocs']
 };
@@ -67,6 +72,18 @@ Pending.args = {
   variant: 'primary',
   isPending: true
 };
+
+export const IconPlusTextVsIconOnly: Story = () => (
+  <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
+    <Button variant="primary" onPress={() => {}}>
+      <Plus aria-hidden size={16} />
+      New project
+    </Button>
+    <Button variant="secondary" aria-label="New project" onPress={() => {}}>
+      <Plus aria-hidden size={16} />
+    </Button>
+  </div>
+);
 
 export const AllStates: Story = () => (
   <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>

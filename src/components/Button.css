@@ -58,7 +58,7 @@
     height: calc(var(--spacing) * 4.5);
   }
 
-  &:has(> svg:only-child) {
+  &[data-icon-only] {
     width: 36px;
     flex-shrink: 0;
     padding: 0;
