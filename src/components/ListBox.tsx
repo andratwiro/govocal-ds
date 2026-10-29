@@ -12,7 +12,7 @@ import {
 import {composeRenderProps} from 'react-aria-components/composeRenderProps';
 import {Check} from 'lucide-react';
 import type {ReactNode} from 'react';
-import {Text, Header} from './Content';
+import {Text} from './Content';
 import {ProgressCircle} from './ProgressCircle';
 import './ListBox.css';
 import {keepClass, ownClass} from './className';
@@ -75,5 +75,4 @@ export function DropdownItem({icon, description, ...props}: DropdownItemProps) {
   );
 }
 
-export {Text, Header};
 export type {ListBoxProps, ListBoxItemProps, ListBoxSectionProps};

@@ -2,7 +2,8 @@
 import {useContext, useState, type KeyboardEvent, type ReactNode} from 'react';
 import {Autocomplete, useFilter} from 'react-aria-components/Autocomplete';
 import {OverlayTriggerStateContext} from 'react-aria-components/Dialog';
-import {Menu, MenuItem, Text} from '../Menu';
+import {Menu, MenuItem} from '../Menu';
+import {Text} from '../Content';
 import {SearchField} from '../SearchField';
 import {Button} from '../Button';
 import clsx from 'clsx';

@@ -1,6 +1,5 @@
 'use client';
 import {type DialogProps} from 'react-aria-components/Dialog';
-import {Heading} from './Content';
 import {
   Sheet as RACSheet,
   SheetBackdrop,
@@ -55,4 +54,3 @@ export function Sheet({children, className, style, ...props}: SheetProps) {
   );
 }
 
-export {Heading};

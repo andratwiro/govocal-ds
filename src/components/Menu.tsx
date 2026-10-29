@@ -16,8 +16,7 @@ import {
 } from 'react-aria-components/Menu';
 import {Popover, type PopoverProps} from './Popover';
 import {ProgressCircle} from './ProgressCircle';
-import {Text, Header, Keyboard} from './Content';
-import {Separator, type SeparatorProps} from './Separator';
+import {Text} from './Content';
 import React, {type ReactNode} from 'react';
 import './Menu.css';
 import {keepClass} from './className';
@@ -120,5 +119,4 @@ export function SubmenuTrigger(props: SubmenuTriggerProps) {
   );
 }
 
-export {Text, Header, Keyboard, Separator};
-export type {MenuProps, MenuSectionProps, MenuLoadMoreItemProps, SubmenuTriggerProps, SeparatorProps};
+export type {MenuProps, MenuSectionProps, MenuLoadMoreItemProps, SubmenuTriggerProps};

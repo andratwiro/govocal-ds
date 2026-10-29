@@ -13,7 +13,6 @@ import {
   type GridListHeaderProps
 } from 'react-aria-components/GridList';
 import {Checkbox} from './Checkbox';
-import {Text} from './Content';
 import {GripVertical} from 'lucide-react';
 import {ProgressCircle} from './ProgressCircle';
 import './GridList.css';
@@ -71,5 +70,4 @@ export function GridListHeader(props: GridListHeaderProps) {
   return <AriaGridListHeader {...props} className={clsx('react-aria-GridListHeader', props.className)} />;
 }
 
-export {Text};
 export type {GridListProps, GridListSectionProps, GridListHeaderProps};

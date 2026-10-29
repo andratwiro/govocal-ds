@@ -1,6 +1,7 @@
 import {Button} from './Button';
 import {SheetTrigger} from 'react-aria-components/Sheet';
-import {Heading, Sheet} from './Sheet';
+import {Sheet} from './Sheet';
+import {Heading} from './Content';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 import {TextField} from './TextField';
 

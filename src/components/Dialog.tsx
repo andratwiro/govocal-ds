@@ -27,5 +27,4 @@ export function DialogTrigger(props: DialogTriggerProps) {
   return <RACDialogTrigger {...props} />;
 }
 
-export {Heading} from './Content';
 export type {DialogTriggerProps};
