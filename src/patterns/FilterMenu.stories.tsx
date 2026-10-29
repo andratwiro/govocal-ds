@@ -32,7 +32,7 @@ function Demo({initial = {}, open}: {initial?: FilterValue; open?: boolean}) {
 }
 
 const meta: Meta<typeof FilterMenu> = {
-  title: 'Patterns/Manage tab/Filter menu',
+  title: 'Patterns/Lists/Filter menu',
   component: FilterMenu,
   tags: ['autodocs', 'not-in-figma'],
   // IDEA_FACETS is shared data for the other filter stories, not a story.

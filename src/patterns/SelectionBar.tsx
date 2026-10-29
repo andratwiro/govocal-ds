@@ -11,9 +11,10 @@ import './SelectionBar.css';
 export interface SelectionAction {
   id: string;
   label: string;
-  /** A 16px Lucide icon, `aria-hidden`. */
-  icon: ReactNode;
-  /** A system `Menu` that the action opens (e.g. the statuses to pick from). Without it, the action calls `onAction`. */
+  /** A 16px Lucide icon, `aria-hidden`, before the label. */
+  icon?: ReactNode;
+  /** A system `Menu` that the action opens (the statuses or groups to pick from). Without it, the action calls
+   * `onAction` (an export, or a confirmation before a delete). */
   menu?: ReactElement;
 }
 
@@ -25,18 +26,18 @@ export interface SelectionBarProps {
   onAction?: (id: string) => void;
   /** Clears the selection (the ×). */
   onClear: () => void;
-  /** What shows while nothing is selected, e.g. the list's count heading. */
+  /** What shows while nothing is selected, e.g. the list's count heading or an "Export all" button. */
   children?: ReactNode;
   /** @default 'Selection actions' */
   'aria-label'?: string;
 }
 
 /**
- * The batch-action bar (the prototype's Manage table, after Linear): while items are selected it takes the place of
- * the list's count, reading "1 selected" followed by one secondary button per action (Status, Assign, Tags, Copy to
- * phase, Official update) and a × that clears the selection. Actions open their own menu or call `onAction`. With
- * nothing selected it shows `children` instead, so the tools beside it never move. A React Aria Toolbar: Tab
- * enters it once and the arrows move between actions. Not in Figma yet.
+ * The bulk-action bar of a list with checkboxes (the prototype's `.pj-inbar`, after Linear): while rows are selected
+ * it reads "2 selected", then one secondary button per action and a × that clears the selection. Actions open their
+ * own menu or call `onAction`. With nothing selected it shows `children` instead (the list's count heading, a quiet
+ * "Export all"), so the tools beside it never move. A React Aria Toolbar: Tab enters it once and the arrows move
+ * between actions. On the phase Manage tab, the Input manager and Users. Not in Figma yet.
  */
 export function SelectionBar({count, actions, onAction, onClear, children, 'aria-label': label = 'Selection actions'}: SelectionBarProps) {
   if (count === 0) return <>{children}</>;

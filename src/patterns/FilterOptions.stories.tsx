@@ -20,7 +20,7 @@ function Demo({options, initial = [], searchable, icon = true}: {options: Filter
 }
 
 const meta: Meta<typeof FilterOptions> = {
-  title: 'Patterns/Manage tab/Filter options',
+  title: 'Patterns/Lists/Filter options',
   component: FilterOptions,
   tags: ['autodocs', 'not-in-figma']
 };

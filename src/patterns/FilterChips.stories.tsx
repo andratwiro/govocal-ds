@@ -16,7 +16,7 @@ function Demo({initial, showClear}: {initial: FilterValue; showClear?: boolean})
 }
 
 const meta: Meta<typeof FilterChips> = {
-  title: 'Patterns/Manage tab/Filter chips',
+  title: 'Patterns/Lists/Filter chips',
   component: FilterChips,
   tags: ['autodocs', 'not-in-figma'],
   parameters: {layout: 'padded'}
@@ -24,7 +24,7 @@ const meta: Meta<typeof FilterChips> = {
 export default meta;
 type Story = StoryObj<typeof FilterChips>;
 
-/** The two filters of the Manage tab: an assignee and a tag. × removes one, Clear removes both. */
+/** Two filters on (the phase Manage tab's): an assignee and a tag. × removes one, Clear removes both. */
 export const TwoFilters: Story = {name: 'Default', render: () => <Demo initial={{assignee: ['Manager A'], tags: ['Cycling']}} />};
 
 /** Several values in one facet read "is any of" and list them. */

@@ -22,7 +22,6 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-projects-actions { display: flex; align-items: center; gap: var(--gv-space-8); }
 .bo-projects-tab { display: inline-flex; align-items: center; gap: var(--gv-space-6); }
 .bo-projects-filters { align-items: center; gap: var(--gv-space-8); }
-.bo-projects-extra { display: inline-flex; align-items: center; gap: var(--gv-space-4); }
 .bo-projects-icon-head { display: inline-flex; align-items: center; }
 .bo-projects-name { display: flex; align-items: center; gap: var(--gv-space-12); }
 .bo-projects-folder { display: flex; align-items: center; gap: var(--gv-space-4); margin-block-start: var(--gv-space-2); }
@@ -80,7 +79,6 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-inputs-main:has(> .bo-inputs-side) { grid-template-columns: minmax(0, 1fr) minmax(0, 380px); align-items: start; }
 .bo-inputs-list-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-16); min-height: 32px; }
 .bo-inputs-list-head > .bo-note { margin: 0; }
-.bo-inputs-bulk { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-8); }
 .bo-inputs-pages { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-4); }
 .bo-inputs-pages > .bo-note { margin-inline-start: var(--gv-space-8); }
 .bo-inputs-side { position: sticky; inset-block-start: var(--gv-space-16); max-height: calc(100vh - 2 * var(--gv-space-16)); overflow-y: auto; }
@@ -184,6 +182,7 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-users-nowrap { white-space: nowrap; }
 .bo-users-scroll { overflow-x: auto; }
 .bo-users-toolbar > .gv-checkbox { flex: none; white-space: nowrap; }
+.bo-users-toolbar > .gv-selection-bar { flex-shrink: 0; }
 .bo-users-form { display: grid; gap: var(--gv-space-16); max-width: 640px; }
 .bo-users-modal { display: grid; gap: var(--gv-space-16); }
 .bo-users-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--gv-space-16); }

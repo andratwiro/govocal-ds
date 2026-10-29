@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {CircleCheck, Copy, MessageSquareText, Tag, User} from 'lucide-react';
+import {CircleCheck, Copy, Download, MessageSquareText, Tag, User, Users} from 'lucide-react';
 import {Button} from '../components/Button';
 import {Menu, MenuItem} from '../components/Menu';
 import {SelectionBar, type SelectionAction} from './SelectionBar';
@@ -9,7 +9,7 @@ const ic = (Icon: typeof Tag) => <Icon aria-hidden size={16} />;
 const menu = (label: string, items: string[]) => (
   <Menu aria-label={label}>{items.map(i => <MenuItem key={i} id={i}>{i}</MenuItem>)}</Menu>
 );
-// The Manage tab's batch actions (invented values).
+// The phase Manage tab's bulk actions (invented values).
 const ACTIONS: SelectionAction[] = [
   {id: 'status', label: 'Status', icon: ic(CircleCheck), menu: menu('Status', ['Proposed', 'Viewed', 'Under consideration', 'Accepted', 'Rejected', 'Implemented'])},
   {id: 'assign', label: 'Assign', icon: ic(User), menu: menu('Assign', ['Unassigned', 'Manager A', 'Manager B', 'Manager C'])},
@@ -18,12 +18,18 @@ const ACTIONS: SelectionAction[] = [
   {id: 'update', label: 'Official update', icon: ic(MessageSquareText)}
 ];
 
-function Demo({initial}: {initial: number}) {
+// The Users list's two: a menu of manual groups and an export.
+const USER_ACTIONS: SelectionAction[] = [
+  {id: 'group', label: 'Add to group', icon: ic(Users), menu: menu('Manual groups', ['Youth panel', 'Cyclists', 'Market traders'])},
+  {id: 'export', label: 'Export selected', icon: ic(Download)}
+];
+
+function Demo({initial, actions = ACTIONS}: {initial: number; actions?: SelectionAction[]}) {
   const [count, setCount] = useState(initial);
   const [last, setLast] = useState('');
   return (
     <div style={{display: 'grid', gap: 12, width: 760}}>
-      <SelectionBar count={count} actions={ACTIONS} onClear={() => setCount(0)} onAction={setLast}>
+      <SelectionBar count={count} actions={actions} onClear={() => setCount(0)} onAction={setLast}>
         <h3 style={{margin: 0, font: 'var(--gv-type-title)'}}>124 ideas</h3>
       </SelectionBar>
       <div style={{font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>
@@ -34,7 +40,7 @@ function Demo({initial}: {initial: number}) {
 }
 
 const meta: Meta<typeof SelectionBar> = {
-  title: 'Patterns/Manage tab/Selection bar',
+  title: 'Patterns/Lists/Selection bar',
   component: SelectionBar,
   tags: ['autodocs', 'not-in-figma'],
   parameters: {layout: 'padded'}
@@ -50,6 +56,9 @@ export const Many: Story = {render: () => <Demo initial={12} />};
 
 /** Empty: nothing selected, the bar gives way to the list's own heading. */
 export const Empty: Story = {render: () => <Demo initial={0} />};
+
+/** Users: the same bar with the two actions of the Users list, a menu and a plain action. */
+export const UsersList: Story = {name: 'Users', render: () => <Demo initial={2} actions={USER_ACTIONS} />};
 
 /** Right to left (Arabic): the count at the right, actions flowing left, the × last. */
 export const RightToLeft: Story = {name: 'Right to left', globals: {direction: 'rtl'}, render: () => <Demo initial={3} />};

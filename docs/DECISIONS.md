@@ -51,6 +51,11 @@ dashboards, Build tab).
 
 ## Prototype review (29 Oct 2026)
 
+- Projects filters: the real admin's "Add filter" adds a Select per filter, the prototype's lists filter through a
+  funnel menu and chips → **the Filter menu and Filter chips** (Visibility, Folder, Manager) → one way to filter a list,
+  as on the phase Manage tab.
+- Bulk-action bars: the Input manager and Users each had their own (chevrons, quiet Delete and Export), the prototype
+  one `.pj-inbar` → **the Selection bar on all three lists**: secondary buttons, no chevrons, a × that clears.
 - Single-choice pickers mark the chosen value with a checkbox in some places, a check in others → **a check mark** →
   a checkbox means "pick several"; React Aria's single-select draws a check.
 - The detail drawer has a Save button although every change applies at once → **no Save button; changes apply at once

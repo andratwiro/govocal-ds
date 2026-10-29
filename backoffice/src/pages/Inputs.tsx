@@ -11,7 +11,6 @@ import {Switch} from '../../../src/components/Switch';
 import {ListBox, ListBoxItem} from '../../../src/components/ListBox';
 import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
 import {TextArea} from '../../../src/components/TextField';
-import {Toolbar} from '../../../src/components/Toolbar';
 import {MyToastRegion, queue} from '../../../src/components/Toast';
 import {Button} from '../../../src/components/Button';
 import {Link} from '../../../src/components/Link';
@@ -21,7 +20,8 @@ import {NewDot} from '../../../src/components/gv/NewDot';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {Modal} from '../../../src/components/gv/Modal';
 import {PanelSection} from '../../../src/patterns/PanelSection';
-import {ChevronDown, ChevronLeft, ChevronRight, Download, Trash2, TriangleAlert, X} from 'lucide-react';
+import {SelectionBar, type SelectionAction} from '../../../src/patterns/SelectionBar';
+import {ChevronDown, ChevronLeft, ChevronRight, CircleCheck, Download, Trash2, TriangleAlert, User, X} from 'lucide-react';
 import {ASSIGNEES, ME, PROJECTS, STATUSES} from '../data';
 import {MANAGED_INPUTS, PAGE_SIZE, TOPICS, type ManagedInput} from '../data-inputs';
 import {Gap, GapLegend} from '../Gap';
@@ -142,6 +142,19 @@ export function Inputs() {
     description: 'The .xlsx file downloads when it is ready.'
   }, {timeout: 5000});
   const preview = inputs.find(i => i.id === open);
+  const bulkActions: SelectionAction[] = [
+    {id: 'status', label: 'Change status', icon: <CircleCheck aria-hidden size={16} />, menu: (
+      <Menu aria-label="Change status" onAction={k => changeSelected({status: String(k)})}>
+        {STATUSES.map(s => <MenuItem key={s} id={s}>{s}</MenuItem>)}
+      </Menu>
+    )},
+    {id: 'assign', label: 'Assign', icon: <User aria-hidden size={16} />, menu: (
+      <Menu aria-label="Assign" onAction={k => changeSelected({assignee: String(k)})}>
+        {ASSIGNEES.map(a => <MenuItem key={a} id={a}>{a}</MenuItem>)}
+      </Menu>
+    )},
+    {id: 'delete', label: 'Delete', icon: <Trash2 aria-hidden size={16} />}
+  ];
 
   return (
     <Page title="Input manager" description="Give feedback, add tags and move input from one project to another.">
@@ -201,24 +214,8 @@ export function Inputs() {
           <div className="bo-inputs-list">
             <div className="bo-inputs-list-head">
               <p className="bo-note">{rows.length} inputs</p>
-              {selected.size > 0 && (
-                <Toolbar aria-label="Bulk actions" className="react-aria-Toolbar bo-inputs-bulk">
-                  <span>{selected.size} selected</span>
-                  <MenuTrigger>
-                    <Button variant="secondary" size={32}>Change status<ChevronDown aria-hidden size={16} /></Button>
-                    <Menu aria-label="Change status" onAction={k => changeSelected({status: String(k)})}>
-                      {STATUSES.map(s => <MenuItem key={s} id={s}>{s}</MenuItem>)}
-                    </Menu>
-                  </MenuTrigger>
-                  <MenuTrigger>
-                    <Button variant="secondary" size={32}>Assign<ChevronDown aria-hidden size={16} /></Button>
-                    <Menu aria-label="Assign" onAction={k => changeSelected({assignee: String(k)})}>
-                      {ASSIGNEES.map(a => <MenuItem key={a} id={a}>{a}</MenuItem>)}
-                    </Menu>
-                  </MenuTrigger>
-                  <Button variant="quiet" size={32} onPress={() => setConfirmDelete(true)}><Trash2 aria-hidden size={16} />Delete</Button>
-                </Toolbar>
-              )}
+              <SelectionBar aria-label="Bulk actions" count={selected.size} actions={bulkActions}
+                onAction={id => id === 'delete' && setConfirmDelete(true)} onClear={() => setSelected(new Set())} />
             </div>
             <div className="bo-inputs-table">
               <DataTable aria-label="Inputs" selectionMode="multiple" className="bo-inputs-grid"

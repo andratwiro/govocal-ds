@@ -1,7 +1,7 @@
 import {useMemo, useState, type ComponentProps} from 'react';
 import {useNavigate} from 'react-router';
-import {ArrowDown, ArrowUp, Calendar, ChevronDown, ChevronLeft, ChevronRight, FileText, Folder, FolderPlus, GripVertical,
-  LayoutGrid, MapPin, Orbit, Plus, Users, X} from 'lucide-react';
+import {ArrowDown, ArrowUp, Calendar, ChevronDown, ChevronLeft, ChevronRight, Eye, FileText, Folder, FolderPlus,
+  GripVertical, LayoutGrid, MapPin, Orbit, Plus, UserRound, Users} from 'lucide-react';
 import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableOptions,
   DataTableEmpty}
   from '../../../src/components/gv/DataTable';
@@ -22,6 +22,8 @@ import {Badge} from '../../../src/components/gv/Badge';
 import {Modal} from '../../../src/components/gv/Modal';
 import {Card} from '../../../src/components/gv/Card';
 import {IconButton} from '../../../src/components/gv/IconButton';
+import {FilterChips} from '../../../src/patterns/FilterChips';
+import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
 import {PROJECTS, type Project} from '../data';
 import {CALENDAR_START, FOLDERS, PENDING, SPACES, TEMPLATES, type Folder as FolderRow} from '../data-projects';
 import {Gap, GapLegend} from '../Gap';
@@ -38,12 +40,34 @@ const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
   'November', 'December'];
 type Range = NonNullable<ComponentProps<typeof DateRangePicker>['value']>;
 type Space = (typeof SPACES)[number];
-// The filters Add filter can add, each a Select of its values ("Any" keeps every project).
-type ExtraFilter = 'visibility' | 'folder';
-const EXTRA_FILTERS: {id: ExtraFilter; label: string}[] = [{id: 'visibility', label: 'Visibility'}, {id: 'folder', label: 'Folder'}];
-const ANY = 'Any';
 const KNOWN = new Set(PROJECTS.map(p => p.id)); // projects that have an overview screen
 const NO_FOLDER = 'No folder';
+const NO_MANAGER = 'Not assigned';
+
+// The Filter menu's facets: each project carries one value per facet (a manager per name); a facet keeps the
+// projects with any of its ticked values, and facets add up.
+const visibilityOf = (p: Project) => (p.status === 'Live' ? 'Published' : 'Draft');
+const facetValues: Record<string, (p: Project) => string[]> = {
+  visibility: p => [visibilityOf(p)],
+  folder: p => [p.folder ?? NO_FOLDER],
+  manager: p => (p.managers?.length ? p.managers : [NO_MANAGER])
+};
+const countOf = (projects: Project[], facet: string, value: string) =>
+  projects.filter(p => facetValues[facet](p).includes(value)).length;
+function projectFacets(projects: Project[], folders: FolderRow[]): FilterFacet[] {
+  const option = (facet: string) => (id: string) => ({id, label: id, count: countOf(projects, facet, id)});
+  const managers = [...new Set(projects.flatMap(p => p.managers ?? []))].sort();
+  return [
+    {id: 'visibility', label: 'Visibility', icon: <Eye aria-hidden size={16} />, options: ['Published', 'Draft'].map(option('visibility'))},
+    {id: 'folder', label: 'Folder', icon: <Folder aria-hidden size={16} />,
+      options: [NO_FOLDER, ...folders.map(f => f.name)].map(option('folder'))},
+    {id: 'manager', label: 'Manager', icon: <UserRound aria-hidden size={16} />, options: [
+      {...option('manager')(NO_MANAGER), icon: <Avatar size={16} unassigned />},
+      ...managers.map(m => ({...option('manager')(m), icon: <Avatar size={16} initials={initial(m)} />}))
+    ]}
+  ];
+}
+const projectsWord = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
 
 // "Manager B" → "B": one letter keeps the 28 avatar clean, as in the prototype's single-initial avatars.
 const initial = (name: string) => name.split(' ').pop()!.slice(0, 1).toUpperCase();
@@ -372,7 +396,7 @@ export function Projects() {
   const [folders, setFolders] = useState(FOLDERS);
   const [spaces, setSpaces] = useState<Space[]>(SPACES);
   const [range, setRange] = useState<Range | null>(null);
-  const [extra, setExtra] = useState<Partial<Record<ExtraFilter, string>>>({});
+  const [filters, setFilters] = useState<FilterValue>({});
   const [dialog, setDialog] = useState<Dialog>(null);
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState(SORTS[0]);
@@ -385,11 +409,9 @@ export function Projects() {
     const to = range && new Date(range.end.year, range.end.month - 1, range.end.day).getTime();
     const inRange = (p: Project) => from === null || to === null ||
       (time(p.start) <= to && (Number.isNaN(time(p.end)) || time(p.end) >= from));
-    const visibility = extra.visibility, folder = extra.folder;
     const list = projects.filter(p => p.title.toLowerCase().includes(query.toLowerCase()) && (!pending || PENDING.has(p.id)) &&
       inRange(p) &&
-      (!visibility || visibility === ANY || (visibility === 'Published') === (p.status === 'Live')) &&
-      (!folder || folder === ANY || (p.folder ?? NO_FOLDER) === folder));
+      Object.entries(filters).every(([facet, on]) => !on.length || facetValues[facet](p).some(v => on.includes(v))));
     const by = (f: (a: Project, b: Project) => number) => [...list].sort(f);
     switch (sort) {
       case 'Alphabetically (a-z)': return by((a, b) => a.title.localeCompare(b.title));
@@ -398,7 +420,8 @@ export function Projects() {
       case 'Recently created (old-new)': return [...list].reverse();
       default: return list;
     }
-  }, [projects, query, sort, pending, range, extra]);
+  }, [projects, query, sort, pending, range, filters]);
+  const facets = useMemo(() => projectFacets(projects, folders), [projects, folders]);
 
   const add = (p: Project, after?: string) => setProjects(list => {
     if (!after) return [p, ...list];
@@ -458,26 +481,9 @@ export function Projects() {
             </Select>
             <ToggleButton isSelected={pending} onChange={setPending}>Pending approval</ToggleButton>
             <DateRangePicker aria-label="Dates" value={range} onChange={setRange} />
-            {EXTRA_FILTERS.filter(f => f.id in extra).map(f => (
-              <span key={f.id} className="bo-projects-extra">
-                <Select aria-label={f.label} selectedKey={extra[f.id]} onSelectionChange={k => setExtra(e => ({...e, [f.id]: String(k)}))}>
-                  {(f.id === 'visibility' ? [ANY, 'Published', 'Draft'] : [ANY, NO_FOLDER, ...folders.map(x => x.name)])
-                    .map(v => <SelectItem key={v} id={v}>{v === ANY ? `${f.label}: any` : v}</SelectItem>)}
-                </Select>
-                <IconButton aria-label={`Remove filter: ${f.label}`} onPress={() => setExtra(({[f.id]: _, ...rest}) => rest)}>
-                  <X aria-hidden size={16} />
-                </IconButton>
-              </span>
-            ))}
-            <MenuTrigger>
-              <Button variant="secondary" size={32} isDisabled={EXTRA_FILTERS.every(f => f.id in extra)}>
-                <Plus aria-hidden size={16} />Add filter</Button>
-              <Menu aria-label="Add filter" disabledKeys={Object.keys(extra)}
-                onAction={k => setExtra(e => ({...e, [k as ExtraFilter]: ANY}))}>
-                {EXTRA_FILTERS.map(f => <MenuItem key={f.id} id={f.id}>{f.label}</MenuItem>)}
-              </Menu>
-            </MenuTrigger>
+            <FilterMenu aria-label="Filter projects" facets={facets} value={filters} onChange={setFilters} countLabel={projectsWord} />
           </div>
+          <FilterChips aria-label="Active filters" facets={facets} value={filters} onChange={setFilters} />
           <GapLegend names={['Project thumbnail']} />
           <ProjectTable rows={rows} onRowAction={onRowAction} />
           <p className="bo-note bo-projects-foot">All projects have been loaded</p>

@@ -55,7 +55,7 @@ Components              src/components/gv/
   Status & feedback     Badge · Banner · New dot · Review status · Skeleton · Status badge
 Patterns                src/patterns/
   App shell             Help popover · Notification list · Side nav
-  Manage tab            Filter chips · Filter menu · Filter options · Selection bar
+  Lists                 Filter chips · Filter menu · Filter options · Selection bar
   Pages & menu          Section toggle
   Participation methods Common ground row · Proposals row · Vote progress · Volunteering row · Voting row
   Project page          Action row · Panel section · Phone preview · Project header · Setup step · Stat card
@@ -151,7 +151,7 @@ below). Rows without a rename say "same".
 |---|---|---|
 | Components/Coachmark · Skeleton · Data table | Components/Overlays/Coachmark · Components/Status & feedback/Skeleton · Components/Data display/Data table | none |
 | Patterns/Help popover · Notification list · Side nav | Patterns/App shell/… (same names) | none |
-| Patterns/Filter chips · Filter menu · Filter options · Selection bar | Patterns/Manage tab/… (same names; the phase's Manage tab is their one place) | none |
+| Patterns/Filter chips · Filter menu · Filter options · Selection bar | Patterns/Lists/… (same names; the back office's lists: the phase Manage tab, Projects, Input manager, Users) | none |
 | Patterns/Section toggle | Patterns/Pages & menu/Section toggle | none |
 | Patterns/Action row · Panel section · Stat card | Patterns/Project page/… (same names) | none |
 | Patterns/Phone preview | Patterns/Project page/Phone preview | PhoneFrame → PhonePreview; AvatarStack → AvatarGroup, now in Avatar.tsx |

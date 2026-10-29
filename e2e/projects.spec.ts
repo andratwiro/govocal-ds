@@ -190,18 +190,40 @@ test('the Dates range keeps the projects running in it', async ({page}) => {
   await expect(bodyRows(page).first()).toContainText('Green Corridors for Larkvale');
 });
 
-test('Add filter adds a real filter, which narrows the list and can be removed', async ({page}) => {
+// The Filter menu and Filter chips (src/patterns), as on the phase Manage tab: they replace the hand-built
+// "Add filter" button and its removable Selects. A facet keeps any of its ticked values; facets add up.
+test('the Filter menu adds a filter as a chip, which narrows the list and can be removed', async ({page}) => {
   await page.goto('/backoffice/#/projects');
-  await page.getByRole('button', {name: 'Add filter'}).click();
-  await page.getByRole('menuitem', {name: 'Visibility'}).click();
-  await page.getByRole('button', {name: /^Visibility: any/}).click();
-  await page.getByRole('option', {name: 'Draft'}).click();
-  for (const row of await bodyRows(page).all()) await expect(row.locator('.gv-status')).toHaveText('Draft');
-  await expect(bodyRows(page)).not.toHaveCount(8);
-  await page.getByRole('button', {name: 'Add filter'}).click();
-  await expect(page.getByRole('menuitem', {name: 'Visibility'})).toBeDisabled();
+  const filter = page.getByRole('button', {name: /^Filter projects/});
+  const chips = page.getByRole('grid', {name: 'Active filters'});
+  await expect(chips).toHaveCount(0);
+  await filter.click();
+  const menu = page.getByRole('menu', {name: 'Filter projects'});
+  for (const f of ['Visibility', 'Folder', 'Manager']) await expect(menu.getByRole('menuitem', {name: new RegExp(`^${f}`)})).toBeVisible();
+  await menu.getByRole('menuitem', {name: /^Visibility/}).hover();
+  await page.getByRole('menuitemcheckbox', {name: /^Draft/}).click();
+  await expect(page.getByRole('menuitemcheckbox', {name: /^Draft/})).toHaveAttribute('aria-checked', 'true');
+  await expect(page.getByRole('menuitemcheckbox', {name: /^Published/})).toContainText('6 projects');
   await page.keyboard.press('Escape');
-  await page.getByRole('button', {name: 'Remove filter: Visibility'}).click();
+  await page.keyboard.press('Escape');
+  await expect(filter).toHaveAccessibleName('Filter projects (1 on)');
+  await expect(chips.getByRole('row')).toHaveCount(1);
+  await expect(chips).toContainText('Visibility');
+  await expect(chips).toContainText('Draft');
+  for (const row of await bodyRows(page).all()) await expect(row.locator('.gv-status')).toHaveText('Draft');
+  await expect(bodyRows(page)).toHaveCount(2);
+  // A second facet adds up: drafts with no manager.
+  await filter.click();
+  await page.getByRole('menu', {name: 'Filter projects'}).getByRole('menuitem', {name: /^Manager/}).hover();
+  await page.getByRole('menuitemcheckbox', {name: /^Not assigned/}).click();
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('Escape');
+  await expect(chips.getByRole('row')).toHaveCount(2);
+  await chips.getByRole('button', {name: 'Remove the Visibility filter'}).click();
+  await expect(chips.getByRole('row')).toHaveCount(1);
+  await expect(bodyRows(page)).toHaveCount(2); // the two projects without a manager
+  await page.getByRole('button', {name: 'Clear', exact: true}).click();
+  await expect(chips).toHaveCount(0);
   await expect(bodyRows(page)).toHaveCount(8);
 });
 

@@ -5,7 +5,7 @@ import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow
   DataTablePerson, DataTableStack, DataTableOptions} from '../../../src/components/gv/DataTable';
 import {ListBox, ListBoxItem} from '../../../src/components/ListBox';
 import {SearchField} from '../../../src/components/SearchField';
-import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
+import {Menu, MenuItem} from '../../../src/components/Menu';
 import {Button} from '../../../src/components/Button';
 import {Card, CardRadio, CardRadioGroup} from '../../../src/components/gv/Card';
 import {Checkbox} from '../../../src/components/gv/Checkbox';
@@ -13,6 +13,7 @@ import {Modal} from '../../../src/components/gv/Modal';
 import {TextField} from '../../../src/components/TextField';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {MyToastRegion, queue} from '../../../src/components/Toast';
+import {SelectionBar, type SelectionAction} from '../../../src/patterns/SelectionBar';
 import {GROUPS, PEOPLE, SEGMENTS, SMART_RULES, type Person} from '../data-users';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
@@ -161,24 +162,28 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
   const count = ids.length;
   const exportUsers = (n: number) => toast('Export started', `${n === 1 ? '1 user' : `${n} users`} in users.xlsx`);
 
+  const actions: SelectionAction[] = [
+    {id: 'group', label: 'Add to group', icon: <UsersIcon aria-hidden size={16} />, menu: (
+      <Menu aria-label="Manual groups" onAction={k => { onAddToGroup(ids, String(k)); setSelected(new Set()); }}>
+        {groups.filter(g => g.kind === 'manual').map(g => <MenuItem key={g.id} id={g.id}>{g.label}</MenuItem>)}
+      </Menu>
+    )},
+    {id: 'export', label: 'Export selected', icon: <Download aria-hidden size={16} />}
+  ];
+
+  // The Select checkbox picks every row; once some are picked it stands alone (named for screen readers) and the
+  // selection bar beside it says how many.
   const toolbar = (
     <div className="bo-users-toolbar">
       <Checkbox isSelected={count > 0 && count === rows.length} isIndeterminate={count > 0 && count < rows.length}
+        aria-label={count > 0 ? 'Select all users' : undefined}
         onChange={on => setSelected(on ? new Set(rows.map(r => r.id)) : new Set())}>
-        {count > 0 ? `${count} selected` : 'Select'}
+        {count === 0 && 'Select'}
       </Checkbox>
+      <SelectionBar count={count} actions={actions} onAction={id => id === 'export' && exportUsers(count)}
+        onClear={() => setSelected(new Set())} />
       <span className="bo-push" />
-      {count > 0 ? (
-        <>
-          <MenuTrigger>
-            <Button variant="secondary" size={32} hasMenu><UsersIcon aria-hidden size={16} />Add to group</Button>
-            <Menu aria-label="Manual groups" onAction={k => { onAddToGroup(ids, String(k)); setSelected(new Set()); }}>
-              {groups.filter(g => g.kind === 'manual').map(g => <MenuItem key={g.id} id={g.id}>{g.label}</MenuItem>)}
-            </Menu>
-          </MenuTrigger>
-          <Button variant="quiet" size={32} onPress={() => exportUsers(count)}><Download aria-hidden size={16} />Export selected</Button>
-        </>
-      ) : <Button variant="quiet" size={32} onPress={() => exportUsers(all.length)}><Download aria-hidden size={16} />Export all</Button>}
+      {count === 0 && <Button variant="quiet" size={32} onPress={() => exportUsers(all.length)}><Download aria-hidden size={16} />Export all</Button>}
       <SearchField aria-label="Search users" placeholder="Search" value={query} onChange={setQuery} />
     </div>
   );
