@@ -1,0 +1,132 @@
+@import '../theme.css';
+
+/*
+ * Alert dialog (the prototype's `.pj-modal--confirm`, "Reset all participation data?" / "Download
+ * the results (PDF)"): the Modal shell at 420, but its own head (icon badge over title, no ×) and
+ * a plain footer (no toolbar fill, no border).
+ */
+.react-aria-Modal:has(> .gv-alert-dialog) {
+  max-width: 94vw;
+  border-radius: var(--gv-radius-12);
+  outline: none;
+  background: var(--gv-surface-panel);
+  box-shadow: var(--gv-shadow-dialog);
+  overflow: hidden;
+}
+
+.gv-alert-dialog {
+  box-sizing: border-box;
+  width: 420px;
+  max-width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: var(--gv-space-24);
+  outline: none;
+  font-family: var(--gv-font-family);
+  color: var(--gv-text-body);
+}
+
+/* Icon badge: 40, radius 10. No `--gv-surface-danger`/`--gv-icon-danger` tokens: a mix of
+   `--gv-color-red-500` on the panel, reported as a gap. */
+.gv-alert-dialog__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-block-end: var(--gv-space-16);
+  border-radius: var(--gv-radius-10);
+
+  &[data-tone='danger'] {
+    background: color-mix(in srgb, var(--gv-color-red-500) 12%, var(--gv-surface-panel));
+    color: var(--gv-color-red-500);
+  }
+}
+
+.gv-alert-dialog__title {
+  margin: 0 0 var(--gv-space-8);
+  font: var(--gv-type-title);
+  letter-spacing: var(--gv-type-title-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-alert-dialog__body {
+  font: var(--gv-type-body);
+  letter-spacing: var(--gv-type-body-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-alert-dialog__body > p {
+  margin: 0;
+}
+
+.gv-alert-dialog__impact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-12);
+  margin: var(--gv-space-16) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gv-alert-dialog__impact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gv-space-10);
+}
+
+.gv-alert-dialog__impact-icon {
+  flex: none;
+  margin-block-start: 1px;
+}
+
+.gv-alert-dialog__impact-row[data-tone='danger'] .gv-alert-dialog__impact-icon {
+  color: var(--gv-color-red-500);
+}
+
+.gv-alert-dialog__impact-row[data-tone='caution'] .gv-alert-dialog__impact-icon {
+  color: var(--gv-text-secondary);
+}
+
+.gv-alert-dialog__impact-row[data-tone='safe'] .gv-alert-dialog__impact-icon {
+  color: var(--gv-text-reviewed);
+}
+
+.gv-alert-dialog__impact-title {
+  display: block;
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-alert-dialog__impact-description {
+  display: block;
+  margin-block-start: 2px;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-alert-dialog__confirm-text {
+  margin-block-start: var(--gv-space-16);
+}
+
+.gv-alert-dialog__confirm-label {
+  margin: 0 0 var(--gv-space-8);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-secondary);
+
+  strong {
+    font-weight: var(--gv-type-ui-strong-weight);
+    color: var(--gv-text-primary);
+  }
+}
+
+.gv-alert-dialog__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gv-space-12);
+  margin-block-start: var(--gv-space-24);
+}
