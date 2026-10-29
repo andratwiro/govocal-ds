@@ -39,3 +39,8 @@ export const Expand: Story = {
   args: {action: 'expand', title: 'Set project card', children: cardText},
   parameters: {design: {type: 'figma', url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=4-37'}}
 };
+
+/** Not in Figma (the prototype's PJP_CHK, 7 Oct): a done step, its dashed ring filled with a tick. */
+export const Done: Story = {
+  args: {action: 'expand', title: 'Set area', isDone: true, defaultExpanded: true, children: 'Riverside North, Old Harbour'}
+};

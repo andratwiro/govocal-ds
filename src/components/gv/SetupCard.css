@@ -17,7 +17,7 @@
   font: inherit;
 }
 
-/* Header: padding 8 8 8 12, gap 10; the 28 chevron box is the Icon button · Ghost. */
+/* Header: padding 8 8 8 12; check + title 8 apart, the chevron 10 after; the 28 chevron box is the Icon button · Ghost. */
 .gv-setup-card__header {
   appearance: none;
   display: flex;
@@ -47,18 +47,18 @@
 }
 
 .gv-setup-card__check {
+  display: block;
   flex: none;
   color: var(--gv-icon-primary);
 }
 
 /* Done: a filled check (the prototype, 7 Oct: the success green, white tick). */
-.gv-setup-card__check--done {
-  color: var(--gv-icon-inverse);
+.gv-setup-card__check-fill {
+  fill: var(--gv-icon-reviewed);
+}
 
-  circle {
-    fill: var(--gv-icon-reviewed);
-    stroke: var(--gv-icon-reviewed);
-  }
+.gv-setup-card__check-tick {
+  stroke: var(--gv-icon-inverse);
 }
 
 .gv-setup-card__title {
@@ -91,12 +91,15 @@
   rotate: 180deg;
 }
 
+/* An open card's body (the prototype's Set project card): from the card's edge, 12 12 24, its sections 24 apart. */
 .gv-setup-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-24);
+  padding: var(--gv-space-12) var(--gv-space-12) var(--gv-space-24);
   font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-body);
-
-  /* text lines up with the title: 12 padding + 16 check + 8 gap */
-  padding: 0 var(--gv-space-12) var(--gv-space-12) calc(var(--gv-space-12) + var(--gv-space-16) + var(--gv-space-8));
 }
 
 .gv-setup-card__sr {

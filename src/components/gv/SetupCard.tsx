@@ -1,7 +1,7 @@
 'use client';
 import type {ReactNode} from 'react';
 import {Button, Disclosure, DisclosurePanel, Heading} from 'react-aria-components';
-import {ChevronDown, ChevronRight, CircleCheck, CircleDashed} from 'lucide-react';
+import {ChevronDown, ChevronRight} from 'lucide-react';
 import './SetupCard.css';
 
 export interface SetupCardProps {
@@ -25,11 +25,25 @@ export interface SetupCardProps {
   onExpandedChange?: (isExpanded: boolean) => void;
 }
 
+/* Figma's circle-dashed-1/16 and the prototype's PJP_CHK_OFF: a 14.5 ring, 1px, short round dashes (2.4 / 2).
+   Done is the prototype's PJP_CHK: a filled 16 circle with a white tick. */
 function Check({isDone}: {isDone?: boolean}) {
   return isDone ? (
-    <CircleCheck className="gv-setup-card__check gv-setup-card__check--done" aria-hidden size={16} />
+    <svg className="gv-setup-card__check gv-setup-card__check--done" viewBox="0 0 16 16" width={16} height={16} aria-hidden="true">
+      <circle className="gv-setup-card__check-fill" cx="8" cy="8" r="8" />
+      <path
+        className="gv-setup-card__check-tick"
+        d="M4.8 8.2l2.1 2.1 4.3-4.4"
+        fill="none"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   ) : (
-    <CircleDashed className="gv-setup-card__check" aria-hidden size={16} strokeWidth={1.25} />
+    <svg className="gv-setup-card__check" viewBox="0 0 16 16" width={16} height={16} aria-hidden="true">
+      <circle cx="8" cy="8" r="7.25" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2.4 2" strokeLinecap="round" />
+    </svg>
   );
 }
 
@@ -52,7 +66,7 @@ export function SetupCard({
           <span className="gv-setup-card__title">{title}</span>
           {isDone && <span className="gv-setup-card__sr">(done)</span>}
           <span className="gv-setup-card__chevron" aria-hidden>
-            <ChevronRight size={16} strokeWidth={1.4} />
+            <ChevronRight size={17} strokeWidth={2} />
           </span>
         </Button>
       </div>
