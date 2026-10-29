@@ -23,7 +23,7 @@ test('quiet button is transparent until hovered', async ({page}) => {
 });
 
 test('select trigger is a neutral field, not primary', async ({page}) => {
-  await page.goto(story('base-select--example'));
+  await page.goto(story('components-forms-select--field'));
   const trigger = page.getByRole('button').first();
   await expect(trigger).not.toHaveCSS('background-color', 'rgb(4, 73, 108)');
   await expect(trigger).toHaveCSS('border-top-color', 'rgb(224, 224, 224)');
