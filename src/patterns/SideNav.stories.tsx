@@ -23,14 +23,14 @@ const Items = () => (
       <SideNavLink href="#" label="Input manager" icon={<Inbox aria-hidden size={18} />} count={46} countLabel="46 inputs need feedback" />
       <SideNavLink href="#" label="Users" icon={<Users aria-hidden size={18} />} />
     </SideNavGroup>
-    <SideNavGroup push>
+    <SideNavGroup isAtBottom>
       <SideNavLink href="#" label="Settings" icon={<Settings aria-hidden size={18} />} />
       <SideNavButton label="Notifications" icon={<Bell aria-hidden size={18} />} count={28} countLabel="28 unread" />
       <MenuTrigger>
-        <SideNavButton label="Sam Rivera" sub="Administrator" chevron icon={<Avatar initials="SR" size={24} />} />
+        <SideNavButton label="Sam Rivera" sub="Administrator" hasMenu icon={<Avatar initials="SR" size={24} />} />
         <Menu aria-label="Account"><MenuItem>My profile</MenuItem><MenuItem>Sign out</MenuItem></Menu>
       </MenuTrigger>
-      <SideNavButton label="Support" chevron accent icon={<LifeBuoy aria-hidden size={18} />} />
+      <SideNavButton label="Support" hasMenu hasAccentIcon icon={<LifeBuoy aria-hidden size={18} />} />
     </SideNavGroup>
   </>
 );
@@ -39,4 +39,4 @@ const Items = () => (
 export const Open: Story = {name: 'Default', render: () => <div style={{width: 224}}><SideNav aria-label="Main"><Items /></SideNav></div>};
 
 /** The 52px icon rail inside a project: names stay accessible and show as tooltips; counts sit on the icons. */
-export const Folded: Story = {render: () => <div style={{width: 52}}><SideNav aria-label="Main" folded><Items /></SideNav></div>};
+export const Folded: Story = {render: () => <div style={{width: 52}}><SideNav aria-label="Main" isFolded><Items /></SideNav></div>};

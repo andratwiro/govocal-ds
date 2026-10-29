@@ -12,7 +12,7 @@ export const IDEA_FACETS: FilterFacet[] = [
   {id: 'status', label: 'Status', icon: ic(CircleCheck), options: ['Proposed', 'Viewed', 'Under consideration', 'Accepted', 'Rejected', 'Implemented']
     .map((s, i) => ({id: s, label: s, count: [31, 22, 20, 19, 17, 15][i]}))},
   {id: 'assignee', label: 'Assignee', icon: ic(User), options: [
-    {id: 'Unassigned', label: 'Unassigned', count: 48, icon: <Avatar size={16} unassigned />},
+    {id: 'Unassigned', label: 'Unassigned', count: 48, icon: <Avatar size={16} isUnassigned />},
     ...['Manager A', 'Manager B', 'Manager C'].map((m, i) => ({id: m, label: m, count: [26, 25, 25][i], icon: <Avatar size={16} initials={m.slice(-1)} />}))
   ]},
   {id: 'tags', label: 'Tags', icon: ic(Tag), options: ['Cycling', 'Environment', 'Public space', 'Transport', 'Safety', 'Housing', 'Culture']

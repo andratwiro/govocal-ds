@@ -295,7 +295,7 @@ export function DataTableAssignee({name, initials, src, emptyLabel = 'Unassigned
   const letters = initials ?? name?.split(/\s+/).slice(0, size === 28 ? 2 : 1).map(w => w[0]).join('').toUpperCase();
   return (
     <span className="gv-data-table__assignee" data-empty={name ? undefined : true}>
-      <Avatar size={size} initials={letters} src={src} unassigned={!name} />
+      <Avatar size={size} initials={letters} src={src} isUnassigned={!name} />
       <span className="gv-data-table__assignee-name">{name ?? emptyLabel}</span>
     </span>
   );

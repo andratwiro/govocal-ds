@@ -149,7 +149,7 @@ function PolicyEditor({id, name, text}: {id: string; name: string; text: string}
       {open && <div className="bo-settings-section">
         <RichTextEditor aria-label={name} placeholder={`The ${name.toLowerCase()} residents read`} value={value}
           onChange={v => { setValue(v); setDirty(true); setSaved(false); }}
-          bold={bold} onBoldChange={setBold} italic={italic} onItalicChange={setItalic} list={list} onListChange={setList} />
+          isBold={bold} onBoldChange={setBold} isItalic={italic} onItalicChange={setItalic} isList={list} onListChange={setList} />
         <div className="bo-settings-actions">
           <Button variant="primary" aria-label={`Save ${name}`} isDisabled={!dirty}
             onPress={() => { setDirty(false); setSaved(true); }}>Save</Button>

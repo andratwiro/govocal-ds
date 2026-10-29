@@ -78,7 +78,7 @@ export function TagPicker({'aria-label': label, options, selected, onChange, add
         <Button variant="quiet" size={32} isDisabled={isDisabled}>
           <Plus aria-hidden />{addLabel}
         </Button>
-        <Popover placement="bottom start" hideArrow className="gv-tag-picker__popover">
+        <Popover placement="bottom start" showArrow={false} className="gv-tag-picker__popover">
           <Dialog aria-label={label} className="gv-tag-picker__dialog">
             <OptionList aria-label={label} options={options} selected={selected} onChange={onChange}
               placeholder={placeholder} searchLabel={placeholder.replace(/(\.\.\.|…)$/, '')} selectionLabel={selectionLabel} />

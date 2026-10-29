@@ -85,7 +85,7 @@ function LiveMonitor({quarter}: {quarter: number}) {
       </div>
       <DashboardCard type="participation-over-time" title="Health score over time"
         subtitle="Average of every sentiment question · per quarter">
-        <LineChart labels={shown} max={5} series={[{label: 'Health score', values: HEALTH.slice(0, quarter + 1), tone: 'primary'}]} />
+        <LineChart labels={shown} max={5} series={[{label: 'Health score', values: HEALTH.slice(0, quarter + 1), color: 'line-primary'}]} />
       </DashboardCard>
       <h2 className="bo-section-title">Questions by category</h2>
       <div className="bo-community-monitor-stack">
@@ -128,14 +128,14 @@ function Participants({quarter}: {quarter: number}) {
     <div className="bo-community-monitor-body">
       <div className="bo-community-monitor-kpis">
         <StatTile label="Respondents" value={n(RESPONDENTS[quarter])} note={quarter === CURRENT ? 'updating live' : QUARTERS[quarter]}>
-          <Sparkline label="Respondents per quarter" labels={shown} values={RESPONDENTS.slice(0, quarter + 1)} height={34} grid={false} />
+          <Sparkline label="Respondents per quarter" labels={shown} values={RESPONDENTS.slice(0, quarter + 1)} height={34} showGrid={false} />
         </StatTile>
         <StatTile label="Popup shown" value={n(POPUP_SHOWN[quarter])} note="times this quarter" />
         <StatTile label="Response rate" value={`${rate}%`} note="of residents shown the popup" />
         <StatTile label="Respondents to date" value={n(allTime)} note={`since ${QUARTERS[0]}`} />
       </div>
       <DashboardCard type="participation-over-time" title="Respondents over time" subtitle="People who answered · per quarter">
-        <LineChart labels={shown} series={[{label: 'Respondents', values: RESPONDENTS.slice(0, quarter + 1), tone: 'primary'}]} />
+        <LineChart labels={shown} series={[{label: 'Respondents', values: RESPONDENTS.slice(0, quarter + 1), color: 'line-primary'}]} />
         <div className="bo-community-monitor-rows">
           <LegendRow color="--gv-chart-line-primary" label="Respondents" value={`${n(RESPONDENTS[quarter])} in ${QUARTERS[quarter]}`} />
         </div>
@@ -258,7 +258,7 @@ function Reports() {
   const create = <Button variant="primary" size={32} onPress={() => setCreating(true)}><Plus aria-hidden size={16} />Create report</Button>;
   return (
     <div className="bo-community-monitor-body">
-      <Panel title="Reports" headingLevel={3} count={reports.length} flush actions={create}
+      <Panel title="Reports" headingLevel={3} count={reports.length} isFlush actions={create}
         description="Reports built from the monitor's quarterly results."
         footer={reports.length > 0 && <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Report pages" />}>
         {reports.length === 0 ? (
@@ -468,7 +468,7 @@ function Settings() {
       </TabPanel>
       <TabPanel id="Managers">
         <div className="bo-community-monitor-body">
-          <Panel title="Managers" headingLevel={3} count={managers.length} flush
+          <Panel title="Managers" headingLevel={3} count={managers.length} isFlush
             description="Admins and these community monitor managers see the results and edit the survey."
             actions={<Button variant="secondary" size={32} onPress={show('manager')}><Plus aria-hidden size={16} />Add a manager</Button>}>
             {managers.length === 0 ? (

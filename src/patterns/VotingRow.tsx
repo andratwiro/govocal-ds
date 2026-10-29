@@ -9,7 +9,7 @@ export interface VotingRowProps extends PlacementProps {
   title: string;
   thumbnail?: string;
   /** Shows the warning mark next to the title. */
-  warning?: boolean;
+  hasWarning?: boolean;
   voteCount: number;
   /** The bar fill, 0-100, relative to the option with the most votes. */
   fillPercent: number;
@@ -30,7 +30,7 @@ export interface VotingRowProps extends PlacementProps {
 export function VotingRow({
   title,
   thumbnail,
-  warning,
+  hasWarning,
   voteCount,
   fillPercent,
   newVoteCount,
@@ -49,7 +49,7 @@ export function VotingRow({
         <div className="gv-list-row-voting__title-cell">
           {thumbnail && <img className="gv-list-row-voting__thumbnail" src={thumbnail} alt="" aria-hidden />}
           <span className="gv-list-row-voting__title">{title}</span>
-          {warning && (
+          {hasWarning && (
             <span className="gv-list-row-voting__marks">
               <TriangleAlert
                 role="img"

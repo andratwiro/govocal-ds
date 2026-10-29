@@ -33,7 +33,7 @@ export const AllVariants: Story = () => (
       voteThreshold={300}
       statusLabel="Official response"
       commentCount={14}
-      closed
+      isClosed
     />
     <ProposalsRow
       title="Night lighting for the east paths"
@@ -43,12 +43,12 @@ export const AllVariants: Story = () => (
       statusLabel="Threshold reached"
       commentCount={9}
       newCommentCount={3}
-      closed
+      isClosed
     />
     <ProposalsRow
       title="Community orchard by the north gate"
       thumbnail={THUMB}
-      warning
+      hasWarning
       voteCount={268}
       voteThreshold={300}
       statusLabel="Gathering support"
@@ -77,7 +77,7 @@ export const Closed: Story = () => (
       voteThreshold={300}
       statusLabel="Official response"
       commentCount={14}
-      closed
+      isClosed
     />
   </Frame>
 );
@@ -92,7 +92,7 @@ export const New: Story = () => (
       statusLabel="Threshold reached"
       commentCount={9}
       newCommentCount={3}
-      closed
+      isClosed
     />
   </Frame>
 );
@@ -102,7 +102,7 @@ export const NewWarning: Story = () => (
     <ProposalsRow
       title="Community orchard by the north gate"
       thumbnail={THUMB}
-      warning
+      hasWarning
       voteCount={268}
       voteThreshold={300}
       statusLabel="Gathering support"

@@ -190,7 +190,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
   );
 
   return (
-    <Panel title={title} description={view === 'all' ? DESCRIPTION : undefined} flush toolbar={toolbar}
+    <Panel title={title} description={view === 'all' ? DESCRIPTION : undefined} isFlush toolbar={toolbar}
       actions={group && (
         <>
           <Button variant="quiet" size={32} onPress={onEditGroup}><Pencil aria-hidden size={16} />Edit Group</Button>

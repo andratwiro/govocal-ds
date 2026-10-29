@@ -24,7 +24,7 @@ type Change = (id: string, patch: Partial<ManagedInput>) => void;
 /** The Select's "With avatars" options: a 16 Avatar before each manager, Unassigned the dashed one. */
 const people = () => ASSIGNEES.map(a => (
   <SelectItem key={a} id={a} textValue={a}
-    icon={a === 'Unassigned' ? <Avatar size={16} unassigned /> : <Avatar size={16} initials={a.slice(-1)} />}>{a}</SelectItem>
+    icon={a === 'Unassigned' ? <Avatar size={16} isUnassigned /> : <Avatar size={16} initials={a.slice(-1)} />}>{a}</SelectItem>
 ));
 
 /** The real admin's per-row "Unassigned ▾": assign an input without opening it, on the side panel's pill. */

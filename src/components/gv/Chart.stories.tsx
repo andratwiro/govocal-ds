@@ -59,7 +59,7 @@ export const Sparkline: Story = {
 /** Two series with the legend the Dashboard card puts under it. */
 export const WithLegend: Story = {
   name: 'Line · 2 series, with legend',
-  args: {labels: WEEKS, legend: true, series: [{label: 'Participants', values: PARTICIPANTS}, {label: 'Visitors', values: VISITORS}]}
+  args: {labels: WEEKS, showLegend: true, series: [{label: 'Participants', values: PARTICIPANTS}, {label: 'Visitors', values: VISITORS}]}
 };
 
 /** Big counts get round steps: monthly registrations across the platform. */
@@ -67,7 +67,7 @@ export const LargeNumbers: Story = {
   name: 'Line · large numbers',
   args: {
     labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-    series: [{label: 'Registrations', values: [412, 538, 611, 702, 690, 845, 1012, 1284], tone: 'primary'}]
+    series: [{label: 'Registrations', values: [412, 538, 611, 702, 690, 845, 1012, 1284], color: 'line-primary'}]
   }
 };
 
@@ -76,7 +76,7 @@ export const SparklineSmall: Story = {
   name: 'Sparkline · small',
   render: () => (
     <div style={{width: 200}}>
-      <SparklineChart label="Participants" values={[20, 24, 31, 28, 35, 44, 52, 61]} height={34} grid={false} />
+      <SparklineChart label="Participants" values={[20, 24, 31, 28, 35, 44, 52, 61]} height={34} showGrid={false} />
     </div>
   )
 };
@@ -85,7 +85,7 @@ export const Legends: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
       <ChartLegend items={[{label: 'Participants', color: 'line-primary'}, {label: 'Visitors', color: 'line-secondary'}]} />
-      <ChartLegend shape="square" align="start" items={[{label: 'Agree', color: 'agree'}, {label: 'Disagree', color: 'disagree'}, {label: 'Pass', color: 'pass'}]} />
+      <ChartLegend variant="square" align="start" items={[{label: 'Agree', color: 'agree'}, {label: 'Disagree', color: 'disagree'}, {label: 'Pass', color: 'pass'}]} />
     </div>
   )
 };
@@ -100,7 +100,7 @@ export const Legends: Story = {
  */
 export const Interactive: Story = {
   name: 'Line · interactive',
-  args: {labels: WEEKS, legend: true, series: [{label: 'Participants', values: PARTICIPANTS}, {label: 'Visitors', values: VISITORS}]}
+  args: {labels: WEEKS, showLegend: true, series: [{label: 'Participants', values: PARTICIPANTS}, {label: 'Visitors', values: VISITORS}]}
 };
 
 /**
@@ -129,7 +129,7 @@ export const WithLegendRows: Story = {
         <div style={{display: 'flex', flexDirection: 'column', gap: 8, width: 341}}>
           {rows.map((r, i) => (
             <LegendRow key={r.label} color={r.color} label={r.label} value={r.value}
-              highlighted={picked === i} dimmed={picked != null && picked !== i}
+              isHighlighted={picked === i} isDimmed={picked != null && picked !== i}
               onHighlightChange={on => setPicked(on ? i : null)} />
           ))}
         </div>

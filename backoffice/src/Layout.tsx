@@ -35,27 +35,27 @@ export function Layout() {
 
   return (
     <div className={folded ? 'bo-app bo-phase-shell' : 'bo-app'}>
-      <SideNav aria-label="Main" folded={folded}>
+      <SideNav aria-label="Main" isFolded={folded}>
         <SideNavHome href="#/platform" />
         <SideNavGroup>{NAV.slice(0, BOTTOM_FROM).map(link)}</SideNavGroup>
-        <SideNavGroup push>
+        <SideNavGroup isAtBottom>
           {NAV.slice(BOTTOM_FROM).map(link)}
           <DialogTrigger>
             <SideNavButton label="Notifications" icon={<Bell aria-hidden size={18} />}
               count={unread || undefined} countLabel={`${unread} unread`} />
-            <Popover placement="end bottom" hideArrow>
+            <Popover placement="end bottom" showArrow={false}>
               <Dialog aria-label="Notifications">
                 <NotificationList
                   items={notifications.map(n => {
                     const Icon = KIND_ICON[n.kind];
                     return {...n, icon: <Icon aria-hidden size={16} />};
                   })}
-                  onMarkAllRead={() => { setNotifications(ns => ns.map(n => ({...n, unread: false}))); setUnread(0); }} />
+                  onMarkAllRead={() => { setNotifications(ns => ns.map(n => ({...n, isUnread: false}))); setUnread(0); }} />
               </Dialog>
             </Popover>
           </DialogTrigger>
           <MenuTrigger>
-            <SideNavButton label={ME.name} sub={ME.role} chevron icon={<Avatar initials={ME.initials} size={24} />} />
+            <SideNavButton label={ME.name} sub={ME.role} hasMenu icon={<Avatar initials={ME.initials} size={24} />} />
             <Menu aria-label="Account">
               <SubmenuTrigger>
                 <MenuItem textValue="Language" icon={<Languages aria-hidden size={16} />}>
@@ -71,7 +71,7 @@ export function Layout() {
             </Menu>
           </MenuTrigger>
           <MenuTrigger>
-            <SideNavButton label="Support" chevron accent icon={<LifeBuoy aria-hidden size={18} />} />
+            <SideNavButton label="Support" hasMenu hasAccentIcon icon={<LifeBuoy aria-hidden size={18} />} />
             <Menu aria-label="Support">
               {SUPPORT_LINKS.map(s => {
                 const Icon = SUPPORT_ICON[s.id];

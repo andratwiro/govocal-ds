@@ -9,15 +9,20 @@ import {keepClass} from './className';
 
 export interface PopoverProps extends Omit<AriaPopoverProps, 'children'> {
   children: React.ReactNode;
-  hideArrow?: boolean;
+  /**
+   * The arrow pointing at the trigger. Menus never draw it.
+   *
+   * @default true
+   */
+  showArrow?: boolean;
 }
 
-export function Popover({children, hideArrow, ...props}: PopoverProps) {
+export function Popover({children, showArrow = true, ...props}: PopoverProps) {
   return (
     <AriaPopover {...props} className={keepClass(props.className)}>
       {({trigger}) => (
         <>
-          {!hideArrow && trigger !== 'MenuTrigger' && trigger !== 'SubmenuTrigger' && (
+          {showArrow && trigger !== 'MenuTrigger' && trigger !== 'SubmenuTrigger' && (
             <OverlayArrow>
               <svg width={12} height={12} viewBox="0 0 12 12">
                 <path d="M0 0 L6 6 L12 0" />

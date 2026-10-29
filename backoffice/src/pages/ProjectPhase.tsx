@@ -255,7 +255,7 @@ const sameFilters = (a: FilterValue, b: FilterValue) => {
 function facetsFor(ideas: Idea[]): FilterFacet[] {
   const options = (id: string, values: readonly string[], person?: boolean) => values.map(v => ({
     id: v, label: v, count: ideas.filter(i => FIELDS[id](i).includes(v)).length,
-    icon: person ? <Avatar size={16} unassigned={v === 'Unassigned'} initials={v.slice(-1)} /> : undefined
+    icon: person ? <Avatar size={16} isUnassigned={v === 'Unassigned'} initials={v.slice(-1)} /> : undefined
   }));
   return [
     {id: 'source', label: 'Source', icon: icon(Inbox), options: options('source', IDEA_SOURCES)},
@@ -391,7 +391,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
     {id: 'assign', label: 'Assign', icon: icon(User), menu: (
       <Menu aria-label="Assign to" onAction={k => edit(i => ({...i, assignee: k as Idea['assignee']}))}>
         {IDEA_ASSIGNEES.map(a => (
-          <MenuItem key={a} id={a} icon={<Avatar size={16} unassigned={a === 'Unassigned'} initials={a.slice(-1)} />}>{a}</MenuItem>
+          <MenuItem key={a} id={a} icon={<Avatar size={16} isUnassigned={a === 'Unassigned'} initials={a.slice(-1)} />}>{a}</MenuItem>
         ))}
       </Menu>
     )},
@@ -458,7 +458,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
       </aside>
       {/* The Data table's "In a panel" story: the Panel's toolbar holds the count (or the Selection bar), the collapsible
           search and the Filter menu, then the chips (the quick view first); the table; the Pagination in its foot. */}
-      <Panel title={phase.title} className="bo-phase-grow" flush
+      <Panel title={phase.title} className="bo-phase-grow" isFlush
         description="Everything posted in this phase. Select ideas for batch actions; click one to open it."
         toolbar={(
           <>
@@ -661,7 +661,7 @@ export function ProjectSettings({project, tab, onTabChange, onClose}: {project: 
   onTabChange: (tab: SettingsTab) => void; onClose: () => void}) {
   return (
     // Modal's "With side tabs": a fixed height, an unpadded body, the vertical Tabs as a side list beside the panel.
-    <Modal title="Project settings" size="wide" height="fixed" padBody={false} isOpen={tab !== null}
+    <Modal title="Project settings" size="wide" height="fixed" isFlush isOpen={tab !== null}
       onOpenChange={o => { if (!o) onClose(); }} footer={<Button size={32} slot="close">Save</Button>}>
       <Tabs orientation="vertical" selectedKey={tab ?? 'General'} onSelectionChange={k => onTabChange(k as SettingsTab)}
         className="bo-phase-settings">

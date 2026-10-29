@@ -130,7 +130,7 @@ export function ActionRow({
         <Button className={clsx('gv-action-row', className)} style={style} data-state={state} isDisabled={isDisabled}>
           {body}
         </Button>
-        <Popover hideArrow placement="bottom start" offset={6} className="gv-action-row__popover">
+        <Popover showArrow={false} placement="bottom start" offset={6} className="gv-action-row__popover">
           <Menu aria-label={menuLabel ?? label}>{menu}</Menu>
         </Popover>
       </MenuTrigger>

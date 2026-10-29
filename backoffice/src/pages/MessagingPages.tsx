@@ -70,7 +70,7 @@ export function EmailComposer() {
           <div className="bo-messaging-field">
             <Label aria-hidden>Email message</Label>
             <RichTextEditor aria-label="Email message" placeholder="Write your message" value={body} onChange={setBody}
-              bold={bold} onBoldChange={setBold} italic={italic} onItalicChange={setItalic} list={list} onListChange={setList} />
+              isBold={bold} onBoldChange={setBold} isItalic={italic} onItalicChange={setItalic} isList={list} onListChange={setList} />
           </div>
         </div>
       </Panel>

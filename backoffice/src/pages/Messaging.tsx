@@ -38,7 +38,7 @@ function CustomEmailTable({emails, onAction, onCreate}: {
   const pageCount = Math.max(1, Math.ceil(emails.length / PAGE_SIZE));
   const current = Math.min(page, pageCount);
   return (
-    <Panel title="Custom emails" headingLevel={3} description="Send out custom emails and check statistics." flush
+    <Panel title="Custom emails" headingLevel={3} description="Send out custom emails and check statistics." isFlush
       actions={<Button variant="primary" size={32} onPress={onCreate}><Plus aria-hidden size={16} />Create email</Button>}
       footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Email pages" />}>
     <div className="bo-messaging-scroll">
@@ -111,7 +111,7 @@ function DraftComposer({email, onSave, onSend, onCancel}: {
           <div className="bo-messaging-field">
             <Label aria-hidden>Email message</Label>
             <RichTextEditor aria-label="Email message" placeholder="Write your message" value={body} onChange={setBody}
-              bold={bold} onBoldChange={setBold} italic={italic} onItalicChange={setItalic} list={list} onListChange={setList} />
+              isBold={bold} onBoldChange={setBold} isItalic={italic} onItalicChange={setItalic} isList={list} onListChange={setList} />
           </div>
         </div>
     </Panel>

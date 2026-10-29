@@ -12,19 +12,19 @@ export type ChartColor =
   | 'blue-1' | 'blue-2' | 'blue-3' | 'blue-4' | 'blue-5'
   | 'green' | 'olive' | 'terracotta';
 
-/** Figma "Chart" draws a line in the primary (brand) or secondary (orange) series colour. */
-export type ChartTone = 'primary' | 'secondary';
 
 export interface ChartSeries {
   /** What the line counts ("Participants"): used in the legend and the spoken trend. */
   label: string;
   values: number[];
-  /** Defaults: one series → secondary (as Figma's Line · 1 series); two → primary, then secondary. */
-  tone?: ChartTone;
+  /**
+   * The line's colour. Figma draws lines in `line-primary` (brand) or `line-secondary` (orange). Defaults: one
+   * series → `line-secondary` (as Figma's Line · 1 series); two → `line-primary`, then `line-secondary`.
+   */
+  color?: ChartColor;
 }
 
 const fmt = (n: number) => n.toLocaleString('en-GB', {maximumFractionDigits: 2});
-const toneColor = (tone: ChartTone): ChartColor => (tone === 'primary' ? 'line-primary' : 'line-secondary');
 
 /** A y axis from 0 in `steps` equal, round steps (Figma: 0·3·6·9·12, 0·4·8·12·16). */
 export function niceScale(dataMax: number, steps = 4): {max: number; ticks: number[]} {
@@ -76,23 +76,26 @@ export interface ChartLegendItem {
 
 export interface ChartLegendProps extends PlacementProps {
   items: ChartLegendItem[];
-  /** `dot`: round 9px (line charts). `square`: 8px, radius 2 (Statements: agree / disagree / pass). */
-  shape?: 'dot' | 'square';
+  /**
+   * The swatch: `dot`, round 9px (line charts); `square`, 8px, radius 2 (Statements: agree / disagree / pass).
+   * @default 'dot'
+   */
+  variant?: 'dot' | 'square';
   align?: 'center' | 'start';
   /** The series picked out (its index): the other items dim, as their series do. */
-  highlighted?: number | null;
+  highlightedSeries?: number | null;
   /**
    * Hovering or focusing an item picks its series out (`index`), leaving gives `null`. When set, each item takes a
-   * tab stop so the keyboard reaches it too. LineChart's own `legend` wires it to the lines.
+   * tab stop so the keyboard reaches it too. LineChart's own legend (`showLegend`) wires it to the lines.
    */
   onHighlightChange?: (index: number | null) => void;
 }
 
 /** The key under a chart: a swatch and a word per series. */
-export function ChartLegend({items, shape = 'dot', align = 'center', highlighted = null, onHighlightChange, className, style}: ChartLegendProps) {
+export function ChartLegend({items, variant = 'dot', align = 'center', highlightedSeries: highlighted = null, onHighlightChange, className, style}: ChartLegendProps) {
   const on = onHighlightChange;
   return (
-    <ul className={cx('gv-chart-legend', `gv-chart-legend--${shape}`, `gv-chart-legend--${align}`, className)} style={style}>
+    <ul className={cx('gv-chart-legend', `gv-chart-legend--${variant}`, `gv-chart-legend--${align}`, className)} style={style}>
       {items.map((it, i) => (
         <li
           key={i}
@@ -289,14 +292,14 @@ export interface LineChartProps extends PlacementProps {
   max?: number;
   /** Height of the plot area in px (axis labels add 34). Figma: 141. */
   height?: number;
-  /** Draw the series legend under the chart (Dashboard card · Participation over time). */
-  legend?: boolean;
+  /** Draw the series legend under the chart (Dashboard card · Participation over time). @default false */
+  showLegend?: boolean;
   /**
    * The hover and keyboard value card (Not in Figma): a marker and the values at the nearest point; the plot is one
    * tab stop, arrows step through the points. Off for a chart drawn only as a picture.
    * @default true
    */
-  interactive?: boolean;
+  isInteractive?: boolean;
   /**
    * A series picked out from outside the chart (its index), as a Legend row beside it does: the others dim.
    * The chart's own legend and the pointer pick one out by themselves.
@@ -309,20 +312,20 @@ export interface LineChartProps extends PlacementProps {
 const VB_W = 1000;
 
 /** Figma "Chart" · Line: gridded line chart with a y axis from 0 and dated x labels. Plain SVG. */
-export function LineChart({series, labels, max, height = 141, legend = false, interactive = true, highlightedSeries = null, className, style, ...rest}: LineChartProps) {
+export function LineChart({series, labels, max, height = 141, showLegend = false, isInteractive: interactive = true, highlightedSeries = null, className, style, ...rest}: LineChartProps) {
   const [legendPick, setLegendPick] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
   const [active, setActive] = useState<number | null>(null);
   const dataMax = Math.max(0, ...series.flatMap(s => s.values));
   const scale = max != null ? {max, ticks: [0, 1, 2, 3, 4].map(i => +((i * max) / 4).toPrecision(12))} : niceScale(dataMax);
-  const tones: ChartTone[] = series.map((s, i) => s.tone ?? (series.length === 1 ? 'secondary' : i === 0 ? 'primary' : 'secondary'));
   const n = Math.max(labels.length, ...series.map(s => s.values.length));
   const x = (i: number) => (n > 1 ? (i / (n - 1)) * VB_W : VB_W / 2);
   const y = (v: number) => height * (1 - v / (scale.max || 1));
   const label = rest['aria-label'] ?? describeChart(series, labels);
   // Outside first (a Legend row beside the chart), then the chart's own legend, then the line under the pointer.
   const picked = highlightedSeries ?? legendPick ?? hovered;
-  const colors = series.map((_, i) => toneColor(tones[i]));
+  const colors: ChartColor[] = series.map((s, i) =>
+    s.color ?? (series.length === 1 || i > 0 ? 'line-secondary' : 'line-primary'));
 
   return (
     <div className={cx('gv-line-chart', className)} style={style}>
@@ -365,10 +368,10 @@ export function LineChart({series, labels, max, height = 141, legend = false, in
           ))}
         </div>
       </div>
-      {legend && (
+      {showLegend && (
         <ChartLegend
           items={series.map((s, i) => ({label: s.label, color: colors[i]}))}
-          highlighted={highlightedSeries ?? legendPick}
+          highlightedSeries={highlightedSeries ?? legendPick}
           onHighlightChange={interactive ? setLegendPick : undefined}
         />
       )}
@@ -386,23 +389,24 @@ export interface SparklineProps extends PlacementProps {
   labels?: string[];
   /** Height in px. Figma: 110 (Votes over time); 34 fits under a Stat tile. */
   height?: number;
-  /** Dashed guides at a quarter, half and three quarters. */
-  grid?: boolean;
-  /** The soft fill under the line. */
-  area?: boolean;
-  tone?: ChartTone;
+  /** Dashed guides at a quarter, half and three quarters. @default true */
+  showGrid?: boolean;
+  /** The soft fill under the line. @default true */
+  showArea?: boolean;
+  /** The line's colour. @default 'line-primary' */
+  color?: ChartColor;
   /**
    * The hover and keyboard value card, as on LineChart. On when `labels` name the points (the card says when);
    * off inside something pressable (a Stat card that opens a detail), where a second tab stop can't sit.
    * @default labels != null
    */
-  interactive?: boolean;
+  isInteractive?: boolean;
   /** Replaces the generated trend sentence. */
   'aria-label'?: string;
 }
 
 /** Figma "Chart" · Sparkline: a bare trend line with a fading fill, no axes. Plain SVG. */
-export function Sparkline({values, label = 'Trend', labels, height = 110, grid = true, area = true, tone = 'primary', interactive = labels != null, className, style, ...rest}: SparklineProps) {
+export function Sparkline({values, label = 'Trend', labels, height = 110, showGrid: grid = true, showArea: area = true, color = 'line-primary', isInteractive: interactive = labels != null, className, style, ...rest}: SparklineProps) {
   const id = 'gv-spark-' + useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const [hovered, setHovered] = useState<number | null>(null);
   const pad = Math.min(8, height / 10);
@@ -411,7 +415,6 @@ export function Sparkline({values, label = 'Trend', labels, height = 110, grid =
   const pts = values.map((v, i) => [n > 1 ? (i / (n - 1)) * VB_W : VB_W / 2, height - pad - ((v - lo) / (hi - lo)) * (height - pad * 2)]);
   const line = pts.map(([px, py], i) => `${i ? 'L' : 'M'}${px.toFixed(1)} ${py.toFixed(1)}`).join(' ');
   const words = rest['aria-label'] ?? describeSeries(label, values, labels);
-  const color = toneColor(tone);
 
   const svg = (
     <svg

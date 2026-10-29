@@ -34,7 +34,7 @@ export function StatCard({label, value, series, caption, onPress, className, sty
         </span>
         {onPress && <ChevronRight className="gv-stat-card__chevron" aria-hidden size={16} />}
       </span>
-      {series && series.length > 1 && <Sparkline className="gv-stat-card__spark" values={series} label={label} height={34} grid={false} />}
+      {series && series.length > 1 && <Sparkline className="gv-stat-card__spark" values={series} label={label} height={34} showGrid={false} />}
       {caption && <span className="gv-stat-card__caption">{caption}</span>}
     </>
   );

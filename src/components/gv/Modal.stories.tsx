@@ -160,7 +160,7 @@ const settingsGroups = [
  */
 function SideTabsModal() {
   return (
-    <Modal title="Settings" size="wide" height="fixed" padBody={false} footer={<Button slot="close">Save</Button>}>
+    <Modal title="Settings" size="wide" height="fixed" isFlush footer={<Button slot="close">Save</Button>}>
       <GroupedTabs defaultSelectedKey="general" style={{minHeight: 0}}>
         <GroupedTabList
           aria-label="Settings"

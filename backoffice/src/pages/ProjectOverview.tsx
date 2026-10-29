@@ -69,7 +69,7 @@ export function ProjectOverview() {
           </Menu>
         </MenuTrigger>
         <MenuTrigger>
-          <Button variant="quiet" size={32} hasMenu iconOnly={false} aria-label={`${live ? 'Live' : status}: change status`}>
+          <Button variant="quiet" size={32} hasMenu isIconOnly={false} aria-label={`${live ? 'Live' : status}: change status`}>
             <StatusBadge state={live ? 'live' : 'draft'}>{live ? '● Live' : status}</StatusBadge>
           </Button>
           <Menu aria-label="Project status" onAction={() => setConfirm(next.to)}>
@@ -145,7 +145,7 @@ function Setup({project, o, live, onSettings}: {project: Project; o: Overview; l
         </PanelSection>
       )}
       <Divider />
-      <PanelSection title="Project details" collapsible>
+      <PanelSection title="Project details" isCollapsible>
         <dl className="bo-project-details">
           <dt>Dates</dt><dd>{project.start ?? 'Not set'}{project.end && ` to ${project.end}`}</dd>
           <dt>Folder</dt><dd>{project.folder ?? 'No folder'}</dd>

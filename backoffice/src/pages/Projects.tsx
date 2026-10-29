@@ -62,7 +62,7 @@ function projectFacets(projects: Project[], folders: FolderRow[]): FilterFacet[]
     {id: 'folder', label: 'Folder', icon: <Folder aria-hidden size={16} />,
       options: [NO_FOLDER, ...folders.map(f => f.name)].map(option('folder'))},
     {id: 'manager', label: 'Manager', icon: <UserRound aria-hidden size={16} />, options: [
-      {...option('manager')(NO_MANAGER), icon: <Avatar size={16} unassigned />},
+      {...option('manager')(NO_MANAGER), icon: <Avatar size={16} isUnassigned />},
       ...managers.map(m => ({...option('manager')(m), icon: <Avatar size={16} initials={initial(m)} />}))
     ]}
   ];
@@ -178,13 +178,13 @@ function ScratchModal({folders, spaces, onClose, onCreate}: {folders: FolderRow[
       {/* The prototype's two pills under the title (Select's "With search" and "With icons" stories). */}
       <div className="bo-projects-form">
         <div className="bo-projects-pills">
-          <Select variant="pill" aria-label="Space" prefix="Space:" searchable searchPlaceholder="Search spaces"
+          <Select variant="pill" aria-label="Space" prefix="Space:" isSearchable searchPlaceholder="Search spaces"
             selectedKey={space} onSelectionChange={k => setSpace(String(k))}>
             {[{id: 'none', name: 'No space'}, ...spaces.map(s => ({id: s.name, name: s.name}))].map(s => (
               <SelectItem key={s.id} id={s.id} icon={<Asterisk aria-hidden size={16} />}>{s.name}</SelectItem>
             ))}
           </Select>
-          <Select variant="pill" aria-label="Folder" prefix="Folder:" searchable searchPlaceholder="Search folders"
+          <Select variant="pill" aria-label="Folder" prefix="Folder:" isSearchable searchPlaceholder="Search folders"
             selectedKey={folder} onSelectionChange={k => setFolder(String(k))}>{folderItems(folders, true)}</Select>
         </div>
         <p className="bo-note">Both are optional. The project opens as an untitled draft: name it from its overview.</p>
@@ -259,7 +259,7 @@ function MoveModal({project, folders, onClose, onMove}: {project: Project; folde
   const [folder, setFolder] = useState(project.folder ?? NO_FOLDER);
   return (
     <Modal title="Move to folder" isOpen onOpenChange={closing(onClose)} footer={footer('Move', () => onMove(orNone(folder)))}>
-      <Select label="Folder" description={`Where ${project.title} is listed, here and on the platform.`} searchable
+      <Select label="Folder" description={`Where ${project.title} is listed, here and on the platform.`} isSearchable
         searchPlaceholder="Search folders" selectedKey={folder} onSelectionChange={k => setFolder(String(k))}>
         {folderItems(folders, true)}
       </Select>
@@ -286,7 +286,7 @@ function GroupPanel<T extends {name: string; managers: string[]}>({title, descri
   const {current, pageCount, setPage, shown} = usePages(found, SHORT_PAGE);
   const singular = title === 'Folders' ? 'folder' : 'space';
   return (
-    <Panel title={title} description={description} flush
+    <Panel title={title} description={description} isFlush
       toolbar={(
         <TableToolbar aria-label={`${singular[0].toUpperCase()}${singular.slice(1)} tools`} heading={word(found.length)}>
           <SearchField aria-label={`Search ${title.toLowerCase()}`} placeholder="Search" value={query}
@@ -334,7 +334,7 @@ function CalendarView({projects}: {projects: Project[]}) {
     return start < to && (Number.isNaN(end) || end >= from);
   });
   return (
-    <Panel title={label} count={running.length} description="Projects running at some point in the month." flush
+    <Panel title={label} count={running.length} description="Projects running at some point in the month." isFlush
       actions={<>
         <IconButton variant="bordered" aria-label="Previous month" onPress={() => move(-1)}><ChevronLeft aria-hidden size={16} /></IconButton>
         <IconButton variant="bordered" aria-label="Next month" onPress={() => move(1)}><ChevronRight aria-hidden size={16} /></IconButton>
@@ -373,7 +373,7 @@ function ArrangeView({projects}: {projects: Project[]}) {
     setOrder(next);
   };
   return (
-    <Panel title="Homepage order" count={ids.length} description="The order projects appear in on the platform's homepage." flush
+    <Panel title="Homepage order" count={ids.length} description="The order projects appear in on the platform's homepage." isFlush
       footer={<GapLegend names={['Drag-and-drop reordering']} />}>
       <DataTable aria-label="Project order">
         <DataTableHeader>
@@ -545,7 +545,7 @@ export function Projects() {
           <TabPanel id="Projects" className="react-aria-TabPanel bo-projects-view">
             {/* Numbered pages in place of "Scroll down to load more" (docs/DECISIONS.md). */}
             <Panel title="All projects" description="Open a project to set it up, or use its menu to copy, move or delete it."
-              flush toolbar={toolbar}
+              isFlush toolbar={toolbar}
               footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Project pages" />}>
               <ProjectTable rows={shown} onRowAction={onRowAction} />
             </Panel>

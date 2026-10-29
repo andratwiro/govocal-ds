@@ -16,9 +16,9 @@ export interface LegendRowProps extends PlacementProps {
    */
   count?: number | string;
   /** Its series is picked out (in the chart beside it): the label goes primary. */
-  highlighted?: boolean;
+  isHighlighted?: boolean;
   /** Another series is picked out: the row dims with its series. */
-  dimmed?: boolean;
+  isDimmed?: boolean;
   /**
    * Hovering or focusing the row picks its series out (`true`), leaving gives `false`. When set, the row takes a tab
    * stop so the keyboard reaches it too. Wire it to a chart's `highlightedSeries` (Not in Figma).
@@ -27,12 +27,12 @@ export interface LegendRowProps extends PlacementProps {
 }
 
 /** A swatch, a label and its value: the key under a stacked bar or beside a chart (Figma "Legend row"). */
-export function LegendRow({color, label, value, count, highlighted, dimmed, onHighlightChange: on, className, style}: LegendRowProps) {
+export function LegendRow({color, label, value, count, isHighlighted, isDimmed, onHighlightChange: on, className, style}: LegendRowProps) {
   return (
     <div
       className={clsx('gv-legend-row', className)} style={style}
-      data-highlighted={highlighted || undefined}
-      data-dimmed={dimmed || undefined}
+      data-highlighted={isHighlighted || undefined}
+      data-dimmed={isDimmed || undefined}
       tabIndex={on ? 0 : undefined}
       onPointerEnter={on && (() => on(true))}
       onPointerLeave={on && (() => on(false))}

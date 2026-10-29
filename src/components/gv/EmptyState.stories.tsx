@@ -57,7 +57,7 @@ export const AllVariants: Story = {
       </Panel>
       <Panel width={520} style={{padding: 16}}>
         <EmptyState
-          framed
+          isFramed
           icon={icon(Lightbulb)}
           title="No inputs yet"
           description="The first one appears here as soon as someone submits."
@@ -127,7 +127,7 @@ export const InputList: Story = {
   render: () => (
     <Panel width={420} style={{padding: 16}}>
       <EmptyState
-        framed
+        isFramed
         icon={icon(Lightbulb)}
         title="No inputs yet"
         description="The first one appears here as soon as someone submits."

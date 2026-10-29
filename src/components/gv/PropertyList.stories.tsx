@@ -32,7 +32,7 @@ export function DemoStatus({value, onChange}: {value: string; onChange: Change})
 /** Assignee: a single choice, applied at once. */
 export function DemoAssignee({value, onChange}: {value: string; onChange: Change}) {
   return (
-    <Select aria-label="Assignee" variant="pill" size={22} searchable searchPlaceholder="Search people..."
+    <Select aria-label="Assignee" variant="pill" size={22} isSearchable searchPlaceholder="Search people..."
       selectedKey={value} onSelectionChange={k => onChange(String(k))}>
       {ASSIGNEES.map(a => <SelectItem key={a} id={a}>{a}</SelectItem>)}
     </Select>

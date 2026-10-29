@@ -107,7 +107,7 @@ export function SetupStep({
     );
     // The popover hangs under the card, as wide as it.
     const popover = (content: ReactNode) => (
-      <Popover placement="bottom start" hideArrow className="gv-setup-card__popover">{content}</Popover>
+      <Popover placement="bottom start" showArrow={false} className="gv-setup-card__popover">{content}</Popover>
     );
     return (
       <div className={clsx('gv-setup-card', className)} style={style} data-action="pick" data-done={isDone || undefined}>

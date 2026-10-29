@@ -63,7 +63,7 @@ function InvitationTable({invitations}: {invitations: Invitation[]}) {
   const {page, pageCount, setPage, shown} = usePage(found);
   // One count, in the toolbar, following the search (docs/DECISIONS.md).
   return (
-    <Panel title="All invitations" headingLevel={3} flush
+    <Panel title="All invitations" headingLevel={3} isFlush
       actions={<Button variant="quiet" size={32} onPress={() => toast('Export started', 'invitations.xlsx')}>
         <Download aria-hidden size={16} />Export all invitations</Button>}
       toolbar={(
@@ -129,7 +129,7 @@ export function UserInvitations() {
 function PeopleTable({label, people}: {label: string; people: Person[]}) {
   const {page, pageCount, setPage, shown} = usePage(people);
   return (
-    <Panel title={label} headingLevel={3} count={people.length} flush
+    <Panel title={label} headingLevel={3} count={people.length} isFlush
       footer={<Pagination page={page} pageCount={pageCount} onPageChange={setPage} aria-label={`${label} pages`} />}>
       <div className="bo-users-scroll">
         <DataTable aria-label={label}>

@@ -30,7 +30,7 @@ export const AllVariants: Story = {
         status="completed"
         title="Collect ideas"
         chip="312 ideas"
-        state="Done"
+        statusLabel="Done"
         meta="29 Jul to 30 Sep · Ideation"
         href="#collect"
       />
@@ -38,23 +38,23 @@ export const AllVariants: Story = {
         status="live"
         title="Vote on the shortlist"
         chip="1,204 votes"
-        state="In progress"
+        statusLabel="In progress"
         meta="1 Oct to 30 Nov · Voting"
         newCount={18}
-        current
+        isCurrent
         href="#vote"
       />
       <RailPhase
         status="upcoming"
         title="Share what we heard"
-        state="Upcoming"
+        statusLabel="Upcoming"
         meta="Information"
         href="#share"
       />
       <RailPhase
         status="upcoming"
         title="Collect ideas"
-        state="Upcoming"
+        statusLabel="Upcoming"
         meta="Ideation"
         href="#collect-new"
         onDelete={() => {}}
@@ -65,7 +65,7 @@ export const AllVariants: Story = {
 
 /** Figma's own row. */
 export const Upcoming: Story = {
-  args: {status: 'upcoming', title: 'Collect ideas', state: 'Upcoming', meta: 'Ideation', href: '#'}
+  args: {status: 'upcoming', title: 'Collect ideas', statusLabel: 'Upcoming', meta: 'Ideation', href: '#'}
 };
 
 export const Live: Story = {
@@ -73,9 +73,9 @@ export const Live: Story = {
     status: 'live',
     title: 'Vote on the shortlist',
     chip: '1,204 votes',
-    state: 'In progress',
+    statusLabel: 'In progress',
     meta: '1 Oct to 30 Nov · Voting',
-    current: true,
+    isCurrent: true,
     href: '#'
   }
 };
@@ -85,7 +85,7 @@ export const Completed: Story = {
     status: 'completed',
     title: 'Collect ideas',
     chip: '312 ideas',
-    state: 'Done',
+    statusLabel: 'Done',
     meta: '29 Jul to 30 Sep · Ideation',
     href: '#'
   }
@@ -105,7 +105,7 @@ export const WithDelete: Story = {
   name: 'With delete',
   tags: ['not-in-figma'],
   decorators: [Story => <div style={{width: 284}}><Story /></div>],
-  args: {status: 'upcoming', title: 'Collect ideas', state: 'Upcoming', meta: 'Ideation', href: '#', onDelete: () => {}}
+  args: {status: 'upcoming', title: 'Collect ideas', statusLabel: 'Upcoming', meta: 'Ideation', href: '#', onDelete: () => {}}
 };
 
 /**
@@ -126,7 +126,7 @@ export const Rail: StoryObj = {
               status="completed"
               title="Collect ideas"
               chip="312 ideas"
-              state="Done"
+              statusLabel="Done"
               meta="29 Jul to 30 Sep · Ideation"
               href="#collect"
               onDelete={() => {}}
@@ -137,10 +137,10 @@ export const Rail: StoryObj = {
               status="live"
               title="Vote on the shortlist"
               chip="1,204 votes"
-              state="In progress"
+              statusLabel="In progress"
               meta="1 Oct to 30 Nov · Voting"
               newCount={18}
-              current
+              isCurrent
               href="#vote"
               onDelete={() => {}}
             />
@@ -149,7 +149,7 @@ export const Rail: StoryObj = {
             <RailPhase
               status="upcoming"
               title="Share what we heard"
-              state="Upcoming"
+              statusLabel="Upcoming"
               meta="Information"
               href="#share"
               onDelete={() => {}}

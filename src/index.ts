@@ -25,7 +25,7 @@ export {
 // Components / Charts
 export {BarRow, type BarRowProps} from './components/gv/BarRow';
 export {
-  ChartLegend, LineChart, Sparkline, type ChartColor, type ChartTone, type ChartSeries, type ChartLegendItem,
+  ChartLegend, LineChart, Sparkline, type ChartColor, type ChartSeries, type ChartLegendItem,
   type ChartLegendProps, type LineChartProps, type SparklineProps
 } from './components/gv/Chart';
 export {
@@ -197,7 +197,7 @@ export {SetupStep, type SetupStepProps} from './patterns/SetupStep';
 export {StatCard, type StatCardProps} from './patterns/StatCard';
 
 // Patterns / Project rail
-export {PhaseTimeline, type TimelineState, type TimelinePhase, type PhaseTimelineProps} from './patterns/PhaseTimeline';
+export {PhaseTimeline, type TimelineStatus, type TimelinePhase, type PhaseTimelineProps} from './patterns/PhaseTimeline';
 export {RailHeader, type RailHeaderProps} from './patterns/RailHeader';
 export {RailPhase, type RailPhaseStatus, type RailPhaseProps} from './patterns/RailPhase';
 

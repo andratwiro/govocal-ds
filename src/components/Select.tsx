@@ -45,7 +45,7 @@ export interface SelectProps<T, M extends 'single' | 'multiple'> extends Omit<
   /** Words before the value, seen but not read ("Space:"): the label or `aria-label` names the field. */
   prefix?: string;
   /** A search at the top of the list, the magnifier first: typing narrows it, ↑↓ still move through it. */
-  searchable?: boolean;
+  isSearchable?: boolean;
   /** @default 'Search...' */
   searchPlaceholder?: string;
   /** Names the search for screen readers. @default the placeholder without its dots, else "Search <label>" */
@@ -56,7 +56,7 @@ export interface SelectProps<T, M extends 'single' | 'multiple'> extends Omit<
 
 /**
  * Pick one value (or several) from a list in a popover: React Aria's Select, its options the dropdown rows (a 16
- * icon or avatar, a description line, a check at the end of the chosen one). With `searchable`, an Autocomplete and
+ * icon or avatar, a description line, a check at the end of the chosen one). With `isSearchable`, an Autocomplete and
  * the system's SearchField sit over the list. Not in Figma yet.
  */
 export function Select<T, M extends 'single' | 'multiple' = 'single'>({
@@ -69,7 +69,7 @@ export function Select<T, M extends 'single' | 'multiple' = 'single'>({
   size,
   icon,
   prefix,
-  searchable,
+  isSearchable,
   searchPlaceholder = 'Search...',
   searchLabel,
   emptyLabel = 'No results',
@@ -80,7 +80,7 @@ export function Select<T, M extends 'single' | 'multiple' = 'single'>({
   const name = label ?? props['aria-label'] ?? 'options';
   const list = (
     // Inside a search, React Aria would call the list "Suggestions"; it keeps the field's name.
-    <SelectListBox items={items} aria-label={searchable ? name : undefined} renderEmptyState={() => emptyLabel}>
+    <SelectListBox items={items} aria-label={isSearchable ? name : undefined} renderEmptyState={() => emptyLabel}>
       {children}
     </SelectListBox>
   );
@@ -95,9 +95,9 @@ export function Select<T, M extends 'single' | 'multiple' = 'single'>({
       </Button>
       {description && <Description>{description}</Description>}
       <FieldError>{errorMessage}</FieldError>
-      <Popover hideArrow className={clsx('select-popover', variant !== 'field' && 'select-popover--fit',
-        searchable && 'select-popover--search')}>
-        {searchable ? (
+      <Popover showArrow={false} className={clsx('select-popover', variant !== 'field' && 'select-popover--fit',
+        isSearchable && 'select-popover--search')}>
+        {isSearchable ? (
           <Autocomplete filter={contains}>
             <div className="select-search">
               <SearchField aria-label={searchLabel ?? (searchPlaceholder === 'Search...' ? `Search ${name.toLowerCase()}`

@@ -10,8 +10,8 @@ const STATE = {Done: 'done', Live: 'in-progress', Draft: 'upcoming'} as const;
 /** A project's phases as the Participation rail shows them, each leading to its phase screen. */
 export function timeline(project: Project, href: (p: Phase) => string, currentId?: string): TimelinePhase[] {
   return project.phases.map(p => ({
-    id: p.id, title: p.title, state: STATE[p.status], dates: p.dates, method: METHOD_WORD[p.method] ?? p.method,
-    count: p.count, fresh: p.fresh, href: href(p), current: p.id === currentId
+    id: p.id, title: p.title, status: STATE[p.status], dates: p.dates, method: METHOD_WORD[p.method] ?? p.method,
+    count: p.count, fresh: p.fresh, href: href(p), isCurrent: p.id === currentId
   }));
 }
 
@@ -31,7 +31,7 @@ export const OVERVIEWS: Record<string, Overview> = {
   'green-corridors': {
     weeks: [6, 11, 19, 27, 34, 48, 63, 77, 96, 118, 139, 160, 181, 197, 215],
     since: '10 Aug',
-    spotlight: [{id: 's1', title: 'Resident satisfaction', state: 'in-progress', dates: '9 Oct to 18 Nov', method: 'Survey', count: '214 responses'}],
+    spotlight: [{id: 's1', title: 'Resident satisfaction', status: 'in-progress', dates: '9 Oct to 18 Nov', method: 'Survey', count: '214 responses'}],
     intro: 'More trees, safer paths and quieter streets. Help us decide where the next green corridor goes and what it should feel like.',
     more: [
       'The ideas you shared in September became 48 proposals. Vote for the ones you want to see first: the most popular go to the council in December.',
@@ -129,7 +129,7 @@ export const IDEAS: Idea[] = Array.from({length: 124}, (_, n) => {
 /** A phase added from the rail's "Add a phase" form: upcoming, with no screen of its own yet. */
 export type NewPhase = {id: string; title: string; method: Phase['method']; dates: string};
 export const addedTimeline = (added: NewPhase[]): TimelinePhase[] =>
-  added.map(p => ({id: p.id, title: p.title, state: 'upcoming', dates: p.dates, method: METHOD_WORD[p.method] ?? p.method}));
+  added.map(p => ({id: p.id, title: p.title, status: 'upcoming', dates: p.dates, method: METHOD_WORD[p.method] ?? p.method}));
 
 // ── Phase screen · Manage side panel ─────────────────────────────────────────────────────────────────
 /** Phases that screen new ideas ("projectId/phaseId"): a waiting idea opens on Approve / Reject. */

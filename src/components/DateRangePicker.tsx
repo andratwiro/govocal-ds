@@ -42,7 +42,7 @@ export function DateRangePicker<T extends DateValue>({
       </Group>
       {description && <Description>{description}</Description>}
       <FieldError>{errorMessage}</FieldError>
-      <Popover hideArrow>
+      <Popover showArrow={false}>
         <RangeCalendar />
       </Popover>
     </AriaDateRangePicker>

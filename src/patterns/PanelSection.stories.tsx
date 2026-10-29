@@ -22,10 +22,10 @@ export const WithNote: Story = {
 
 /** Folded until opened (prototype "Project details"). */
 export const Collapsible: Story = {
-  args: {title: 'Project details', collapsible: true, children: <p style={{margin: 0}}>Dates, folder, visibility.</p>}
+  args: {title: 'Project details', isCollapsible: true, children: <p style={{margin: 0}}>Dates, folder, visibility.</p>}
 };
 
 export const CollapsibleOpen: Story = {
   name: 'Collapsible, open',
-  args: {title: 'Project details', collapsible: true, defaultExpanded: true, children: <p style={{margin: 0}}>Dates, folder, visibility.</p>}
+  args: {title: 'Project details', isCollapsible: true, defaultExpanded: true, children: <p style={{margin: 0}}>Dates, folder, visibility.</p>}
 };

@@ -52,7 +52,7 @@ export interface ButtonProps extends RACButtonProps {
    * accessible name from React Aria's slot context, which this component never
    * sees as a prop, so checking for `aria-label` here would miss them.
    */
-  iconOnly?: boolean;
+  isIconOnly?: boolean;
   /**
    * Fills the width of its container, its content centred: a form's submit, a card's call to action. Placement, like
    * `className`.
@@ -76,8 +76,8 @@ function isIconOnlyChildren(children: ButtonProps['children']): boolean {
 }
 
 export function Button(props: ButtonProps) {
-  const {variant, size, hasMenu, iconOnly, tone, isFullWidth, className, ...rest} = props;
-  const resolvedIconOnly = iconOnly ?? isIconOnlyChildren(props.children);
+  const {variant, size, hasMenu, isIconOnly, tone, isFullWidth, className, ...rest} = props;
+  const resolvedIconOnly = isIconOnly ?? isIconOnlyChildren(props.children);
   return (
     <RACButton
       {...rest}

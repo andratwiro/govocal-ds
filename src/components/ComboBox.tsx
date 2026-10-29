@@ -46,7 +46,7 @@ export function ComboBox<T, M extends 'single' | 'multiple' = 'single'>({
       {props.selectionMode === 'multiple' && <ComboBoxValue placeholder="No items selected" />}
       {description && <Description>{description}</Description>}
       <FieldError>{errorMessage}</FieldError>
-      <Popover hideArrow className="combobox-popover">
+      <Popover showArrow={false} className="combobox-popover">
         <ComboBoxListBox>{children}</ComboBoxListBox>
       </Popover>
     </AriaComboBox>

@@ -141,7 +141,7 @@ function ThreadPane({tab, list, me, onPost, onDelete, onDismissWarning}: PanePro
           {list.map(c => item(c))}
         </ol>}
       {onPost && (
-        <CommentComposer me={me} fieldRef={field} internal={tab === 'internal'} replyTo={replyTo?.author}
+        <CommentComposer me={me} fieldRef={field} isInternal={tab === 'internal'} replyTo={replyTo?.author}
           onCancelReply={() => { setReplyTo(null); field.current?.focus(); }}
           onPost={text => { onPost(text, {tab, replyTo: replyTo?.id}); setReplyTo(null); }} />
       )}
@@ -197,7 +197,7 @@ export interface CommentComposerProps extends PlacementProps {
   /** The writer's avatar letters. */
   me: string;
   /** Posting to the internal conversation: its own placeholder. */
-  internal?: boolean;
+  isInternal?: boolean;
   /** The author answered, when Reply was pressed: a "Replying to …" line with a cancel. */
   replyTo?: string;
   onCancelReply?: () => void;
@@ -207,7 +207,7 @@ export interface CommentComposerProps extends PlacementProps {
 
 /** The team's composer: their avatar, a field that grows with the words, and Post (on until there are words).
  * ⌘/Ctrl + Enter posts; Enter starts a new line. */
-export function CommentComposer({me, internal, replyTo, onCancelReply, onPost, fieldRef, className, style}: CommentComposerProps) {
+export function CommentComposer({me, isInternal, replyTo, onCancelReply, onPost, fieldRef, className, style}: CommentComposerProps) {
   const [text, setText] = useState('');
   const post = () => {
     if (!text.trim()) return;
@@ -220,7 +220,7 @@ export function CommentComposer({me, internal, replyTo, onCancelReply, onPost, f
       post();
     }
   };
-  const placeholder = internal ? 'This comment is not visible to regular users'
+  const placeholder = isInternal ? 'This comment is not visible to regular users'
     : replyTo ? `Reply to ${replyTo}` : 'Reply as the project team';
   return (
     <div className={clsx('gv-comment-thread__composer', className)} style={style}>
@@ -235,7 +235,7 @@ export function CommentComposer({me, internal, replyTo, onCancelReply, onPost, f
       <div className="gv-comment-thread__compose-row">
         <span className="gv-comment-thread__avatar" aria-hidden><Avatar initials={me} /></span>
         <AriaTextField className="react-aria-TextField gv-comment-thread__field" value={text} onChange={setText}
-          aria-label={internal ? 'Internal comment' : replyTo ? `Reply to ${replyTo}` : 'Comment'}>
+          aria-label={isInternal ? 'Internal comment' : replyTo ? `Reply to ${replyTo}` : 'Comment'}>
           <AriaTextArea ref={fieldRef} rows={1} placeholder={placeholder} onKeyDown={onKeyDown}
             className="react-aria-TextArea inset gv-comment-thread__input" />
         </AriaTextField>

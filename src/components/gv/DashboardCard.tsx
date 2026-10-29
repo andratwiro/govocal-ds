@@ -292,8 +292,8 @@ export function DashboardDemographic({label, items, className, style}: Dashboard
               color={`--gv-chart-${it.color}`}
               label={it.label}
               value={`${Math.round(it.percent)}%`}
-              highlighted={picked === i}
-              dimmed={picked != null && picked !== i}
+              isHighlighted={picked === i}
+              isDimmed={picked != null && picked !== i}
               onHighlightChange={on => setPicked(on ? i : null)}
             />
           </li>

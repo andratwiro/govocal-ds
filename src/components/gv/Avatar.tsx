@@ -25,7 +25,7 @@ export interface AvatarProps extends PlacementProps {
    *
    * @default false
    */
-  unassigned?: boolean;
+  isUnassigned?: boolean;
   /** Visually-hidden text for screen readers, e.g. "Assigned to Sam". */
   'aria-label'?: string;
 }
@@ -34,19 +34,19 @@ export interface AvatarProps extends PlacementProps {
  * A small round avatar: initials on a filled circle, a photo over them, or an empty/unassigned ring. Display-only:
  * the photo is decorative (`alt=""`); the avatar's `aria-label`, or the name beside it, says who it is.
  */
-export function Avatar({initials, src, size, unassigned, 'aria-label': ariaLabel, className, style}: AvatarProps) {
+export function Avatar({initials, src, size, isUnassigned, 'aria-label': ariaLabel, className, style}: AvatarProps) {
   // The photo that failed, so a new `src` gets its own try.
   const [failed, setFailed] = useState<string>();
-  const photo = !unassigned && !!src && failed !== src;
+  const photo = !isUnassigned && !!src && failed !== src;
   return (
     <span
       className={clsx('gv-avatar', className)} style={style}
       data-size={size || 28}
-      data-unassigned={unassigned || undefined}
+      data-unassigned={isUnassigned || undefined}
       data-photo={photo || undefined}
       role={ariaLabel ? 'img' : undefined}
       aria-label={ariaLabel}>
-      {!unassigned && initials}
+      {!isUnassigned && initials}
       {photo && <img className="gv-avatar__photo" src={src} alt="" onError={() => setFailed(src)} />}
     </span>
   );

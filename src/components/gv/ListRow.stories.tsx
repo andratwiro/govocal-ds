@@ -30,7 +30,7 @@ export const AllVariants: Story = () => (
     <ListRow
       title="Organise open-air cinema nights on Linden Avenue in summer. It would be a great way for neighbours to meet."
       status="Viewed"
-      warning
+      hasWarning
     />
     <ListRow title="Build rain gardens along the north district so the street stops flooding after every heavy storm." status="Rejected" />
     <ListRow
@@ -43,7 +43,7 @@ export const AllVariants: Story = () => (
 
 export const WarningNoImage: Story = () => (
   <Frame>
-    <ListRow title="Organise open-air cinema nights on Linden Avenue in summer." status="Viewed" warning />
+    <ListRow title="Organise open-air cinema nights on Linden Avenue in summer." status="Viewed" hasWarning />
   </Frame>
 );
 WarningNoImage.storyName = 'Warning · without image';

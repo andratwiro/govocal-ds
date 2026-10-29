@@ -129,7 +129,7 @@ export function ExportMenu({selected = 0, onExport}: {selected?: number; onExpor
         <IconButton variant="bordered" tone="strong" aria-label="Export"><Download aria-hidden size={16} /></IconButton>
         <Tooltip>Export</Tooltip>
       </TooltipTrigger>
-      <Popover placement="bottom end" hideArrow>
+      <Popover placement="bottom end" showArrow={false}>
         <Menu aria-label="Export" onAction={key => onExport?.(String(key))} disabledKeys={selected ? [] : ['selected']}>
           <MenuItem id="ideas">All ideas (.xlsx)</MenuItem>
           <MenuItem id="comments">All comments (.xlsx)</MenuItem>

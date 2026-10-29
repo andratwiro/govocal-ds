@@ -24,7 +24,7 @@ export interface EmptyStateProps extends PlacementProps {
    */
   size?: 'page' | 'panel';
   /** A dashed frame, where the empty thing is a list someone fills (the front office's input list). */
-  framed?: boolean;
+  isFramed?: boolean;
   /**
    * The title's heading level in the page's outline; `none` makes it a plain paragraph (a card that already has a
    * heading).
@@ -47,7 +47,7 @@ export function EmptyState({
   icon,
   action,
   size = 'page',
-  framed,
+  isFramed,
   headingLevel = 3,
   className,
   style
@@ -58,7 +58,7 @@ export function EmptyState({
       className={clsx('gv-empty-state', className)}
       style={style}
       data-size={size}
-      data-framed={framed || undefined}>
+      data-framed={isFramed || undefined}>
       {illustration ? (
         <Illustration className="gv-empty-state__art" name={illustration} size={ART_WIDTH[size]} />
       ) : icon ? (

@@ -115,7 +115,7 @@ export interface IllustrationProps {
   /** @default 'auto' */
   motion?: IllustrationMotion;
   /** Freezes the animation where it is (animation-play-state on the root), e.g. from a pause button. */
-  paused?: boolean;
+  isPaused?: boolean;
   /** What the picture says, when it says something the text around it doesn't. Leave out for decoration. */
   alt?: string;
   className?: string;
@@ -126,7 +126,7 @@ export interface IllustrationProps {
  * An illustration: one self-contained SVG file drawn inline, so it paints with the page's `--gv-*` tokens. Content,
  * not a component: the drawings live in src/illustrations/ and the designer owns them. Not in Figma.
  */
-export function Illustration({name, size, height, motion = 'auto', paused, alt, className, style}: IllustrationProps) {
+export function Illustration({name, size, height, motion = 'auto', isPaused, alt, className, style}: IllustrationProps) {
   const {svg, info} = registry[name];
   const plan = motionPlan(motion, cycleSeconds(info));
   const ref = useRef<HTMLSpanElement>(null);
@@ -202,7 +202,7 @@ export function Illustration({name, size, height, motion = 'auto', paused, alt, 
       data-name={name}
       data-motion={motion}
       data-state={playing ? 'play' : 'rest'}
-      data-paused={paused || undefined}
+      data-paused={isPaused || undefined}
       role={alt ? 'img' : undefined}
       aria-label={alt || undefined}
       aria-hidden={alt ? undefined : true}

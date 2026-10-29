@@ -12,7 +12,7 @@ export interface CommonGroundRowProps extends PlacementProps {
   /** Shows the "New" accent label at the end of the statement cell. */
   isNew?: boolean;
   /** Shows the warning mark (a flagged statement). */
-  warning?: boolean;
+  hasWarning?: boolean;
   /**
    * The assigned reviewer. Omit for a row with no assignee cell content at all (Figma `Empty`,
    * a statement the project team wrote); `null` for an unassigned one (an empty dashed ring);
@@ -41,7 +41,7 @@ export interface CommonGroundRowProps extends PlacementProps {
 export function CommonGroundRow({
   statement,
   isNew,
-  warning,
+  hasWarning,
   assignee,
   likes,
   agreePercent,
@@ -71,7 +71,7 @@ export function CommonGroundRow({
       <div className="gv-list-row-cg__cells">
         <div className="gv-list-row-cg__statement-cell">
           <span className="gv-list-row-cg__statement">{statement}</span>
-          {warning && (
+          {hasWarning && (
             <span className="gv-list-row-cg__marks">
               <TriangleAlert
                 role="img"

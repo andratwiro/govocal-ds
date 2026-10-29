@@ -71,7 +71,7 @@ export const WithSparkline: Story = {
   render: () => (
     <div style={{width: 240}}>
       <StatTile type="with-note" label="Participants" value="873" note="Last 30 days: +61">
-        <Sparkline values={[20, 24, 31, 28, 35, 44, 52, 61]} height={34} grid={false} />
+        <Sparkline values={[20, 24, 31, 28, 35, 44, 52, 61]} height={34} showGrid={false} />
       </StatTile>
     </div>
   )

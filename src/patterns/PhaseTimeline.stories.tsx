@@ -3,10 +3,10 @@ import {PhaseTimeline, type TimelinePhase} from './PhaseTimeline';
 import {SectionLabel} from '../components/gv/SectionLabel';
 
 const PHASES: TimelinePhase[] = [
-  {id: 'a', title: 'Project background', state: 'done', dates: '10 to 30 Aug', method: 'Sharing', count: '1,890 visits', href: '#a'},
-  {id: 'b', title: 'Collect ideas', state: 'done', dates: '1 to 21 Sep', method: 'Ideation', count: '312 ideas', fresh: 18, href: '#b'},
-  {id: 'c', title: 'Community vote', state: 'in-progress', dates: '19 Oct to 16 Nov', method: 'Voting', count: '1,240 votes', href: '#c'},
-  {id: 'd', title: 'Feedback survey', state: 'upcoming', dates: '17 Nov to 7 Dec', method: 'Survey', href: '#d'}
+  {id: 'a', title: 'Project background', status: 'done', dates: '10 to 30 Aug', method: 'Sharing', count: '1,890 visits', href: '#a'},
+  {id: 'b', title: 'Collect ideas', status: 'done', dates: '1 to 21 Sep', method: 'Ideation', count: '312 ideas', fresh: 18, href: '#b'},
+  {id: 'c', title: 'Community vote', status: 'in-progress', dates: '19 Oct to 16 Nov', method: 'Voting', count: '1,240 votes', href: '#c'},
+  {id: 'd', title: 'Feedback survey', status: 'upcoming', dates: '17 Nov to 7 Dec', method: 'Survey', href: '#d'}
 ];
 
 const meta: Meta<typeof PhaseTimeline> = {
@@ -22,17 +22,17 @@ type Story = StoryObj<typeof PhaseTimeline>;
 export const Timeline: Story = {name: 'Default', args: {phases: PHASES}};
 
 /** The phase being viewed is highlighted. */
-export const Current: Story = {args: {phases: PHASES.map(p => ({...p, current: p.id === 'b'}))}};
+export const Current: Story = {args: {phases: PHASES.map(p => ({...p, isCurrent: p.id === 'b'}))}};
 
 /** Spotlight: methods outside the timeline, no spine. */
 export const Spotlight: Story = {
   render: () => (
     <>
       <SectionLabel>Spotlight</SectionLabel>
-      <PhaseTimeline phases={[{id: 's', title: 'Resident satisfaction', state: 'in-progress', dates: '9 Oct to 18 Nov', method: 'Survey', count: '214 responses', href: '#s'}]} />
+      <PhaseTimeline phases={[{id: 's', title: 'Resident satisfaction', status: 'in-progress', dates: '9 Oct to 18 Nov', method: 'Survey', count: '214 responses', href: '#s'}]} />
     </>
   )
 };
 
 /** Every phase still to come: grey dots, grey spine. */
-export const AllUpcoming: Story = {name: 'All upcoming', args: {phases: PHASES.map(p => ({...p, state: 'upcoming', count: undefined, fresh: undefined}))}};
+export const AllUpcoming: Story = {name: 'All upcoming', args: {phases: PHASES.map(p => ({...p, status: 'upcoming', count: undefined, fresh: undefined}))}};

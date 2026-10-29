@@ -62,7 +62,7 @@ export function FilterMenu({facets, value, onChange, countLabel, 'aria-label': l
           <Funnel aria-hidden size={16} />
         </IconButton>
       </span>
-      <Popover placement="bottom end" hideArrow>
+      <Popover placement="bottom end" showArrow={false}>
         <Menu aria-label={label} className="gv-filter-menu"
           onAction={key => { if (key === 'clear-all') onChange({}); }}>
           {facets.map(f => {

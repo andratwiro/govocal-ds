@@ -77,7 +77,7 @@ function MenuButton({label, variant, children, menu}: {label: string; variant: '
       <Button variant={variant} size={32} hasMenu>
         {children}
       </Button>
-      <Popover hideArrow placement="bottom end" offset={6}>
+      <Popover showArrow={false} placement="bottom end" offset={6}>
         <Menu aria-label={label}>{menu}</Menu>
       </Popover>
     </MenuTrigger>

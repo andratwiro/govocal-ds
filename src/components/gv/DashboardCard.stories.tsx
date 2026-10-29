@@ -82,7 +82,7 @@ const cards = {
       type="statements"
       title="Statements"
       subtitle="Where the community aligns and where it splits."
-      legend={<ChartLegend shape="square" align="start" items={[{label: 'Agree', color: 'agree'}, {label: 'Disagree', color: 'disagree'}, {label: 'Pass', color: 'pass'}]} />}>
+      legend={<ChartLegend variant="square" align="start" items={[{label: 'Agree', color: 'agree'}, {label: 'Disagree', color: 'disagree'}, {label: 'Pass', color: 'pass'}]} />}>
       <DashboardStatements items={STATEMENTS} />
     </DashboardCard>
   ),
@@ -93,7 +93,7 @@ const cards = {
   ),
   participation: (
     <DashboardCard type="participation-over-time" title="Participation over time">
-      <LineChart legend labels={WEEKS} series={[{label: 'Participants', values: [1, 0, 1, 10, 0, 1]}, {label: 'Visitors', values: [0, 3, 9, 9, 6, 6]}]} />
+      <LineChart showLegend labels={WEEKS} series={[{label: 'Participants', values: [1, 0, 1, 10, 0, 1]}, {label: 'Visitors', values: [0, 3, 9, 9, 6, 6]}]} />
     </DashboardCard>
   ),
   ai: (

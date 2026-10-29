@@ -23,11 +23,11 @@ function Controlled() {
   let [list, setList] = useState(false);
   return (
     <RichTextToolbar
-      bold={bold}
+      isBold={bold}
       onBoldChange={setBold}
-      italic={italic}
+      isItalic={italic}
       onItalicChange={setItalic}
-      list={list}
+      isList={list}
       onListChange={setList}
     />
   );

@@ -13,10 +13,10 @@ import './PanelSection.css';
 export interface PanelSectionProps extends PlacementProps {
   /** The section's name ("Next actions"). */
   title: string;
-  /** A short note at the end of the header ("0 of 6 ready"). Not shown on a collapsible section. */
+  /** A short note at the end of the header ("0 of 6 ready"). Not shown when `isCollapsible`. */
   aside?: ReactNode;
   /** Folds under its header, with a chevron at the end (prototype "Project details"). */
-  collapsible?: boolean;
+  isCollapsible?: boolean;
   defaultExpanded?: boolean;
   /** Heading level of the title. @default 3 */
   level?: 2 | 3 | 4;
@@ -27,8 +27,8 @@ export interface PanelSectionProps extends PlacementProps {
  * A section of a side panel (prototype `.pj-psec`): a small strong title, its body 16 below. Collapsible sections
  * fold with a chevron at the end of the header. Not in Figma yet.
  */
-export function PanelSection({title, aside, collapsible, defaultExpanded, level = 3, children, className, style}: PanelSectionProps) {
-  if (collapsible) {
+export function PanelSection({title, aside, isCollapsible, defaultExpanded, level = 3, children, className, style}: PanelSectionProps) {
+  if (isCollapsible) {
     return (
       <Disclosure className={clsx('gv-panel-section', className)} style={style} data-collapsible defaultExpanded={defaultExpanded}>
         <Heading level={level} className="gv-panel-section__heading">

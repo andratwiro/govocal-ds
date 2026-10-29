@@ -33,7 +33,7 @@ export interface PanelProps extends PlacementProps {
    *
    * @default false
    */
-  flush?: boolean;
+  isFlush?: boolean;
   children?: ReactNode;
 }
 
@@ -44,7 +44,7 @@ export interface PanelProps extends PlacementProps {
  * enough. Not in Figma yet.
  */
 export function Panel({
-  title, headingLevel = 2, count, description, actions, toolbar, footer, flush, children, className, style
+  title, headingLevel = 2, count, description, actions, toolbar, footer, isFlush, children, className, style
 }: PanelProps) {
   const id = useId();
   const {locale} = useLocale();
@@ -63,7 +63,7 @@ export function Panel({
         {actions && <div className="gv-panel__actions">{actions}</div>}
       </header>
       {toolbar && <div className="gv-panel__toolbar">{toolbar}</div>}
-      <div className="gv-panel__body" data-flush={flush || undefined}>{children}</div>
+      <div className="gv-panel__body" data-flush={isFlush || undefined}>{children}</div>
       {footer && <footer className="gv-panel__foot">{footer}</footer>}
     </section>
   );

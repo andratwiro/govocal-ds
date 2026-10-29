@@ -28,7 +28,7 @@ export function ColorPicker({label, children, className, style, ...props}: Color
           <ColorSwatch />
           <span>{label}</span>
         </Button>
-        <Popover hideArrow placement="bottom start" className="color-picker-dialog">
+        <Popover showArrow={false} placement="bottom start" className="color-picker-dialog">
           {children || (
             <>
               <ColorArea colorSpace="hsb" xChannel="saturation" yChannel="brightness" />

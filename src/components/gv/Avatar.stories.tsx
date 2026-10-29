@@ -26,14 +26,14 @@ export const AllVariants: Story = () => (
     <Avatar initials="RE" src={PORTRAITS[1]} aria-label="Resident E" />
     <Avatar initials="JL" size={24} aria-label="Assigned to Jo Lee" />
     <Avatar initials="R" size={16} aria-label="Assigned to Riley Chen" />
-    <Avatar unassigned aria-label="Unassigned" />
+    <Avatar isUnassigned aria-label="Unassigned" />
   </div>
 );
 
 export const Filled: Story = () => <Avatar initials="S" aria-label="Assigned to Sam" />;
 
 /** Not in Figma: the prototype's unassigned ring. */
-export const Unassigned: Story = () => <Avatar unassigned aria-label="Unassigned" />;
+export const Unassigned: Story = () => <Avatar isUnassigned aria-label="Unassigned" />;
 
 /** Not in Figma: a photo (the prototype's Audience table). It covers the circle; the initials sit under it. */
 export const Image: Story = () => (
@@ -55,7 +55,7 @@ export const Stack: Story = () => (
       <Avatar initials="JL" aria-label="Jo Lee" />
     </div>
     <div style={{marginLeft: -6}}>
-      <Avatar unassigned aria-label="Unassigned" />
+      <Avatar isUnassigned aria-label="Unassigned" />
     </div>
   </div>
 );

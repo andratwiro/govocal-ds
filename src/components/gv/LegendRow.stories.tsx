@@ -55,8 +55,8 @@ CountAndPercent.storyName = 'Count and percent';
  */
 export const Highlighted: Story = () => (
   <div style={{display: 'flex', flexDirection: 'column', gap: 8, width: 341}}>
-    <LegendRow color="--gv-chart-blue-1" label="18–24" value="16%" dimmed />
-    <LegendRow color="--gv-chart-blue-2" label="25–34" value="29%" highlighted />
-    <LegendRow color="--gv-chart-blue-3" label="35–44" value="23%" dimmed />
+    <LegendRow color="--gv-chart-blue-1" label="18–24" value="16%" isDimmed />
+    <LegendRow color="--gv-chart-blue-2" label="25–34" value="29%" isHighlighted />
+    <LegendRow color="--gv-chart-blue-3" label="35–44" value="23%" isDimmed />
   </div>
 );

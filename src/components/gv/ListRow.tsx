@@ -21,7 +21,7 @@ export interface ListRowProps extends PlacementProps {
   /** A thumbnail image URL (Figma `Image=Yes`). */
   thumbnail?: string;
   /** Shows the warning mark at the end of the title cell (Figma `Marks=Warning`). */
-  warning?: boolean;
+  hasWarning?: boolean;
   /**
    * A checkbox in the row's leading slot, shown on hover, on focus and once checked; a
    * checked row is tinted. The prototype's Manage table. Not in Figma (its leading 28 is empty).
@@ -35,7 +35,7 @@ export interface ListRowProps extends PlacementProps {
  * (checkbox) and a trailing 28px slot (under the header's add-column button).
  * Pair it with `ListHeader` (pass `selectAll` so the columns line up).
  */
-export function ListRow({title, status, thumbnail, warning, select, className, style}: ListRowProps) {
+export function ListRow({title, status, thumbnail, hasWarning, select, className, style}: ListRowProps) {
   return (
     <div
       className={clsx('gv-list-row', className)} style={style}
@@ -56,7 +56,7 @@ export function ListRow({title, status, thumbnail, warning, select, className, s
             <img className="gv-list-row__thumbnail" src={thumbnail} alt="" aria-hidden />
           )}
           <span className="gv-list-row__title">{title}</span>
-          {warning && (
+          {hasWarning && (
             <span className="gv-list-row__marks">
               <TriangleAlert
                 role="img"

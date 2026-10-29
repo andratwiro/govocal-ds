@@ -50,7 +50,7 @@ export const AllVariants: Story = () => (
     <VotingRow
       title="Evening path lighting"
       thumbnail={THUMB}
-      warning
+      hasWarning
       voteCount={41}
       fillPercent={35}
       onlineCount={41}
@@ -97,7 +97,7 @@ export const NewWarning: Story = () => (
     <VotingRow
       title="Evening path lighting"
       thumbnail={THUMB}
-      warning
+      hasWarning
       voteCount={41}
       fillPercent={35}
       onlineCount={41}

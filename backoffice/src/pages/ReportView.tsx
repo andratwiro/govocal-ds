@@ -213,7 +213,7 @@ function MapBlock({block, lang}: {block: Extract<Block, {kind: 'map'}>; lang: La
       <div className="bo-report-legends">
         {block.shade !== 'none' && (
           <div className="bo-report-legend"><span className="bo-note">Districts: {SHADES[block.shade]}</span>
-            <ChartLegend align="start" shape="square" items={steps.map((s, i) => ({label: s, color: `blue-${i + 1}` as ChartColor}))} /></div>
+            <ChartLegend align="start" variant="square" items={steps.map((s, i) => ({label: s, color: `blue-${i + 1}` as ChartColor}))} /></div>
         )}
         {layers.length > 0 && (
           <div className="bo-report-legend"><span className="bo-note">On top</span><ChartLegend align="start" items={layers} /></div>
@@ -330,9 +330,9 @@ function BlockBody({block, lang, nums, pageOf, blocks, reportTitle}: {
     case 'line':
       return (
         <FigureStandIn figure={block.figure} lang={lang}>
-          <LineChart labels={block.labels} legend height={160}
-            series={[{label: 'Observed', values: block.observed, tone: 'primary'},
-              ...(block.showEstimate ? [{label: 'Estimated at close', values: block.estimate, tone: 'secondary' as const}] : [])]} />
+          <LineChart labels={block.labels} showLegend height={160}
+            series={[{label: 'Observed', values: block.observed, color: 'line-primary'},
+              ...(block.showEstimate ? [{label: 'Estimated at close', values: block.estimate, color: 'line-secondary' as const}] : [])]} />
         </FigureStandIn>
       );
     case 'insight': {

@@ -11,20 +11,20 @@ import './SideNav.css';
 /**
  * The back office's main sidebar (the real admin's dark rail, the prototype's `.gv-bo-side`):
  * a "To platform" band, groups of items, and button rows that open menus (notifications,
- * account, support). `folded` turns it into the 52px icon rail the prototype uses inside a
+ * account, support). `isFolded` turns it into the 52px icon rail the prototype uses inside a
  * project: labels become visually hidden (they stay the controls' names) and show as tooltips.
  * Not in Figma yet.
  */
 export interface SideNavProps extends PlacementProps {
   'aria-label': string;
   /** The icon-only rail (inside a project or phase). @default false */
-  folded?: boolean;
+  isFolded?: boolean;
   children: ReactNode;
 }
 
 const Folded = createContext(false);
 
-export function SideNav({'aria-label': ariaLabel, folded = false, children, className, style}: SideNavProps) {
+export function SideNav({'aria-label': ariaLabel, isFolded: folded = false, children, className, style}: SideNavProps) {
   return (
     <Folded.Provider value={folded}>
       <nav className={clsx('gv-side-nav', className)} style={style} aria-label={ariaLabel} data-folded={folded || undefined}>{children}</nav>
@@ -32,12 +32,12 @@ export function SideNav({'aria-label': ariaLabel, folded = false, children, clas
   );
 }
 
-/** A list of items. `push` sends the group to the bottom of the rail (the real admin's bottom items). */
-export interface SideNavGroupProps extends PlacementProps {push?: boolean; children: ReactNode}
+/** A list of items. `isAtBottom` sends the group to the bottom of the rail (the real admin's bottom items). */
+export interface SideNavGroupProps extends PlacementProps {isAtBottom?: boolean; children: ReactNode}
 
-export function SideNavGroup({push, children, className, style}: SideNavGroupProps) {
+export function SideNavGroup({isAtBottom, children, className, style}: SideNavGroupProps) {
   return (
-    <ul className={clsx('gv-side-nav__group', className)} style={style} data-push={push || undefined}>
+    <ul className={clsx('gv-side-nav__group', className)} style={style} data-push={isAtBottom || undefined}>
       {Children.toArray(children).map((child, i) => <li key={i}>{child}</li>)}
     </ul>
   );
@@ -69,16 +69,16 @@ interface RowContent {
   count?: number;
   /** What the count means, for screen readers ("46 inputs need feedback"). @default the number */
   countLabel?: string;
-  /** A trailing chevron: the row opens a menu. */
-  chevron?: boolean;
+  /** A trailing chevron: the row opens a menu (as Button's `hasMenu`). */
+  hasMenu?: boolean;
   /** Paints the icon in the accent green (the real admin's Support row). */
-  accent?: boolean;
+  hasAccentIcon?: boolean;
 }
 
-function Content({icon, label, sub, count, countLabel, chevron, accent}: RowContent) {
+function Content({icon, label, sub, count, countLabel, hasMenu, hasAccentIcon}: RowContent) {
   return (
     <>
-      <span className="gv-side-nav__icon" data-accent={accent || undefined} aria-hidden>
+      <span className="gv-side-nav__icon" data-accent={hasAccentIcon || undefined} aria-hidden>
         {icon}
         {!!count && <span className="gv-side-nav__count" data-on-icon>{count}</span>}
       </span>
@@ -92,7 +92,7 @@ function Content({icon, label, sub, count, countLabel, chevron, accent}: RowCont
           <span className="gv-side-nav__hidden">{countLabel ?? String(count)}</span>
         </span>
       )}
-      {chevron && <ChevronRight aria-hidden size={16} className="gv-side-nav__chevron" />}
+      {hasMenu && <ChevronRight aria-hidden size={16} className="gv-side-nav__chevron" />}
     </>
   );
 }
@@ -119,12 +119,12 @@ export type SideNavButtonProps = RowContent & Omit<RACButtonProps, 'children' | 
 
 /** A row that opens something (a menu, the notifications panel): put it first inside a MenuTrigger or DialogTrigger. */
 export const SideNavButton = forwardRef<HTMLButtonElement, SideNavButtonProps>(
-  function SideNavButton({icon, label, sub, count, countLabel, chevron, accent, className, style, ...rest}, ref) {
+  function SideNavButton({icon, label, sub, count, countLabel, hasMenu, hasAccentIcon, className, style, ...rest}, ref) {
     const folded = useContext(Folded);
     return (
       <WithTooltip label={label} on={folded}>
         <RACButton {...rest} ref={ref} className={clsx('gv-side-nav__row', className)} style={style}>
-          <Content {...{icon, label, sub, count, countLabel, chevron, accent}} />
+          <Content {...{icon, label, sub, count, countLabel, hasMenu, hasAccentIcon}} />
         </RACButton>
       </WithTooltip>
     );

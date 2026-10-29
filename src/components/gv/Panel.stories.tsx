@@ -82,7 +82,7 @@ function Emails() {
 function PagedParticipants() {
   const [page, setPage] = useState(1);
   return (
-    <Panel title="All participants" count={2184} description="Everyone who has taken part in this project." flush
+    <Panel title="All participants" count={2184} description="Everyone who has taken part in this project." isFlush
       footer={<Pagination page={page} pageCount={8} onPageChange={setPage} aria-label="Participant pages" />}>
       <Participants />
     </Panel>
@@ -129,7 +129,7 @@ export const WithCountAndDescription: Story = {
   name: 'With count and description',
   render: () => (
     <div style={{maxWidth: 900}}>
-      <Panel title="All participants" count={2184} description="Everyone who has taken part in this project." flush>
+      <Panel title="All participants" count={2184} description="Everyone who has taken part in this project." isFlush>
         <Participants />
       </Panel>
     </div>
@@ -141,7 +141,7 @@ export const WithActions: Story = {
   name: 'With actions',
   render: () => (
     <div style={{maxWidth: 900}}>
-      <Panel title="Custom emails" description="Send custom emails to participants and check how they did." flush
+      <Panel title="Custom emails" description="Send custom emails to participants and check how they did." isFlush
         actions={<Button size={32}><Plus aria-hidden size={16} />Create email</Button>}>
         <Emails />
       </Panel>
@@ -159,7 +159,7 @@ function SearchableParticipants() {
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState('');
   return (
-    <Panel title="All participants" count={2184} description="Everyone who has taken part in this project." flush
+    <Panel title="All participants" count={2184} description="Everyone who has taken part in this project." isFlush
       toolbar={(
         <TableToolbar aria-label="Participant tools">
           <SearchField aria-label="Search participants" placeholder="Search by name or email" value={query} onChange={setQuery} />
@@ -203,7 +203,7 @@ export const RightToLeft: Story = {
   render: () => (
     <div style={{maxWidth: 900}}>
       <Panel title="All participants" count={2184} description="Everyone who has taken part in this project."
-        actions={<Button size={32}><Plus aria-hidden size={16} />Invite</Button>} flush>
+        actions={<Button size={32}><Plus aria-hidden size={16} />Invite</Button>} isFlush>
         <Participants />
       </Panel>
     </div>

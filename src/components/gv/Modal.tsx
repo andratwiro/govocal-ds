@@ -30,12 +30,12 @@ export interface ModalProps extends PlacementProps {
    */
   height?: 'auto' | 'fixed';
   /**
-   * Off for a body that lays out its own regions and scrolling (the side-tabs dialog's own list +
-   * panel), rather than the default single padded, scrolling block.
+   * No padding and no scrolling of its own around the body, for a body that lays out its own regions and scrolling
+   * (the side-tabs dialog's own list + panel), rather than the default single padded, scrolling block.
    *
-   * @default true
+   * @default false
    */
-  padBody?: boolean;
+  isFlush?: boolean;
   /** Controlled open state; inside a `DialogTrigger` the trigger handles it. */
   isOpen?: boolean;
   defaultOpen?: boolean;
@@ -53,7 +53,7 @@ export function Modal({
   footer,
   size = 'default',
   height = 'auto',
-  padBody = true,
+  isFlush = false,
   isOpen,
   defaultOpen,
   onOpenChange,
@@ -73,7 +73,7 @@ export function Modal({
             <X aria-hidden size={20} strokeWidth={1.75} />
           </Button>
         </div>
-        <div className="gv-modal__body" data-unpadded={!padBody || undefined}>{children}</div>
+        <div className="gv-modal__body" data-unpadded={isFlush || undefined}>{children}</div>
         {footer && <div className="gv-modal__footer">{footer}</div>}
       </Dialog>
     </StarterModal>

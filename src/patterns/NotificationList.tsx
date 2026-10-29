@@ -13,7 +13,7 @@ export interface NotificationItem {
   text: ReactNode;
   /** When, as shown ("2 h ago"). */
   time: string;
-  unread?: boolean;
+  isUnread?: boolean;
   /** Where the notification leads. */
   href?: string;
   /** A small leading icon, e.g. `<MessageSquare aria-hidden size={16} />`. */
@@ -47,7 +47,7 @@ export function NotificationList({title = 'Notifications', items, onMarkAllRead,
         : (
           <ul className="gv-notification-list__items">
             {items.map(item => (
-              <li key={item.id} className="gv-notification-list__item" data-unread={item.unread || undefined}>
+              <li key={item.id} className="gv-notification-list__item" data-unread={item.isUnread || undefined}>
                 {item.icon && <span className="gv-notification-list__icon" aria-hidden>{item.icon}</span>}
                 <span className="gv-notification-list__body">
                   {item.href
@@ -55,7 +55,7 @@ export function NotificationList({title = 'Notifications', items, onMarkAllRead,
                     : <span className="gv-notification-list__text">{item.text}</span>}
                   <span className="gv-notification-list__time">{item.time}</span>
                 </span>
-                {item.unread && <NewDot aria-label="Unread" />}
+                {item.isUnread && <NewDot aria-label="Unread" />}
               </li>
             ))}
           </ul>

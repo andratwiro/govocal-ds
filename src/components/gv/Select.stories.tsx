@@ -17,7 +17,7 @@ const spaces = () => SPACES.map(s => <SelectItem key={s} id={s} icon={ic(Asteris
 const folders = () => FOLDERS.map(f => <SelectItem key={f} id={f} icon={ic(Folder)}>{f}</SelectItem>);
 const statuses = () => STATUSES.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>);
 const people = () => [
-  <SelectItem key="none" id="none" textValue="Unassigned" icon={<Avatar size={16} unassigned />}>Unassigned</SelectItem>,
+  <SelectItem key="none" id="none" textValue="Unassigned" icon={<Avatar size={16} isUnassigned />}>Unassigned</SelectItem>,
   ...MANAGERS.map(m => <SelectItem key={m} id={m} icon={<Avatar size={16} initials={m.slice(-1)} />}>{m}</SelectItem>)
 ];
 const visibility = () => [
@@ -52,7 +52,7 @@ export const AllVariants: Story = {
         <Select label="Assignee" placeholder="Choose a person">{people()}</Select>
       </Row>
       <Row label="Pill · 28">
-        <Select variant="pill" aria-label="Space" prefix="Space:" defaultSelectedKey="City parks" searchable>{spaces()}</Select>
+        <Select variant="pill" aria-label="Space" prefix="Space:" defaultSelectedKey="City parks" isSearchable>{spaces()}</Select>
         <Select variant="pill" aria-label="Folder" defaultSelectedKey="Riverside redevelopment">{folders()}</Select>
       </Row>
       <Row label="Pill · 22">
@@ -105,7 +105,7 @@ export const Quiet: Story = {
 export const WithSearch: Story = {
   name: 'With search',
   render: () => (
-    <Select variant="pill" aria-label="Space" prefix="Space:" defaultSelectedKey="City parks" searchable
+    <Select variant="pill" aria-label="Space" prefix="Space:" defaultSelectedKey="City parks" isSearchable
       searchPlaceholder="Search spaces">
       {spaces()}
     </Select>
@@ -144,7 +144,7 @@ export const EmptySearch: Story = {
   name: 'Empty search',
   render: () => (
     <div style={{minHeight: 200}}>
-      <Select variant="pill" aria-label="Space" prefix="Space:" defaultSelectedKey="City parks" searchable
+      <Select variant="pill" aria-label="Space" prefix="Space:" defaultSelectedKey="City parks" isSearchable
         searchPlaceholder="Search spaces">
         {spaces()}
       </Select>

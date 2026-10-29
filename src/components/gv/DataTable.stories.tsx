@@ -504,7 +504,7 @@ function ManagePanel() {
             onPress={() => fresh(setMetric)(metric === m ? undefined : m)} />
         ))}
       </div>
-      <Panel title="Collect ideas" description="Everything posted in this phase. Select ideas for batch actions; click one to open it." flush
+      <Panel title="Collect ideas" description="Everything posted in this phase. Select ideas for batch actions; click one to open it." isFlush
         actions={<Button variant="secondary" size={32}><Plus aria-hidden size={16} />Add input</Button>}
         toolbar={(
           <>

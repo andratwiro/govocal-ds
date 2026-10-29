@@ -11,7 +11,7 @@ const FEW_TAGS = TAGS.slice(0, 5);
 const STATUSES: OptionListItem[] = ['Screening', 'Proposed', 'Viewed', 'Under consideration', 'Accepted', 'Rejected']
   .map(s => ({id: s, label: s}));
 const PEOPLE: OptionListItem[] = [
-  {id: 'Unassigned', label: 'Unassigned', icon: <Avatar size={16} unassigned />},
+  {id: 'Unassigned', label: 'Unassigned', icon: <Avatar size={16} isUnassigned />},
   ...['Manager A', 'Manager B', 'Manager C'].map(m => ({id: m, label: m, icon: <Avatar size={16} initials={m.slice(-1)} />}))
 ];
 const TOPICS: OptionListItem[] = ['Mobility', 'Public transit', 'Cycling & bike lanes', 'Roads & traffic', 'Parking', 'Climate',

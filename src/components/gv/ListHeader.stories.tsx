@@ -133,7 +133,7 @@ export const ManageTable: Story = () => {
           key={i}
           title={title}
           status={status}
-          warning={warning}
+          hasWarning={warning}
           select={{
             isSelected: picked.has(i),
             'aria-label': `Select: ${title}`,
@@ -176,7 +176,7 @@ export const InATable: Story = () => (
           <ListRow
             title="Organise open-air cinema nights on Linde square"
             status="Viewed"
-            warning
+            hasWarning
           />
         </Cell>
       </Row>
