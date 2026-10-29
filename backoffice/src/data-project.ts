@@ -179,3 +179,51 @@ export const PHASE_FILES: FileListItemData[] = [
 export const AREAS = ['Wrenfield', 'Quillmoor', 'Tamsel Park', 'Brindle', 'Hollowbrook', 'Orchard Reach'];
 export const TOPICS = ['Mobility', 'Public transit', 'Cycling and bike lanes', 'Roads and traffic', 'Parking', 'Climate', 'Energy',
   'Air quality', 'Green spaces', 'Water and rivers', 'Waste and recycling', 'Biodiversity'];
+
+// ── Phase screen · Build: what residents see of the phase, on the phone ─────────────────────────────
+/** The phase's call to action and a line about it, by method, as the phone shows them. */
+export const PHONE_CALL: Partial<Record<Phase['method'], {button: string; line: string}>> = {
+  Information: {button: 'Read the background', line: 'Why the corridors, where they could go, and what happens next.'},
+  Ideation: {button: 'Submit your idea', line: 'Share where a green corridor should go and what it should feel like.'},
+  Proposals: {button: 'Start a proposal', line: 'Turn an idea into a proposal: 300 supporters bring an official response.'},
+  Voting: {button: 'Vote', line: 'Pick the proposals you want first. You have three votes.'},
+  Survey: {button: 'Take the survey', line: 'Ten short questions on how the process felt.'},
+  'Common ground': {button: 'React to statements', line: 'Agree, disagree or pass: see where the neighbourhood stands.'},
+  Volunteering: {button: 'Volunteer', line: 'Sign up to plant the first corridor in spring.'}
+};
+
+// ── Phase screen · Insights (one week in) ────────────────────────────────────────────────────────────
+export const INSIGHT_WEEKS = ['16 Aug', '23 Aug', '30 Aug', '06 Sep', '13 Sep', '20 Sep'];
+/** An ideation (or proposals) phase: participants and visitors per week. */
+export const PARTICIPATION_WEEKS = {participants: [4, 9, 21, 46, 30, 14], visitors: [18, 41, 77, 128, 96, 52]};
+export const AI_SUMMARY = 'Most ideas ask for shade and safer crossings along the main streets, with frequent calls for protected cycle ' +
+  'lanes that connect to the river path. Several residents worry about flooding after heavy storms and suggest rain gardens.';
+
+/** A voting phase's options, ranked by votes (1,240 in all). */
+export const VOTE_OPTIONS = [
+  {title: 'Rain gardens along Brindle Street', votes: 362, newVotes: 14, offline: 22, comments: 18, newComments: 3},
+  {title: 'Protected cycle lane on Wrenfield Avenue', votes: 287, newVotes: 9, offline: 12, comments: 24, newComments: 1},
+  {title: 'Trees and benches on Quillmoor Road', votes: 214, newVotes: 6, offline: 0, comments: 9, newComments: 0},
+  {title: 'A green square behind Tamsel Park', votes: 168, newVotes: 4, offline: 8, comments: 11, newComments: 2},
+  {title: 'Night lighting through Hollowbrook Square', votes: 121, newVotes: 0, offline: 0, comments: 6, newComments: 0},
+  {title: 'Wildflower verges on Orchard Reach', votes: 88, newVotes: 2, offline: 4, comments: 3, newComments: 0}
+];
+/** Votes cast, cumulative, day by day since the vote opened. */
+export const VOTES_BY_DAY = [64, 151, 263, 372, 455, 540, 618, 702, 781, 853, 934, 1008, 1081, 1166, 1240];
+export const VOTER_AGES = [
+  {label: '18–24', percent: 12, color: 'blue-1'}, {label: '25–34', percent: 27, color: 'blue-2'},
+  {label: '35–44', percent: 26, color: 'blue-3'}, {label: '45–54', percent: 19, color: 'blue-4'}, {label: '55+', percent: 16, color: 'blue-5'}
+] as const;
+export const VOTER_COMMUTES = [
+  {label: 'Bicycle', percent: 38, color: 'green'}, {label: 'Public transport', percent: 29, color: 'blue-2'},
+  {label: 'Walking', percent: 21, color: 'olive'}, {label: 'Car', percent: 12, color: 'terracotta'}
+] as const;
+
+/** A proposals phase's proposals (Manage), against the 300-vote threshold. */
+export const PROPOSALS = [
+  {title: 'Car-free Sundays on Brindle Street', votes: 412, status: 'Official response', comments: 31},
+  {title: 'Rain gardens instead of kerbside parking', votes: 338, status: 'Threshold reached', comments: 22},
+  {title: 'A cycle link from Wrenfield to the river', votes: 241, status: 'Gathering support', comments: 17},
+  {title: 'Shade sails over the Tamsel Park playground', votes: 156, status: 'Gathering support', comments: 9},
+  {title: 'A tool library at the Quillmoor community centre', votes: 74, status: 'Gathering support', comments: 4}
+];

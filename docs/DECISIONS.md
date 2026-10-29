@@ -28,6 +28,15 @@ list; change any line and the agent follows. Newest first within each section.
 - The Participation rail drawn twice (the overview's own head with hide and add; the phase screen's with empty Spotlight and Events labels) → **one rail: Rail header (hide on the overview), the timeline, Spotlight only when something runs there** → one rail; an empty label tells nothing.
 - "Link copied" and "Invitation sent" as a status line in the header bar → **a Toast** → one feedback channel; the status change says itself in one too.
 
+### Phase
+
+- Build's stage held a Gap for the phone → **the Phone preview, with the phase's dates, a line and its call to action** → the overview's phone, one preview.
+- Build's setup as a bare column with page-made section heads → **a Panel "Setup" (cog in the head), "Before you publish" and the method's setup as Panel sections** → the overview's setup column, the same parts.
+- Manage and Insights of a phase that hasn't started as a note or an empty table → **the Empty state (the notebook) on the stage, its panel size beside it** → the prototype's empty tabs, one look for every method.
+- Insights as a note → **the prototype's phase dashboard on Stat tiles and Dashboard cards: a vote shows its results (tiles with notes, live ranking, who is voting, the AI Banner), ideas and proposals the ideation dashboard, other methods their visitors; Recommended actions as the Manage tab's cards in a Panel** → each piece is a story already; six tiles sit 3 + 3, not 4 + 2.
+- Voting and Proposals Manage as a note → **a Panel over the method's List header and rows (Voting row, Proposals row)** → the Figma rows for those methods; other methods keep a note until drawn.
+- The rail sent a non-ideation Manage to Build → **the rail keeps the tab it is on** → every method has a Manage tab now.
+
 ## Building from the prototype review (29 Oct 2026)
 
 Calls made while planning the build of the review's findings (selectors, tables, side panel, feedback, forms,

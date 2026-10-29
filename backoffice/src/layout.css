@@ -87,17 +87,10 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-phase-panel-tight { padding: var(--gv-space-8); display: grid; }
 .bo-phase-rail { flex: 0 0 300px; display: grid; align-content: start; gap: var(--gv-space-16); padding-block-start: var(--gv-space-25); }
 .bo-phase-rail-section { display: grid; }
-.bo-phase-rail-list { list-style: none; margin: 0; padding: var(--gv-space-4) 0 0; margin-inline: calc(-1 * var(--gv-space-10)); display: grid; gap: var(--gv-space-2); }
 .bo-phase-side { flex: 0 0 332px; align-self: start; }
 .bo-phase-body[data-view="manage"] .bo-phase-side { flex-basis: 308px; }
 .bo-phase-grow { flex: 1; min-width: 0; align-self: stretch; }
 .bo-phase-stage { display: grid; place-items: center; padding: var(--gv-space-24); background: var(--gv-surface-stage); border-radius: var(--gv-radius-12); }
-.bo-phase-panel-header, .bo-phase-section-header, .bo-phase-toolbar { display: flex; align-items: center; gap: var(--gv-space-8); }
-.bo-phase-panel-header { justify-content: space-between; margin-block-end: var(--gv-space-18); }
-.bo-phase-section-header { justify-content: space-between; margin-block-end: var(--gv-space-16); }
-.bo-phase-section-header h3 { font: var(--gv-type-small-strong); color: var(--gv-text-primary); }
-.bo-phase-section-gap { margin-block-start: var(--gv-space-24); }
-.bo-phase-toolbar { margin-block-end: var(--gv-space-8); min-height: 28px; }
 .bo-phase-stack { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--gv-space-8); }
 .bo-phase-flush { margin: 0; }
 .bo-phase-panel-actions { padding: var(--gv-space-16); }
@@ -302,7 +295,21 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-phase-settings { display: flex; width: 100%; min-height: 0; }
 .bo-phase-settings-list { flex: 0 0 200px; padding: var(--gv-space-16) var(--gv-space-12); overflow-y: auto; border-inline-end: 1px solid var(--gv-border-row); }
 .bo-phase-settings-panel { flex: 1 1 auto; min-width: 0; overflow-y: auto; padding: var(--gv-space-20) var(--gv-space-24); }
-.bo-phase-status { margin-block-end: var(--gv-space-8); }
+/* ── Project phase · Build, empty tabs, method Manage, Insights ── */
+.bo-phase-setup-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gv-space-24); }
+.bo-phase-setup-body .bo-phase-stack { grid-template-columns: minmax(0, 1fr); }
+.bo-phase-setup { flex-basis: 344px; }
+.bo-phase-phone-call { width: 100%; justify-content: center; }
+.bo-phase-empty { display: grid; place-items: center; }
+.bo-phase-empty-side { display: grid; align-content: start; }
+.bo-phase-method-list { display: grid; }
+.bo-phase-insights { display: grid; align-content: start; gap: var(--gv-space-14); }
+.bo-phase-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--gv-space-10); }
+.bo-phase-tiles[data-tiles="4"] { grid-template-columns: repeat(4, 1fr); }
+.bo-phase-tiles[data-tiles="6"] { grid-template-columns: repeat(3, 1fr); }
+.bo-phase-insights-pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gv-space-14); }
+.bo-phase-insights-pair[data-wide] { grid-template-columns: 1.4fr 1fr; }
+.bo-phase-insights-side { align-self: start; }
 /* ── Project phase · Side panel, attachments ── */
 .bo-phase-record-meta { display: flex; flex-wrap: wrap; gap: var(--gv-space-24); margin: var(--gv-space-16) 0 0; }
 .bo-phase-attach { display: grid; gap: var(--gv-space-16); }

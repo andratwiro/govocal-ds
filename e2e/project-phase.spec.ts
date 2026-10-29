@@ -150,7 +150,7 @@ async function violations(page: Page, within: string) {
 
 test('Build: the checklist and phase cards open', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
-  const setup = page.getByRole('complementary', {name: 'Setup'});
+  const setup = page.getByRole('region', {name: 'Setup'});
   await setup.getByRole('button', {name: 'Edit project page'}).click();
   await expect(page.getByRole('dialog', {name: 'Project settings'}).getByRole('tab', {name: 'Project page'})).toHaveAttribute('aria-selected', 'true');
   await page.keyboard.press('Escape');
@@ -159,7 +159,7 @@ test('Build: the checklist and phase cards open', async ({page}) => {
 });
 
 test('Build: the phase status is a compact Banner, neutral before and after, success while live', async ({page}) => {
-  const strip = (page: Page) => page.getByRole('complementary', {name: 'Setup'}).locator('.gv-banner--compact');
+  const strip = (page: Page) => page.getByRole('region', {name: 'Setup'}).locator('.gv-banner--compact');
   for (const [phase, tone, text] of [
     ['p2', 'neutral', 'EndedClosed on 21 Sep'],
     ['p4', 'success', 'LiveEnds on 16 Nov'],
@@ -174,7 +174,7 @@ test('Build: the phase status is a compact Banner, neutral before and after, suc
 
 test('Project settings: a fixed-height Modal with a vertical side list of tabs', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
-  await page.getByRole('complementary', {name: 'Setup'}).getByRole('button', {name: 'Project settings'}).click();
+  await page.getByRole('region', {name: 'Setup'}).getByRole('button', {name: 'Project settings'}).click();
   const dialog = page.getByRole('dialog', {name: 'Project settings'});
   await expect(dialog).toHaveAttribute('data-height', 'fixed');
   const tabs = dialog.getByRole('tablist', {name: 'Project settings'});
@@ -302,7 +302,7 @@ test('the side panel passes axe (WCAG 2.2 AA), reported', async ({page}) => {
 
 test('Build: the Dates card holds a Date range field; Events has one with times', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
-  const setup = page.getByRole('complementary', {name: 'Setup'});
+  const setup = page.getByRole('region', {name: 'Setup'});
   await setup.getByRole('button', {name: /^Dates/}).click();
   await expect(setup.getByRole('group', {name: 'Start date'})).toBeVisible();
   await expect(setup.getByRole('button', {name: 'Add end date'})).toBeVisible();
@@ -320,7 +320,7 @@ test('Build: the Dates card holds a Date range field; Events has one with times'
 
 test('Build: the Attachments card opens its dialog: a drop zone, the files, Done', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
-  const setup = page.getByRole('complementary', {name: 'Setup'});
+  const setup = page.getByRole('region', {name: 'Setup'});
   await expect(setup.locator('[data-gv="setup-card"]', {hasText: 'Attachments'})).toContainText('2 files');
   await setup.getByRole('button', {name: 'Add an attachment'}).click();
   const dialog = page.getByRole('dialog', {name: 'Attachments'});
@@ -430,8 +430,73 @@ test('the Filter menu: Enter ticks an option and the submenu stays open; Esc clo
 
 test('Project settings: General has the project URL with its prefix', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
-  await page.getByRole('complementary', {name: 'Setup'}).getByRole('button', {name: 'Project settings'}).click();
+  await page.getByRole('region', {name: 'Setup'}).getByRole('button', {name: 'Project settings'}).click();
   const dialog = page.getByRole('dialog', {name: 'Project settings'});
   await expect(dialog.getByRole('textbox', {name: 'Project URL'})).toHaveValue('green-corridors');
   await expect(dialog.getByText('internal.govocal.com/en/projects/')).toBeVisible();
+});
+
+// ── Build's phone, the empty tabs, the other methods' Manage and the Insights dashboards (redesign on the current
+// components). The Build setup is a Panel now, so it is found as a region named "Setup" (it was a complementary).
+test('Build: the stage shows the phase on the Phone preview; the setup is a Panel with its sections', async ({page}) => {
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p4/build');
+  const phone = page.getByRole('region', {name: 'Preview'}).getByLabel('What residents see of Community vote');
+  await expect(phone.getByRole('heading', {name: 'Green Corridors for Larkvale'})).toBeVisible();
+  await expect(phone.getByRole('button', {name: 'Vote'})).toBeVisible();
+  const setup = page.getByRole('region', {name: 'Setup'});
+  await expect(setup.getByRole('heading', {level: 2, name: 'Setup'})).toBeVisible();
+  for (const h of ['Before you publish', 'Voting setup']) await expect(setup.getByRole('heading', {level: 3, name: h})).toBeVisible();
+  await expect(setup).toContainText('0 of 6 ready');
+});
+
+test('a phase that has not started: Manage and Insights show the Empty state', async ({page}) => {
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p5/manage');
+  await expect(page.getByRole('heading', {name: 'Responses will appear here'})).toBeVisible();
+  await expect(page.getByText('No responses yet')).toBeVisible();
+  await page.getByRole('radio', {name: 'Insights'}).click();
+  await expect(page.getByRole('heading', {name: 'Insights will appear here'})).toBeVisible();
+  await expect(page.getByText('No insights yet')).toBeVisible();
+  // A draft ideation phase too: no empty table, the Empty state.
+  await page.goto('/backoffice/#/projects/harbour-plan/phases/p1/manage');
+  await expect(page.getByRole('heading', {name: 'Ideas will appear here'})).toBeVisible();
+  await expect(page.getByRole('grid', {name: 'Ideas'})).toHaveCount(0);
+});
+
+test('Manage for proposals lists the Proposals rows; an information phase has nothing to manage', async ({page}) => {
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p3/manage');
+  const list = page.getByRole('list', {name: 'Proposals'});
+  await expect(list.getByRole('listitem')).toHaveCount(5);
+  await expect(list.getByRole('listitem').first()).toContainText('Car-free Sundays on Brindle Street');
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p1/manage');
+  await expect(page.getByRole('heading', {name: 'Nothing to manage here'})).toBeVisible();
+});
+
+test('Insights for ideas: the stat tiles, the dashboard cards and the recommended actions', async ({page}) => {
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p2/insights');
+  const dash = page.getByRole('region', {name: 'Insights'});
+  await expect(dash.locator('.gv-kpi__label')).toHaveText(['Visitors', 'Phase participants', 'Ideas', 'Comments', 'Reactions', 'Participation rate']);
+  await expect(dash.getByText(String(IDEAS.length), {exact: true}).first()).toBeVisible();
+  for (const h of ['Participation over time', 'What are people saying?', 'Topic breakdown', 'Status breakdown', 'Most liked', 'Demographics and audience'])
+    await expect(dash.getByRole('heading', {name: h})).toBeVisible();
+  const actions = page.getByRole('region', {name: 'Recommended actions'});
+  await actions.getByRole('button', {name: 'Add a report'}).click();
+  await expect(page).toHaveURL(/#\/reporting$/);
+});
+
+test('Insights for a vote: tiles with notes, the live ranking, who is voting, the AI banner', async ({page}) => {
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p4/insights');
+  const dash = page.getByRole('region', {name: 'Insights'});
+  await expect(dash.getByText('updating live').first()).toBeVisible();
+  await expect(dash.getByRole('heading', {name: 'Live ranking'})).toBeVisible();
+  await expect(dash.getByText('Rain gardens along Brindle Street')).toBeVisible();
+  await expect(dash.getByText('Age group')).toBeVisible();
+  await dash.getByRole('radio', {name: 'Weekly'}).click();
+  await expect(dash.getByRole('radio', {name: 'Weekly'})).toBeChecked();
+  await expect(dash.getByRole('note')).toContainText('Explore AI-powered summaries');
+});
+
+test('the Insights tab passes axe (WCAG 2.2 AA), reported', async ({page}) => {
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p2/insights');
+  await expect(page.getByRole('heading', {name: 'Status breakdown'})).toBeVisible();
+  a11yReport(await violations(page, '.bo-phase-insights'));
 });
