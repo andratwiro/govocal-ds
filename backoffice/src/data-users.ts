@@ -26,6 +26,27 @@ export const PEOPLE: Person[] = [
   P(12, 'Resident L', 'Registered user', '2025-03-28', 15)
 ];
 
+const DAY = 86_400_000;
+const FIRST = Date.UTC(2021, 0, 4);
+const SPAN = (Date.UTC(2025, 2, 27) - FIRST) / DAY;
+
+/** About 5,000 invented residents after the twelve, so the list runs as long as a real platform's and the table
+ * virtualises. They joined before any of the twelve, so the twelve still lead the list, newest first. The same people
+ * every time (a hash of the number, no random). */
+export function inventPeople(count: number, from = PEOPLE.length + 1): Person[] {
+  return Array.from({length: count}, (_, i) => {
+    const n = from + i;
+    const seed = Math.imul(n, 2654435761) >>> 0;
+    const joined = new Date(FIRST + (seed % SPAN) * DAY).toISOString().slice(0, 10);
+    // One in five never came back after joining; the others were last seen up to a year ago.
+    const lastActive = seed % 5 === 0 ? undefined : (seed >>> 8) % (365 * 1440);
+    return P(n, `Resident ${n}`, 'Registered user', joined, lastActive);
+  });
+}
+
+/** The twelve, then the invented tail: the Users page's list. */
+export const ALL_PEOPLE: Person[] = [...PEOPLE, ...inventPeople(5000)];
+
 /** The real admin's role lists, in its order, with the role each one keeps. */
 export const SEGMENTS: {id: string; label: string; roles?: Role[]}[] = [
   {id: 'all', label: 'Registered users'},

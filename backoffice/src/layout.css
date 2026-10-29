@@ -128,6 +128,9 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-users-option-label { flex: 1; }
 .bo-users-nowrap { white-space: nowrap; }
 .bo-users-scroll { overflow-x: auto; }
+/* The Users list: as tall as its rows, up to most of the window; the virtualised table fills it and scrolls inside. */
+.bo-users-rows { display: flex; flex-direction: column; max-block-size: 70vh; }
+.bo-users-table { flex: 1 1 auto; min-block-size: 0; }
 .bo-users-form { display: grid; gap: var(--gv-space-16); max-width: 640px; }
 .bo-users-modal { display: grid; gap: var(--gv-space-16); }
 .bo-users-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--gv-space-16); }

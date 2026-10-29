@@ -22,24 +22,27 @@ test('users follows the real admin: segments, groups, a selectable user table', 
   for (const c of ['Name', 'Role', 'Last active', 'Joined', 'Options']) {
     await expect(grid.getByRole('columnheader', {name: c})).toBeVisible();
   }
-  // Every admin table pages (docs/DECISIONS.md): ten of the twelve people on the first page.
-  await expect(grid.getByRole('row')).toHaveCount(11);
+  // One scrolling list, virtualised (the Data table's "Virtualized" story): the twelve and 5,000 invented people,
+  // of whom the table draws only the rows in view, and tells assistive tech the whole count.
+  await expect(grid).toHaveAttribute('aria-rowcount', '5013');
+  await expect(grid.getByRole('row', {name: /Admin A/})).toBeVisible();
+  expect(await grid.getByRole('row').count()).toBeLessThan(100);
 });
 
 // The list sits in a Panel (Panel's "With a toolbar" story): the title and description in the head, the toolbar row
-// (the count, Export all, the search), the table flush, the Pagination in the foot.
-test('the list is a Panel: head, toolbar with the count and search, the table, Pagination in the foot', async ({page}) => {
+// (the count, Export all, the search), the table flush; no pages, the table scrolls.
+test('the list is a Panel: head, toolbar with the count and search, the table, no Pagination', async ({page}) => {
   await page.goto('/backoffice/#/users');
   const panel = page.getByRole('region', {name: 'Registered users'});
   await expect(panel).toHaveClass(/gv-panel/);
   await expect(panel.getByRole('heading', {level: 2, name: 'Registered users'})).toBeVisible();
   await expect(panel.locator('.gv-panel__description')).toContainText('Get an overview of all the people');
   const toolbar = panel.locator('.gv-panel__toolbar');
-  await expect(toolbar.getByRole('heading', {level: 3, name: '12 users'})).toBeVisible();
+  await expect(toolbar.getByRole('heading', {level: 3, name: '5,012 users'})).toBeVisible();
   await expect(toolbar.getByRole('searchbox', {name: 'Search users'})).toBeVisible();
   await expect(toolbar.getByRole('button', {name: 'Export all'})).toBeVisible();
   await expect(panel.locator('.gv-panel__body').getByRole('grid', {name: 'Registered users'})).toBeVisible();
-  await expect(panel.locator('.gv-panel__foot').getByRole('navigation', {name: 'User pages'})).toBeVisible();
+  await expect(panel.getByRole('navigation', {name: 'User pages'})).toHaveCount(0);
   a11yReport(await axeOn(page, '.gv-panel'));
   // The one count follows the search.
   await toolbar.getByRole('searchbox', {name: 'Search users'}).fill('admin');
@@ -51,32 +54,50 @@ test('the list is a Panel: head, toolbar with the count and search, the table, P
   await expect(group.locator('.gv-panel__actions').getByRole('button', {name: 'Delete Group'})).toBeVisible();
 });
 
-test('Pagination moves through the users; the header select-all ticks the page shown', async ({page}) => {
+test('one list, no pages: scrolling draws later rows under the pinned header, the page stays put', async ({page}) => {
   await page.goto('/backoffice/#/users');
   const grid = page.getByRole('grid', {name: 'Registered users'});
-  const pager = page.getByRole('navigation', {name: 'User pages'});
-  await expect(pager.getByRole('button', {name: 'Page 1'})).toHaveAttribute('aria-current', 'page');
-  await pager.getByRole('button', {name: 'Page 2'}).click();
-  await expect(pager.getByRole('button', {name: 'Page 2'})).toHaveAttribute('aria-current', 'page');
-  await expect(grid.getByRole('row')).toHaveCount(3); // header + Admin B and Resident L
-  await expect(grid.getByRole('row', {name: /Admin B/})).toBeVisible();
-  await expect(grid.getByRole('row', {name: /Resident E/})).toHaveCount(0);
+  await expect(grid.getByRole('row', {name: /Admin A/})).toBeVisible();
+  const before = await page.evaluate(() => window.scrollY);
+  // The table takes its height from its box and scrolls inside it: most of the window, not 5,000 rows tall.
+  const box = (await grid.boundingBox())!;
+  expect(box.height).toBeLessThanOrEqual(page.viewportSize()!.height * 0.7 + 1);
+  await grid.evaluate(g => { g.scrollTop = g.scrollHeight / 2; });
+  await expect.poll(async () => Math.max(...await grid.locator('[role="row"][data-key]')
+    .evaluateAll(rs => rs.map(r => Number(r.getAttribute('aria-rowindex')))))).toBeGreaterThan(2000);
+  await expect(grid.getByRole('row', {name: /Admin A/})).toHaveCount(0);
+  expect(await grid.getByRole('row').count()).toBeLessThan(100);
+  const [head, rows] = [grid.locator('.gv-data-table__header'), grid];
+  expect(Math.abs((await head.boundingBox())!.y - (await rows.boundingBox())!.y)).toBeLessThanOrEqual(2);
+  expect(await page.evaluate(() => window.scrollY)).toBe(before);
+  // The keyboard reaches the last row.
+  await grid.evaluate(g => { g.scrollTop = 0; });
+  await grid.getByRole('row', {name: /Admin A/}).focus();
+  await page.keyboard.press('End');
+  await expect(grid.locator('[role="row"][aria-rowindex="5013"]')).toBeInViewport();
+});
+
+test('the header select-all ticks every row in view: all of them, or all the search leaves', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  const grid = page.getByRole('grid', {name: 'Registered users'});
   await grid.getByRole('columnheader').getByRole('checkbox').click({force: true});
-  await expect(page.getByText('2 selected')).toBeVisible();
-  // A tick on another page stays: page 1 adds to it.
-  await pager.getByRole('button', {name: 'Page 1'}).click();
-  await grid.getByRole('row', {name: /Resident E/}).locator('.gv-checkbox .indicator').click();
-  await expect(page.getByText('3 selected')).toBeVisible();
+  await expect(page.getByText('5,012 selected')).toBeVisible();
+  // A row drawn only now, far down the list, is ticked too.
+  await grid.evaluate(g => { g.scrollTop = g.scrollHeight; });
+  await expect(grid.locator('[role="row"][aria-rowindex="5013"]')).toHaveAttribute('aria-selected', 'true');
+  await page.getByRole('button', {name: 'Export selected'}).click();
+  await expect(toast(page).filter({hasText: '5,012 users in users.xlsx'})).toBeVisible();
   await page.getByRole('button', {name: 'Clear selection'}).click();
-  // A new search goes back to the first page.
-  await pager.getByRole('button', {name: 'Page 2'}).click();
-  await page.getByRole('searchbox', {name: 'Search users'}).fill('resident');
-  await expect(pager.getByRole('button', {name: 'Page 1'})).toHaveAttribute('aria-current', 'page');
+  // A search narrows what "all" means.
+  await page.getByRole('searchbox', {name: 'Search users'}).fill('admin');
+  // Not forced: the click waits until the page takes pointer events again (the export toast briefly holds them).
+  await grid.getByRole('columnheader').locator('.gv-checkbox .indicator').click();
+  await expect(page.getByText('2 selected')).toBeVisible();
 });
 
 test('the Panel counts the list; rows use the gv Avatar and icon button; a row has its options menu', async ({page}) => {
   await page.goto('/backoffice/#/users');
-  await expect(page.getByRole('heading', {level: 3, name: '12 users'})).toBeVisible();
+  await expect(page.getByRole('heading', {level: 3, name: '5,012 users'})).toBeVisible();
   const row = page.getByRole('row', {name: /Admin A/});
   await expect(row.locator('.gv-avatar')).toHaveText('AA');
   await expect(row.getByText('user1@example.org')).toBeVisible();
@@ -90,15 +111,15 @@ test('the Panel counts the list; rows use the gv Avatar and icon button; a row h
 });
 
 // docs/DECISIONS.md: select-all lives in the header only; the toolbar's "Select" checkbox is gone.
-test('the header select-all picks every row of the page and shows the selection actions', async ({page}) => {
+test('the header select-all picks every row and shows the selection actions', async ({page}) => {
   await page.goto('/backoffice/#/users');
   await expect(page.getByText('Select', {exact: true})).toHaveCount(0);
   const grid = page.getByRole('grid', {name: 'Registered users'});
   await grid.getByRole('columnheader').getByRole('checkbox').click({force: true});
   await expect(grid.getByRole('row').nth(1)).toHaveAttribute('aria-selected', 'true');
-  await expect(page.getByText('10 selected')).toBeVisible();
+  await expect(page.getByText('5,012 selected')).toBeVisible();
   // The Selection bar takes the count's place in the toolbar.
-  await expect(page.getByRole('heading', {name: '12 users'})).toHaveCount(0);
+  await expect(page.getByRole('heading', {name: '5,012 users'})).toHaveCount(0);
   await expect(page.getByRole('button', {name: 'Add to group'})).toBeVisible();
   await expect(page.getByRole('button', {name: 'Export selected'})).toBeVisible();
 });
@@ -117,7 +138,6 @@ test('segments, groups and search narrow the users', async ({page}) => {
   const banned = page.getByRole('region', {name: 'Banned emails'});
   await expect(banned.locator('.gv-empty-state').getByRole('heading', {name: 'No banned emails'})).toBeVisible();
   await expect(banned.getByRole('grid')).toHaveCount(0);
-  await expect(banned.getByRole('navigation', {name: 'User pages'})).toHaveCount(0);
   await segments.getByRole('option', {name: /^Registered users/}).click();
   await page.getByRole('searchbox', {name: 'Search users'}).fill('user12@');
   await expect(page.getByRole('grid', {name: 'Registered users'}).getByRole('row')).toHaveCount(2);
@@ -292,6 +312,8 @@ test('User insights leads to the users dashboard', async ({page}) => {
 
 test('a row opens the user profile: name, email, role, joined and participation', async ({page}) => {
   await page.goto('/backoffice/#/users');
+  // Manager C sits below the table's fold: find them first, as an admin would in a list of 5,000.
+  await page.getByRole('searchbox', {name: 'Search users'}).fill('Manager C');
   await page.getByRole('row', {name: /Manager C/}).getByText('Project manager').click();
   await expect(page).toHaveURL(/#\/users\/u3$/);
   await expect(page.getByRole('heading', {level: 1, name: 'Manager C'})).toBeVisible();
@@ -350,13 +372,14 @@ test('a row menu answers: admin rights toggle, add to group, block and delete as
   await page.getByRole('menuitem', {name: 'Delete user'}).click();
   await remove.getByRole('button', {name: 'Delete user'}).click();
   await expect(toast(page).filter({hasText: 'Resident K is deleted'})).toBeVisible();
-  await expect(page.getByRole('grid', {name: 'Registered users'}).getByRole('row')).toHaveCount(11); // header + ten
+  // Resident H blocked, Resident K deleted: 5,010 people and the header.
+  await expect(page.getByRole('grid', {name: 'Registered users'})).toHaveAttribute('aria-rowcount', '5011');
 });
 
 test('the selection actions answer: Add to group adds the users, the exports start', async ({page}) => {
   await page.goto('/backoffice/#/users');
   await page.getByRole('button', {name: 'Export all'}).click();
-  await expect(toast(page).first()).toContainText('12 users in users.xlsx');
+  await expect(toast(page).first()).toContainText('5,012 users in users.xlsx');
   const grid = page.getByRole('grid', {name: 'Registered users'});
   for (const n of ['Resident G', 'Resident I']) await grid.getByRole('row', {name: new RegExp(n)}).locator('.gv-checkbox .indicator').click();
   await page.getByRole('button', {name: 'Export selected'}).click();

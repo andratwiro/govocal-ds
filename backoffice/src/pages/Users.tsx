@@ -1,13 +1,13 @@
-import {useMemo, useState, type ComponentProps, type ReactNode} from 'react';
+import {useCallback, useMemo, useRef, useState, type ComponentProps, type ReactNode} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {Ban, ChartColumn, Download, Mail, Pencil, Plus, SearchX, ShieldCheck, ShieldOff, Trash2, UserMinus, UserPlus,
   Users as UsersIcon, Zap} from 'lucide-react';
 import {AlertDialog, Banner, Button, ChoiceCard, DataTable, DataTableBody, DataTableCell, DataTableColumn,
-  DataTableHeader, DataTableOptions, DataTablePerson, DataTableRow, DataTableStack, EmptyState, Menu, MenuItem, Modal,
-  Pagination, Panel, queue, RadioGroup, SearchField, Select, type SelectionAction, SelectionBar, SelectItem, Separator,
-  TableToolbar, TableToolbarHeading, TextField, ToastRegion} from 'govocal-ds';
+  DataTableHeader, DataTableOptions, DataTablePerson, DataTableRow, DataTableStack, EmptyState, type Key, Menu, MenuItem,
+  Modal, Panel, queue, RadioGroup, SearchField, Select, type SelectionAction, SelectionBar, SelectItem, Separator,
+  TableToolbar, TableToolbarHeading, TextField, toKeySet, ToastRegion} from 'govocal-ds';
 import {ListBox, ListBoxItem} from 'govocal-ds/base';
-import {GROUPS, PEOPLE, SEGMENTS, SMART_RULES, type Person} from '../data-users';
+import {ALL_PEOPLE, GROUPS, SEGMENTS, SMART_RULES, type Person} from '../data-users';
 import {Gap} from '../Gap';
 import {Page} from './Page';
 
@@ -16,9 +16,9 @@ type TableProps = ComponentProps<typeof DataTable>;
 type Selection = Parameters<NonNullable<TableProps['onSelectionChange']>>[0];
 type Sort = {column: 'name' | 'lastActive' | 'joined'; direction: 'ascending' | 'descending'};
 
-// Every admin table pages (docs/DECISIONS.md).
+// The admin's other user lists page (docs/DECISIONS.md); the Users list itself is virtualised.
 export const PAGE_SIZE = 10;
-export const usersWord = (n: number) => `${n} ${n === 1 ? 'user' : 'users'}`;
+export const usersWord = (n: number) => `${n.toLocaleString('en-GB')} ${n === 1 ? 'user' : 'users'}`;
 
 const DESCRIPTION = 'Get an overview of all the people and organisations that registered on the platform. ' +
   'Add a selection of users to Manual groups or Smart groups.';
@@ -36,7 +36,7 @@ function useGroups() {
 
 // The people, as changed here (a role, a block, a deletion): they outlive a change of route, until a reload.
 export type Member = Person & {blocked?: boolean};
-export const peopleStore: {people: Member[]} = {people: [...PEOPLE]};
+export const peopleStore: {people: Member[]} = {people: [...ALL_PEOPLE]};
 function usePeople() {
   const [people, set] = useState(peopleStore.people);
   const setPeople = (f: (p: Member[]) => Member[]) => set(peopleStore.people = f(peopleStore.people));
@@ -71,8 +71,9 @@ function inView(view: string, groups: Group[], people: Member[]): Member[] {
   return roles ? active.filter(p => roles.includes(p.role)) : active;
 }
 
+const COLLATOR = new Intl.Collator('en');
 function compare(a: Person, b: Person, column: string) {
-  if (column === 'name') return a.name.localeCompare(b.name);
+  if (column === 'name') return COLLATOR.compare(a.name, b.name);
   // Never active sorts as the oldest activity.
   if (column === 'lastActive') return (b.lastActive ?? Number.MAX_SAFE_INTEGER) - (a.lastActive ?? Number.MAX_SAFE_INTEGER);
   return a.joined.localeCompare(b.joined);
@@ -165,31 +166,31 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
   const group = groups.find(g => g.id === view);
   const title = SEGMENTS.find(s => s.id === view)?.label ?? group?.label ?? '';
   const [query, setQuery] = useState('');
-  const [selected, setSelected] = useState<Selection>(new Set());
+  const [selected, setSelected] = useState<Set<Key>>(new Set());
   const [sort, setSort] = useState<Sort>({column: 'joined', direction: 'descending'});
-  const [page, setPage] = useState(1);
-  const all = inView(view, groups, people);
+  const all = useMemo(() => inView(view, groups, people), [view, groups, people]);
   const rows = useMemo(() => {
     const q = query.toLowerCase();
     const found = all.filter(p => p.name.toLowerCase().includes(q) || p.email?.toLowerCase().includes(q));
     const sign = sort.direction === 'descending' ? -1 : 1;
     return found.sort((a, b) => sign * compare(a, b, sort.column));
   }, [all, query, sort]);
-  const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
-  const current = Math.min(page, pageCount);
-  const shown = rows.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
-  const search = (q: string) => { setQuery(q); setPage(1); };
   // The prototype's sortable headers: pressing the sorted one flips it; a new column starts A-Z for names and
   // newest first for dates.
   const onSort = ({column, direction}: {column: string | number; direction: Sort['direction']}) =>
     setSort(s => s.column === column ? {column: s.column, direction}
       : {column: column as Sort['column'], direction: column === 'name' ? 'ascending' : 'descending'});
-  // The header's select-all ticks the page shown (a known page, docs/DECISIONS.md); ticks on other pages stay.
-  const ids = selected === 'all' ? shown.map(r => r.id) : rows.filter(r => selected.has(r.id)).map(r => r.id);
-  const onSelect = (keys: Selection) =>
-    setSelected(keys === 'all' ? new Set([...ids, ...shown.map(r => r.id)]) : keys);
+  // One scrolling list, no pages (the Data table's "Virtualized" story): the header's select-all ticks every row in
+  // view, that is every row the search and the list leave, all 5,000 if nothing narrows them.
+  const ids = rows.filter(r => selected.has(r.id)).map(r => r.id);
+  const onSelect = (keys: Selection) => setSelected(toKeySet<Key>(keys, rows.map(r => r.id)));
   const count = ids.length;
-  const exportUsers = (n: number) => toast('Export started', `${n === 1 ? '1 user' : `${n} users`} in users.xlsx`);
+  // A row's cells read the menu's handler and the list's kind: stable, and named in the body's `dependencies`, so
+  // the table reuses the rows it built until one of them changes.
+  const act = useRef(onRowAction);
+  act.current = onRowAction;
+  const onAct = useCallback((p: Member, a: RowAction) => act.current(p, a), []);
+  const exportUsers = (n: number) => toast('Export started', `${usersWord(n)} in users.xlsx`);
 
   const manualGroup = group?.kind === 'manual';
   const actions: SelectionAction[] = [
@@ -217,7 +218,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
       </SelectionBar>
     )}>
       <Button variant="quiet" size={32} onPress={() => exportUsers(all.length)}><Download aria-hidden size={16} />Export all</Button>
-      <SearchField aria-label="Search users" placeholder="Search" value={query} onChange={search} />
+      <SearchField aria-label="Search users" placeholder="Search" value={query} onChange={setQuery} />
     </TableToolbar>
   );
 
@@ -228,8 +229,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
           <Button variant="quiet" size={32} onPress={onEditGroup}><Pencil aria-hidden size={16} />Edit Group</Button>
           <Button variant="quiet" tone="danger" size={32} onPress={onDeleteGroup}><Trash2 aria-hidden size={16} />Delete Group</Button>
         </>
-      )}
-      footer={rows.length > 0 && <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="User pages" />}>
+      )}>
       {/* A smart group says why its list can't be edited by hand (the Banner's info tone). */}
       {group?.kind === 'smart' && (
         <div className="bo-users-note">
@@ -245,36 +245,36 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
           <EmptyState layout="panel" headingLevel={3} icon={<UsersIcon size={24} />} title={emptyTitle} description={emptyText} />
         )
       ) : (
-        <div className="bo-users-scroll">
-        <DataTable aria-label={title} selectionMode="multiple" selectedKeys={selected} onSelectionChange={onSelect}
-          sortDescriptor={sort} onSortChange={onSort}>
-          {/* The header's check column is the one select-all (docs/DECISIONS.md): no toolbar "Select" checkbox. */}
-          <DataTableHeader>
-            <DataTableColumn id="name" isRowHeader allowsSorting>Name</DataTableColumn>
-            <DataTableColumn id="role">Role</DataTableColumn>
-            <DataTableColumn id="lastActive" allowsSorting>Last active</DataTableColumn>
-            <DataTableColumn id="joined" allowsSorting>Joined</DataTableColumn>
-            <DataTableColumn id="options" align="options">Options</DataTableColumn>
-          </DataTableHeader>
-          <DataTableBody>{shown.map(p => (
-            <DataTableRow key={p.id} id={p.id} textValue={p.name} href={`#/users/${p.id}`}>
-              <DataTableCell>
-                <DataTablePerson name={p.name} initials={initials(p.name)}
-                  sub={p.email && <span className="bo-users-nowrap">{p.email}</span>} />
-              </DataTableCell>
-              <DataTableCell>
-                <span className="bo-users-nowrap">
-                  <DataTableStack sub={p.role !== 'Registered user' && 'Assigned items'}>{p.role}</DataTableStack>
-                </span>
-              </DataTableCell>
-              <DataTableCell><span className="bo-users-nowrap">{ago(p.lastActive)}</span></DataTableCell>
-              <DataTableCell><span className="bo-users-nowrap">{date(p.joined)}</span></DataTableCell>
-              <DataTableCell align="options">
-                <RowOptions person={p} blocked={!!p.blocked} inManualGroup={manualGroup} onAction={a => onRowAction(p, a)} />
-              </DataTableCell>
-            </DataTableRow>))}
-          </DataTableBody>
-        </DataTable>
+        // The table takes its height from this box: as tall as its rows, up to most of the window, then it
+        // scrolls inside itself under its pinned header and draws only the rows in view.
+        <div className="bo-users-rows">
+          <DataTable aria-label={title} className="bo-users-table" isVirtualized rowLines={2} selectionMode="multiple"
+            selectedKeys={selected}
+            onSelectionChange={onSelect} sortDescriptor={sort} onSortChange={onSort}>
+            {/* The header's check column is the one select-all (docs/DECISIONS.md): no toolbar "Select" checkbox. */}
+            <DataTableHeader>
+              <DataTableColumn id="name" isRowHeader allowsSorting width="2fr">Name</DataTableColumn>
+              <DataTableColumn id="role" width="1.5fr">Role</DataTableColumn>
+              <DataTableColumn id="lastActive" allowsSorting>Last active</DataTableColumn>
+              <DataTableColumn id="joined" allowsSorting>Joined</DataTableColumn>
+              <DataTableColumn id="options" align="options">Options</DataTableColumn>
+            </DataTableHeader>
+            <DataTableBody items={rows} dependencies={[manualGroup, onAct]}>
+              {p => (
+                <DataTableRow id={p.id} textValue={p.name} href={`#/users/${p.id}`}>
+                  <DataTableCell><DataTablePerson name={p.name} initials={initials(p.name)} sub={p.email} /></DataTableCell>
+                  <DataTableCell>
+                    <DataTableStack sub={p.role !== 'Registered user' && 'Assigned items'}>{p.role}</DataTableStack>
+                  </DataTableCell>
+                  <DataTableCell>{ago(p.lastActive)}</DataTableCell>
+                  <DataTableCell>{date(p.joined)}</DataTableCell>
+                  <DataTableCell align="options">
+                    <RowOptions person={p} blocked={!!p.blocked} inManualGroup={manualGroup} onAction={a => onAct(p, a)} />
+                  </DataTableCell>
+                </DataTableRow>
+              )}
+            </DataTableBody>
+          </DataTable>
         </div>
       )}
     </Panel>
