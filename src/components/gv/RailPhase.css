@@ -10,7 +10,7 @@
   align-items: flex-start;
   width: 100%;
   padding: var(--gv-space-8) var(--gv-space-8) var(--gv-space-8) var(--gv-space-12);
-  border-radius: var(--gv-radius-8);
+  border-radius: var(--gv-radius-12);
   text-decoration: none;
   color: inherit;
   cursor: pointer;
