@@ -1,16 +1,27 @@
-import {readFile, writeFile} from 'node:fs/promises';
+import {readFile, readdir, writeFile} from 'node:fs/promises';
 import {availableParallelism} from 'node:os';
 import {chromium} from 'playwright';
 import {AxeBuilder} from '@axe-core/playwright';
 import {serve} from './lib/serve.mjs';
 import {summarize} from './lib/a11y.mjs';
 
-const index = JSON.parse(await readFile('dist/storybook/index.json', 'utf8'));
-const stories = Object.values(index.entries).filter(e => e.type === 'story' && !e.title.startsWith('Overview'));
+const OUT = 'dist/storybook';
+// CI splits the scan over runners: A11Y_SHARD=2/3 scans every third story from the second and writes its raw findings
+// to a11y-raw-2.json; `--merge` then folds every a11y-raw-*.json into the one results file the page reads.
+if (process.argv.includes('--merge')) {
+  const parts = (await readdir(OUT)).filter(f => /^a11y-raw-\d+\.json$/.test(f));
+  const raw = (await Promise.all(parts.map(async f => JSON.parse(await readFile(`${OUT}/${f}`, 'utf8'))))).flat();
+  await writeResults(raw, `${parts.length} shards`);
+  process.exit(0);
+}
+const [shard, shards] = (process.env.A11Y_SHARD ?? '1/1').split('/').map(Number);
+const index = JSON.parse(await readFile(`${OUT}/index.json`, 'utf8'));
+const stories = Object.values(index.entries).filter(e => e.type === 'story' && !e.title.startsWith('Overview'))
+  .filter((_, i) => i % shards === shard - 1);
 // 388 stories × 2 directions one at a time took over ten minutes: a few pages in one browser, each in its own
 // context, share the work. A11Y_CONCURRENCY=1 brings back the one-page run on a busy machine.
 const concurrency = Math.max(1, Number(process.env.A11Y_CONCURRENCY ?? Math.min(4, availableParallelism())));
-const server = await serve('dist/storybook', 6206);
+const server = await serve(OUT, 6206);
 let browser = await chromium.launch();
 let relaunching = null;
 
@@ -88,10 +99,20 @@ try {
   await browser.close().catch(() => {});
   server.close();
 }
-// Pages finish out of order: sort so the results file reads the same run to run.
-raw.sort((a, b) => a.story.localeCompare(b.story) || a.direction.localeCompare(b.direction));
-const summary = summarize(raw);
-await writeFile('dist/storybook/a11y-results.json', JSON.stringify(summary, null, 2));
-const total = summary.components.reduce((n, c) => n + c.violations, 0);
 const seconds = Math.round((Date.now() - started) / 1000);
-console.log(`a11y: ${stories.length} stories × 2 directions, ${total} violations across ${summary.components.filter(c => c.violations).length} components (${concurrency} pages, ${seconds} s)`);
+if (shards > 1) {
+  await writeFile(`${OUT}/a11y-raw-${shard}.json`, JSON.stringify(raw));
+  console.log(`a11y: shard ${shard}/${shards}, ${stories.length} stories × 2 directions (${concurrency} pages, ${seconds} s)`);
+} else {
+  await writeResults(raw, `${concurrency} pages, ${seconds} s`);
+}
+
+async function writeResults(raw, how) {
+  // Pages finish out of order: sort so the results file reads the same run to run.
+  raw.sort((a, b) => a.story.localeCompare(b.story) || a.direction.localeCompare(b.direction));
+  const summary = summarize(raw);
+  await writeFile(`${OUT}/a11y-results.json`, JSON.stringify(summary, null, 2));
+  const total = summary.components.reduce((n, c) => n + c.violations, 0);
+  const stories = new Set(raw.map(r => r.story)).size;
+  console.log(`a11y: ${stories} stories × 2 directions, ${total} violations across ${summary.components.filter(c => c.violations).length} components (${how})`);
+}
