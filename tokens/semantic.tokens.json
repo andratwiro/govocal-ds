@@ -177,6 +177,13 @@
       "$description": "The keyboard focus ring's colour. Components draw the whole ring with --gv-focus-ring."
     }
   },
+  "chart": {
+    "highlight": {
+      "$type": "color",
+      "$value": "{color.teal.500}",
+      "$description": "Chart: the one thing a finding names, in the accent: a highlighted bar, a highlighted figure (Stat tile's isHighlighted, a document's lead number). Not in Figma; the same teal as surface-accent-strong."
+    }
+  },
   "side-nav": {
     "icon-accent": {
       "$type": "color",
@@ -241,6 +248,11 @@
       "$description": "The one typeface. Every text style uses it; set it through a type role (font: var(--gv-type-<role>)), not on its own.",
       "$extensions": {"com.figma.variableId": "VariableID:1:141"}
     },
+    "family-document": {
+      "$type": "fontFamily",
+      "$value": "{font.family}",
+      "$description": "Not in Figma: the typeface of a document people read or print (a report's pages), set through the document roles (font: var(--gv-type-document-<role>)). The interface's family by default; a platform's theme sets this one at :root to give its documents its own face while the interface keeps Public Sans."
+    },
     "size-12": {
       "$type": "dimension",
       "$value": {"value": 12, "unit": "px"},
@@ -265,6 +277,11 @@
       "$description": "Title: panel, modal and card titles.",
       "$extensions": {"com.figma.variableId": "VariableID:1:147"}
     },
+    "size-19": {
+      "$type": "dimension",
+      "$value": {"value": 19, "unit": "px"},
+      "$description": "Not in Figma: Document lead, a document's opening line and a figure's finding."
+    },
     "size-20": {
       "$type": "dimension",
       "$value": {"value": 20, "unit": "px"},
@@ -276,6 +293,11 @@
       "$value": {"value": 28, "unit": "px"},
       "$description": "Stat: big numbers in KPI tiles.",
       "$extensions": {"com.figma.variableId": "VariableID:1:149"}
+    },
+    "size-44": {
+      "$type": "dimension",
+      "$value": {"value": 44, "unit": "px"},
+      "$description": "Not in Figma: Document display, a document's title on its title page."
     },
     "line-height-16": {
       "$type": "dimension",
@@ -295,11 +317,26 @@
       "$description": "The line under 16 and 20px text.",
       "$extensions": {"com.figma.variableId": "VariableID:1:163"}
     },
+    "line-height-28": {
+      "$type": "dimension",
+      "$value": {"value": 28, "unit": "px"},
+      "$description": "Not in Figma: the line under 19px text."
+    },
     "line-height-32": {
       "$type": "dimension",
       "$value": {"value": 32, "unit": "px"},
       "$description": "The line under 28px text.",
       "$extensions": {"com.figma.variableId": "VariableID:45:3"}
+    },
+    "line-height-36": {
+      "$type": "dimension",
+      "$value": {"value": 36, "unit": "px"},
+      "$description": "Not in Figma: the line under 28px document headings."
+    },
+    "line-height-52": {
+      "$type": "dimension",
+      "$value": {"value": 52, "unit": "px"},
+      "$description": "Not in Figma: the line under 44px text."
     },
     "weight-regular": {
       "$type": "fontWeight",
@@ -318,6 +355,28 @@
       "$value": {"value": 0, "unit": "px"},
       "$description": "The one letter spacing, 0px, set once on :root (theme.css) and inherited by every element and form control. No role tracks its own.",
       "$extensions": {"com.figma.variableId": "VariableID:1:169"}
+    }
+  },
+  "type": {
+    "document-display": {
+      "$type": "typography",
+      "$value": {"fontFamily": "{font.family-document}", "fontSize": "{font.size-44}", "lineHeight": 1.1818, "fontWeight": "{font.weight-medium}", "letterSpacing": "{font.tracking}"},
+      "$description": "Not in Figma: a document's title on its title page (a report's cover). 44/52 Medium."
+    },
+    "document-heading": {
+      "$type": "typography",
+      "$value": {"fontFamily": "{font.family-document}", "fontSize": "{font.size-28}", "lineHeight": 1.2857, "fontWeight": "{font.weight-medium}", "letterSpacing": "{font.tracking}"},
+      "$description": "Not in Figma: a document's section heading on its page (a report's numbered section). 28/36 Medium."
+    },
+    "document-lead": {
+      "$type": "typography",
+      "$value": {"fontFamily": "{font.family-document}", "fontSize": "{font.size-19}", "lineHeight": 1.4737, "fontWeight": "{font.weight-regular}", "letterSpacing": "{font.tracking}"},
+      "$description": "Not in Figma: a document's lead line: the title page's subtitle, a figure's finding, an insight's question. 19/28 Regular."
+    },
+    "document-body": {
+      "$type": "typography",
+      "$value": {"fontFamily": "{font.family-document}", "fontSize": "{font.size-13}", "lineHeight": 1.5385, "fontWeight": "{font.weight-regular}", "letterSpacing": "{font.tracking}"},
+      "$description": "Not in Figma: a document's reading text on its page (a report's paragraphs and lists, a quote's words). 13/20 Regular."
     }
   },
   "space": {

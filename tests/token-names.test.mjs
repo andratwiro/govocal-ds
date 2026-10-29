@@ -24,8 +24,11 @@ const SIDE_NAV = new RegExp(`^--gv-side-nav-(${PROPERTIES.join('|')})(-(current|
 const OTHER = [
   /^--gv-color-[a-z]+-\d+$/, /^--gv-color-alpha-[a-z]+(-\d+)?$/, /^--gv-chart-[a-z]+(-[a-z0-9]+)*$/,
   /^--gv-space-\d+$/, /^--gv-radius-(\d+|full)$/, /^--gv-size-(icon|control|avatar)-\d+$/,
-  /^--gv-font-(family|tracking|size-\d+|line-height-\d+|weight-(regular|medium))$/,
+  /^--gv-font-(family|family-document|tracking|size-\d+|line-height-\d+|weight-(regular|medium))$/,
   /^--gv-type-(stat|stat-small|title|body|body-strong|ui|ui-strong|small|small-strong)$/,
+  // A document's roles (a report's pages): one family of their own, so a platform themes its documents' type apart
+  // from the interface's. Named for what the text is in a document, never for the screen that shows it.
+  /^--gv-type-document-(display|heading|lead|body)$/,
   /^--gv-shadow-(raised|raised-strong|overlay)$/, /^--gv-motion-(duration|easing)-[a-z]+$/, /^--gv-border-width-\d+$/,
   /^--gv-focus-ring(-offset(-inset)?)?$/, /^--gv-opacity-[a-z]+$/, /^--gv-layer-[a-z]+$/
 ];

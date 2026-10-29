@@ -4,6 +4,18 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Report parts (29 Oct 2026, night)
+
+Calls made while building the report builder's missing parts from the back office's deep dive (the live report
+prototype against our report view): a document's type, the page stage and zoom bar, the block frame, inline rich text,
+the plain stat tile, figure, quote and sortable list.
+
+- The deep dive's `--gv-type-report-*` vs the token grammar ("name what it is, never where it's used") → **`--gv-type-document-display` (44/52 Medium), `-heading` (28/36 Medium), `-lead` (19/28 Regular), `-body` (13/20 Regular), on a family of their own, `--gv-font-family-document` (the interface's family by default)** → a report is one document among others (a printed project page, an export); the four roles are themed together, apart from the interface's, by one line a platform's theme sets at `:root`. Not in Figma, in `tokens/semantic.tokens.json`; the font primitives 19, 44 and the 28, 36, 52 lines join the scales.
+- Body 13/20 is the value of `--gv-type-ui` → **its own `document-body` anyway** → a platform's face must reach a document's paragraphs without changing the back office's rows.
+- Weights: the prototype draws the title and headings 500, the subtitle 300 → **Medium and Regular** → the system has no Light; tokens win.
+- A sheet surface token (white, shadow 1) → **none: a sheet is `--gv-surface-panel` with `--gv-shadow-raised` on the `--gv-surface-tertiary` stage** → the grammar already names a white surface that rests on a grey one; a component word (`sheet`) can't be a token.
+- The lead number "in the accent": `--gv-text-accent` is a retired name (renames.json splits it into link, brand and icon-brand) → **`--gv-chart-highlight` (teal 500, as `surface-accent-strong`)** → the earlier audit's "one rule (accent = named in the finding), one chart token": a highlighted bar and a highlighted figure are the same mark, and a retired name must never come back with a new meaning.
+
 ## Maps (29 Oct 2026)
 
 Calls made while adding the Map view (Components/Data display): an external review found maps uncovered, and the ideation phase's Manage tab shows ideas on one.

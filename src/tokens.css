@@ -55,6 +55,7 @@
 
   /** @tokens Font family @presenter FontFamily */
   --gv-font-family: 'Public Sans', system-ui, sans-serif; /* The one typeface. Every text style uses it; set it through a type role (font: var(--gv-type-<role>)), not on its own. */
+  --gv-font-family-document: var(--gv-font-family); /* Not in Figma: the typeface of a document people read or print (a report's pages), set through the document roles (font: var(--gv-type-document-<role>)). The interface's family by default; a platform's theme sets this one at :root to give its documents its own face while the interface keeps Public Sans. */
   /** @tokens-end */
 
   /** @tokens Font size @presenter FontSize */
@@ -62,15 +63,20 @@
   --gv-font-size-13: 13px; /* UI and UI strong: the control size (buttons, rows, menus, cells). */
   --gv-font-size-14: 14px; /* Body and Body strong: reading text, modal titles. */
   --gv-font-size-16: 16px; /* Title: panel, modal and card titles. */
+  --gv-font-size-19: 19px; /* Not in Figma: Document lead, a document's opening line and a figure's finding. */
   --gv-font-size-20: 20px; /* Stat small: small number tiles and counts. */
   --gv-font-size-28: 28px; /* Stat: big numbers in KPI tiles. */
+  --gv-font-size-44: 44px; /* Not in Figma: Document display, a document's title on its title page. */
   /** @tokens-end */
 
   /** @tokens Line height @presenter LineHeight */
   --gv-font-line-height-16: 16px; /* The line under 12px text. */
   --gv-font-line-height-20: 20px; /* The line under 13 and 14px text. */
   --gv-font-line-height-24: 24px; /* The line under 16 and 20px text. */
+  --gv-font-line-height-28: 28px; /* Not in Figma: the line under 19px text. */
   --gv-font-line-height-32: 32px; /* The line under 28px text. */
+  --gv-font-line-height-36: 36px; /* Not in Figma: the line under 28px document headings. */
+  --gv-font-line-height-52: 52px; /* Not in Figma: the line under 44px text. */
   /** @tokens-end */
 
   /** @tokens Font weight @presenter FontWeight */
@@ -184,6 +190,7 @@
   --gv-chart-green: var(--gv-color-green-400); /* Chart: a categorical green. */
   --gv-chart-olive: var(--gv-color-olive-500); /* Chart: a categorical olive. */
   --gv-chart-terracotta: var(--gv-color-orange-500); /* Chart: a categorical terracotta. */
+  --gv-chart-highlight: var(--gv-color-teal-500); /* Chart: the one thing a finding names, in the accent: a highlighted bar, a highlighted figure (Stat tile's isHighlighted, a document's lead number). Not in Figma; the same teal as surface-accent-strong. */
   /** @tokens-end */
 
   /** @tokens Space @presenter Spacing */
@@ -267,6 +274,10 @@
   --gv-type-ui: var(--gv-font-weight-regular) var(--gv-font-size-13)/var(--gv-font-line-height-20) var(--gv-font-family); /* The control text: list rows, cells, menu options, breadcrumbs, group titles. 13/20 Regular. */
   --gv-type-small-strong: var(--gv-font-weight-medium) var(--gv-font-size-12)/var(--gv-font-line-height-16) var(--gv-font-family); /* Pills, the rail header, a phase name, a sorted column header. 12/16 Medium. */
   --gv-type-small: var(--gv-font-weight-regular) var(--gv-font-size-12)/var(--gv-font-line-height-16) var(--gv-font-family); /* Captions and meta: card titles, To review and Required, rail labels. 12/16 Regular. */
+  --gv-type-document-display: var(--gv-font-weight-medium) var(--gv-font-size-44)/var(--gv-font-line-height-52) var(--gv-font-family-document); /* Not in Figma: a document's title on its title page (a report's cover). 44/52 Medium. */
+  --gv-type-document-heading: var(--gv-font-weight-medium) var(--gv-font-size-28)/var(--gv-font-line-height-36) var(--gv-font-family-document); /* Not in Figma: a document's section heading on its page (a report's numbered section). 28/36 Medium. */
+  --gv-type-document-lead: var(--gv-font-weight-regular) var(--gv-font-size-19)/var(--gv-font-line-height-28) var(--gv-font-family-document); /* Not in Figma: a document's lead line: the title page's subtitle, a figure's finding, an insight's question. 19/28 Regular. */
+  --gv-type-document-body: var(--gv-font-weight-regular) var(--gv-font-size-13)/var(--gv-font-line-height-20) var(--gv-font-family-document); /* Not in Figma: a document's reading text on its page (a report's paragraphs and lists, a quote's words). 13/20 Regular. */
 
   /** @tokens Shadow @presenter Shadow */
   --gv-shadow-raised-strong: 0px 1px 2px 0px rgb(20 20 40 / 0.1); /* A raised shape a step stronger: the selected item of a Segmented control. */

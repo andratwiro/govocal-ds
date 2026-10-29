@@ -55,7 +55,11 @@ const NO_CAP = 100_000;
 // A role's parts are references to the font primitives ({font.size-13}) or, pulled without them, the drawn values.
 type Ref = string;
 type TypeValue = {fontSize: {value: number} | Ref; lineHeight: number; fontWeight: number | Ref};
-const typeRoles = (tokensJson as unknown as {type: Record<string, {$value: TypeValue}>}).type;
+// Figma's roles, then the hand-written ones (a document's roles, Not in Figma), as tokens.css lists them.
+const typeRoles = {
+  ...(tokensJson as unknown as {type: Record<string, {$value: TypeValue}>}).type,
+  ...(semanticJson as unknown as {type?: Record<string, {$value: TypeValue}>}).type
+};
 const fontTokens = (semanticJson as unknown as {font: Record<string, {$value: unknown}>}).font;
 const deref = <T,>(v: T | Ref): T =>
   typeof v === 'string' && v.startsWith('{font.') ? fontTokens[v.slice(6, -1)].$value as T : v as T;
@@ -115,10 +119,11 @@ const usedBy = (name: string) => {
 };
 
 // Every --gv-type-<role>, drawn in itself, with its size/line, weight, what it is for (its description) and the
-// components using it (folded: the busiest roles name fifty).
-export const TypeRoles = () => <Unstyled>
+// components using it (folded: the busiest roles name fifty). `only`: the interface's roles, or a document's
+// (--gv-type-document-*, themed per platform through --gv-font-family-document).
+export const TypeRoles = ({only}: {only?: 'interface' | 'document'}) => <Unstyled>
   <ol className="gv-tokens-roles">
-    {roles.map(({role, size, line, weight}) => <li key={role} className="gv-tokens-role">
+    {roles.filter(({role}) => !only || (only === 'document') === role.startsWith('document-')).map(({role, size, line, weight}) => <li key={role} className="gv-tokens-role">
       <div className="gv-tokens-role__sample" style={{font: `var(--gv-type-${role})`}}>{roleName(role)}</div>
       <div className="gv-tokens-role__spec">
         <span>{size}/{line} {WEIGHT[weight] ?? weight}</span>
