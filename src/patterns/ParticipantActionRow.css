@@ -1,0 +1,130 @@
+@import '../components/theme.css';
+
+/* Prototype .pjacc2: 40 tall, switch | one button (the action, who can take it, a chevron) to Access rights. Every
+   label starts on the same x: a locked action keeps the switch's width with a check in it, and a plain label keeps
+   the button's 2 of padding as margin. */
+.gv-participant-action-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.gv-participant-action {
+  --gv-participant-action-slot: 36px;
+
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-10);
+  min-height: 40px;
+
+  > .react-aria-SwitchField {
+    flex: none;
+  }
+}
+
+.gv-participant-action__lock {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--gv-participant-action-slot);
+  color: var(--gv-icon-primary);
+}
+
+.gv-participant-action__open {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--gv-space-8);
+  min-width: 0;
+  padding: var(--gv-space-6) var(--gv-space-4) var(--gv-space-6) var(--gv-space-2);
+  border: 0;
+  border-radius: var(--gv-radius-8);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  outline: none;
+  transition: background-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  &[data-hovered] {
+    background: var(--gv-surface-toolbar);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 0;
+  }
+}
+
+.gv-participant-action__label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-primary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gv-participant-action__label--plain {
+  margin-inline-start: var(--gv-space-2);
+  padding-block: var(--gv-space-6);
+}
+
+.gv-participant-action[data-off] .gv-participant-action__label {
+  color: var(--gv-text-quiet);
+}
+
+.gv-participant-action__value {
+  flex: none;
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-primary);
+
+  &[data-default] {
+    color: var(--gv-text-tertiary);
+  }
+}
+
+.gv-participant-action__chevron {
+  flex: none;
+  color: var(--gv-icon-quiet);
+}
+
+[dir='rtl'] .gv-participant-action__chevron {
+  transform: scaleX(-1);
+}
+
+/* Settings that hang from an action sit in the label column, right under it (prototype .pjacc2__opts). */
+.gv-participant-action__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-6);
+  margin: var(--gv-space-2) 0 var(--gv-space-8) calc(36px + var(--gv-space-10) + var(--gv-space-2));
+}
+
+.gv-participant-limit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-12);
+
+  .react-aria-RadioGroup > .react-aria-Label {
+    margin-bottom: var(--gv-space-6);
+    font: var(--gv-type-ui);
+    letter-spacing: var(--gv-type-ui-tracking);
+    color: var(--gv-text-primary);
+  }
+
+  /* Limited's maximum: the label on the left, the field at the end of the line. */
+  .gv-number-field-wrap .react-aria-NumberField {
+    flex: 1;
+    justify-content: space-between;
+  }
+
+  .gv-number-field-wrap .react-aria-Label {
+    font: var(--gv-type-ui);
+    letter-spacing: var(--gv-type-ui-tracking);
+  }
+}
