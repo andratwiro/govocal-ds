@@ -17,24 +17,27 @@ type Story = StoryFn<typeof Tooltip>;
 
 export const Example: Story = args => (
   <TooltipTrigger>
-    <Button>
-      <Save size={18} />
+    <Button aria-label="Save">
+      <Save size={16} />
     </Button>
     <Tooltip {...args}>Save</Tooltip>
   </TooltipTrigger>
 );
 
+/** One line up to 320, then even lines; the tail only on the project's step cards. */
 export const AllStates: StoryFn<typeof Tooltip> = () => (
-  <div style={{display: 'flex', gap: 32}}>
+  <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 72, paddingTop: 48}}>
     <TooltipTrigger isOpen>
-      <Button>Publish project</Button>
-      <Tooltip>Platform menu</Tooltip>
+      <Button variant="secondary">Platform menu</Button>
+      <Tooltip>Show the platform menu</Tooltip>
     </TooltipTrigger>
     <TooltipTrigger isOpen>
-      <Button>Green Corridors for Riverside</Button>
-      <Tooltip>
-        Private, so it does not appear on the homepage, in search or in widgets.
-      </Tooltip>
+      <Button variant="secondary">Private</Button>
+      <Tooltip>Private, so it does not appear on the homepage, in search or in widgets.</Tooltip>
+    </TooltipTrigger>
+    <TooltipTrigger isOpen>
+      <Button variant="secondary">Collect ideas</Button>
+      <Tooltip showArrow>Step 2 of 4 · open until 12 Dec</Tooltip>
     </TooltipTrigger>
   </div>
 );
