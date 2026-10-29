@@ -69,7 +69,10 @@ function CopyToPhase({initial = ['Community vote']}: {initial?: string[]}) {
   const [phases, setPhases] = useState<Selection>(new Set(initial));
   return (
     <Menu aria-label="Copy to phase">
-      <MenuSection aria-label="Phases" selectionMode="multiple" selectedKeys={phases} onSelectionChange={setPhases}>
+      {/* React Aria closes a menu on Enter, ticks included: a pick-several section keeps it open
+          (shouldCloseOnSelect={false}). The action after the divider still closes it. */}
+      <MenuSection aria-label="Phases" selectionMode="multiple" shouldCloseOnSelect={false} selectedKeys={phases}
+        onSelectionChange={setPhases}>
         {PHASES.map(p => <MenuItem key={p} id={p}>{p}</MenuItem>)}
       </MenuSection>
       <Separator />
@@ -137,8 +140,10 @@ export const WithSections: Story = () => (
 );
 WithSections.storyName = 'With sections';
 
-/** Copy to phase: tick several phases (a box at the start; the menu stays open), then a divider and one action that
- * isn't a choice. The box shows on ticked rows and under the pointer. */
+/** Copy to phase: tick several phases (a box at the start), then a divider and one action that isn't a choice. A
+ * click, Space or Enter ticks a phase and the menu stays open (its section sets `shouldCloseOnSelect={false}`; React
+ * Aria closes on Enter otherwise); Esc closes it, and so does the action. The box shows on ticked rows and under the
+ * pointer. */
 export const MultipleWithAFooterAction: Story = () => (
   <MenuTrigger>
     <Button variant="quiet" hasMenu>Copy to phase</Button>
