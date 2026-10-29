@@ -80,6 +80,32 @@
     }
   }
 
+  /*
+   * Danger (the review's §C: primary confirm or quiet inline Delete, no outlined look). No
+   * `--gv-action-danger`/`--gv-text-danger` tokens yet: `--gv-color-red-500` (the notification
+   * dot's token) directly, reported as a gap.
+   */
+  &[data-variant='primary'][data-tone='danger'] {
+    background: var(--gv-color-red-500);
+
+    &[data-hovered] {
+      filter: brightness(1.08);
+    }
+  }
+
+  &[data-variant='quiet'][data-tone='danger'] {
+    color: var(--gv-color-red-500);
+
+    &[data-hovered] {
+      background: color-mix(in srgb, var(--gv-color-red-500) 10%, transparent);
+      color: var(--gv-color-red-500);
+    }
+
+    &[data-pressed] {
+      background: color-mix(in srgb, var(--gv-color-red-500) 16%, transparent);
+    }
+  }
+
   /* Icons: 16, drawn at Figma's stroke (1.17 at 16 = 1.75 on Lucide's 24 grid). */
   > svg {
     width: 16px;

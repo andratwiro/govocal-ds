@@ -53,6 +53,20 @@ export const AllStates: Story = () => (
         Show all
       </Button>
     </div>
+    <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
+      <Button variant="primary" tone="danger" onPress={() => {}}>
+        Reset project
+      </Button>
+      <Button variant="primary" tone="danger" isDisabled>
+        Reset project
+      </Button>
+      <Button variant="quiet" tone="danger" size={32} onPress={() => {}}>
+        Delete
+      </Button>
+      <Button variant="quiet" tone="danger" size={32} isDisabled>
+        Delete
+      </Button>
+    </div>
   </div>
 );
 AllStates.storyName = 'All Variants';
@@ -107,6 +121,27 @@ Quiet.args = {
   variant: 'quiet',
   onPress: () => alert('Hello world!')
 };
+
+/**
+ * Not in Figma: `tone="danger"` on the primary variant — a destructive confirm, e.g. the Alert
+ * dialog's "Reset data" / "Delete" action.
+ */
+export const Danger: Story = args => <Button {...args}>Reset project</Button>;
+Danger.args = {
+  variant: 'primary',
+  tone: 'danger',
+  onPress: () => alert('Hello world!')
+};
+
+/** Not in Figma: `tone="danger"` on the quiet variant — an inline Delete in a row or toolbar. */
+export const QuietDanger: Story = args => <Button {...args}>Delete</Button>;
+QuietDanger.args = {
+  variant: 'quiet',
+  tone: 'danger',
+  size: 32,
+  onPress: () => alert('Hello world!')
+};
+QuietDanger.storyName = 'Quiet · danger';
 
 export const Pending: Story = args => <Button {...args}>Save</Button>;
 Pending.args = {

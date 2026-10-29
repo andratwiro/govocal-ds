@@ -23,6 +23,13 @@ interface ButtonProps extends RACButtonProps {
    */
   size?: 32 | 36;
   /**
+   * Danger: `tone="danger"` on the `primary` variant (a destructive confirm) or `quiet` (an inline
+   * Delete). No outlined danger look (§C): the two cover every case.
+   *
+   * @default 'default'
+   */
+  tone?: 'default' | 'danger';
+  /**
    * Appends a menu chevron, for buttons that open a menu.
    *
    * @default false
@@ -57,7 +64,7 @@ function isIconOnlyChildren(children: ButtonProps['children']): boolean {
 }
 
 export function Button(props: ButtonProps) {
-  const {variant, size, hasMenu, iconOnly, ...rest} = props;
+  const {variant, size, hasMenu, iconOnly, tone, ...rest} = props;
   const resolvedIconOnly = iconOnly ?? isIconOnlyChildren(props.children);
   return (
     <RACButton
@@ -65,6 +72,7 @@ export function Button(props: ButtonProps) {
       className="react-aria-Button"
       data-variant={variant || 'primary'}
       data-size={size || 36}
+      data-tone={tone || 'default'}
       data-icon-only={resolvedIconOnly || undefined}>
       {composeRenderProps(props.children, (children, {isPending}) => (
         <>
