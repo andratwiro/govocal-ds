@@ -6,16 +6,20 @@
   flex-direction: column;
 }
 
+/* The field: Figma's Title field and the prototype's .pj-input / .pjc2-in: white, a 1px control border (the
+   `inset` utility), radius 8, UI 13/20 primary, padding 12 at the sides; 36 tall, the height of the default Button
+   and the Select trigger, so fields and buttons line up in a row. Focus = the 2px selected ring inside. */
 .react-aria-Input,
 .react-aria-TextArea {
   width: 100%;
-  min-height: var(--spacing-8);
+  min-height: var(--spacing-9);
   padding: 0 var(--spacing-3);
   box-sizing: border-box;
   margin: 0;
   border: none;
   border-radius: var(--radius);
-  font: var(--font-size) var(--gv-font-family);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--field-text-color);
   outline: none;
   -webkit-tap-highlight-color: transparent;
@@ -30,6 +34,7 @@
   }
 
   &[data-disabled] {
+    background: var(--gv-surface-toolbar);
     color: var(--text-color-disabled);
     &::placeholder {
       color: var(--text-color-disabled);
@@ -39,5 +44,6 @@
 
 .react-aria-TextArea {
   min-height: 64px;
-  padding: var(--spacing-2) var(--spacing-3);
+  padding: var(--gv-space-8) var(--spacing-3);
+  resize: vertical;
 }
