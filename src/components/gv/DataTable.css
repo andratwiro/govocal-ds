@@ -270,6 +270,22 @@
   .gv-data-table__cell:last-child { border-end-end-radius: var(--gv-radius-8); }
 }
 
+/* The open row (`openKey`: the record a Side panel shows): the strong hover tint, and a 2px bar in the selected
+   colour at its start edge, so it reads as "this one" beside ticked rows (a ticked open row keeps the ticked tint). */
+.gv-data-table__row[data-open] {
+  &:not([data-selected]) .gv-data-table__cell {
+    background: var(--gv-surface-hover-strong);
+  }
+
+  .gv-data-table__cell:first-child {
+    box-shadow: inset 2px 0 0 var(--gv-border-selected);
+
+    &:dir(rtl) {
+      box-shadow: inset -2px 0 0 var(--gv-border-selected);
+    }
+  }
+}
+
 .gv-data-table__cell[data-muted] {
   color: var(--gv-text-meta);
 }
@@ -332,8 +348,8 @@
   color: var(--gv-icon-inverse);
 
   /* No semantic token for a project's tile yet (see the report): the prototype's teal and blue. */
-  &[data-tone='teal'] { background: var(--gv-color-teal-400); }
-  &[data-tone='blue'] { background: var(--gv-color-blue-400); }
+  &[data-color='teal'] { background: var(--gv-color-teal-400); }
+  &[data-color='blue'] { background: var(--gv-color-blue-400); }
 
   > svg {
     inline-size: 16px;
@@ -417,7 +433,7 @@
 }
 
 /* Row checkboxes that show on demand. */
-.gv-data-table[data-reveal-checks] {
+.gv-data-table[data-checks-on-hover] {
   /* Row checkboxes and the header's select-all start hidden; the select-all then wears the gv Checkbox's quiet look
      (dimmed until hovered or checked). */
   .gv-data-table__check .gv-checkbox {

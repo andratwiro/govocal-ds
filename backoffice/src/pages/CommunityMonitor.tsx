@@ -298,11 +298,11 @@ function Reports() {
               <DataTableColumn isRowHeader>Report</DataTableColumn>
               <DataTableColumn>Quarter</DataTableColumn>
               <DataTableColumn>Status</DataTableColumn>
-              <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+              <DataTableColumn align="options" showLabel={false}>Actions</DataTableColumn>
             </DataTableHeader>
             <DataTableBody>{shown.map(r => (
               <DataTableRow key={r.id} id={r.id} textValue={r.title} onAction={() => setOpen(r)}>
-                <DataTableCell><DataTableStack strong sub={`Updated ${r.updated}`}>{r.title}</DataTableStack></DataTableCell>
+                <DataTableCell><DataTableStack isStrong sub={`Updated ${r.updated}`}>{r.title}</DataTableStack></DataTableCell>
                 <DataTableCell>{r.quarter}</DataTableCell>
                 <DataTableCell><StatusBadge state={r.published ? 'live' : 'draft'}>{r.published ? 'Published' : 'Draft'}</StatusBadge></DataTableCell>
                 <DataTableCell align="options">
@@ -507,7 +507,7 @@ function Settings() {
                 <DataTableHeader>
                   <DataTableColumn isRowHeader>Name</DataTableColumn>
                   <DataTableColumn>Role</DataTableColumn>
-                  <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+                  <DataTableColumn align="options" showLabel={false}>Actions</DataTableColumn>
                 </DataTableHeader>
                 <DataTableBody>{managers.map(m => (
                   <DataTableRow key={m} id={m} textValue={m}>

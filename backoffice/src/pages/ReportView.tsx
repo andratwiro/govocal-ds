@@ -376,7 +376,7 @@ function BlockBody({block, lang, nums, pageOf, blocks, reportTitle}: {
       return (
         <FigureStandIn figure={block.figure} lang={lang}>
           <DataTable aria-label={block.figure.measure}>
-            <DataTableHeader selectAll={false}>
+            <DataTableHeader showSelectAll={false}>
               <DataTableColumn>When</DataTableColumn>
               <DataTableColumn isRowHeader>Event</DataTableColumn>
               <DataTableColumn>Project</DataTableColumn>
@@ -384,9 +384,9 @@ function BlockBody({block, lang, nums, pageOf, blocks, reportTitle}: {
             <DataTableBody>
               {block.events.map(e => (
                 <DataTableRow key={e.title} id={e.title} textValue={e.title}>
-                  <DataTableCell muted>{block.showEnd ? `${e.when} to ${e.ends}` : e.when}</DataTableCell>
+                  <DataTableCell isMuted>{block.showEnd ? `${e.when} to ${e.ends}` : e.when}</DataTableCell>
                   <DataTableCell>{e.title}</DataTableCell>
-                  <DataTableCell muted>{e.project}</DataTableCell>
+                  <DataTableCell isMuted>{e.project}</DataTableCell>
                 </DataTableRow>
               ))}
             </DataTableBody>

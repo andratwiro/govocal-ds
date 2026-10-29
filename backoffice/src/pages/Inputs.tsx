@@ -310,7 +310,7 @@ export function Inputs() {
                   <DataTableRow key={i.id} id={i.id} onAction={() => setOpen(i.id)}>
                     <DataTableCell textValue={i.title}>
                       {/* The prototype's title over a quiet sub-line: the input's project (still a link) and tags. */}
-                      <DataTableStack strong sub={<><Link href={`#/projects/${i.project}`}>{title(i.project)}</Link> · {i.tags.join(', ')}</>}>
+                      <DataTableStack isStrong sub={<><Link href={`#/projects/${i.project}`}>{title(i.project)}</Link> · {i.tags.join(', ')}</>}>
                         <span className="bo-inputs-title-line">
                           {i.title}
                           {FLAGGED.has(i.id) && <TriangleAlert aria-label="Content warning" size={14} />}

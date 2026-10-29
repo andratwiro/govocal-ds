@@ -54,7 +54,7 @@ function ReportTable({label, reports, onAction}: {label: string; reports: Report
           <DataTableColumn isRowHeader>Report</DataTableColumn>
           <DataTableColumn>Created</DataTableColumn>
           <DataTableColumn>Last edited</DataTableColumn>
-          <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+          <DataTableColumn align="options" showLabel={false}>Actions</DataTableColumn>
         </DataTableHeader>
         <DataTableBody>
           {reports.map(r => (

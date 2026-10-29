@@ -114,13 +114,13 @@ function ItemList({config}: {config: ListConfig}) {
             <DataTableHeader>
               <DataTableColumn isRowHeader>{config.column}</DataTableColumn>
               {config.categories && <DataTableColumn>Category</DataTableColumn>}
-              <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+              <DataTableColumn align="options" showLabel={false}>Actions</DataTableColumn>
             </DataTableHeader>
             <DataTableBody>
               {items.map(item => (
                 <DataTableRow key={item.id} id={item.id} textValue={item.name}>
                   <DataTableCell textValue={item.name}>
-                    <DataTableStack strong sub={item.description || undefined}
+                    <DataTableStack isStrong sub={item.description || undefined}
                       leading={item.color && <ColorSwatch color={item.color} aria-label={`Colour of ${item.name}`} />}>
                       {item.name}
                     </DataTableStack>
@@ -215,13 +215,13 @@ export function PoliciesTab() {
         <DataTable aria-label="Platform policies">
           <DataTableHeader>
             <DataTableColumn isRowHeader>Policy</DataTableColumn>
-            <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+            <DataTableColumn align="options" showLabel={false}>Actions</DataTableColumn>
           </DataTableHeader>
           <DataTableBody>
             {POLICIES.map(p => (
               <DataTableRow key={p.id} id={p.id} textValue={p.name}>
                 <DataTableCell textValue={p.name}>
-                  <DataTableStack strong leading={icon(FileText)} sub={texts[p.id]}>{p.name}</DataTableStack>
+                  <DataTableStack isStrong leading={icon(FileText)} sub={texts[p.id]}>{p.name}</DataTableStack>
                 </DataTableCell>
                 <DataTableCell align="options">
                   <DataTableOptions aria-label={`Options for ${p.name}`} onAction={() => setEditing(p)}>

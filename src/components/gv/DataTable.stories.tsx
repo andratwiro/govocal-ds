@@ -15,7 +15,8 @@ import {
   DataTableTags,
   DataTableText,
   DataTableThumbnail,
-  DataTableAddColumn
+  DataTableAddColumn,
+  toKeySet
 } from './DataTable';
 import {MenuItem} from '../Menu';
 import {SearchField} from '../SearchField';
@@ -30,6 +31,7 @@ import {FilterMenu, type FilterValue} from '../../patterns/FilterMenu';
 import {FilterChips} from '../../patterns/FilterChips';
 import {SelectionBar} from '../../patterns/SelectionBar';
 import {StatCard} from '../../patterns/StatCard';
+import {SidePanel, SidePanelSection} from './SidePanel';
 import {IDEA_FACETS} from '../../patterns/FilterMenu.stories';
 import {
   DISMISS_WARNINGS, ExportMenu, IDEA_ACTIONS, IDEAS as MANAGE_IDEAS, METRICS, filterIdeas, ideaCount,
@@ -55,12 +57,12 @@ function sortPeople(list: Person[], sort: SortDescriptor) {
   return [...list].sort((a, b) => sign * String(a[key]).localeCompare(String(b[key]), undefined, {numeric: true}));
 }
 
-function PeopleTable({initialSort, selectable, initialSelection = [], empty, revealChecks, framed, density}: {
+function PeopleTable({initialSort, selectable, initialSelection = [], empty, showChecksOnHover, framed, density}: {
   initialSort?: SortDescriptor;
   selectable?: boolean;
   initialSelection?: string[];
   empty?: boolean;
-  revealChecks?: boolean;
+  showChecksOnHover?: boolean;
   framed?: boolean;
   density?: 'compact';
 }) {
@@ -69,7 +71,7 @@ function PeopleTable({initialSort, selectable, initialSelection = [], empty, rev
   const rows = useMemo(() => (empty ? [] : sort ? sortPeople(PEOPLE, sort) : PEOPLE), [sort, empty]);
   return (
     <DataTable aria-label="Users" sortDescriptor={sort} onSortChange={d => setSort(d as SortDescriptor)}
-      revealChecks={revealChecks} framed={framed} density={density}
+      showChecksOnHover={showChecksOnHover} isFramed={framed} density={density}
       selectionMode={selectable ? 'multiple' : 'none'} selectedKeys={selected}
       onSelectionChange={k => setSelected(k as typeof selected)}>
       <DataTableHeader>
@@ -112,14 +114,14 @@ const Caption = ({children}: {children: ReactNode}) => (
   <h3 style={{margin: '0 0 8px', font: 'var(--gv-type-small-strong)', color: 'var(--gv-text-secondary)'}}>{children}</h3>
 );
 
-/** The three looks: in a Card or Panel (default), standing alone (`framed`), and dense (`compact`). */
+/** The three looks: in a Card or Panel (default), standing alone (`isFramed`), and dense (`compact`). */
 export const AllVariants: Story = {
   name: 'AllVariants',
   render: () => (
     <div style={{display: 'grid', gap: 32, maxWidth: 900}}>
       <div><Caption>Default</Caption><PeopleTable initialSort={{column: 'name', direction: 'ascending'}} /></div>
       <div><Caption>Framed</Caption><PeopleTable framed /></div>
-      <div><Caption>Compact, checks on hover</Caption><PeopleTable density="compact" selectable revealChecks initialSelection={['b']} /></div>
+      <div><Caption>Compact, checks on hover</Caption><PeopleTable density="compact" selectable showChecksOnHover initialSelection={['b']} /></div>
     </div>
   )
 };
@@ -142,13 +144,13 @@ export const SortedDescending: Story = {
 };
 
 /**
- * Some rows checked: the header's select-all is indeterminate, and selects all at a press. With `revealChecks` (as
+ * Some rows checked: the header's select-all is indeterminate, and selects all at a press. With `showChecksOnHover` (as
  * here) unchecked rows show their box on hover, and the select-all shows while the table is hovered or focused, or
  * once anything is checked.
  */
 export const SelectableSomeSelected: Story = {
   name: 'Select all · indeterminate',
-  render: () => <PeopleTable selectable revealChecks initialSelection={['b', 'c']} initialSort={{column: 'joined', direction: 'descending'}} />
+  render: () => <PeopleTable selectable showChecksOnHover initialSelection={['b', 'c']} initialSort={{column: 'joined', direction: 'descending'}} />
 };
 
 /** Selection driven by the page's own select-all control: the header's check column stays empty. */
@@ -156,7 +158,7 @@ export const SelectableWithoutSelectAll: Story = {
   name: 'Selectable, without select all',
   render: () => (
     <DataTable aria-label="Users" selectionMode="multiple" defaultSelectedKeys={['a']}>
-      <DataTableHeader selectAll={false}>
+      <DataTableHeader showSelectAll={false}>
         <DataTableColumn isRowHeader>Name</DataTableColumn>
         <DataTableColumn>Role</DataTableColumn>
       </DataTableHeader>
@@ -205,7 +207,7 @@ export const NumericColumns: Story = {
           ['More frequent buses on the north line', 'Resident D · 2 weeks ago', 142, 9],
           ['A pocket park on the old depot site', 'Manager B · 3 weeks ago', 18, 7]].map(([t, s, l, c]) => (
           <DataTableRow key={t} textValue={String(t)}>
-            <DataTableCell><DataTableStack strong sub={s}>{t}</DataTableStack></DataTableCell>
+            <DataTableCell><DataTableStack isStrong sub={s}>{t}</DataTableStack></DataTableCell>
             <DataTableCell align="number">{l}</DataTableCell>
             <DataTableCell align="number">{c}</DataTableCell>
           </DataTableRow>
@@ -248,7 +250,7 @@ export const WithThumbnails: Story = {
               <DataTableCell>
                 <DataTableText lines={2} leading={i.picture && <DataTableThumbnail src={i.picture} />}>{i.title}</DataTableText>
               </DataTableCell>
-              <DataTableCell muted>{shortDate(i.published)}</DataTableCell>
+              <DataTableCell isMuted>{shortDate(i.published)}</DataTableCell>
               <DataTableCell align="number">{i.likes}</DataTableCell>
             </DataTableRow>
           ))}
@@ -305,7 +307,7 @@ export const TagsColumn: Story = {
           {[...FEW.slice(0, 4), {...FEW[4], tags: ['Public space and greenery', 'Environment', 'Culture']}].map(i => (
             <DataTableRow key={i.id} id={i.id} textValue={i.title}>
               <DataTableCell><DataTableText lines={1}>{i.title}</DataTableText></DataTableCell>
-              <DataTableCell>{i.tags.length ? <DataTableTags tags={i.tags} /> : <span style={{color: 'var(--gv-text-tertiary)'}}>–</span>}</DataTableCell>
+              <DataTableCell>{i.tags.length ? <DataTableTags items={i.tags} /> : <span style={{color: 'var(--gv-text-tertiary)'}}>–</span>}</DataTableCell>
             </DataTableRow>
           ))}
         </DataTableBody>
@@ -333,20 +335,20 @@ export const ProjectsListCells: Story = {
   name: 'Projects list cells',
   render: () => (
     <div style={{display: 'grid', gap: 12, maxWidth: 980}}>
-      <DataTable aria-label="Projects" framed>
+      <DataTable aria-label="Projects" isFramed>
         <DataTableHeader>
           <DataTableColumn isRowHeader>Project</DataTableColumn>
           <DataTableColumn align="number">Participants</DataTableColumn>
           <DataTableColumn>Current phase</DataTableColumn>
           <DataTableColumn>Manager</DataTableColumn>
           <DataTableColumn>Visibility</DataTableColumn>
-          <DataTableColumn align="options" hideLabel>Options</DataTableColumn>
+          <DataTableColumn align="options" showLabel={false}>Options</DataTableColumn>
         </DataTableHeader>
         <DataTableBody>
           {PROJECTS.map(p => (
             <DataTableRow key={p.id} id={p.id} textValue={p.name}>
               <DataTableCell>
-                <DataTableStack leading={<DataTableThumbnail icon={p.icon} tone={p.tone} />} sub={p.folder || undefined}>{p.name}</DataTableStack>
+                <DataTableStack leading={<DataTableThumbnail icon={p.icon} color={p.tone} />} sub={p.folder || undefined}>{p.name}</DataTableStack>
               </DataTableCell>
               <DataTableCell align="number">{p.people}</DataTableCell>
               <DataTableCell>{p.phase}</DataTableCell>
@@ -416,8 +418,9 @@ function ManageTable() {
         <FilterMenu facets={STATUS_FACET} value={filter} onChange={setFilter} aria-label="Filter ideas" />
       </TableToolbar>
       <FilterChips facets={STATUS_FACET} value={filter} onChange={setFilter} />
-      <DataTable aria-label="Ideas" density="compact" revealChecks selectionMode="multiple"
+      <DataTable aria-label="Ideas" density="compact" showChecksOnHover selectionMode="multiple"
         selectedKeys={selected} onSelectionChange={k => setSelected(k as typeof selected)}
+        onRowAction={key => setOpened(IDEAS.find(i => i.id === key))} openKey={opened?.id}
         sortDescriptor={sort} onSortChange={d => setSort(d as SortDescriptor)}
         addColumn={(
           <DataTableAddColumn selectedKeys={extra} onSelectionChange={setExtra}>
@@ -433,13 +436,13 @@ function ManageTable() {
         </DataTableHeader>
         <DataTableBody renderEmptyState={() => <DataTableEmpty>No inputs match</DataTableEmpty>}>
           {rows.map(i => (
-            <DataTableRow key={i.id} id={i.id} textValue={i.text} onAction={() => setOpened(i)}>
+            <DataTableRow key={i.id} id={i.id} textValue={i.text}>
               <DataTableCell>
                 <DataTableText marks={i.warning && <TriangleAlert size={16} aria-label={`Content warning: ${i.warning}`} role="img" />}>
                   {i.text}
                 </DataTableText>
               </DataTableCell>
-              <DataTableCell muted><span style={{whiteSpace: 'nowrap'}}>{i.status}</span></DataTableCell>
+              <DataTableCell isMuted><span style={{whiteSpace: 'nowrap'}}>{i.status}</span></DataTableCell>
               {extra.has('likes') && <DataTableCell align="number">{i.likes}</DataTableCell>}
               {extra.has('comments') && <DataTableCell align="number">{i.comments}</DataTableCell>}
             </DataTableRow>
@@ -447,7 +450,7 @@ function ManageTable() {
         </DataTableBody>
       </DataTable>
       <p role="status" style={{font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)', margin: 0}}>
-        {opened ? `Opened: ${opened.text.split('.')[0]}` : 'Click a row to open the input.'}
+        {opened ? `Opened: ${opened.text.split('.')[0]}` : 'Click a row to open the input; tick its box to select it.'}
       </p>
     </div>
   );
@@ -456,8 +459,9 @@ function ManageTable() {
 /**
  * The phase Manage tab's input table: compact wrapping rows (up to three lines), a content-warning mark after the
  * idea, the quiet Status word, checkboxes on hover or once checked, sortable Idea and Status, a "+" that adds
- * Likes / Comments columns, and a row click that opens the input. Above it, a Table toolbar: the count follows the
- * collapsible search and the status filter, which drive the rows the table is given.
+ * Likes / Comments columns, and a row click that opens the input (marked by `openKey`), ticked rows or not. Above it, a
+ * Table toolbar: the count follows the collapsible search and the status filter, which drive the rows the table is
+ * given.
  */
 export const ManageInputs: Story = {name: 'Manage inputs', render: () => <ManageTable />};
 
@@ -523,8 +527,8 @@ function ManagePanel() {
           </>
         )}
         footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Idea pages" />}>
-        <DataTable aria-label="Ideas" revealChecks selectionMode="multiple"
-          selectedKeys={selected} onSelectionChange={k => setSelected(new Set(k === 'all' ? [...selected, ...rows.map(r => r.id)] : k))}
+        <DataTable aria-label="Ideas" showChecksOnHover selectionMode="multiple"
+          selectedKeys={selected} onSelectionChange={k => setSelected(toKeySet(k, [...selected, ...rows.map(r => r.id)]))}
           sortDescriptor={sort} onSortChange={d => setSort(d as SortDescriptor)}
           addColumn={(
             <DataTableAddColumn selectedKeys={extra} onSelectionChange={setExtra}>
@@ -554,11 +558,11 @@ function ManagePanel() {
                   </DataTableText>
                 </DataTableCell>
                 <DataTableCell><DataTableAssignee name={i.assignee} initials={i.assignee?.slice(-1)} /></DataTableCell>
-                <DataTableCell>{i.tags.length ? <DataTableTags tags={i.tags} /> : null}</DataTableCell>
-                <DataTableCell muted><span style={{whiteSpace: 'nowrap'}}>{i.status}</span></DataTableCell>
+                <DataTableCell>{i.tags.length ? <DataTableTags items={i.tags} /> : null}</DataTableCell>
+                <DataTableCell isMuted><span style={{whiteSpace: 'nowrap'}}>{i.status}</span></DataTableCell>
                 <DataTableCell align="number">{i.likes}</DataTableCell>
                 {extra.has('comments') && <DataTableCell align="number">{i.comments}</DataTableCell>}
-                {extra.has('published') && <DataTableCell muted><span style={{whiteSpace: 'nowrap'}}>{shortDate(i.published)}</span></DataTableCell>}
+                {extra.has('published') && <DataTableCell isMuted><span style={{whiteSpace: 'nowrap'}}>{shortDate(i.published)}</span></DataTableCell>}
               </DataTableRow>
             ))}
           </DataTableBody>
@@ -579,6 +583,77 @@ function ManagePanel() {
  * view). Click a row: the line under the panel says what opened.
  */
 export const InAPanel: Story = {name: 'In a panel', render: () => <ManagePanel />};
+
+// ── Bulk selection and an open row, with a Side panel ─────────────────────────────────────────────
+const OPEN_LIST = MANAGE_IDEAS.slice(0, 10);
+const rowOf = (id: string) => document.querySelector<HTMLElement>(`[aria-label="Ideas"] [role="row"][data-key="${id}"]`);
+
+function BulkAndOpen() {
+  const [selected, setSelected] = useState<Set<string | number>>(new Set(['idea-2', 'idea-5']));
+  const [open, setOpen] = useState<string | null>('idea-3');
+  const [said, setSaid] = useState('');
+  const at = OPEN_LIST.findIndex(i => i.id === open);
+  const idea = at >= 0 ? OPEN_LIST[at] : undefined;
+  return (
+    <div style={{minHeight: '100vh', boxSizing: 'border-box', padding: 24, background: 'var(--gv-surface-app)'}}>
+      <div style={{display: 'grid', gap: 8, width: 720}}>
+        <Panel title="Collect ideas" flush
+          toolbar={(
+            <TableToolbar start={(
+              <SelectionBar count={selected.size} actions={IDEA_ACTIONS} onClear={() => setSelected(new Set())}
+                onAction={id => setSaid(`${id} for ${ideaCount(selected.size)}`)}>
+                <TableToolbarHeading>{ideaCount(OPEN_LIST.length)}</TableToolbarHeading>
+              </SelectionBar>
+            )} />
+          )}>
+          <DataTable aria-label="Ideas" selectionMode="multiple"
+            selectedKeys={selected} onSelectionChange={k => setSelected(toKeySet(k, OPEN_LIST.map(i => i.id)))}
+            onRowAction={key => setOpen(String(key))} openKey={open}>
+            <DataTableHeader>
+              <DataTableColumn id="title" isRowHeader>Idea</DataTableColumn>
+              <DataTableColumn id="assignee">Assignee</DataTableColumn>
+              <DataTableColumn id="likes" align="number">Likes</DataTableColumn>
+            </DataTableHeader>
+            <DataTableBody>
+              {OPEN_LIST.map(i => (
+                <DataTableRow key={i.id} id={i.id} textValue={i.title}>
+                  <DataTableCell><DataTableText lines={1}>{i.title}</DataTableText></DataTableCell>
+                  <DataTableCell><DataTableAssignee name={i.assignee} initials={i.assignee?.slice(-1)} /></DataTableCell>
+                  <DataTableCell align="number">{i.likes}</DataTableCell>
+                </DataTableRow>
+              ))}
+            </DataTableBody>
+          </DataTable>
+        </Panel>
+        <p role="status" style={{margin: 0, font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>{said}</p>
+      </div>
+      <SidePanel isOpen={idea !== undefined} label="Collect ideas" itemName="idea"
+        position={idea ? {current: at + 1, total: OPEN_LIST.length} : undefined}
+        onPositionChange={n => setOpen(OPEN_LIST[n - 1].id)}
+        onOpenChange={o => !o && setOpen(null)}
+        returnFocus={() => (open ? rowOf(open) : null)}>
+        {idea && (
+          <SidePanelSection>
+            <p style={{margin: 0, font: 'var(--gv-type-body)'}}>{idea.title}</p>
+          </SidePanelSection>
+        )}
+      </SidePanel>
+    </div>
+  );
+}
+
+/**
+ * Bulk selection and an open row on one table, with the Side panel beside it. Tick rows with their checkboxes (or
+ * Space, or a Shift / ⌘ / Ctrl click): the Selection bar takes the count's place. Click a row (or Enter on it) to open
+ * it in the panel, ticked rows or not: `onRowAction` opens, `openKey` marks the open row (tint, start bar,
+ * `aria-current`). The pager walks the list and the mark follows; Esc or × closes the panel back to the row. The
+ * selection is `toKeySet(selection, allKeys)`, which turns the header's "all" into keys.
+ */
+export const WithBulkSelectionAndAnOpenRow: Story = {
+  name: 'With bulk selection and an open row',
+  parameters: {layout: 'fullscreen', docs: {story: {inline: false, iframeHeight: 720}}},
+  render: () => <BulkAndOpen />
+};
 
 /** Right to left (Arabic): columns, padding, the check column and the "…" mirror. */
 export const RightToLeft: Story = {

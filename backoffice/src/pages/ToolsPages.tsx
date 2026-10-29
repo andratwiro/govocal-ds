@@ -71,14 +71,14 @@ export function PublicApiTokens() {
               <DataTableColumn isRowHeader>Name</DataTableColumn>
               <DataTableColumn>Created</DataTableColumn>
               <DataTableColumn>Last used</DataTableColumn>
-              <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+              <DataTableColumn align="options" showLabel={false}>Actions</DataTableColumn>
             </DataTableHeader>
             <DataTableBody>
               {tokens.map(t => (
                 <DataTableRow key={t.id} id={t.id}>
                   <DataTableCell>{t.name}</DataTableCell>
-                  <DataTableCell muted>{t.created}</DataTableCell>
-                  <DataTableCell muted>{t.lastUsed}</DataTableCell>
+                  <DataTableCell isMuted>{t.created}</DataTableCell>
+                  <DataTableCell isMuted>{t.lastUsed}</DataTableCell>
                   <DataTableCell align="options">
                     <IconButton aria-label={`Delete token: ${t.name}`} onPress={() => setDeleting(t)}>
                       <Trash2 aria-hidden size={16} />
@@ -196,14 +196,14 @@ export function Webhooks() {
                 <DataTableColumn>Events</DataTableColumn>
                 <DataTableColumn>Project</DataTableColumn>
                 <DataTableColumn>Enabled</DataTableColumn>
-                <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+                <DataTableColumn align="options" showLabel={false}>Actions</DataTableColumn>
               </DataTableHeader>
               <DataTableBody>
                 {hooks.map(h => (
                   <DataTableRow key={h.id} id={h.id}>
                     <DataTableCell>{h.name}</DataTableCell>
-                    <DataTableCell muted>{h.url}</DataTableCell>
-                    <DataTableCell><DataTableTags tags={h.events} /></DataTableCell>
+                    <DataTableCell isMuted>{h.url}</DataTableCell>
+                    <DataTableCell><DataTableTags items={h.events} /></DataTableCell>
                     <DataTableCell>{h.project}</DataTableCell>
                     <DataTableCell><StatusBadge state={h.enabled ? 'live' : 'draft'}>{h.enabled ? 'Enabled' : 'Off'}</StatusBadge></DataTableCell>
                     <DataTableCell align="options">
@@ -303,13 +303,13 @@ export function McpAuthorizations() {
             <DataTableHeader>
               <DataTableColumn isRowHeader>Client name</DataTableColumn>
               <DataTableColumn>Client ID</DataTableColumn>
-              <DataTableColumn hideLabel>Actions</DataTableColumn>
+              <DataTableColumn showLabel={false}>Actions</DataTableColumn>
             </DataTableHeader>
             <DataTableBody>
               {clients.map(c => (
                 <DataTableRow key={c.id} id={c.id}>
                   <DataTableCell>{c.name}</DataTableCell>
-                  <DataTableCell muted>{c.clientId}</DataTableCell>
+                  <DataTableCell isMuted>{c.clientId}</DataTableCell>
                   <DataTableCell>
                     <Button variant="quiet" tone="danger" size={32} aria-label={`Revoke access: ${c.name}`}
                       onPress={() => setRevoking(c.id)}>Revoke access</Button>

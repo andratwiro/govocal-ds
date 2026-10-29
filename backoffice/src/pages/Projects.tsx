@@ -62,7 +62,7 @@ const METHOD_ICONS: Record<string, typeof MapPin> = {
 };
 const methodTile = (method: string) => {
   const Icon = METHOD_ICONS[method] ?? MapPin;
-  return <DataTableThumbnail icon={<Icon aria-hidden />} tone={method === 'Voting' || method === 'Poll' ? 'blue' : 'teal'} />;
+  return <DataTableThumbnail icon={<Icon aria-hidden />} color={method === 'Voting' || method === 'Poll' ? 'blue' : 'teal'} />;
 };
 const ProjectTile = ({p}: {p: Project}) => methodTile(p.phases[0]?.method ?? '');
 
@@ -147,7 +147,7 @@ function ProjectTable({rows, onRowAction}: {rows: Project[]; onRowAction: (p: Pr
         <DataTableColumn align="number"><span className="bo-projects-icon-head"><Users aria-hidden size={16} /><span className="bo-visually-hidden">Participants</span></span></DataTableColumn>
         <DataTableColumn>Phase</DataTableColumn><DataTableColumn>Managers</DataTableColumn><DataTableColumn>Visibility</DataTableColumn>
         <DataTableColumn>Start</DataTableColumn><DataTableColumn>End</DataTableColumn>
-        <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+        <DataTableColumn align="options" showLabel={false}>Actions</DataTableColumn>
       </DataTableHeader>
       <DataTableBody renderEmptyState={() => <DataTableEmpty>No projects match. Clear the search or the filters to see them all.</DataTableEmpty>}>
         {rows.map(p => (
@@ -163,8 +163,8 @@ function ProjectTable({rows, onRowAction}: {rows: Project[]; onRowAction: (p: Pr
             <DataTableCell><DataTableStack sub={p.timeLeft}>{p.current}</DataTableStack></DataTableCell>
             <DataTableCell><Managers names={p.managers} /></DataTableCell>
             <DataTableCell><Visibility p={p} /></DataTableCell>
-            <DataTableCell muted><span className="bo-projects-nowrap">{p.start}</span></DataTableCell>
-            <DataTableCell muted><span className="bo-projects-nowrap">{p.end ?? '—'}</span></DataTableCell>
+            <DataTableCell isMuted><span className="bo-projects-nowrap">{p.start}</span></DataTableCell>
+            <DataTableCell isMuted><span className="bo-projects-nowrap">{p.end ?? '—'}</span></DataTableCell>
             <DataTableCell align="options">
               <DataTableOptions aria-label={`Actions for ${p.title}`} onAction={k => onRowAction(p, k as RowAction)}>
                 <MenuItem id="duplicate">Duplicate</MenuItem>
@@ -326,7 +326,7 @@ function GroupPanel<T extends {name: string; managers: string[]}>({title, descri
           {shown.map(r => (
             <DataTableRow key={r.name} id={r.name}>
               <DataTableCell textValue={r.name}>
-                <DataTableStack leading={<DataTableThumbnail tone="teal"
+                <DataTableStack leading={<DataTableThumbnail color="teal"
                   icon={singular === 'folder' ? <Folder aria-hidden /> : <Orbit aria-hidden />} />}>{r.name}</DataTableStack>
               </DataTableCell>
               <DataTableCell textValue={projectsWord(inside(r).length)}><Inside projects={inside(r)} /></DataTableCell>
@@ -372,7 +372,7 @@ function CalendarView({projects}: {projects: Project[]}) {
               {running.map(p => (
                 <DataTableRow key={p.id} id={p.id}>
                   <DataTableCell textValue={p.title}><DataTableStack leading={<ProjectTile p={p} />}>{p.title}</DataTableStack></DataTableCell>
-                  <DataTableCell muted><span className="bo-projects-nowrap">{p.start} – {p.end ?? 'no end date'}</span></DataTableCell>
+                  <DataTableCell isMuted><span className="bo-projects-nowrap">{p.start} – {p.end ?? 'no end date'}</span></DataTableCell>
                   <DataTableCell><DataTableStack sub={p.timeLeft}>{p.current}</DataTableStack></DataTableCell>
                 </DataTableRow>
               ))}
@@ -402,7 +402,7 @@ function ArrangeView({projects}: {projects: Project[]}) {
           <DataTableColumn align="number">Position</DataTableColumn>
           <DataTableColumn isRowHeader>Project</DataTableColumn>
           <DataTableColumn>Visibility</DataTableColumn>
-          <DataTableColumn align="options" hideLabel>Move</DataTableColumn>
+          <DataTableColumn align="options" showLabel={false}>Move</DataTableColumn>
         </DataTableHeader>
         <DataTableBody>
           {ids.map((id, i) => {

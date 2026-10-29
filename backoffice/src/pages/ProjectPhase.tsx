@@ -723,7 +723,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
         {/* The checkboxes keep the bulk selection, so the open idea can't also be the table's selection (the Side panel
             story's single-select `selectedKeys=[open]`): a row's action opens it instead, as in the Data table's
             "In a panel" story. */}
-        <DataTable aria-label="Ideas" revealChecks selectionMode="multiple"
+        <DataTable aria-label="Ideas" showChecksOnHover selectionMode="multiple"
           selectedKeys={selected} onSelectionChange={k => setSelected(new Set(k === 'all' ? [...selected, ...rows.map(r => r.id)] : k))}
           sortDescriptor={sort} onSortChange={d => { setSort(d as Sort); setPage(1); }}
           addColumn={(
@@ -753,8 +753,8 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
                     </DataTableText>
                   </DataTableCell>
                   <DataTableCell><DataTableAssignee name={person(i.assignee)} initials={i.assignee.slice(-1)} /></DataTableCell>
-                  <DataTableCell>{i.tags.length ? <DataTableTags tags={i.tags} /> : null}</DataTableCell>
-                  <DataTableCell muted><span className="bo-phase-manage-nowrap">{i.screening ? 'Waiting for approval' : i.status}</span></DataTableCell>
+                  <DataTableCell>{i.tags.length ? <DataTableTags items={i.tags} /> : null}</DataTableCell>
+                  <DataTableCell isMuted><span className="bo-phase-manage-nowrap">{i.screening ? 'Waiting for approval' : i.status}</span></DataTableCell>
                   <DataTableCell align="number">{i.likes}</DataTableCell>
                   {extra.has('comments') && <DataTableCell align="number">{i.comments}</DataTableCell>}
                 </DataTableRow>

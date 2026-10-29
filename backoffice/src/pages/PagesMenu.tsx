@@ -76,8 +76,8 @@ function MenuTab({menu, setMenu, pages}: {menu: string[]; setMenu: Update; pages
           <DataTableColumn align="number">Position</DataTableColumn>
           <DataTableColumn isRowHeader>Item</DataTableColumn>
           <DataTableColumn>Type</DataTableColumn>
-          <DataTableColumn align="options" hideLabel>Move</DataTableColumn>
-          <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+          <DataTableColumn align="options" showLabel={false}>Move</DataTableColumn>
+          <DataTableColumn align="options" showLabel={false}>Actions</DataTableColumn>
         </DataTableHeader>
         <DataTableBody>
           {items.map((item, i) => {
@@ -143,7 +143,7 @@ function PagesTab({menu, setMenu, pages, setPages}: {menu: string[]; setMenu: Up
               <DataTableColumn isRowHeader>Page</DataTableColumn>
               <DataTableColumn>Last edited</DataTableColumn>
               <DataTableColumn>In menu</DataTableColumn>
-              <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+              <DataTableColumn align="options" showLabel={false}>Actions</DataTableColumn>
             </DataTableHeader>
             <DataTableBody>
               {pages.map(id => {
@@ -151,9 +151,9 @@ function PagesTab({menu, setMenu, pages, setPages}: {menu: string[]; setMenu: Up
                 return (
                   <DataTableRow key={id} id={id}>
                     <DataTableCell textValue={page.label}>
-                      <DataTableStack strong sub={`/pages/${meta.slug}`}>{page.label}</DataTableStack>
+                      <DataTableStack isStrong sub={`/pages/${meta.slug}`}>{page.label}</DataTableStack>
                     </DataTableCell>
-                    <DataTableCell muted>{meta.edited}</DataTableCell>
+                    <DataTableCell isMuted>{meta.edited}</DataTableCell>
                     <DataTableCell>
                       <Switch isSelected={inMenu} aria-label={`Show ${page.label} in menu`} onChange={on => showInMenu(page, on)}>
                         {inMenu ? 'In menu' : 'Not in menu'}

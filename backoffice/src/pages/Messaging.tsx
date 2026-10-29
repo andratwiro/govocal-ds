@@ -107,14 +107,14 @@ function CustomEmailTable({emails, onAction, onCreate}: {
         <DataTableColumn isRowHeader>Subject</DataTableColumn>
         <DataTableColumn>Status</DataTableColumn><DataTableColumn>Date</DataTableColumn>
         <DataTableColumn align="number">Opened</DataTableColumn><DataTableColumn align="number">Clicked</DataTableColumn>
-        <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+        <DataTableColumn align="options" showLabel={false}>Actions</DataTableColumn>
       </DataTableHeader>
       <DataTableBody renderEmptyState={() => <DataTableEmpty>No emails match. Clear the search or the filters to see them all.</DataTableEmpty>}>
         {shown.map(e => (
         // A sent email opens its statistics; a draft opens from its menu.
         <DataTableRow key={e.id} id={e.id} textValue={e.subject} href={e.status === 'Sent' ? `#/messaging/emails/custom/${e.id}` : undefined}>
           <DataTableCell>
-            <DataTableStack strong sub={<>To: {e.to}{e.project && <> · Project: {e.project}</>}</>}>{e.subject}</DataTableStack>
+            <DataTableStack isStrong sub={<>To: {e.to}{e.project && <> · Project: {e.project}</>}</>}>{e.subject}</DataTableStack>
           </DataTableCell>
           <DataTableCell><StatusBadge state={e.status === 'Sent' ? 'live' : 'draft'}>{e.status}</StatusBadge></DataTableCell>
           <DataTableCell><span className="bo-messaging-nowrap">{e.date}</span></DataTableCell>
@@ -384,7 +384,7 @@ function Sms() {
             </DataTableHeader>
             <DataTableBody>{shown.map(s => (
               <DataTableRow key={s.id} id={s.id} textValue={s.label}>
-                <DataTableCell><DataTableStack strong sub={s.body}>{s.label}</DataTableStack></DataTableCell>
+                <DataTableCell><DataTableStack isStrong sub={s.body}>{s.label}</DataTableStack></DataTableCell>
                 <DataTableCell><StatusBadge state={s.status === 'Sent' ? 'live' : 'draft'}>{s.status}</StatusBadge></DataTableCell>
                 <DataTableCell><span className="bo-messaging-nowrap">{s.date}</span></DataTableCell>
                 <DataTableCell align="number">{s.delivered == null ? '—' : n(s.delivered)}</DataTableCell>

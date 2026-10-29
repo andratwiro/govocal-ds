@@ -12,7 +12,7 @@ export function Placeholder({item}: {item: NavItem}) {
   return (
     <Page title={item.label} actions={<Button variant="primary" size={32}>New</Button>}>
       <p className="bo-note">Shallow page: layout and components only, invented data.</p>
-      <DataTable aria-label={item.label} framed>
+      <DataTable aria-label={item.label} isFramed>
         <DataTableHeader>{cols.map((c, i) => <DataTableColumn key={c} isRowHeader={i === 0}>{c}</DataTableColumn>)}</DataTableHeader>
         <DataTableBody>{rows.map((r, i) => (
           <DataTableRow key={i}>{r.map((c, j) => <DataTableCell key={j}>{c}</DataTableCell>)}</DataTableRow>))}

@@ -1,6 +1,5 @@
 import {useState, type ReactNode} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import type {Selection} from 'react-aria-components';
 import {Check, ExternalLink, SquarePen, Trash2} from 'lucide-react';
 import {Button} from '../Button';
 import {ToastRegion, queue} from '../Toast';
@@ -146,9 +145,7 @@ function Manage({start = 3, footer}: {start?: number | null; footer?: boolean}) 
     <div style={{minHeight: '100vh', boxSizing: 'border-box', padding: 24, background: 'var(--gv-surface-app)'}}>
       <section style={{width: 720, padding: '16px 24px', borderRadius: 12, background: 'var(--gv-surface-panel)'}}>
         <h2 style={{margin: '0 0 8px', font: 'var(--gv-type-title)', color: 'var(--gv-text-primary)'}}>124 ideas</h2>
-        <DataTable aria-label="Ideas" selectionMode="single" selectionBehavior="replace"
-          selectedKeys={open ? [open] : []}
-          onSelectionChange={(keys: Selection) => keys !== 'all' && keys.size > 0 && setOpen(Number([...keys][0]))}>
+        <DataTable aria-label="Ideas" onRowAction={key => setOpen(Number(key))} openKey={open}>
           <DataTableHeader>
             <DataTableColumn id="idea" isRowHeader>Idea</DataTableColumn>
             <DataTableColumn id="status">Status</DataTableColumn>
@@ -158,7 +155,7 @@ function Manage({start = 3, footer}: {start?: number | null; footer?: boolean}) 
             {ideas.slice(0, ROWS).map(i => (
               <DataTableRow key={i.n} id={i.n} textValue={i.text}>
                 <DataTableCell><DataTableText lines={2}>{i.text}</DataTableText></DataTableCell>
-                <DataTableCell muted>{i.status}</DataTableCell>
+                <DataTableCell isMuted>{i.status}</DataTableCell>
                 <DataTableCell align="number">{i.likes}</DataTableCell>
               </DataTableRow>
             ))}

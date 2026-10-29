@@ -389,15 +389,15 @@ function ParticipationFeed() {
             <DataTableColumn id="content" isRowHeader>Content</DataTableColumn>
             <DataTableColumn id="project">Project</DataTableColumn>
             <DataTableColumn id="date">Date</DataTableColumn>
-            <DataTableColumn id="actions" align="options" hideLabel>Actions</DataTableColumn>
+            <DataTableColumn id="actions" align="options" showLabel={false}>Actions</DataTableColumn>
           </DataTableHeader>
           <DataTableBody renderEmptyState={() => <DataTableEmpty>No results</DataTableEmpty>}>
             {shown.map(f => (
               <DataTableRow key={f.id} id={f.id} textValue={f.content}>
                 <DataTableCell><Badge>{f.type}</Badge></DataTableCell>
                 <DataTableCell><DataTableText lines={2}>{f.content}</DataTableText></DataTableCell>
-                <DataTableCell muted>{f.project}</DataTableCell>
-                <DataTableCell muted><span className="bo-dashboard-nowrap">{f.date}</span></DataTableCell>
+                <DataTableCell isMuted>{f.project}</DataTableCell>
+                <DataTableCell isMuted><span className="bo-dashboard-nowrap">{f.date}</span></DataTableCell>
                 <DataTableCell align="options">
                   {show === 'new'
                     ? <Button variant="quiet" size={32} aria-label={`Mark as viewed: ${f.content}`}
@@ -456,7 +456,7 @@ function ManagementFeed() {
         <DataTableBody renderEmptyState={() => <DataTableEmpty>No results</DataTableEmpty>}>
           {shown.map(m => (
             <DataTableRow key={m.id} id={m.id} textValue={m.item}>
-              <DataTableCell muted><span className="bo-dashboard-nowrap">{m.date}</span></DataTableCell>
+              <DataTableCell isMuted><span className="bo-dashboard-nowrap">{m.date}</span></DataTableCell>
               <DataTableCell>{m.user}</DataTableCell>
               <DataTableCell><DataTableStack sub={m.kind}>{m.item}</DataTableStack></DataTableCell>
               <DataTableCell><Badge>{m.action}</Badge></DataTableCell>
