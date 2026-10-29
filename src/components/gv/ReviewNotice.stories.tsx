@@ -25,8 +25,8 @@ export const AllVariants: Story = {
 /** Review notice (Figma's one variant) */
 export const ToReview: Story = {name: 'To review', args: {state: 'to-review'}};
 
-/** Prototype only: a decision with no value yet. */
+/** Not in Figma (the prototype's `.rv--todo` "To set"): a decision with no value yet. */
 export const ToSet: Story = {name: 'To set', args: {state: 'to-set'}};
 
-/** Prototype only: after the admin visited the card. */
+/** Not in Figma (the prototype's `.rv--done`): after the admin visited the card. */
 export const Reviewed: Story = {args: {state: 'reviewed'}};

@@ -1,6 +1,6 @@
 @import '../theme.css';
 
-/* Review notice (Figma 4:224; prototype .rv): a 14 dashed circle + Small, gap 4. */
+/* Review notice (Figma 4:224; prototype .rv): a 14 dashed circle + Small, gap 4, all icon-default / tertiary grey. */
 .gv-review-notice {
   display: inline-flex;
   align-items: center;
@@ -14,21 +14,22 @@
 }
 
 .gv-review-notice__icon {
+  display: block;
   flex: none;
   color: var(--gv-icon-default);
 }
 
-/* Reviewed has to catch the eye (the prototype, 22 Oct): green, medium, a filled check, no chip. */
+/* Reviewed has to catch the eye (the prototype, 22 Oct): green, medium, a filled 16 check, no chip. */
 .gv-review-notice[data-state='reviewed'] {
   font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-reviewed);
+}
 
-  .gv-review-notice__icon {
-    color: var(--gv-icon-inverse);
+.gv-review-notice__fill {
+  fill: var(--gv-icon-reviewed);
+}
 
-    circle {
-      fill: var(--gv-icon-reviewed);
-      stroke: var(--gv-icon-reviewed);
-    }
-  }
+.gv-review-notice__tick {
+  stroke: var(--gv-icon-inverse);
 }
