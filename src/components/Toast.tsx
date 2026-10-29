@@ -37,9 +37,12 @@ export const queue = new ToastQueue<MyToastContent>({
   // Wrap state updates in a CSS view transition.
   wrapUpdate(fn) {
     if ('startViewTransition' in document) {
-      document.startViewTransition(() => {
+      const transition = document.startViewTransition(() => {
         flushSync(fn);
       });
+      // Two updates in one frame (Undo: close, then onAction adds a toast) skip the first transition; its
+      // update still runs, but `ready` rejects with an AbortError nobody needs to hear about.
+      transition.ready.catch(() => {});
     } else {
       fn();
     }
