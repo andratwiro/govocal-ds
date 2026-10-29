@@ -1,0 +1,51 @@
+@import '../theme.css';
+
+/*
+ * Multilingual text field (Not in Figma): the platform's field with a language switcher. The label row holds the
+ * label (with the Required marker) at its start and the switcher at its end, 8 over the field, as the platform's
+ * label container; with many languages the switcher wraps under the label, still at the end. The field below is the
+ * Text field (TextField.css). Shared by the multilingual rich text editor.
+ */
+.gv-multilingual-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.gv-multilingual-field__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-4) var(--gv-space-8);
+  margin-bottom: var(--gv-space-8);
+}
+
+/* The label's own 8 below moves to the row. */
+.gv-multilingual-field__label.react-aria-Label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  margin: 0;
+}
+
+.gv-multilingual-field[data-disabled] .gv-multilingual-field__label {
+  color: var(--gv-text-disabled);
+}
+
+/* With no label, the switcher still sits at the end, as the platform's spacer puts it. */
+.gv-multilingual-field__switcher {
+  margin-inline-start: auto;
+  justify-content: flex-end;
+}
+
+/* Help and error take the foot's width beside the counter: Form.css gives them `contain: inline-size`, which in the
+   foot's flex row left them a word wide. */
+.gv-multilingual-field .gv-text-field-foot > :is(.field-description, .react-aria-FieldError) {
+  flex: 1 1 0;
+}
+
+/* The rich text editor's error and help, outside a React Aria field: the field's own look (Form.css). */
+.gv-multilingual-field__error {
+  display: block;
+}

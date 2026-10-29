@@ -47,9 +47,10 @@ Components              src/components/gv/
   Charts                Bar row · Chart · Dashboard card · Legend row · Statement row
   Data display          Avatar (with Avatar group) · Data table · File list · Illustration · List header · List header cell · List row
                         · Property list · Reaction counts · Stat row · Stat tile · Table toolbar
-  Forms                 Checkbox · Choice card · Date range field · Drop zone · Number field · Option list · Required marker
-                        · Rich text editor · Rich text toolbar · Rich text toolbar button · Search field · Select · Switch
-                        · Tag picker · Text field · Title field
+  Forms                 Checkbox · Choice card · Date range field · Drop zone · Locale switcher · Multilingual rich text editor
+                        · Multilingual text field · Number field · Option list · Required marker · Rich text editor
+                        · Rich text toolbar · Rich text toolbar button · Search field · Select · Switch · Tag picker
+                        · Text field · Title field
   Layout & containers   Card · Divider · Panel · Section label
   Navigation            Breadcrumbs · Pagination · Tabs
   Overlays              Alert dialog · Coachmark · Help popover · Modal · Side panel · Tooltip
