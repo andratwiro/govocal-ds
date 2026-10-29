@@ -1,0 +1,23 @@
+@import '../theme.css';
+@import '../utilities.css';
+
+.gv-status {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 var(--gv-space-6);
+  border-radius: var(--gv-radius-full);
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  white-space: nowrap;
+
+  &[data-state='draft'] {
+    background: var(--gv-surface-stage);
+    color: var(--gv-text-pill);
+  }
+
+  &[data-state='live'] {
+    background: var(--gv-surface-live);
+    color: var(--gv-text-live);
+  }
+}
