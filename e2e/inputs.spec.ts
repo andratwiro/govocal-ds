@@ -61,8 +61,8 @@ test('sortable columns reorder the inputs', async ({page}) => {
 test('input manager names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/inputs');
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
-  // Badge now comes from the system; pagination is still missing (its pages work with plain buttons).
-  expect(gaps).toEqual(['Pagination']);
+  // Badge and Pagination now come from the system.
+  expect(gaps).toEqual([]);
 });
 
 // ── First clicks ──
@@ -178,11 +178,14 @@ test('Exports opens its menu and each export shows a toast', async ({page}) => {
 
 test('pagination moves between pages', async ({page}) => {
   await page.goto('/backoffice/#/inputs');
+  const pager = page.getByRole('navigation', {name: 'Input pages'});
   await expect(inputRows(page)).toHaveCount(10);
-  await expect(page.getByText('Page 1 of 2')).toBeVisible();
-  await page.getByRole('button', {name: 'Next page'}).click();
+  await expect(pager.getByRole('button', {name: 'Page 1'})).toHaveAttribute('aria-current', 'page');
+  await expect(pager.getByRole('button', {name: 'Previous page'})).toBeDisabled();
+  await pager.getByRole('button', {name: 'Next page'}).click();
   await expect(inputRows(page)).toHaveCount(2);
-  await expect(page.getByRole('button', {name: 'Page 2'})).toHaveAttribute('aria-current', 'page');
-  await page.getByRole('button', {name: 'Page 1'}).click();
+  await expect(pager.getByRole('button', {name: 'Page 2'})).toHaveAttribute('aria-current', 'page');
+  await expect(pager.getByRole('button', {name: 'Next page'})).toBeDisabled();
+  await pager.getByRole('button', {name: 'Page 1'}).click();
   await expect(inputRows(page)).toHaveCount(10);
 });

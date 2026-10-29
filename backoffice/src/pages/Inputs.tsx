@@ -22,9 +22,10 @@ import {AlertDialog} from '../../../src/components/gv/AlertDialog';
 import {PanelSection} from '../../../src/patterns/PanelSection';
 import {SelectionBar, type SelectionAction} from '../../../src/patterns/SelectionBar';
 import {ChevronDown, ChevronLeft, ChevronRight, CircleCheck, Download, Trash2, TriangleAlert, User, X} from 'lucide-react';
+import {Pagination} from '../../../src/components/gv/Pagination';
 import {ASSIGNEES, ME, PROJECTS, STATUSES} from '../data';
 import {MANAGED_INPUTS, PAGE_SIZE, TOPICS, type ManagedInput} from '../data-inputs';
-import {Gap, GapLegend} from '../Gap';
+import {Gap} from '../Gap';
 import {Page} from './Page';
 
 const title = (id: string) => PROJECTS.find(p => p.id === id)?.title ?? id;
@@ -257,22 +258,7 @@ export function Inputs() {
                 </DataTableBody>
               </DataTable>
             </div>
-            <GapLegend names={['Pagination']} />
-            <Gap name="Pagination" inline>
-              <nav aria-label="Pages" className="bo-inputs-pages">
-                <IconButton aria-label="Previous page" isDisabled={current === 1} onPress={() => setPage(current - 1)}>
-                  <ChevronLeft aria-hidden size={16} />
-                </IconButton>
-                {Array.from({length: pages}, (_, n) => n + 1).map(n => (
-                  <Button key={n} variant={n === current ? 'primary' : 'quiet'} size={32} aria-label={`Page ${n}`}
-                    aria-current={n === current ? 'page' : undefined} onPress={() => setPage(n)}>{n}</Button>
-                ))}
-                <IconButton aria-label="Next page" isDisabled={current === pages} onPress={() => setPage(current + 1)}>
-                  <ChevronRight aria-hidden size={16} />
-                </IconButton>
-                <span className="bo-note">Page {current} of {pages}</span>
-              </nav>
-            </Gap>
+            <Pagination page={current} pageCount={pages} onPageChange={setPage} aria-label="Input pages" />
           </div>
           {preview && <InputPreview key={preview.id} input={preview} onChange={change} onClose={() => setOpen(null)} />}
         </div>

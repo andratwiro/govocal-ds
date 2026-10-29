@@ -84,7 +84,7 @@ test('sorting by name orders the rows, and pressing again flips them', async ({p
 test('users names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/users');
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
-  expect(gaps).toEqual(['Pagination']);
+  expect(gaps).toEqual([]);
 });
 
 test('the table is the gv DataTable: Joined sort toggles, a row selects, one select-all, options open', async ({page}) => {

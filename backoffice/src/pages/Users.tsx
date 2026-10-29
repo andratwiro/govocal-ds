@@ -11,12 +11,13 @@ import {Card, CardRadio, CardRadioGroup} from '../../../src/components/gv/Card';
 import {Checkbox} from '../../../src/components/gv/Checkbox';
 import {Modal} from '../../../src/components/gv/Modal';
 import {AlertDialog} from '../../../src/components/gv/AlertDialog';
+import {Pagination} from '../../../src/components/gv/Pagination';
 import {TextField} from '../../../src/components/TextField';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {ToastRegion, queue} from '../../../src/components/Toast';
 import {SelectionBar, type SelectionAction} from '../../../src/patterns/SelectionBar';
 import {GROUPS, PEOPLE, SEGMENTS, SMART_RULES, type Person} from '../data-users';
-import {Gap, GapLegend} from '../Gap';
+import {Gap} from '../Gap';
 import {Page} from './Page';
 
 // React Aria's own types, read off the gv DataTable (the back office imports only the system).
@@ -228,7 +229,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
           </DataTableBody>
         </DataTable>
         </div>
-        <Gap name="Pagination" inline><span className="bo-note">Page 1 of 1</span></Gap>
+        <Pagination page={1} pageCount={1} aria-label="User pages" />
       </div>
     </Card>
   );
@@ -404,7 +405,6 @@ export function Users() {
   };
   return (
     <Page title="Users" actions={<HeaderActions />}>
-      <GapLegend names={['Pagination']} />
       <div className="bo-split">
         <Sidebar view={view} setView={setView} all={groups} people={people} onAddGroup={() => setModal('add')} />
         {/* A fresh table per view: search and selection belong to the list they were made in. */}
