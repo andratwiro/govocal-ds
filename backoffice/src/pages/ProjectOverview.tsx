@@ -12,7 +12,6 @@ import {ProjectHeader} from '../../../src/patterns/ProjectHeader';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {RailHeader} from '../../../src/patterns/RailHeader';
 import {RailSectionLabel} from '../../../src/patterns/RailSectionLabel';
-import {SetupStep} from '../../../src/patterns/SetupStep';
 import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {ActionRow} from '../../../src/patterns/ActionRow';
 import {PanelSection} from '../../../src/patterns/PanelSection';
@@ -21,7 +20,7 @@ import {PhonePreview, PhoneHeader, PhoneImage} from '../../../src/patterns/Phone
 import {StatCard} from '../../../src/patterns/StatCard';
 import {ME, PROJECTS, type Project} from '../data';
 import {NO_OVERVIEW, OVERVIEWS, addedTimeline, timeline, type NewPhase, type Overview} from '../data-project';
-import {AddPhase, CHECKLIST, CHECKLIST_TAB, CardStub, ProjectSettings, type SettingsTab} from './ProjectPhase';
+import {AddPhase, CHECKLIST, CHECKLIST_TAB, CardStub, ChecklistStep, ProjectSettings, type SettingsTab} from './ProjectPhase';
 
 // The project's publication status, as the prototype's status pill: one next step from each state.
 type PubStatus = 'Draft' | 'Published' | 'Archived';
@@ -153,9 +152,7 @@ function Setup({project, o, live, onSettings}: {project: Project; o: Overview; l
           <ul className="bo-phase-stack">
             {CHECKLIST.map(c => (
               <li key={c.title} data-gv="setup-card">
-                {c.action === 'open'
-                  ? <SetupStep title={c.title} onPress={() => { const t = CHECKLIST_TAB[c.title]; if (t) onSettings(t); else setStub(c.title); }} />
-                  : <SetupStep action="expand" title={c.title}><p className="bo-note bo-phase-flush">{c.body}</p></SetupStep>}
+                <ChecklistStep step={c} onOpen={title => { const t = CHECKLIST_TAB[title]; if (t) onSettings(t); else setStub(title); }} />
               </li>
             ))}
           </ul>

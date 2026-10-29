@@ -350,11 +350,6 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-messaging-sms p { margin: 0; }
 .bo-reporting-present { display: grid; gap: var(--gv-space-12); }
 /* ── Project phase · Manage ── */
-.bo-phase-manage { display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: var(--gv-space-8); }
-.bo-phase-manage > .bo-phase-toolbar { margin-block-end: 0; align-items: flex-start; }
-.bo-phase-manage > .bo-note:empty { display: none; }
-.bo-phase-manage-lead { flex: 1; min-width: 0; display: flex; align-items: center; gap: var(--gv-space-8); }
-.bo-phase-manage-toolbar .react-aria-SearchField { width: 220px; }
 .bo-phase-manage-nowrap { white-space: nowrap; }
 /* ── Feedback: project settings side tabs, phase status ── */
 /* Modal's "With side tabs" story: the list and the panel each scroll on their own inside the fixed-height body. */
@@ -362,3 +357,6 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-phase-settings-list { flex: 0 0 200px; padding: var(--gv-space-16) var(--gv-space-12); overflow-y: auto; border-inline-end: 1px solid var(--gv-border-row); }
 .bo-phase-settings-panel { flex: 1 1 auto; min-width: 0; overflow-y: auto; padding: var(--gv-space-20) var(--gv-space-24); }
 .bo-phase-status { margin-block-end: var(--gv-space-8); }
+/* ── Project phase · Side panel, attachments ── */
+.bo-phase-record-meta { display: flex; flex-wrap: wrap; gap: var(--gv-space-24); margin: var(--gv-space-16) 0 0; }
+.bo-phase-attach { display: grid; gap: var(--gv-space-16); }

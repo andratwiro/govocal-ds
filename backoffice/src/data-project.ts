@@ -1,4 +1,7 @@
 import type {TimelinePhase} from '../../src/patterns/PhaseTimeline';
+import type {ThreadComment} from '../../src/patterns/CommentThread';
+import type {PostedUpdate} from '../../src/patterns/OfficialUpdate';
+import type {FileListItemData} from '../../src/components/gv/FileList';
 import type {Phase, Project} from './data';
 
 // Project overview (#/projects/:id), after the prototype's live project screen. Invented data only.
@@ -59,6 +62,12 @@ export type Idea = {
   source: typeof IDEA_SOURCES[number]; replied: boolean; likes: number; comments: number;
   /** Posted in the last day; comments nobody on the team has read yet; why it was flagged. */
   isNew: boolean; newComments: number; warning?: string;
+  /** Who posted it and when, as the side panel shows them; its dislikes beside the likes. */
+  author: string; date: string; dislikes: number;
+  /** Waiting for approval: only in a phase that screens new ideas (SCREENING_PHASES). */
+  screening?: boolean;
+  /** The author added a picture (the page draws one of the invented illustrations). */
+  hasPicture: boolean;
 };
 
 const PLACES = ['Wrenfield Avenue', 'Quillmoor Road', 'Tamsel Park', 'Brindle Street', 'Hollowbrook Square', 'Orchard Reach'];
@@ -95,6 +104,9 @@ const TEMPLATES: [string, string[]][] = [
   ['Plant fruit trees on {p} that anyone can pick from.', ['Environment', 'Public space']],
   ['Add a bike repair stand with a pump on {p}.', ['Cycling']]
 ];
+const AUTHORS = ['Resident A', 'Resident B', 'Resident C', 'Resident D', 'Resident E', 'Resident F'];
+// Two of the newest ideas wait for approval in a phase that screens.
+const SCREENING = new Set([7, 15]);
 const WARNINGS: Record<number, string> = {0: 'Possible personal data', 37: 'Reported by a resident', 71: 'Possible personal data', 102: 'Strong language'};
 
 export const IDEAS: Idea[] = Array.from({length: 124}, (_, n) => {
@@ -110,7 +122,10 @@ export const IDEAS: Idea[] = Array.from({length: 124}, (_, n) => {
     replied: !(status === 'Proposed' || (status === 'Viewed' && n % 2 === 0)),
     likes: (n * 13) % 47, comments: (n * 7) % 19,
     isNew: n < 18, newComments: n % 4 === 1 ? (n % 3) + 1 : 0,
-    warning: WARNINGS[n]
+    warning: WARNINGS[n],
+    author: AUTHORS[n % AUTHORS.length], date: `${21 - (n % 21)} September 2026`, dislikes: (n * 7) % 9,
+    screening: SCREENING.has(n) || undefined,
+    hasPicture: n % 3 === 0
   };
 });
 
@@ -118,3 +133,49 @@ export const IDEAS: Idea[] = Array.from({length: 124}, (_, n) => {
 export type NewPhase = {id: string; title: string; method: Phase['method']; dates: string};
 export const addedTimeline = (added: NewPhase[]): TimelinePhase[] =>
   added.map(p => ({id: p.id, title: p.title, state: 'upcoming', dates: p.dates, method: METHOD_WORD[p.method] ?? p.method}));
+
+// ── Phase screen · Manage side panel ─────────────────────────────────────────────────────────────────
+/** Phases that screen new ideas ("projectId/phaseId"): a waiting idea opens on Approve / Reject. */
+export const SCREENING_PHASES = new Set(['green-corridors/p2']);
+
+/** The signed-in team member, as the thread shows them. */
+export const TEAM = {author: 'Manager A', initials: 'A'};
+
+const REMARKS = [
+  'Could this also work for the other end of the street?',
+  'I agree, this would make a real difference for families here.',
+  'Not sure about this. The street is already crowded at weekends.',
+  'This is the most useful one on the list.'
+];
+
+const daysAgo = (d: number) => (d === 1 ? 'Yesterday' : `${d} days ago`);
+
+/** An idea's public comments (as many as its comment count, up to four shown here) and the team's notes. */
+export function ideaComments(idea: Idea): ThreadComment[] {
+  const n = Math.min(idea.comments, 4);
+  return Array.from({length: n}, (_, k) => ({
+    id: `${idea.id}-c${k + 1}`, author: AUTHORS[(k + 2) % AUTHORS.length], initials: AUTHORS[(k + 2) % AUTHORS.length].slice(-1),
+    time: daysAgo(n - k), text: REMARKS[k % REMARKS.length], isNew: k >= n - idea.newComments,
+    replies: k === 0 && idea.replied ? [{id: `${idea.id}-c1r1`, ...TEAM, time: daysAgo(Math.max(1, n - 1)),
+      text: 'Good question: the team is looking into it.'}] : undefined
+  }));
+}
+export const ideaInternal = (idea: Idea): ThreadComment[] => (idea.assignee === 'Unassigned' ? [] : [
+  {id: `${idea.id}-i1`, author: 'Manager B', initials: 'B', time: 'Yesterday', text: 'Worth a site visit before we answer?'}
+]);
+/** The update the team posted on a replied idea. */
+export const ideaUpdates = (idea: Idea): PostedUpdate[] => (idea.replied ? [{
+  id: `${idea.id}-u1`, date: '22 September 2026',
+  text: 'Thank you for this idea. The project team is looking into it and will post an update here.'
+}] : []);
+
+// ── Phase screen · Build: the phase's attachments ────────────────────────────────────────────────────
+export const PHASE_FILES: FileListItemData[] = [
+  {id: 'f1', name: 'consultation-summary.pdf', meta: 'PDF · 340 KB'},
+  {id: 'f2', name: 'corridor-map.jpg', meta: 'JPG · 1.2 MB'}
+];
+
+// ── Project setup: Set area and Set topic tags (invented areas and topics) ───────────────────────────
+export const AREAS = ['Wrenfield', 'Quillmoor', 'Tamsel Park', 'Brindle', 'Hollowbrook', 'Orchard Reach'];
+export const TOPICS = ['Mobility', 'Public transit', 'Cycling and bike lanes', 'Roads and traffic', 'Parking', 'Climate', 'Energy',
+  'Air quality', 'Green spaces', 'Water and rivers', 'Waste and recycling', 'Biodiversity'];

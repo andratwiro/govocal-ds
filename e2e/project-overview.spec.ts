@@ -172,3 +172,32 @@ test('Add a phase puts a new upcoming phase on the timeline', async ({page}) => 
   await expect(rail).toContainText('Walk the route');
   await expect(rail).toContainText('Upcoming · 9 to 23 Feb · Ideation');
 });
+
+// Set area and Set topic tags open their picker under the card (Setup step's "Opens a picker" story).
+test('Set topic tags: a searchable Option list; Enter ticks and it stays open; Esc closes, the card shows the value', async ({page}) => {
+  await page.goto('/backoffice/#/projects/harbour-plan');
+  const card = page.getByRole('button', {name: /Set topic tags/});
+  await card.click();
+  const search = page.getByRole('searchbox', {name: 'Search tags'});
+  await expect(search).toBeFocused();
+  await search.fill('clim');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('menuitemcheckbox', {name: 'Climate'})).toHaveAttribute('aria-checked', 'true');
+  await expect(page.getByText('1 tag selected')).toBeVisible();
+  // Esc empties the search first, then closes and gives focus back to the card.
+  await page.keyboard.press('Escape');
+  await expect(search).toHaveValue('');
+  await page.keyboard.press('Escape');
+  await expect(search).toHaveCount(0);
+  await expect(card).toContainText('1 tag');
+  await expect(card).toBeFocused();
+});
+
+test('Set area: a Menu of three choices; the card says what is set', async ({page}) => {
+  await page.goto('/backoffice/#/projects/harbour-plan');
+  const card = page.getByRole('button', {name: /Set area/});
+  await card.click();
+  await page.getByRole('menuitemradio', {name: /All areas/}).click();
+  await expect(card).toContainText('All areas');
+});

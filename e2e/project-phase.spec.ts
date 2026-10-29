@@ -9,6 +9,10 @@ const URL = '/backoffice/#/projects/green-corridors/phases/p2/manage';
 const ideas = (n: number) => `${n} ${n === 1 ? 'idea' : 'ideas'}`;
 const table = (page: Page) => page.getByRole('grid', {name: 'Ideas'});
 const rows = (page: Page) => table(page).getByRole('row').filter({has: page.getByRole('rowheader')});
+// The table shows 20 ideas a page (the Pagination in the Panel's foot); the count heading says how many match.
+const PAGE = 20;
+const onPage = (n: number) => Math.min(n, PAGE);
+const count = (page: Page, n: number) => page.getByRole('heading', {level: 3, name: ideas(n)});
 const filterButton = (page: Page) => page.getByRole('button', {name: /^Filter ideas/});
 const chips = (page: Page) => page.getByRole('grid', {name: 'Active filters'});
 
@@ -20,8 +24,8 @@ async function tick(page: Page, facet: string, value: string) {
 test('the Manage tab lists the phase\'s ideas with its metrics', async ({page}) => {
   await page.goto(URL);
   await expect(page.getByRole('radiogroup', {name: 'Phase view'}).getByRole('radio', {name: 'Manage'})).toBeChecked();
-  await expect(page.getByRole('heading', {level: 2, name: ideas(IDEAS.length)})).toBeVisible();
-  await expect(rows(page)).toHaveCount(IDEAS.length);
+  await expect(count(page, IDEAS.length)).toBeVisible();
+  await expect(rows(page)).toHaveCount(onPage(IDEAS.length));
   const overview = page.getByRole('complementary', {name: 'Ideas overview'});
   for (const m of ['Waiting for a reply', 'Unassigned', 'New ideas', 'New comments', 'Content warnings'])
     await expect(overview.getByText(m, {exact: true})).toBeVisible();
@@ -40,7 +44,7 @@ test('the filter menu narrows the table, and its chips follow', async ({page}) =
 
   await tick(page, 'Assignee', 'Manager A');
   const a = IDEAS.filter(i => i.assignee === 'Manager A');
-  await expect(rows(page)).toHaveCount(a.length);
+  await expect(rows(page)).toHaveCount(onPage(a.length));
   // The Tags submenu searches: "Filter..." narrows the list, counts read "n ideas".
   await page.getByRole('menuitem', {name: /^Tags/}).hover();
   const search = page.getByRole('searchbox', {name: 'Filter tags'});
@@ -52,8 +56,8 @@ test('the filter menu narrows the table, and its chips follow', async ({page}) =
   await cycling.click();
   await expect(cycling).toHaveAttribute('aria-checked', 'true');
   const both = a.filter(i => i.tags.includes('Cycling'));
-  await expect(rows(page)).toHaveCount(both.length);
-  await expect(page.getByRole('heading', {level: 2, name: ideas(both.length)})).toBeVisible();
+  await expect(rows(page)).toHaveCount(onPage(both.length));
+  await expect(count(page, both.length)).toBeVisible();
   await expect(menu.getByRole('menuitem', {name: /^Assignee/})).toContainText('1');
   await expect(menu.getByRole('menuitem', {name: 'Clear all filters'})).toBeVisible();
 
@@ -68,7 +72,7 @@ test('the filter menu narrows the table, and its chips follow', async ({page}) =
 
   // Removing a chip unticks the menu.
   await chips(page).getByRole('button', {name: 'Remove the Tags filter'}).click();
-  await expect(rows(page)).toHaveCount(a.length);
+  await expect(rows(page)).toHaveCount(onPage(a.length));
   await filterButton(page).click();
   await expect(menu.getByRole('menuitem', {name: /^Tags/})).not.toContainText('1');
   await page.getByRole('menuitem', {name: /^Tags/}).hover();
@@ -77,27 +81,27 @@ test('the filter menu narrows the table, and its chips follow', async ({page}) =
   // Two values in one facet: "is any of"; Clear all filters empties both views.
   await tick(page, 'Status', 'Proposed');
   await tick(page, 'Status', 'Viewed');
-  await expect(rows(page)).toHaveCount(a.filter(i => ['Proposed', 'Viewed'].includes(i.status)).length);
+  await expect(rows(page)).toHaveCount(onPage(a.filter(i => ['Proposed', 'Viewed'].includes(i.status)).length));
   await expect(chips(page).getByRole('row', {name: 'Status is any of Proposed, Viewed'})).toBeVisible();
   await menu.getByRole('menuitem', {name: 'Clear all filters'}).click();
   await expect(chips(page)).toHaveCount(0);
-  await expect(rows(page)).toHaveCount(IDEAS.length);
+  await expect(rows(page)).toHaveCount(onPage(IDEAS.length));
 });
 
 test('the metrics are filters too: Unassigned shows its chip', async ({page}) => {
   await page.goto(URL);
   await page.getByRole('link', {name: /^Unassigned/}).click();
   await expect(chips(page).getByRole('row', {name: 'Assignee is Unassigned'})).toBeVisible();
-  await expect(rows(page)).toHaveCount(IDEAS.filter(i => i.assignee === 'Unassigned').length);
+  await expect(rows(page)).toHaveCount(onPage(IDEAS.filter(i => i.assignee === 'Unassigned').length));
   await page.getByRole('button', {name: 'Clear', exact: true}).click();
-  await expect(rows(page)).toHaveCount(IDEAS.length);
+  await expect(rows(page)).toHaveCount(onPage(IDEAS.length));
 });
 
 test('search narrows the ideas', async ({page}) => {
   await page.goto(URL);
   await page.getByRole('button', {name: 'Search ideas'}).click();
   await page.getByRole('searchbox', {name: 'Search ideas'}).fill('repair café');
-  await expect(rows(page)).toHaveCount(IDEAS.filter(i => i.text.toLowerCase().includes('repair café')).length);
+  await expect(rows(page)).toHaveCount(onPage(IDEAS.filter(i => i.text.toLowerCase().includes('repair café')).length));
 });
 
 test('selecting ideas swaps the count for the selection bar', async ({page}) => {
@@ -108,22 +112,23 @@ test('selecting ideas swaps the count for the selection bar', async ({page}) => 
   await expect(bar).toContainText('1 selected');
   for (const a of ['Status', 'Assign', 'Tags', 'Copy to phase', 'Official update'])
     await expect(bar.getByRole('button', {name: a, exact: true})).toBeVisible();
-  await expect(page.getByRole('heading', {level: 2, name: ideas(IDEAS.length)})).toHaveCount(0);
+  await expect(count(page, IDEAS.length)).toHaveCount(0);
 
   // Status applies to the selected ideas at once.
   await bar.getByRole('button', {name: 'Status', exact: true}).click();
-  await page.getByRole('menuitem', {name: 'Implemented', exact: true}).click();
+  await page.getByRole('menuitemradio', {name: 'Implemented', exact: true}).click();
   await expect(first).toContainText('Implemented');
 
-  // Official update opens its composer.
+  // Official update opens its composer (Bulk official update: no Cancel, Esc or × closes it).
   await bar.getByRole('button', {name: 'Official update'}).click();
   const dialog = page.getByRole('dialog', {name: 'Official update'});
   await expect(dialog.getByRole('textbox', {name: 'Official update'})).toBeVisible();
-  await dialog.getByRole('button', {name: 'Cancel'}).click();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
 
   await bar.getByRole('button', {name: 'Clear selection'}).click();
   await expect(bar).toHaveCount(0);
-  await expect(page.getByRole('heading', {level: 2, name: ideas(IDEAS.length)})).toBeVisible();
+  await expect(count(page, IDEAS.length)).toBeVisible();
 });
 
 test('the Manage tab passes axe (WCAG 2.2 AA), filters on and a row selected', async ({page}) => {
@@ -134,7 +139,7 @@ test('the Manage tab passes axe (WCAG 2.2 AA), filters on and a row selected', a
   await page.keyboard.press('Escape');
   await page.keyboard.press('Escape');
   await rows(page).first().getByRole('checkbox').check({force: true});
-  a11yReport(await violations(page, 'section[aria-label="Ideas"]'));
+  a11yReport(await violations(page, '.gv-panel'));
 });
 
 async function violations(page: Page, within: string) {
@@ -183,4 +188,248 @@ test('Project settings: a fixed-height Modal with a vertical side list of tabs',
   await expect(dialog.getByRole('tabpanel', {name: 'Access rights'})).toBeVisible();
   await dialog.getByRole('button', {name: 'Save'}).click();
   await expect(dialog).toHaveCount(0);
+});
+
+// ── The Manage tab's side panel (Side panel's "Default" story, the body of Comment thread's "In a side panel") ──
+const panel = (page: Page) => page.getByRole('dialog', {name: 'Collect ideas'});
+// The panel floats over the table's end: press a row near its start, as a manager would.
+const pressRow = (page: Page, n: number) => rows(page).nth(n).getByRole('rowheader').click({position: {x: 24, y: 8}});
+const openRow = async (page: Page, n: number) => {
+  await pressRow(page, n);
+  await expect(panel(page)).toBeVisible();
+};
+
+test('a row opens its idea in the side panel; the pager walks the list; Esc puts focus back on the row', async ({page}) => {
+  await page.goto(URL);
+  await openRow(page, 2);
+  await expect(panel(page)).toContainText(IDEAS[2].text);
+  await expect(panel(page)).toContainText(`3 of ${IDEAS.length}`);
+  await expect(panel(page).locator('dl[aria-label="Idea details"]')).toBeVisible();
+  await expect(panel(page).getByRole('toolbar', {name: 'Quick actions'})).toBeVisible();
+  await expect(panel(page).getByRole('textbox', {name: 'Official update'})).toBeVisible();
+  await expect(panel(page).getByRole('tab', {name: /^Comments/})).toBeVisible();
+  // The list behind stays usable and unselected: no Save, no modal.
+  await expect(rows(page).nth(2)).toHaveAttribute('aria-selected', 'false');
+
+  await panel(page).getByRole('button', {name: 'Next idea'}).click();
+  await expect(panel(page)).toContainText(`4 of ${IDEAS.length}`);
+  await expect(panel(page)).toContainText(IDEAS[3].text);
+  await page.keyboard.press('Escape');
+  await expect(panel(page)).toHaveCount(0);
+  await expect(rows(page).nth(3)).toBeFocused();
+
+  // × closes it too, and focus goes back to the row that opened it.
+  await openRow(page, 5);
+  await panel(page).getByRole('button', {name: 'Close'}).click();
+  await expect(panel(page)).toHaveCount(0);
+  await expect(rows(page).nth(5)).toBeFocused();
+});
+
+test('the pager counts the filtered list', async ({page}) => {
+  await page.goto(URL);
+  await page.getByRole('link', {name: /^Unassigned/}).click();
+  const unassigned = IDEAS.filter(i => i.assignee === 'Unassigned');
+  await openRow(page, 0);
+  await expect(panel(page)).toContainText(`1 of ${unassigned.length}`);
+  await expect(panel(page).getByRole('button', {name: 'Previous idea'})).toBeDisabled();
+});
+
+test('a status change in the panel shows in its row at once, with an Undo toast', async ({page}) => {
+  await page.goto(URL);
+  const idea = IDEAS[2];
+  const next = idea.status === 'Implemented' ? 'Accepted' : 'Implemented';
+  await openRow(page, 2);
+  await panel(page).getByRole('button', {name: /Status/}).click();
+  await page.getByRole('option', {name: next, exact: true}).click();
+  await expect(rows(page).nth(2)).toContainText(next);
+  const toast = page.getByRole('alertdialog').or(page.locator('.react-aria-Toast')).filter({hasText: `Status changed to ${next}`});
+  await expect(toast).toBeVisible();
+  await toast.getByRole('button', {name: 'Undo'}).click();
+  await expect(rows(page).nth(2)).toContainText(idea.status);
+});
+
+test('a screening phase: a waiting idea opens on Approve / Reject', async ({page}) => {
+  await page.goto(URL);
+  const waiting = IDEAS.map((i, n) => [i, n] as const).filter(([i]) => i.screening);
+  expect(waiting.length).toBeGreaterThanOrEqual(2);
+  const [[, first], [, second]] = waiting;
+  await expect(rows(page).nth(first)).toContainText('Waiting for approval');
+
+  await openRow(page, first);
+  const decision = panel(page).getByRole('toolbar', {name: 'Waiting for approval'});
+  await decision.getByRole('button', {name: 'Approve'}).click();
+  await expect(decision).toHaveCount(0);
+  await expect(rows(page).nth(first)).toContainText('Proposed');
+  await expect(page.getByText('Idea approved and published')).toBeVisible();
+
+  await page.keyboard.press('Escape');
+  await pressRow(page, second);
+  await panel(page).getByRole('toolbar', {name: 'Waiting for approval'}).getByRole('button', {name: 'Reject'}).click();
+  await expect(rows(page).nth(second)).toContainText('Rejected');
+  await expect(page.getByText('Idea rejected')).toBeVisible();
+});
+
+test('a phase that does not screen has no ideas waiting', async ({page}) => {
+  await page.goto('/backoffice/#/projects/harbour-plan/phases/p1/manage');
+  await expect(page.getByText('Waiting for approval')).toHaveCount(0);
+});
+
+test('bulk selection still works beside the panel; the Selection bar\'s Official update opens its dialog', async ({page}) => {
+  await page.goto(URL);
+  await openRow(page, 0);
+  await page.keyboard.press('Escape');
+  for (const n of [0, 1]) await rows(page).nth(n).getByRole('checkbox').check({force: true});
+  const bar = page.getByRole('toolbar', {name: 'Selection actions'});
+  await expect(bar).toContainText('2 selected');
+  await bar.getByRole('button', {name: 'Official update'}).click();
+  const dialog = page.getByRole('dialog', {name: 'Official update'});
+  await expect(dialog).toContainText('This update goes to 2 ideas');
+  const send = dialog.getByRole('button', {name: 'Send'});
+  await expect(send).toBeDisabled();
+  await dialog.getByRole('textbox', {name: 'Official update'}).fill('The team has read every idea on this street.');
+  await send.click();
+  await expect(dialog).toHaveCount(0);
+  await expect(page.getByText('Official update sent to 2 ideas')).toBeVisible();
+});
+
+test('the side panel passes axe (WCAG 2.2 AA), reported', async ({page}) => {
+  await page.goto(URL);
+  await openRow(page, 2);
+  a11yReport(await violations(page, '.gv-side-panel'));
+});
+
+test('Build: the Dates card holds a Date range field; Events has one with times', async ({page}) => {
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
+  const setup = page.getByRole('complementary', {name: 'Setup'});
+  await setup.getByRole('button', {name: /^Dates/}).click();
+  await expect(setup.getByRole('group', {name: 'Start date'})).toBeVisible();
+  await expect(setup.getByRole('button', {name: 'Add end date'})).toBeVisible();
+
+  await setup.getByRole('button', {name: 'Project settings'}).click();
+  const dialog = page.getByRole('dialog', {name: 'Project settings'});
+  await dialog.getByRole('tab', {name: 'Events'}).click();
+  const events = dialog.getByRole('tabpanel', {name: 'Events'});
+  await expect(events.getByRole('group', {name: 'Event dates, start date'})).toBeVisible();
+  // The time fields come with a date: type a start date and its time field appears.
+  await events.getByRole('group', {name: 'Event dates, start date'}).getByRole('spinbutton').first().click();
+  await page.keyboard.type('11022026');
+  await expect(events.getByRole('group', {name: 'Event dates, start time'})).toBeVisible();
+});
+
+test('Build: the Attachments card opens its dialog: a drop zone, the files, Done', async ({page}) => {
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
+  const setup = page.getByRole('complementary', {name: 'Setup'});
+  await expect(setup.locator('[data-gv="setup-card"]', {hasText: 'Attachments'})).toContainText('2 files');
+  await setup.getByRole('button', {name: 'Add an attachment'}).click();
+  const dialog = page.getByRole('dialog', {name: 'Attachments'});
+  await expect(dialog.getByRole('button', {name: 'Drop a file here or browse'})).toBeVisible();
+  const files = dialog.getByRole('grid', {name: 'Attachments'}).getByRole('row');
+  await expect(files).toHaveCount(2);
+  await dialog.locator('input[type="file"]').setInputFiles({name: 'walk-route.pdf', mimeType: 'application/pdf', buffer: Buffer.alloc(2048)});
+  await expect(files).toHaveCount(3);
+  await expect(files.last()).toContainText('walk-route.pdf');
+  await files.first().getByRole('link', {name: 'Delete'}).click();
+  await expect(files).toHaveCount(2);
+  await dialog.getByRole('button', {name: 'Done'}).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(setup.locator('[data-gv="setup-card"]', {hasText: 'Attachments'})).toContainText('2 files');
+});
+
+// ── The table in its Panel (Data table's "In a panel" story) and the batch pickers ──
+test('the table pages by 20, and the panel\'s pager turns the page', async ({page}) => {
+  await page.goto(URL);
+  const pages = page.getByRole('navigation', {name: 'Idea pages'});
+  await pages.getByRole('button', {name: 'Page 2'}).click();
+  await expect(rows(page).first()).toContainText(IDEAS[PAGE].text.slice(0, 12));
+  await pages.getByRole('button', {name: 'Page 1'}).click();
+  await openRow(page, PAGE - 1);
+  await expect(panel(page)).toContainText(`${PAGE} of ${IDEAS.length}`);
+  await panel(page).getByRole('button', {name: 'Next idea'}).click();
+  await expect(panel(page)).toContainText(`${PAGE + 1} of ${IDEAS.length}`);
+  await expect(pages.getByRole('button', {name: 'Page 2'})).toHaveAttribute('aria-current', 'page');
+  await page.keyboard.press('Escape');
+  await expect(rows(page).first()).toBeFocused();
+});
+
+test('a quick view from the stats is a key-only chip; its × turns it off', async ({page}) => {
+  await page.goto(URL);
+  await page.getByRole('link', {name: /^New ideas/}).click();
+  await expect(chips(page).getByRole('row', {name: 'New ideas'})).toBeVisible();
+  await expect(count(page, IDEAS.filter(i => i.isNew).length)).toBeVisible();
+  await chips(page).getByRole('button', {name: 'Remove the New ideas filter'}).click();
+  await expect(chips(page)).toHaveCount(0);
+  await expect(count(page, IDEAS.length)).toBeVisible();
+});
+
+test('batch Assign: a Menu with avatars', async ({page}) => {
+  await page.goto(URL);
+  await rows(page).first().getByRole('checkbox').check({force: true});
+  await page.getByRole('toolbar', {name: 'Selection actions'}).getByRole('button', {name: 'Assign', exact: true}).click();
+  const item = page.getByRole('menuitem', {name: 'Manager C'});
+  await expect(item.locator('.gv-avatar')).toHaveText('C');
+  await item.click();
+  await expect(rows(page).first()).toContainText('Manager C');
+});
+
+test('batch Tags: a searchable Option list; Enter ticks and the list stays open, Esc closes', async ({page}) => {
+  await page.goto(URL);
+  const first = IDEAS[0];
+  const tag = ['Housing', 'Culture'].find(t => !first.tags.includes(t))!;
+  await rows(page).first().getByRole('checkbox').check({force: true});
+  await page.getByRole('toolbar', {name: 'Selection actions'}).getByRole('button', {name: 'Tags', exact: true}).click();
+  const search = page.getByRole('searchbox', {name: 'Filter tags'});
+  await expect(search).toBeFocused();
+  await search.fill(tag.slice(0, 3));
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  const option = page.getByRole('menuitemcheckbox', {name: new RegExp(`^${tag}`)});
+  await expect(option).toHaveAttribute('aria-checked', 'true');
+  await expect(search).toBeVisible();
+  await expect(rows(page).first()).toContainText(tag);
+  // Esc empties the search first, then closes.
+  await page.keyboard.press('Escape');
+  await expect(search).toHaveValue('');
+  await page.keyboard.press('Escape');
+  await expect(search).toHaveCount(0);
+});
+
+test('batch Copy to phase: tick several phases, the menu stays open; Add phase follows a divider', async ({page}) => {
+  await page.goto(URL);
+  await rows(page).first().getByRole('checkbox').check({force: true});
+  await page.getByRole('toolbar', {name: 'Selection actions'}).getByRole('button', {name: 'Copy to phase'}).click();
+  const menu = page.getByRole('menu', {name: 'Copy to phase'});
+  await page.keyboard.press('ArrowDown');
+  const vote = menu.getByRole('menuitemcheckbox', {name: 'Community vote'});
+  await vote.focus();
+  await page.keyboard.press('Enter');
+  await expect(vote).toHaveAttribute('aria-checked', 'true');
+  await expect(menu).toBeVisible();
+  await expect(page.getByText('1 idea copied to Community vote.')).toBeVisible();
+  await expect(menu.getByRole('separator')).toHaveCount(1);
+  await menu.getByRole('menuitem', {name: 'Add phase'}).click();
+  await expect(page.getByRole('dialog', {name: 'Add a phase'})).toBeVisible();
+});
+
+test('the Filter menu: Enter ticks an option and the submenu stays open; Esc closes', async ({page}) => {
+  await page.goto(URL);
+  await filterButton(page).click();
+  const source = page.getByRole('menuitem', {name: /^Source/});
+  await source.focus();
+  await page.keyboard.press('Enter');
+  const online = page.getByRole('menuitemcheckbox', {name: /^Online/});
+  await expect(online).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(online).toHaveAttribute('aria-checked', 'true');
+  await expect(online).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(online).toHaveCount(0);
+  await expect(chips(page).getByRole('row', {name: 'Source is Online'})).toBeVisible();
+});
+
+test('Project settings: General has the project URL with its prefix', async ({page}) => {
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
+  await page.getByRole('complementary', {name: 'Setup'}).getByRole('button', {name: 'Project settings'}).click();
+  const dialog = page.getByRole('dialog', {name: 'Project settings'});
+  await expect(dialog.getByRole('textbox', {name: 'Project URL'})).toHaveValue('green-corridors');
+  await expect(dialog.getByText('internal.govocal.com/en/projects/')).toBeVisible();
 });
