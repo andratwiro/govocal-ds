@@ -2,6 +2,7 @@ import {Meta, IconGallery, IconItem} from '@storybook/addon-docs/blocks';
 import * as lucide from 'lucide-react';
 import {toPascalCase} from '../../scripts/lib/icons.mjs';
 import iconsJson from '../../tokens/icons.json';
+import iconsInUse from '../../tokens/icons-in-use.json';
 
 <Meta title="Foundations/Icons" />
 
@@ -16,6 +17,7 @@ export const noMatch = figmaNames.filter(name => !hasLucide(name));
 export const prototypeOnly = ['map-pin', 'map', 'layout-grid', 'eye-off', 'grip-vertical', 'calendar', 'clock',
   'globe', 'flag', 'lock', 'message-circle', 'megaphone', 'thumbs-up', 'trash-2', 'pencil', 'external-link',
   'panel-left-close', 'panel-left-open'];
+export const codeOnly = iconsInUse.used.filter(name => !figmaNames.includes(name) && !prototypeOnly.includes(name));
 export const IconPair = ({name}) => {
   const Icon = lucide[toPascalCase(name)];
   return <>
@@ -50,6 +52,16 @@ The [prototype](https://govocal.augur.page/ux-ui-audit/design/?theme=0) already 
 
 <IconGallery>
   {prototypeOnly.map(name => (
+    <IconItem key={name} name={name}><IconPair name={name} /></IconItem>
+  ))}
+</IconGallery>
+
+## In the code, not in Figma
+
+The components and the back office import these; Figma doesn't name them yet. `npm run icons:in-use` refreshes the list.
+
+<IconGallery>
+  {codeOnly.map(name => (
     <IconItem key={name} name={name}><IconPair name={name} /></IconItem>
   ))}
 </IconGallery>
