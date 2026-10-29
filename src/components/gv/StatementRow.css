@@ -1,0 +1,51 @@
+@import '../theme.css';
+
+.gv-statement-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-16);
+  width: 100%;
+}
+
+.gv-statement-row__statement {
+  flex: 1 1 430px;
+  min-width: 0;
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gv-statement-row__bar {
+  flex: 0 0 200px;
+  display: flex;
+  height: 8px;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-pill);
+  overflow: hidden;
+}
+
+.gv-statement-row__bar-segment {
+  display: block;
+  height: 100%;
+
+  &[data-kind='agree'] {
+    background: var(--gv-chart-agree);
+  }
+
+  &[data-kind='disagree'] {
+    background: var(--gv-chart-disagree);
+  }
+
+  &[data-kind='pass'] {
+    background: var(--gv-chart-pass);
+  }
+}
+
+.gv-statement-row__value {
+  flex: 0 0 72px;
+  text-align: right;
+  font: var(--gv-type-small-strong);
+  color: var(--gv-text-secondary);
+}
