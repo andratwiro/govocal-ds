@@ -60,6 +60,12 @@ export {
 export {ListHeaderCell, type ListHeaderCellProps} from './components/gv/ListHeaderCell';
 export {ListRow, type ListRowSelect, type ListRowProps} from './components/gv/ListRow';
 export {
+  MapView, MapPin, MapCard, MapOverlay, MapChip, MapLegend, maplibreEngine, OPENFREEMAP_POSITRON, type MapViewProps,
+  type MapItem, type MapTone, type MapPinProps, type MapCardProps, type MapOverlayProps, type MapChipProps,
+  type MapLegendItem, type MapLegendProps, type LatLng, type MapEngine, type MapEngineEvent, type MapEngineFactory,
+  type MapEngineOptions
+} from './components/gv/MapView';
+export {
   PropertyList, PropertyListItem, type PropertyListProps, type PropertyListItemProps
 } from './components/gv/PropertyList';
 export {ReactionCounts, type ReactionCountsProps} from './components/gv/ReactionCounts';

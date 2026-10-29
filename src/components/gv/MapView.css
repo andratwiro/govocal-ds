@@ -1,0 +1,412 @@
+@import '../theme.css';
+
+/* Map (the prototype's Manage map view `.pj-mgmap` and Configure map `.pj-mapstage`). The tiles are the engine's;
+   everything on them is drawn here from tokens: pins, the open pin's card, the zoom buttons, overlays, the credits.
+   The root fills the height the page gives it (240 at the least, until layout size tokens exist). The pins sit in
+   screen pixels (a map is not mirrored right to left); the chrome around them follows the reading direction. */
+.gv-map {
+  position: relative;
+  isolation: isolate;
+  /* clip, not hidden: focus moving to a pin or the card must never scroll the map's layers out of line. */
+  overflow: clip;
+  container-type: inline-size;
+  box-sizing: border-box;
+  min-height: 240px; /* raw: no layout size token yet (as Tile grid's widths) */
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-tertiary);
+  font-family: var(--gv-font-family);
+  color: var(--gv-text-primary);
+}
+
+/* Two classes: MapLibre's own sheet (loaded with the engine, later) makes its container `position: relative`. */
+.gv-map > .gv-map__canvas {
+  position: absolute;
+  inset: 0;
+
+  canvas:focus-visible {
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
+  }
+}
+
+/* Where people can add a point (onMapPress), the map says so with its cursor. */
+.gv-map[data-pressable] .gv-map__canvas .maplibregl-canvas-container.maplibregl-interactive {
+  cursor: crosshair;
+}
+
+.gv-map__message {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: var(--gv-space-24);
+  font: var(--gv-type-ui);
+  color: var(--gv-text-secondary);
+  text-align: center;
+}
+
+/* ── Pins ── Each marker is a point (0 × 0) the Map moves to its place; the pin centres on it, the card hangs off it.
+   The layer makes no stacking context, so an open pin's card can rise above the overlays. */
+.gv-map__pins {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.gv-map[data-status='loading'] .gv-map__pins,
+.gv-map[data-status='error'] .gv-map__pins {
+  visibility: hidden;
+}
+
+.gv-map__marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 0;
+  height: 0;
+
+  &[data-outside] {
+    visibility: hidden;
+  }
+
+  &:has(.gv-map-pin[data-hovered]),
+  &[data-hot] {
+    z-index: 2;
+  }
+
+  &[data-selected] {
+    z-index: 5;
+  }
+
+  > .gv-map-pin {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+  }
+}
+
+/* A pin: a 24 hit area round a 14 dot in its tone with a white ring; hot (hovered here or from the list): 18, near
+   black; open: 18 in the accent with a wider ring. A cluster: a 28 disc with its count. */
+.gv-map-pin {
+  --gv-map-pin-fill: var(--gv-icon-tertiary);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--gv-size-control-24);
+  height: var(--gv-size-control-24);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--gv-radius-full);
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+
+  &[data-tone='info'] {
+    --gv-map-pin-fill: var(--gv-icon-info);
+  }
+
+  &[data-tone='success'] {
+    --gv-map-pin-fill: var(--gv-icon-success);
+  }
+
+  &[data-tone='warning'] {
+    --gv-map-pin-fill: var(--gv-icon-warning);
+  }
+
+  &[data-tone='danger'] {
+    --gv-map-pin-fill: var(--gv-surface-danger-strong);
+  }
+
+  &[data-tone='ai'] {
+    --gv-map-pin-fill: var(--gv-surface-accent-strong);
+  }
+
+  &[data-focus-visible] {
+    outline: var(--gv-focus-ring);
+    outline-offset: 0;
+  }
+}
+
+.gv-map-pin__dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--gv-size-icon-14);
+  height: var(--gv-size-icon-14);
+  border: 2px solid var(--gv-border-inverse);
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-map-pin-fill);
+  box-shadow: var(--gv-shadow-raised);
+  transition:
+    width var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+    height var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+    background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+}
+
+.gv-map-pin[data-hovered] .gv-map-pin__dot,
+.gv-map-pin[data-highlighted] .gv-map-pin__dot {
+  width: var(--gv-size-icon-18);
+  height: var(--gv-size-icon-18);
+  background: var(--gv-icon-primary);
+}
+
+.gv-map-pin[data-selected] .gv-map-pin__dot {
+  width: var(--gv-size-icon-18);
+  height: var(--gv-size-icon-18);
+  border-width: 3px;
+  background: var(--gv-border-selected);
+}
+
+.gv-map-pin[data-cluster] {
+  width: var(--gv-size-control-28);
+  height: var(--gv-size-control-28);
+
+  .gv-map-pin__dot {
+    width: var(--gv-size-control-28);
+    height: var(--gv-size-control-28);
+    background: var(--gv-icon-secondary);
+    font: var(--gv-type-small-strong);
+    color: var(--gv-text-inverse);
+  }
+
+  &[data-hovered] .gv-map-pin__dot {
+    width: var(--gv-size-control-28);
+    height: var(--gv-size-control-28);
+  }
+}
+
+/* The open pin's card: above the pin (below it near the top edge), slid sideways to stay inside the map. */
+.gv-map__card {
+  position: absolute;
+  left: 0;
+  width: 280px; /* raw: no layout size token yet */
+  max-width: calc(100cqw - 2 * var(--gv-space-12));
+  transform: translateX(calc(-50% + var(--gv-map-card-dx, 0px)));
+  bottom: calc(var(--gv-size-control-24) / 2 + var(--gv-space-12));
+  pointer-events: auto;
+
+  &[data-placement='bottom'] {
+    top: calc(var(--gv-size-control-24) / 2 + var(--gv-space-12));
+    bottom: auto;
+  }
+}
+
+/* ── Parts ── */
+.gv-map-card {
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 1px solid var(--gv-border-subtle);
+  border-radius: var(--gv-radius-12);
+  background: var(--gv-surface-panel);
+  box-shadow: var(--gv-shadow-overlay);
+  font-family: var(--gv-font-family);
+}
+
+.gv-map-card__media {
+  > img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    object-fit: cover;
+  }
+}
+
+.gv-map-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-4);
+  padding: var(--gv-space-12) var(--gv-space-16);
+}
+
+.gv-map-card__title {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  font: var(--gv-type-body);
+  color: var(--gv-text-primary);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.gv-map-card__meta {
+  margin: 0;
+  font: var(--gv-type-ui);
+  color: var(--gv-text-secondary);
+}
+
+.gv-map-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gv-space-8);
+  margin-block-start: var(--gv-space-8);
+}
+
+/* An overlay in a corner, 12 in from the edges. Top-start leaves room for the zoom buttons; top-end sits under
+   them; bottom-end sits above the credits line. */
+.gv-map-overlay {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gv-space-8);
+  max-width: calc(100% - 2 * var(--gv-space-12));
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+
+  &[data-placement='top-start'] {
+    top: var(--gv-space-12);
+    inset-inline-start: var(--gv-space-12);
+    max-width: calc(100% - 3 * var(--gv-space-12) - var(--gv-size-control-28) - 2px);
+  }
+
+  &[data-placement='top-end'] {
+    top: calc(var(--gv-space-12) + 2 * var(--gv-size-control-28) + 3px + var(--gv-space-8));
+    inset-inline-end: var(--gv-space-12);
+    align-items: flex-end;
+  }
+
+  &[data-placement='bottom-start'] {
+    bottom: var(--gv-space-12);
+    inset-inline-start: var(--gv-space-12);
+  }
+
+  &[data-placement='bottom-end'] {
+    bottom: calc(var(--gv-space-12) + var(--gv-font-line-height-16));
+    inset-inline-end: var(--gv-space-12);
+    align-items: flex-end;
+  }
+}
+
+/* The map's white surface: the zoom buttons, a chip, the legend. */
+.gv-map__zoom,
+.gv-map-chip,
+.gv-map-legend {
+  box-sizing: border-box;
+  border: 1px solid var(--gv-border-control);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-panel);
+  box-shadow: var(--gv-shadow-raised);
+}
+
+.gv-map__zoom {
+  position: absolute;
+  z-index: 4;
+  top: var(--gv-space-12);
+  inset-inline-end: var(--gv-space-12);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  > .gv-icon-button {
+    border-radius: 0;
+
+    & + .gv-icon-button {
+      border-block-start: 1px solid var(--gv-border-subtle);
+    }
+
+    &[data-focus-visible] {
+      outline-offset: -2px;
+    }
+  }
+}
+
+.gv-map-chip {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: var(--gv-space-6) var(--gv-space-12);
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+  text-align: start;
+}
+
+button.gv-map-chip {
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+
+  &[data-hovered] {
+    border-color: var(--gv-border-control-hovered);
+  }
+
+  &[data-focus-visible] {
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
+  }
+}
+
+.gv-map-legend {
+  padding: var(--gv-space-8) var(--gv-space-12);
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+}
+
+.gv-map-legend__title {
+  margin: 0 0 var(--gv-space-4);
+  font: var(--gv-type-small-strong);
+  color: var(--gv-text-secondary);
+}
+
+.gv-map-legend__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gv-map-legend__row {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-4);
+
+  > .gv-map-pin {
+    width: var(--gv-size-icon-18);
+    height: var(--gv-size-icon-18);
+    cursor: default;
+  }
+}
+
+/* The tiles' credits (their licence asks for it): always shown, at the bottom end, on a light veil. */
+.gv-map__credits {
+  position: absolute;
+  z-index: 4;
+  bottom: 0;
+  inset-inline-end: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 var(--gv-space-6);
+  border-start-start-radius: var(--gv-radius-6);
+  background: color-mix(in srgb, var(--gv-surface-panel) 80%, transparent);
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+
+  a {
+    color: var(--gv-text-brand);
+    text-decoration: none;
+    border-radius: var(--gv-radius-2);
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: var(--gv-focus-ring);
+      outline-offset: 1px;
+    }
+  }
+}
