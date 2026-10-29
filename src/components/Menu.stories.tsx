@@ -32,3 +32,22 @@ export const Example: Story = args => (
 );
 
 Example.args = {};
+
+export const AllStates: StoryFn<typeof Menu> = () => (
+  <MenuTrigger isOpen>
+    <Button>Phase actions</Button>
+    <Menu>
+      <MenuItem>Duplicate phase</MenuItem>
+      <MenuItem>Move to timeline</MenuItem>
+      <SubmenuTrigger>
+        <MenuItem>Share</MenuItem>
+        <Menu>
+          <MenuItem>Copy link</MenuItem>
+          <MenuItem>Invite by email</MenuItem>
+        </Menu>
+      </SubmenuTrigger>
+      <MenuItem isDisabled>Archive</MenuItem>
+      <MenuItem>Delete phase</MenuItem>
+    </Menu>
+  </MenuTrigger>
+);
