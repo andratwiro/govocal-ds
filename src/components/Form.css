@@ -32,18 +32,21 @@
   }
 }
 
+/* Field label: UI strong, primary, 8 above the field. */
 .react-aria-Label {
   display: block;
-  font: var(--font-size) var(--gv-font-family);
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
   color: var(--text-color);
   margin-bottom: var(--spacing-2);
-  font-weight: 500;
   cursor: default;
 }
 
+/* Help and error under a field: Small, 4 below it (help in the secondary grey, as the prototype's .pjp-help). */
 .react-aria-FieldError {
   display: block;
-  font: var(--font-size-sm) var(--gv-font-family);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
   color: var(--invalid-color);
   margin-top: var(--spacing-1);
   contain: inline-size;
@@ -51,7 +54,9 @@
 
 .field-description {
   display: block;
-  font: var(--font-size-sm) var(--gv-font-family);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
   margin-top: var(--spacing-1);
   contain: inline-size;
 
@@ -60,21 +65,25 @@
   }
 }
 
+/* The button at the end of a field (ComboBox, DatePicker, DateRangePicker): a quiet 24 square with a 16 icon in
+   the default icon grey, like the Select trigger's chevron; it greys in on hover. */
 .field-Button {
-  background: var(--tint-200);
-  color: var(--tint-1400);
+  background: transparent;
+  color: var(--gv-icon-default);
   forced-color-adjust: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--gv-radius-6);
   border: none;
+  box-shadow: none;
   margin-left: calc(-1 * var(--spacing-8) + 4px);
   height: calc(100% - 8px);
   aspect-ratio: 1/1;
   padding: 0;
   display: flex;
+  flex: none;
   align-items: center;
   justify-content: center;
-  transition-property: scale, background;
-  transition-duration: 200ms;
+  transition-property: background, color;
+  transition-duration: 150ms;
   -webkit-tap-highlight-color: transparent;
 
   svg {
@@ -83,17 +92,13 @@
   }
 
   &:where([data-hovered], [data-pressed]) {
-    background: var(--tint-300);
-    color: var(--tint-1200);
+    background: var(--gv-surface-hover-strong);
+    color: var(--gv-icon-strong);
   }
 
   @media (forced-colors: active) {
     background: Highlight;
     color: HighlightText;
-  }
-
-  &[data-pressed] {
-    scale: 0.9;
   }
 
   &[data-focus-visible] {
