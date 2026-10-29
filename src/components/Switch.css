@@ -16,79 +16,89 @@
   /* This is needed so the HiddenInput is positioned correctly */
   position: relative;
   align-items: center;
-  gap: var(--spacing-2);
-  font: var(--font-size) var(--gv-font-family);
-  color: var(--text-color);
+  gap: var(--gv-space-8);
+  font: var(--gv-type-ui) var(--gv-font-family);
+  color: var(--gv-text-primary);
   forced-color-adjust: none;
   -webkit-tap-highlight-color: transparent;
 
+  /* Tali's toggle (augur-design.html .gv-toggle): 36x20 track, 2px padding, 16px knob,
+     off = slate-300 (-> --gv-control-toggle-off is near-white so we use the foundation
+     step the prototype actually paints the off-track with), on = dark neutral track. */
   .track {
-    --height: calc(var(--spacing) * 5.5);
+    --height: 20px;
     height: var(--height);
-    width: calc(var(--spacing) * 9.5);
-    border-radius: var(--height);
-    transition: all 200ms;
+    width: 36px;
+    box-sizing: border-box;
+    padding: 2px;
+    border-radius: var(--gv-radius-full);
+    background: var(--gv-color-slate-300);
+    transition: background 200ms;
     scale: 1;
 
     .handle {
       display: block;
-      height: 100%;
+      height: 16px;
+      width: 16px;
       aspect-ratio: 1;
-      border-radius: var(--height);
+      border-radius: var(--gv-radius-full);
+      background: var(--gv-control-knob);
       transition: all 200ms;
       transform-origin: 0 50%;
       will-change: transform;
-      --indicator-color: var(--tint-600);
     }
+  }
+
+  &:hover .track {
+    background: var(--gv-color-slate-400);
   }
 
   &[data-pressed] .handle {
-    scale: 1.2 1;
-    border-radius: var(--height) / calc(var(--height) * 1.2);
-    background: var(--button-background-pressed);
+    scale: 1.1 1;
   }
 
-  &[data-invalid] {
-    .handle {
-      --indicator-color: var(--invalid-color);
-    }
-
-    &[data-pressed] .handle {
-      background: transparent;
-    }
+  &[data-invalid] .track {
+    background: var(--gv-state-notification);
   }
 
   &[data-selected] {
-    --border-color: var(--highlight-background-pressed);
+    .track {
+      background: var(--gv-control-toggle-on);
+    }
+
+    &:hover .track {
+      background: var(--gv-control-toggle-on);
+    }
+
     .handle {
-      transform: translateX(var(--spacing-4));
-      transform-origin: var(--spacing-9) 50%;
+      transform: translateX(16px);
+      transform-origin: 16px 50%;
       background: var(--gv-control-knob);
-      box-shadow: inset 0 0 0 1px var(--border-color);
 
       @media (forced-colors: active) {
         background: HighlightText;
-        box-shadow: inset 0 0 0 1px Highlight;
       }
     }
   }
 
   &[data-focus-visible] .track {
-    outline: 2px solid var(--focus-ring-color);
+    outline: 2px solid var(--gv-border-selected);
     outline-offset: 2px;
   }
 
   &[data-disabled] {
-    color: var(--text-color-disabled);
-    --border-color: var(--border-color-disabled);
+    color: var(--gv-text-quiet);
 
     .track {
-      box-shadow: 0 0 0 1px var(--border-color);
+      opacity: 0.5;
     }
 
-    &[data-selected] .handle {
-      background: var(--gray-200);
-      box-shadow: none;
+    &:hover .track {
+      background: var(--gv-color-slate-300);
+    }
+
+    &[data-selected]:hover .track {
+      background: var(--gv-control-toggle-on);
     }
   }
 }
