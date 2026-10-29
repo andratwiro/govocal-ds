@@ -4,6 +4,36 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Public API and prop names (29 Oct 2026, evening)
+
+The architecture review's API pass: two entry points, the className contract and one naming convention (docs/API.md).
+
+**Entry points**
+- Starter parts and Components side by side in one barrel vs starter parts hidden → **`govocal-ds` for Components and Patterns, `govocal-ds/base` for the starter parts no Component covers yet** → a page reaches for a Component first; the fallback stays importable and visible.
+- Breadcrumbs, Checkbox, Drop zone and Modal each a starter part and a Component under one name → **the Component takes the name; the starter part is in neither entry** → one name, one part.
+- Heading, Text, Header, Keyboard and Separator re-exported by Menu, List box, Grid list, Dialog, Sheet and Drop zone → **one home each (Content, Separator), exported once** → a second path to the same part is an alias.
+- The back office's aliases written by hand in Vite, Storybook and tsconfig → **Vite and Storybook compute theirs from `package.json` `exports`** → one list to change.
+- Deep imports in the back office → **`npm run api:imports` rewrites them; `theme.css` imports go (each part's CSS imports it), `tokens.css` becomes `govocal-ds/tokens.css`** → one road for every consumer, re-runnable.
+- The phase page's story pictures (no entry exports them) → **left as the one borrowed path the guard allows** → story data is not system API; the back office gets its own pictures.
+
+**Props**
+- Popover `hideArrow`, Modal `padBody` (true = padded) → **`showArrow` (default true), `isFlush` (default false)** → no `hideX`; Panel and Dialog already said `isFlush`.
+- A chart series' `tone` (a palette slot) and IconButton's `tone` (Figma's name for an icon's weight) → **`color` (a ChartColor) and `emphasis`** → `tone` means a colour intent and nothing else; Figma keeps its property name.
+- Button `tone="default"` → **`neutral`** → the one tone set's word.
+- ListHeaderCell `variant` (label, number, add column) and VolunteeringRow `variant` (the tab it sits in) → **`kind` and `layout`** → neither is a fill: one says what it shows, the other where it sits.
+- Skeleton `shape`, DashboardCard `type`, StatTile `type` → **`variant`, `kind`, `layout`**, Figma's values kept → the three axes the convention names.
+- Breadcrumbs `level="phase"` and `phaseState` (Go Vocal words on a Component every back-office page uses) → **`variant="editor"` and `status`** → generalised, not moved: a page header needs it everywhere.
+- ProjectHeader `level` project | phase-draft | phase-live beside `publishState` → **`level` project | phase plus one `status`** → one status axis; phase stays, it is a Pattern.
+- Select's `size` open to every look → **a union: pill 22 | 28, field and quiet 32 | 36** → a pill at 36 no longer compiles. SegmentedControl default | small → **36 | 30**. Link keeps small | medium → a type size, not a height.
+- Modal `size`, DropZone `size`, Banner `compact`, EmptyState `size` → **`width`, `density`, `density="compact"`, `layout`** → a size is a height; the rest say which preset they are.
+- SectionLabel `level` 1–6 → **`headingLevel` 2–6** → a page owns its h1.
+- OptionList and TagPicker `options` / `selected`, controlled only → **`items` / `value`, plus `defaultValue`** → they keep their own value when not controlled, as a field does. Pagination gains `defaultPage` beside `page`.
+- Banner, Empty state and Dashboard card `action` → **`actions`** (a slot, as Panel and Card); Phone preview keeps `action` → it is one data object for the phone's own pill, not a slot.
+- Banner `type="info-link"` (the info tone plus where the link sits) → **`linkPlacement="inline"`**, default trailing → one prop per meaning.
+- Dashboard ranking `votes` → **`count`** (`unit` still says votes by default) → the card counts any option; voting is the page's word.
+- ReviewStatus and DashboardCard's Figma kinds stay Components though their values speak Go Vocal → **kept** → Card composes the first, three back-office screens the second, and a Component can't build on a Pattern.
+- NotificationRowList painted with the bell list's class → **its own `gv-notification-row-list`** → both lists on one page took one look.
+
 ## Back office redesign on the current components (29 Oct 2026)
 
 **Dashboard**
