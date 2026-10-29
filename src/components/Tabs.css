@@ -19,6 +19,9 @@
   }
 }
 
+/* The prototype's tabs (augur-design.html .pj-pa-col .pj-mtab): UI regular in the secondary grey, the chosen one
+   UI strong primary on a 2px selected-blue line; 4 apart, padding 12 10, a 1px divider under the list. Side tabs
+   (.pj-mtabs--side): rows of 8 12, radius 8, slate text; hover a light wash, the chosen one the card grey, no line. */
 .react-aria-TabList {
   display: flex;
 
@@ -27,7 +30,8 @@
   }
 
   &[data-orientation='horizontal'] {
-    border-bottom: 0.5px solid var(--border-color);
+    gap: var(--gv-space-4);
+    border-bottom: 1px solid var(--gv-divider-strong);
     max-width: 100%;
     overflow-x: auto;
     overflow-y: clip;
@@ -35,48 +39,49 @@
 
     .react-aria-SelectionIndicator {
       left: 0;
-      bottom: 0px;
+      bottom: 0;
       width: 100%;
-      height: 3px;
+      height: 2px;
       transition-property: translate, width;
     }
   }
 
   &[data-orientation='vertical'] {
     flex-direction: column;
-    border-inline-end: 1px solid var(--border-color);
+    gap: var(--gv-space-3);
+    padding-inline-end: var(--gv-space-12);
+    border-inline-end: 1px solid var(--gv-divider-strong);
 
     .react-aria-SelectionIndicator {
-      top: 0;
-      right: 0px;
-      height: 100%;
-      width: 3px;
-      transition-property: translate, height;
+      display: none;
     }
   }
 }
 
 .react-aria-Tab {
-  padding: 10px;
+  padding: var(--gv-space-12) var(--gv-space-10);
   cursor: default;
   outline: none;
   position: relative;
-  font: var(--font-size) var(--gv-font-family);
-  color: var(--text-color);
-  transition: color 200ms;
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-secondary);
+  white-space: nowrap;
+  transition:
+    color 120ms,
+    background-color 120ms;
   --border-color: transparent;
   forced-color-adjust: none;
   -webkit-tap-highlight-color: transparent;
 
-  &[data-hovered],
-  &[data-focus-visible] {
-    color: var(--text-color-hover);
+  &[data-hovered] {
+    color: var(--gv-text-primary);
   }
 
   .react-aria-SelectionIndicator {
     position: absolute;
     transition-duration: 200ms;
-    border-radius: 3px;
+    border-radius: 0;
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -84,8 +89,9 @@
   }
 
   &[data-selected] {
-    --border-color: var(--highlight-background);
-    color: var(--text-color-hover);
+    --border-color: var(--gv-border-selected);
+    color: var(--gv-text-primary);
+    font-weight: var(--gv-type-ui-strong-weight);
   }
 
   &[data-disabled] {
@@ -96,14 +102,30 @@
   }
 
   &[data-focus-visible] {
-    border-radius: calc(var(--radius-sm) + 8px);
+    border-radius: var(--gv-radius-8);
     outline: 2px solid var(--focus-ring-color);
-    outline-offset: -8px;
+    outline-offset: -2px;
   }
 
   &[href] {
     text-decoration: none;
     cursor: pointer;
+  }
+
+  [data-orientation='vertical'] > & {
+    padding: var(--gv-space-8) var(--gv-space-12);
+    border-radius: var(--gv-radius-8);
+    color: var(--gv-color-slate-750);
+
+    &[data-hovered] {
+      color: var(--gv-text-primary);
+      background: var(--gv-surface-hover);
+    }
+
+    &[data-selected] {
+      color: var(--gv-text-primary);
+      background: var(--gv-border-card);
+    }
   }
 }
 
