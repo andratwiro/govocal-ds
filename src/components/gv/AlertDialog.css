@@ -84,11 +84,11 @@
   color: var(--gv-color-red-500);
 }
 
-.gv-alert-dialog__impact-row[data-tone='caution'] .gv-alert-dialog__impact-icon {
+.gv-alert-dialog__impact-row[data-tone='warning'] .gv-alert-dialog__impact-icon {
   color: var(--gv-text-secondary);
 }
 
-.gv-alert-dialog__impact-row[data-tone='safe'] .gv-alert-dialog__impact-icon {
+.gv-alert-dialog__impact-row[data-tone='success'] .gv-alert-dialog__impact-icon {
   color: var(--gv-text-reviewed);
 }
 

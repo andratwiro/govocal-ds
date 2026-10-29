@@ -1,5 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import type {ReactNode} from 'react';
+import {useState, type ReactNode} from 'react';
 import {DialogTrigger} from 'react-aria-components';
 import {Button} from '../Button';
 import {AlertDialog} from './AlertDialog';
@@ -41,14 +41,14 @@ function ConfirmDialog() {
   );
 }
 
-function DestructiveDialog() {
+function DestructiveDialog({onCancel = () => {}, onConfirm = () => {}}: {onCancel?: () => void; onConfirm?: () => void}) {
   return (
     <AlertDialog
       tone="danger"
       title="Delete this group?"
       confirmLabel="Delete group"
-      onCancel={() => {}}
-      onConfirm={() => {}}>
+      onCancel={onCancel}
+      onConfirm={onConfirm}>
       <p>Managers in this group keep their account, but lose the permissions it grants. This can't be undone.</p>
     </AlertDialog>
   );
@@ -81,25 +81,34 @@ function ImpactListDialog() {
       onConfirm={() => {}}
       impact={[
         {tone: 'danger', title: 'Delete a question', description: "You'll lose response data linked to that question in all phases using the same form"},
-        {tone: 'caution', title: 'Add or reorder questions', description: 'Your response data may be inaccurate'},
-        {tone: 'safe', title: 'Edit text', description: "Fixing a typo? It won't affect your response data"}
+        {tone: 'warning', title: 'Add or reorder questions', description: 'Your response data may be inaccurate'},
+        {tone: 'success', title: 'Edit text', description: "Fixing a typo? It won't affect your response data"}
       ]}>
       <p>Ideation, voting, and budgeting phases in this project share a single input form. Any edits you make here will apply to all of them.</p>
     </AlertDialog>
   );
 }
 
-/** One trigger per dialog: press one to open it. */
+/** One trigger per dialog: press one to open it. The line under them says how Destructive last closed: Cancel, Esc
+ * and a click outside call `onCancel`, the confirm calls `onConfirm`; both close it. */
 export const AllVariants: Story = {
   parameters: {docs: {story: {inline: true}}},
-  render: () => (
-    <div style={{display: 'flex', gap: 8, flexWrap: 'wrap'}}>
-      <Open label="Confirm" open={false}><ConfirmDialog /></Open>
-      <Open label="Destructive" open={false}><DestructiveDialog /></Open>
-      <Open label="Type to confirm" open={false}><TypeToConfirmDialog /></Open>
-      <Open label="With impact list" open={false}><ImpactListDialog /></Open>
-    </div>
-  )
+  render: function AllVariants() {
+    const [said, setSaid] = useState('');
+    return (
+      <div style={{display: 'grid', gap: 'var(--gv-space-12)'}}>
+        <div style={{display: 'flex', gap: 'var(--gv-space-8)', flexWrap: 'wrap'}}>
+          <Open label="Confirm" open={false}><ConfirmDialog /></Open>
+          <Open label="Destructive" open={false}>
+            <DestructiveDialog onCancel={() => setSaid('onCancel')} onConfirm={() => setSaid('onConfirm')} />
+          </Open>
+          <Open label="Type to confirm" open={false}><TypeToConfirmDialog /></Open>
+          <Open label="With impact list" open={false}><ImpactListDialog /></Open>
+        </div>
+        <output style={{font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>{said && `Last: ${said}`}</output>
+      </div>
+    );
+  }
 };
 
 /** A plain confirm, no danger, no icon ("Download the results (PDF)"). */

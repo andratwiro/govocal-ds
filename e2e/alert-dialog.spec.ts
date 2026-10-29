@@ -40,3 +40,23 @@ test('with impact list: a row per consequence, tone icon then title then descrip
   await expect(rows.nth(0)).toContainText('Delete a question');
   await expect(rows.nth(2)).toContainText('Edit text');
 });
+
+test('both buttons close it: Esc and Cancel call onCancel, the confirm calls onConfirm', async ({page}) => {
+  await page.goto(story('components-overlays-alert-dialog--all-variants'));
+  const trigger = page.getByRole('button', {name: 'Destructive', exact: true});
+  const dialog = page.getByRole('alertdialog', {name: 'Delete this group?'});
+  const said = page.locator('output');
+  await trigger.click();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(said).toHaveText('Last: onCancel');
+  await trigger.click();
+  await dialog.getByRole('button', {name: 'Delete group'}).click();
+  await expect(dialog).toBeHidden();
+  await expect(said).toHaveText('Last: onConfirm');
+  await trigger.click();
+  await dialog.getByRole('button', {name: 'Cancel'}).click();
+  await expect(dialog).toBeHidden();
+  await expect(said).toHaveText('Last: onCancel');
+  await expect(trigger).toBeFocused();
+});
