@@ -1,11 +1,31 @@
 import {Meta} from '@storybook/addon-docs/blocks';
-import {Tokens} from './TokenBlocks';
+import {Renamed, Tokens} from './TokenBlocks';
 
 <Meta title="Foundations/Radius" />
 
 # Radius
 
-Corner radii as Figma draws them, one `--gv-radius-*` per value, from the Figma Foundations page. Right-click a row
-to see which components use it.
+**In Figma:** the `Tokens` collection, group `radius/`, drawn on the Foundations page's Radius frame.
+
+Corner radii, one `--gv-radius-*` per value: **2 · 4 · 6 · 8 · 10 · 12 · 14 · 22 · full**.
+
+## Which radius
+
+Most used first:
+
+- **8**: controls: buttons, fields, selects, menus and their items.
+- **full**: pills, avatars, dots, switches.
+- **4**: small marks inside a control or a chart: a checkbox, a tag, a bar, a tooltip.
+- **12**: cards, panels, popovers, banners and toasts.
+- **6**: rows and small controls: list rows, breadcrumbs, a segmented control, chips.
+- **10**: an icon badge, a drop zone, a framed block inside a panel.
+- **14**: what floats over the page: a modal, a sheet, the side panel.
+- **2**: a legend's or a chart's tiny marks; **22**: the phone preview's frame.
+
+## Snapped
+
+3 → 4, 5 → 6, 7 → 8, 9 → 8 (`npm run tokens:rename`).
+
+<Renamed match="^--gv-radius-" />
 
 <Tokens category="Radius @presenter BorderRadius" />

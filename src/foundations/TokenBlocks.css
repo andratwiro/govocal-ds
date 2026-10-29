@@ -56,7 +56,11 @@
 
 /* Token names keep the browser's monospace face; size and colour come from the tokens. */
 .gv-tokens-role__spec code,
-.gv-tokens-shadow code {
+.gv-tokens-shadow code,
+.gv-tokens-swatch code,
+.gv-tokens-list code,
+.gv-tokens-states code,
+.gv-tokens-renamed code {
   font-size: var(--gv-font-size-12);
   line-height: var(--gv-font-line-height-16);
   font-weight: var(--gv-font-weight-regular);
@@ -69,25 +73,25 @@
   color: var(--gv-text-secondary);
 }
 
-.gv-tokens-role__users,
-.gv-tokens-role__users p {
+.gv-tokens-users,
+.gv-tokens-users p {
   margin: 0;
   font: var(--gv-type-small);
   color: var(--gv-text-secondary);
 }
 
-.gv-tokens-role__users summary {
+.gv-tokens-users summary {
   inline-size: fit-content;
   cursor: pointer;
 }
 
-.gv-tokens-role__users summary:focus-visible {
+.gv-tokens-users summary:focus-visible {
   outline: var(--gv-focus-ring);
   outline-offset: var(--gv-focus-ring-offset);
   border-radius: var(--gv-radius-2);
 }
 
-.gv-tokens-role__users p {
+.gv-tokens-users p {
   margin-block-start: var(--gv-space-4);
   max-inline-size: 48rem;
 }
@@ -106,7 +110,9 @@
 
 .gv-tokens-shadow {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--gv-space-4);
   block-size: var(--gv-space-104);
   padding: var(--gv-space-12);
   background: var(--gv-surface-panel);
@@ -171,4 +177,223 @@
   font: var(--gv-type-small-strong);
   color: var(--gv-text-inverse);
   overflow: hidden;
+}
+
+.gv-tokens-shadow p {
+  margin: 0;
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+}
+
+/* Colour: a swatch beside its name, primitive, Figma name, description and users. */
+.gv-tokens-swatch {
+  display: grid;
+  grid-template-columns: var(--gv-size-control-32) minmax(0, 1fr);
+  gap: var(--gv-space-8);
+  align-items: start;
+}
+
+.gv-tokens-swatch__chip {
+  block-size: var(--gv-size-control-32);
+  border: 1px solid var(--gv-border-default);
+  border-radius: var(--gv-radius-6);
+}
+
+.gv-tokens-swatch__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-2);
+  min-inline-size: 0;
+}
+
+.gv-tokens-swatch__text code {
+  overflow-wrap: anywhere;
+  color: var(--gv-text-primary);
+}
+
+.gv-tokens-swatch__meta,
+.gv-tokens-swatch__text p {
+  margin: 0;
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+}
+
+/* The intents: a row per role, a column per property. */
+.gv-tokens-intents {
+  margin: var(--gv-space-16) 0 var(--gv-space-32);
+  border-block-start: 1px solid var(--gv-border-default);
+}
+
+.gv-tokens-intents__row {
+  display: grid;
+  grid-template-columns: 6rem repeat(5, minmax(0, 1fr));
+  gap: var(--gv-space-16);
+  padding-block: var(--gv-space-12);
+  border-block-end: 1px solid var(--gv-border-subtle);
+}
+
+.gv-tokens-intents__head {
+  font: var(--gv-type-small-strong);
+  color: var(--gv-text-secondary);
+}
+
+.gv-tokens-intents__role {
+  font: var(--gv-type-ui-strong);
+  color: var(--gv-text-primary);
+}
+
+.gv-tokens-intents__cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-12);
+  min-inline-size: 0;
+}
+
+/* The neutral ladders, side by side. */
+.gv-tokens-ladders {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--gv-space-24);
+  margin: var(--gv-space-16) 0 var(--gv-space-32);
+}
+
+.gv-tokens-ladder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-8);
+}
+
+.gv-tokens-ladder h4 {
+  margin: 0;
+  font: var(--gv-type-ui-strong);
+  color: var(--gv-text-primary);
+}
+
+.gv-tokens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: var(--gv-space-16);
+  margin: var(--gv-space-16) 0 var(--gv-space-32);
+}
+
+/* A plain list of tokens: name and value, then what it is for. */
+.gv-tokens-list {
+  margin: var(--gv-space-16) 0 var(--gv-space-32);
+  border-block-start: 1px solid var(--gv-border-default);
+}
+
+.gv-tokens-list > div {
+  padding-block: var(--gv-space-8);
+  border-block-end: 1px solid var(--gv-border-subtle);
+}
+
+.gv-tokens-list dt {
+  font: var(--gv-type-ui);
+  color: var(--gv-text-secondary);
+}
+
+.gv-tokens-list dt code {
+  color: var(--gv-text-primary);
+}
+
+.gv-tokens-list dd {
+  margin: var(--gv-space-2) 0 0;
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+}
+
+/* The renames, as a table. */
+.gv-tokens-renamed {
+  inline-size: 100%;
+  margin: var(--gv-space-16) 0 var(--gv-space-32);
+  border-collapse: collapse;
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+}
+
+.gv-tokens-renamed th {
+  text-align: start;
+  font: var(--gv-type-small-strong);
+  color: var(--gv-text-primary);
+}
+
+.gv-tokens-renamed th,
+.gv-tokens-renamed td {
+  padding: var(--gv-space-6) var(--gv-space-8);
+  border-block-end: 1px solid var(--gv-border-subtle);
+  vertical-align: top;
+}
+
+.gv-tokens-renamed code {
+  overflow-wrap: anywhere;
+  color: var(--gv-text-primary);
+}
+
+/* Focus and states: the ring drawn, still, on a button, a field and a row; disabled at 45%. */
+.gv-tokens-states {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--gv-space-24);
+  margin: var(--gv-space-16) 0 var(--gv-space-32);
+  padding: var(--gv-space-24);
+  background: var(--gv-surface-tertiary);
+  border-radius: var(--gv-radius-12);
+}
+
+.gv-tokens-states figure {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gv-space-12);
+  margin: 0;
+}
+
+.gv-tokens-states figcaption {
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+}
+
+.gv-tokens-state {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  block-size: var(--gv-size-control-36);
+  padding-inline: var(--gv-space-12);
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+}
+
+.gv-tokens-state--button {
+  background: var(--gv-surface-brand-strong);
+  border-radius: var(--gv-radius-8);
+  font: var(--gv-type-ui-strong);
+  color: var(--gv-text-inverse);
+}
+
+.gv-tokens-state--field {
+  inline-size: 100%;
+  background: var(--gv-surface-panel);
+  border: 1px solid var(--gv-border-control);
+  border-radius: var(--gv-radius-8);
+  color: var(--gv-text-placeholder);
+}
+
+.gv-tokens-state--row {
+  inline-size: 100%;
+  background: var(--gv-surface-panel);
+  border-block-end: 1px solid var(--gv-border-row);
+}
+
+.gv-tokens-state--focus {
+  outline: var(--gv-focus-ring);
+  outline-offset: var(--gv-focus-ring-offset);
+}
+
+.gv-tokens-state--focus-inset {
+  outline: var(--gv-focus-ring);
+  outline-offset: var(--gv-focus-ring-offset-inset);
+}
+
+.gv-tokens-state--disabled {
+  opacity: var(--gv-opacity-disabled);
 }

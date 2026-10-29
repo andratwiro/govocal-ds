@@ -16,7 +16,8 @@ const pages = [
   {id: 'foundations-spacing', first: '--gv-space-0', last: '--gv-space-104'},
   {id: 'foundations-radius', first: '--gv-radius-2', last: '--gv-radius-full'},
   {id: 'foundations-shadows', first: '--gv-shadow-raised-strong', last: '--gv-shadow-overlay'},
-  {id: 'foundations-size', first: '--gv-size-icon-12', last: '--gv-size-avatar-28'}
+  {id: 'foundations-size', first: '--gv-size-icon-12', last: '--gv-size-avatar-28'},
+  {id: 'foundations-focus-and-states', first: '--gv-opacity-disabled', last: '--gv-opacity-dimmed'}
 ];
 for (const {id, first, last} of pages) {
   test(`${id} shows its first token block whole, with no scroll box inside`, async ({page}) => {
@@ -28,14 +29,19 @@ for (const {id, first, last} of pages) {
   });
 }
 
-test('Colour lists every token group, and the focus ring Figma lacks', async ({page}) => {
+test('Colour shows the grammar, the intents, the ladders, what is Not in Figma and the renames', async ({page}) => {
   await page.goto(docs('foundations-colour'));
   // By id: a docs heading's accessible name also carries its "Copy heading URL" link.
-  for (const id of ['primitives', 'surface', 'text', 'border', 'icon', 'action', 'control', 'state', 'avatar',
-    'divider', 'chart', 'not-in-figma'])
+  for (const id of ['intents', 'neutral-ladders', 'surface', 'text', 'icon', 'border', 'side-nav', 'chart', 'not-in-figma',
+    'renamed', 'primitives-dont-paint-with-these'])
     await expect(page.locator(`:is(h2, h3)#${id}`)).toBeVisible();
-  await expect(page.getByText('--gv-action-primary', {exact: true}).first()).toBeVisible();
+  // The grammar's words, an intent's solid fill in its cell, the chart palette, an old name in the Renamed table.
+  await expect(page.getByRole('cell', {name: /focused/}).first()).toBeVisible();
+  await expect(page.locator('.gv-tokens-intents').getByText('--gv-surface-danger-strong', {exact: true})).toBeVisible();
   await expect(page.getByText('--gv-chart-terracotta', {exact: true}).first()).toBeVisible();
+  await expect(page.locator('.gv-tokens-renamed').getByText('--gv-action-primary', {exact: true})).toBeVisible();
+  // No old group is left on the page.
+  for (const id of ['action', 'control', 'state', 'avatar', 'divider']) await expect(page.locator(`#${id}`)).toHaveCount(0);
 });
 
 test('Typography draws each role in itself before the tables', async ({page}) => {
@@ -44,6 +50,8 @@ test('Typography draws each role in itself before the tables', async ({page}) =>
   await expect(stat).toContainText('28/32 Regular');
   await expect(stat.locator('.gv-tokens-role__sample')).toHaveCSS('font-size', '28px');
   await expect(page.locator('.gv-tokens-role')).toHaveCount(9);
+  // What a role is for is its token's description, not a list in the page.
+  await expect(stat.locator('.gv-tokens-role__use')).toContainText('Big numbers');
   await expect(page.getByText('--gv-font-weight-regular', {exact: true}).first()).toBeVisible();
 });
 
@@ -54,6 +62,16 @@ test('Size draws each size at its token, above its table', async ({page}) => {
   await expect(control.nth(3)).toHaveCSS('height', '36px');
   await expect(page.locator('.gv-tokens-sizes--icon svg').nth(2)).toHaveCSS('width', '16px');
   await expect(page.locator('.gv-tokens-sizes--avatar .gv-tokens-size__sample').last()).toHaveCSS('width', '28px');
+});
+
+test('Focus and states draws the ring on a button, a field and a row, and disabled at 45%', async ({page}) => {
+  await page.goto(docs('foundations-focus-and-states'));
+  const focused = page.locator('.gv-tokens-state--focus, .gv-tokens-state--focus-inset');
+  await expect(focused).toHaveCount(3);
+  for (const el of await focused.all()) await expect(el).toHaveCSS('outline-width', '2px');
+  await expect(page.locator('.gv-tokens-state--focus-inset')).toHaveCSS('outline-offset', '-2px');
+  await expect(page.locator('.gv-tokens-state--disabled')).toHaveCSS('opacity', '0.45');
+  await expect(page.getByText('--gv-layer-overlay', {exact: true})).toBeVisible();
 });
 
 test('Icons lists the Figma names, with no scroll box inside', async ({page}) => {
@@ -70,7 +88,8 @@ test('the sidebar has Foundations as its own section, in order', async ({page}) 
   const ids = await tree.locator('[data-item-id^="foundations-"]').evaluateAll(els =>
     els.map(el => el.getAttribute('data-item-id')));
   // The named pages first (.storybook/preview.tsx), then the rest alphabetically.
-  const order = ['colour', 'typography', 'spacing', 'radius', 'shadows', 'motion', 'icons', 'illustrations', 'size'];
+  const order = ['colour', 'typography', 'spacing', 'radius', 'shadows', 'motion', 'icons', 'illustrations',
+    'focus-and-states', 'size'];
   const pagesShown = ids.map(id => id!.replace(/^foundations-|--docs$/g, ''));
   expect(pagesShown).toEqual(order.filter(name => pagesShown.includes(name)));
   expect(pagesShown).toEqual(expect.arrayContaining(['colour', 'typography', 'spacing', 'radius', 'shadows', 'icons']));

@@ -1,11 +1,39 @@
 import {Meta} from '@storybook/addon-docs/blocks';
-import {Tokens} from './TokenBlocks';
+import {Renamed, Tokens} from './TokenBlocks';
 
 <Meta title="Foundations/Spacing" />
 
 # Spacing
 
-Gaps and paddings as Figma draws them, one `--gv-space-*` per value, from the Figma Foundations page. Right-click a
-row to see which components use it.
+**In Figma:** the `Tokens` collection, group `space/`, drawn on the Foundations page's Spacing frame. `space/40` and
+`space/64` are Not in Figma yet.
+
+Gaps, paddings and margins, one `--gv-space-*` per value, on a base of 4:
+**0 · 2 · 4 · 6 · 8 · 10 · 12 · 16 · 20 · 24 · 28 · 32 · 40 · 48 · 56 · 64 · 104**. A value off that ladder is no
+token: `tests/tokens-only.test.mjs` refuses it and names the steps.
+
+## Which step
+
+Most used first:
+
+- **8**: the gap between things that belong together: an icon and its label, a row's parts, a button group.
+- **16**: a card's or panel's padding, the gap between cards and between sections inside a panel.
+- **12**: a control's inline padding, a compact card's padding, the gap in a list of fields.
+- **4** and **6**: inside a control (a chip's padding, an icon to its count) and tight stacks of text.
+- **24**: a panel's or a page section's padding, the gap between groups.
+- **2** and **10**: a nudge inside a small control (a segmented control's track, a badge, a breadcrumb).
+- **20**, **28**, **32**: roomier panels and tables, an indent, the space above a section.
+- **40**, **48**, **56**, **64**, **104**: an empty state, page sections, a title field's room; 64 is unused so far.
+
+A 1px or 3px offset is not spacing: on a position (`top`, `left`, `inset`, `translate`, a `margin` that nudges a mark
+onto a line) write it raw. Padding, gap and radius never take one.
+
+## Snapped to base 4
+
+The steps code had that base 4 dropped, and where their uses went (`npm run tokens:rename`): 5 → 4, 7 → 8, 9 → 8,
+11 → 12, 14 → 16, 15 → 16, 18 → 16, 22 → 24, 25 → 24, 44 → 40. A 1 or 3 stays raw on a position and takes 2 or 4
+anywhere else.
+
+<Renamed match="^--gv-space-" />
 
 <Tokens category="Space @presenter Spacing" />

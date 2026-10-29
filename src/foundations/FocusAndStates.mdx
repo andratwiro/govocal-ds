@@ -1,0 +1,34 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import {FocusSpecimens, TokenList, Tokens} from './TokenBlocks';
+
+<Meta title="Foundations/Focus and states" />
+
+# Focus and states
+
+**In Figma:** the stroke widths are the `Tokens` collection's `border/width-1` and `border/width-2`; the focus ring,
+opacity and layers are **Not in Figma** yet, written by hand in `tokens/semantic.tokens.json`.
+
+## Focus ring
+
+Every focusable thing draws the same ring on `[data-focus-visible]`: `outline: var(--gv-focus-ring)`, outside the box
+with `--gv-focus-ring-offset`, or inside it with `--gv-focus-ring-offset-inset` for rows, tabs and cells that touch
+their neighbours. A hand-drawn ring fails `tests/tokens-only.test.mjs`. On a dark fill, where the navy would vanish,
+the ring keeps its width and takes a light colour: `var(--gv-border-width-2) solid var(--gv-border-inverse)` (the side
+nav has its own, `--gv-side-nav-border-focused`).
+
+<FocusSpecimens />
+
+<TokenList match="^--gv-(focus-ring|border-width)" />
+
+## Opacity
+
+Anything that can't be used is drawn at 45%; a dragged row at 60%; what steps back while another series is picked out
+at 40%. Any other opacity carries a `raw:` note saying why.
+
+<Tokens category="Opacity @presenter Opacity" />
+
+## Layers
+
+Three z-index layers for what sits over the page. Inside a component, 1 to 5 order its own parts and stay numbers.
+
+<TokenList match="^--gv-layer-" />
