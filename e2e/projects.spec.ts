@@ -19,6 +19,38 @@ test('projects follows the real admin: views, filters, a full project table', as
   await expect(page.getByRole('navigation', {name: 'Project pages'})).toBeVisible();
   await expect(page.getByText('8 projects', {exact: true})).toBeVisible();
   await expect(page.getByText('All projects have been loaded')).toHaveCount(0);
+  // The list is a Panel (head, toolbar row, flush table, Pagination in the foot), as Users and Messaging are; the
+  // count heads the Table toolbar, whose tools are the sort, Pending approval, the dates, the Filter menu and the search.
+  const panel = page.getByRole('region', {name: 'All projects'});
+  await expect(panel.getByRole('heading', {name: 'All projects'})).toBeVisible();
+  const tools = panel.getByRole('toolbar', {name: 'Project tools'});
+  await expect(panel.getByRole('heading', {name: '8 projects'})).toBeVisible();
+  await expect(tools.getByRole('searchbox', {name: 'Search projects'})).toBeVisible();
+  await expect(tools.getByRole('button', {name: /^Filter projects/})).toBeVisible();
+  await expect(tools.locator('.react-aria-Select[data-variant="quiet"]')).toContainText('Sort:');
+  await expect(panel.getByRole('navigation', {name: 'Project pages'})).toBeVisible();
+});
+
+// The head's action follows the tab, as in the real admin: New project, New folder, New space.
+test('the page head offers the open tab\'s action', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  const head = page.locator('.bo-page-header');
+  await expect(head.getByRole('button', {name: 'New project'})).toBeVisible();
+  await page.getByRole('tab', {name: 'Folders'}).click();
+  await expect(head.getByRole('button', {name: 'New folder'})).toBeVisible();
+  await expect(head.getByRole('button', {name: 'New project'})).toHaveCount(0);
+  await page.getByRole('tab', {name: 'Spaces'}).click();
+  await head.getByRole('button', {name: 'New space'}).click();
+  const modal = page.getByRole('dialog', {name: 'New space'});
+  await expect(modal.getByRole('button', {name: 'Create space'})).toBeDisabled();
+  await modal.getByRole('textbox', {name: 'Space name'}).fill('Riverside');
+  await modal.getByRole('button', {name: 'Create space'}).click();
+  await expect(page.getByText('Space created')).toBeVisible();
+  const spaces = page.getByRole('region', {name: 'Spaces'});
+  await expect(spaces.getByRole('heading', {name: '4 spaces'})).toBeVisible();
+  await expect(spaces.getByRole('grid', {name: 'Spaces'}).getByRole('row', {name: /Riverside/})).toContainText('0 projects');
+  await spaces.getByRole('searchbox', {name: 'Search spaces'}).fill('river');
+  await expect(spaces.getByRole('heading', {name: '1 space'})).toBeVisible();
 });
 
 test('Pagination moves through the projects; a search starts again from the first page', async ({page}) => {
@@ -75,6 +107,7 @@ test('projects names what the system still lacks', async ({page}) => {
   // The project thumbnail is the Data table's DataTableThumbnail now.
   // Arrange projects reorders with buttons until the system has drag and drop.
   expect(gaps).toEqual([]);
+  // Templates are Choice cards with their method's tile in the media slot: no "Template image" gap any more.
   await page.getByRole('tab', {name: 'Arrange projects'}).click();
   await expect(page.locator('[data-gap="Drag-and-drop reordering"]').first()).toBeVisible();
   // The Calendar lists the month's projects where the real admin draws a timeline; templates have no image yet.
@@ -82,12 +115,18 @@ test('projects names what the system still lacks', async ({page}) => {
   await expect(page.locator('[data-gap="Project timeline"]')).toBeVisible();
   await page.getByRole('button', {name: 'New project'}).click();
   await page.getByRole('menuitem', {name: 'Use a template'}).click();
-  await expect(page.locator('[data-gap="Template image"]').first()).toBeVisible();
+  const gallery = page.getByRole('dialog', {name: 'Start from a template'});
+  await expect(gallery.locator('.gv-choice-card')).toHaveCount(9);
+  await expect(gallery.locator('.gv-choice-card .gv-data-table__tile').first()).toBeVisible();
+  await expect(page.locator('[data-gap="Template image"]')).toHaveCount(0);
 });
 
 // ── First clicks: the list's own controls (the overview and phase screens are their own specs) ──
 const bodyRows = (page: import('@playwright/test').Page) =>
   page.getByRole('grid', {name: 'Projects'}).getByRole('rowgroup').nth(1).getByRole('row');
+// Undo in the toast that says `title` (several toasts can be up at once).
+const undo = (page: import('@playwright/test').Page, title: string) =>
+  page.locator('.react-aria-Toast', {hasText: title}).getByRole('button', {name: 'Undo'}).click();
 const axe = async (page: import('@playwright/test').Page, selector: string) => {
   // The Gap marker's own label is scaffolding of the demo, not the page: it is left out of the check.
   await settled(page);
@@ -157,24 +196,31 @@ test('Use a template opens the gallery; Use template asks for a title, then adds
   const gallery = page.getByRole('dialog', {name: 'Start from a template'});
   await expect(gallery.getByText('9 templates available')).toBeVisible();
   await axe(page, '.gv-modal');
+  await gallery.getByRole('searchbox', {name: 'Search the templates'}).fill('zzz');
+  await expect(gallery.getByText('No templates match')).toBeVisible();
   await gallery.getByRole('searchbox', {name: 'Search the templates'}).fill('budget');
   await expect(gallery.getByText('1 templates available')).toBeVisible();
-  await gallery.getByRole('button', {name: 'Use template: Participatory budget'}).click();
+  // One pick (a Choice card in a radio group), then Use template in the foot.
+  await expect(gallery.getByRole('button', {name: 'Use template'})).toBeDisabled();
+  await gallery.getByRole('radio', {name: /Participatory budget/}).check({force: true});
+  await gallery.getByRole('button', {name: 'Use template'}).click();
   const create = page.getByRole('dialog', {name: "Create a project based on the template 'Participatory budget'"});
   await create.getByRole('textbox', {name: 'The title of your project'}).fill('Budget for the parks');
   await create.getByRole('button', {name: 'Create project'}).click();
   await expect(page.getByRole('row', {name: /Budget for the parks/}).locator('.gv-status')).toHaveText('Draft');
 });
 
+// New folder sits on the Folders tab now (the head's action follows the tab, as in the real admin).
 test('New folder opens a folder form; Create adds the folder to the Folders view', async ({page}) => {
   await page.goto('/backoffice/#/projects');
+  await page.getByRole('tab', {name: 'Folders'}).click();
   await page.getByRole('button', {name: 'New folder'}).click();
   const modal = page.getByRole('dialog', {name: 'New folder'});
   await expect(modal.getByRole('button', {name: 'Create folder'})).toBeDisabled();
   await modal.getByRole('textbox', {name: 'Folder name'}).fill('Parks and play');
   await modal.getByRole('button', {name: 'Create folder'}).click();
   await expect(page.getByText('Folder created')).toBeVisible();
-  await page.getByRole('tab', {name: 'Folders'}).click();
+  await expect(page.getByRole('heading', {name: '3 folders'})).toBeVisible();
   await expect(page.getByRole('grid', {name: 'Folders'}).getByRole('row', {name: /Parks and play/})).toBeVisible();
 });
 
@@ -199,6 +245,9 @@ test('row actions duplicate, move to a folder and delete on the list', async ({p
   await page.getByRole('option', {name: 'Neighbourhood services'}).click();
   await move.getByRole('button', {name: 'Move', exact: true}).click();
   await expect(page.getByRole('row', {name: /^Harbour Plan 2030/})).toContainText('Neighbourhood services');
+  // Instant changes offer Undo in their Toast.
+  await undo(page, 'Moved to Neighbourhood services');
+  await expect(page.getByRole('row', {name: /^Harbour Plan 2030/})).not.toContainText('Neighbourhood services');
 
   // Clean air week is on the second page now.
   await page.getByRole('navigation', {name: 'Project pages'}).getByRole('button', {name: 'Page 2'}).click();
@@ -210,6 +259,9 @@ test('row actions duplicate, move to a folder and delete on the list', async ({p
   await expect(page.getByRole('row', {name: /Clean air week/})).toHaveCount(0);
   await expect(bodyRows(page)).toHaveCount(2);
   await expect(page.getByText('8 projects', {exact: true})).toBeVisible();
+  await undo(page, 'Project deleted');
+  await expect(page.getByRole('row', {name: /Clean air week/})).toBeVisible();
+  await expect(page.getByText('9 projects', {exact: true})).toBeVisible();
 });
 
 test('search, sort and pending approval change the list', async ({page}) => {
@@ -230,20 +282,28 @@ test('Folders, Spaces, Calendar and Arrange projects tabs show their views', asy
   await page.getByRole('tab', {name: 'Folders'}).click();
   const folders = page.getByRole('grid', {name: 'Folders'});
   await expect(folders.getByRole('row', {name: /Neighbourhood services/})).toContainText('2 projects');
+  await page.getByRole('searchbox', {name: 'Search folders'}).fill('zzz');
+  await expect(folders.getByText('No folders match.')).toBeVisible();
   await page.getByRole('tab', {name: 'Spaces'}).click();
   await expect(page.getByRole('grid', {name: 'Spaces'}).getByRole('row', {name: /City centre/})).toBeVisible();
   await page.getByRole('tab', {name: 'Calendar'}).click();
+  // Each tab is a Panel; the Calendar's title is the month, its arrows in the head, the month's projects in a table.
   await expect(page.getByRole('heading', {name: 'October 2026'})).toBeVisible();
-  await expect(page.getByRole('list', {name: 'October 2026'}).getByRole('listitem').first()).toContainText('Green Corridors for Larkvale');
+  await expect(page.getByRole('grid', {name: 'October 2026'}).getByRole('row').nth(1)).toContainText('Green Corridors for Larkvale');
   await page.getByRole('button', {name: 'Next month'}).click();
   await expect(page.getByRole('heading', {name: 'November 2026'})).toBeVisible();
   await axe(page, '.bo-page');
+  // Before the first project starts, the month is an Empty state.
+  for (let i = 0; i < 4; i++) await page.getByRole('button', {name: 'Previous month'}).click();
+  await expect(page.getByText('No projects run in July 2026')).toBeVisible();
+  await expect(page.getByRole('grid', {name: 'July 2026'})).toHaveCount(0);
   await page.getByRole('tab', {name: 'Arrange projects'}).click();
-  const order = page.getByRole('list', {name: 'Project order'});
-  await expect(order.getByRole('listitem').first()).toContainText('Green Corridors for Larkvale');
+  await expect(page.getByRole('region', {name: 'Homepage order'})).toBeVisible();
+  const order = page.getByRole('grid', {name: 'Project order'}).getByRole('rowgroup').nth(1).getByRole('row');
+  await expect(order.first()).toContainText('Green Corridors for Larkvale');
   await page.getByRole('button', {name: 'Move Green Corridors for Larkvale down'}).click();
-  await expect(order.getByRole('listitem').first()).toContainText('Harbour Plan 2030');
-  await expect(order.getByRole('listitem').nth(1)).toContainText('Green Corridors for Larkvale');
+  await expect(order.first()).toContainText('Harbour Plan 2030');
+  await expect(order.nth(1)).toContainText('Green Corridors for Larkvale');
 });
 
 test('the Dates range keeps the projects running in it', async ({page}) => {

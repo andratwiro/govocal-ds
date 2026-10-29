@@ -16,16 +16,17 @@ export const SPACES = [
 // Projects whose publication waits for an admin's approval.
 export const PENDING = new Set(['harbour-plan', 'clean-air']);
 
+// Each template's first method: its tile shows that method's icon (as the project list's tiles do).
 export const TEMPLATES = [
-  {title: 'Spatial plan', summary: 'Collect contributions on a new spatial plan and let residents prioritise them.'},
-  {title: 'Collect ideas on a map', summary: 'Let residents pin their ideas on a map.'},
-  {title: 'Polling', summary: 'Take the pulse of public opinion on one topic.'},
-  {title: 'Mobility plan', summary: 'Involve residents in drawing up a mobility plan.'},
-  {title: 'Prioritisation of ideas', summary: 'Collect contributions and let residents prioritise them.'},
-  {title: 'Scenario planning', summary: 'Let residents weigh up different scenarios.'},
-  {title: 'Participatory budget', summary: 'Let residents share part of the budget across competing proposals.'},
-  {title: 'Climate action plan', summary: 'Build a shared climate roadmap from collected and prioritised proposals.'},
-  {title: 'Green spaces', summary: 'Decide together how to improve parks, squares and other green spaces.'}
+  {title: 'Spatial plan', method: 'Ideation', summary: 'Collect contributions on a new spatial plan and let residents prioritise them.'},
+  {title: 'Collect ideas on a map', method: 'Ideation', summary: 'Let residents pin their ideas on a map.'},
+  {title: 'Polling', method: 'Poll', summary: 'Take the pulse of public opinion on one topic.'},
+  {title: 'Mobility plan', method: 'Survey', summary: 'Involve residents in drawing up a mobility plan.'},
+  {title: 'Prioritisation of ideas', method: 'Voting', summary: 'Collect contributions and let residents prioritise them.'},
+  {title: 'Scenario planning', method: 'Survey', summary: 'Let residents weigh up different scenarios.'},
+  {title: 'Participatory budget', method: 'Voting', summary: 'Let residents share part of the budget across competing proposals.'},
+  {title: 'Climate action plan', method: 'Proposals', summary: 'Build a shared climate roadmap from collected and prioritised proposals.'},
+  {title: 'Green spaces', method: 'Ideation', summary: 'Decide together how to improve parks, squares and other green spaces.'}
 ];
 
 // The Calendar view opens on this month (the invented platform's "today").

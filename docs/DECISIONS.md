@@ -13,6 +13,14 @@ list; change any line and the agent follows. Newest first within each section.
 - "Go to Input Manager" as a centred link in the card body → **the Dashboard card's footer** → the slot Figma draws for it.
 - Participation and Management feeds as a bare starter Table under a Segmented control or a field Select → **list pages: Panel, Table toolbar, Data table, Pagination; the Action filter as the Filter menu and chips; Mark as viewed at once with Undo, ticked rows through the Selection bar; Empty state when nothing is left** → one list shape on every admin table.
 
+### Projects
+
+- New folder beside New project on every tab (ours) vs one action per tab (the real admin) → **the page head's action follows the tab: New project, New folder, New space** → the action belongs to the list it adds to.
+- Search in the tab row over every view (both) vs the Table toolbar's search → **each tab is a Panel with its own count and search in the toolbar row** (Search projects, folders, spaces); the sort is a quiet Select ("Sort: Recently viewed") → one list shape, as Users and Messaging.
+- Template gallery: Cards with a missing image and a button each → **Choice cards in a radio group, the method's tile in the media slot, one Use template in the foot** → one pick, one confirm, like every dialog; the "Template image" gap is gone.
+- Calendar and Arrange as a hand-built month list and order list → **Panels with Data tables** (month as the Panel title, its arrows in the head; position, project, visibility and ↑↓ for the order), Empty state for an empty month → the timeline and drag-and-drop stay gaps.
+- Move, duplicate and delete changed the list silently → **a Toast with Undo for each; Delete still confirms first** → "This cannot be undone" leaves the confirm.
+
 ## Building from the prototype review (29 Oct 2026)
 
 Calls made while planning the build of the review's findings (selectors, tables, side panel, feedback, forms,
