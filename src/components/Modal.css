@@ -1,11 +1,16 @@
 @import './theme.css';
 
+/* The overlay covers the visible window and centres the dialog in it. (The starter's sticky dialog, shifted up by
+   half its height, couldn't move past the overlay's bottom, so a dialog taller than half the window rose off the top.) */
 .react-aria-ModalOverlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: var(--page-width);
-  height: var(--page-height);
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 100vw;
+  height: var(--visual-viewport-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--gv-surface-backdrop);
   overflow: clip;
   z-index: 100;
@@ -23,11 +28,7 @@
 
 /* The shell is the Figma Modal's (5:513): radius 14, panel fill, a 1px subtle outline, the dialog shadow. */
 .react-aria-Modal {
-  position: sticky;
   max-height: calc(var(--visual-viewport-height) * 0.9);
-  top: calc(var(--visual-viewport-height) / 2);
-  margin-left: 50vw;
-  translate: -50% -50%;
   box-shadow: var(--gv-shadow-dialog);
   border-radius: var(--radius-xl);
   background: var(--overlay-background);

@@ -262,7 +262,9 @@ test('a screening phase: a waiting idea opens on Approve / Reject', async ({page
   await expect(rows(page).nth(first)).toContainText('Proposed');
   await expect(page.getByText('Idea approved and published')).toBeVisible();
 
+  // The decision took its buttons away; focus stayed in the panel, so Esc still closes it.
   await page.keyboard.press('Escape');
+  await expect(panel(page)).toHaveCount(0);
   await pressRow(page, second);
   await panel(page).getByRole('toolbar', {name: 'Waiting for approval'}).getByRole('button', {name: 'Reject'}).click();
   await expect(rows(page).nth(second)).toContainText('Rejected');

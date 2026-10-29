@@ -231,8 +231,16 @@ export interface SidePanelDecisionProps {
  * buttons at the end, in a toolbar named by the title. It leaves once the decision is made (a toast follows). */
 export function SidePanelDecision({title, children}: SidePanelDecisionProps) {
   const id = useId();
+  // A decision usually takes its own buttons away (Approve, Reject). Focus would drop to the page, out of reach of
+  // the panel's Esc: hand it to the panel's dialog instead. The cleanup runs before React removes the toolbar.
+  const ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => () => {
+    const el = ref.current;
+    if (el?.contains(document.activeElement))
+      el.closest<HTMLElement>('[role="dialog"]')?.focus({preventScroll: true});
+  }, []);
   return (
-    <Toolbar aria-labelledby={id} className="gv-side-panel__decision">
+    <Toolbar ref={ref} aria-labelledby={id} className="gv-side-panel__decision">
       <span id={id} className="gv-side-panel__decision-title">{title}</span>
       <span className="gv-side-panel__decision-actions">{children}</span>
     </Toolbar>
