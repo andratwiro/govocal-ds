@@ -30,7 +30,7 @@ test('live monitor: health score and three category scores, over time, then ever
   await expect(page.locator('.gv-bar-row', {hasText: '11. Transparency'})).toBeVisible();
   // Answer distribution for one question at a time.
   const answers = page.getByRole('region', {name: 'Answers per question'});
-  await expect(answers.locator('.gv-dashboard-demographic__row')).toHaveCount(5);
+  await expect(answers.getByRole('listitem').filter({hasText: /\d+%$/})).toHaveCount(5);
   await expect(answers).toContainText('Very satisfied');
 });
 

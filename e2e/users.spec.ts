@@ -24,7 +24,7 @@ test('users follows the real admin: segments, groups, a selectable user table', 
 
 test('the Card counts the list; rows use the gv Avatar and icon button; a row has its options menu', async ({page}) => {
   await page.goto('/backoffice/#/users');
-  await expect(page.getByRole('heading', {level: 3, name: 'Registered users'}).locator('..').locator('.gv-card__pill')).toHaveText('12');
+  await expect(page.getByRole('heading', {level: 3, name: 'Registered users'}).locator('..').getByText('12', {exact: true})).toBeVisible();
   const row = page.getByRole('row', {name: /Admin A/});
   await expect(row.locator('.gv-avatar')).toHaveText('AA');
   await expect(row.getByText('user1@example.org')).toBeVisible();

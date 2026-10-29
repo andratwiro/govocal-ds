@@ -26,7 +26,7 @@ test('dashboard is built from the gv cards, KPI tiles and charts, with no gaps l
   }
   await expect(page.getByRole('img', {name: /^Line chart, Mar to Oct/})).toHaveCount(4);
   await expect(page.getByRole('img', {name: /^Inputs per month rose/})).toBeVisible();
-  await expect(page.locator('.gv-dashboard-bars__row', {hasText: 'Under consideration'})).toContainText('15% · 59');
+  await expect(page.getByRole('listitem').filter({hasText: /^Under consideration/})).toContainText('15% · 59');
   await expect(page.getByRole('link', {name: /Waiting for feedback/})).toHaveAttribute('href', '#/inputs');
   await expect(page.getByRole('region', {name: 'Events'})).toContainText('Upcoming3');
   await expect(page.locator('[data-gap]')).toHaveCount(0);
