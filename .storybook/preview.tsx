@@ -5,16 +5,35 @@ import {LucideProvider} from 'lucide-react';
 import {theme} from './theme';
 import {DocsPage} from './DocsPage';
 
+/*
+ * The locale every story runs in: numbers, dates and lists follow it (React Aria's I18nProvider), as they follow
+ * AppProvider's `locale` in an app. The words stay English: the system never translates, so a story shows another
+ * language by passing `labels`. Arabic runs right to left.
+ */
+const LOCALES = [
+  {value: 'en-GB', title: 'English (UK)'},
+  {value: 'nl-BE', title: 'Dutch (Belgium)'},
+  {value: 'fr-BE', title: 'French (Belgium)'},
+  {value: 'de-DE', title: 'German'},
+  {value: 'es-CL', title: 'Spanish (Chile)'},
+  {value: 'ar-SA', title: 'Arabic, right to left'}
+];
+const RTL_LOCALES = new Set(['ar-SA']);
+
 const preview: Preview = {
   globalTypes: {
+    locale: {description: 'Locale: numbers and dates (the words stay English)', toolbar: {title: 'Locale', icon: 'globe',
+      items: LOCALES, dynamicTitle: true}},
+    // "Right to left" is Arabic, whatever the Locale says, so links with `globals=direction:rtl` keep working.
     direction: {description: 'Direction', toolbar: {title: 'Direction', icon: 'transfer',
       items: [{value: 'ltr', title: 'Left to right'}, {value: 'rtl', title: 'Right to left (Arabic)'}]}},
   },
-  initialGlobals: {direction: 'ltr'},
+  initialGlobals: {locale: 'en-GB', direction: 'ltr'},
   decorators: [
     (Story, {globals}) => {
-      const dir = globals.direction === 'rtl' ? 'rtl' : 'ltr';
-      const locale = dir === 'rtl' ? 'ar-SA' : 'en-GB';
+      const chosen = LOCALES.some(l => l.value === globals.locale) ? (globals.locale as string) : 'en-GB';
+      const locale = globals.direction === 'rtl' ? 'ar-SA' : chosen;
+      const dir = RTL_LOCALES.has(locale) ? 'rtl' : 'ltr';
       useEffect(() => {
         document.documentElement.dir = dir;
         document.documentElement.lang = locale;

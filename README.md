@@ -19,7 +19,8 @@ system covers and what it still lacks.
 You own the system and change it by asking Claude Code, in this folder, with the Figma MCP.
 
 1. **Look first.** Open the live Storybook. Overview › Welcome explains the sections; each component's stories show
-   its states, and the toolbar's Direction button shows it right to left.
+   its states, the toolbar's Direction button shows it right to left, and its Locale menu shows numbers and dates
+   as a Dutch, French, German, Chilean or Arabic viewer reads them (the words stay English).
 2. **Set up once** (docs/HOW-TO.md, "Before you start"): Node 24 (`nvm use`), `npm ci`, then `claude` in this folder
    and `/mcp` to sign in to Figma. Nothing secret goes in the repo.
 3. **Ask for a change.** Say what you want and point at Figma: *"Make Badge match this frame: <link>"*,

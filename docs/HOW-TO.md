@@ -62,7 +62,8 @@ height"*. The agent edits the hand-written file and rebuilds.
   logs one line there.
 
 **Check:**
-- The component's All variants story, then the toolbar's Direction button for right to left.
+- The component's All variants story, then the toolbar's Direction button for right to left, and its Locale menu
+  (German, say) for numbers and dates. The words stay English there: a story shows another language through `labels`.
 - The Accessibility panel under the story. Findings are reported, never blocking (docs/DESIGN.md).
 - The back-office pages that use it. docs/COMPONENTS.md lists every entry; ask the agent where one is used.
 - `npm test`, then the end-to-end tests (recipe 5).
