@@ -1,10 +1,11 @@
+import type {ReactNode} from 'react';
 import './LegendRow.css';
 
 export interface LegendRowProps {
   /** The legend swatch's colour, as a `--gv-chart-*` token name. */
   color: string;
   /** The series' label (e.g. an age bracket). */
-  label: string;
+  label: ReactNode;
   /** The value shown at the end of the row (e.g. a percentage). */
   value: string;
 }

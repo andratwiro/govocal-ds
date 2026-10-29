@@ -45,14 +45,6 @@
   color: var(--gv-text-secondary);
 }
 
-.gv-stat-row__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: var(--gv-radius-3);
-  background: var(--gv-state-notification);
-  flex-shrink: 0;
-}
-
 .gv-stat-row__value {
   display: flex;
   align-items: center;

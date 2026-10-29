@@ -72,24 +72,6 @@
   white-space: nowrap;
 }
 
-/* Required (Figma "Required · Placement=Card"): a 6 dot + the word, gap 8. */
-.gv-card__required {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--gv-space-8);
-  flex: none;
-  font: var(--gv-type-small);
-  color: var(--gv-text-tertiary);
-  white-space: nowrap;
-}
-
-.gv-card__required-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: var(--gv-radius-full);
-  background: var(--gv-icon-default);
-}
-
 /* Review slot: 8 of breathing room before the pills. */
 .gv-card__review {
   display: inline-flex;
@@ -115,26 +97,6 @@
   min-width: 0;
 }
 
-/* Pill: 22 tall, padding 0 10, gap 4, a 14 icon, Small strong. */
-.gv-card__pill {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--gv-space-4);
-  height: 22px;
-  min-width: 0;
-  padding: 0 var(--gv-space-10);
-  border-radius: var(--gv-radius-full);
-  background: var(--gv-surface-pill);
-  font: var(--gv-type-small-strong);
-  color: var(--gv-text-pill);
-  white-space: nowrap;
-
-  svg {
-    flex: none;
-    color: var(--gv-icon-pill);
-  }
-}
-
 /* An open card hides its summary: the body says it (prototype .pjsec.is-open). */
 .gv-card[data-expanded] > .gv-card__heading .gv-card__pills,
 .gv-card[data-expanded] > .gv-card__heading .gv-card__summary {
@@ -148,8 +110,8 @@
   flex: none;
 }
 
-/* Icon button · Ghost: 28, radius 8, a 16 icon. Also the chevron's box. */
-.gv-card__icon-button,
+/* The expand chevron's 28 box (Figma's Icon button · Ghost). It sits inside the header's trigger, so it is
+   drawn, not an IconButton: a button inside a button is not allowed. */
 .gv-card__chevron {
   appearance: none;
   display: inline-flex;
@@ -163,21 +125,6 @@
   border-radius: var(--gv-radius-8);
   background: transparent;
   color: var(--gv-icon-default);
-}
-
-.gv-card__icon-button {
-  cursor: pointer;
-  outline: none;
-
-  &[data-hovered] {
-    background: var(--gv-surface-hover-strong);
-    color: var(--gv-icon-strong);
-  }
-
-  &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
-  }
 }
 
 .gv-card__chevron svg {
@@ -213,112 +160,26 @@
   gap: var(--gv-space-12);
 }
 
-/* Switch (Figma "Toggle" in Manage · Toggle): 26 × 16, a 12 knob. */
-.gv-card__switch {
-  display: inline-flex;
-  flex: none;
-  cursor: pointer;
-  outline: none;
+/* Radios (the design system's RadioGroup): options 20 apart in a list, 24 apart in a row; the dot sits on the
+   title's line, with a Small title and a tertiary line under it. */
+.react-aria-RadioGroup.gv-card__radios {
+  gap: 0;
 
-  &[data-focus-visible] .gv-card__switch-track {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
+  > .react-aria-Label:empty {
+    display: none;
   }
 
-  &[data-disabled] {
-    cursor: default;
-    opacity: 0.5;
-  }
-}
-
-.gv-card__switch-track {
-  position: relative;
-  display: block;
-  width: 26px;
-  height: 16px;
-  border-radius: var(--gv-radius-full);
-  background: var(--gv-control-toggle-off);
-  transition: background 150ms;
-}
-
-.gv-card__switch-knob {
-  position: absolute;
-  inset-block-start: var(--gv-space-2);
-  inset-inline-start: var(--gv-space-2);
-  width: 12px;
-  height: 12px;
-  border-radius: var(--gv-radius-full);
-  background: var(--gv-control-knob);
-  box-shadow: var(--gv-shadow-subtle);
-  transition: translate 150ms;
-}
-
-.gv-card__switch[data-selected] {
-  .gv-card__switch-track {
-    background: var(--gv-control-toggle-on);
+  .radio-items {
+    gap: var(--gv-space-20);
   }
 
-  .gv-card__switch-knob {
-    translate: 10px 0;
-  }
-}
-
-[dir='rtl'] .gv-card__switch[data-selected] .gv-card__switch-knob {
-  translate: -10px 0;
-}
-
-/* Radios: options 20 apart in a list, 24 apart in a row; a 16 circle, gap 8, Small title + tertiary line. */
-.gv-card__radios {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gv-space-20);
-
-  &[data-orientation='horizontal'] {
-    flex-direction: row;
-    flex-wrap: wrap;
+  &[data-orientation='horizontal'] .radio-items {
     gap: var(--gv-space-24);
   }
 }
 
-.gv-card__radio {
-  display: flex;
+.gv-card__radio .react-aria-RadioButton {
   align-items: flex-start;
-  gap: var(--gv-space-8);
-  border-radius: var(--gv-radius-8);
-  cursor: pointer;
-  outline: none;
-
-  &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
-  }
-}
-
-.gv-card__radio-dot {
-  position: relative;
-  flex: none;
-  box-sizing: border-box;
-  width: 16px;
-  height: 16px;
-  border: 1px solid var(--gv-border-radio);
-  border-radius: var(--gv-radius-full);
-  background: var(--gv-surface-panel);
-}
-
-.gv-card__radio[data-hovered] .gv-card__radio-dot {
-  border-color: var(--gv-border-control-hover);
-}
-
-.gv-card__radio[data-selected] .gv-card__radio-dot {
-  border-color: var(--gv-border-selected);
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 3px;
-    border-radius: var(--gv-radius-full);
-    background: var(--gv-action-checked);
-  }
 }
 
 .gv-card__radio-text {
@@ -336,23 +197,4 @@
 .gv-card__radio-description {
   font: var(--gv-type-small);
   color: var(--gv-text-tertiary);
-}
-
-/* Compact buttons in a card (Figma "Button · compact": 32 tall, padding 0 14, gap 8, Small strong).
-   Painted here on the starter Button until G1's CompactButton lands. */
-.gv-card .react-aria-Button[data-size='32'] {
-  padding: 0 var(--gv-space-14);
-  gap: var(--gv-space-8);
-  font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
-
-  > svg {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-/* A full-width button inside a choice list (Survey options' "Add questions"). */
-.gv-card__radios > .react-aria-Button {
-  width: 100%;
 }

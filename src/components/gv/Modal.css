@@ -95,21 +95,3 @@
   padding: var(--gv-space-12) var(--gv-space-24);
   border-block-start: 1px solid var(--gv-border-row);
 }
-
-/* Stories only: the Attachments drop zone (Figma: toolbar fill, radius 10, padding 22 16, gap 8). Swap for G2's DropZone. */
-.gv-modal-story__drop {
-  width: 100%;
-  box-sizing: border-box;
-  flex-direction: column;
-  gap: var(--gv-space-8);
-  min-height: 94px;
-  padding: var(--gv-space-22) var(--gv-space-16);
-  border-radius: var(--gv-radius-10);
-  background: var(--gv-surface-toolbar);
-  color: var(--gv-text-secondary);
-  font: var(--gv-type-ui);
-
-  svg {
-    color: var(--gv-icon-default);
-  }
-}

@@ -63,30 +63,6 @@
 .gv-dashboard-card__action {
   flex: none;
 }
-/* Range switch (Votes over time): the starter SegmentedControl, painted as Tali's (prototype .pj-dseg)
-   until Tali's own Segmented control replaces it. Scoped to this slot only. */
-.gv-dashboard-card .gv-dashboard-card__action .segmented-control {
-  --button-color: var(--gv-surface-stage);
-  --button-border: transparent;
-  padding: var(--gv-space-3);
-  border-radius: var(--gv-radius-8);
-}
-.gv-dashboard-card .gv-dashboard-card__action .segmented-control-item {
-  height: auto;
-  padding: var(--gv-space-4) var(--gv-space-11);
-  font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
-  color: var(--gv-text-secondary);
-}
-.gv-dashboard-card .gv-dashboard-card__action .segmented-control-item[data-selected] {
-  color: var(--gv-text-primary);
-}
-.gv-dashboard-card .gv-dashboard-card__action .react-aria-SelectionIndicator {
-  --button-color: var(--gv-surface-panel);
-  --button-border: transparent;
-  border-radius: var(--gv-radius-6);
-  box-shadow: var(--gv-shadow-segment-selected);
-}
 .gv-dashboard-card__body {
   min-inline-size: 0;
 }
@@ -111,7 +87,7 @@
   margin-block-start: var(--gv-space-4);
 }
 
-/* ── Statements: text · agree/disagree/pass bar · "% agree" (Figma Statement row) ── */
+/* ── Statements: one Statement row per statement, 14 apart (Figma) ── */
 .gv-dashboard-statements {
   display: flex;
   flex-direction: column;
@@ -120,39 +96,10 @@
   padding: 0;
   list-style: none;
 }
-.gv-dashboard-statements__row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 200px 72px;
-  align-items: center;
-  gap: var(--gv-space-14);
-}
-.gv-dashboard-statements__text {
-  font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
-  color: var(--gv-text-primary);
-}
-.gv-dashboard-statements__bar {
-  display: flex;
-  block-size: 8px;
-  border-radius: var(--gv-radius-full);
-  overflow: hidden;
-  background: var(--gv-surface-pill);
-}
-.gv-dashboard-statements__bar > span {
-  display: block;
-  block-size: 100%;
-  background: var(--chart-color);
-}
-.gv-dashboard-statements__value {
-  font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
-  color: var(--gv-text-secondary);
-  text-align: end;
-  white-space: nowrap;
-}
 
-/* ── Status breakdown: label · track · "18% · 6" (Figma Bar row) ── */
-/* One grid for all rows (subgrid), so every track starts and ends at the same place. */
+/* ── Status breakdown: one Bar row per status ── */
+/* The rows share one grid (subgrid), so every track starts and ends at the same place whatever the width
+   of each row's value ("3% · 1" vs "30% · 10"). Layout only: each Bar row still draws itself. */
 .gv-dashboard-bars {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) max-content;
@@ -161,42 +108,12 @@
   padding: 0;
   list-style: none;
 }
-.gv-dashboard-bars__row {
+.gv-dashboard-bars > li,
+.gv-dashboard-bars .gv-bar-row {
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: subgrid;
   align-items: center;
-  padding-block: var(--gv-space-6);
-}
-.gv-dashboard-bars__label {
-  min-inline-size: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
-  color: var(--gv-text-body);
-}
-.gv-dashboard-bars__track {
-  display: block;
-  block-size: 6px;
-  border-radius: var(--gv-radius-3);
-  overflow: hidden;
-  background: var(--gv-surface-stage);
-}
-.gv-dashboard-bars__track > span {
-  display: block;
-  block-size: 100%;
-  border-radius: var(--gv-radius-3);
-  background: var(--chart-color);
-}
-.gv-dashboard-bars__value {
-  min-inline-size: 40px;
-  text-align: end;
-  white-space: nowrap;
-  font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
-  color: var(--gv-text-body);
 }
 
 /* ── Live ranking: #rank · title over share bar · % and count (prototype .pj-vrrow) ── */
@@ -347,27 +264,4 @@
   margin: 0;
   padding: 0;
   list-style: none;
-}
-.gv-dashboard-demographic__row {
-  display: flex;
-  align-items: center;
-  gap: var(--gv-space-8);
-  font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
-}
-.gv-dashboard-demographic__swatch {
-  flex: none;
-  inline-size: 8px;
-  block-size: 8px;
-  border-radius: var(--gv-radius-2);
-  background: var(--chart-color);
-}
-.gv-dashboard-demographic__name {
-  flex: 1;
-  min-inline-size: 0;
-  color: var(--gv-text-body);
-}
-.gv-dashboard-demographic__value {
-  flex: none;
-  color: var(--gv-text-secondary);
 }

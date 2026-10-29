@@ -1,9 +1,10 @@
 'use client';
+import type {ReactNode} from 'react';
 import './StatementRow.css';
 
 export interface StatementRowProps {
   /** The Common Ground statement text. */
-  statement: string;
+  statement: ReactNode;
   /** Percent who agree, disagree and pass. Should sum to roughly 100. */
   agreePercent: number;
   disagreePercent: number;
@@ -30,7 +31,7 @@ export function StatementRow({
       <span
         className="gv-statement-row__bar"
         role="img"
-        aria-label={`${summary} (${agreePercent}% agree, ${disagreePercent}% disagree, ${passPercent}% pass)`}>
+        aria-label={`${summary} (${Math.round(agreePercent)}% agree, ${Math.round(disagreePercent)}% disagree, ${Math.round(passPercent)}% pass)`}>
         <span
           className="gv-statement-row__bar-segment"
           data-kind="agree"
@@ -47,7 +48,9 @@ export function StatementRow({
           style={{width: `${passPercent}%`}}
         />
       </span>
-      <span className="gv-statement-row__value">{summary}</span>
+      <span className="gv-statement-row__value" aria-hidden="true">
+        {summary}
+      </span>
     </div>
   );
 }

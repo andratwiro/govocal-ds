@@ -1,6 +1,5 @@
 'use client';
-import {Breadcrumb, Breadcrumbs, Button, Link} from 'react-aria-components';
-import {ArrowLeft, ChevronRight, PanelLeft} from 'lucide-react';
+import {Breadcrumb} from './Breadcrumb';
 import './Header.css';
 
 export interface HeaderProps {
@@ -25,7 +24,10 @@ export interface HeaderProps {
   onTogglePanel?: () => void;
 }
 
-/** Tali's page header: a breadcrumb for the project, or panel + back + project / phase + state for a phase. */
+/**
+ * Tali's page header (Figma 14:876): a 48-tall frame around her Breadcrumb, as in Figma, where each
+ * Level holds a Breadcrumb instance of the same level.
+ */
 export function Header({
   level = 'project',
   projectName,
@@ -37,47 +39,30 @@ export function Header({
   onBack,
   onTogglePanel
 }: HeaderProps) {
-  if (level === 'project') {
-    return (
-      <nav className="gv-header" data-level={level} aria-label="Breadcrumb">
-        <Breadcrumbs className="gv-header__crumbs">
-          <Breadcrumb className="gv-header__crumb">
-            <Link className="gv-header__link" href={parentHref} onPress={onParentPress}>
-              {parentLabel}
-            </Link>
-            <ChevronRight className="gv-header__chevron" aria-hidden size={16} />
-          </Breadcrumb>
-          <Breadcrumb className="gv-header__crumb">
-            <Link className="gv-header__current gv-header__current--boxed">{projectName}</Link>
-          </Breadcrumb>
-        </Breadcrumbs>
-      </nav>
-    );
-  }
-  const live = level === 'phase-live';
   return (
     <nav className="gv-header" data-level={level} aria-label="Breadcrumb">
-      <Button className="gv-header__icon" aria-label="Show or hide the timeline" onPress={onTogglePanel}>
-        <PanelLeft aria-hidden size={16} />
-      </Button>
-      <span className="gv-header__divider" aria-hidden />
-      <Button className="gv-header__icon" aria-label={`Back to ${projectName}`} onPress={onBack}>
-        <ArrowLeft aria-hidden size={16} />
-      </Button>
-      <Breadcrumbs className="gv-header__crumbs gv-header__crumbs--phase">
-        <Breadcrumb className="gv-header__crumb">
-          <Link className="gv-header__link gv-header__link--project" href={projectHref} onPress={onBack}>
-            {projectName}
-          </Link>
-          <span className="gv-header__slash" aria-hidden>/</span>
-        </Breadcrumb>
-        <Breadcrumb className="gv-header__crumb">
-          <Link className="gv-header__current">{phaseName}</Link>
-        </Breadcrumb>
-      </Breadcrumbs>
-      <span className="gv-header__status" data-state={live ? 'live' : 'draft'}>
-        {live ? 'Live' : 'Draft'}
-      </span>
+      {level === 'project' ? (
+        <Breadcrumb
+          level="project"
+          items={[
+            {key: 'parent', label: parentLabel, href: parentHref, onPress: onParentPress},
+            {key: 'project', label: projectName}
+          ]}
+        />
+      ) : (
+        <Breadcrumb
+          level="phase"
+          phaseState={level === 'phase-live' ? 'live' : 'draft'}
+          items={[
+            {key: 'project', label: projectName, href: projectHref, onPress: onBack},
+            {key: 'phase', label: phaseName}
+          ]}
+          onTogglePanel={onTogglePanel}
+          onBack={onBack}
+          togglePanelLabel="Show or hide the timeline"
+          backLabel={`Back to ${projectName}`}
+        />
+      )}
     </nav>
   );
 }

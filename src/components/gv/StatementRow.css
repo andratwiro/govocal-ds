@@ -1,9 +1,10 @@
 @import '../theme.css';
 
+/* Figma: 430 statement + 200 bar + 72 value in a 730 row, so 14 between them. */
 .gv-statement-row {
   display: flex;
   align-items: center;
-  gap: var(--gv-space-16);
+  gap: var(--gv-space-14);
   width: 100%;
 }
 

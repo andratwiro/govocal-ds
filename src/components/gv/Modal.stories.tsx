@@ -1,12 +1,12 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import type {ReactNode} from 'react';
 import {DialogTrigger} from 'react-aria-components';
-import {Link as LinkIcon, Upload} from 'lucide-react';
+import {Link as LinkIcon} from 'lucide-react';
 import {Button} from '../Button';
-import {Checkbox} from '../Checkbox';
-import {DropZone, Text} from '../DropZone';
 import {Radio, RadioGroup} from '../RadioGroup';
 import {TextField} from '../TextField';
+import {Checkbox} from './Checkbox';
+import {DropZone} from './DropZone';
 import {Modal} from './Modal';
 
 const figma = (id: string) => ({
@@ -30,27 +30,20 @@ type Story = StoryObj<typeof Modal>;
 function Open({label, open = true, children}: {label: string; open?: boolean; children: ReactNode}) {
   return (
     <DialogTrigger defaultOpen={open}>
-      <Button variant="secondary">
-        <span>{label}</span>
-      </Button>
+      <Button variant="secondary">{label}</Button>
       {children}
     </DialogTrigger>
   );
 }
 
 const done = (
-  <Button variant="secondary" slot="close">
-    <span>Done</span>
-  </Button>
+  <Button variant="secondary" slot="close">Done</Button>
 );
 
 function AttachmentsModal() {
   return (
     <Modal title="Attachments" footer={done}>
-      <DropZone className="react-aria-DropZone gv-modal-story__drop">
-        <Upload aria-hidden size={20} />
-        <Text slot="label">Drop a file here or browse</Text>
-      </DropZone>
+      <DropZone />
     </Modal>
   );
 }
@@ -68,16 +61,14 @@ function ShareModal() {
       footer={
         <Button variant="secondary">
           <LinkIcon aria-hidden size={16} />
-          <span>Copy link</span>
+          Copy link
         </Button>
       }>
       <div style={{display: 'flex', gap: 8, alignItems: 'flex-end'}}>
         <div style={{flex: 1}}>
           <TextField label="Invite by email" placeholder="name@riverside.example" />
         </div>
-        <Button>
-          <span>Invite</span>
-        </Button>
+        <Button>Invite</Button>
       </div>
       <ul style={{listStyle: 'none', margin: '16px 0 0', padding: 0}}>
         {people.map(([name, email, role]) => (
@@ -103,12 +94,8 @@ function AccessModal() {
       title="Who can take part"
       footer={
         <>
-          <Button variant="secondary" slot="close">
-            <span>Cancel</span>
-          </Button>
-          <Button slot="close">
-            <span>Save</span>
-          </Button>
+          <Button variant="secondary" slot="close">Cancel</Button>
+          <Button slot="close">Save</Button>
         </>
       }>
       <RadioGroup aria-label="Who can take part" defaultValue="registered">
@@ -135,12 +122,8 @@ function InputManagerModal() {
       title="Input manager"
       footer={
         <>
-          <Button variant="secondary" slot="close">
-            <span>Cancel</span>
-          </Button>
-          <Button slot="close">
-            <span>Move 3 inputs to Vote on proposals</span>
-          </Button>
+          <Button variant="secondary" slot="close">Cancel</Button>
+          <Button slot="close">Move 3 inputs to Vote on proposals</Button>
         </>
       }>
       <p style={{margin: '0 0 12px', color: 'var(--gv-text-secondary)'}}>

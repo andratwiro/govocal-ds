@@ -46,6 +46,10 @@ export const AllVariants: Story = {
         </Segment>
         <Segment id="insights">Insights</Segment>
       </SegmentedControl>
+      <SegmentedControl size="small" aria-label="Range" defaultSelectedKeys={['daily']} disallowEmptySelection>
+        <Segment id="daily">Daily</Segment>
+        <Segment id="weekly">Weekly</Segment>
+      </SegmentedControl>
     </div>
   )
 };
@@ -77,6 +81,17 @@ export const InsightsManageUnread: Story = {
         Manage
       </Segment>
       <Segment id="insights">Insights</Segment>
+    </SegmentedControl>
+  )
+};
+
+/** Not a Figma variant: the range switch in a dashboard card's header (Dashboard card · Votes over time). */
+export const SmallRangeSwitch: Story = {
+  name: 'Small · range switch',
+  render: () => (
+    <SegmentedControl size="small" aria-label="Range" defaultSelectedKeys={['daily']} disallowEmptySelection>
+      <Segment id="daily">Daily</Segment>
+      <Segment id="weekly">Weekly</Segment>
     </SegmentedControl>
   )
 };

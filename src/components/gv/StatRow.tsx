@@ -1,6 +1,7 @@
 'use client';
 import {Link as RACLink, type LinkProps as RACLinkProps} from 'react-aria-components/Link';
 import {ChevronRight} from 'lucide-react';
+import {NewDot} from './NewDot';
 import './StatRow.css';
 
 export interface StatRowProps {
@@ -33,7 +34,7 @@ export function StatRow({label, value, isNew = false, isStatic = false, href, on
     <>
       <div className="gv-stat-row__label">
         <span>{label}</span>
-        {isNew && <span className="gv-stat-row__dot" aria-hidden="true" />}
+        {isNew && <NewDot />}
       </div>
       <div className="gv-stat-row__value">
         <span>{value}</span>

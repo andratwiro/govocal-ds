@@ -1,6 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {Download, FileChartColumn, FileText, Lightbulb, Link, Plus, Sparkles, Upload} from 'lucide-react';
-import {Button} from '../Button';
+import {CompactButton} from './CompactButton';
 import {TextField} from '../TextField';
 import {Card, CardRadio, CardRadioGroup, CardSwitch, type CardProps} from './Card';
 
@@ -52,8 +52,8 @@ const statements: CardProps = {
   title: 'Statements',
   actions: (
     <>
-      <Button variant="secondary" size={32}><span>Add</span></Button>
-      <Button size={32}><span>Import</span></Button>
+      <CompactButton>Add</CompactButton>
+      <CompactButton variant="primary">Import</CompactButton>
     </>
   )
 };
@@ -77,8 +77,8 @@ const report: CardProps = {
   title: 'Report',
   actions: (
     <>
-      <Button variant="secondary" size={32}><span>Download</span></Button>
-      <Button size={32}><Plus aria-hidden /><span>Add a report</span></Button>
+      <CompactButton>Download</CompactButton>
+      <CompactButton variant="primary" icon={<Plus aria-hidden />}>Add a report</CompactButton>
     </>
   )
 };
@@ -105,7 +105,7 @@ const surveyOptions: CardProps = {
   children: (
     <CardRadioGroup aria-label="Survey options" defaultValue="survey">
       <CardRadio value="survey" description="AI-powered insights and a wide range of question types">Survey</CardRadio>
-      <Button variant="secondary" size={32}><span>Add questions</span></Button>
+      <CompactButton>Add questions</CompactButton>
       <CardRadio value="poll" description="Set up a short, multiple-choice questionnaire">Quick poll</CardRadio>
       <CardRadio value="external" description="Embed a third-party survey">External survey</CardRadio>
     </CardRadioGroup>
@@ -114,7 +114,7 @@ const surveyOptions: CardProps = {
 const optionsToVoteOn: CardProps = {
   title: 'Options to vote on',
   iconActions: [{icon: Plus, label: 'Add an option'}, {icon: Upload, label: 'Import options'}],
-  actions: <Button size={32}><span>Create form</span></Button>
+  actions: <CompactButton variant="primary">Create form</CompactButton>
 };
 const votingMethod: CardProps = {
   layout: 'stacked', title: 'Voting method', review: 'to-set',

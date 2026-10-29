@@ -1,5 +1,6 @@
 'use client';
 import {TriangleAlert} from 'lucide-react';
+import {VoteProgress} from './VoteProgress';
 import './ListRowProposals.css';
 
 export interface ListRowProposalsProps {
@@ -21,9 +22,8 @@ export interface ListRowProposalsProps {
 }
 
 /**
- * The content of one Proposals list row, built around Tali's vote-progress
- * bar (swap in the real `VoteProgress` component once it ships — see the
- * group report). Place inside a selectable `Row`/`Cell` (Table) or
+ * The content of one Proposals list row, built around Tali's Vote progress
+ * (Type=Threshold). Place inside a selectable `Row`/`Cell` (Table) or
  * `GridListItem` — see the `InATable` story.
  */
 export function ListRowProposals({
@@ -38,9 +38,6 @@ export function ListRowProposals({
   daysLeft,
   closed
 }: ListRowProposalsProps) {
-  const reached = voteCount >= voteThreshold;
-  const fillPercent = Math.min(100, Math.round((voteCount / voteThreshold) * 100));
-
   return (
     <div className="gv-list-row-proposals">
       <div className="gv-list-row-proposals__title-cell">
@@ -59,15 +56,12 @@ export function ListRowProposals({
         </span>
       </div>
       <div className="gv-list-row-proposals__cell gv-list-row-proposals__votes-cell">
-        <span className="gv-list-row-proposals__vote-count">{voteCount}</span>
-        <span className="gv-list-row-proposals__vote-of">/ {voteThreshold}</span>
-        <span className="gv-list-row-proposals__bar">
-          <span
-            className="gv-list-row-proposals__bar-fill"
-            data-reached={reached || undefined}
-            style={{width: `${fillPercent}%`}}
-          />
-        </span>
+        <VoteProgress
+          variant="threshold"
+          label={`Votes for ${title}`}
+          count={voteCount}
+          threshold={voteThreshold}
+        />
       </div>
       <div className="gv-list-row-proposals__cell gv-list-row-proposals__status-cell">
         {statusLabel}

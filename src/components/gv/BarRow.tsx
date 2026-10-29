@@ -1,9 +1,10 @@
 'use client';
+import type {ReactNode} from 'react';
 import './BarRow.css';
 
 export interface BarRowProps {
   /** The row's label (e.g. a status name). */
-  label: string;
+  label: ReactNode;
   /**
    * Percentage filled, 0–100. Omitted for the empty state (no data to show yet).
    */

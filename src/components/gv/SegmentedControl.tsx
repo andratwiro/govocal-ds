@@ -8,9 +8,19 @@ import {
 } from 'react-aria-components/ToggleButtonGroup';
 import {composeRenderProps} from 'react-aria-components/composeRenderProps';
 import type {ReactNode} from 'react';
+import {NewDot} from './NewDot';
 import './SegmentedControl.css';
 
-export interface SegmentedControlProps extends ToggleButtonGroupProps {}
+export interface SegmentedControlProps extends ToggleButtonGroupProps {
+  /**
+   * `default` is Figma's Segmented control (the Build / Manage / Insights tabs, 36 tall).
+   * `small` is the range switch in a dashboard card's header (Figma Dashboard card · Votes over
+   * time "Range switch", prototype `.pj-dseg`): 30 tall, Small type, on the stage grey.
+   *
+   * @default 'default'
+   */
+  size?: 'default' | 'small';
+}
 
 /**
  * Tali's Segmented control (Figma node 14:883; prototype `.pj-hseg`).
@@ -19,16 +29,13 @@ export interface SegmentedControlProps extends ToggleButtonGroupProps {}
  * directly: its hardcoded className/data-variant on the RAC elements leaves no way for a
  * consumer to repaint it with gv- classes.
  */
-export function SegmentedControl(props: SegmentedControlProps) {
-  return <RACToggleButtonGroup {...props} className="gv-segmented-control" />;
+export function SegmentedControl({size = 'default', ...props}: SegmentedControlProps) {
+  return <RACToggleButtonGroup {...props} className="gv-segmented-control" data-size={size} />;
 }
 
 export interface SegmentProps extends ToggleButtonProps {
   children?: ReactNode;
-  /**
-   * Shows a small unread dot before the label (Figma `Segment` State=Unread).
-   * Swap later: this is a plain styled dot — G1's NewDot export is the real primitive once merged.
-   */
+  /** Shows Tali's New dot before the label (Figma `Segment` State=Unread). */
   isUnread?: boolean;
 }
 
@@ -40,7 +47,7 @@ export function Segment({children, isUnread, ...props}: SegmentProps) {
         <>
           <SelectionIndicator className="gv-segment-indicator" data-selected />
           <span className="gv-segment-label">
-            {isUnread && <span className="gv-segment-dot" aria-hidden="true" />}
+            {isUnread && <NewDot aria-label="Unread" />}
             {resolvedChildren}
           </span>
         </>

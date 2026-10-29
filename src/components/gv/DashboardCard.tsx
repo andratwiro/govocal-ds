@@ -2,6 +2,9 @@ import {useId, type HTMLAttributes, type Key, type ReactNode} from 'react';
 import {Button} from 'react-aria-components/Button';
 import {ChevronRight} from 'lucide-react';
 import type {ChartColor} from './Chart';
+import {BarRow} from './BarRow';
+import {LegendRow} from './LegendRow';
+import {StatementRow} from './StatementRow';
 import './Chart.css';
 import './DashboardCard.css';
 
@@ -83,7 +86,7 @@ export function DashboardCard({
   );
 }
 
-/* ────────────── Body parts. Drawn here in plain CSS; swap for Statement row / Bar row / Legend row later. ────────────── */
+/* ────────────── Body parts, built from Statement row, Bar row and Legend row (as Figma's instances are). ────────────── */
 
 const pct = (n: number) => `${Math.max(0, Math.min(100, n))}%`;
 
@@ -101,16 +104,16 @@ export function DashboardStatements({items}: {items: DashboardStatement[]}) {
     <ul className="gv-dashboard-statements">
       {items.map((s, i) => {
         const total = s.agree + s.disagree + s.pass || 1;
-        const [a, d, p] = [s.agree, s.disagree, s.pass].map(v => Math.round((v / total) * 100));
+        const share = (v: number) => Math.max(0, Math.min(100, (v / total) * 100));
         return (
-          <li key={i} className="gv-dashboard-statements__row">
-            <span className="gv-dashboard-statements__text">{s.statement}</span>
-            <span className="gv-dashboard-statements__bar" role="img" aria-label={`${a}% agree, ${d}% disagree, ${p}% pass`}>
-              <span data-chart-color="agree" style={{inlineSize: pct((s.agree / total) * 100)}} />
-              <span data-chart-color="disagree" style={{inlineSize: pct((s.disagree / total) * 100)}} />
-              <span data-chart-color="pass" style={{inlineSize: pct((s.pass / total) * 100)}} />
-            </span>
-            <span className="gv-dashboard-statements__value" aria-hidden>{a}% agree</span>
+          <li key={i}>
+            <StatementRow
+              statement={s.statement}
+              agreePercent={share(s.agree)}
+              disagreePercent={share(s.disagree)}
+              passPercent={share(s.pass)}
+              summary={`${Math.round(share(s.agree))}% agree`}
+            />
           </li>
         );
       })}
@@ -127,19 +130,18 @@ export interface DashboardBar {
   color?: ChartColor;
 }
 
-/** Status breakdown: a label, a thin track and "percent · count" per row (Figma Bar row look). */
+/** Status breakdown: one Bar row per status (label, thin track, "percent · count"). */
 export function DashboardBars({items}: {items: DashboardBar[]}) {
   return (
     <ul className="gv-dashboard-bars">
       {items.map((b, i) => (
-        <li key={i} className="gv-dashboard-bars__row">
-          <span className="gv-dashboard-bars__label">{b.label}</span>
-          <span className="gv-dashboard-bars__track" aria-hidden>
-            <span data-chart-color={b.color ?? 'bar'} style={{inlineSize: pct(b.percent)}} />
-          </span>
-          <span className="gv-dashboard-bars__value">
-            {Math.round(b.percent)}%{b.count != null && ` · ${b.count.toLocaleString('en-GB')}`}
-          </span>
+        <li key={i}>
+          <BarRow
+            label={b.label}
+            percent={Math.max(0, Math.min(100, b.percent))}
+            value={`${Math.round(b.percent)}%${b.count != null ? ` · ${b.count.toLocaleString('en-GB')}` : ''}`}
+            barColor={`--gv-chart-${b.color ?? 'bar'}`}
+          />
         </li>
       ))}
     </ul>
@@ -217,10 +219,8 @@ export function DashboardDemographic({label, items}: {label: ReactNode; items: D
       </div>
       <ul className="gv-dashboard-demographic__legend" aria-labelledby={id}>
         {items.map((it, i) => (
-          <li key={i} className="gv-dashboard-demographic__row">
-            <span className="gv-dashboard-demographic__swatch" data-chart-color={it.color} aria-hidden />
-            <span className="gv-dashboard-demographic__name">{it.label}</span>
-            <span className="gv-dashboard-demographic__value">{Math.round(it.percent)}%</span>
+          <li key={i}>
+            <LegendRow color={`--gv-chart-${it.color}`} label={it.label} value={`${Math.round(it.percent)}%`} />
           </li>
         ))}
       </ul>

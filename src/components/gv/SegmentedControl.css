@@ -62,10 +62,28 @@
   white-space: nowrap;
 }
 
-.gv-segment-dot {
-  width: var(--gv-space-6);
-  height: var(--gv-space-6);
-  border-radius: var(--gv-radius-full);
-  background: var(--gv-state-notification);
-  flex-shrink: 0;
+/* size="small": a dashboard card's range switch (Figma Dashboard card · Votes over time "Range switch",
+   prototype .pj-dseg): stage-grey track, padding 3, radius 8; segments 4/11, radius 6, Small type. */
+.gv-segmented-control[data-size='small'] {
+  gap: 0;
+  background: var(--gv-surface-stage);
+  border-radius: var(--gv-radius-8);
+
+  .gv-segment {
+    height: auto;
+    padding: var(--gv-space-4) var(--gv-space-11);
+    border-radius: var(--gv-radius-6);
+    font: var(--gv-type-small);
+    letter-spacing: var(--gv-type-small-tracking);
+    color: var(--gv-text-secondary);
+
+    &[data-selected] {
+      font: var(--gv-type-small);
+      color: var(--gv-text-primary);
+    }
+  }
+
+  .gv-segment-indicator {
+    border-radius: var(--gv-radius-6);
+  }
 }

@@ -2,109 +2,98 @@
 
 /*
  * Tali's Breadcrumb (Figma node 14:875, Level=Project/Phase·Draft/Phase·Live; prototype `.pj-bc`).
- * Project level: plain link trail, chevron separators, a pill-shaped current label.
- * Phase level: panel-toggle + back-arrow icon buttons, a divider, "/" separators (prototype's
- * `.pj-bc__sep--slash`), and a trailing Draft/Live status pill.
+ * Everything 5 apart (Figma's gap). Project level: link › current (in a 22-tall box, where a rename
+ * lives). Phase level: Icon button | Icon button, link / current, then a Status pill. The icon
+ * buttons are IconButton and the pill is Status; this file only lays them out.
  */
 .gv-breadcrumb {
   display: inline-flex;
   align-items: center;
   gap: var(--gv-space-5);
-  font: var(--gv-type-ui);
+  min-width: 0;
+  font-family: var(--gv-font-family);
 }
 
-.gv-breadcrumb-icon-btn {
-  all: unset;
+/* Between the panel toggle and ←: the sidebar and "go back" are two things (1 × 31, divider-strong;
+   Figma's 8-wide spacer, padding 0 3 0 4). */
+.gv-breadcrumb-divider {
+  flex: none;
+  align-self: center;
+  width: 1px;
+  height: 31px;
+  margin-inline: var(--gv-space-4) var(--gv-space-3);
+  background: var(--gv-divider-strong);
+}
+
+.gv-breadcrumb-trail,
+.gv-breadcrumb-crumb {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: var(--gv-space-28);
-  height: var(--gv-space-28);
-  border-radius: var(--gv-radius-8);
-  color: var(--gv-icon-default);
+  gap: var(--gv-space-5);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gv-breadcrumb-link,
+.gv-breadcrumb-current {
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  outline: none;
+  border-radius: var(--gv-radius-4);
+  text-decoration: none;
+}
+
+/* Prototype .pj-bc__link: grey, darkens on hover (no underline). */
+.gv-breadcrumb-link {
+  color: var(--gv-text-secondary);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 
   &[data-hovered] {
-    background: var(--gv-surface-hover);
+    color: var(--gv-text-primary);
   }
 
   &[data-focus-visible] {
     outline: 2px solid var(--gv-border-selected);
-    outline-offset: 1px;
+    outline-offset: 2px;
   }
-}
-
-.gv-breadcrumb-divider {
-  width: 1px;
-  height: var(--gv-space-20);
-  background: var(--gv-divider-strong);
-}
-
-.gv-breadcrumb-trail {
-  display: flex;
-  align-items: center;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.gv-breadcrumb-crumb {
-  display: flex;
-  align-items: center;
-  gap: var(--gv-space-5);
-}
-
-.gv-breadcrumb-link {
-  color: var(--gv-text-secondary);
-  text-decoration: none;
-  outline: none;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-
-  &[data-hovered],
-  &[data-focus-visible] {
-    text-decoration: underline;
-  }
-
-  &[data-focus-visible] {
-    border-radius: var(--gv-radius-4);
-    outline: 2px solid var(--gv-border-selected);
-  }
-}
-
-.gv-breadcrumb-sep-icon {
-  color: var(--gv-icon-quiet);
-}
-
-.gv-breadcrumb-sep-slash {
-  color: var(--gv-text-quiet);
 }
 
 .gv-breadcrumb-current {
   font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
   color: var(--gv-text-primary);
+}
 
-  &[data-level='project'] {
-    padding: var(--gv-space-1) var(--gv-space-5);
-    border-radius: var(--gv-radius-6);
+/* Project level: the current crumb sits in a 22-tall box (1/5 padding, radius 6). */
+.gv-breadcrumb[data-level='project'] .gv-breadcrumb-current {
+  padding: var(--gv-space-1) var(--gv-space-5);
+  border-radius: var(--gv-radius-6);
+}
+
+/* Phase level: the project name truncates first (prototype, max 200); the phase name stays whole. */
+.gv-breadcrumb[data-level='phase'] {
+  .gv-breadcrumb-link {
+    max-width: 200px;
+    padding-inline-start: var(--gv-space-4);
+  }
+
+  .gv-breadcrumb-current {
+    padding-inline-end: var(--gv-space-6);
   }
 }
 
-.gv-breadcrumb-status {
-  display: inline-flex;
-  align-items: center;
-  padding: 0 var(--gv-space-6);
-  border-radius: var(--gv-radius-full);
-  font: var(--gv-type-small-strong);
+.gv-breadcrumb-sep-icon {
+  flex: none;
+  color: var(--gv-icon-quiet);
 }
 
-.gv-breadcrumb-status[data-state='draft'] {
-  background: var(--gv-surface-stage);
-  color: var(--gv-text-pill);
-}
-
-.gv-breadcrumb-status[data-state='live'] {
-  background: var(--gv-surface-live);
-  color: var(--gv-text-live);
+.gv-breadcrumb-sep-slash {
+  font: var(--gv-type-ui);
+  color: var(--gv-text-quiet);
 }

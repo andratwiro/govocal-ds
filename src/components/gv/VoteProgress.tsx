@@ -43,7 +43,11 @@ export function VoteProgress(props: VoteProgressProps) {
         <span className="gv-vote-progress__count">{count}</span>
         <span className="gv-vote-progress__of">/ {threshold}</span>
         <span className="gv-vote-progress__track">
-          <span className="gv-vote-progress__fill" style={{width: `${percent}%`}} />
+          <span
+            className="gv-vote-progress__fill"
+            data-reached={count >= threshold || undefined}
+            style={{width: `${percent}%`}}
+          />
         </span>
       </ProgressBar>
     );

@@ -5,14 +5,14 @@ import {
   Disclosure,
   DisclosurePanel,
   Heading,
-  Radio,
-  RadioGroup,
-  Switch,
-  type RadioGroupProps,
-  type RadioProps,
-  type SwitchProps
+  type RadioGroupProps
 } from 'react-aria-components';
 import {ChevronDown, ChevronRight, type LucideIcon} from 'lucide-react';
+import {Radio, RadioGroup, type RadioProps} from '../RadioGroup';
+import {Switch, type SwitchProps} from '../Switch';
+import {IconButton} from './IconButton';
+import {Pill} from './Pill';
+import {Required} from './Required';
 import {ReviewNotice, type ReviewNoticeProps} from './ReviewNotice';
 import './Card.css';
 
@@ -75,12 +75,7 @@ export interface CardProps {
 function Status({isRequired, review, summary, pills}: Pick<CardProps, 'isRequired' | 'review' | 'summary' | 'pills'>) {
   return (
     <>
-      {isRequired && (
-        <span className="gv-card__required">
-          <span className="gv-card__required-dot" aria-hidden />
-          Required
-        </span>
-      )}
+      {isRequired && <Required placement="card" />}
       {review && (
         <span className="gv-card__review">
           <ReviewNotice state={review} />
@@ -90,10 +85,9 @@ function Status({isRequired, review, summary, pills}: Pick<CardProps, 'isRequire
       {pills && pills.length > 0 && (
         <span className="gv-card__pills">
           {pills.map(({label, icon: Icon}) => (
-            <span key={label} className="gv-card__pill">
-              {Icon && <Icon aria-hidden size={14} />}
+            <Pill key={label} icon={Icon && <Icon aria-hidden size={14} />}>
               {label}
-            </span>
+            </Pill>
           ))}
         </span>
       )}
@@ -106,9 +100,9 @@ function Trailing({iconActions, actions}: Pick<CardProps, 'iconActions' | 'actio
   return (
     <span className="gv-card__actions">
       {iconActions?.map(({icon: Icon, label, onPress}) => (
-        <Button key={label} className="gv-card__icon-button" aria-label={label} onPress={onPress}>
+        <IconButton key={label} aria-label={label} onPress={onPress}>
           <Icon aria-hidden size={16} />
-        </Button>
+        </IconButton>
       ))}
       {actions}
     </span>
@@ -187,9 +181,9 @@ export function Card({
         {status}
         <Trailing iconActions={iconActions} actions={actions} />
         {control === 'open' && (
-          <Button className="gv-card__icon-button" aria-label={`Open ${typeof title === 'string' ? title : ''}`.trim()} onPress={onOpen}>
+          <IconButton aria-label={`Open ${typeof title === 'string' ? title : ''}`.trim()} onPress={onOpen}>
             <ChevronRight aria-hidden size={16} />
-          </Button>
+          </IconButton>
         )}
         {control === 'placeholder' && <span className="gv-card__chevron" aria-hidden />}
       </div>
@@ -198,33 +192,38 @@ export function Card({
   );
 }
 
-/** The Card's on/off switch (Figma "Manage · Toggle": 26 × 16, a 12 knob). */
-export function CardSwitch(props: Omit<SwitchProps, 'children' | 'className'>) {
+/**
+ * The Card's on/off switch (Figma "Manage · Toggle"): the design system's Switch, with no visible label
+ * (give it an `aria-label`).
+ */
+export function CardSwitch(props: Omit<SwitchProps, 'children' | 'className' | 'description' | 'errorMessage'>) {
+  return <Switch {...props}>{null}</Switch>;
+}
+
+/** The choice cards' radio list (Survey placement, Survey options, Voting method): the design system's RadioGroup. */
+export function CardRadioGroup({
+  orientation = 'vertical',
+  children,
+  ...props
+}: Omit<RadioGroupProps, 'className'> & {orientation?: 'vertical' | 'horizontal'}) {
   return (
-    <Switch {...props} className="gv-card__switch">
-      <span className="gv-card__switch-track" aria-hidden>
-        <span className="gv-card__switch-knob" />
-      </span>
-    </Switch>
+    <RadioGroup
+      {...props}
+      orientation={orientation}
+      className={({defaultClassName}) => `${defaultClassName} gv-card__radios`}>
+      {children as ReactNode}
+    </RadioGroup>
   );
 }
 
-/** The choice cards' radio list (Survey placement, Survey options, Voting method). */
-export function CardRadioGroup({
-  orientation = 'vertical',
-  ...props
-}: Omit<RadioGroupProps, 'className'> & {orientation?: 'vertical' | 'horizontal'}) {
-  return <RadioGroup {...props} orientation={orientation} className="gv-card__radios" data-orientation={orientation} />;
-}
-
+/** One choice: the design system's Radio, with a title and an optional grey line under it. */
 export function CardRadio({
   children,
   description,
   ...props
-}: Omit<RadioProps, 'className' | 'children'> & {children: ReactNode; description?: ReactNode}) {
+}: Omit<RadioProps, 'className' | 'children' | 'description'> & {children: ReactNode; description?: ReactNode}) {
   return (
-    <Radio {...props} className="gv-card__radio">
-      <span className="gv-card__radio-dot" aria-hidden />
+    <Radio {...props} className={({defaultClassName}) => `${defaultClassName} gv-card__radio`}>
       <span className="gv-card__radio-text">
         <span className="gv-card__radio-title">{children}</span>
         {description && <span className="gv-card__radio-description">{description}</span>}

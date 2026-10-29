@@ -1,146 +1,14 @@
 @import '../theme.css';
 
-/* Tali's Header (Figma 14:876): 48 tall, padding 5/6, gap 8, radius 8. */
+/* Tali's Header (Figma 14:876): 48 tall, padding 5/6, radius 8, around a Breadcrumb (Breadcrumb.css). */
 .gv-header {
   display: inline-flex;
   align-items: center;
-  gap: var(--gv-space-5);
+  gap: var(--gv-space-8);
   min-height: 48px;
+  min-width: 0;
   box-sizing: border-box;
   padding: var(--gv-space-5) var(--gv-space-6);
   border-radius: var(--gv-radius-8);
   font-family: var(--gv-font-family);
-}
-
-.gv-header__crumbs {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--gv-space-5);
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.gv-header__crumb {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--gv-space-5);
-  min-width: 0;
-}
-
-.gv-header__link,
-.gv-header__current {
-  font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  outline: none;
-  border-radius: var(--gv-radius-4);
-  text-decoration: none;
-}
-
-.gv-header__link {
-  color: var(--gv-text-secondary);
-  cursor: pointer;
-
-  &[data-hovered] {
-    color: var(--gv-text-primary);
-  }
-
-  &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
-  }
-}
-
-/* On a phase the project name truncates first; the phase name stays whole. */
-.gv-header__link--project {
-  max-width: 200px;
-  padding-inline-start: var(--gv-space-4);
-}
-
-.gv-header__current {
-  font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
-  color: var(--gv-text-primary);
-  padding-inline-end: var(--gv-space-6);
-}
-
-/* Project level: the current crumb sits in a 22-tall box (1/5 padding, radius 6), where a rename lives. */
-.gv-header__current--boxed {
-  padding: var(--gv-space-1) var(--gv-space-5);
-  border-radius: var(--gv-radius-6);
-}
-
-.gv-header__chevron {
-  flex: none;
-  color: var(--gv-icon-quiet);
-}
-
-.gv-header__slash {
-  font: var(--gv-type-ui);
-  color: var(--gv-text-quiet);
-}
-
-/* Icon button · Ghost (28, radius 8). */
-.gv-header__icon {
-  appearance: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  border: none;
-  border-radius: var(--gv-radius-8);
-  background: transparent;
-  color: var(--gv-icon-default);
-  cursor: pointer;
-  outline: none;
-
-  &[data-hovered] {
-    background: var(--gv-surface-hover-strong);
-    color: var(--gv-icon-strong);
-  }
-
-  &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
-  }
-}
-
-/* Between the panel toggle and ←: the sidebar and "go back" are two things (1 × 31, divider-strong). */
-.gv-header__divider {
-  flex: none;
-  align-self: center;
-  width: 1px;
-  height: 31px;
-  margin-inline: var(--gv-space-4) var(--gv-space-3);
-  background: var(--gv-divider-strong);
-}
-
-/* Status pill (Draft / Live): 18 tall, padding 0 6, Small strong. */
-.gv-header__status {
-  display: inline-flex;
-  align-items: center;
-  flex: none;
-  height: 18px;
-  padding: 0 var(--gv-space-6);
-  border-radius: var(--gv-radius-full);
-  font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
-  white-space: nowrap;
-
-  &[data-state='draft'] {
-    background: var(--gv-surface-stage);
-    color: var(--gv-text-pill);
-  }
-
-  &[data-state='live'] {
-    background: var(--gv-surface-live);
-    color: var(--gv-text-live);
-  }
 }

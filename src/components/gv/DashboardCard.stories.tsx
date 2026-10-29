@@ -1,9 +1,9 @@
 import type {Decorator, Meta, StoryObj} from '@storybook/react-vite';
 import {Sparkles} from 'lucide-react';
-import {Button} from '../Button';
-import {SegmentedControl, SegmentedControlItem} from '../SegmentedControl';
 import {ChartLegend, LineChart, Sparkline} from './Chart';
+import {CompactButton} from './CompactButton';
 import {Kpi} from './Kpi';
+import {Segment, SegmentedControl} from './SegmentedControl';
 import {
   DashboardBars,
   DashboardCard,
@@ -91,7 +91,7 @@ const cards = {
       type="ai-summary"
       icon={<Sparkles />}
       title="What are people saying?"
-      footer={<>1 / 34<Button variant="secondary">Explore</Button></>}>
+      footer={<>1 / 34<CompactButton>Explore</CompactButton></>}>
       <p>{SUMMARY}</p>
     </DashboardCard>
   ),
@@ -117,9 +117,9 @@ const cards = {
       title="Participation over time"
       subtitle="Votes cast · cumulative"
       action={
-        <SegmentedControl aria-label="Range" disallowEmptySelection defaultSelectedKeys={['daily']}>
-          <SegmentedControlItem id="daily">Daily</SegmentedControlItem>
-          <SegmentedControlItem id="weekly">Weekly</SegmentedControlItem>
+        <SegmentedControl size="small" aria-label="Range" disallowEmptySelection defaultSelectedKeys={['daily']}>
+          <Segment id="daily">Daily</Segment>
+          <Segment id="weekly">Weekly</Segment>
         </SegmentedControl>
       }>
       <Sparkline label="Votes cast" values={VOTES} />

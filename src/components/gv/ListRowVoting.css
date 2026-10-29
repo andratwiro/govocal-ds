@@ -53,28 +53,6 @@
   flex-basis: 200px;
   display: flex;
   align-items: center;
-  gap: var(--gv-space-6);
-}
-
-.gv-list-row-voting__vote-count {
-  font: var(--gv-type-ui-strong);
-  color: var(--gv-text-primary);
-  flex-shrink: 0;
-}
-
-.gv-list-row-voting__bar {
-  flex: 1;
-  height: 4px;
-  border-radius: var(--gv-radius-full);
-  background: var(--gv-surface-stage);
-  overflow: hidden;
-}
-
-.gv-list-row-voting__bar-fill {
-  display: block;
-  height: 100%;
-  border-radius: var(--gv-radius-full);
-  background: var(--gv-icon-default);
 }
 
 .gv-list-row-voting__new {
