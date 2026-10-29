@@ -17,14 +17,18 @@ const meta: Meta<typeof ListRowProposals> = {
 export default meta;
 type Story = StoryFn<typeof ListRowProposals>;
 
+const THUMB = 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=64&auto=format&fit=crop';
+
 const Frame = ({children}: {children: React.ReactNode}) => (
-  <div style={{width: 764, border: '1px solid var(--gv-border-card)'}}>{children}</div>
+  <div style={{width: 764, background: 'var(--gv-surface-panel)'}}>{children}</div>
 );
 
+/** Figma's variants, each with its thumbnail. */
 export const AllVariants: Story = () => (
   <Frame>
     <ListRowProposals
       title="Car-free park loop on weekends"
+      thumbnail={THUMB}
       voteCount={512}
       voteThreshold={300}
       statusLabel="Official response"
@@ -33,6 +37,7 @@ export const AllVariants: Story = () => (
     />
     <ListRowProposals
       title="Night lighting for the east paths"
+      thumbnail={THUMB}
       voteCount={341}
       voteThreshold={300}
       statusLabel="Threshold reached"
@@ -42,6 +47,7 @@ export const AllVariants: Story = () => (
     />
     <ListRowProposals
       title="Community orchard by the north gate"
+      thumbnail={THUMB}
       warning
       voteCount={268}
       voteThreshold={300}
@@ -52,6 +58,7 @@ export const AllVariants: Story = () => (
     />
     <ListRowProposals
       title="Repair the lagoon railings"
+      thumbnail={THUMB}
       voteCount={152}
       voteThreshold={300}
       statusLabel="Gathering support"
@@ -65,6 +72,7 @@ export const Closed: Story = () => (
   <Frame>
     <ListRowProposals
       title="Car-free park loop on weekends"
+      thumbnail={THUMB}
       voteCount={512}
       voteThreshold={300}
       statusLabel="Official response"
@@ -78,6 +86,7 @@ export const New: Story = () => (
   <Frame>
     <ListRowProposals
       title="Night lighting for the east paths"
+      thumbnail={THUMB}
       voteCount={341}
       voteThreshold={300}
       statusLabel="Threshold reached"
@@ -92,6 +101,7 @@ export const NewWarning: Story = () => (
   <Frame>
     <ListRowProposals
       title="Community orchard by the north gate"
+      thumbnail={THUMB}
       warning
       voteCount={268}
       voteThreshold={300}
@@ -107,6 +117,7 @@ export const Open: Story = () => (
   <Frame>
     <ListRowProposals
       title="Repair the lagoon railings"
+      thumbnail={THUMB}
       voteCount={152}
       voteThreshold={300}
       statusLabel="Gathering support"

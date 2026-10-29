@@ -1,74 +1,104 @@
 @import '../theme.css';
 
+/*
+ * Figma "List row · Proposals": Proposal | Votes 200 | Status 144 | Comments 112 | Time left 104.
+ * No checkbox slot in front; 28 at the end (under the header's last slot), as in the
+ * prototype's Manage table. Cells 9 above and below, 0 8 inside (the title 0 16 0 8), all on
+ * the title's first line; numbers right-aligned.
+ */
 .gv-list-row-proposals {
+  box-sizing: border-box;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
-  min-height: 54px;
-  padding: var(--gv-space-9) var(--gv-space-28);
-  gap: var(--gv-space-16);
+  padding-inline-end: var(--gv-space-28);
   border-bottom: 1px solid var(--gv-border-row);
+}
+
+.gv-list-row-proposals__cells {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) 200px 144px 112px 104px;
+  align-items: start;
+  padding-block: var(--gv-space-9);
 }
 
 .gv-list-row-proposals__title-cell {
   display: flex;
-  align-items: center;
-  gap: var(--gv-space-12);
-  flex: 1 1 176px;
+  align-items: flex-start;
+  gap: var(--gv-space-8);
   min-width: 0;
-  padding-right: var(--gv-space-16);
+  padding: 0 var(--gv-space-16) 0 var(--gv-space-8);
 }
 
+/* 32 thumbnail, 12 from the text (Figma: 8 gap + 4 before the text; prototype: 4 + 8). */
 .gv-list-row-proposals__thumbnail {
   width: 32px;
   height: 32px;
   flex-shrink: 0;
+  margin-inline-end: var(--gv-space-4);
   border-radius: var(--gv-radius-6);
   background: var(--gv-surface-hover);
   object-fit: cover;
 }
 
 .gv-list-row-proposals__title {
-  display: inline-flex;
-  align-items: flex-start;
-  gap: var(--gv-space-6);
+  flex: 1;
+  min-width: 0;
   font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.gv-list-row-proposals__marks {
+  flex: none;
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+  margin-top: var(--gv-space-3);
 }
 
 .gv-list-row-proposals__warning {
-  flex-shrink: 0;
-  margin-top: 3px;
+  flex: none;
+  margin: -1px;
   color: var(--gv-icon-warning);
 }
 
 .gv-list-row-proposals__cell {
-  flex: 0 0 144px;
+  display: flex;
+  align-items: flex-start;
+  min-width: 0;
   padding: 0 var(--gv-space-8);
   font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-secondary);
+
+  &[data-num] {
+    justify-content: flex-end;
+    font-variant-numeric: tabular-nums;
+  }
 }
 
+/* Vote progress keeps to one line: its bar gives way when the count is wide. */
 .gv-list-row-proposals__votes-cell {
-  flex-basis: 200px;
-  display: flex;
   align-items: center;
+  height: 20px;
+  white-space: nowrap;
 }
 
-.gv-list-row-proposals__comments-cell {
-  flex-basis: 112px;
-  display: flex;
-  align-items: center;
-  gap: var(--gv-space-8);
-}
-
+/* "N new": Small strong accent, 8 after the count. */
 .gv-list-row-proposals__new {
+  flex: none;
+  margin-inline-start: var(--gv-space-8);
+  padding-top: var(--gv-space-2);
   font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-accent);
-}
-
-.gv-list-row-proposals__time-cell {
-  flex-basis: 104px;
 }
 
 .gv-list-row-proposals__closed {
