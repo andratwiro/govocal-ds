@@ -12,6 +12,7 @@ import {
 } from 'react-aria-components/ListBox';
 import {composeRenderProps} from 'react-aria-components/composeRenderProps';
 import {Check} from 'lucide-react';
+import type {ReactNode} from 'react';
 import {Text} from './Content';
 import {ProgressCircle} from './ProgressCircle';
 import './ListBox.css';
@@ -48,15 +49,25 @@ export function DropdownListBox<T>(props: ListBoxProps<T>) {
   return <AriaListBox {...props} className="dropdown-listbox" />;
 }
 
-export function DropdownItem(props: ListBoxItemProps) {
+export interface DropdownItemProps extends ListBoxItemProps {
+  /** A 16 icon, or a 16 Avatar for a person, before the name. */
+  icon?: ReactNode;
+  /** A second line under the name, in Small secondary. */
+  description?: ReactNode;
+}
+
+/** A Select or ComboBox option: icon · name (· description line) · a check at the end when chosen. */
+export function DropdownItem({icon, description, ...props}: DropdownItemProps) {
   let textValue =
     props.textValue || (typeof props.children === 'string' ? props.children : undefined);
   return (
     <ListBoxItem {...props} textValue={textValue} className="dropdown-item">
       {composeRenderProps(props.children, (children, {isSelected}) => (
         <>
-          {isSelected && <Check />}
+          {icon && <span className="dropdown-item__icon" aria-hidden>{icon}</span>}
           {typeof children === 'string' ? <Text slot="label">{children}</Text> : children}
+          {description && <Text slot="description">{description}</Text>}
+          {isSelected && <Check className="dropdown-item__check" />}
         </>
       ))}
     </ListBoxItem>

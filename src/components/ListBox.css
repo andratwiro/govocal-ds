@@ -180,8 +180,8 @@
   width: 100%;
 }
 
-/* Select and ComboBox options: the dropdown rows, the chosen one marked by a 16 check at the end (the prototype's
-   .pjdd__chk), never a fill. */
+/* Select and ComboBox options: the dropdown rows, icon · name · check, the chosen one marked by a 16 check at the end
+   (the prototype's .pjdd__chk), never a fill. A description line sits under the name. */
 .dropdown-listbox {
   display: block;
   max-height: inherit;
@@ -207,12 +207,12 @@
 .dropdown-item {
   display: grid;
   grid-template-areas:
-    'label check'
-    'desc check';
-  grid-template-columns: 1fr auto;
+    'icon label check'
+    '. desc check';
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   align-content: center;
-  column-gap: var(--gv-space-10);
+  column-gap: 0;
   min-height: var(--gv-space-32);
   padding: 0 var(--gv-space-8);
   box-sizing: border-box;
@@ -229,10 +229,24 @@
     padding-block: var(--gv-space-6);
   }
 
-  .lucide-check {
+  /* 16, the strong icon grey, 10 before the name (the prototype's dropdown canon). An Avatar comes as it is. */
+  .dropdown-item__icon {
+    grid-area: icon;
+    display: inline-flex;
+    margin-inline-end: var(--gv-space-10);
+    color: var(--gv-icon-strong);
+
+    > svg {
+      width: var(--gv-space-16);
+      height: var(--gv-space-16);
+    }
+  }
+
+  .dropdown-item__check {
     grid-area: check;
     width: var(--gv-space-16);
     height: var(--gv-space-16);
+    margin-inline-start: var(--gv-space-10);
     color: var(--gv-action-checked);
   }
 
@@ -259,6 +273,10 @@
 
   [slot='label'] {
     grid-area: label;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   [slot='description'] {
@@ -270,6 +288,10 @@
 
   &[data-disabled] {
     color: var(--text-color-disabled);
+
+    .dropdown-item__icon {
+      color: var(--gv-icon-quiet);
+    }
   }
 
   &[href] {

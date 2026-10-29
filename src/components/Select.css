@@ -1,12 +1,15 @@
 @import './theme.css';
 
 .react-aria-Select {
+  --select-gap: var(--gv-space-8);
+
   color: var(--text-color);
   position: relative;
   width: 200px;
 
   .react-aria-Button {
     padding: 0 var(--spacing-2) 0 var(--spacing-3);
+    gap: var(--select-gap);
     width: 100%;
     min-width: 0;
 
@@ -15,43 +18,219 @@
     }
   }
 
-  /* The value reads as a field's text (UI regular primary), not a button label. */
+  /* The value reads as a field's text (UI regular primary), not a button label; an option's icon or avatar comes
+     with it. */
   .react-aria-SelectValue {
     flex: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--gv-space-8);
+    min-width: 0;
     font: var(--gv-type-ui);
     letter-spacing: var(--gv-type-ui-tracking);
     color: var(--field-text-color);
     text-align: start;
     overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
 
     &[data-placeholder] {
       color: var(--text-color-placeholder);
       font-weight: normal;
     }
+
+    [slot='label'] {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    [slot='description'] {
+      display: none;
+    }
+
+    .dropdown-item__icon {
+      display: inline-flex;
+      flex: none;
+      color: var(--gv-icon-strong);
+    }
+
+    .dropdown-item__icon > svg {
+      width: var(--gv-space-16);
+      height: var(--gv-space-16);
+    }
+  }
+
+  .gv-select-icon {
+    display: inline-flex;
+    flex: none;
+    color: var(--gv-icon-strong);
+
+    > svg {
+      width: var(--gv-space-16);
+      height: var(--gv-space-16);
+    }
+  }
+
+  /* "Space:" sits a word space from its value, not a gap. */
+  .gv-select-prefix {
+    flex: none;
+    margin-inline-end: calc(var(--gv-space-4) - var(--select-gap));
+    font: var(--gv-type-ui);
+    letter-spacing: var(--gv-type-ui-tracking);
+    color: var(--gv-text-secondary);
   }
 
   .lucide-chevron-down {
     flex: none;
     width: var(--gv-space-16);
     height: var(--gv-space-16);
-    margin-inline-start: var(--spacing-2);
     color: var(--gv-icon-default);
   }
 
-  &[data-disabled] .lucide-chevron-down {
+  &[data-disabled] .lucide-chevron-down,
+  &[data-disabled] .gv-select-icon {
     color: var(--gv-icon-quiet);
+  }
+}
+
+/* Pill (the prototype's `.pjm-chip--pjc`, New project's Space and Folder): 28 tall, 12 to the sides, radius full, the
+   pill grey, the value in UI primary, a 12 chevron; hovered or open, a step darker. It is as wide as what it says. */
+.react-aria-Select[data-variant='pill'],
+.react-aria-Select[data-variant='quiet'] {
+  width: fit-content;
+  max-width: 100%;
+
+  /* The value's parts join the trigger's row, so icons lead and a prefix sits between them and the value
+     ("✱ Space: City parks"). */
+  .react-aria-SelectValue {
+    display: contents;
+  }
+
+  .react-aria-SelectValue .dropdown-item__icon,
+  .gv-select-icon {
+    order: -1;
+  }
+}
+
+.react-aria-Select[data-variant='pill'] {
+  .react-aria-Button {
+    height: var(--gv-space-28);
+    padding: 0 var(--gv-space-12);
+    border-radius: var(--gv-radius-full);
+    background: var(--gv-surface-pill);
+    color: var(--gv-text-primary);
+
+    &[data-hovered],
+    &[data-pressed] {
+      background: var(--gv-color-slate-200);
+      color: var(--gv-text-primary);
+    }
+  }
+
+  &[data-open] .react-aria-Button {
+    background: var(--gv-color-slate-200);
   }
 
   .react-aria-SelectValue {
-    [slot='description'] {
-      display: none;
+    color: var(--gv-text-primary);
+  }
+
+  .lucide-chevron-down {
+    width: var(--gv-space-12);
+    height: var(--gv-space-12);
+  }
+}
+
+/* The small pill (`.spill`, a side panel's property row: "Status  Viewed ▾"): 22 tall, 10 to the sides, gap 6,
+   Small strong secondary, 14 icons. */
+.react-aria-Select[data-variant='pill'][data-size='22'] {
+  --select-gap: var(--gv-space-6);
+
+  .react-aria-Button {
+    height: var(--gv-space-22);
+    padding: 0 var(--gv-space-10);
+  }
+
+  .react-aria-SelectValue,
+  .gv-select-prefix {
+    font: var(--gv-type-small-strong);
+    letter-spacing: var(--gv-type-small-tracking);
+    color: var(--gv-text-secondary);
+  }
+
+  .react-aria-SelectValue {
+    gap: var(--gv-space-6);
+  }
+
+  .gv-select-icon > svg,
+  .react-aria-SelectValue .dropdown-item__icon > svg {
+    width: var(--gv-space-14);
+    height: var(--gv-space-14);
+  }
+}
+
+/* Quiet (a toolbar's "Sort: Newest ▾"): no fill until hovered, the value in UI primary after a secondary prefix. */
+.react-aria-Select[data-variant='quiet'] {
+  .react-aria-Button {
+    padding: 0 var(--gv-space-8);
+
+    &[data-hovered] {
+      background: var(--gv-surface-hover);
     }
+  }
+
+  &[data-open] .react-aria-Button {
+    background: var(--gv-surface-hover-strong);
+  }
+
+  .react-aria-SelectValue {
+    color: var(--gv-text-primary);
   }
 }
 
 .select-popover[data-trigger='Select'] {
   width: var(--trigger-width);
   padding: 0;
+}
+
+/* A pill's or a quiet trigger's list is as wide as its longest option, never narrower than the trigger or 200. */
+.select-popover--fit[data-trigger='Select'] {
+  width: max-content;
+  min-width: max(var(--trigger-width), 200px);
+  max-width: 320px;
+}
+
+/* With a search: 290 (the prototype's `.pjc-pop`) unless the trigger is wider. */
+.select-popover--fit.select-popover--search[data-trigger='Select'] {
+  width: max(var(--trigger-width), 290px);
+}
+
+/* The search over the list: the dropdown canon's 32 field, radius 8, the near-white fill, the magnifier first; 6
+   from the frame and from the rows. */
+.select-search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-6);
+  max-height: inherit;
+  box-sizing: border-box;
+  padding: var(--gv-space-6) var(--gv-space-6) 0;
+
+  .select-search__field {
+    width: 100%;
+
+    .react-aria-Input {
+      height: var(--gv-space-32);
+      background: var(--gv-surface-toolbar);
+    }
+  }
+
+  .dropdown-listbox {
+    flex: 0 1 auto;
+    min-height: 0;
+    padding: 0 0 var(--gv-space-6);
+
+    &[data-empty] {
+      padding-inline: var(--gv-space-8);
+    }
+  }
 }
