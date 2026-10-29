@@ -4,3 +4,4 @@ Task 2: complete (commits 0fedad6..05a0b7c, review clean); space/0 fix after rev
 Minor (T2): Figma space/0 drawn 1px (name wins now); ask Tali if a 0 step is wanted at all
 Task 3: implemented 9bb6f7b (Mac session), in review
 SPLIT (Rob 29 Oct: back office in parallel): Storybook clanker owns backoffice/** and Task 5, then Task 6's two pages; the Mac session owns src/**, .storybook/**, Tasks 3, 4, 9, Task 6's components, Patterns, Icons. New system files are fine from either side; edit the other side's files only after saying so in chat. git pull --rebase before every push.
+Task 5: complete (commit e0f602f, review clean; fixed 3 minors: import check covers side-effect imports, unknown phase redirects, phase switch never empty). Left Minor: Page has no breadcrumbs prop yet (Task 6); no skip link (a11y, not blocking)
