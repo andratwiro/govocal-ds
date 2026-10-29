@@ -11,30 +11,25 @@ export interface DropZoneProps extends RACDropZoneProps {
   acceptedFileTypes?: ReadonlyArray<string>;
   allowsMultiple?: boolean;
   onSelect?: (files: FileList | null) => void;
+  /** The label, in place of "Drop a file here or browse". Plain text: the whole zone is the button. */
   children?: ReactNode;
 }
 
 /**
- * Drop zone (Figma node 5:490): a dashed-bordered area with an upload icon and a
- * "Drop a file here or browse" label, "browse" opening the OS file picker via FileTrigger.
- * The prototype's `.pj-sub__upload` agrees with Figma on padding/radius/colour but uses a
- * dashed border where Figma shows solid — followed the prototype here (dashed reads as "drop
- * target" at a glance; a solid card border would look like a static panel).
+ * Drop zone (Figma node 5:490; the prototype's attachments zone `.attz`): an upload icon over
+ * "Drop a file here or browse". Drop a file on it, or press anywhere in it to open the file picker
+ * (FileTrigger), as the prototype's zone is one button. The border is dashed, as the prototype draws
+ * it (Figma shows it solid): dashed reads as "drop here" at a glance.
  */
 export function DropZone({acceptedFileTypes, allowsMultiple, onSelect, children, ...props}: DropZoneProps) {
   return (
     <RACDropZone {...props} className="gv-drop-zone">
-      <Upload size={20} aria-hidden="true" className="gv-drop-zone-icon" />
-      <span className="gv-drop-zone-text">
-        {children ?? (
-          <>
-            Drop a file here or{' '}
-            <FileTrigger acceptedFileTypes={acceptedFileTypes} allowsMultiple={allowsMultiple} onSelect={onSelect}>
-              <Button className="gv-drop-zone-browse">browse</Button>
-            </FileTrigger>
-          </>
-        )}
-      </span>
+      <FileTrigger acceptedFileTypes={acceptedFileTypes} allowsMultiple={allowsMultiple} onSelect={onSelect}>
+        <Button className="gv-drop-zone-trigger" isDisabled={props.isDisabled}>
+          <Upload aria-hidden="true" className="gv-drop-zone-icon" />
+          <span className="gv-drop-zone-text">{children ?? 'Drop a file here or browse'}</span>
+        </Button>
+      </FileTrigger>
     </RACDropZone>
   );
 }

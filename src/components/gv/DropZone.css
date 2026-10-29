@@ -1,53 +1,66 @@
 @import '../theme.css';
 
-/* Drop zone (Figma node 5:490): toolbar fill, control border (dashed per the prototype), radius 10. */
+/*
+ * Drop zone (Figma node 5:490; prototype `.attz`): toolbar fill, 1.5 dashed control border (the
+ * prototype's; Figma draws 1 solid), radius 10, 22/16 padding, icon over text 8 apart. The prototype
+ * sets the states: the border darkens on hover, and a file held over it turns the border brand and
+ * the fill white. The whole zone is the browse button.
+ */
 .gv-drop-zone {
+  border: 1.5px dashed var(--gv-border-control);
+  border-radius: var(--gv-radius-10);
+  background: var(--gv-surface-toolbar);
+  outline: none;
+  transition: border-color 0.12s, background 0.12s;
+
+  &[data-hovered] {
+    border-color: var(--gv-border-control-hover);
+  }
+
+  &[data-drop-target] {
+    border-color: var(--gv-border-selected);
+    background: var(--gv-surface-panel);
+  }
+
+  &[data-focus-visible],
+  &:has(.gv-drop-zone-trigger[data-focus-visible]) {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+  }
+
+  &[data-disabled] {
+    opacity: 0.45;
+  }
+}
+
+.gv-drop-zone-trigger {
+  all: unset;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--gv-space-8);
+  width: 100%;
   padding: var(--gv-space-22) var(--gv-space-16);
-  border: 1.5px dashed var(--gv-border-control);
-  border-radius: var(--gv-radius-10);
-  background: var(--gv-surface-toolbar);
   text-align: center;
-  outline: none;
-
-  &[data-focus-visible],
-  &[data-drop-target] {
-    border-color: var(--gv-border-selected);
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: -1px;
-  }
-
-  &[data-drop-target] {
-    background: var(--gv-surface-info);
-  }
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 
   &[data-disabled] {
-    opacity: 0.6;
+    cursor: not-allowed;
   }
 }
 
+/* upload/20 (Figma; the prototype renders it at 20 too), at Figma's 1.75 stroke on Lucide's 24 grid. */
 .gv-drop-zone-icon {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.75;
   color: var(--gv-icon-default);
 }
 
 .gv-drop-zone-text {
   font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-secondary);
-}
-
-.gv-drop-zone-browse {
-  all: unset;
-  color: var(--gv-text-accent);
-  cursor: pointer;
-  text-decoration: underline;
-  -webkit-tap-highlight-color: transparent;
-
-  &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
-    border-radius: var(--gv-radius-2);
-  }
 }
