@@ -49,7 +49,7 @@ type Story = StoryObj<typeof TableToolbar>;
 
 /** Every state at once: plain, filtered, searching with the export, and with a selection. */
 export const AllVariants: Story = {
-  name: 'All variants',
+  name: 'AllVariants',
   render: () => (
     <div style={{display: 'grid', gap: 32}}>
       <Demo />

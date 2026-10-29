@@ -114,7 +114,7 @@ const Caption = ({children}: {children: ReactNode}) => (
 
 /** The three looks: in a Card or Panel (default), standing alone (`framed`), and dense (`compact`). */
 export const AllVariants: Story = {
-  name: 'All variants',
+  name: 'AllVariants',
   render: () => (
     <div style={{display: 'grid', gap: 32, maxWidth: 900}}>
       <div><Caption>Default</Caption><PeopleTable initialSort={{column: 'name', direction: 'ascending'}} /></div>
@@ -219,13 +219,6 @@ export const NumericColumns: Story = {
 export const RowOptions: Story = {name: 'Row options', render: () => <PeopleTable />};
 
 export const Empty: Story = {render: () => <PeopleTable empty selectable />};
-
-/** Right to left (Arabic): columns, padding, the check column and the "…" mirror. */
-export const RightToLeft: Story = {
-  name: 'Right to left',
-  globals: {direction: 'rtl'},
-  render: () => <PeopleTable selectable initialSelection={['a']} initialSort={{column: 'joined', direction: 'descending'}} />
-};
 
 // ── Cells: thumbnails, assignees, tags, the Projects list ─────────────────────────────────────────
 const FEW = MANAGE_IDEAS.slice(0, 6);
@@ -584,3 +577,10 @@ function ManagePanel() {
  * view). Click a row: the line under the panel says what opened.
  */
 export const InAPanel: Story = {name: 'In a panel', render: () => <ManagePanel />};
+
+/** Right to left (Arabic): columns, padding, the check column and the "…" mirror. */
+export const RightToLeft: Story = {
+  name: 'Right to left',
+  globals: {direction: 'rtl'},
+  render: () => <PeopleTable selectable initialSelection={['a']} initialSort={{column: 'joined', direction: 'descending'}} />
+};
