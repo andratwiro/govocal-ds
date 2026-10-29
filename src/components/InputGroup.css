@@ -8,10 +8,10 @@
     width: fit-content;
     padding: 0 var(--spacing-2);
     border-radius: var(--radius);
-    font-size: var(--font-size);
+    font: var(--gv-type-ui);
     color: var(--field-text-color);
     overflow: hidden;
-    height: 32px;
+    height: var(--spacing-9);
 
     &[data-focus-within] {
       outline: 2px solid var(--focus-ring-color);
@@ -26,8 +26,8 @@
   .react-aria-Input {
     padding: var(--spacing-1);
     margin: 0;
-    font: var(--font-size) var(--gv-font-family);
-    color: var(--text-color);
+    font: var(--gv-type-ui);
+    color: var(--field-text-color);
     outline: none;
     border: none;
     background: transparent;
