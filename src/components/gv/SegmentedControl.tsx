@@ -8,6 +8,7 @@ import {
 } from 'react-aria-components/ToggleButtonGroup';
 import {composeRenderProps} from 'react-aria-components/composeRenderProps';
 import type {ReactNode} from 'react';
+import {Tooltip, TooltipTrigger} from '../Tooltip';
 import {NewDot} from './NewDot';
 import './SegmentedControl.css';
 
@@ -34,14 +35,20 @@ export function SegmentedControl({size = 'default', ...props}: SegmentedControlP
 }
 
 export interface SegmentedControlItemProps extends ToggleButtonProps {
+  /** The label; an icon (`aria-hidden`, 16, or 14 in `small`) may come first ("List", "Map"). */
   children?: ReactNode;
   /** Shows the New dot in the segment's top-right corner (Figma `Segmented control item` State=Unread). */
   isUnread?: boolean;
+  /**
+   * A tip under the segment on hover and keyboard focus, read as its description: what the New dot stands for
+   * ("18 new ideas", the phase tabs). Not in Figma.
+   */
+  tooltip?: ReactNode;
 }
 
 /** Segmented control item (Figma node 14:882): one segment of the control. */
-export function SegmentedControlItem({children, isUnread, ...props}: SegmentedControlItemProps) {
-  return (
+export function SegmentedControlItem({children, isUnread, tooltip, ...props}: SegmentedControlItemProps) {
+  const segment = (
     <ToggleButton {...props} className="gv-segment" data-unread={isUnread || undefined}>
       {composeRenderProps(children, resolvedChildren => (
         <>
@@ -51,5 +58,12 @@ export function SegmentedControlItem({children, isUnread, ...props}: SegmentedCo
         </>
       ))}
     </ToggleButton>
+  );
+  if (tooltip == null) return segment;
+  return (
+    <TooltipTrigger>
+      {segment}
+      <Tooltip placement="bottom">{tooltip}</Tooltip>
+    </TooltipTrigger>
   );
 }

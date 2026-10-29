@@ -1,3 +1,4 @@
+import {List, Map as MapIcon} from 'lucide-react';
 import {SegmentedControl, SegmentedControlItem} from './SegmentedControl';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
@@ -94,6 +95,43 @@ export const SmallRangeSwitch: Story = {
     <SegmentedControl size="small" aria-label="Range" defaultSelectedKeys={['daily']} disallowEmptySelection>
       <SegmentedControlItem id="daily">Daily</SegmentedControlItem>
       <SegmentedControlItem id="weekly">Weekly</SegmentedControlItem>
+    </SegmentedControl>
+  )
+};
+
+/**
+ * Not a Figma variant: an icon before each label in the small control (the Manage tab's List / Map switch). The icon
+ * is 14 and `aria-hidden`; the word names the segment.
+ */
+export const IconAndLabelSmall: Story = {
+  name: 'Icon and label · small',
+  render: () => (
+    <SegmentedControl size="small" aria-label="View" defaultSelectedKeys={['map']} disallowEmptySelection>
+      <SegmentedControlItem id="list">
+        <List aria-hidden />
+        List
+      </SegmentedControlItem>
+      <SegmentedControlItem id="map">
+        <MapIcon aria-hidden />
+        Map
+      </SegmentedControlItem>
+    </SegmentedControl>
+  )
+};
+
+/**
+ * Not in Figma: the New dot with a tip that says what it stands for ("18 new ideas"), on hover and on keyboard focus,
+ * read as the segment's description (the phase tabs).
+ */
+export const UnreadWithTooltip: Story = {
+  name: 'Unread with tooltip',
+  render: () => (
+    <SegmentedControl aria-label="Phase" defaultSelectedKeys={['build']} selectionMode="single" disallowEmptySelection>
+      <SegmentedControlItem id="build">Build</SegmentedControlItem>
+      <SegmentedControlItem id="manage" isUnread tooltip="18 new ideas">
+        Manage
+      </SegmentedControlItem>
+      <SegmentedControlItem id="insights">Insights</SegmentedControlItem>
     </SegmentedControl>
   )
 };

@@ -58,6 +58,13 @@
   align-items: center;
   gap: var(--gv-space-6);
   white-space: nowrap;
+
+  /* An icon before the label (List, Map): 16, 14 in the small control; it takes the label's colour. */
+  & > svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+  }
 }
 
 /* Unread: the New dot sits in the segment's top-right corner and takes no width (Figma places it
@@ -91,5 +98,14 @@
 
   .gv-segment-indicator {
     border-radius: var(--gv-radius-6);
+  }
+
+  .gv-segment-label {
+    gap: var(--gv-space-5);
+  }
+
+  .gv-segment-label > svg {
+    width: 14px;
+    height: 14px;
   }
 }
