@@ -1,12 +1,16 @@
 @import './theme.css';
 
+/* Same rows as the ListBox nav lists and the prototype's side tabs (.pj-mtabs--side): a 1px control-grey frame,
+   radius 12, padding 6; rows 32 tall, radius 8, UI type in the slate grey; hover the light wash; the current page the
+   stronger wash in primary UI strong (no side pill). Section headers Small strong secondary. */
 .react-aria-NavigationTree {
   display: flex;
   flex-direction: column;
+  gap: var(--gv-space-2);
   overflow: auto;
-  padding: var(--spacing-1);
-  border: 0.5px solid var(--border-color);
-  border-radius: calc(var(--radius) + var(--spacing-1));
+  padding: var(--gv-space-6);
+  border: 1px solid var(--gv-border-control);
+  border-radius: var(--radius-lg);
   background: var(--overlay-background);
   forced-color-adjust: none;
   outline: none;
@@ -20,14 +24,14 @@
   }
 
   .react-aria-NavigationTreeSection:not(:first-child) {
-    margin-top: var(--spacing-4);
+    margin-top: var(--gv-space-12);
   }
 
   .react-aria-NavigationTreeHeader {
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    padding: var(--spacing-1) var(--spacing-2);
-    color: var(--text-color);
+    font: var(--gv-type-small-strong);
+    letter-spacing: var(--gv-type-small-strong-tracking);
+    padding: var(--gv-space-8) var(--gv-space-8) var(--gv-space-4);
+    color: var(--gv-text-secondary);
   }
 }
 
@@ -36,15 +40,22 @@
   display: flex;
   position: relative;
   align-items: center;
-  min-height: var(--spacing-8);
+  min-height: 32px;
   border-radius: var(--radius);
   box-sizing: border-box;
   outline: none;
-  color: var(--text-color);
-  font: var(--font-size) var(--gv-font-family);
+  color: var(--gv-color-slate-750);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  transition: background-color 120ms;
   -webkit-tap-highlight-color: transparent;
   /* Indent each nested level. --tree-item-level is set on the row by React Aria (1-based). */
   padding-inline-start: calc((var(--tree-item-level, 1) - 1) * var(--padding));
+
+  &:has(a.react-aria-Link[data-hovered]) {
+    background: var(--gv-surface-hover);
+    color: var(--gv-text-primary);
+  }
 
   .react-aria-Link:before {
     display: none;
@@ -52,16 +63,9 @@
     position: absolute;
     inset-inline-start: 2px;
     top: 50%;
-    width: 2px;
     transform: translateY(-50%);
-    height: 1lh;
-    background: var(--text-color-hover);
-    font-weight: 600;
-    border-radius: 9999px;
-  }
-
-  a.react-aria-Link[data-hovered]:before {
-    display: block;
+    background: var(--gv-icon-quiet);
+    border-radius: var(--gv-radius-full);
   }
 
   /* When a current-route ancestor is collapsed, tint it and show a small dot where the pill would be.
@@ -78,9 +82,10 @@
   }
 
   /* React Aria sets data-current on the link matching the NavigationTree's selectedRoute. */
-  &[data-current] .react-aria-Link:before {
-    display: block;
-    background: var(--focus-ring-color);
+  &[data-current] {
+    background: var(--gv-surface-hover-strong);
+    color: var(--gv-text-primary);
+    font-weight: var(--gv-type-ui-strong-weight);
   }
 
   &[data-focus-visible] {
@@ -97,9 +102,9 @@
     flex: 1;
     display: flex;
     align-items: center;
-    gap: var(--spacing-2);
+    gap: var(--gv-space-8);
     min-width: 0;
-    padding: var(--spacing-1) var(--spacing-2);
+    padding: var(--gv-space-6) var(--gv-space-8);
     border-radius: var(--radius);
     color: inherit;
     text-decoration: none;
@@ -120,7 +125,8 @@
     justify-content: center;
     width: var(--spacing-6);
     height: var(--spacing-6);
-    border-radius: var(--radius);
+    border-radius: var(--gv-radius-6);
+    color: var(--gv-icon-quiet);
     cursor: default;
     -webkit-tap-highlight-color: transparent;
 
