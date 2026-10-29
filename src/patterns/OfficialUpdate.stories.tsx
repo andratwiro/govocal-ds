@@ -24,7 +24,7 @@ export function DemoUpdates({initial = []}: {initial?: PostedUpdate[]}) {
     <OfficialUpdate updates={updates} onPublish={({text, name}) => {
       const update = {id: `u${Date.now()}`, text, by: name || undefined, date: 'Today'};
       setUpdates(list => [update, ...list]);
-      queue.add({title: 'Official update published', body: 'The author and everyone following this idea will see it.',
+      queue.add({title: 'Official update published', description: 'The author and everyone following this idea will see it.',
         action: 'Undo', onAction: () => setUpdates(list => list.filter(u => u.id !== update.id))}, {timeout: 6000});
     }} />
   );
@@ -73,7 +73,7 @@ export const Bulk: Story = {
         </Button>
         <BulkOfficialUpdate count={2} isOpen={open} onOpenChange={setOpen}
           onSend={() => queue.add({title: 'Official update sent to 2 ideas',
-            body: 'The authors and everyone following them will see it.', action: 'Undo'}, {timeout: 6000})} />
+            description: 'The authors and everyone following them will see it.', action: 'Undo'}, {timeout: 6000})} />
       </>
     );
   }

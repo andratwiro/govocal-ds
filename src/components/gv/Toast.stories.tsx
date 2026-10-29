@@ -1,5 +1,5 @@
-import {useEffect} from 'react';
-import {ToastRegion, queue} from '../Toast';
+import {useEffect, type ComponentType} from 'react';
+import {Toast, ToastRegion, queue, toast} from '../Toast';
 import {Button} from '../Button';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
@@ -13,6 +13,9 @@ interface ToastStoryArgs {
 
 const meta: Meta<ToastStoryArgs> = {
   title: 'Components/Status & feedback/Toast',
+  // The docs and the manifest read Toast's and ToastRegion's props; the stories' own args only drive Example.
+  component: Toast as unknown as ComponentType<ToastStoryArgs>,
+  subcomponents: {ToastRegion},
   parameters: {
     layout: 'centered'
   },
@@ -70,23 +73,15 @@ export const AllVariants: Story = {
       <>
         <ToastRegion />
         <div style={{display: 'flex', gap: 12}}>
-          <Button
-            onPress={() =>
-              queue.add({
-                title: 'Your project is live',
-                description: 'Public · anyone can take part.'
-              })
-            }>
+          <Button onPress={() => toast('Your project is live', 'Public · anyone can take part.')}>
             Publish now
           </Button>
           <Button
             variant="secondary"
             onPress={() =>
-              queue.add({
-                title: 'Idea archived',
-                body: '"Shade sails over the Lagoon playground" moved to the archive.',
+              toast('Idea archived', '"Shade sails over the Lagoon playground" moved to the archive.', {
                 action: 'Undo',
-                onAction: () => queue.add({title: 'Idea restored', icon: null})
+                onAction: () => toast('Idea restored', undefined, {icon: null})
               })
             }>
             Archive idea
@@ -105,7 +100,7 @@ export const WithUndo: Story = {
       queue.clear(); // the queue is global: start this story from an empty one
       const key = queue.add({
         title: 'Idea archived',
-        body: '"Shade sails over the Lagoon playground" moved to the archive.',
+        description: '"Shade sails over the Lagoon playground" moved to the archive.',
         action: 'Undo',
         onAction: () => queue.add({title: 'Idea restored', icon: null}, {timeout: 5000})
       });
@@ -152,10 +147,10 @@ export const Example: Story = {
       <ToastRegion />
       <Button
         onPress={() =>
-          queue.add(
-            {title: args.title, description: args.description, action: args.action || undefined},
-            args.timeout ? {timeout: args.timeout} : undefined
-          )
+          toast(args.title, args.description || undefined, {
+            action: args.action || undefined,
+            ...(args.timeout != null ? {timeout: args.timeout} : {})
+          })
         }>
         {args.buttonLabel}
       </Button>
@@ -164,13 +159,13 @@ export const Example: Story = {
   parameters: {
     docs: {
       source: {
-        code: `import {ToastRegion, queue} from 'src/components/Toast';
+        code: `import {AppProvider, toast} from 'govocal-ds';
 
-// Once per page, at its root:
-<ToastRegion />
+// Once, at the app's root (it renders the one ToastRegion):
+<AppProvider locale="en-GB"><App /></AppProvider>
 
-// Anywhere after an action:
-queue.add({title: '"Green Corridors for Riverside" deleted', action: 'Undo', onAction: restore});`
+// Anywhere after an action (5 seconds unless timeout says otherwise; 0 keeps it):
+toast('"Green Corridors for Riverside" deleted', undefined, {action: 'Undo', onAction: restore});`
       }
     }
   }

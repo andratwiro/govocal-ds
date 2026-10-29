@@ -185,7 +185,7 @@ export function Inputs() {
     if (!before) return;
     const undo = Object.fromEntries(Object.keys(next).map(k => [k, before[k as keyof ManagedInput]])) as Partial<ManagedInput>;
     change(id, next);
-    if (toast) queue.add({title: toast, body, action: 'Undo', onAction: () => change(id, undo)}, {timeout: 6000});
+    if (toast) queue.add({title: toast, description: body, action: 'Undo', onAction: () => change(id, undo)}, {timeout: 6000});
   };
   const changeSelected = (patch: Partial<ManagedInput>) =>
     setInputs(list => list.map(i => selected.has(i.id) ? {...i, ...patch} : i));

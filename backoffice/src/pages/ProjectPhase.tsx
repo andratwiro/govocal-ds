@@ -528,7 +528,7 @@ type Sort = {column: string | number; direction: 'ascending' | 'descending'};
 
 // A change in the side panel (or the Selection bar's Official update) applies at once; its toast can undo it.
 const undoToast = (title: string, undo: () => void, body?: string) =>
-  queue.add({title, body, action: 'Undo', onAction: undo}, {timeout: 6000});
+  queue.add({title, description: body, action: 'Undo', onAction: undo}, {timeout: 6000});
 
 type Thread = {comments: ThreadComment[]; internal: ThreadComment[]};
 type Restore = (list: ThreadComment[]) => ThreadComment[];

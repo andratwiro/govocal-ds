@@ -8,21 +8,22 @@ import {
   Text
 } from 'react-aria-components/Toast';
 import {Button as RACButton} from 'react-aria-components/Button';
+import {composeRenderProps} from 'react-aria-components/composeRenderProps';
 import {Button} from './Button';
 import {Check, X} from 'lucide-react';
+import {clsx} from 'clsx';
 import './Toast.css';
 import {flushSync} from 'react-dom';
-import {type CSSProperties, type ReactNode} from 'react';
+import {createContext, useContext, type CSSProperties, type ReactNode} from 'react';
 
 /**
- * What a toast shows. The prototype's `pjShowToast({title, body, action: 'Undo', onAction})` maps one to one:
- * `queue.add({title, body, action: 'Undo', onAction})`.
+ * What a toast shows. The prototype's `pjShowToast({title, body, action: 'Undo', onAction})` maps to
+ * `toast(title, body, {action: 'Undo', onAction})`.
  */
 export interface ToastMessage {
   title: string;
+  /** A line under the title, e.g. what moved where. */
   description?: string;
-  /** The prototype's name for `description`; used when `description` is not given. */
-  body?: string;
   /**
    * The leading icon. Left out: the success check in a green circle, as in the prototype. `null`: no icon.
    */
@@ -32,11 +33,12 @@ export interface ToastMessage {
   onAction?: () => void;
 }
 
-// This is a global toast queue, to be imported and called where ever you want to queue a toast via queue.add().
+/** The app's one toast queue, which the one `ToastRegion` draws. Pages call `toast()`; `queue` is for what `toast()`
+ * doesn't cover (closing a toast early: `queue.close(key)`, clearing: `queue.clear()`). */
 export const queue = new ToastQueue<ToastMessage>({
   // Wrap state updates in a CSS view transition.
   wrapUpdate(fn) {
-    if ('startViewTransition' in document) {
+    if (typeof document !== 'undefined' && 'startViewTransition' in document) {
       const transition = document.startViewTransition(() => {
         flushSync(fn);
       });
@@ -49,13 +51,45 @@ export const queue = new ToastQueue<ToastMessage>({
   }
 });
 
-export function ToastRegion() {
+export interface ToastOptions {
+  /** The leading icon. Left out: the success check. `null`: no icon. */
+  icon?: ReactNode;
+  /** A text action under the words, e.g. "Undo". Pressing it closes the toast, then calls `onAction`. */
+  action?: string;
+  onAction?: () => void;
+  /** How long the toast stays, in milliseconds; `0` keeps it until it is closed. @default 5000 */
+  timeout?: number;
+}
+
+/**
+ * Shows a toast: `toast('Idea archived', 'Moved to the archive.', {action: 'Undo', onAction: restore})`. It stays 5
+ * seconds unless `timeout` says otherwise, and returns its key (`queue.close(key)` takes it away early). The app
+ * renders the region once, with `AppProvider`.
+ */
+export function toast(title: string, description?: string, {timeout = 5000, ...options}: ToastOptions = {}): string {
+  return queue.add({title, description, ...options}, timeout ? {timeout} : undefined);
+}
+
+/** True inside an app that already renders the `ToastRegion` (`AppProvider` does): a `ToastRegion` there draws
+ * nothing, so a page's own region and the app's never show a toast twice. */
+export const ToastRegionContext = createContext(false);
+
+export interface ToastRegionProps {
+  /** Places the region (it sits fixed at the window's bottom end); never paints it. */
+  className?: string;
+  style?: CSSProperties;
+}
+
+/**
+ * Where toasts appear: fixed at the window's bottom end, newest on top. Render it once, at the app's root:
+ * `AppProvider` does. A `ToastRegion` inside `AppProvider` draws nothing (see `ToastRegionContext`).
+ */
+export function ToastRegion({className, style}: ToastRegionProps = {}) {
+  if (useContext(ToastRegionContext)) return null;
   return (
-    // The ToastRegion should be rendered at the root of your app.
-    <RACToastRegion queue={queue}>
+    <RACToastRegion queue={queue} className={clsx('react-aria-ToastRegion', className)} style={style}>
       {({toast}) => {
-        const {title, description, body, icon, action, onAction} = toast.content;
-        const words = description ?? body;
+        const {title, description, icon, action, onAction} = toast.content;
         return (
           <Toast toast={toast} style={{viewTransitionName: toast.key} as CSSProperties}>
             {icon !== null && (
@@ -65,7 +99,7 @@ export function ToastRegion() {
             )}
             <RACToastContent>
               <Text slot="title">{title}</Text>
-              {words && <Text slot="description">{words}</Text>}
+              {description && <Text slot="description">{description}</Text>}
               {action && (
                 <RACButton
                   className="toast-action"
@@ -87,6 +121,7 @@ export function ToastRegion() {
   );
 }
 
-export function Toast(props: ToastProps<ToastMessage>) {
-  return <RACToast {...props} />;
+/** One toast, as `ToastRegion` draws it. Pages don't render it: they call `toast()`. */
+export function Toast({className, ...props}: ToastProps<ToastMessage>) {
+  return <RACToast {...props} className={composeRenderProps(className, c => clsx('react-aria-Toast', c))} />;
 }
