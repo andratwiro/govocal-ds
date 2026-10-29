@@ -270,9 +270,8 @@ function GroupModal({editing, onClose, onSave}: {
       {!editing && (
         <Card layout="stacked" title="Kind of group">
           <CardRadioGroup aria-label="Kind of group" value={kind} onChange={v => setKind(v as Group['kind'])}>
-            {/* The note in the page's meta grey: the Card's own description grey is under 4.5:1 on white. */}
             {KINDS.map(({kind: k, title: t, note}) => (
-              <CardRadio key={k} value={k} description={<span className="bo-note">{note}</span>}>{t}</CardRadio>
+              <CardRadio key={k} value={k} description={note}>{t}</CardRadio>
             ))}
           </CardRadioGroup>
         </Card>
