@@ -1,0 +1,10 @@
+@import '../theme.css';
+
+.gv-editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-2);
+  padding-inline: var(--gv-space-4);
+  background: var(--gv-surface-toolbar);
+  border-block-end: 1px solid var(--gv-border-subtle);
+}

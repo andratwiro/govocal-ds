@@ -1,0 +1,38 @@
+@import '../theme.css';
+
+.gv-editor {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: var(--gv-surface-panel);
+  border: 1px solid var(--gv-border-control);
+  border-radius: var(--gv-radius-10);
+  overflow: hidden;
+}
+
+.gv-editor__field {
+  display: flex;
+  flex: 1;
+}
+
+.gv-editor__area {
+  flex: 1;
+  min-height: 74px;
+  padding: var(--gv-space-9) var(--gv-space-11);
+  border: none;
+  outline: none;
+  resize: none;
+  background: transparent;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-body);
+  font-family: var(--gv-font-family);
+}
+
+.gv-editor__area::placeholder {
+  color: var(--gv-text-placeholder);
+}
+
+.gv-editor__area[data-focused] {
+  outline: none;
+}
