@@ -11,7 +11,8 @@
     'track track';
   grid-template-columns: 1fr auto;
   max-width: min(calc(100% - 12px), 300px);
-  font: var(--gv-type-ui) var(--gv-font-family);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
 
   .react-aria-Label {
@@ -20,7 +21,8 @@
 
   .react-aria-SliderOutput {
     grid-area: output;
-    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    color: var(--gv-text-secondary);
   }
 
   .react-aria-SliderTrack {
