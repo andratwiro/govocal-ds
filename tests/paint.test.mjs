@@ -1,8 +1,10 @@
 import {describe, it, expect} from 'vitest';
-import {readFileSync, readdirSync} from 'node:fs';
+import {readFileSync, readdirSync, existsSync} from 'node:fs';
 
 const dir = 'src/components';
-const css = readdirSync(dir).filter(f => f.endsWith('.css')).map(f => [f, readFileSync(`${dir}/${f}`, 'utf8')]);
+// Every stylesheet of the system, gv/ and src/patterns/ included.
+const css = [dir, 'src/patterns'].filter(existsSync).flatMap(d =>
+  readdirSync(d, {recursive: true}).filter(f => f.endsWith('.css')).map(f => [`${d}/${f}`, readFileSync(`${d}/${f}`, 'utf8')]));
 
 describe('paint comes only from tokens', () => {
   it('has no raw colours outside tokens.css', () => {
