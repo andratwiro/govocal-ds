@@ -48,8 +48,8 @@
   /* Count: a number beside a title or a group ("2,184", "2"; the prototype's `.tag-count`): 20 tall, 8 to the sides,
      Small regular in figures of one width, never narrower than round. */
   &[data-variant='count'] {
-    height: var(--gv-space-20);
-    min-width: var(--gv-space-20);
+    height: 20px;
+    min-width: 20px;
     padding: 0 var(--gv-space-8);
     justify-content: center;
     color: var(--gv-text-secondary);
@@ -61,9 +61,11 @@
     }
   }
 
-  /* Removable: the × sits 4 from the end, its 16 hit area round. */
+  /* Removable (`.pj-bdg--rm`, an input's tags): the × 4 from the end, its 16 hit area round; the prototype's 0.5
+     cool-grey-500 hairline drawn as 1px of the control's hover border, the nearest whole stroke. */
   &[data-removable] {
     padding-inline-end: var(--gv-space-4);
+    border-color: var(--gv-border-control-hover);
   }
 }
 
@@ -79,8 +81,8 @@
   align-items: center;
   justify-content: center;
   flex: none;
-  width: var(--gv-space-16);
-  height: var(--gv-space-16);
+  width: 16px;
+  height: 16px;
   box-sizing: border-box;
   border-radius: var(--gv-radius-full);
   color: var(--gv-icon-default);
