@@ -22,10 +22,10 @@ export function Meter({label, ...props}: MeterProps) {
                   width: percentage + '%',
                   '--fill-color':
                     percentage < 70
-                      ? 'var(--gv-surface-brand-mark)'
+                      ? 'var(--gv-surface-accent-strong)'
                       : percentage < 90
                         ? 'var(--gv-icon-warning)'
-                        : 'var(--gv-state-notification)'
+                        : 'var(--gv-surface-danger-strong)'
                 } as any
               }
             />

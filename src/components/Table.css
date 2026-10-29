@@ -5,9 +5,9 @@
    radius 8; the header Small strong in the secondary grey over a 1px card-grey line, no column dividers; rows UI
    primary, 12 tall padding, a hairline between them, the hover surface on hover, a 5 % brand tint when chosen. */
 .react-aria-Table {
-  border: 1px solid var(--gv-border-card);
-  border-radius: var(--radius);
-  background: var(--overlay-background);
+  border: 1px solid var(--gv-border-default);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-panel);
   overflow: clip;
   outline: none;
   border-spacing: 0;
@@ -16,19 +16,18 @@
   word-break: break-word;
   forced-color-adjust: none;
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
 
   div& {
     padding: 0;
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
+    outline: var(--gv-focus-ring);
   }
 
   &[data-drop-target] {
-    outline: 2px solid var(--highlight-background);
-    background: var(--highlight-overlay);
+    outline: 2px solid var(--gv-border-selected);
+    background: var(--gv-surface-info);
   }
 
   &:has(.react-aria-TableBody[data-empty]) {
@@ -53,7 +52,7 @@
 .react-aria-Row {
   outline: none;
   cursor: default;
-  color: var(--text-color);
+  color: var(--gv-text-primary);
   position: relative;
   transform: scale(1);
   transition-property: background, color;
@@ -62,29 +61,29 @@
   -webkit-tap-highlight-color: transparent;
 
   tr:last-child& {
-    border-radius: 0 0 var(--radius) var(--radius);
+    border-radius: 0 0 var(--gv-radius-8) var(--gv-radius-8);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
   }
 
   &[data-hovered] {
-    background: var(--gv-surface-hover);
+    background: var(--gv-surface-hovered);
   }
 
   &[data-pressed] {
-    background: var(--gv-surface-hover-strong);
+    background: var(--gv-surface-pressed);
   }
 
   &[data-selected] {
-    background: color-mix(in srgb, var(--gv-border-selected) 5%, var(--gv-surface-panel));
+    background: var(--gv-surface-selected);
     color: var(--gv-text-primary);
   }
 
   &[data-disabled] {
-    color: var(--text-color-disabled);
+    color: var(--gv-text-disabled);
   }
 
   &[data-href] {
@@ -92,13 +91,13 @@
   }
 
   &[data-dragging] {
-    opacity: 0.6;
+    opacity: var(--gv-opacity-dragging);
     transform: translateZ(0);
   }
 
   &[data-drop-target] {
-    outline: 2px solid var(--highlight-background);
-    background: var(--highlight-overlay);
+    outline: 2px solid var(--gv-border-selected);
+    background: var(--gv-surface-info);
     z-index: 4;
   }
 
@@ -117,12 +116,12 @@
 
     &[data-focus-visible] {
       border-radius: var(--gv-radius-4);
-      outline: 2px solid var(--focus-ring-color);
+      outline: var(--gv-focus-ring);
     }
   }
 
   .react-aria-DropIndicator[data-drop-target] {
-    outline: 1px solid var(--highlight-background);
+    outline: 1px solid var(--gv-border-selected);
     transform: translateZ(0);
   }
 }
@@ -142,16 +141,16 @@
   }
 
   &:is(.react-aria-Row:last-child > :first-child) {
-    border-end-start-radius: var(--radius);
+    border-end-start-radius: var(--gv-radius-8);
   }
 
   &:is(.react-aria-Row:last-child > :last-child) {
-    border-end-end-radius: var(--radius);
+    border-end-end-radius: var(--gv-radius-8);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
   }
 }
 
@@ -162,9 +161,8 @@
   --button-border-size: 0px;
   cursor: default;
   padding-block: var(--gv-space-8);
-  border-bottom: 1px solid var(--gv-border-card);
+  border-bottom: 1px solid var(--gv-border-default);
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-secondary);
   position: relative;
   z-index: calc(sibling-count() - sibling-index());
@@ -191,11 +189,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     border-color: transparent;
-    border-radius: var(--radius-sm);
+    border-radius: var(--gv-radius-4);
 
     &[data-focus-visible] {
-      outline: 2px solid var(--focus-ring-color);
-      outline-offset: 2px;
+      outline: var(--gv-focus-ring);
+      outline-offset: var(--gv-focus-ring-offset);
     }
   }
 
@@ -213,10 +211,10 @@
 
 .react-aria-ColumnResizer {
   width: 1px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--gv-radius-4);
   background-color: var(--gv-border-control);
-  padding: 0 var(--spacing-2);
-  translate: var(--spacing-4) 0;
+  padding: 0 var(--gv-space-8);
+  translate: var(--gv-space-16) 0;
   height: 32px;
   margin: calc(-1 * var(--gv-space-16)) 0;
   flex: 0 0 auto;
@@ -237,14 +235,14 @@
   }
 
   &[data-focus-visible] {
-    background-color: var(--focus-ring-color);
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: -2px;
+    background-color: var(--gv-border-focused);
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
   }
 
   &[data-resizing] {
     width: 2px;
-    background-color: var(--highlight-background);
+    background-color: var(--gv-surface-brand-strong);
   }
 }
 
@@ -261,9 +259,9 @@
   }
 
   &[data-tree-column] {
-    --chevron-placeholder: var(--spacing-5);
+    --chevron-placeholder: var(--gv-space-20);
     padding-inline-start: calc(
-      var(--gv-space-12) + (var(--table-row-level) - 1) * var(--spacing-4) +
+      var(--gv-space-12) + (var(--table-row-level) - 1) * var(--gv-space-16) +
         var(--chevron-placeholder)
     );
 
@@ -275,7 +273,7 @@
   .react-aria-Button[slot='chevron'] {
     all: unset;
     vertical-align: middle;
-    margin-inline-end: var(--spacing-1);
+    margin-inline-end: var(--gv-space-4);
 
     svg {
       rotate: 0deg;
@@ -294,18 +292,18 @@
 }
 
 .react-aria-DropIndicator[data-drop-target] {
-  outline: 1px solid var(--highlight-background);
+  outline: 1px solid var(--gv-border-selected);
   transform: translateZ(0);
-  translate: calc(68px + (var(--table-row-level) - 1) * var(--spacing-4)) 0;
+  translate: calc(68px + (var(--table-row-level) - 1) * var(--gv-space-16)) 0;
 }
 
 .react-aria-ResizableTableContainer {
   width: 100%;
   overflow: auto;
   position: relative;
-  border: 1px solid var(--gv-border-card);
-  border-radius: var(--radius);
-  background: var(--overlay-background);
+  border: 1px solid var(--gv-border-default);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-panel);
 
   .react-aria-Table {
     border: none;
@@ -319,7 +317,7 @@
   .react-aria-TableHeader {
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: var(--gv-layer-sticky);
   }
 
   .react-aria-Cell {

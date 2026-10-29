@@ -81,7 +81,7 @@ export const Hover: Story = {
         font: 'var(--gv-type-ui-strong)',
         color: 'var(--gv-text-primary)',
         background: 'var(--gv-surface-panel)',
-        border: '1px solid var(--gv-border-card)',
+        border: '1px solid var(--gv-border-default)',
         borderRadius: 'var(--gv-radius-12)',
         overflow: 'hidden',
         cursor: 'pointer'

@@ -12,7 +12,6 @@
   grid-template-columns: 1fr auto;
   max-width: min(calc(100% - 12px), 300px);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
 
   .react-aria-Label {
@@ -38,7 +37,7 @@
 
     .react-aria-SliderFill {
       border-radius: inherit;
-      background: var(--gv-action-primary);
+      background: var(--gv-surface-brand-strong);
 
       @media (forced-colors: active) {
         background: Highlight;
@@ -50,17 +49,17 @@
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: var(--gv-control-knob);
-    box-shadow: 0 0 0 1.5px var(--gv-action-primary), var(--gv-shadow-subtle);
+    background: var(--gv-surface-panel);
+    box-shadow: 0 0 0 1.5px var(--gv-border-selected), var(--gv-shadow-raised);
     forced-color-adjust: none;
 
     &[data-focus-visible] {
-      outline: 2px solid var(--gv-border-selected);
-      outline-offset: 2px;
+      outline: var(--gv-focus-ring);
+      outline-offset: var(--gv-focus-ring-offset);
     }
 
     &[data-dragging] {
-      box-shadow: 0 0 0 1.5px var(--gv-action-checked), var(--gv-shadow-subtle);
+      box-shadow: 0 0 0 1.5px var(--gv-border-selected), var(--gv-shadow-raised);
     }
   }
 
@@ -88,7 +87,7 @@
   &[data-orientation='vertical'] {
     height: 150px;
     display: block;
-    margin: var(--spacing-3) 0;
+    margin: var(--gv-space-12) 0;
 
     .react-aria-Label,
     .react-aria-SliderOutput {
@@ -96,11 +95,11 @@
     }
 
     .react-aria-SliderTrack {
-      width: var(--spacing-5);
+      width: var(--gv-space-20);
       height: 100%;
 
       .track {
-        width: var(--spacing-2);
+        width: var(--gv-space-8);
         height: 100%;
         left: 50%;
         transform: translateX(-50%);
@@ -114,7 +113,7 @@
   }
 
   &[data-disabled] {
-    color: var(--gv-text-quiet);
+    color: var(--gv-text-disabled);
 
     .react-aria-SliderTrack {
       .track {
@@ -122,12 +121,12 @@
       }
 
       .react-aria-SliderFill {
-        background: var(--gv-text-quiet);
+        background: var(--gv-text-disabled);
       }
     }
 
     .react-aria-SliderThumb {
-      box-shadow: 0 0 0 1.5px var(--gv-text-quiet);
+      box-shadow: 0 0 0 1.5px var(--gv-text-disabled);
     }
   }
 }

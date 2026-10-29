@@ -11,7 +11,7 @@
   justify-content: center;
   gap: var(--gv-space-8);
   box-sizing: border-box;
-  padding: var(--gv-space-44) var(--gv-space-24);
+  padding: var(--gv-space-40) var(--gv-space-24);
   text-align: center;
   font-family: var(--gv-font-family);
 }
@@ -23,13 +23,12 @@
 .gv-empty-state__icon {
   display: flex;
   margin-block-end: var(--gv-space-4);
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-tertiary);
 }
 
 .gv-empty-state__title {
   margin: 0;
   font: var(--gv-type-body-strong);
-  letter-spacing: var(--gv-type-body-strong-tracking);
   color: var(--gv-text-primary);
   text-wrap: balance;
 }
@@ -40,7 +39,6 @@
   margin: 0;
   text-wrap: balance;
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-secondary);
 }
 
@@ -54,7 +52,6 @@
 
 .gv-empty-state[data-size='panel'] .gv-empty-state__title {
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
 }
 
 .gv-empty-state[data-size='panel'] .gv-empty-state__text {
@@ -66,7 +63,7 @@
 .gv-empty-state[data-framed] {
   gap: var(--gv-space-4);
   padding: var(--gv-space-28) var(--gv-space-24);
-  border: 1px dashed var(--gv-border-radio);
+  border: 1px dashed var(--gv-border-strong);
   border-radius: var(--gv-radius-12);
 }
 

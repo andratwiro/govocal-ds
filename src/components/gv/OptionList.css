@@ -21,7 +21,7 @@
 
   .react-aria-Input {
     block-size: 32px;
-    background: var(--gv-surface-toolbar);
+    background: var(--gv-surface-secondary);
   }
 }
 
@@ -53,7 +53,6 @@
 .gv-option-list__count {
   flex: none;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-tertiary);
   white-space: nowrap;
 }
@@ -66,8 +65,8 @@
   justify-content: space-between;
   gap: var(--gv-space-8);
   margin: calc(-1 * var(--gv-space-6)) calc(-1 * var(--gv-space-6)) 0;
-  padding: var(--gv-space-4) var(--gv-space-6) var(--gv-space-4) var(--gv-space-14);
-  border-top: 1px solid var(--gv-border-card);
+  padding: var(--gv-space-4) var(--gv-space-6) var(--gv-space-4) var(--gv-space-16);
+  border-top: 1px solid var(--gv-border-default);
 
   .react-aria-Button[data-variant='quiet'] {
     padding: 0 var(--gv-space-8);
@@ -76,6 +75,5 @@
 
 .gv-option-list__summary {
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 }

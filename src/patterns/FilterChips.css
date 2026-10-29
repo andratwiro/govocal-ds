@@ -10,9 +10,8 @@
   box-sizing: border-box;
   padding: var(--gv-space-6) var(--gv-space-8);
   border-radius: var(--gv-radius-8);
-  background: var(--gv-surface-toolbar);
+  background: var(--gv-surface-secondary);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   font-family: var(--gv-font-family);
 }
 
@@ -55,11 +54,11 @@
   }
 
   > [role='gridcell'] > * + * {
-    border-inline-start: 1px solid var(--gv-border-card);
+    border-inline-start: 1px solid var(--gv-border-default);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
+    outline: var(--gv-focus-ring);
     outline-offset: 1px;
   }
 }
@@ -70,7 +69,7 @@
 
 .gv-filter-chip__icon {
   display: inline-flex;
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-tertiary);
 
   > svg {
     inline-size: 14px;
@@ -86,18 +85,18 @@
   margin: 0;
   border: 0;
   background: none;
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-tertiary);
   cursor: pointer;
   outline: none;
 
   &[data-hovered] {
-    background: var(--gv-surface-hover);
+    background: var(--gv-surface-hovered);
     color: var(--gv-icon-primary);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
   }
 }
 
@@ -112,16 +111,15 @@
   background: none;
   color: var(--gv-text-primary);
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   cursor: pointer;
   outline: none;
 
   &[data-hovered] {
-    background: var(--gv-surface-hover-strong);
+    background: var(--gv-surface-pressed);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
+    outline: var(--gv-focus-ring);
     outline-offset: 1px;
   }
 }

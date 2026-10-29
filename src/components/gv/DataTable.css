@@ -17,20 +17,20 @@
   outline: none;
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
   }
 
   /* Standing alone (the prototype's Projects list): card border, radius 10, a tinted header, 16px edges. */
   &[data-framed] {
-    border: 1px solid var(--gv-border-card);
+    border: 1px solid var(--gv-border-default);
     border-radius: var(--gv-radius-10);
     overflow: hidden;
 
     .gv-data-table__column {
-      padding-block: var(--gv-space-11);
+      padding-block: var(--gv-space-12);
       padding-inline: var(--gv-space-12);
-      background: var(--gv-surface-stage);
+      background: var(--gv-surface-tertiary);
     }
 
     .gv-data-table__cell {
@@ -52,7 +52,7 @@
 .gv-data-table__column {
   box-sizing: border-box;
   padding: var(--gv-space-8);
-  border-bottom: 1px solid var(--gv-border-card);
+  border-bottom: 1px solid var(--gv-border-default);
   background: transparent;
   font: var(--gv-type-small-strong);
   color: var(--gv-text-secondary);
@@ -68,7 +68,7 @@
       color: var(--gv-text-primary);
 
       .gv-data-table__head {
-        background: var(--gv-surface-hover);
+        background: var(--gv-surface-hovered);
       }
 
       .gv-data-table__sort {
@@ -99,8 +99,8 @@
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
     border-radius: var(--gv-radius-4);
   }
 }
@@ -129,7 +129,7 @@
 
   &[data-active] {
     visibility: visible;
-    color: var(--gv-icon-strong);
+    color: var(--gv-icon-secondary);
   }
 }
 
@@ -139,7 +139,7 @@
   cursor: default;
 
   &[data-hovered] {
-    background: var(--gv-surface-hover);
+    background: var(--gv-surface-hovered);
   }
 
   &[data-actionable] {
@@ -148,13 +148,13 @@
 
   /* Checked rows read as one tinted block with rounded ends (the prototype's Manage selection). */
   &[data-selected] .gv-data-table__cell {
-    background: color-mix(in srgb, var(--gv-action-checked) 10%, var(--gv-surface-panel));
+    background: var(--gv-surface-selected);
     border-bottom-color: transparent;
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
   }
 
   &:last-child .gv-data-table__cell {
@@ -165,7 +165,7 @@
 .gv-data-table__cell {
   box-sizing: border-box;
   padding: var(--gv-space-12) var(--gv-space-8);
-  border-bottom: 1px solid var(--gv-divider-default);
+  border-bottom: 1px solid var(--gv-border-subtle);
   vertical-align: middle;
   outline: none;
 
@@ -182,8 +182,8 @@
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
   }
 }
 
@@ -251,7 +251,7 @@
   position: absolute;
   width: 1px;
   height: 1px;
-  margin: calc(-1 * var(--gv-space-1));
+  margin: -1px;
   padding: 0;
   overflow: hidden;
   clip: rect(0 0 0 0);
@@ -271,7 +271,7 @@
 }
 
 .gv-data-table__cell[data-muted] {
-  color: var(--gv-text-meta);
+  color: var(--gv-text-secondary);
 }
 
 /* Wrapping text, clamped, with its marks after it. */
@@ -319,7 +319,7 @@
   block-size: var(--gv-space-32);
   border-radius: var(--gv-radius-6);
   object-fit: cover;
-  background: var(--gv-surface-pill);
+  background: var(--gv-surface-neutral);
 }
 
 .gv-data-table__tile {
@@ -396,8 +396,8 @@
   }
 
   .gv-data-table__cell {
-    padding-block: var(--gv-space-9);
-    line-height: var(--gv-type-ui-line);
+    padding-block: var(--gv-space-8);
+    line-height: var(--gv-font-line-height-20);
     vertical-align: top;
   }
 

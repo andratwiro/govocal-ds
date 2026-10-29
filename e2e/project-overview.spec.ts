@@ -96,7 +96,7 @@ test('the phone preview shows what a resident sees', async ({page}) => {
 test('the overview passes axe (WCAG 2.2 AA)', async ({page}) => {
   await page.goto(URL);
   await expect(page.getByRole('navigation', {name: 'Phases'})).toBeVisible();
-  // Rail section label paints its text in --gv-text-quiet (about 2.9:1 on white): the component's own token, owned
+  // Rail section label paints its text in --gv-text-disabled (about 2.9:1 on white): the component's own token, owned
   // by the system, not this page. Accessibility is shown, never blocking, so that one contrast check is waived and reported.
   a11yReport(await violations(page));
 });

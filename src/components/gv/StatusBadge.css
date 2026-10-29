@@ -8,16 +8,15 @@
   padding: 0 var(--gv-space-6);
   border-radius: var(--gv-radius-full);
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   white-space: nowrap;
 
   &[data-state='draft'] {
-    background: var(--gv-surface-stage);
-    color: var(--gv-text-pill);
+    background: var(--gv-surface-tertiary);
+    color: var(--gv-text-neutral);
   }
 
   &[data-state='live'] {
-    background: var(--gv-surface-live);
-    color: var(--gv-text-live);
+    background: var(--gv-surface-success);
+    color: var(--gv-text-success-strong);
   }
 }

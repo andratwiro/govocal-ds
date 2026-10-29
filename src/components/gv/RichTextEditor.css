@@ -30,14 +30,13 @@
   flex: 1;
   min-height: 74px;
   margin: 0;
-  padding: var(--gv-space-9) var(--gv-space-11);
+  padding: var(--gv-space-8) var(--gv-space-12);
   border: none;
   outline: none;
   resize: none;
   background: transparent;
   font: var(--gv-type-small);
-  line-height: var(--gv-type-ui-line);
-  letter-spacing: var(--gv-type-small-tracking);
+  line-height: var(--gv-font-line-height-20);
   color: var(--gv-text-body);
 }
 

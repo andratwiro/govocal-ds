@@ -3,7 +3,7 @@
 .react-aria-Select {
   --select-gap: var(--gv-space-8);
 
-  color: var(--text-color);
+  color: var(--gv-text-primary);
   position: relative;
   width: 200px;
 
@@ -27,15 +27,14 @@
     gap: var(--gv-space-8);
     min-width: 0;
     font: var(--gv-type-ui);
-    letter-spacing: var(--gv-type-ui-tracking);
-    color: var(--field-text-color);
+    color: var(--gv-text-primary);
     text-align: start;
     overflow: hidden;
     white-space: nowrap;
 
     &[data-placeholder] {
-      color: var(--text-color-placeholder);
-      font-weight: var(--gv-type-ui-weight);
+      color: var(--gv-text-placeholder);
+      font-weight: var(--gv-font-weight-regular);
     }
 
     [slot='label'] {
@@ -51,7 +50,7 @@
     .dropdown-item__icon {
       display: inline-flex;
       flex: none;
-      color: var(--gv-icon-strong);
+      color: var(--gv-icon-secondary);
     }
 
     .dropdown-item__icon > svg {
@@ -63,7 +62,7 @@
   .gv-select-icon {
     display: inline-flex;
     flex: none;
-    color: var(--gv-icon-strong);
+    color: var(--gv-icon-secondary);
 
     > svg {
       width: 16px;
@@ -76,7 +75,6 @@
     flex: none;
     margin-inline-end: calc(var(--gv-space-4) - var(--select-gap));
     font: var(--gv-type-ui);
-    letter-spacing: var(--gv-type-ui-tracking);
     color: var(--gv-text-secondary);
   }
 
@@ -84,12 +82,12 @@
     flex: none;
     width: 16px;
     height: 16px;
-    color: var(--gv-icon-default);
+    color: var(--gv-icon-tertiary);
   }
 
   &[data-disabled] .lucide-chevron-down,
   &[data-disabled] .gv-select-icon {
-    color: var(--gv-icon-quiet);
+    color: var(--gv-icon-disabled);
   }
 }
 
@@ -117,18 +115,18 @@
     height: 28px;
     padding: 0 var(--gv-space-12);
     border-radius: var(--gv-radius-full);
-    background: var(--gv-surface-pill);
+    background: var(--gv-surface-neutral);
     color: var(--gv-text-primary);
 
     &[data-hovered],
     &[data-pressed] {
-      background: var(--gv-color-slate-200);
+      background: var(--gv-surface-neutral-hovered);
       color: var(--gv-text-primary);
     }
   }
 
   &[data-open] .react-aria-Button {
-    background: var(--gv-color-slate-200);
+    background: var(--gv-surface-neutral-hovered);
   }
 
   .react-aria-SelectValue {
@@ -154,7 +152,6 @@
   .react-aria-SelectValue,
   .gv-select-prefix {
     font: var(--gv-type-small-strong);
-    letter-spacing: var(--gv-type-small-tracking);
     color: var(--gv-text-secondary);
   }
 
@@ -175,12 +172,12 @@
     padding: 0 var(--gv-space-8);
 
     &[data-hovered] {
-      background: var(--gv-surface-hover);
+      background: var(--gv-surface-hovered);
     }
   }
 
   &[data-open] .react-aria-Button {
-    background: var(--gv-surface-hover-strong);
+    background: var(--gv-surface-pressed);
   }
 
   .react-aria-SelectValue {
@@ -220,7 +217,7 @@
 
     .react-aria-Input {
       height: 32px;
-      background: var(--gv-surface-toolbar);
+      background: var(--gv-surface-secondary);
     }
   }
 

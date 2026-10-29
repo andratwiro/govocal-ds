@@ -5,9 +5,9 @@
    without a size the link takes the size of its sentence. */
 .react-aria-Link {
   display: inline;
-  color: var(--gv-text-accent);
+  color: var(--gv-text-link);
   font-family: var(--gv-font-family);
-  font-weight: var(--gv-type-body-strong-weight);
+  font-weight: var(--gv-font-weight-medium);
   text-decoration: none;
   cursor: pointer;
   outline: none;
@@ -17,12 +17,10 @@
 
   &[data-size='small'] {
     font: var(--gv-type-small-strong);
-    letter-spacing: var(--gv-type-small-strong-tracking);
   }
 
   &[data-size='medium'] {
     font: var(--gv-type-body-strong);
-    letter-spacing: var(--gv-type-body-strong-tracking);
   }
 
   svg {
@@ -35,16 +33,16 @@
 
   &[data-hovered],
   &[data-pressed] {
-    color: var(--gv-color-brand-900);
+    color: var(--gv-text-link-hovered);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 
   &[data-disabled] {
     cursor: default;
-    color: var(--gv-text-quiet);
+    color: var(--gv-text-disabled);
   }
 }

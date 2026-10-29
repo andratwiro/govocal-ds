@@ -12,39 +12,38 @@
 .react-aria-Input,
 .react-aria-TextArea {
   width: 100%;
-  min-height: var(--spacing-9);
-  padding: 0 var(--spacing-3);
+  min-height: var(--gv-size-control-36);
+  padding: 0 var(--gv-space-12);
   box-sizing: border-box;
   margin: 0;
   border: none;
-  border-radius: var(--radius);
+  border-radius: var(--gv-radius-8);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
-  color: var(--field-text-color);
+  color: var(--gv-text-primary);
   outline: none;
   -webkit-tap-highlight-color: transparent;
 
   &::placeholder {
-    color: var(--text-color-placeholder);
+    color: var(--gv-text-placeholder);
   }
 
   &[data-focused] {
-    outline: 2px solid var(--focus-ring-color);
+    outline: var(--gv-focus-ring);
     outline-offset: -1px;
   }
 
   &[data-disabled] {
-    background: var(--gv-surface-toolbar);
-    color: var(--text-color-disabled);
+    background: var(--gv-surface-secondary);
+    color: var(--gv-text-disabled);
     &::placeholder {
-      color: var(--text-color-disabled);
+      color: var(--gv-text-disabled);
     }
   }
 }
 
 .react-aria-TextArea {
   min-height: 64px;
-  padding: var(--gv-space-8) var(--spacing-3);
+  padding: var(--gv-space-8) var(--gv-space-12);
   resize: vertical;
 }
 
@@ -53,11 +52,11 @@
 .gv-text-field-group {
   display: flex;
   align-items: center;
-  min-height: var(--spacing-9);
+  min-height: var(--gv-size-control-36);
   box-sizing: border-box;
 
   &[data-focus-within] {
-    outline: 2px solid var(--focus-ring-color);
+    outline: var(--gv-focus-ring);
     outline-offset: -1px;
   }
 
@@ -73,18 +72,17 @@
 
 .gv-text-field-affix {
   flex: none;
-  padding: 0 var(--spacing-1);
+  padding: 0 var(--gv-space-4);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-secondary);
   white-space: nowrap;
 
   &:first-child {
-    padding-inline-start: var(--spacing-3);
+    padding-inline-start: var(--gv-space-12);
   }
 
   &:last-child {
-    padding-inline-end: var(--spacing-3);
+    padding-inline-end: var(--gv-space-12);
   }
 }
 
@@ -101,8 +99,7 @@
 
 .gv-text-field-counter {
   flex: none;
-  margin-top: var(--spacing-1);
+  margin-top: var(--gv-space-4);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-tertiary);
 }

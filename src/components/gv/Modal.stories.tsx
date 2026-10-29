@@ -164,7 +164,7 @@ function SideTabsModal() {
       <GroupedTabs defaultSelectedKey="general" style={{minHeight: 0}}>
         <GroupedTabList
           aria-label="Settings"
-          style={{flex: '0 0 200px', padding: '8px', overflowY: 'auto', background: 'var(--gv-surface-toolbar)',
+          style={{flex: '0 0 200px', padding: '8px', overflowY: 'auto', background: 'var(--gv-surface-secondary)',
             borderInlineEnd: '1px solid var(--gv-border-subtle)'}}>
           {settingsGroups.map(group => (
             <TabSection key={group.title} title={group.title}>

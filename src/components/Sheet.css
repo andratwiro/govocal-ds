@@ -3,17 +3,16 @@
 /* The sheet is a Modal that slides: the Figma Modal shell (radius 14, panel fill, 1px subtle outline, dialog
    shadow) and UI type; the grab handle in the control grey. */
 .react-aria-Sheet {
-  background: var(--overlay-background);
+  background: var(--gv-surface-panel);
   color: var(--gv-text-primary);
   outline: 1px solid var(--gv-border-subtle);
-  box-shadow: var(--gv-shadow-dialog);
+  box-shadow: var(--gv-shadow-overlay);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   height: auto;
   max-height: calc(100% - var(--gv-space-32));
-  width: calc(100% - var(--spacing-3));
+  width: calc(100% - var(--gv-space-12));
   max-width: 800px;
-  margin: var(--spacing-2);
+  margin: var(--gv-space-8);
   border-radius: var(--gv-radius-14);
   overflow: clip;
   z-index: 1;
@@ -24,7 +23,7 @@
   &[data-position='left'],
   &[data-position='right'] {
     width: 340px;
-    height: calc(100% - var(--spacing-3));
+    height: calc(100% - var(--gv-space-12));
     max-height: unset;
   }
 
@@ -97,12 +96,12 @@
 }
 
 .react-aria-SheetContent {
-  padding: var(--spacing-8);
-  padding-bottom: calc(var(--spacing-8) + var(--sheet-scroll-padding-y));
+  padding: var(--gv-space-32);
+  padding-bottom: calc(var(--gv-space-32) + var(--sheet-scroll-padding-y));
   mask-image: linear-gradient(
     to bottom,
-    transparent 0px var(--spacing-4),
-    var(--gv-color-neutral-900) var(--spacing-8) calc(100% - var(--spacing-8)),
+    transparent 0px var(--gv-space-16),
+    var(--gv-color-neutral-900) var(--gv-space-32) calc(100% - var(--gv-space-32)),
     transparent
   ); /* raw: a mask, where only the alpha counts */
   box-sizing: border-box;
@@ -118,7 +117,6 @@
     margin-top: 0;
     margin-bottom: var(--gv-space-12);
     font: var(--gv-type-title);
-    letter-spacing: var(--gv-type-title-tracking);
     color: var(--gv-text-primary);
   }
 }

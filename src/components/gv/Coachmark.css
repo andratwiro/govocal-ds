@@ -6,13 +6,12 @@
   position: relative;
   width: 266px;
   box-sizing: border-box;
-  background: var(--gv-action-primary);
+  background: var(--gv-surface-brand-strong);
   color: var(--gv-text-inverse);
   border-radius: var(--gv-radius-12);
   padding: var(--gv-space-16) var(--gv-space-16) var(--gv-space-12);
-  box-shadow: var(--gv-shadow-dialog);
+  box-shadow: var(--gv-shadow-overlay);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   transition:
     transform var(--gv-motion-duration-medium) var(--gv-motion-easing-standard),
     opacity var(--gv-motion-duration-medium) var(--gv-motion-easing-standard);
@@ -50,7 +49,7 @@
 .gv-coachmark__arrow svg {
   display: block;
   overflow: visible;
-  fill: var(--gv-action-primary);
+  fill: var(--gv-surface-brand-strong);
 }
 
 .gv-coachmark[data-placement='top'] .gv-coachmark__arrow svg {
@@ -78,19 +77,18 @@
 
 .gv-coachmark__title {
   font: var(--gv-type-body-strong);
-  letter-spacing: var(--gv-type-body-strong-tracking);
 }
 
 /* The prototype paints the words and buttons in white at 75–90 % on the brand fill; no token holds white at an
    alpha, so each is the white mixed into the fill. */
 .gv-coachmark__x {
   flex: none;
-  margin-top: var(--gv-space-1);
+  margin-top: 1px;
   border: none;
   background: none;
   padding: 0;
   border-radius: var(--gv-radius-4);
-  color: color-mix(in srgb, var(--gv-text-inverse) 75%, var(--gv-action-primary));
+  color: color-mix(in srgb, var(--gv-text-inverse) 75%, var(--gv-text-brand));
   cursor: pointer;
   display: inline-flex;
 }
@@ -102,8 +100,7 @@
 .gv-coachmark__body {
   margin-top: var(--gv-space-6);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
-  color: color-mix(in srgb, var(--gv-text-inverse) 90%, var(--gv-action-primary));
+  color: color-mix(in srgb, var(--gv-text-inverse) 90%, var(--gv-text-brand));
 }
 
 .gv-coachmark__acts {
@@ -111,21 +108,20 @@
   align-items: center;
   justify-content: flex-end;
   gap: var(--gv-space-6);
-  margin-top: var(--gv-space-14);
+  margin-top: var(--gv-space-16);
 }
 
 .gv-coachmark__skip,
 .gv-coachmark__got {
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   cursor: pointer;
 }
 
 .gv-coachmark__skip {
   border: none;
   background: none;
-  color: color-mix(in srgb, var(--gv-text-inverse) 85%, var(--gv-action-primary));
-  padding: var(--gv-space-6) var(--gv-space-9);
+  color: color-mix(in srgb, var(--gv-text-inverse) 85%, var(--gv-text-brand));
+  padding: var(--gv-space-6) var(--gv-space-8);
   border-radius: var(--gv-radius-6);
 }
 
@@ -138,8 +134,8 @@
   border: 1px solid color-mix(in srgb, var(--gv-text-inverse) 50%, transparent);
   background: none;
   color: var(--gv-text-inverse);
-  font-weight: var(--gv-type-ui-strong-weight);
-  padding: var(--gv-space-6) var(--gv-space-14);
+  font-weight: var(--gv-font-weight-medium);
+  padding: var(--gv-space-6) var(--gv-space-16);
   border-radius: var(--gv-radius-8);
 }
 

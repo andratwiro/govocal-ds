@@ -10,11 +10,10 @@
   width: 28px;
   height: 28px;
   border-radius: var(--gv-radius-full);
-  background: var(--gv-avatar-fill);
-  border: 2px solid var(--gv-border-avatar);
+  background: var(--gv-surface-brand-strong);
+  border: 2px solid var(--gv-border-inverse);
   color: var(--gv-text-inverse);
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   overflow: hidden;
   position: relative;
 
@@ -26,7 +25,7 @@
   &[data-size='16'] {
     width: 16px;
     height: 16px;
-    font-size: var(--gv-type-small-size);
+    font-size: var(--gv-font-size-12);
     border-width: 1px;
   }
 
@@ -40,8 +39,8 @@
 /* A photo covers the circle, over the initials it falls back to (they show while it loads or if it fails). Under a
    photo the circle is the light pill grey with dark initials: readable while it loads, no dark fringe at its edge. */
 .gv-avatar[data-photo] {
-  background: var(--gv-surface-pill);
-  color: var(--gv-text-pill);
+  background: var(--gv-surface-neutral);
+  color: var(--gv-text-neutral);
 }
 
 .gv-avatar__photo {
@@ -59,7 +58,6 @@
   align-items: center;
   gap: var(--gv-space-8);
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-primary);
 }
 

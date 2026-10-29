@@ -2,7 +2,7 @@
 @import './utilities.css';
 
 .react-aria-DateRangePicker {
-  color: var(--text-color);
+  color: var(--gv-text-primary);
   max-width: 100%;
 
   .react-aria-Group {
@@ -15,21 +15,20 @@
     box-sizing: border-box;
     overflow: clip;
     position: relative;
-    padding: 0 var(--spacing-1) 0 var(--spacing-3);
-    border-radius: var(--radius);
+    padding: 0 var(--gv-space-4) 0 var(--gv-space-12);
+    border-radius: var(--gv-radius-8);
     font: var(--gv-type-ui);
-    letter-spacing: var(--gv-type-ui-tracking);
-    color: var(--field-text-color);
+    color: var(--gv-text-primary);
     white-space: nowrap;
     cursor: text;
 
     &[data-focus-within] {
-      outline: 2px solid var(--focus-ring-color);
+      outline: var(--gv-focus-ring);
       outline-offset: -1px;
     }
 
     &[data-disabled] {
-      color: var(--text-color-disabled);
+      color: var(--gv-text-disabled);
     }
   }
 
@@ -64,7 +63,7 @@
     box-shadow: none;
     background: none;
     height: auto;
-    line-height: var(--gv-type-ui-line);
+    line-height: var(--gv-font-line-height-20);
     &[data-focus-within] {
       outline: unset;
     }

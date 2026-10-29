@@ -14,13 +14,11 @@
 .gv-help-popover__title {
   margin: 0;
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   color: var(--gv-text-primary);
 }
 
 .gv-help-popover__body {
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-body);
 }
 

@@ -12,7 +12,7 @@
   inset-block-start: 0;
   overflow-y: auto;
   padding-block-end: var(--gv-space-16);
-  background: var(--gv-surface-nav);
+  background: var(--gv-side-nav-surface);
   color: var(--gv-text-inverse);
 }
 
@@ -44,7 +44,7 @@
   -webkit-tap-highlight-color: transparent;
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-icon-nav-active);
+    outline: 2px solid var(--gv-side-nav-icon-current);
     outline-offset: -2px;
   }
 }
@@ -53,7 +53,7 @@
 .gv-side-nav__home {
   min-block-size: 60px;
   padding: var(--gv-space-10) var(--gv-space-8) var(--gv-space-10) var(--gv-space-16);
-  background: var(--gv-surface-brand-mark);
+  background: var(--gv-surface-accent-strong);
 
   > svg {
     flex: none;
@@ -71,11 +71,11 @@
   &[data-hovered],
   &[aria-current='page'],
   &[aria-expanded='true'] {
-    background: var(--gv-surface-nav-active);
+    background: var(--gv-side-nav-surface-current);
   }
 
   &[aria-current='page'] .gv-side-nav__icon {
-    color: var(--gv-icon-nav-active);
+    color: var(--gv-side-nav-icon-current);
   }
 }
 
@@ -86,7 +86,7 @@
   align-items: center;
   justify-content: center;
   inline-size: var(--gv-size-icon-24);
-  color: var(--gv-icon-nav);
+  color: var(--gv-side-nav-icon);
 
   &[data-accent] {
     color: var(--gv-side-nav-icon-accent);
@@ -110,8 +110,7 @@
    colour, 8:1 on the nav surface. */
 .gv-side-nav__sub {
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
-  color: var(--gv-icon-nav);
+  color: var(--gv-side-nav-icon);
 }
 
 /* The real admin's red count (CountBadge): white on the notification red, 4.6:1. */
@@ -121,10 +120,9 @@
   padding: 0 var(--gv-space-4);
   box-sizing: border-box;
   border-radius: var(--gv-radius-4);
-  background: var(--gv-state-notification);
+  background: var(--gv-surface-danger-strong);
   color: var(--gv-text-inverse);
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   text-align: center;
 
   &[data-on-icon] {
@@ -134,7 +132,7 @@
 
 .gv-side-nav__chevron {
   flex: none;
-  color: var(--gv-icon-nav);
+  color: var(--gv-side-nav-icon);
 }
 
 [dir='rtl'] .gv-side-nav__chevron,

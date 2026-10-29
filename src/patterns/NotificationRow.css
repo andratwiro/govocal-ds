@@ -39,11 +39,11 @@
   transition: background-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 
   &[data-hovered] {
-    background: var(--gv-surface-toolbar);
+    background: var(--gv-surface-secondary);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
+    outline: var(--gv-focus-ring);
     outline-offset: 0;
   }
 }
@@ -62,12 +62,11 @@
 
 .gv-notification-row__name {
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
 }
 
 .gv-notification-row[data-off] .gv-notification-row__name {
-  color: var(--gv-text-quiet);
+  color: var(--gv-text-disabled);
 }
 
 .gv-notification-row__meta {
@@ -76,8 +75,7 @@
   align-items: flex-start;
   gap: var(--gv-space-2);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
-  color: var(--gv-text-meta);
+  color: var(--gv-text-secondary);
 
   > span {
     display: inline-flex;
@@ -117,7 +115,6 @@
 .gv-notification-email__title {
   margin: 0;
   font: var(--gv-type-title);
-  letter-spacing: var(--gv-type-title-tracking);
   color: var(--gv-text-primary);
 }
 
@@ -130,7 +127,7 @@
 .gv-notification-email__rule {
   margin: calc(-1 * var(--gv-space-16)) 0 0;
   border: 0;
-  border-block-start: 1px solid var(--gv-divider-default);
+  border-block-start: 1px solid var(--gv-border-subtle);
 }
 
 .gv-notification-email__field {
@@ -141,6 +138,5 @@
 .gv-notification-email__label {
   margin-block-end: var(--gv-space-8);
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   color: var(--gv-text-primary);
 }

@@ -4,7 +4,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--spacing-1);
+  gap: var(--gv-space-4);
   width: fit-content;
 
   &[data-orientation='horizontal'] {
@@ -23,7 +23,7 @@
   .react-aria-Separator {
     &[aria-orientation='vertical'] {
       height: auto;
-      margin: 0px var(--spacing-1);
+      margin: 0px var(--gv-space-4);
     }
   }
 }

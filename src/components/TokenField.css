@@ -10,31 +10,30 @@
 .react-aria-TokenInput {
   padding: var(--gv-space-6) var(--gv-space-10);
   outline: none;
-  border-radius: var(--radius);
+  border-radius: var(--gv-radius-8);
   outline: none;
   box-sizing: border-box;
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
-  line-height: var(--gv-type-ui-line);
-  color: var(--field-text-color);
+  line-height: var(--gv-font-line-height-20);
+  color: var(--gv-text-primary);
 
   &:empty::before {
     content: attr(data-placeholder);
-    color: var(--text-color-placeholder);
+    color: var(--gv-text-placeholder);
   }
 
   &[aria-multiline='true'] {
     min-height: 100px;
-    padding: var(--gv-space-10) var(--spacing-3);
+    padding: var(--gv-space-10) var(--gv-space-12);
   }
 
   &[data-focused] {
-    outline: 2px solid var(--focus-ring-color);
+    outline: var(--gv-focus-ring);
     outline-offset: -1px;
   }
 
   &[data-disabled] {
-    color: var(--text-color-disabled);
+    color: var(--gv-text-disabled);
     user-select: none;
   }
 }
@@ -42,19 +41,19 @@
 /* A token is the Figma Pill (gv/Pill): pill grey, the pill text colour, round, medium weight; chosen = the checked
    blue with white text. */
 .react-aria-Token {
-  background-color: var(--gv-surface-pill);
-  color: var(--gv-text-pill);
-  font-weight: var(--gv-type-small-strong-weight);
+  background-color: var(--gv-surface-neutral);
+  color: var(--gv-text-neutral);
+  font-weight: var(--gv-font-weight-medium);
   border-radius: var(--gv-radius-full);
-  height: var(--spacing-5);
-  padding: var(--gv-space-1) var(--spacing-2);
+  height: var(--gv-space-20);
+  padding: var(--gv-space-2) var(--gv-space-8);
   margin: 0 var(--gv-space-2);
   cursor: default;
   white-space: nowrap;
   -webkit-tap-highlight-color: transparent;
 
   &[data-selected] {
-    background-color: var(--gv-action-checked);
+    background-color: var(--gv-surface-selected-strong);
     color: var(--gv-text-inverse);
   }
 
@@ -63,7 +62,7 @@
   }
 
   &[data-disabled] {
-    background-color: var(--gv-surface-hover);
-    color: var(--text-color-disabled);
+    background-color: var(--gv-surface-hovered);
+    color: var(--gv-text-disabled);
   }
 }

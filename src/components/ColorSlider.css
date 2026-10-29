@@ -6,7 +6,7 @@
     'label output'
     'track track';
   grid-template-columns: 1fr auto;
-  gap: var(--spacing-1);
+  gap: var(--gv-space-4);
 
   .react-aria-Label {
     grid-area: label;
@@ -16,12 +16,12 @@
     grid-area: output;
     text-align: end;
     font: var(--gv-type-ui);
-    color: var(--text-color);
+    color: var(--gv-text-primary);
   }
 
   .react-aria-SliderTrack {
     grid-area: track;
-    border-radius: var(--radius);
+    border-radius: var(--gv-radius-8);
   }
 
   &[data-orientation='horizontal'] {
@@ -29,7 +29,7 @@
     max-width: 300px;
 
     .react-aria-SliderTrack {
-      height: var(--spacing-6);
+      height: var(--gv-space-24);
     }
 
     .react-aria-ColorThumb {
@@ -47,7 +47,7 @@
     }
 
     .react-aria-SliderTrack {
-      width: var(--spacing-6);
+      width: var(--gv-space-24);
       height: 100%;
     }
 
@@ -58,7 +58,7 @@
 
   &[data-disabled] {
     .react-aria-SliderTrack {
-      background: var(--gray-400) !important; /* raw: colour picker chrome, a disabled well */
+      background: var(--gv-color-slate-400) !important; /* raw: colour picker chrome, a disabled well */
     }
   }
 }

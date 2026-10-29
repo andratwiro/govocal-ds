@@ -4,11 +4,11 @@
   width: min(90vw, 500px);
   height: min(90vh, 356px);
   max-height: inherit;
-  padding: var(--spacing-2);
+  padding: var(--gv-space-8);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
+  gap: var(--gv-space-8);
 
   .react-aria-Menu {
     flex: 1;

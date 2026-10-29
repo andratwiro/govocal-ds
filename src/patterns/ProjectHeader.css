@@ -8,7 +8,7 @@
   min-height: 48px;
   min-width: 0;
   box-sizing: border-box;
-  padding: var(--gv-space-5) var(--gv-space-6);
+  padding: var(--gv-space-4) var(--gv-space-6);
   border-radius: var(--gv-radius-8);
   font-family: var(--gv-font-family);
 }
@@ -18,12 +18,12 @@
   flex: none;
   width: 1px;
   height: 31px;
-  margin-inline: var(--gv-space-4) var(--gv-space-3);
-  background: var(--gv-divider-strong);
+  margin-inline: var(--gv-space-4) 3px;
+  background: var(--gv-border-default);
 }
 
 .gv-header[data-level='project'] {
-  gap: var(--gv-space-5);
+  gap: var(--gv-space-4);
 }
 
 /* The bar (prototype .pj-hdr, the back office's phase bar): the full width of the screen's top, white on the app grey,
@@ -58,12 +58,12 @@
   width: 7px;
   height: 7px;
   border-radius: var(--gv-radius-full);
-  background: var(--gv-text-live);
+  background: var(--gv-text-success-strong);
 }
 
 /* A mode that can't open yet (Manage and Insights before the phase is published): quiet, as the prototype's
    .pj-hseg__b.is-disabled. Segmented control draws no disabled look of its own yet. */
 .gv-project-header .gv-segment[data-disabled] {
-  color: var(--gv-text-quiet);
+  color: var(--gv-text-disabled);
   cursor: default;
 }

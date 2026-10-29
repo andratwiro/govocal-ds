@@ -18,13 +18,12 @@
   .react-aria-Input {
     width: 100%;
     box-sizing: border-box;
-    padding: var(--gv-space-9) var(--gv-space-11);
+    padding: var(--gv-space-8) var(--gv-space-12);
     border: 1px solid var(--gv-border-control);
     border-radius: var(--gv-radius-8);
     background: var(--gv-surface-panel);
     color: var(--gv-text-primary);
     font: var(--gv-type-small);
-    letter-spacing: var(--gv-type-small-tracking);
     outline: none;
 
     &::placeholder {
@@ -33,18 +32,18 @@
 
     &[data-focused] {
       border-color: var(--gv-border-selected);
-      outline: 2px solid var(--gv-border-selected);
+      outline: var(--gv-focus-ring);
       outline-offset: -1px;
     }
 
     &[data-invalid] {
-      border-color: var(--gv-state-notification);
+      border-color: var(--gv-border-danger);
     }
   }
 
   .react-aria-FieldError {
     margin-top: var(--gv-space-4);
-    color: var(--gv-state-notification);
+    color: var(--gv-text-danger);
     font: var(--gv-type-small);
   }
 }

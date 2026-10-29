@@ -22,12 +22,11 @@
   .segmented-control-item {
     all: unset;
     display: block;
-    color: var(--gray-1200);
+    color: var(--gv-text-primary);
     font: var(--gv-type-ui-strong);
-    letter-spacing: var(--gv-type-ui-strong-tracking);
     height: var(--gv-size-control-32);
     outline: none;
-    padding: 0 var(--spacing-3);
+    padding: 0 var(--gv-space-12);
     position: relative;
     z-index: 1;
     transition: color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
@@ -44,11 +43,11 @@
 
     &[data-selected] {
       z-index: 0;
-      color: var(--highlight-foreground);
+      color: var(--gv-text-inverse);
     }
 
     &[data-focus-visible] {
-      outline: 2px solid var(--focus-ring-color);
+      outline: var(--gv-focus-ring);
       outline-offset: 4px;
     }
   }

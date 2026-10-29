@@ -22,8 +22,7 @@
 .gv-table-toolbar__heading {
   margin: 0;
   font: var(--gv-type-title);
-  font-weight: var(--gv-type-body-weight);
-  letter-spacing: var(--gv-type-title-tracking);
+  font-weight: var(--gv-font-weight-regular);
   color: var(--gv-text-primary);
   white-space: nowrap;
 }

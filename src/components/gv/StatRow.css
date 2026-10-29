@@ -23,7 +23,7 @@
 
   &[data-hovered],
   &[data-current] {
-    background: var(--gv-surface-hover);
+    background: var(--gv-surface-hovered);
 
     .gv-stat-row__chevron {
       color: var(--gv-icon-primary);
@@ -31,8 +31,8 @@
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 }
 
@@ -45,7 +45,6 @@
   align-items: center;
   gap: var(--gv-space-6);
   font: var(--gv-type-body);
-  letter-spacing: var(--gv-type-body-tracking);
   color: var(--gv-text-secondary);
 }
 
@@ -56,7 +55,6 @@
   gap: var(--gv-space-6);
   font: var(--gv-type-stat);
   line-height: 1;
-  letter-spacing: var(--gv-type-stat-tracking);
   color: var(--gv-text-primary);
 }
 

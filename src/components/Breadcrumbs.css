@@ -11,7 +11,6 @@
   margin: 0;
   padding: 0;
   font: var(--gv-type-title);
-  letter-spacing: var(--gv-type-title-tracking);
   color: var(--gv-text-secondary);
 
   .react-aria-Breadcrumb {
@@ -28,7 +27,7 @@
 
   .react-aria-Link {
     font: inherit;
-    font-weight: var(--gv-type-body-weight);
+    font-weight: var(--gv-font-weight-regular);
     color: var(--gv-text-secondary);
     outline: none;
     position: relative;
@@ -43,23 +42,23 @@
 
     &[data-current] {
       color: var(--gv-text-primary);
-      font-weight: var(--gv-type-title-weight);
+      font-weight: var(--gv-font-weight-medium);
       overflow: hidden;
       text-overflow: ellipsis;
       cursor: default;
     }
 
     &[data-focus-visible] {
-      border-radius: var(--radius-sm);
-      outline: 2px solid var(--focus-ring-color);
-      outline-offset: 2px;
+      border-radius: var(--gv-radius-4);
+      outline: var(--gv-focus-ring);
+      outline-offset: var(--gv-focus-ring-offset);
     }
 
     &[data-disabled] {
       cursor: default;
 
       &:not([data-current]) {
-        color: var(--text-color-disabled);
+        color: var(--gv-text-disabled);
       }
     }
   }

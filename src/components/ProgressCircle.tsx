@@ -27,14 +27,14 @@ export function ProgressCircle(props: ProgressCircleProps) {
               cx="50%"
               cy="50%"
               r={radius}
-              stroke="var(--highlight-pressed)"
+              stroke="var(--gv-surface-pressed)"
               strokeWidth={strokeWidth}
             />
             <circle
               cx="50%"
               cy="50%"
               r={radius}
-              stroke="var(--highlight-background)"
+              stroke="var(--gv-icon-brand)"
               strokeWidth={strokeWidth}
               // Normalize the path length to 100 so we can easily set stroke-dashoffset to a percentage.
               pathLength="100"

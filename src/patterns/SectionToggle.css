@@ -21,17 +21,14 @@
 
 .gv-section-toggle__title {
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   color: var(--gv-text-primary);
 }
 
 .gv-section-toggle__description {
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
-  color: var(--gv-text-meta);
+  color: var(--gv-text-secondary);
 }
 
 .gv-section-toggle__switch-label {
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
 }

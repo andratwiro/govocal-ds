@@ -14,7 +14,6 @@
 
 .gv-vote-progress__count {
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   color: var(--gv-text-primary);
 }
 
@@ -24,7 +23,6 @@
 
 .gv-vote-progress__of {
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-secondary);
   margin-inline-end: var(--gv-space-6);
   white-space: nowrap;
@@ -37,7 +35,7 @@
   min-inline-size: var(--gv-space-24);
   height: 4px;
   border-radius: var(--gv-radius-full);
-  background: var(--gv-surface-stage);
+  background: var(--gv-surface-tertiary);
   overflow: hidden;
 }
 
@@ -45,18 +43,17 @@
   display: block;
   height: 100%;
   border-radius: var(--gv-radius-full);
-  background: var(--gv-icon-default);
+  background: var(--gv-icon-tertiary);
 }
 
 /* Teal once the threshold is reached; grey on the way there (Figma Proposals row, Open vs Closed). */
 .gv-vote-progress--threshold .gv-vote-progress__fill[data-reached] {
-  background: var(--gv-surface-brand-mark);
+  background: var(--gv-surface-accent-strong);
 }
 
 .gv-vote-progress__new {
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
-  color: var(--gv-text-accent);
+  color: var(--gv-text-brand);
   margin-inline-start: var(--gv-space-8);
   white-space: nowrap;
 }

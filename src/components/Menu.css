@@ -56,7 +56,6 @@
   cursor: default;
   color: var(--gv-text-primary);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   position: relative;
   display: grid;
   grid-column: 1 / -1;
@@ -78,7 +77,7 @@
     grid-area: icon;
     width: 16px;
     height: 16px;
-    color: var(--gv-icon-strong);
+    color: var(--gv-icon-secondary);
     margin-inline-end: var(--gv-space-10);
   }
 
@@ -96,13 +95,13 @@
   &[data-open],
   &[data-pressed],
   &[data-focused] {
-    background: var(--gv-surface-hover);
+    background: var(--gv-surface-hovered);
     color: var(--gv-text-primary);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
   }
 
   /* Pick several: the system Checkbox's box (15, radius 4, control border; ticked = the checked colour, a white
@@ -130,8 +129,8 @@
 
     &[data-selected] {
       opacity: 1;
-      background: var(--gv-action-checked);
-      border-color: var(--gv-action-checked);
+      background: var(--gv-surface-selected-strong);
+      border-color: var(--gv-border-selected);
     }
   }
 
@@ -153,7 +152,7 @@
   .gv-menu-check {
     width: 16px;
     height: 16px;
-    color: var(--gv-action-checked);
+    color: var(--gv-icon-brand);
   }
 
   &[href] {
@@ -162,11 +161,11 @@
   }
 
   &[data-disabled] {
-    color: var(--gv-text-quiet);
+    color: var(--gv-text-disabled);
 
     > svg,
     > .gv-menu-icon {
-      color: var(--gv-icon-quiet);
+      color: var(--gv-icon-disabled);
     }
   }
 
@@ -185,7 +184,6 @@
   [slot='description'] {
     grid-area: desc;
     font: var(--gv-type-small);
-    letter-spacing: var(--gv-type-small-tracking);
     color: var(--gv-text-secondary);
   }
 
@@ -224,7 +222,6 @@
     grid-column: 1 / -1;
     padding: var(--gv-space-8) var(--gv-space-8) var(--gv-space-4);
     font: var(--gv-type-small);
-    letter-spacing: var(--gv-type-small-tracking);
     color: var(--gv-text-secondary);
     cursor: default;
     user-select: none;
@@ -235,7 +232,7 @@
   grid-column: 1 / -1;
   margin: var(--gv-space-6) var(--gv-space-4);
   border: 0;
-  border-top: 1px solid var(--gv-border-card);
+  border-top: 1px solid var(--gv-border-default);
   height: 0;
   width: auto;
 }

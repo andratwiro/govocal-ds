@@ -1,10 +1,10 @@
 @layer utilities {
   /* utility that creates a button-like element, which can be optionally selected */
   .button-base {
-    --button-color: var(--button-background);
+    --button-color: var(--gv-surface-panel);
     --button-border: var(--border-color);
     --button-border-size: 1px;
-    --button-text: var(--text-color);
+    --button-text: var(--gv-text-primary);
 
     background: var(--button-color);
     color: var(--button-text);
@@ -18,12 +18,12 @@
     -webkit-tap-highlight-color: transparent;
 
     &:where([data-pressed]) {
-      --button-color: var(--button-background-pressed);
+      --button-color: var(--gv-surface-pressed);
     }
 
     &:where([data-focus-visible]) {
-      outline: 2px solid var(--focus-ring-color);
-      outline-offset: 2px;
+      outline: var(--gv-focus-ring);
+      outline-offset: var(--gv-focus-ring-offset);
     }
 
     &:where([data-variant='secondary']) {
@@ -33,30 +33,30 @@
 
     &:where([data-variant='quiet']) {
       --button-color: none;
-      --button-text: var(--text-color);
+      --button-text: var(--gv-text-primary);
       --button-border: transparent;
 
       &:where([data-hovered], [data-pressed]) {
-        --button-color: var(--highlight-hover);
+        --button-color: var(--gv-surface-hovered);
         --button-border: transparent;
       }
     }
 
     &:where([data-selected]) {
-      --button-color: var(--highlight-background);
-      --button-border: var(--highlight-background);
-      --button-text: var(--highlight-foreground);
+      --button-color: var(--gv-surface-brand-strong);
+      --button-border: var(--gv-border-selected);
+      --button-text: var(--gv-text-inverse);
 
       &:where([data-pressed]) {
-        --button-color: var(--highlight-background-pressed);
-        --button-border: var(--highlight-background-pressed);
+        --button-color: var(--gv-surface-selected-strong);
+        --button-border: var(--gv-border-selected);
       }
     }
 
     &:where([data-disabled]) {
       box-shadow: none;
-      --button-color: var(--border-color-disabled);
-      --button-text: var(--text-color-disabled);
+      --button-color: var(--gv-border-disabled);
+      --button-text: var(--gv-text-disabled);
 
       &:where([data-variant='quiet']) {
         --button-color: none;
@@ -96,7 +96,7 @@
 
   /* utility that creates a small indicator, such as a checkbox, radio, switch, or slider thumb */
   .indicator {
-    --indicator-background: var(--indicator-color, var(--field-background));
+    --indicator-background: var(--indicator-color, var(--gv-surface-panel));
     --indicator-border: var(--border-color);
 
     background: var(--indicator-background);
@@ -116,8 +116,8 @@
 
     [data-selected] > &,
     [data-indeterminate] > & {
-      --indicator-background: var(--highlight-background);
-      --indicator-border: var(--highlight-background);
+      --indicator-background: var(--gv-surface-brand-strong);
+      --indicator-border: var(--gv-border-selected);
       box-shadow: inset 0 0 0 1px var(--indicator-border);
 
       @media (forced-colors: active) {
@@ -127,29 +127,29 @@
 
     &[data-invalid],
     [data-invalid] > & {
-      --indicator-border: var(--invalid-color);
+      --indicator-border: var(--gv-border-danger);
 
       @media (forced-colors: active) {
-        --indicator-border: var(--invalid-color);
+        --indicator-border: var(--gv-border-danger);
       }
     }
 
     &[data-focus-visible],
     [data-focus-visible] > & {
-      outline: 2px solid var(--focus-ring-color);
-      outline-offset: 2px;
+      outline: var(--gv-focus-ring);
+      outline-offset: var(--gv-focus-ring-offset);
     }
 
     &[data-disabled],
     [data-disabled] > & {
-      background: var(--field-background);
-      box-shadow: inset 0 0 0 1px var(--border-color-disabled);
+      background: var(--gv-surface-panel);
+      box-shadow: inset 0 0 0 1px var(--gv-border-disabled);
     }
   }
 
   /* utility that creates an inset effect, used for form fields, slider/progress tracks, etc. */
   .inset {
-    --inset-background: var(--field-background);
+    --inset-background: var(--gv-surface-panel);
     --inset-border: var(--border-color);
     --inset-border-size: 1px;
 
@@ -159,7 +159,7 @@
     forced-color-adjust: none;
 
     &:where([data-hovered], [data-pressed]) {
-      --inset-border: var(--border-color-hover);
+      --inset-border: var(--gv-border-control-hovered);
     }
 
     @media (forced-colors: active) {
@@ -168,11 +168,11 @@
     }
 
     &:where([data-invalid]) {
-      --inset-border: var(--invalid-color);
+      --inset-border: var(--gv-border-danger);
     }
 
     &:where([data-disabled]) {
-      box-shadow: inset 0 0 0 1px var(--border-color-disabled);
+      box-shadow: inset 0 0 0 1px var(--gv-border-disabled);
     }
 
     &.track {

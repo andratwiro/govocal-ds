@@ -4,36 +4,34 @@
 .react-aria-Calendar {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
+  gap: var(--gv-space-8);
   width: fit-content;
   max-width: 100%;
   color: var(--gv-text-primary);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
 
   .months {
     display: flex;
-    gap: var(--spacing-3);
+    gap: var(--gv-space-12);
   }
 
   .month {
-    width: calc(var(--spacing-9) * 7);
-    min-width: calc(var(--spacing-7) * 7);
+    width: calc(var(--gv-size-control-36) * 7);
+    min-width: calc(var(--gv-space-28) * 7);
     container-type: inline-size;
   }
 
   header {
     display: flex;
     align-items: center;
-    margin: 0 var(--spacing-1) var(--spacing-4) var(--spacing-1);
-    min-height: var(--spacing-8);
+    margin: 0 var(--gv-space-4) var(--gv-space-16) var(--gv-space-4);
+    min-height: var(--gv-space-32);
 
     .react-aria-CalendarHeading {
       flex: 1;
       margin: 0;
       text-align: center;
       font: var(--gv-type-body-strong);
-      letter-spacing: var(--gv-type-body-strong-tracking);
     }
   }
 
@@ -51,7 +49,7 @@
 
   [slot='errorMessage'] {
     font: var(--gv-type-small);
-    color: var(--invalid-color);
+    color: var(--gv-text-danger);
   }
 }
 
@@ -59,12 +57,11 @@
    radius-8 corner every control here has (not round), today marked UI strong, the chosen day the selected fill. */
 .react-aria-CalendarHeaderCell {
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-secondary);
 }
 
 .react-aria-CalendarCell {
-  --gap: var(--spacing-1);
+  --gap: var(--gv-space-4);
   width: calc((100cqw / 7) - var(--gap));
   aspect-ratio: 1;
   margin: calc(var(--gap) / 2);
@@ -72,9 +69,8 @@
   align-items: center;
   justify-content: center;
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   text-align: center;
-  border-radius: var(--radius);
+  border-radius: var(--gv-radius-8);
   cursor: default;
   forced-color-adjust: none;
   transition: scale var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
@@ -87,11 +83,11 @@
   }
 
   &[data-today] {
-    font-weight: var(--gv-type-ui-strong-weight);
+    font-weight: var(--gv-font-weight-medium);
   }
 
   &[data-disabled] {
-    opacity: 0.5;
+    opacity: var(--gv-opacity-disabled);
   }
 
   &[data-pressed] {
@@ -100,10 +96,10 @@
 
   &[data-unavailable] {
     text-decoration: line-through;
-    color: var(--invalid-color);
+    color: var(--gv-text-danger);
   }
 
   &[data-invalid] {
-    --button-color: var(--invalid-color);
+    --button-color: var(--gv-surface-danger-strong);
   }
 }

@@ -9,7 +9,7 @@
 .gv-breadcrumb {
   display: inline-flex;
   align-items: center;
-  gap: var(--gv-space-5);
+  gap: var(--gv-space-4);
   min-width: 0;
   font-family: var(--gv-font-family);
 }
@@ -21,15 +21,15 @@
   align-self: center;
   width: 1px;
   height: 31px;
-  margin-inline: var(--gv-space-4) var(--gv-space-3);
-  background: var(--gv-divider-strong);
+  margin-inline: var(--gv-space-4) 3px;
+  background: var(--gv-border-default);
 }
 
 .gv-breadcrumb-trail,
 .gv-breadcrumb-crumb {
   display: inline-flex;
   align-items: center;
-  gap: var(--gv-space-5);
+  gap: var(--gv-space-4);
   min-width: 0;
   margin: 0;
   padding: 0;
@@ -39,7 +39,6 @@
 .gv-breadcrumb-link,
 .gv-breadcrumb-current {
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -59,14 +58,13 @@
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 }
 
 .gv-breadcrumb-current {
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   color: var(--gv-text-primary);
 }
 
@@ -74,8 +72,8 @@
    lives. The prototype (`.pj-bc__cur`) pulls the box back by its own padding, so the words sit 5
    from the chevron like every other gap and the whole trail is Figma's 170.9 wide. */
 .gv-breadcrumb[data-level='project'] .gv-breadcrumb-current {
-  padding: var(--gv-space-1) var(--gv-space-5);
-  margin: calc(-1 * var(--gv-space-1)) calc(-1 * var(--gv-space-5));
+  padding: var(--gv-space-2) var(--gv-space-4);
+  margin: -1px calc(-1 * var(--gv-space-4));
   border-radius: var(--gv-radius-6);
 }
 
@@ -100,5 +98,5 @@
 
 .gv-breadcrumb-sep-slash {
   font: var(--gv-type-ui);
-  color: var(--gv-text-quiet);
+  color: var(--gv-text-disabled);
 }

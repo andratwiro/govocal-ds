@@ -15,7 +15,7 @@
   gap: var(--gv-space-12);
   margin: 0;
   padding: var(--gv-space-16);
-  border: 1px solid var(--gv-border-card);
+  border: 1px solid var(--gv-border-default);
   border-radius: var(--gv-radius-12);
   background: var(--gv-surface-panel);
 }
@@ -26,7 +26,7 @@
   place-items: center;
   min-block-size: 200px;
   border-radius: var(--gv-radius-8);
-  background: var(--gv-surface-stage);
+  background: var(--gv-surface-tertiary);
   overflow: hidden;
 }
 
@@ -44,7 +44,6 @@
 
 .gv-illus-tile__name code {
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   color: var(--gv-text-primary);
   user-select: all;
 }
@@ -55,7 +54,6 @@
   gap: var(--gv-space-2) var(--gv-space-12);
   margin: 0;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
 }
 
 .gv-illus-tile__facts dt {

@@ -11,15 +11,15 @@
       --gvi-avatar: color-mix(in oklch, var(--gv-color-teal-400) 20%, var(--gv-color-neutral-25));
       font-family: var(--gv-font-family);
     }
-    .gvi-proposal-threshold .stage { fill: var(--gv-surface-stage); }
-    .gvi-proposal-threshold .card { fill: var(--gv-surface-panel); stroke: var(--gv-border-card); stroke-width: 1; }
+    .gvi-proposal-threshold .stage { fill: var(--gv-surface-tertiary); }
+    .gvi-proposal-threshold .card { fill: var(--gv-surface-panel); stroke: var(--gv-border-default); stroke-width: 1; }
     .gvi-proposal-threshold .av { fill: var(--gvi-avatar); }
     .gvi-proposal-threshold .av-t { font-size: 12px; font-weight: 500; fill: var(--gv-color-slate-800); text-anchor: middle; }
     .gvi-proposal-threshold .small { font-size: 12px; fill: var(--gv-text-secondary); }
     .gvi-proposal-threshold .ink { font-size: 12px; fill: var(--gv-text-primary); }
     .gvi-proposal-threshold .title { font-size: 13px; fill: var(--gv-text-primary); }
     .gvi-proposal-threshold .num { font-size: 12px; fill: var(--gv-text-primary); font-variant-numeric: tabular-nums; text-anchor: end; }
-    .gvi-proposal-threshold .track { fill: var(--gv-border-card); }
+    .gvi-proposal-threshold .track { fill: var(--gv-border-default); }
     .gvi-proposal-threshold .fill { fill: var(--gv-color-teal-400); transform-box: fill-box; transform-origin: left center; scale: .1805 1; }
     .gvi-proposal-threshold .shine { opacity: 0; }
     .gvi-proposal-threshold .v1, .gvi-proposal-threshold .v2, .gvi-proposal-threshold .v3, .gvi-proposal-threshold .v4 { opacity: 0; }

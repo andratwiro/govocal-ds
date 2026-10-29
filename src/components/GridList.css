@@ -2,10 +2,10 @@
 
 .react-aria-GridList {
   justify-content: center;
-  gap: var(--spacing-4);
-  padding: var(--spacing-2);
-  scroll-padding: var(--spacing-2);
-  border-radius: var(--radius);
+  gap: var(--gv-space-16);
+  padding: var(--gv-space-8);
+  scroll-padding: var(--gv-space-8);
+  border-radius: var(--gv-radius-8);
   max-height: inherit;
   overflow: auto;
   forced-color-adjust: none;
@@ -35,7 +35,7 @@
   }
 
   .react-aria-GridListSection:not(:first-child) {
-    margin-top: var(--spacing-4);
+    margin-top: var(--gv-space-16);
   }
 
   &[data-layout='stack'] > .react-aria-GridListSection {
@@ -84,7 +84,7 @@
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
+    outline: var(--gv-focus-ring);
   }
 
   &[data-empty] {
@@ -95,19 +95,19 @@
   }
 
   &[data-drop-target] {
-    outline: 2px solid var(--highlight-background);
+    outline: 2px solid var(--gv-border-selected);
     outline-offset: -1px;
-    background: var(--highlight-overlay);
+    background: var(--gv-surface-info);
   }
 
   .react-aria-DropIndicator {
     display: none;
     &[data-drop-target] {
       display: block;
-      outline: 2px solid var(--highlight-background);
+      outline: 2px solid var(--gv-border-selected);
       outline-offset: -1px;
-      background: var(--highlight-overlay);
-      border-radius: var(--radius);
+      background: var(--gv-surface-info);
+      border-radius: var(--gv-radius-8);
     }
   }
 }
@@ -117,17 +117,16 @@
 .react-aria-GridListItem {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
-  border-radius: var(--radius);
+  gap: var(--gv-space-8);
+  border-radius: var(--gv-radius-8);
   outline: none;
   cursor: default;
   color: var(--gv-text-primary);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   box-sizing: border-box;
-  padding-bottom: var(--spacing-3);
+  padding-bottom: var(--gv-space-12);
   background: var(--gv-surface-panel);
-  border: 1px solid var(--gv-border-card);
+  border: 1px solid var(--gv-border-default);
   min-width: 0;
   max-width: 250px;
   overflow: clip;
@@ -139,12 +138,12 @@
   -webkit-tap-highlight-color: transparent;
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 
   &[data-hovered] {
-    border-color: var(--gv-border-control-hover);
+    border-color: var(--gv-border-control-hovered);
   }
 
   &[data-pressed] {
@@ -154,7 +153,7 @@
   &::after {
     content: '';
     position: absolute;
-    inset: calc(-1 * var(--gv-space-1));
+    inset: -1px;
     pointer-events: none;
     border-radius: inherit;
     box-shadow: inset 0 0 0 2px var(--gv-border-selected);
@@ -173,21 +172,21 @@
   }
 
   &[data-disabled] {
-    color: var(--text-color-disabled);
+    color: var(--gv-text-disabled);
   }
 
   .react-aria-CheckboxField {
     position: absolute;
-    top: var(--spacing-4);
-    inset-inline-start: var(--spacing-4);
+    top: var(--gv-space-16);
+    inset-inline-start: var(--gv-space-16);
 
     .react-aria-CheckboxButton {
       &::before {
         content: '';
         position: absolute;
-        inset: calc(-1 * var(--gv-space-3));
+        inset: -3px;
         background: var(--gv-surface-panel);
-        box-shadow: var(--gv-shadow-subtle);
+        box-shadow: var(--gv-shadow-raised);
         border-radius: var(--gv-radius-6);
       }
 
@@ -201,26 +200,25 @@
     width: 100%;
     height: var(--grid-item-size);
     object-fit: cover;
-    padding-bottom: var(--spacing-2);
+    padding-bottom: var(--gv-space-8);
     -webkit-user-drag: none;
     -webkit-touch-callout: none;
     flex-shrink: 0;
   }
 
   .react-aria-Text {
-    padding: 0 var(--spacing-3);
+    padding: 0 var(--gv-space-12);
     display: -webkit-box;
     overflow: hidden;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
 
     &:not([slot]) {
-      font-weight: var(--gv-type-ui-strong-weight);
+      font-weight: var(--gv-font-weight-medium);
     }
 
     &[slot='description'] {
       font: var(--gv-type-small);
-      letter-spacing: var(--gv-type-small-tracking);
       color: var(--gv-text-secondary);
     }
   }
@@ -231,19 +229,19 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    bottom: var(--spacing-2);
-    inset-inline-end: var(--spacing-2);
-    border-radius: var(--radius);
-    color: var(--gv-icon-default);
+    bottom: var(--gv-space-8);
+    inset-inline-end: var(--gv-space-8);
+    border-radius: var(--gv-radius-8);
+    color: var(--gv-icon-tertiary);
 
     &[data-focus-visible] {
       border-radius: var(--gv-radius-4);
-      outline: 2px solid var(--focus-ring-color);
+      outline: var(--gv-focus-ring);
     }
   }
 
   &[data-dragging] {
-    opacity: 0.6;
+    opacity: var(--gv-opacity-dragging);
   }
 
   &[data-drop-target] {
@@ -253,9 +251,9 @@
       inset: 0;
       border-radius: inherit;
       z-index: 5;
-      outline: 2px solid var(--highlight-background);
+      outline: 2px solid var(--gv-border-selected);
       outline-offset: -2px;
-      background: var(--highlight-overlay);
+      background: var(--gv-surface-info);
     }
   }
 }
@@ -271,8 +269,8 @@
 .react-aria-GridListSection {
   display: grid;
   justify-content: center;
-  gap: var(--spacing-4);
-  color: var(--text-color);
+  gap: var(--gv-space-16);
+  color: var(--gv-text-primary);
   width: 100%;
 
   > .react-aria-GridListHeader {
@@ -283,9 +281,8 @@
 .react-aria-GridListHeader {
   position: sticky;
   z-index: 2;
-  top: calc(var(--spacing-2) * -1);
+  top: calc(var(--gv-space-8) * -1);
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-secondary);
   background: var(--gv-surface-panel);
   cursor: default;

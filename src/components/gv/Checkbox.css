@@ -16,8 +16,8 @@
     .indicator {
       --indicator-background: var(--gv-surface-panel);
       --indicator-border: var(--gv-border-control);
-      width: var(--gv-space-15);
-      height: var(--gv-space-15);
+      width: var(--gv-space-16);
+      height: var(--gv-space-16);
       border-radius: var(--gv-radius-4);
       scale: none;
     }
@@ -34,13 +34,13 @@
     &[data-selected],
     &[data-indeterminate] {
       .indicator {
-        --indicator-background: var(--gv-action-checked);
-        --indicator-border: var(--gv-action-checked);
+        --indicator-background: var(--gv-surface-selected-strong);
+        --indicator-border: var(--gv-border-selected);
       }
     }
 
     &[data-invalid] .indicator {
-      --indicator-border: var(--invalid-color);
+      --indicator-border: var(--gv-border-danger);
     }
 
     &[data-disabled] .indicator {
@@ -49,8 +49,8 @@
     }
 
     &[data-focus-visible] .indicator {
-      outline: 2px solid var(--gv-border-selected);
-      outline-offset: 2px;
+      outline: var(--gv-focus-ring);
+      outline-offset: var(--gv-focus-ring-offset);
     }
   }
 }

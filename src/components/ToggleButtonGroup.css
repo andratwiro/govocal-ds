@@ -6,7 +6,7 @@
   display: inline-flex;
   width: fit-content;
   border: 1px solid var(--gv-border-control);
-  border-radius: var(--radius);
+  border-radius: var(--gv-radius-8);
   overflow: hidden;
   background: var(--gv-surface-panel);
 
@@ -18,23 +18,22 @@
     --button-text: var(--gv-text-secondary);
     height: auto;
     min-height: var(--gv-size-control-28);
-    padding: var(--gv-space-6) var(--gv-space-11);
+    padding: var(--gv-space-6) var(--gv-space-12);
     font: var(--gv-type-small);
-    letter-spacing: var(--gv-type-small-tracking);
 
     &[data-hovered] {
-      --button-color: var(--gv-surface-hover);
+      --button-color: var(--gv-surface-hovered);
       --button-text: var(--gv-text-primary);
     }
 
     &[data-selected] {
-      --button-color: var(--gv-color-neutral-900);
+      --button-color: var(--gv-surface-inverse);
       --button-text: var(--gv-text-inverse);
     }
 
     &[data-disabled] {
       --button-color: var(--gv-surface-panel);
-      --button-text: var(--text-color-disabled);
+      --button-text: var(--gv-text-disabled);
     }
 
     &[data-focus-visible] {

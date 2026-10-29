@@ -21,7 +21,7 @@
   width: 52px;
   height: 52px;
   border-radius: var(--gv-radius-10);
-  background: var(--gv-surface-stage);
+  background: var(--gv-surface-tertiary);
   overflow: hidden;
 
   img {
@@ -36,12 +36,11 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--gv-space-3);
+  gap: var(--gv-space-4);
 }
 
 .gv-cause-row__title {
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   color: var(--gv-text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -50,7 +49,6 @@
 
 .gv-cause-row__desc {
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -61,7 +59,7 @@
 .gv-cause-row__bar {
   height: 6px;
   border-radius: var(--gv-radius-full);
-  background: var(--gv-surface-pill);
+  background: var(--gv-surface-neutral);
   overflow: hidden;
 }
 
@@ -82,13 +80,11 @@
 
 .gv-cause-row__count {
   font: var(--gv-type-title);
-  letter-spacing: var(--gv-type-title-tracking);
   color: var(--gv-text-primary);
 }
 
 .gv-cause-row__word {
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-body);
 }
 
@@ -115,13 +111,11 @@
 
   .gv-cause-row__title {
     font: var(--gv-type-ui);
-    letter-spacing: var(--gv-type-ui-tracking);
   }
 }
 
 .gv-cause-row__signups {
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 }
 

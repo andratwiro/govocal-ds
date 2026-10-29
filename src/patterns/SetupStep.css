@@ -36,12 +36,12 @@
   outline: none;
 
   &[data-hovered] {
-    background: var(--gv-surface-hover);
+    background: var(--gv-surface-hovered);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
     border-radius: var(--gv-radius-8);
   }
 }
@@ -54,7 +54,7 @@
 
 /* Done: a filled check (the prototype, 7 Oct: the success green, white tick). */
 .gv-setup-card__check-fill {
-  fill: var(--gv-icon-reviewed);
+  fill: var(--gv-icon-success);
 }
 
 .gv-setup-card__check-tick {
@@ -76,7 +76,6 @@
 .gv-setup-card__title {
   min-width: 0;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -91,7 +90,7 @@
   height: 28px;
   margin-inline-start: var(--gv-space-2);
   border-radius: var(--gv-radius-8);
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-tertiary);
 
   svg {
     transition: rotate var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
@@ -144,7 +143,6 @@
   gap: var(--gv-space-24);
   padding: var(--gv-space-12) var(--gv-space-12) var(--gv-space-24);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-body);
 }
 

@@ -6,9 +6,8 @@
   display: inline-flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--gv-space-14);
+  gap: var(--gv-space-16);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   font-variant-numeric: tabular-nums;
   color: var(--gv-text-secondary);
 }
@@ -24,6 +23,6 @@
     width: 16px;
     height: 16px;
     stroke-width: 1.75;
-    color: var(--gv-icon-default);
+    color: var(--gv-icon-tertiary);
   }
 }

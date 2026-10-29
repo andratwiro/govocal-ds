@@ -13,7 +13,7 @@
   border: 1px solid var(--gv-border-control);
   border-radius: var(--gv-radius-22);
   background: var(--gv-surface-panel);
-  box-shadow: var(--gv-shadow-subtle);
+  box-shadow: var(--gv-shadow-raised);
   transition:
     box-shadow var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
     transform var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
@@ -23,7 +23,7 @@
   transform: translateY(-2px);
   box-shadow:
     0 0 0 3px color-mix(in srgb, var(--gv-border-selected) 42%, transparent),
-    var(--gv-shadow-dialog);
+    var(--gv-shadow-overlay);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -55,7 +55,6 @@
   gap: var(--gv-space-16);
   padding: var(--gv-space-16) var(--gv-space-20) var(--gv-space-24);
   font: var(--gv-type-body);
-  letter-spacing: var(--gv-type-body-tracking);
   transition: filter var(--gv-motion-duration-medium) var(--gv-motion-easing-standard);
 }
 
@@ -75,7 +74,6 @@
 
 .gv-phone__content :is(h1, h2) {
   font: var(--gv-type-title);
-  letter-spacing: var(--gv-type-title-tracking);
   color: var(--gv-text-primary);
 }
 
@@ -90,7 +88,6 @@
   > p {
     margin: 0;
     font: var(--gv-type-title);
-    letter-spacing: var(--gv-type-title-tracking);
     color: var(--gv-text-tertiary);
   }
 }
@@ -112,7 +109,6 @@
   backdrop-filter: blur(8px);
   color: var(--gv-text-inverse);
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
@@ -133,8 +129,8 @@
 }
 
 .gv-phone__action[data-focus-visible] {
-  outline: 2px solid var(--gv-border-selected);
-  outline-offset: 2px;
+  outline: var(--gv-focus-ring);
+  outline-offset: var(--gv-focus-ring-offset);
 }
 
 .gv-phone-header {
@@ -152,7 +148,7 @@
   inline-size: 88px;
   block-size: var(--gv-space-24);
   border-radius: var(--gv-radius-4);
-  background: var(--gv-surface-hover-strong);
+  background: var(--gv-surface-pressed);
 }
 
 .gv-phone-header__menu {
@@ -165,8 +161,8 @@
   aspect-ratio: 16 / 9;
   margin-inline: calc(-1 * var(--gv-space-20));
   margin-block-start: calc(-1 * var(--gv-space-16));
-  background: var(--gv-surface-hover-strong);
-  color: var(--gv-icon-default);
+  background: var(--gv-surface-pressed);
+  color: var(--gv-icon-tertiary);
 }
 
 .gv-phone-card {
@@ -176,7 +172,7 @@
   padding: var(--gv-space-16);
   border-radius: var(--gv-radius-10);
   background: var(--gv-surface-panel);
-  box-shadow: var(--gv-shadow-subtle);
+  box-shadow: var(--gv-shadow-raised);
 }
 
 /* Prototype .pj-mirbar in the preview: the tenant's colour, here the preview's neutral (a slate wash), a dot and the
@@ -186,9 +182,9 @@
   flex: none;
   flex-direction: column;
   gap: var(--gv-space-10);
-  padding: var(--gv-space-14) var(--gv-space-16) var(--gv-space-16);
-  background: color-mix(in srgb, var(--gv-text-pill) 20%, var(--gv-surface-panel));
-  color: var(--gv-text-pill);
+  padding: var(--gv-space-16) var(--gv-space-16) var(--gv-space-16);
+  background: color-mix(in srgb, var(--gv-text-neutral) 20%, var(--gv-surface-panel));
+  color: var(--gv-text-neutral);
 }
 
 .gv-phone-countdown__when {
@@ -196,7 +192,6 @@
   align-items: center;
   gap: var(--gv-space-8);
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   text-transform: uppercase;
 }
 
@@ -215,7 +210,6 @@
   background: var(--gv-surface-panel);
   color: var(--gv-text-primary);
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   text-align: center;
 }
 
@@ -228,7 +222,7 @@
   min-block-size: 100%;
   padding: var(--gv-space-56) var(--gv-space-24);
   border-radius: var(--gv-radius-12);
-  background: var(--gv-surface-stage);
+  background: var(--gv-surface-tertiary);
 }
 
 .gv-phone-stage__open {
@@ -245,10 +239,9 @@
   align-items: center;
   margin: 0;
   padding: var(--gv-space-4) var(--gv-space-12);
-  border-radius: var(--gv-radius-5);
-  background: var(--gv-surface-pill);
-  color: var(--gv-text-pill);
+  border-radius: var(--gv-radius-6);
+  background: var(--gv-surface-neutral);
+  color: var(--gv-text-neutral);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   white-space: nowrap;
 }

@@ -44,14 +44,12 @@
 
 .gv-view-option__name {
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   color: var(--gv-text-primary);
 }
 
 .gv-view-option__description {
-  margin: var(--gv-space-3) 0 0;
+  margin: 3px 0 0;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 
   .react-aria-Link {
@@ -77,20 +75,19 @@
   border: 0;
   border-radius: var(--gv-radius-4);
   background: none;
-  color: var(--gv-text-accent);
+  color: var(--gv-text-brand);
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   cursor: pointer;
   outline: none;
   transition: color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 
   &[data-hovered] {
-    color: var(--gv-color-brand-900);
+    color: var(--gv-text-link-hovered);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 
   &[data-selected] {

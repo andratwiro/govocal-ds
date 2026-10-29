@@ -16,7 +16,6 @@
   flex: 1 1 0;
   min-width: 0;
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-body);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -42,14 +41,14 @@
 
 .gv-bar-row__track {
   height: 6px;
-  border-radius: var(--gv-radius-3);
-  background: var(--gv-surface-stage);
+  border-radius: var(--gv-radius-4);
+  background: var(--gv-surface-tertiary);
   overflow: hidden;
 }
 
 .gv-bar-row__fill {
   height: 100%;
-  border-radius: var(--gv-radius-3);
+  border-radius: var(--gv-radius-4);
   background: var(--bar-color);
   transition: background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 }
@@ -79,7 +78,6 @@
   min-width: 40px;
   text-align: end;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-body);
   font-variant-numeric: tabular-nums;
 }
@@ -87,6 +85,6 @@
 .gv-bar-row[data-empty] {
   .gv-bar-row__label,
   .gv-bar-row__value {
-    color: var(--gv-text-quiet);
+    color: var(--gv-text-disabled);
   }
 }

@@ -3,16 +3,16 @@
 /*
  * Segmented control (Figma node 14:883) + Segmented control item (14:882).
  * Figma and the prototype's `.pj-hseg`/`.pj-hseg__b` agree: radius 5 (not a full pill), a sliding
- * selected segment with --gv-shadow-segment-selected, text --gv-text-segment (default) /
+ * selected segment with --gv-shadow-raised-strong, text --gv-text-neutral (default) /
  * --gv-text-primary + type ui-strong (selected).
  */
 .gv-segmented-control {
   display: inline-flex;
   width: fit-content;
   gap: var(--gv-space-2);
-  padding: var(--gv-space-3);
-  background: var(--gv-surface-pill);
-  border-radius: var(--gv-radius-5);
+  padding: var(--gv-space-4);
+  background: var(--gv-surface-neutral);
+  border-radius: var(--gv-radius-6);
 }
 
 .gv-segment {
@@ -21,18 +21,18 @@
   position: relative;
   display: flex;
   align-items: center;
-  height: calc(var(--gv-size-control-36) - 2 * var(--gv-space-3)); /* 30: the 36 control less the track's 3 padding */
-  padding: var(--gv-space-5) var(--gv-space-14);
-  border-radius: var(--gv-radius-5);
+  height: calc(var(--gv-size-control-36) - 2 * var(--gv-space-4)); /* 30: the 36 control less the track's 3 padding */
+  padding: var(--gv-space-4) var(--gv-space-16);
+  border-radius: var(--gv-radius-6);
   font: var(--gv-type-ui);
-  color: var(--gv-text-segment);
+  color: var(--gv-text-neutral);
   cursor: pointer;
   z-index: 1;
   -webkit-tap-highlight-color: transparent;
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 
   &[data-selected] {
@@ -45,9 +45,9 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  border-radius: var(--gv-radius-5);
+  border-radius: var(--gv-radius-6);
   background: var(--gv-surface-panel);
-  box-shadow: var(--gv-shadow-segment-selected);
+  box-shadow: var(--gv-shadow-raised-strong);
   transition-property: translate, width;
   transition-duration: var(--gv-motion-duration-medium);
   transition-timing-function: var(--gv-motion-easing-move);
@@ -79,15 +79,14 @@
    prototype .pj-dseg): stage-grey track, padding 3, radius 8; segments 4/11, radius 6, Small type. */
 .gv-segmented-control[data-size='small'] {
   gap: 0;
-  background: var(--gv-surface-stage);
+  background: var(--gv-surface-tertiary);
   border-radius: var(--gv-radius-8);
 
   .gv-segment {
     height: auto;
-    padding: var(--gv-space-4) var(--gv-space-11);
+    padding: var(--gv-space-4) var(--gv-space-12);
     border-radius: var(--gv-radius-6);
     font: var(--gv-type-small);
-    letter-spacing: var(--gv-type-small-tracking);
     color: var(--gv-text-secondary);
 
     &[data-selected] {
@@ -101,7 +100,7 @@
   }
 
   .gv-segment-label {
-    gap: var(--gv-space-5);
+    gap: var(--gv-space-4);
   }
 
   .gv-segment-label > svg {

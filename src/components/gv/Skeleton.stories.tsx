@@ -30,7 +30,7 @@ export const AllVariants: Story = () => (
       width: 300,
       padding: 16,
       borderRadius: 'var(--gv-radius-12)',
-      background: 'var(--gv-surface-stage)'
+      background: 'var(--gv-surface-tertiary)'
     }}>
     {[0, 1].map(i => (
       <div

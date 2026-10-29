@@ -16,13 +16,12 @@
   justify-content: space-between;
   gap: var(--gv-space-8);
   padding: var(--gv-space-4) var(--gv-space-4) var(--gv-space-8) var(--gv-space-8);
-  border-block-end: 1px solid var(--gv-border-separator);
+  border-block-end: 1px solid var(--gv-border-default);
 }
 
 .gv-notification-list__title {
   margin: 0;
   font: var(--gv-type-body-strong);
-  letter-spacing: var(--gv-type-body-strong-tracking);
 }
 
 .gv-notification-list__items {
@@ -52,7 +51,7 @@
   flex: none;
   display: inline-flex;
   margin-block-start: var(--gv-space-2);
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-tertiary);
 }
 
 .gv-notification-list__body {
@@ -64,7 +63,6 @@
 
 .gv-notification-list__text {
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-body);
   text-decoration: none;
   outline: none;
@@ -74,22 +72,20 @@
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
     border-radius: var(--gv-radius-2);
   }
 }
 
 .gv-notification-list__item[data-unread] .gv-notification-list__text {
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   color: var(--gv-text-primary);
 }
 
 .gv-notification-list__time {
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
-  color: var(--gv-text-meta);
+  color: var(--gv-text-secondary);
 }
 
 .gv-notification-list__empty {

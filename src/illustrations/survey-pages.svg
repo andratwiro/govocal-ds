@@ -18,8 +18,8 @@
       --gvi-done: color-mix(in oklch, var(--gv-color-teal-400) 35%, var(--gv-color-neutral-0));
       font-family: var(--gv-font-family);
     }
-    .gvi-survey-pages .stage { fill: var(--gv-surface-stage); }
-    .gvi-survey-pages .card { fill: var(--gv-surface-panel); stroke: var(--gv-border-card); stroke-width: 1; }
+    .gvi-survey-pages .stage { fill: var(--gv-surface-tertiary); }
+    .gvi-survey-pages .card { fill: var(--gv-surface-panel); stroke: var(--gv-border-default); stroke-width: 1; }
     .gvi-survey-pages .step { font-size: 12px; fill: var(--gv-text-secondary); }
     .gvi-survey-pages .q { font-size: 13px; fill: var(--gv-text-primary); }
     .gvi-survey-pages .face .bg { fill: var(--gv-color-slate-50); }

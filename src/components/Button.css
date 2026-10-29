@@ -10,7 +10,6 @@
 .react-aria-Button {
   appearance: none;
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   margin: 0;
   border-radius: var(--gv-radius-8);
   height: var(--gv-size-control-36);
@@ -37,7 +36,7 @@
   }
 
   &[data-variant='primary'] {
-    background: var(--gv-action-primary);
+    background: var(--gv-surface-brand-strong);
     color: var(--gv-text-inverse);
     border: none;
 
@@ -54,14 +53,14 @@
 
     /* Prototype `.btn--secondary:hover`: border darkens, fill goes to the near-white neutral-25. */
     &[data-hovered] {
-      border-color: var(--gv-border-control-hover);
-      background: var(--gv-surface-toolbar);
+      border-color: var(--gv-border-control-hovered);
+      background: var(--gv-surface-secondary);
     }
   }
 
   /* Figma: the 36 secondary ("Done") carries shadow/subtle; the 32 one ("Share") doesn't. */
   &[data-variant='secondary'][data-size='36'] {
-    box-shadow: var(--gv-shadow-subtle);
+    box-shadow: var(--gv-shadow-raised);
   }
 
   /* Not in Figma: the prototype's tertiary (`.btn--tertiary`), a text action with no chrome. */
@@ -71,12 +70,12 @@
     border: none;
 
     &[data-hovered] {
-      background: var(--gv-surface-hover);
+      background: var(--gv-surface-hovered);
       color: var(--gv-text-primary);
     }
 
     &[data-pressed] {
-      background: var(--gv-surface-hover-strong);
+      background: var(--gv-surface-pressed);
     }
   }
 
@@ -86,7 +85,7 @@
    * dot's token) directly, reported as a gap.
    */
   &[data-variant='primary'][data-tone='danger'] {
-    background: var(--gv-color-red-500);
+    background: var(--gv-surface-danger-strong);
 
     &[data-hovered] {
       filter: brightness(1.08);
@@ -94,15 +93,15 @@
   }
 
   &[data-variant='quiet'][data-tone='danger'] {
-    color: var(--gv-color-red-500);
+    color: var(--gv-text-danger);
 
     &[data-hovered] {
-      background: color-mix(in srgb, var(--gv-color-red-500) 10%, transparent);
-      color: var(--gv-color-red-500);
+      background: var(--gv-surface-danger);
+      color: var(--gv-text-danger);
     }
 
     &[data-pressed] {
-      background: color-mix(in srgb, var(--gv-color-red-500) 16%, transparent);
+      background: var(--gv-surface-danger-pressed);
     }
   }
 
@@ -130,23 +129,23 @@
   }
 
   &[data-disabled] {
-    opacity: 0.45;
+    opacity: var(--gv-opacity-disabled);
     cursor: not-allowed;
     filter: none;
     box-shadow: none;
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 
   kbd {
     font: var(--gv-type-small);
-    background: var(--highlight-hover);
-    border: 0.5px solid var(--tint-500);
-    padding: 0 var(--spacing-1);
-    border-radius: var(--radius-sm);
-    margin-inline-start: var(--spacing-3);
+    background: var(--gv-surface-hovered);
+    border: 0.5px solid var(--gv-color-teal-500);
+    padding: 0 var(--gv-space-4);
+    border-radius: var(--gv-radius-4);
+    margin-inline-start: var(--gv-space-12);
   }
 }

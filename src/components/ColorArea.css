@@ -2,14 +2,14 @@
 
 .react-aria-ColorArea {
   width: 100%;
-  max-width: calc(var(--spacing) * 56);
+  max-width: calc(var(--gv-space-4) * 56);
   aspect-ratio: 1/1;
-  border-radius: var(--radius);
+  border-radius: var(--gv-radius-8);
   flex-shrink: 0;
 }
 
 .react-aria-ColorArea {
   &[data-disabled] {
-    background: var(--gray-400) !important; /* raw: colour picker chrome, a disabled well */
+    background: var(--gv-color-slate-400) !important; /* raw: colour picker chrome, a disabled well */
   }
 }

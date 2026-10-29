@@ -3,37 +3,35 @@
 .react-aria-RangeCalendar {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
+  gap: var(--gv-space-8);
   overflow: auto;
   width: fit-content;
   max-width: 100%;
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
 
   .months {
     display: flex;
-    gap: var(--spacing-3);
+    gap: var(--gv-space-12);
   }
 
   .month {
-    width: calc(var(--spacing-9) * 7);
-    min-width: calc(var(--spacing-7) * 7);
+    width: calc(var(--gv-size-control-36) * 7);
+    min-width: calc(var(--gv-space-28) * 7);
     container-type: inline-size;
   }
 
   header {
     display: flex;
     align-items: center;
-    margin: 0 var(--spacing-1) var(--spacing-4) var(--spacing-1);
-    min-height: var(--spacing-8);
+    margin: 0 var(--gv-space-4) var(--gv-space-16) var(--gv-space-4);
+    min-height: var(--gv-space-32);
 
     .react-aria-CalendarHeading {
       flex: 1;
       margin: 0;
       text-align: center;
       font: var(--gv-type-body-strong);
-      letter-spacing: var(--gv-type-body-strong-tracking);
     }
   }
 
@@ -44,7 +42,7 @@
 
   [slot='errorMessage'] {
     font: var(--gv-type-small);
-    color: var(--invalid-color);
+    color: var(--gv-text-danger);
   }
 
   .react-aria-CalendarCell {
@@ -60,14 +58,14 @@
       justify-content: center;
       width: 100%;
       height: 100%;
-      border-radius: var(--radius);
+      border-radius: var(--gv-radius-8);
       transition: scale var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
     }
 
     /* The days between the ends: a light wash of the selected blue (8 % on the panel), no rules above or below. */
     &[data-selected] {
       border-radius: 0;
-      background: color-mix(in srgb, var(--gv-action-checked) 8%, var(--gv-surface-panel));
+      background: var(--gv-surface-selected);
       border-color: transparent;
       border-style: solid;
       border-width: 0;
@@ -79,16 +77,16 @@
 
       &[data-selection-start],
       &:is(td:first-child > *, [aria-disabled] + td > *) {
-        border-start-start-radius: var(--radius);
-        border-end-start-radius: var(--radius);
+        border-start-start-radius: var(--gv-radius-8);
+        border-end-start-radius: var(--gv-radius-8);
         margin-inline-start: calc(var(--gap) / 2);
         padding-inline-start: 0;
       }
 
       &[data-selection-end],
       &:is(td:last-child > *, td:has(+ [aria-disabled]) > *) {
-        border-end-end-radius: var(--radius);
-        border-start-end-radius: var(--radius);
+        border-end-end-radius: var(--gv-radius-8);
+        border-start-end-radius: var(--gv-radius-8);
         margin-inline-end: calc(var(--gap) / 2);
         padding-inline-end: 0;
       }
@@ -117,8 +115,8 @@
       outline: none;
       z-index: 2;
       span {
-        outline: 2px solid var(--focus-ring-color);
-        outline-offset: 2px;
+        outline: var(--gv-focus-ring);
+        outline-offset: var(--gv-focus-ring-offset);
       }
     }
   }

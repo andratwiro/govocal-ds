@@ -48,11 +48,11 @@
   transition: background-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 
   &[data-hovered] {
-    background: var(--gv-surface-toolbar);
+    background: var(--gv-surface-secondary);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
+    outline: var(--gv-focus-ring);
     outline-offset: 0;
   }
 }
@@ -62,7 +62,6 @@
   min-width: 0;
   overflow: hidden;
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -74,13 +73,12 @@
 }
 
 .gv-participant-action[data-off] .gv-participant-action__label {
-  color: var(--gv-text-quiet);
+  color: var(--gv-text-disabled);
 }
 
 .gv-participant-action__value {
   flex: none;
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
 
   &[data-default] {
@@ -113,7 +111,6 @@
   .react-aria-RadioGroup > .react-aria-Label {
     margin-bottom: var(--gv-space-6);
     font: var(--gv-type-ui);
-    letter-spacing: var(--gv-type-ui-tracking);
     color: var(--gv-text-primary);
   }
 
@@ -125,6 +122,5 @@
 
   .gv-number-field-wrap .react-aria-Label {
     font: var(--gv-type-ui);
-    letter-spacing: var(--gv-type-ui-tracking);
   }
 }

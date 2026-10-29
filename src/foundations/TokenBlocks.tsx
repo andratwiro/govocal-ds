@@ -40,7 +40,7 @@ const FIGMA_ROLES: Record<string, [name: string, use: string]> = {
   'small': ['Small', 'Card titles, To review / Required, rail labels, meta and captions']
 };
 const roleName = (role: string) => FIGMA_ROLES[role]?.[0] ?? role.replace(/-/g, ' ');
-// --gv-type-stat-small-size → "Stat small"
+// --gv-font-size-20 → "Stat small"
 const roleOf = (token: string) => roleName(token.replace(/^--gv-type-|-(size|line|weight)$/g, ''));
 
 // Two of the addon's presenters scroll inside their 32px cell (a big radius, a wrapped line of text); the type

@@ -4,7 +4,7 @@
 /* One field (the Group carries TextField's chrome), the date segments, and a calendar button at the end, as the
    prototype's .pj-dateinput draws its calendar glyph inside the box. */
 .react-aria-DatePicker {
-  color: var(--text-color);
+  color: var(--gv-text-primary);
   max-width: 100%;
 
   .react-aria-Group {
@@ -15,18 +15,18 @@
     max-width: 100%;
     height: var(--gv-size-control-36);
     box-sizing: border-box;
-    padding: 0 var(--spacing-1) 0 var(--spacing-3);
-    border-radius: var(--radius);
+    padding: 0 var(--gv-space-4) 0 var(--gv-space-12);
+    border-radius: var(--gv-radius-8);
     overflow: clip;
     cursor: text;
 
     &[data-focus-within] {
-      outline: 2px solid var(--focus-ring-color);
+      outline: var(--gv-focus-ring);
       outline-offset: -1px;
     }
 
     &[data-disabled] {
-      color: var(--text-color-disabled);
+      color: var(--gv-text-disabled);
     }
   }
 
@@ -49,6 +49,6 @@
   }
 
   .field-Button {
-    margin-left: var(--spacing-2);
+    margin-left: var(--gv-space-8);
   }
 }

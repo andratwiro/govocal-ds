@@ -12,10 +12,10 @@ const innerScrollers = (page: Page) => page.locator('#storybook-docs').evaluate(
 // table never renders together), and nothing inside the page scrolls.
 const pages = [
   {id: 'foundations-colour', first: '--gv-color-slate-50', last: '--gv-color-olive-500'},
-  {id: 'foundations-typography', first: '--gv-font-family', last: '--gv-type-small-weight'},
+  {id: 'foundations-typography', first: '--gv-font-family', last: '--gv-font-weight-regular'},
   {id: 'foundations-spacing', first: '--gv-space-0', last: '--gv-space-104'},
   {id: 'foundations-radius', first: '--gv-radius-2', last: '--gv-radius-full'},
-  {id: 'foundations-shadows', first: '--gv-shadow-segment-selected', last: '--gv-shadow-dialog'},
+  {id: 'foundations-shadows', first: '--gv-shadow-raised-strong', last: '--gv-shadow-overlay'},
   {id: 'foundations-size', first: '--gv-size-icon-12', last: '--gv-size-avatar-28'}
 ];
 for (const {id, first, last} of pages) {
@@ -44,7 +44,7 @@ test('Typography draws each role in itself before the tables', async ({page}) =>
   await expect(stat).toContainText('28/32 Regular');
   await expect(stat.locator('.gv-tokens-role__sample')).toHaveCSS('font-size', '28px');
   await expect(page.locator('.gv-tokens-role')).toHaveCount(9);
-  await expect(page.getByText('--gv-type-small-weight', {exact: true}).first()).toBeVisible();
+  await expect(page.getByText('--gv-font-weight-regular', {exact: true}).first()).toBeVisible();
 });
 
 test('Size draws each size at its token, above its table', async ({page}) => {

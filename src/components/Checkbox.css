@@ -4,15 +4,15 @@
 .react-aria-CheckboxField {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-1);
+  gap: var(--gv-space-4);
 
   [slot='description'],
   .react-aria-FieldError {
-    margin-inline-start: calc(var(--gv-space-15) + var(--gv-space-8));
+    margin-inline-start: calc(var(--gv-space-16) + var(--gv-space-8));
   }
 
   &[data-disabled] [slot='description'] {
-    color: var(--text-color-disabled);
+    color: var(--gv-text-disabled);
   }
 }
 
@@ -27,14 +27,13 @@
   align-items: center;
   gap: var(--gv-space-8);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
   forced-color-adjust: none;
   -webkit-tap-highlight-color: transparent;
 
   .indicator {
-    width: var(--gv-space-15);
-    height: var(--gv-space-15);
+    width: var(--gv-space-16);
+    height: var(--gv-space-16);
     box-sizing: border-box;
     border: 1px solid var(--gv-border-control);
     border-radius: var(--gv-radius-4);
@@ -63,14 +62,14 @@
   }
 
   &[data-hovered] .indicator {
-    border-color: var(--gv-border-control-hover);
+    border-color: var(--gv-border-control-hovered);
   }
 
   &[data-selected],
   &[data-indeterminate] {
     .indicator {
-      background: var(--gv-action-checked);
-      border-color: var(--gv-action-checked);
+      background: var(--gv-surface-selected-strong);
+      border-color: var(--gv-border-selected);
     }
 
     svg {
@@ -86,16 +85,16 @@
   }
 
   &[data-invalid] .indicator {
-    border-color: var(--gv-state-notification);
+    border-color: var(--gv-border-danger);
   }
 
   &[data-focus-visible] .indicator {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 
   &[data-disabled] {
-    color: var(--text-color-disabled);
+    color: var(--gv-text-disabled);
 
     .indicator {
       background: var(--gv-surface-app);

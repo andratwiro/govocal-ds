@@ -34,21 +34,21 @@
   -webkit-tap-highlight-color: transparent;
 
   &[data-hovered] {
-    background: var(--gv-surface-hover);
+    background: var(--gv-surface-hovered);
   }
 
   &[data-pressed] {
-    background: var(--gv-surface-hover-strong);
+    background: var(--gv-surface-pressed);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
+    outline: var(--gv-focus-ring);
     outline-offset: 1px;
   }
 }
 
 .gv-pagination__step {
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-tertiary);
 
   > svg {
     width: 16px;
@@ -62,21 +62,19 @@
 
   &[data-disabled] {
     background: transparent;
-    color: var(--gv-icon-quiet);
+    color: var(--gv-icon-disabled);
     cursor: default;
   }
 }
 
 .gv-pagination__page {
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
-  color: var(--gv-text-accent);
+  color: var(--gv-text-brand);
 
   &[aria-current='page'] {
-    background: var(--gv-action-primary);
+    background: var(--gv-surface-brand-strong);
     color: var(--gv-text-inverse);
     font: var(--gv-type-ui-strong);
-    letter-spacing: var(--gv-type-ui-strong-tracking);
     cursor: default;
   }
 }

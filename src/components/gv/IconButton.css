@@ -20,7 +20,7 @@
   border: 1px solid transparent;
   border-radius: var(--gv-radius-8);
   background: transparent;
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-tertiary);
   cursor: pointer;
   text-decoration: none;
   transition:
@@ -41,11 +41,11 @@
   }
 
   &[data-tone='strong'] {
-    color: var(--gv-icon-strong);
+    color: var(--gv-icon-secondary);
   }
 
   &[data-variant='ghost'][data-hovered] {
-    background: var(--gv-surface-hover);
+    background: var(--gv-surface-hovered);
     color: var(--gv-icon-primary);
   }
 
@@ -54,19 +54,19 @@
     border-color: var(--gv-border-control);
 
     &[data-hovered] {
-      border-color: var(--gv-border-control-hover);
+      border-color: var(--gv-border-control-hovered);
       background: var(--gv-surface-panel);
       color: var(--gv-icon-primary);
     }
   }
 
   &[data-disabled] {
-    opacity: 0.45;
+    opacity: var(--gv-opacity-disabled);
     cursor: not-allowed;
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 }

@@ -9,14 +9,13 @@
   margin: 0;
   padding-block: var(--gv-space-8);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
-  color: var(--gv-text-quiet);
+  color: var(--gv-text-disabled);
 }
 
 .gv-section-label__icon {
   display: inline-flex;
   flex: none;
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-tertiary);
 
   > svg {
     width: 16px;

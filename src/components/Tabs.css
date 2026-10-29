@@ -3,7 +3,7 @@
 .react-aria-Tabs {
   display: flex;
   gap: var(--gv-space-8);
-  color: var(--text-color);
+  color: var(--gv-text-primary);
   max-width: 100%;
 
   &[data-orientation='horizontal'] {
@@ -32,7 +32,7 @@
 
   &[data-orientation='horizontal'] {
     gap: var(--gv-space-4);
-    border-bottom: 1px solid var(--gv-divider-strong);
+    border-bottom: 1px solid var(--gv-border-default);
     max-width: 100%;
     overflow-x: auto;
     overflow-y: clip;
@@ -51,7 +51,7 @@
     flex-direction: column;
     gap: var(--gv-space-4);
     padding-inline-end: var(--gv-space-12);
-    border-inline-end: 1px solid var(--gv-divider-strong);
+    border-inline-end: 1px solid var(--gv-border-default);
 
     .react-aria-SelectionIndicator {
       display: none;
@@ -63,13 +63,12 @@
 .react-aria-Tab {
   display: flex;
   align-items: center;
-  gap: var(--gv-space-7);
+  gap: var(--gv-space-8);
   padding: var(--gv-space-12) var(--gv-space-10);
   cursor: default;
   outline: none;
   position: relative;
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-secondary);
   white-space: nowrap;
   transition:
@@ -93,20 +92,20 @@
   &[data-selected] {
     --border-color: var(--gv-border-selected);
     color: var(--gv-text-primary);
-    font-weight: var(--gv-type-ui-strong-weight);
+    font-weight: var(--gv-font-weight-medium);
   }
 
   &[data-disabled] {
-    color: var(--text-color-disabled);
+    color: var(--gv-text-disabled);
     &[data-selected] {
-      --border-color: var(--text-color-disabled);
+      --border-color: var(--gv-text-disabled);
     }
   }
 
   &[data-focus-visible] {
     border-radius: var(--gv-radius-8);
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
   }
 
   &[href] {
@@ -130,19 +129,19 @@
 
   &[data-hovered] {
     color: var(--gv-text-primary);
-    background: var(--gv-surface-hover-strong);
+    background: var(--gv-surface-pressed);
   }
 
   &[data-selected] {
     color: var(--gv-text-primary);
-    background: var(--gv-surface-hover);
+    background: var(--gv-surface-hovered);
   }
 }
 
 /* "(18)" after the label: the label's own colour and weight, figures that line up, one plain space from the label
    (the count carries the space, so it takes back the icon gap). */
 .gv-tab__count {
-  margin-inline-start: calc(-1 * var(--gv-space-7));
+  margin-inline-start: calc(-1 * var(--gv-space-8));
   font-variant-numeric: tabular-nums;
   white-space: pre;
 }
@@ -164,7 +163,7 @@
   }
 
   &[data-status='danger'] {
-    background: var(--gv-state-notification);
+    background: var(--gv-surface-danger-strong);
   }
 }
 
@@ -181,7 +180,7 @@
   /* A line between groups, 12 under the last tab of the one above and 16 over the next heading. */
   & + & {
     margin-block-start: var(--gv-space-12);
-    border-block-start: 1px solid var(--gv-divider-strong);
+    border-block-start: 1px solid var(--gv-border-default);
 
     .gv-grouped-tabs__heading {
       padding-block-start: var(--gv-space-16);
@@ -193,7 +192,6 @@
 .gv-grouped-tabs__heading {
   padding: var(--gv-space-8) var(--gv-space-12) var(--gv-space-4);
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-tertiary);
 }
 
@@ -201,8 +199,8 @@
   cursor: default;
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
   }
 }
 
@@ -242,7 +240,7 @@
   transition: opacity var(--gv-motion-duration-slow) var(--gv-motion-easing-standard);
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
+    outline: var(--gv-focus-ring);
   }
 
   &[data-entering],

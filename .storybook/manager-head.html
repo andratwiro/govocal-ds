@@ -14,7 +14,6 @@
     gap: var(--gv-space-10);
     font: var(--gv-type-title);
     font-weight: 600;
-    letter-spacing: var(--gv-type-title-tracking);
     color: var(--gv-text-primary);
     white-space: nowrap;
   }
@@ -27,7 +26,6 @@
   /* Section labels in sentence case, Small strong, like the system's own rail labels. */
   #storybook-explorer-tree .sidebar-subheading [data-action='collapse-root'] {
     font: var(--gv-type-small-strong);
-    letter-spacing: var(--gv-type-small-strong-tracking);
     text-transform: none;
     color: var(--gv-text-secondary);
   }
@@ -41,25 +39,25 @@
   #storybook-explorer-tree .sidebar-item[data-selected='true']:hover,
   #storybook-explorer-tree .sidebar-item[data-selected='true']:focus {
     background: var(--gv-surface-panel);
-    box-shadow: var(--gv-shadow-segment-selected);
+    box-shadow: var(--gv-shadow-raised-strong);
     color: var(--gv-text-primary);
     font-weight: 500;
   }
   #storybook-explorer-tree .sidebar-item[data-selected='true'] svg {
-    color: var(--gv-icon-strong);
+    color: var(--gv-icon-secondary);
   }
 
   /* Type icons (the svg straight inside the row's icon slot; the expand chevron sits one level deeper):
      docs in the mark's coral, components in the brand teal, stories in the strong icon grey (3:1 on the mint). */
   #storybook-explorer-tree .sidebar-item > :is(a, button) > div:first-child > svg {
-    color: var(--gv-icon-strong);
+    color: var(--gv-icon-secondary);
   }
   #storybook-explorer-tree .sidebar-item[data-nodetype='document'] > a > div:first-child > svg {
     color: var(--gv-color-red-450);
   }
   #storybook-explorer-tree .sidebar-item[data-nodetype='component'] > button > div:first-child > svg,
   #storybook-explorer-tree .sidebar-item[data-nodetype='group'] > button > div:first-child > svg {
-    color: var(--gv-surface-brand-mark);
+    color: var(--gv-surface-accent-strong);
   }
 
   /* Search: a system field (panel, control border, radius 8). */

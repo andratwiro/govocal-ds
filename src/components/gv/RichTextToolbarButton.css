@@ -14,14 +14,14 @@
   border: none;
   border-radius: var(--gv-radius-6);
   background: transparent;
-  color: var(--gv-icon-strong);
+  color: var(--gv-icon-secondary);
   cursor: pointer;
   outline: none;
   forced-color-adjust: none;
 }
 
 .gv-editor-tool[data-hovered] {
-  background: var(--gv-surface-hover-strong);
+  background: var(--gv-surface-pressed);
   color: var(--gv-icon-primary);
 }
 
@@ -29,16 +29,16 @@
 .gv-editor-tool[data-selected] {
   background: var(--gv-surface-panel);
   color: var(--gv-icon-primary);
-  box-shadow: var(--gv-shadow-subtle);
+  box-shadow: var(--gv-shadow-raised);
 }
 
 .gv-editor-tool[data-disabled] {
   background: transparent;
-  color: var(--gv-icon-quiet);
+  color: var(--gv-icon-disabled);
   cursor: default;
 }
 
 .gv-editor-tool[data-focus-visible] {
-  outline: 2px solid var(--gv-border-selected);
-  outline-offset: -2px;
+  outline: var(--gv-focus-ring);
+  outline-offset: var(--gv-focus-ring-offset-inset);
 }

@@ -9,14 +9,12 @@
   overflow: auto;
   padding: var(--gv-space-24);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
 
   .react-aria-Heading[slot='title'] {
     margin-top: 0;
     margin-bottom: var(--gv-space-12);
     font: var(--gv-type-title);
-    letter-spacing: var(--gv-type-title-tracking);
     color: var(--gv-text-primary);
   }
 }

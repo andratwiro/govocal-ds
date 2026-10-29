@@ -26,7 +26,7 @@ function Frame({label, children}: {label: string; children: ReactNode}) {
     <figure style={{margin: 0, display: 'grid', gap: 8, alignContent: 'start'}}>
       <figcaption style={{font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>{label}</figcaption>
       <div style={{width: 'fit-content', border: '1px solid var(--gv-border-control)', borderRadius: 12,
-        background: 'var(--gv-surface-panel)', boxShadow: 'var(--gv-shadow-subtle)'}}>{children}</div>
+        background: 'var(--gv-surface-panel)', boxShadow: 'var(--gv-shadow-raised)'}}>{children}</div>
     </figure>
   );
 }

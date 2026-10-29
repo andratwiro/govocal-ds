@@ -7,7 +7,7 @@
 .gv-skeleton {
   display: block;
   flex: none;
-  background: var(--gv-surface-hover);
+  background: var(--gv-surface-hovered);
   border-radius: var(--gv-radius-4);
   animation: gv-skeleton-pulse var(--gv-motion-duration-loop) var(--gv-motion-easing-move) infinite;
 }

@@ -33,7 +33,7 @@ const Panel = ({width, height, children, style}: {width: number; height?: number
       display: 'grid',
       boxSizing: 'border-box',
       background: 'var(--gv-surface-panel)',
-      border: '1px solid var(--gv-border-card)',
+      border: '1px solid var(--gv-border-default)',
       borderRadius: 'var(--gv-radius-12)',
       ...style
     }}>

@@ -20,7 +20,7 @@ type Story = StoryObj<typeof RichTextToolbarButton>;
 /** Figma's one shape with each icon; then selected and disabled (Not in Figma: neither source has them). */
 export const AllVariants: Story = {
   render: () => (
-    <div style={{display: 'flex', gap: 8, background: 'var(--gv-surface-toolbar)', padding: 8}}>
+    <div style={{display: 'flex', gap: 8, background: 'var(--gv-surface-secondary)', padding: 8}}>
       <RichTextToolbarButton aria-label="Bold">
         <Bold aria-hidden size={14} strokeWidth={1.75} />
       </RichTextToolbarButton>
