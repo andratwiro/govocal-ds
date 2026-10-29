@@ -1,5 +1,8 @@
 @import '../theme.css';
 
+/* Figma "Stat row" (14:886) + prototype .pj-stats__row: label over a big number, the chevron at the far end of the
+   number's line; interactive rows sit 8 inside their own hover area. */
+
 .gv-stat-row {
   display: flex;
   flex-direction: column;
@@ -18,7 +21,8 @@
 .gv-stat-row--interactive {
   cursor: pointer;
 
-  &[data-hovered] {
+  &[data-hovered],
+  &[data-current] {
     background: var(--gv-surface-hover);
 
     .gv-stat-row__chevron {
@@ -45,18 +49,26 @@
   color: var(--gv-text-secondary);
 }
 
+/* Stat type on the prototype's 28 line (Figma's Stat line is 32): rows are 80 high, as the prototype's. */
 .gv-stat-row__value {
   display: flex;
   align-items: center;
   gap: var(--gv-space-6);
   font: var(--gv-type-stat);
+  line-height: 1;
   letter-spacing: var(--gv-type-stat-tracking);
   color: var(--gv-text-primary);
 }
 
+/* At the end of the line, as Figma (the number's frame fills the row) and the prototype (.pj-stats__go). */
 .gv-stat-row__chevron {
   width: 16px;
   height: 16px;
+  margin-inline-start: auto;
   color: var(--gv-icon-quiet);
   flex-shrink: 0;
+}
+
+[dir='rtl'] .gv-stat-row__chevron {
+  transform: scaleX(-1);
 }

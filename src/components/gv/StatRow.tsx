@@ -23,13 +23,20 @@ export interface StatRowProps {
    * @default false
    */
   isStatic?: boolean;
+  /**
+   * The row's filter is on (prototype `.pj-stats__row.is-on`: a Manage metric whose inputs the table now shows). Painted
+   * as hovered with the chevron dark, and announced as the current item. Not in Figma.
+   *
+   * @default false
+   */
+  isSelected?: boolean;
   /** Where the row navigates. Omit together with onPress to force a static row. */
   href?: RACLinkProps['href'];
   /** Called when the row is activated, for a link that isn't a plain navigation. */
   onPress?: RACLinkProps['onPress'];
 }
 
-export function StatRow({label, value, isNew = false, isStatic = false, href, onPress}: StatRowProps) {
+export function StatRow({label, value, isNew = false, isStatic = false, isSelected = false, href, onPress}: StatRowProps) {
   const content = (
     <>
       <div className="gv-stat-row__label">
@@ -48,7 +55,11 @@ export function StatRow({label, value, isNew = false, isStatic = false, href, on
   }
 
   return (
-    <RACLink href={href} onPress={onPress} className="gv-stat-row gv-stat-row--interactive">
+    <RACLink
+      href={href}
+      onPress={onPress}
+      aria-current={isSelected ? 'true' : undefined}
+      className="gv-stat-row gv-stat-row--interactive">
       {content}
     </RACLink>
   );
