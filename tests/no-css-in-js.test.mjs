@@ -2,7 +2,7 @@ import {describe, it, expect} from 'vitest';
 import {readFileSync, readdirSync, statSync, existsSync} from 'node:fs';
 import {join} from 'node:path';
 
-// The platform is moving away from styled-components (Iva, 29 Oct 2026): styles live in .css files on var(--gv-*).
+// The platform is moving away from styled-components (29 Oct 2026): styles live in .css files on var(--gv-*).
 const BANNED = /^(styled-components|@emotion\/.*|@stitches\/.*|@vanilla-extract\/.*|@linaria\/.*|tailwindcss|twin\.macro)$/;
 
 const files = dir => readdirSync(dir).flatMap(f => {
