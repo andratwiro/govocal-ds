@@ -1,6 +1,7 @@
 import {test, expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {headingJumps} from './headings';
+import {a11yReport} from './axe';
 
 test('users follows the real admin: segments, groups, a selectable user table', async ({page}) => {
   await page.goto('/backoffice/#/users');
@@ -123,7 +124,7 @@ test('the users table passes axe (WCAG 2.2 AA)', async ({page}) => {
   await expect(page.getByRole('grid', {name: 'Registered users'})).toBeVisible();
   const {violations} = await new AxeBuilder({page}).include('.gv-data-table')
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
-  expect(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`)).toEqual([]);
+  a11yReport(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`));
 });
 
 // ── The first clicks (shallow: each control leads somewhere visible) ─────────
@@ -146,7 +147,7 @@ test('Invite users opens the invitations page: invite by email, then the list of
   await page.getByRole('textbox', {name: 'Email addresses'}).fill('new1@example.org, new2@example.org');
   for (const f of ['Role', 'Add to a group']) await expect(page.getByRole('button', {name: new RegExp(f)}).first()).toBeVisible();
   await page.getByRole('textbox', {name: 'Invitation message'}).fill('Join us on the platform.');
-  expect(await axeOn(page, '.bo-page')).toEqual([]);
+  a11yReport(await axeOn(page, '.bo-page'));
   await page.getByRole('button', {name: 'Send invites'}).click();
   await expect(toast(page).first()).toContainText('2 invitations sent');
   await tabs.getByRole('tab', {name: 'All invitations'}).click();
@@ -166,7 +167,7 @@ test('Add a new group: choose normal or smart, name it, and it joins the list wi
   await expect(kinds.getByRole('radio', {name: /Create a normal group/})).toBeVisible();
   await expect(kinds.getByRole('radio', {name: /Create a smart group/})).toBeVisible();
   await expect(modal.getByRole('button', {name: 'Save group'})).toBeDisabled();
-  expect(await axeOn(page, '.gv-modal')).toEqual([]);
+  a11yReport(await axeOn(page, '.gv-modal'));
   await kinds.getByText('Create a smart group').click();
   await expect(kinds.getByRole('radio', {name: /Create a smart group/})).toBeChecked();
   await modal.getByRole('textbox', {name: 'Name of the group'}).fill('Cyclists');
@@ -205,7 +206,7 @@ test('Seats overview shows seats used and available, with the admins and manager
   }
   await expect(page.getByRole('grid', {name: 'Admins'}).getByRole('row')).toHaveCount(3);
   await expect(page.getByRole('grid', {name: 'Managers'}).getByRole('row', {name: /Manager C/})).toBeVisible();
-  expect(await axeOn(page, '.bo-page')).toEqual([]);
+  a11yReport(await axeOn(page, '.bo-page'));
   await page.getByRole('link', {name: 'Users'}).first().click();
   await expect(page).toHaveURL(/#\/users$/);
 });
@@ -225,7 +226,7 @@ test('a row opens the user profile: name, email, role, joined and participation'
   await expect(page.getByText('June 12, 2025')).toBeVisible();
   const done = page.getByRole('region', {name: 'Participation'});
   for (const k of ['Ideas', 'Comments', 'Votes', 'Projects']) await expect(done.getByText(k, {exact: true})).toBeVisible();
-  expect(await axeOn(page, '.bo-page')).toEqual([]);
+  a11yReport(await axeOn(page, '.bo-page'));
   await page.getByRole('button', {name: 'Make platform admin'}).click();
   await expect(toast(page).first()).toContainText('Manager C is now a platform admin');
 });

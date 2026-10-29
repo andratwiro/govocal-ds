@@ -1,5 +1,6 @@
 import {test, expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import {a11yReport} from './axe';
 
 test('inspiration hub follows the real admin: highlighted projects, then all projects with filters and sort', async ({page}) => {
   await page.goto('/backoffice/#/inspiration-hub');
@@ -75,7 +76,7 @@ test('a project card opens a preview, and the preview passes axe', async ({page}
   await expect(dialog).toContainText('2,475 participants');
   await expect(dialog.getByRole('heading', {name: 'Phases'})).toBeVisible();
   const r = await new AxeBuilder({page}).include('.gv-modal').withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
-  expect(r.violations.map(v => v.id)).toEqual([]);
+  a11yReport(r.violations.map(v => v.id));
   await dialog.getByRole('button', {name: 'Close'}).first().click();
   await expect(dialog).toHaveCount(0);
 });

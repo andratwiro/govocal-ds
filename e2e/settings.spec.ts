@@ -1,5 +1,5 @@
 import {test, expect, type Page} from '@playwright/test';
-import {axeViolations} from './axe';
+import {axeViolations, a11yReport} from './axe';
 
 test('settings follows the real admin: seven tabs, General open on its five sections', async ({page}) => {
   await page.goto('/backoffice/#/settings');
@@ -80,7 +80,7 @@ test('tags: Add platform tag adds a row; Edit renames one', async ({page}) => {
   await page.getByRole('button', {name: 'Add platform tag'}).click();
   const modal = page.getByRole('dialog', {name: 'Add platform tag'});
   await expect(modal).toBeVisible();
-  expect(await axeViolations(page, '.gv-modal')).toEqual([]);
+  a11yReport(await axeViolations(page, '.gv-modal'));
   const save = modal.getByRole('button', {name: 'Save tag'});
   await expect(save).toBeDisabled();
   await modal.getByRole('textbox', {name: 'Tag name'}).fill('Education');
@@ -104,7 +104,7 @@ test('areas: Add area adds a row; Edit opens it filled in', async ({page}) => {
   await expect(rows).toHaveCount(4);
   await page.getByRole('button', {name: 'Add area'}).click();
   const modal = page.getByRole('dialog', {name: 'Add area'});
-  expect(await axeViolations(page, '.gv-modal')).toEqual([]);
+  a11yReport(await axeViolations(page, '.gv-modal'));
   await modal.getByRole('textbox', {name: 'Area name'}).fill('West end');
   await modal.getByRole('button', {name: 'Save area'}).click();
   await expect(rows).toHaveCount(5);
@@ -123,7 +123,7 @@ test('statuses: input and proposal statuses apart, each with Add status and Edit
   expect(count).toBeGreaterThan(3);
   await page.getByRole('button', {name: 'Add status'}).click();
   const modal = page.getByRole('dialog', {name: 'Add status'});
-  expect(await axeViolations(page, '.gv-modal')).toEqual([]);
+  a11yReport(await axeViolations(page, '.gv-modal'));
   await modal.getByRole('textbox', {name: 'Status name'}).fill('On hold');
   await modal.getByRole('button', {name: /Category/}).click();
   await page.getByRole('option', {name: 'Other'}).click();

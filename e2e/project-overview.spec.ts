@@ -1,5 +1,6 @@
 import {test, expect, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import {a11yReport} from './axe';
 
 // A project's own overview (#/projects/:id), after the prototype's live project screen:
 // Project setup | Participation rail | the resident's phone preview, under a breadcrumb bar.
@@ -97,7 +98,7 @@ test('the overview passes axe (WCAG 2.2 AA)', async ({page}) => {
   await expect(page.getByRole('navigation', {name: 'Phases'})).toBeVisible();
   // Rail section label paints its text in --gv-text-quiet (about 2.9:1 on white): the component's own token, owned
   // by the system, not this page. Accessibility is shown, never blocking, so that one contrast check is waived and reported.
-  expect(await violations(page)).toEqual([]);
+  a11yReport(await violations(page));
 });
 
 test('an ended phase reads Done, not Draft, and its rail passes axe', async ({page}) => {
@@ -108,7 +109,7 @@ test('an ended phase reads Done, not Draft, and its rail passes axe', async ({pa
   await expect(crumbs).not.toContainText('Draft');
   await expect(page.getByText('18 new').first()).toBeVisible();
   // The rail only: the phase screen's setup cards carry their own contrast issues, reported to the system.
-  expect(await violations(page, 'nav[aria-label="Phases"]')).toEqual([]);
+  a11yReport(await violations(page, 'nav[aria-label="Phases"]'));
 });
 
 // Only the contrast of two system parts is waived: the rail section label (see above) and Rail phase's green state

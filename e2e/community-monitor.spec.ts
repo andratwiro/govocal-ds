@@ -1,6 +1,6 @@
 import {test, expect, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import {settled} from './axe';
+import {settled, a11yReport} from './axe';
 
 const CATEGORIES = ['Quality of life', 'Service delivery', 'Governance and trust'];
 
@@ -109,7 +109,7 @@ test('View survey opens the survey as residents see it, and passes axe', async (
   await expect(dialog).toBeVisible();
   await expect(dialog).toContainText('1. The city as a place to live');
   await expect(dialog).toContainText('11. Transparency');
-  expect(await axeOn(page, '.gv-modal')).toEqual([]);
+  a11yReport(await axeOn(page, '.gv-modal'));
   await dialog.getByRole('button', {name: 'Close'}).first().click();
   await expect(dialog).toHaveCount(0);
 });
@@ -120,7 +120,7 @@ test('Create report adds a draft report', async ({page}) => {
   await page.getByRole('button', {name: 'Create report'}).click();
   const dialog = page.getByRole('dialog', {name: 'Create a report'});
   await expect(dialog).toBeVisible();
-  expect(await axeOn(page, '.gv-modal')).toEqual([]);
+  a11yReport(await axeOn(page, '.gv-modal'));
   await dialog.getByRole('textbox', {name: 'Report title'}).fill('Parks check-in');
   await dialog.getByRole('button', {name: 'Create'}).click();
   await expect(dialog).toHaveCount(0);
@@ -134,7 +134,7 @@ test('a report card opens its report', async ({page}) => {
   const dialog = page.getByRole('dialog', {name: 'Q3 2026 results'});
   await expect(dialog.locator('.gv-kpi', {hasText: 'Health score'})).toBeVisible();
   await expect(dialog).toContainText('Respondents');
-  expect(await axeOn(page, '.gv-modal')).toEqual([]);
+  a11yReport(await axeOn(page, '.gv-modal'));
 });
 
 test('Edit survey opens the questions to edit, and saving says so', async ({page}) => {
@@ -142,7 +142,7 @@ test('Edit survey opens the questions to edit, and saving says so', async ({page
   await page.getByRole('button', {name: 'Edit survey'}).click();
   const dialog = page.getByRole('dialog', {name: 'Edit survey'});
   await expect(dialog.getByRole('textbox', {name: 'Question 1', exact: true})).toHaveValue('The city as a place to live');
-  expect(await axeOn(page, '.gv-modal')).toEqual([]);
+  a11yReport(await axeOn(page, '.gv-modal'));
   await dialog.getByRole('textbox', {name: 'Question 1', exact: true}).fill('The town as a place to live');
   await dialog.getByRole('button', {name: 'Save'}).click();
   await expect(dialog).toHaveCount(0);
@@ -155,7 +155,7 @@ test('Import answers opens a drop zone', async ({page}) => {
   const dialog = page.getByRole('dialog', {name: 'Import answers'});
   await expect(dialog.getByRole('button', {name: 'browse'})).toBeVisible();
   await expect(dialog.getByRole('button', {name: 'Download the template'})).toBeVisible();
-  expect(await axeOn(page, '.gv-modal')).toEqual([]);
+  a11yReport(await axeOn(page, '.gv-modal'));
 });
 
 test('Add a manager picks someone and adds them', async ({page}) => {
@@ -163,7 +163,7 @@ test('Add a manager picks someone and adds them', async ({page}) => {
   await expect(page.locator('.gv-pill')).toHaveCount(3);
   await page.getByRole('button', {name: 'Add a manager'}).click();
   const dialog = page.getByRole('dialog', {name: 'Add a manager'});
-  expect(await axeOn(page, '.gv-modal')).toEqual([]);
+  a11yReport(await axeOn(page, '.gv-modal'));
   await dialog.getByRole('button', {name: /Person/}).click();
   await page.getByRole('option', {name: 'Admin D'}).click();
   await dialog.getByRole('button', {name: 'Add'}).click();

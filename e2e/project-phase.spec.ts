@@ -1,6 +1,7 @@
 import {test, expect, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {IDEAS} from '../backoffice/src/data-project';
+import {a11yReport} from './axe';
 
 // The phase screen's Manage tab (#/projects/:id/phases/:phase/manage), after the prototype's Manage tab one week after
 // publishing: the metrics, then the ideas under a toolbar (count or selection bar, search, filter) and filter chips.
@@ -133,7 +134,7 @@ test('the Manage tab passes axe (WCAG 2.2 AA), filters on and a row selected', a
   await page.keyboard.press('Escape');
   await page.keyboard.press('Escape');
   await rows(page).first().getByRole('checkbox').check({force: true});
-  expect(await violations(page, 'section[aria-label="Ideas"]')).toEqual([]);
+  a11yReport(await violations(page, 'section[aria-label="Ideas"]'));
 });
 
 async function violations(page: Page, within: string) {

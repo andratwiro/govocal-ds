@@ -1,5 +1,6 @@
 import {test, expect, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import {a11yReport} from './axe';
 
 // Body rows only (the header row is not an input).
 const inputRows = (page: Page) => page.getByRole('grid', {name: 'Inputs'}).getByRole('rowgroup').nth(1).getByRole('row');
@@ -75,7 +76,7 @@ test('a row click opens the input preview; its status select updates the row', a
   await expect(panel.getByText('Resident B · Registered user')).toBeVisible();
   await expect(panel.locator('.bo-inputs-preview-body')).not.toBeEmpty();
   const {violations} = await new AxeBuilder({page}).include('.bo-inputs-preview').withTags(allowedTags).analyze();
-  expect(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`)).toEqual([]);
+  a11yReport(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`));
   await panel.getByRole('button', {name: /Status/}).click();
   await page.getByRole('option', {name: 'Implemented'}).click();
   await expect(inputRows(page).filter({hasText: 'Bike lane by the school'}).locator('.gv-status')).toHaveText('Implemented');

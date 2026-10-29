@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import type {Page} from '@playwright/test';
+import {test, type Page} from '@playwright/test';
 
 /** The WCAG 2.2 AA violations inside one part of the page (an open modal, a popover), as "rule: targets". */
 // A dialog fading in is half transparent for a moment, and axe reads that as low contrast: let animations end first.
@@ -12,4 +12,15 @@ export async function axeViolations(page: Page, within: string) {
   const {violations} = await new AxeBuilder({page}).include(within)
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
   return violations.map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`);
+}
+
+/**
+ * WCAG 2.2 AA is the front office's bar. In the back office the design is followed as drawn: axe's findings are
+ * reported (a test annotation and a log line each), never fail a test and never change the design (29 Oct 2026).
+ */
+export function a11yReport(violations: string[]) {
+  for (const v of violations) {
+    test.info().annotations.push({type: 'a11y', description: v});
+    console.log(`a11y (reported, not blocking): ${v}`);
+  }
 }

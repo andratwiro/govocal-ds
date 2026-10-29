@@ -42,8 +42,10 @@ dev walking the back office sees one consistent system with every main component
 - **Fill the gaps.** The agent applies the system to everything Figma doesn't draw (states, RTL, focus). Nothing is
   marked as filled in: the designer browses and judges.
 - **Paint only through `var(--gv-*)`.** Plain React + plain CSS on CSS variables. No styled-components, no Tailwind.
-- **Accessibility is shown, never blocking.** Results hold for Go Vocal's own palette only (no city colours yet), and
-  the page says so.
+- **Accessibility is shown, never blocking.** WCAG 2.2 AA is the front office's bar; this system serves the back office
+  for now, so the design is followed as drawn. Findings show in Storybook's Accessibility panel, on
+  Overview/Accessibility and as e2e annotations; none fails a check, and none is a reason to change the design.
+  Results hold for Go Vocal's own palette only (no city colours yet), and the page says so.
 - **Public repo hygiene.** No licensed font files (link a font service), no real tenant names or data, no unreleased
   roadmap items. Pages carry `noindex`.
 

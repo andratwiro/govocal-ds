@@ -1,6 +1,6 @@
 import {test, expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import {settled} from './axe';
+import {settled, a11yReport} from './axe';
 
 test('projects follows the real admin: views, filters, a full project table', async ({page}) => {
   await page.goto('/backoffice/#/projects');
@@ -63,7 +63,7 @@ const axe = async (page: import('@playwright/test').Page, selector: string) => {
   await settled(page);
   const {violations} = await new AxeBuilder({page}).include(selector).exclude('.bo-gap-label')
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
-  expect(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`)).toEqual([]);
+  a11yReport(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`));
 };
 
 // The prototype's From scratch: a Space and a Folder, neither required; the project starts as an untitled draft.

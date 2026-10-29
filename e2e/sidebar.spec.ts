@@ -1,5 +1,6 @@
 import {test, expect, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import {a11yReport} from './axe';
 
 // The back office's main sidebar, after the real admin's sidebar (order, counts, menus) and the
 // prototype's rail (look): To platform band, main items, a gap, the bottom items, Notifications,
@@ -110,19 +111,19 @@ test('folded inside a phase: icons only, names still accessible, badges on the i
   await expect(page.getByRole('menu', {name: 'Support'})).toBeVisible();
 });
 
-test('the sidebar has no axe violations, open and folded, menus included', async ({page}) => {
+test('the sidebar is scanned by axe, open and folded, menus included', async ({page}) => {
   await page.goto('/backoffice/#/dashboard');
-  expect(await violations(page, 'nav[aria-label="Main"]')).toEqual([]);
+  a11yReport(await violations(page, 'nav[aria-label="Main"]'));
   await nav(page).getByRole('button', {name: /Notifications/}).click();
   await settled(page);
-  expect(await violations(page, '[role="dialog"]')).toEqual([]);
+  a11yReport(await violations(page, '[role="dialog"]'));
   await page.keyboard.press('Escape');
   await nav(page).getByRole('button', {name: /Alex Morgan/}).click();
   await settled(page);
-  expect(await violations(page, '[role="menu"]')).toEqual([]);
+  a11yReport(await violations(page, '[role="menu"]'));
   await page.keyboard.press('Escape');
   await page.goto(PHASE);
-  expect(await violations(page, 'nav[aria-label="Main"]')).toEqual([]);
+  a11yReport(await violations(page, 'nav[aria-label="Main"]'));
 });
 
 // Overlays fade in; measure contrast once they have.

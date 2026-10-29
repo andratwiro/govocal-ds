@@ -1,5 +1,5 @@
 import {test, expect, type Page} from '@playwright/test';
-import {axeViolations} from './axe';
+import {axeViolations, a11yReport} from './axe';
 
 // Card titles and actions as the real admin words them ("Public API Access", "Manage API Keys",
 // "Manage MCP Authorizations"). Power BI now opens its templates page, so the locked example is the workshops,
@@ -39,7 +39,7 @@ test('the workshops are locked; learn more and every help icon open a popover', 
   const learn = page.getByRole('dialog', {name: 'Online deliberation workshops'});
   await expect(learn).toBeVisible();
   await expect(learn.getByRole('link')).toHaveCount(0);
-  expect(await axeViolations(page, '.gv-help-popover')).toEqual([]);
+  a11yReport(await axeViolations(page, '.gv-help-popover'));
   await page.keyboard.press('Escape');
   await expect(learn).toHaveCount(0);
 
@@ -75,7 +75,7 @@ test('public API tokens: the list, then Create new token shows the secret once a
   await page.getByRole('button', {name: 'Create new token'}).click();
   const modal = page.getByRole('dialog', {name: 'Create a new token'});
   await expect(modal).toBeVisible();
-  expect(await axeViolations(page, '.gv-modal')).toEqual([]);
+  a11yReport(await axeViolations(page, '.gv-modal'));
   const create = modal.getByRole('button', {name: 'Create token'});
   await expect(create).toBeDisabled();
   await modal.getByRole('textbox', {name: 'Name'}).fill('Open data portal');
@@ -105,7 +105,7 @@ test('webhooks: the list, Create webhook adds one, Edit webhook opens it filled 
   await page.getByRole('button', {name: 'Create webhook'}).click();
   const modal = page.getByRole('dialog', {name: 'Create a new webhook'});
   await expect(modal).toBeVisible();
-  expect(await axeViolations(page, '.gv-modal')).toEqual([]);
+  a11yReport(await axeViolations(page, '.gv-modal'));
   await modal.getByRole('textbox', {name: 'Name'}).fill('Case system');
   await modal.getByRole('textbox', {name: 'URL'}).fill('https://cases.example.org/hook');
   await modal.getByText('idea.created').click();
@@ -149,7 +149,7 @@ test('MCP authorizations: Revoke access asks first, then removes the client', as
   await rows.first().getByRole('button', {name: /^Revoke access: /}).click();
   const modal = page.getByRole('dialog', {name: 'Revoke access'});
   await expect(modal.getByText(/re-authorized before it can connect again/)).toBeVisible();
-  expect(await axeViolations(page, '.gv-modal')).toEqual([]);
+  a11yReport(await axeViolations(page, '.gv-modal'));
   await modal.getByRole('button', {name: 'Revoke access'}).click();
   await expect(rows).toHaveCount(1);
 });
