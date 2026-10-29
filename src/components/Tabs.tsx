@@ -17,14 +17,33 @@ import {ListBox, ListBoxItem, ListBoxSection, Header} from 'react-aria-component
 import {VisuallyHidden} from 'react-aria-components/VisuallyHidden';
 import {useLocale, type Key} from 'react-aria-components';
 import {composeRenderProps} from 'react-aria-components/composeRenderProps';
+import {clsx} from 'clsx';
 import './Tabs.css';
 
-export function Tabs(props: TabsProps) {
-  return <RACTabs {...props} />;
+/**
+ * Tabs: a `TabList` of `Tab`s, then one `TabPanels` holding a `TabPanel` per tab (same `id`). `TabPanels` is
+ * required: it is what a panel fading out is laid against, and what animates the height between panels. A
+ * `TabPanel` outside it floats over the page while it fades, so in development the panel warns in the console.
+ *
+ * ```tsx
+ * <Tabs defaultSelectedKey="all">
+ *   <TabList aria-label="Reports"><Tab id="all" count={18}>All reports</Tab><Tab id="mine">Mine</Tab></TabList>
+ *   <TabPanels>
+ *     <TabPanel id="all">…</TabPanel>
+ *     <TabPanel id="mine">…</TabPanel>
+ *   </TabPanels>
+ * </Tabs>
+ * ```
+ *
+ * A `className` (or `style`) places the part; it is added to React Aria's own class, never instead of it.
+ */
+export function Tabs({className, ...props}: TabsProps) {
+  return <RACTabs {...props} className={composeRenderProps(className, c => clsx('react-aria-Tabs', c))} />;
 }
 
-export function TabList<T>(props: TabListProps<T>) {
-  return <RACTabList {...props} />;
+/** The row (or, `orientation="vertical"` on Tabs, the column) of `Tab`s. Name it with `aria-label`. */
+export function TabList<T>({className, ...props}: TabListProps<T>) {
+  return <RACTabList {...props} className={composeRenderProps(className, c => clsx('react-aria-TabList', c))} />;
 }
 
 /** A status dot's meaning (a field language: `success` complete, `danger` missing, `warning` incomplete). */
@@ -48,10 +67,10 @@ export interface TabProps extends RACTabProps {
  * One tab. An icon passed as the first child sits 7 before the label (16, as the Projects list); `count` and `status`
  * add the prototype's "(18)" and the language dot.
  */
-export function Tab({count, status, statusLabel, ...props}: TabProps) {
+export function Tab({count, status, statusLabel, className, ...props}: TabProps) {
   const {locale} = useLocale();
   return (
-    <RACTab {...props}>
+    <RACTab {...props} className={composeRenderProps(className, c => clsx('react-aria-Tab', c))}>
       {composeRenderProps(props.children, children => (
         <>
           {status && <span className="gv-tab__status" data-status={status} aria-hidden />}
@@ -65,12 +84,28 @@ export function Tab({count, status, statusLabel, ...props}: TabProps) {
   );
 }
 
-export function TabPanels<T>(props: TabPanelsProps<T>) {
-  return <RACTabPanels {...props} />;
+// Whether a TabPanel sits inside TabPanels: the contract Tabs' JSDoc states, checked in development.
+const InTabPanels = createContext(false);
+const warned = new Set<string>();
+
+/** Holds the `TabPanel`s, after the `TabList`. Required: see `Tabs`. */
+export function TabPanels<T>({className, ...props}: TabPanelsProps<T>) {
+  return (
+    <InTabPanels.Provider value>
+      <RACTabPanels {...props} className={clsx('react-aria-TabPanels', className)} />
+    </InTabPanels.Provider>
+  );
 }
 
-export function TabPanel(props: TabPanelProps) {
-  return <RACTabPanel {...props} />;
+/** What a `Tab` shows (the same `id`); only the chosen one is drawn. Always inside `TabPanels`. */
+export function TabPanel({className, ...props}: TabPanelProps) {
+  const inPanels = useContext(InTabPanels);
+  if (process.env.NODE_ENV !== 'production' && !inPanels && !warned.has(String(props.id))) {
+    warned.add(String(props.id));
+    console.warn(`TabPanel "${String(props.id)}" sits outside TabPanels. Wrap the panels in <TabPanels>: a panel fading ` +
+      'out is laid against it, and floats over the page without it.');
+  }
+  return <RACTabPanel {...props} className={composeRenderProps(className, c => clsx('react-aria-TabPanel', c))} />;
 }
 
 /* ───────────── Grouped tabs: vertical tabs under group headings ─────────────
