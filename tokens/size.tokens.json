@@ -1,5 +1,5 @@
 {
-  "$description": "Not in Figma: our Figma export has no size variables. Written by hand (DTCG); npm run tokens:pull never touches this file, npm run tokens:build merges it with the Figma tokens into src/tokens.css. Values are the sizes the components already draw: icons, control heights (fields and the default Button are 36, docs/DECISIONS.md) and avatars. Each name is its value in px.",
+  "$description": "Not in Figma, apart from two: Figma binds a 24 and a 28 size variable (the editor tool and the icon button), which the drawing-based pull doesn't read; their ids are on control 24 and 28 and in tokens/variable-ids.json. Written by hand (DTCG); npm run tokens:pull never touches this file, npm run tokens:build merges it with the Figma tokens into src/tokens.css. Values are the sizes the components already draw: icons, control heights (fields and the default Button are 36, docs/DECISIONS.md) and avatars. Each name is its value in px.",
   "size": {
     "icon": {
       "12": {
@@ -37,12 +37,14 @@
       "24": {
         "$type": "dimension",
         "$value": {"value": 24, "unit": "px"},
-        "$description": "The smallest square button: a banner's or toast's dismiss ×, a rich text toolbar button."
+        "$description": "The smallest square button: a banner's or toast's dismiss ×, a rich text toolbar button.",
+        "$extensions": {"com.figma.variableId": "VariableID:1:127"}
       },
       "28": {
         "$type": "dimension",
         "$value": {"value": 28, "unit": "px"},
-        "$description": "Compact controls: the default icon button, a modal's close, a card's chevron, a toast action, a toggle in a group."
+        "$description": "Compact controls: the default icon button, a modal's close, a card's chevron, a toast action, a toggle in a group.",
+        "$extensions": {"com.figma.variableId": "VariableID:1:129"}
       },
       "32": {
         "$type": "dimension",

@@ -3,6 +3,8 @@
 :root {
   color-scheme: light;
   font-family: var(--gv-font-family);
+  /* The one letter spacing (Figma binds one tracking variable to every text node): set here, inherited everywhere. */
+  letter-spacing: var(--gv-font-tracking);
 
   /* text */
   --text-color: var(--gv-text-primary);
@@ -100,4 +102,9 @@
   --tint-1400: var(--gv-color-brand-900);
   --tint-1500: var(--gv-color-brand-900);
   --tint-1600: var(--gv-color-brand-900);
+}
+
+/* Form controls don't inherit letter-spacing by default; they take the page's one tracking too. */
+:where(input, textarea, select, button) {
+  letter-spacing: inherit;
 }

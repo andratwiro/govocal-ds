@@ -5,6 +5,7 @@ import {Settings} from 'lucide-react';
 import usageJson from './usage.json';
 import tokensJson from '../../tokens/foundations.tokens.json';
 import sizeJson from '../../tokens/size.tokens.json';
+import semanticJson from '../../tokens/semantic.tokens.json';
 import './TokenBlocks.css';
 
 // The Foundations pages (src/foundations/*.mdx) share these blocks. Each block shows at full height: the page
@@ -18,8 +19,13 @@ type Presenter = ({token}: {token: {name: string}}) => JSX.Element;
 // virtualises its 49px rows. A cap no category comes near lets the box grow to its rows, so every row renders.
 const NO_CAP = 100_000;
 
-type TypeValue = {fontSize: {value: number}; lineHeight: number; fontWeight: number};
-const typeRoles = (tokensJson as {type: Record<string, {$value: TypeValue}>}).type;
+// A role's parts are references to the font primitives ({font.size-13}) or, pulled without them, the drawn values.
+type Ref = string;
+type TypeValue = {fontSize: {value: number} | Ref; lineHeight: number; fontWeight: number | Ref};
+const typeRoles = (tokensJson as unknown as {type: Record<string, {$value: TypeValue}>}).type;
+const fontTokens = (semanticJson as unknown as {font: Record<string, {$value: unknown}>}).font;
+const deref = <T,>(v: T | Ref): T =>
+  typeof v === 'string' && v.startsWith('{font.') ? fontTokens[v.slice(6, -1)].$value as T : v as T;
 
 // The Typography frame in Figma names each role and says where it goes; the tokens keep only the numbers.
 const FIGMA_ROLES: Record<string, [name: string, use: string]> = {
@@ -69,7 +75,7 @@ export const TypeRoles = () => <Unstyled>
   <ol className="gv-tokens-roles">
     {Object.entries(typeRoles).map(([role, {$value: v}]) => {
       const use = FIGMA_ROLES[role]?.[1];
-      const size = v.fontSize.value;
+      const size = deref(v.fontSize).value;
       const users = usage[`--gv-type-${role}`] ?? [];
       return <li key={role} className="gv-tokens-role">
         <div className="gv-tokens-role__sample"
@@ -77,7 +83,7 @@ export const TypeRoles = () => <Unstyled>
           {roleName(role)}
         </div>
         <div className="gv-tokens-role__spec">
-          <span>{size}/{Math.round(size * v.lineHeight)} {WEIGHT[v.fontWeight] ?? v.fontWeight}</span>
+          <span>{size}/{Math.round(size * v.lineHeight)} {WEIGHT[deref(v.fontWeight)] ?? deref(v.fontWeight)}</span>
           <code>--gv-type-{role}</code>
         </div>
         {use && <p className="gv-tokens-role__use">{use}</p>}

@@ -1,13 +1,27 @@
+import {refName} from './names.mjs';
+
+const isRef = v => typeof v === 'string' && /^\{[^{}]+\}$/.test(v);
+const varOf = ref => `var(${refName(ref)})`;
+const lookup = (tokens, ref) => ref.slice(1, -1).split('.').reduce((node, key) => node?.[key], tokens);
+// A reference followed to the value it ends at.
+const resolve = (tokens, v, seen = []) => {
+  if (!isRef(v)) return v;
+  const t = lookup(tokens, v);
+  if (!t || !('$value' in t)) throw new Error(`${seen.at(-1) ?? v}: ${v} names no token`);
+  if (seen.includes(v)) throw new Error(`${v} refers to itself`);
+  return resolve(tokens, t.$value, [...seen, v]);
+};
+
 const rgb = c => {
   const [r, g, b] = c.components.map(v => Math.round(v * 255));
   return c.alpha >= 1 ? c.hex : `rgb(${r} ${g} ${b} / ${c.alpha})`;
 };
-const ref = v => `var(--gv-${v.slice(1, -1).replaceAll('.', '-')})`;
-const dim = d => `${d.value}${d.unit}`;
+const colour = v => isRef(v) ? varOf(v) : rgb(v);
+const dim = d => isRef(d) ? varOf(d) : `${d.value}${d.unit}`;
 
 // storybook-design-token (addon) reads "/** @tokens <Category> @presenter <Presenter> */ ... */
 // /** @tokens-end */" blocks inside the stylesheet it's pointed at. One block per semantic group
-// (plus the primitive scales), all annotated so the Foundations page can group and filter them.
+// (plus the primitive scales), all annotated so the Foundations pages can group and filter them.
 const open = (name, presenter) => `/** @tokens ${name} @presenter ${presenter} */`;
 const close = '/** @tokens-end */';
 const block = (name, presenter, lines) => lines.length ? [open(name, presenter), ...lines, close] : [];
@@ -37,27 +51,64 @@ const px = (d, path, name) => {
   return `${d.value}px`;
 };
 
+// The colour groups, property first (docs/NAMING.md, Token names); any other colour group follows them, the chart
+// palette last.
+const COLOUR_ORDER = ['surface', 'text', 'icon', 'border'];
+const NOT_COLOUR = new Set(['color', 'space', 'radius', 'size', 'type', 'shadow', 'motion', 'font', 'focus',
+  'border-width', 'opacity', 'layer']);
+const byNumber = entries => [...entries].sort(([a], [b]) => (Number(a) || (a === 'full' ? Infinity : 0)) -
+  (Number(b) || (b === 'full' ? Infinity : 0)));
+
+const quoteFamily = f => /^[\w-]+$/.test(f) && !/\s/.test(f) ? f : `'${f}'`;
+const familyCss = v => (Array.isArray(v) ? v : [v, 'system-ui', 'sans-serif']).map(quoteFamily).join(', ');
+
+// The font primitive whose value is `value` (a dimension or a weight), as var(), or null.
+function fontVar(tokens, prefix, value) {
+  for (const [key, t] of Object.entries(tokens.font ?? {})) {
+    if (!key.startsWith(prefix)) continue;
+    const v = resolve(tokens, t.$value);
+    if (typeof value === 'number' ? v === value : v?.value === value.value && v?.unit === value.unit)
+      return `var(--gv-font-${key})`;
+  }
+  return null;
+}
+
 export function toCss(tokens) {
   const sections = [];
 
   const colorLines = [];
   for (const [family, steps] of Object.entries(tokens.color))
-    for (const [step, t] of Object.entries(steps)) colorLines.push(`--gv-color-${family}-${step}: ${rgb(t.$value)};`);
+    for (const [step, t] of Object.entries(steps)) colorLines.push(`--gv-color-${family}-${step}: ${rgb(t.$value)};${note(t)}`);
   sections.push(block('Colour primitives', 'Color', colorLines));
 
-  const families = new Set(Object.values(tokens.type).map(t => t.$value.fontFamily));
+  // Type: one family; with font primitives (tokens/semantic.tokens.json), each role's shorthand is built from them.
+  const font = tokens.font ?? {};
+  const families = new Set(Object.values(tokens.type).map(t => {
+    const f = resolve(tokens, t.$value.fontFamily);
+    return Array.isArray(f) ? f[0] : f;
+  }));
   if (families.size !== 1) throw new Error(`expected one font family, got ${[...families]}`);
-  const fontFamilyLine = `--gv-font-family: '${[...families][0]}', system-ui, sans-serif;`;
-  sections.push(block('Font family', 'FontFamily', [fontFamilyLine]));
+  const family = font.family ? resolve(tokens, font.family.$value) : [...families][0];
+  sections.push(block('Font family', 'FontFamily', [`--gv-font-family: ${familyCss(family)};${note(font.family ?? {})}`]));
+  const fontLines = prefix => Object.entries(font).filter(([k]) => k.startsWith(prefix))
+    .map(([k, t]) => `--gv-font-${k}: ${typeof t.$value === 'number' ? t.$value : dim(t.$value)};${note(t)}`);
+  sections.push(block('Font size', 'FontSize', fontLines('size-')));
+  sections.push(block('Line height', 'LineHeight', fontLines('line-height-')));
+  sections.push(block('Font weight', 'FontWeight', fontLines('weight-')));
+  sections.push(block('Letter spacing', 'LetterSpacing', fontLines('tracking')));
 
-  for (const [group, roles] of Object.entries(tokens)) {
-    if (['color', 'space', 'radius', 'size', 'type', 'shadow', 'motion'].includes(group)) continue;
-    const lines = Object.entries(roles).map(([role, t]) => `--gv-${group}-${role}: ${ref(t.$value)};`);
+  const groups = Object.keys(tokens).filter(g => !NOT_COLOUR.has(g) && !g.startsWith('$'));
+  const colourGroups = [...COLOUR_ORDER.filter(g => groups.includes(g)),
+    ...groups.filter(g => !COLOUR_ORDER.includes(g) && g !== 'chart'), ...groups.filter(g => g === 'chart')];
+  for (const group of colourGroups) {
+    const lines = Object.entries(tokens[group]).map(([role, t]) => `--gv-${group}-${role}: ${colour(t.$value)};${note(t)}`);
     sections.push(block(group, 'Color', lines));
   }
 
-  sections.push(block('Space', 'Spacing', Object.entries(tokens.space).map(([n, t]) => `--gv-space-${n}: ${dim(t.$value)};`)));
-  sections.push(block('Radius', 'BorderRadius', Object.entries(tokens.radius).map(([n, t]) => `--gv-radius-${n}: ${dim(t.$value)};`)));
+  sections.push(block('Space', 'Spacing', byNumber(Object.entries(tokens.space)).map(([n, t]) =>
+    `--gv-space-${n}: ${dim(t.$value)};${note(t)}`)));
+  sections.push(block('Radius', 'BorderRadius', byNumber(Object.entries(tokens.radius)).map(([n, t]) =>
+    `--gv-radius-${n}: ${dim(t.$value)};${note(t)}`)));
 
   // The addon has no size presenter: Spacing draws each as a bar of its length (the Size page draws its own).
   for (const [kind, steps] of Object.entries(tokens.size ?? {})) {
@@ -66,27 +117,43 @@ export function toCss(tokens) {
       `--gv-size-${kind}-${n}: ${px(t.$value, `size.${kind}.${n}`, n)};${note(t)}`)));
   }
 
-  // The addon has FontSize / LineHeight / FontWeight presenters but none for a "font" shorthand:
-  // split each type role into its own size/line/weight vars for those presenters, and keep the
-  // shorthand (+ tracking) vars too, unannotated, for components that already paint with them.
-  const shorthandLines = [];
-  const sizeLines = [], lineLines = [], weightLines = [];
+  // Focus, stroke widths, opacity and layers (Not in Figma, apart from the two stroke widths). The Foundations page
+  // draws them itself; Opacity also gets the addon's presenter.
+  const plainLines = (group, value) => Object.entries(tokens[group] ?? {}).map(([n, t]) =>
+    `--gv-${group}-${n}: ${value(t.$value, `${group}.${n}`)};${note(t)}`);
+  const border = v => typeof v === 'object' && !isRef(v) && 'style' in v
+    ? `${dim(v.width)} ${v.style} ${colour(v.color)}` : dim(v);
+  const number = (v, path) => {
+    if (typeof v !== 'number') throw new Error(`${path}: a number token's value is a number`);
+    return String(v);
+  };
+  sections.push(plainLines('border-width', border));
+  sections.push(plainLines('focus', border));
+  sections.push(block('Opacity', 'Opacity', plainLines('opacity', number)));
+  sections.push(plainLines('layer', number));
+
+  // Type roles: `font: var(--gv-type-<role>)`, the one way to set text. With font primitives, the shorthand is built
+  // from them (a part with no matching primitive stays a number, so a missing primitive shows in the diff).
+  const roleLines = [];
   for (const [role, t] of Object.entries(tokens.type)) {
-    const v = t.$value, line = Math.round(v.fontSize.value * v.lineHeight);
-    shorthandLines.push(`--gv-type-${role}: ${v.fontWeight} ${dim(v.fontSize)}/${line}px var(--gv-font-family);`);
-    shorthandLines.push(`--gv-type-${role}-tracking: ${dim(v.letterSpacing)};`);
-    sizeLines.push(`--gv-type-${role}-size: ${dim(v.fontSize)};`);
-    lineLines.push(`--gv-type-${role}-line: ${line}px;`);
-    weightLines.push(`--gv-type-${role}-weight: ${v.fontWeight};`);
+    const v = t.$value;
+    const size = resolve(tokens, v.fontSize), weight = resolve(tokens, v.fontWeight);
+    const line = Math.round(size.value * v.lineHeight);
+    const sizeCss = isRef(v.fontSize) ? varOf(v.fontSize) : fontVar(tokens, 'size-', size) ?? dim(size);
+    const weightCss = isRef(v.fontWeight) ? varOf(v.fontWeight) : fontVar(tokens, 'weight-', weight) ?? weight;
+    const lineCss = fontVar(tokens, 'line-height-', {value: line, unit: 'px'}) ?? `${line}px`;
+    roleLines.push(`--gv-type-${role}: ${weightCss} ${sizeCss}/${lineCss} var(--gv-font-family);${note(t)}`);
+    // The parts each role used to carry, kept until the codemod (npm run tokens:rename) moves their uses.
+    roleLines.push(`--gv-type-${role}-tracking: ${dim(resolve(tokens, v.letterSpacing))};`);
+    roleLines.push(`--gv-type-${role}-size: ${dim(size)};`);
+    roleLines.push(`--gv-type-${role}-line: ${line}px;`);
+    roleLines.push(`--gv-type-${role}-weight: ${weight};`);
   }
-  sections.push(block('Font size', 'FontSize', sizeLines));
-  sections.push(block('Line height', 'LineHeight', lineLines));
-  sections.push(block('Font weight', 'FontWeight', weightLines));
-  if (shorthandLines.length) sections.push(shorthandLines);
+  sections.push(roleLines);
 
   sections.push(block('Shadow', 'Shadow', Object.entries(tokens.shadow).map(([name, t]) =>
     `--gv-shadow-${name}: ${t.$value.map(s =>
-      `${dim(s.offsetX)} ${dim(s.offsetY)} ${dim(s.blur)} ${dim(s.spread)} ${rgb(s.color)}`).join(', ')};`)));
+      `${dim(s.offsetX)} ${dim(s.offsetY)} ${dim(s.blur)} ${dim(s.spread)} ${rgb(s.color)}`).join(', ')};${note(t)}`)));
 
   // The addon has Animation and Easing presenters; the Motion page gives durations its own (a bar that plays them).
   const durations = Object.entries(tokens.motion?.duration ?? {});
@@ -105,6 +172,6 @@ export function toCss(tokens) {
 
   const body = sections.filter(s => s.length).map(lines => lines.map(l => `  ${l}`).join('\n')).join('\n\n');
   return `/* Generated by scripts/build-tokens.mjs from tokens/foundations.tokens.json (Figma), ` +
-    `tokens/motion.tokens.json and tokens/size.tokens.json (Not in Figma). Do not edit by hand. */\n` +
+    `tokens/semantic.tokens.json, motion.tokens.json and size.tokens.json (Not in Figma). Do not edit by hand. */\n` +
     `:root {\n${body}\n}\n${media}`;
 }

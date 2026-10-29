@@ -18,7 +18,9 @@ const page = {type: 'CANVAS', name: 'Foundations', children: [{type: 'FRAME', na
       swatch('surface/live', 'alpha/green-12', {r: 0.031, g: 0.514, b: 0.227, a: 1}, 0.12, 'VariableID:10:4')]}]}]},
   {type: 'FRAME', name: 'Typography', children: [{type: 'FRAME', name: 'Stat small', children: [
     {type: 'FRAME', name: 'Label', children: [text('Stat small', 'Stat small'), text('20/24 Medium', '20/24 Medium')]},
-    text('sample', 'Small number tiles', {fontFamily: 'Public Sans', fontSize: 20, lineHeightPx: 24, fontWeight: 500, letterSpacing: 0})]}]},
+    {...text('sample', 'Small number tiles', {fontFamily: 'Public Sans', fontSize: 20, lineHeightPx: 24, fontWeight: 500, letterSpacing: 0}),
+      boundVariables: Object.fromEntries([['fontFamily', '1:141'], ['fontSize', '45:2'], ['lineHeight', '1:163'],
+        ['fontWeight', '1:167'], ['letterSpacing', '1:169']].map(([k, id]) => [k, [{type: 'VARIABLE_ALIAS', id: `VariableID:${id}`}]]))}]}]},
   {type: 'FRAME', name: 'space/14', children: [text('space/14', 'space/14'),
     {type: 'RECTANGLE', name: 'Bar', absoluteBoundingBox: {width: 14, height: 12},
       boundVariables: {size: {x: {type: 'VARIABLE_ALIAS', id: 'VariableID:1:100'}}}}]},
@@ -139,13 +141,49 @@ describe('toCss', () => {
   });
 });
 
+// The font primitives, hand-written (tokens/semantic.tokens.json) with the Figma ids the samples bind.
+const fontFile = {font: {
+  family: {$type: 'fontFamily', $value: ['Public Sans', 'system-ui', 'sans-serif'], $description: 'The face.'},
+  'size-20': {$type: 'dimension', $value: {value: 20, unit: 'px'}, $description: 'Stat small.'},
+  'line-height-24': {$type: 'dimension', $value: {value: 24, unit: 'px'}},
+  'weight-medium': {$type: 'fontWeight', $value: 500},
+  tracking: {$type: 'dimension', $value: {value: 0, unit: 'px'}}}};
+const fontIds = {'VariableID:1:141': '--gv-font-family', 'VariableID:45:2': '--gv-font-size-20',
+  'VariableID:1:163': '--gv-font-line-height-24', 'VariableID:1:167': '--gv-font-weight-medium', 'VariableID:1:169': '--gv-font-tracking'};
+
+describe('parseFoundations reads the font variables a type sample binds', () => {
+  it('writes each bound part as a reference to its font token, and the line height as DTCG\'s ratio', () => {
+    expect(parseFoundations(page, {names: fontIds}).tokens.type['stat-small'].$value).toEqual({fontFamily: '{font.family}',
+      fontSize: '{font.size-20}', lineHeight: 1.2, fontWeight: '{font.weight-medium}', letterSpacing: '{font.tracking}'});
+  });
+  it('keeps the drawn value of a part whose variable has no name', () => {
+    expect(parseFoundations(page).tokens.type['stat-small'].$value.fontSize).toEqual({value: 20, unit: 'px'});
+  });
+});
+
 describe('toCss annotations for storybook-design-token', () => {
   const css = toCss(parseFoundations(page).tokens);
   it('opens one annotated category per kind', () => {
+    const withFont = toCss(mergeTokens(parseFoundations(page).tokens, fontFile));
     for (const c of ['Colour primitives @presenter Color', 'surface @presenter Color', 'Space @presenter Spacing',
       'Radius @presenter BorderRadius', 'Font size @presenter FontSize', 'Line height @presenter LineHeight',
-      'Font weight @presenter FontWeight', 'Shadow @presenter Shadow'])
-      expect(css).toContain(`/** @tokens ${c} */`);
+      'Font weight @presenter FontWeight', 'Letter spacing @presenter LetterSpacing', 'Shadow @presenter Shadow'])
+      expect(withFont).toContain(`/** @tokens ${c} */`);
+  });
+  it('writes the font primitives, each with its description as the line comment', () => {
+    const withFont = toCss(mergeTokens(parseFoundations(page).tokens, fontFile));
+    expect(withFont).toContain('/** @tokens Font size @presenter FontSize */\n  --gv-font-size-20: 20px; /* Stat small. */');
+    expect(withFont).toContain('--gv-font-line-height-24: 24px;');
+    expect(withFont).toContain('--gv-font-weight-medium: 500;');
+    expect(withFont).toContain("--gv-font-family: 'Public Sans', system-ui, sans-serif; /* The face. */");
+    expect(withFont).toContain('/** @tokens Letter spacing @presenter LetterSpacing */\n  --gv-font-tracking: 0px;');
+  });
+  it('builds each role from the font primitives, by reference or by value', () => {
+    const fromRefs = toCss(mergeTokens(parseFoundations(page, {names: fontIds}).tokens, fontFile));
+    expect(fromRefs).toContain('--gv-type-stat-small: var(--gv-font-weight-medium) var(--gv-font-size-20)/var(--gv-font-line-height-24) var(--gv-font-family);');
+    // A role pulled without bound variables (literal parts) finds the same primitives by value.
+    expect(toCss(mergeTokens(parseFoundations(page).tokens, fontFile))).toContain(
+      '--gv-type-stat-small: var(--gv-font-weight-medium) var(--gv-font-size-20)/var(--gv-font-line-height-24) var(--gv-font-family);');
   });
   it('splits type roles for the presenters', () => {
     expect(css).toContain('--gv-type-stat-small-size: 20px;');
@@ -201,9 +239,10 @@ describe('mergeTokens', () => {
   });
   it('a Figma pull writes only the Figma files', () => {
     const pull = readFileSync('scripts/figma-pull.mjs', 'utf8');
-    expect(pull).not.toMatch(/motion|size\.tokens/);
+    expect(pull).not.toMatch(/motion|size\.tokens|semantic\.tokens/);
     expect(readFileSync('scripts/build-tokens.mjs', 'utf8')).toContain('tokens/motion.tokens.json');
     expect(readFileSync('scripts/build-tokens.mjs', 'utf8')).toContain('tokens/size.tokens.json');
+    expect(readFileSync('scripts/build-tokens.mjs', 'utf8')).toContain('tokens/semantic.tokens.json');
   });
 });
 
@@ -267,9 +306,21 @@ describe('toCss size', () => {
 });
 
 describe('src/tokens.css', () => {
-  it('is the build of the Figma file, the motion file and the size file (run npm run tokens:build)', () => {
+  it('is the build of the Figma file and the hand-written ones (run npm run tokens:build)', () => {
     const read = path => JSON.parse(readFileSync(path, 'utf8'));
     expect(readFileSync('src/tokens.css', 'utf8')).toBe(toCss(mergeTokens(read('tokens/foundations.tokens.json'),
-      read('tokens/motion.tokens.json'), read('tokens/size.tokens.json'))));
+      read('tokens/semantic.tokens.json'), read('tokens/motion.tokens.json'), read('tokens/size.tokens.json'))));
+  });
+  it('every Figma id on a hand-written token is the one tokens/variable-ids.json gives that name', () => {
+    const ids = JSON.parse(readFileSync('tokens/variable-ids.json', 'utf8'));
+    const marked = [];
+    const walk = (node, path) => Object.entries(node).forEach(([k, v]) => {
+      if (k.startsWith('$') || typeof v !== 'object') return;
+      if ('$value' in v) { const id = v.$extensions?.['com.figma.variableId']; if (id) marked.push([id, `--gv-${[...path, k].join('-')}`]); }
+      else walk(v, [...path, k]);
+    });
+    for (const f of ['tokens/semantic.tokens.json', 'tokens/size.tokens.json']) walk(JSON.parse(readFileSync(f, 'utf8')), []);
+    expect(marked.length).toBeGreaterThan(10);
+    for (const [id, name] of marked) expect(ids[id], id).toBe(name);
   });
 });
