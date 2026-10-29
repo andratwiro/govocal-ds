@@ -49,7 +49,11 @@ test('Typography draws each role in itself before the tables', async ({page}) =>
   const stat = page.locator('.gv-tokens-role').first();
   await expect(stat).toContainText('28/32 Regular');
   await expect(stat.locator('.gv-tokens-role__sample')).toHaveCSS('font-size', '28px');
-  await expect(page.locator('.gv-tokens-role')).toHaveCount(9);
+  // Nine interface roles, then a document's four (themed per platform), each list drawn in its own family.
+  await expect(page.locator('.gv-tokens-role')).toHaveCount(13);
+  const display = page.locator('.gv-tokens-role').filter({hasText: '--gv-type-document-display'});
+  await expect(display).toContainText('44/52 Medium');
+  await expect(display.locator('.gv-tokens-role__sample')).toHaveCSS('font-size', '44px');
   // What a role is for is its token's description, not a list in the page.
   await expect(stat.locator('.gv-tokens-role__use')).toContainText('Big numbers');
   await expect(page.getByText('--gv-font-weight-regular', {exact: true}).first()).toBeVisible();

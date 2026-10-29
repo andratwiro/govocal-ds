@@ -234,7 +234,7 @@ to pick from.
 - property: `surface` (fills) · `text` · `icon` · `border` (borders, outlines, rings). `chart-*` is its own data-viz
   namespace.
 - role, neutral ladders: text and icon `primary` · `secondary` · `tertiary` (icon also `quiet`); surface `app` ·
-  `panel` · `secondary` · `tertiary`; border `subtle` · `row` · `default` · `strong` · `control`.
+  `panel` · `secondary` · `tertiary`; place `document` (a document's paper, `--gv-surface-document`); border `subtle` · `row` · `default` · `strong` · `control`.
 - role, intents: `neutral` · `brand` · `accent` · `info` · `success` · `warning` · `danger` · `selected` · `inverse`.
 - role, special: `body` · `placeholder` · `link` · `backdrop`.
 - emphasis: none (on a surface, the tint) or `strong` (the solid fill).

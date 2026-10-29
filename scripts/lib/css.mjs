@@ -89,7 +89,12 @@ export function toCss(tokens) {
   }));
   if (families.size !== 1) throw new Error(`expected one font family, got ${[...families]}`);
   const family = font.family ? resolve(tokens, font.family.$value) : [...families][0];
-  sections.push(block('Font family', 'FontFamily', [`--gv-font-family: ${familyCss(family)};${note(font.family ?? {})}`]));
+  // A second family may stand in for another role group (family-document: a document's face, themed per platform);
+  // its value is a reference to the one family, so the interface and every document share Public Sans by default.
+  const moreFamilies = Object.entries(font).filter(([k]) => k.startsWith('family-'))
+    .map(([k, t]) => `--gv-font-${k}: ${isRef(t.$value) ? varOf(t.$value) : familyCss(t.$value)};${note(t)}`);
+  sections.push(block('Font family', 'FontFamily', [`--gv-font-family: ${familyCss(family)};${note(font.family ?? {})}`,
+    ...moreFamilies]));
   const fontLines = prefix => Object.entries(font).filter(([k]) => k.startsWith(prefix))
     .map(([k, t]) => `--gv-font-${k}: ${typeof t.$value === 'number' ? t.$value : dim(t.$value)};${note(t)}`);
   sections.push(block('Font size', 'FontSize', fontLines('size-')));
@@ -143,7 +148,8 @@ export function toCss(tokens) {
     const sizeCss = isRef(v.fontSize) ? varOf(v.fontSize) : fontVar(tokens, 'size-', size) ?? dim(size);
     const weightCss = isRef(v.fontWeight) ? varOf(v.fontWeight) : fontVar(tokens, 'weight-', weight) ?? weight;
     const lineCss = fontVar(tokens, 'line-height-', {value: line, unit: 'px'}) ?? `${line}px`;
-    roleLines.push(`--gv-type-${role}: ${weightCss} ${sizeCss}/${lineCss} var(--gv-font-family);${note(t)}`);
+    const familyVar = isRef(v.fontFamily) ? varOf(v.fontFamily) : 'var(--gv-font-family)';
+    roleLines.push(`--gv-type-${role}: ${weightCss} ${sizeCss}/${lineCss} ${familyVar};${note(t)}`);
     // One tracking for every role, set once on :root (theme.css). A role that ever needs its own gets its own token
     // and a guard for that role; until then a role that tracks differently is refused.
     const tracking = resolve(tokens, v.letterSpacing), one = font.tracking && resolve(tokens, font.tracking.$value);

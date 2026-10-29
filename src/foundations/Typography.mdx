@@ -8,8 +8,8 @@ import {Tokens, TypeRoles} from './TokenBlocks';
 **In Figma:** the nine text styles on the Foundations page's Typography frame, each binding its size, line height and
 weight to the `Tokens` collection's `font/` variables (`font/size-13`, `font/line-height-20`, `font/weight-medium`).
 
-Nine roles on the 12 · 13 · 14 · 16 · 20 · 28 scale, Regular and Medium only: hierarchy comes from size steps and grey
-versus black, not from extra weights. One rule sets them:
+Nine interface roles on the 12 · 13 · 14 · 16 · 20 · 28 scale, and four document roles (below), Regular and Medium
+only: hierarchy comes from size steps and grey versus black, not from extra weights. One rule sets them:
 
 ```css
 .gv-row__title { font: var(--gv-type-ui-strong); }
@@ -45,20 +45,38 @@ one.
 
 ## Roles
 
-<TypeRoles />
+<TypeRoles only="interface" />
+
+## Document roles
+
+**Not in Figma.** The type of a document people read or print on a sheet: a report's title page, its section headings,
+its lead lines and its paragraphs (Components/Layout & containers/Page stage, Figure, Quote). Named for what the text
+is in a document, never for the screen that shows it.
+
+They have a family of their own, `--gv-font-family-document`, which is the interface's family by default. **Themable
+per platform:** a platform's theme sets it (or a role) once, at `:root`, and its documents take its face while the
+back office keeps Public Sans. Set it at `:root`, not on a page's element: the roles read the family where they are
+defined.
+
+```css
+/* A platform's theme */
+:root { --gv-font-family-document: 'Source Serif 4', Georgia, serif; }
+```
+
+<TypeRoles only="document" />
 
 ## Family
 <Tokens category="Font family @presenter FontFamily" />
 
 ## Size
 
-Six sizes, each named by its value; a role picks one.
+Eight sizes, each named by its value; a role picks one (19 and 44 serve the document roles).
 
 <Tokens category="Font size @presenter FontSize" />
 
 ## Line height
 
-Four line heights, each named by its value.
+Seven line heights, each named by its value.
 
 <Tokens category="Line height @presenter LineHeight" />
 

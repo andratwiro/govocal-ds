@@ -12,7 +12,7 @@ const names = [...new Set(lines.map(l => l.name))];
 export const PROPERTIES = ['surface', 'text', 'icon', 'border'];
 export const ROLES = {
   hierarchy: ['primary', 'secondary', 'tertiary', 'body', 'placeholder', 'quiet', 'neutral', 'default', 'subtle'],
-  place: ['app', 'panel', 'backdrop', 'row', 'control'],
+  place: ['app', 'panel', 'document', 'backdrop', 'row', 'control'],
   intent: ['brand', 'accent', 'link', 'info', 'success', 'warning', 'danger', 'selected', 'inverse']
 };
 export const STATES = ['hovered', 'pressed', 'selected', 'disabled', 'focused'];
@@ -24,8 +24,11 @@ const SIDE_NAV = new RegExp(`^--gv-side-nav-(${PROPERTIES.join('|')})(-(current|
 const OTHER = [
   /^--gv-color-[a-z]+-\d+$/, /^--gv-color-alpha-[a-z]+(-\d+)?$/, /^--gv-chart-[a-z]+(-[a-z0-9]+)*$/,
   /^--gv-space-\d+$/, /^--gv-radius-(\d+|full)$/, /^--gv-size-(icon|control|avatar)-\d+$/,
-  /^--gv-font-(family|tracking|size-\d+|line-height-\d+|weight-(regular|medium))$/,
+  /^--gv-font-(family|family-document|tracking|size-\d+|line-height-\d+|weight-(regular|medium))$/,
   /^--gv-type-(stat|stat-small|title|body|body-strong|ui|ui-strong|small|small-strong)$/,
+  // A document's roles (a report's pages): one family of their own, so a platform themes its documents' type apart
+  // from the interface's. Named for what the text is in a document, never for the screen that shows it.
+  /^--gv-type-document-(display|heading|lead|body)$/,
   /^--gv-shadow-(raised|raised-strong|overlay)$/, /^--gv-motion-(duration|easing)-[a-z]+$/, /^--gv-border-width-\d+$/,
   /^--gv-focus-ring(-offset(-inset)?)?$/, /^--gv-opacity-[a-z]+$/, /^--gv-layer-[a-z]+$/
 ];
@@ -111,6 +114,7 @@ export function deltaE([L1, a1, b1], [L2, a2, b2]) {
 // One value, two jobs: each name says what it is for, so the designer can pull them apart without a code change.
 export const EXPLAINED = {
   'surface-app surface-neutral': 'the page behind everything vs a neutral pill or track that sits on panels',
+  'surface-document surface-panel': 'the paper of a document on the Page stage vs a panel: a platform may tint its documents\' paper alone',
   'surface-app surface-pressed': 'the page vs a row or button held down',
   'surface-neutral surface-pressed': 'a neutral pill or track at rest vs a row held down',
   'surface-hovered surface-tertiary': 'a row under the pointer vs a resting tertiary fill (a table header): two Figma variables',
