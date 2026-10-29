@@ -38,6 +38,9 @@
 }
 
 .gv-choice-card__button {
+  /* The hidden native input (Checkbox/RadioButton) positions itself against the nearest positioned
+     ancestor; without this it escapes to the page and clicks land on the wrong tile. */
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: var(--gv-space-12);
@@ -47,9 +50,12 @@
   -webkit-tap-highlight-color: transparent;
 
   /* The radio dot / checkbox mark, drawn to match RadioGroup/Checkbox so one visual language runs
-     through the system; Checkbox.css and RadioGroup.css set its size, border and selected fill. */
+     through the system; Checkbox.css and RadioGroup.css set its size, border and selected fill.
+     `pointer-events: none` so a click always reaches the label (the hidden input sits at the same
+     spot, in document order before it). */
   .indicator {
     margin-top: var(--gv-space-2);
+    pointer-events: none;
   }
 
   &[data-disabled] {
