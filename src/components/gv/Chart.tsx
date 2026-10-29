@@ -1,6 +1,8 @@
 import {useId, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode} from 'react';
 import './Chart.css';
 import type {PlacementProps} from '../className';
+import {useListFormatter, useNumberFormatter} from '../format';
+import {mergeLabels} from '../labels';
 
 /**
  * The chart palette, one name per `--gv-chart-*` token. Anything that draws data (lines, bars,
@@ -24,7 +26,51 @@ export interface ChartSeries {
   color?: ChartColor;
 }
 
-const fmt = (n: number) => n.toLocaleString('en-GB', {maximumFractionDigits: 2});
+/** How a chart writes a number. The parts pass the locale's (`useNumberFormatter`); called directly (the unit
+ * tests), up to two decimals with no grouping. */
+type Format = (n: number) => string;
+const plain: Format = n => String(Math.round(n * 100) / 100);
+/** The chart parts' number format: up to two decimals, grouped as the locale groups. */
+const useChartFormat = (): Format => useNumberFormatter({maximumFractionDigits: 2}).format;
+
+/**
+ * The words the charts say themselves (docs/API.md rule 11): the trend sentence that names a chart, and the explorer's
+ * name. Values arrive as the locale writes them; `peak` is the inner peak's clause, empty when there is none.
+ */
+export interface ChartLabels {
+  /** Sparkline: what is counted, when no `label` is given. */
+  trend: string;
+  /** A line chart's name: its series' sentences, and the first and last x labels when there are two or more. */
+  lineChart: (sentences: string[], from?: string, to?: string) => string;
+  noData: (label: string) => string;
+  stayed: (label: string, value: string) => string;
+  beganAndEnded: (label: string, value: string, peak: string) => string;
+  rose: (label: string, from: string, to: string, peak: string) => string;
+  fell: (label: string, from: string, to: string, peak: string) => string;
+  /** The inner peak's clause, given its value and, when the x axis names it, its point. */
+  peak: (value: string, at?: string) => string;
+  /** The explorer's (slider's) name, given the series' names already joined ("Participants and Visitors"). */
+  values: (names: string) => string;
+}
+
+/** The charts' English words; a page passes its own over them with `labels`. */
+export const chartLabels: ChartLabels = {
+  trend: 'Trend',
+  lineChart: (sentences, from, to) => `Line chart${from != null ? `, ${from} to ${to}` : ''}. ${sentences.map(s => s + '.').join(' ')}`,
+  noData: label => `${label}: no data`,
+  stayed: (label, value) => `${label} stayed at ${value}`,
+  beganAndEnded: (label, value, peak) => `${label} began and ended at ${value}${peak}`,
+  rose: (label, from, to, peak) => `${label} rose from ${from} to ${to}${peak}`,
+  fell: (label, from, to, peak) => `${label} fell from ${from} to ${to}${peak}`,
+  peak: (value, at) => `, peaking at ${value}${at ? ` on ${at}` : ''}`,
+  values: names => `${names} values`
+};
+
+/** How the describe functions write: a number format (the parts pass the locale's) and the words over `chartLabels`. */
+export interface ChartSay {
+  format?: Format;
+  labels?: Partial<ChartLabels>;
+}
 
 /** A y axis from 0 in `steps` equal, round steps (Figma: 0·3·6·9·12, 0·4·8·12·16). */
 export function niceScale(dataMax: number, steps = 4): {max: number; ticks: number[]} {
@@ -36,28 +82,30 @@ export function niceScale(dataMax: number, steps = 4): {max: number; ticks: numb
 }
 
 /** One series in words: where it started, where it ended, and an inner peak if there was one. */
-export function describeSeries(label: string, values: number[], labels?: string[]): string {
-  if (!values.length) return `${label}: no data`;
+export function describeSeries(label: string, values: number[], xAxis?: string[], {format: fmt = plain, labels}: ChartSay = {}): string {
+  const l = mergeLabels(chartLabels, labels);
+  if (!values.length) return l.noData(label);
   const first = values[0], last = values[values.length - 1];
   const max = Math.max(...values), at = values.indexOf(max);
-  const peak = max > first && max > last
-    ? `, peaking at ${fmt(max)}${labels?.[at] ? ` on ${labels[at]}` : ''}` : '';
-  if (values.every(v => v === first)) return `${label} stayed at ${fmt(first)}`;
-  if (first === last) return `${label} began and ended at ${fmt(first)}${peak}`;
-  return `${label} ${last > first ? 'rose' : 'fell'} from ${fmt(first)} to ${fmt(last)}${peak}`;
+  const peak = max > first && max > last ? l.peak(fmt(max), xAxis?.[at] || undefined) : '';
+  if (values.every(v => v === first)) return l.stayed(label, fmt(first));
+  if (first === last) return l.beganAndEnded(label, fmt(first), peak);
+  return (last > first ? l.rose : l.fell)(label, fmt(first), fmt(last), peak);
 }
 
 /** The whole chart in words: the default aria-label of a LineChart. */
-export function describeChart(series: ChartSeries[], labels: string[]): string {
-  const range = labels.length > 1 ? `, ${labels[0]} to ${labels[labels.length - 1]}` : '';
-  return `Line chart${range}. ${series.map(s => describeSeries(s.label, s.values, labels) + '.').join(' ')}`;
+export function describeChart(series: ChartSeries[], xAxis: string[], say: ChartSay = {}): string {
+  const sentences = series.map(s => describeSeries(s.label, s.values, xAxis, say));
+  const ranged = xAxis.length > 1;
+  return mergeLabels(chartLabels, say.labels).lineChart(sentences, ranged ? xAxis[0] : undefined, ranged ? xAxis[xAxis.length - 1] : undefined);
 }
 
 
 /** One point in words, for the value card and the keyboard explorer: "23 Feb: Participants 0, Visitors 3". */
-export function describePoint(series: {label: string; values: number[]}[], labels: string[] | undefined, i: number): string {
+export function describePoint(series: {label: string; values: number[]}[], xAxis: string[] | undefined, i: number,
+  {format: fmt = plain}: ChartSay = {}): string {
   const values = series.filter(s => s.values[i] != null).map(s => `${s.label} ${fmt(s.values[i])}`).join(', ');
-  return labels?.[i] ? `${labels[i]}: ${values}` : values;
+  return xAxis?.[i] ? `${xAxis[i]}: ${values}` : values;
 }
 
 /** The point nearest a place across the plot (0 at the start, 1 at the end). */
@@ -140,7 +188,7 @@ interface ChartStageProps {
   name: string;
   series: ExploreSeries[];
   /** One per point: the card's title and the start of the spoken value. */
-  labels?: string[];
+  xAxis?: string[];
   n: number;
   /** A point's place across the stage, 0–1. */
   xAt: (i: number) => number;
@@ -157,12 +205,13 @@ interface ChartStageProps {
 /** How close the pointer must come to a line to pick it out. */
 const LINE_REACH = 12;
 
-function ChartStage({className, style, children, interactive, name, series, labels, n, xAt, yAt, emphasis, onHoverSeries, onActiveChange}: ChartStageProps) {
+function ChartStage({className, style, children, interactive, name, series, xAxis, n, xAt, yAt, emphasis, onHoverSeries, onActiveChange}: ChartStageProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
   /** Who shows the card: the pointer, the keyboard, or nobody. */
   const [shown, setShown] = useState<'pointer' | 'keyboard' | null>(null);
   const keyboard = useRef(false);
+  const fmt = useChartFormat();
 
   const show = (i: number, by: 'pointer' | 'keyboard') => {
     setIndex(i);
@@ -213,7 +262,7 @@ function ChartStage({className, style, children, interactive, name, series, labe
   };
 
   const x = xAt(index);
-  const text = describePoint(series, labels, index);
+  const text = describePoint(series, xAxis, index, {format: fmt});
   const picked = emphasis;
 
   return (
@@ -242,7 +291,7 @@ function ChartStage({className, style, children, interactive, name, series, labe
             )
           )}
           <div className="gv-chart-card" data-side={x > 0.5 ? 'before' : 'after'} style={{left: `${x * 100}%`}} aria-hidden>
-            {labels?.[index] && <div className="gv-chart-card__title">{labels[index]}</div>}
+            {xAxis?.[index] && <div className="gv-chart-card__title">{xAxis[index]}</div>}
             {series.map((s, k) =>
               s.values[index] == null ? null : (
                 <div key={k} className="gv-chart-card__row" data-highlighted={picked === k || undefined}>
@@ -287,7 +336,7 @@ export interface LineChartProps extends PlacementProps {
   /** One or two series (Figma: Line · 1 series, Line · 2 series), one value per label. */
   series: ChartSeries[];
   /** The x axis, one label per value ("16 Feb"). */
-  labels: string[];
+  xAxis: string[];
   /** Top of the y axis. Default: a round ceiling over the data, in four steps from 0. */
   max?: number;
   /** Height of the plot area in px (axis labels add 34). Figma: 141. */
@@ -307,21 +356,26 @@ export interface LineChartProps extends PlacementProps {
   highlightedSeries?: number | null;
   /** Replaces the generated trend sentence. */
   'aria-label'?: string;
+  /** Its own words (the trend sentence, the explorer's name), over `chartLabels`. */
+  labels?: Partial<ChartLabels>;
 }
 
 const VB_W = 1000;
 
 /** Figma "Chart" · Line: gridded line chart with a y axis from 0 and dated x labels. Plain SVG. */
-export function LineChart({series, labels, max, height = 141, showLegend = false, isInteractive: interactive = true, highlightedSeries = null, className, style, ...rest}: LineChartProps) {
+export function LineChart({series, xAxis, max, height = 141, showLegend = false, isInteractive: interactive = true, highlightedSeries = null, labels, className, style, ...rest}: LineChartProps) {
+  const l = mergeLabels(chartLabels, labels);
+  const and = useListFormatter();
   const [legendPick, setLegendPick] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
   const [active, setActive] = useState<number | null>(null);
   const dataMax = Math.max(0, ...series.flatMap(s => s.values));
   const scale = max != null ? {max, ticks: [0, 1, 2, 3, 4].map(i => +((i * max) / 4).toPrecision(12))} : niceScale(dataMax);
-  const n = Math.max(labels.length, ...series.map(s => s.values.length));
+  const n = Math.max(xAxis.length, ...series.map(s => s.values.length));
   const x = (i: number) => (n > 1 ? (i / (n - 1)) * VB_W : VB_W / 2);
   const y = (v: number) => height * (1 - v / (scale.max || 1));
-  const label = rest['aria-label'] ?? describeChart(series, labels);
+  const fmt = useChartFormat();
+  const label = rest['aria-label'] ?? describeChart(series, xAxis, {format: fmt, labels: l});
   // Outside first (a Legend row beside the chart), then the chart's own legend, then the line under the pointer.
   const picked = highlightedSeries ?? legendPick ?? hovered;
   const colors: ChartColor[] = series.map((s, i) =>
@@ -336,9 +390,9 @@ export function LineChart({series, labels, max, height = 141, showLegend = false
         <ChartStage
           className="gv-line-chart__stage"
           interactive={interactive}
-          name={`${series.map(s => s.label).join(' and ')} values`}
+          name={l.values(and.format(series.map(s => s.label)))}
           series={series.map((s, i) => ({label: s.label, color: colors[i], values: s.values}))}
-          labels={labels}
+          xAxis={xAxis}
           n={n}
           xAt={i => x(i) / VB_W}
           yAt={(k, i) => y(series[k].values[i]) / height}
@@ -363,8 +417,8 @@ export function LineChart({series, labels, max, height = 141, showLegend = false
           </svg>
         </ChartStage>
         <div className="gv-line-chart__x" aria-hidden>
-          {labels.map((l, i) => (
-            <span key={i} data-active={active === i || undefined} style={{left: `${(x(i) / VB_W) * 100}%`}}>{l}</span>
+          {xAxis.map((tick, i) => (
+            <span key={i} data-active={active === i || undefined} style={{left: `${(x(i) / VB_W) * 100}%`}}>{tick}</span>
           ))}
         </div>
       </div>
@@ -383,10 +437,11 @@ export function LineChart({series, labels, max, height = 141, showLegend = false
 
 export interface SparklineProps extends PlacementProps {
   values: number[];
-  /** What is counted ("Votes cast"): starts the spoken trend and names the value card's row. */
+  /** What is counted ("Votes cast"): starts the spoken trend and names the value card's row. @default `labels.trend` */
   label?: string;
-  /** Optional dates, one per value, so the spoken trend can name the peak and the value card its date. */
-  labels?: string[];
+  /** Optional dates, one per value (an x axis it doesn't draw), so the spoken trend can name the peak and the value
+   * card its date. */
+  xAxis?: string[];
   /** Height in px. Figma: 110 (Votes over time); 34 fits under a Stat tile. */
   height?: number;
   /** Dashed guides at a quarter, half and three quarters. @default true */
@@ -396,17 +451,21 @@ export interface SparklineProps extends PlacementProps {
   /** The line's colour. @default 'line-primary' */
   color?: ChartColor;
   /**
-   * The hover and keyboard value card, as on LineChart. On when `labels` name the points (the card says when);
+   * The hover and keyboard value card, as on LineChart. On when `xAxis` names the points (the card says when);
    * off inside something pressable (a Stat card that opens a detail), where a second tab stop can't sit.
-   * @default labels != null
+   * @default xAxis != null
    */
   isInteractive?: boolean;
   /** Replaces the generated trend sentence. */
   'aria-label'?: string;
+  /** Its own words (the trend sentence, the explorer's name), over `chartLabels`. */
+  labels?: Partial<ChartLabels>;
 }
 
 /** Figma "Chart" · Sparkline: a bare trend line with a fading fill, no axes. Plain SVG. */
-export function Sparkline({values, label = 'Trend', labels, height = 110, showGrid: grid = true, showArea: area = true, color = 'line-primary', isInteractive: interactive = labels != null, className, style, ...rest}: SparklineProps) {
+export function Sparkline({values, label: labelProp, xAxis, height = 110, showGrid: grid = true, showArea: area = true, color = 'line-primary', isInteractive: interactive = xAxis != null, labels, className, style, ...rest}: SparklineProps) {
+  const l = mergeLabels(chartLabels, labels);
+  const label = labelProp ?? l.trend;
   const id = 'gv-spark-' + useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const [hovered, setHovered] = useState<number | null>(null);
   const pad = Math.min(8, height / 10);
@@ -414,7 +473,8 @@ export function Sparkline({values, label = 'Trend', labels, height = 110, showGr
   const n = values.length;
   const pts = values.map((v, i) => [n > 1 ? (i / (n - 1)) * VB_W : VB_W / 2, height - pad - ((v - lo) / (hi - lo)) * (height - pad * 2)]);
   const line = pts.map(([px, py], i) => `${i ? 'L' : 'M'}${px.toFixed(1)} ${py.toFixed(1)}`).join(' ');
-  const words = rest['aria-label'] ?? describeSeries(label, values, labels);
+  const fmt = useChartFormat();
+  const words = rest['aria-label'] ?? describeSeries(label, values, xAxis, {format: fmt, labels: l});
 
   const svg = (
     <svg
@@ -449,9 +509,9 @@ export function Sparkline({values, label = 'Trend', labels, height = 110, showGr
       className={cx('gv-sparkline-stage', className)}
       style={style}
       interactive
-      name={`${label} values`}
+      name={l.values(label)}
       series={[{label, color, values}]}
-      labels={labels}
+      xAxis={xAxis}
       n={n}
       xAt={i => pts[i][0] / VB_W}
       yAt={(_, i) => pts[i][1] / height}

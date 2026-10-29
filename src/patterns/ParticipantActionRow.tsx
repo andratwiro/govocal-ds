@@ -7,7 +7,49 @@ import {Radio, RadioGroup} from '../components/RadioGroup';
 import {Switch} from '../components/Switch';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {mergeLabels} from '../components/labels';
 import './ParticipantActionRow.css';
+
+/** The words Participant action row says itself (docs/API.md rule 11). */
+export interface ParticipantActionRowLabels {
+  /** The check's name on an action the phase can't turn off. */
+  alwaysOn: string;
+  /** The row's button name, given the action. */
+  edit: (action: string) => string;
+}
+
+/** Participant action row's English words; a page passes its own over them with `labels`. */
+export const participantActionRowLabels: ParticipantActionRowLabels = {
+  alwaysOn: 'Always on',
+  edit: action => `Edit access for ${action}`
+};
+
+/** The words Participant limit says itself (docs/API.md rule 11). */
+export interface ParticipantLimitLabels {
+  /** The choice's label, when no `label` is given. */
+  limit: string;
+  unlimited: string;
+  limited: string;
+  /** The maximum's label. */
+  max: string;
+}
+
+/** Participant limit's English words; a page passes its own over them with `labels`. */
+export const participantLimitLabels: ParticipantLimitLabels = {
+  limit: 'Number of likes per participant',
+  unlimited: 'Unlimited',
+  limited: 'Limited',
+  max: 'Maximum likes'
+};
+
+/** The words Participant action list says itself (docs/API.md rule 11). */
+export interface ParticipantActionListLabels {
+  /** The group's name, when no `aria-label` is given. */
+  actions: string;
+}
+
+/** Participant action list's English words; a page passes its own over them with `labels`. */
+export const participantActionListLabels: ParticipantActionListLabels = {actions: 'Participant actions'};
 
 /** `className` and `style` place the row (not its options under it); they never paint it. */
 export interface ParticipantActionRowProps extends PlacementProps {
@@ -33,6 +75,8 @@ export interface ParticipantActionRowProps extends PlacementProps {
   onOpen?: () => void;
   /** Settings that hang from the action while it is on (Reacting's likes per participant), in the label column. */
   options?: ReactNode;
+  /** Its own words (the check's and the button's names), over `participantActionRowLabels`. */
+  labels?: Partial<ParticipantActionRowLabels>;
 }
 
 /**
@@ -50,16 +94,18 @@ export function ParticipantActionRow({
   onChange,
   onOpen,
   options,
+  labels,
   className,
   style
 }: ParticipantActionRowProps) {
+  const l = mergeLabels(participantActionRowLabels, labels);
   const [inner, setInner] = useState(defaultSelected);
   const on = isLocked || (isSelected ?? inner);
   return (
     <>
       <div className={clsx('gv-participant-action', className)} style={style} data-off={!on || undefined}>
         {isLocked ? (
-          <span className="gv-participant-action__lock" role="img" aria-label="Always on">
+          <span className="gv-participant-action__lock" role="img" aria-label={l.alwaysOn}>
             <Check aria-hidden size={16} />
           </span>
         ) : (
@@ -74,7 +120,7 @@ export function ParticipantActionRow({
           </Switch>
         )}
         {on && onOpen ? (
-          <Button className="gv-participant-action__open" onPress={onOpen} aria-label={`Edit access for ${children}`}>
+          <Button className="gv-participant-action__open" onPress={onOpen} aria-label={l.edit(children)}>
             <span className="gv-participant-action__label">{children}</span>
             {value != null && (
               <span className="gv-participant-action__value" data-default={isDefault || undefined}>
@@ -93,33 +139,34 @@ export function ParticipantActionRow({
 }
 
 export interface ParticipantLimitProps extends PlacementProps {
-  /** @default 'Number of likes per participant' */
+  /** @default `labels.limit` ("Number of likes per participant") */
   label?: string;
-  /** @default 'Maximum likes' */
-  maxLabel?: string;
   /** `limited` reveals the maximum. */
   defaultLimit?: 'unlimited' | 'limited';
   /** @default 5 */
   defaultMax?: number;
   onChange?: (limit: 'unlimited' | 'limited', max: number) => void;
+  /** Its own words (the choices, the maximum's label), over `participantLimitLabels`. */
+  labels?: Partial<ParticipantLimitLabels>;
 }
 
 /** How many reactions each participant has: Unlimited or Limited; Limited reveals the maximum. */
 export function ParticipantLimit({
-  label = 'Number of likes per participant',
-  maxLabel = 'Maximum likes',
+  label,
   defaultLimit = 'unlimited',
   defaultMax = 5,
   onChange,
+  labels,
   className,
   style
 }: ParticipantLimitProps) {
+  const words = mergeLabels(participantLimitLabels, labels);
   const [limit, setLimit] = useState(defaultLimit);
   const [max, setMax] = useState(defaultMax);
   return (
     <div className={clsx('gv-participant-limit', className)} style={style}>
       <RadioGroup
-        label={label}
+        label={label ?? words.limit}
         orientation="horizontal"
         value={limit}
         onChange={next => {
@@ -127,12 +174,12 @@ export function ParticipantLimit({
           setLimit(l);
           onChange?.(l, max);
         }}>
-        <Radio value="unlimited">Unlimited</Radio>
-        <Radio value="limited">Limited</Radio>
+        <Radio value="unlimited">{words.unlimited}</Radio>
+        <Radio value="limited">{words.limited}</Radio>
       </RadioGroup>
       {limit === 'limited' && (
         <NumberField
-          label={maxLabel}
+          label={words.max}
           labelPosition="side"
           minValue={1}
           value={max}
@@ -147,11 +194,18 @@ export function ParticipantLimit({
 }
 
 /** The actions, one row each (a phase's Participant actions card). */
-export interface ParticipantActionListProps extends PlacementProps {children: ReactNode; 'aria-label'?: string}
+export interface ParticipantActionListProps extends PlacementProps {
+  children: ReactNode;
+  /** @default `labels.actions` ("Participant actions") */
+  'aria-label'?: string;
+  /** Its own words, over `participantActionListLabels`. */
+  labels?: Partial<ParticipantActionListLabels>;
+}
 
-export function ParticipantActionList({children, 'aria-label': ariaLabel = 'Participant actions', className, style}: ParticipantActionListProps) {
+export function ParticipantActionList({children, 'aria-label': ariaLabel, labels, className, style}: ParticipantActionListProps) {
   return (
-    <div className={clsx('gv-participant-action-list', className)} style={style} role="group" aria-label={ariaLabel}>
+    <div className={clsx('gv-participant-action-list', className)} style={style} role="group"
+      aria-label={ariaLabel ?? mergeLabels(participantActionListLabels, labels).actions}>
       {children}
     </div>
   );

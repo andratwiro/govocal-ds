@@ -3,7 +3,17 @@ import {Button} from 'react-aria-components/Button';
 import {Plus, ArrowDown} from 'lucide-react';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {mergeLabels} from '../labels';
 import './ListHeaderCell.css';
+
+/** The words List header cell says itself (docs/API.md rule 11). */
+export interface ListHeaderCellLabels {
+  /** The add-column button's name, when no `aria-label` is given. */
+  addColumn: string;
+}
+
+/** List header cell's English words; a page passes its own over them with `labels`. */
+export const listHeaderCellLabels: ListHeaderCellLabels = {addColumn: 'Add column'};
 
 export interface ListHeaderCellProps extends PlacementProps {
   /**
@@ -32,6 +42,8 @@ export interface ListHeaderCellProps extends PlacementProps {
   /** Sort / add-column press handler. */
   onPress?: () => void;
   'aria-label'?: string;
+  /** Its own words, over `listHeaderCellLabels`. */
+  labels?: Partial<ListHeaderCellLabels>;
 }
 
 export function ListHeaderCell({
@@ -41,6 +53,7 @@ export function ListHeaderCell({
   children,
   onPress,
   'aria-label': ariaLabel,
+  labels,
   className,
   style
 }: ListHeaderCellProps) {
@@ -50,7 +63,7 @@ export function ListHeaderCell({
         className={clsx('gv-list-header-cell', className)} style={style}
         data-kind="add-column"
         onPress={onPress}
-        aria-label={ariaLabel ?? 'Add column'}>
+        aria-label={ariaLabel ?? mergeLabels(listHeaderCellLabels, labels).addColumn}>
         <Plus aria-hidden size={16} strokeWidth={1.75} />
       </Button>
     );

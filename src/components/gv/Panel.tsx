@@ -1,9 +1,9 @@
 'use client';
-import {useId, useMemo, type ReactNode} from 'react';
-import {useLocale} from 'react-aria-components/I18nProvider';
+import {useId, type ReactNode} from 'react';
 import {Badge} from './Badge';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {useNumberFormatter} from '../format';
 import './Panel.css';
 
 export interface PanelProps extends PlacementProps {
@@ -47,8 +47,8 @@ export function Panel({
   title, headingLevel = 2, count, description, actions, toolbar, footer, isFlush, children, className, style
 }: PanelProps) {
   const id = useId();
-  const {locale} = useLocale();
-  const shown = useMemo(() => typeof count === 'number' ? new Intl.NumberFormat(locale).format(count) : count, [count, locale]);
+  const number = useNumberFormatter();
+  const shown = typeof count === 'number' ? number.format(count) : count;
   const Heading = `h${headingLevel}` as const;
   return (
     <section className={clsx('gv-panel', className)} style={style} aria-labelledby={id}>

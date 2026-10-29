@@ -88,12 +88,12 @@ const cards = {
   ),
   visitors: (
     <DashboardCard kind="visitors-over-time" title="Visitors over time">
-      <LineChart labels={WEEKS} series={[{label: 'Visitors', values: [2, 5, 9, 14, 11, 7]}]} />
+      <LineChart xAxis={WEEKS} series={[{label: 'Visitors', values: [2, 5, 9, 14, 11, 7]}]} />
     </DashboardCard>
   ),
   participation: (
     <DashboardCard kind="participation-over-time" title="Participation over time">
-      <LineChart showLegend labels={WEEKS} series={[{label: 'Participants', values: [1, 0, 1, 10, 0, 1]}, {label: 'Visitors', values: [0, 3, 9, 9, 6, 6]}]} />
+      <LineChart showLegend xAxis={WEEKS} series={[{label: 'Participants', values: [1, 0, 1, 10, 0, 1]}, {label: 'Visitors', values: [0, 3, 9, 9, 6, 6]}]} />
     </DashboardCard>
   ),
   ai: (
@@ -132,7 +132,7 @@ const cards = {
           <SegmentedControlItem id="weekly">Weekly</SegmentedControlItem>
         </SegmentedControl>
       }>
-      <Sparkline label="Votes cast" labels={DAYS} values={VOTES} />
+      <Sparkline label="Votes cast" xAxis={DAYS} values={VOTES} />
     </DashboardCard>
   ),
   ranking: (

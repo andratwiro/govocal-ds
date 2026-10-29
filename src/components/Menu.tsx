@@ -16,6 +16,7 @@ import {
 } from 'react-aria-components/Menu';
 import {Popover, type PopoverProps} from './Popover';
 import {ProgressCircle} from './ProgressCircle';
+import {loadMoreLabels, mergeLabels, type LoadMoreLabels} from './labels';
 import {Text} from './Content';
 import React, {type ReactNode} from 'react';
 import './Menu.css';
@@ -50,10 +51,11 @@ export function Menu<T>(props: MenuProps<T>) {
   return <AriaMenu {...props} className={keepClass(props.className, 'gv-base-menu')}>{props.children}</AriaMenu>;
 }
 
-export function MenuLoadMoreItem(props: MenuLoadMoreItemProps) {
+/** The spinner a Menu shows while its next page loads; its name is `labels.loading` (`loadMoreLabels`). */
+export function MenuLoadMoreItem({labels, ...props}: MenuLoadMoreItemProps & {labels?: Partial<LoadMoreLabels>}) {
   return (
     <AriaMenuLoadMoreItem {...props} className={clsx('react-aria-MenuLoadingIndicator gv-base-menu-loading-indicator', props.className)}>
-      <ProgressCircle isIndeterminate aria-label="Loading more..." />
+      <ProgressCircle isIndeterminate aria-label={mergeLabels(loadMoreLabels, labels).loading} />
     </AriaMenuLoadMoreItem>
   );
 }

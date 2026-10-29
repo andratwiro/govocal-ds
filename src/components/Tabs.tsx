@@ -15,7 +15,9 @@ import {
 } from 'react-aria-components/Tabs';
 import {ListBox, ListBoxItem, ListBoxSection, Header} from 'react-aria-components/ListBox';
 import {VisuallyHidden} from 'react-aria-components/VisuallyHidden';
-import {useLocale, type Key} from 'react-aria-components';
+import type {Key} from 'react-aria-components';
+import {useNumberFormatter} from './format';
+import {mergeLabels} from './labels';
 import {composeRenderProps} from 'react-aria-components/composeRenderProps';
 import {clsx} from 'clsx';
 import './Tabs.css';
@@ -49,34 +51,45 @@ export function TabList<T>({className, ...props}: TabListProps<T>) {
 /** A status dot's meaning (a field language: `success` complete, `danger` missing, `warning` incomplete). */
 export type TabStatus = 'success' | 'warning' | 'danger';
 
-const STATUS_WORDS: Record<TabStatus, string> = {success: 'complete', warning: 'incomplete', danger: 'missing'};
+/** The words a Tab says itself (docs/API.md rule 11): what its status dot means, read after the label. */
+export interface TabLabels {
+  complete: string;
+  incomplete: string;
+  missing: string;
+}
+
+/** A Tab's English words; a page passes its own over them with `labels`. */
+export const tabLabels: TabLabels = {complete: 'complete', incomplete: 'incomplete', missing: 'missing'};
+
+const STATUS_KEY = {success: 'complete', warning: 'incomplete', danger: 'missing'} as const;
 
 export interface TabProps extends RACTabProps {
   /** A count after the label, in brackets: "All reports (18)". Formatted for the locale. */
   count?: number;
   /**
    * A dot before the label: a multilingual field's languages (green complete, red missing). The dot is colour only,
-   * so the tab also says it in words to screen readers (`statusLabel`).
+   * so the tab also says it in words to screen readers, after the label ("ES-ES, missing").
    */
   status?: TabStatus;
-  /** What the status dot means, read after the label ("ES-ES, missing"). @default 'complete' | 'incomplete' | 'missing' */
-  statusLabel?: string;
+  /** Its own words (what the status dot means), over `tabLabels`. */
+  labels?: Partial<TabLabels>;
 }
 
 /**
  * One tab. An icon passed as the first child sits 7 before the label (16, as the Projects list); `count` and `status`
  * add the prototype's "(18)" and the language dot.
  */
-export function Tab({count, status, statusLabel, className, ...props}: TabProps) {
-  const {locale} = useLocale();
+export function Tab({count, status, labels, className, ...props}: TabProps) {
+  const number = useNumberFormatter();
+  const l = mergeLabels(tabLabels, labels);
   return (
     <RACTab {...props} className={composeRenderProps(className, c => clsx('react-aria-Tab gv-base-tab', c))}>
       {composeRenderProps(props.children, children => (
         <>
           {status && <span className="gv-tab__status" data-status={status} aria-hidden />}
           {children}
-          {count != null && <span className="gv-tab__count"> ({new Intl.NumberFormat(locale).format(count)})</span>}
-          {status && <VisuallyHidden>, {statusLabel ?? STATUS_WORDS[status]}</VisuallyHidden>}
+          {count != null && <span className="gv-tab__count"> ({number.format(count)})</span>}
+          {status && <VisuallyHidden>, {l[STATUS_KEY[status]]}</VisuallyHidden>}
           <SelectionIndicator className="react-aria-SelectionIndicator gv-base-selection-indicator" />
         </>
       ))}

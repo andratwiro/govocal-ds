@@ -32,8 +32,8 @@ type Story = StoryObj<typeof LineChart>;
 export const AllVariants: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 24}}>
-      <LineChart labels={WEEKS} series={[{label: 'Participants', values: PARTICIPANTS}, {label: 'Visitors', values: VISITORS}]} />
-      <LineChart labels={WEEKS} series={[{label: 'Visitors', values: VISITORS_DOC}]} />
+      <LineChart xAxis={WEEKS} series={[{label: 'Participants', values: PARTICIPANTS}, {label: 'Visitors', values: VISITORS}]} />
+      <LineChart xAxis={WEEKS} series={[{label: 'Visitors', values: VISITORS_DOC}]} />
       <SparklineChart label="Votes cast" values={VOTES} />
     </div>
   )
@@ -41,13 +41,13 @@ export const AllVariants: Story = {
 
 export const Line2Series: Story = {
   name: 'Line · 2 series',
-  args: {labels: WEEKS, series: [{label: 'Participants', values: PARTICIPANTS}, {label: 'Visitors', values: VISITORS}]},
+  args: {xAxis: WEEKS, series: [{label: 'Participants', values: PARTICIPANTS}, {label: 'Visitors', values: VISITORS}]},
   parameters: figma('23-192')
 };
 
 export const Line1Series: Story = {
   name: 'Line · 1 series',
-  args: {labels: WEEKS, series: [{label: 'Visitors', values: VISITORS_DOC}]},
+  args: {xAxis: WEEKS, series: [{label: 'Visitors', values: VISITORS_DOC}]},
   parameters: figma('23-211')
 };
 
@@ -59,14 +59,14 @@ export const Sparkline: Story = {
 /** Two series with the legend the Dashboard card puts under it. */
 export const WithLegend: Story = {
   name: 'Line · 2 series, with legend',
-  args: {labels: WEEKS, showLegend: true, series: [{label: 'Participants', values: PARTICIPANTS}, {label: 'Visitors', values: VISITORS}]}
+  args: {xAxis: WEEKS, showLegend: true, series: [{label: 'Participants', values: PARTICIPANTS}, {label: 'Visitors', values: VISITORS}]}
 };
 
 /** Big counts get round steps: monthly registrations across the platform. */
 export const LargeNumbers: Story = {
   name: 'Line · large numbers',
   args: {
-    labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+    xAxis: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
     series: [{label: 'Registrations', values: [412, 538, 611, 702, 690, 845, 1012, 1284], color: 'line-primary'}]
   }
 };
@@ -100,16 +100,16 @@ export const Legends: Story = {
  */
 export const Interactive: Story = {
   name: 'Line · interactive',
-  args: {labels: WEEKS, showLegend: true, series: [{label: 'Participants', values: PARTICIPANTS}, {label: 'Visitors', values: VISITORS}]}
+  args: {xAxis: WEEKS, showLegend: true, series: [{label: 'Participants', values: PARTICIPANTS}, {label: 'Visitors', values: VISITORS}]}
 };
 
 /**
- * With `labels`, a Sparkline takes the same card and keyboard explorer (the card names the day). Without them, or
+ * With `xAxis`, a Sparkline takes the same card and keyboard explorer (the card names the day). Without it, or
  * with `interactive={false}` inside something pressable, it stays a picture.
  */
 export const SparklineInteractive: Story = {
   name: 'Sparkline · interactive',
-  render: () => <SparklineChart label="Votes cast" labels={DAYS} values={VOTES} />
+  render: () => <SparklineChart label="Votes cast" xAxis={DAYS} values={VOTES} />
 };
 
 /**
@@ -134,7 +134,7 @@ export const WithLegendRows: Story = {
           ))}
         </div>
         <LineChart
-          labels={['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct']}
+          xAxis={['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct']}
           highlightedSeries={picked}
           series={[
             {label: 'Active admins', values: [6, 7, 7, 8, 8, 9, 9, 9]},

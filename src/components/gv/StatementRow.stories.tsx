@@ -110,7 +110,7 @@ export const FourShares: Story = () => (
       disagreePercent={14}
       passPercent={2}
       unseenPercent={81}
-      passLabel="Unsure"
+      labels={{pass: 'Unsure'}}
       counts={{agree: 21, disagree: 88, pass: 12, unseen: 519}}
     />
     <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>

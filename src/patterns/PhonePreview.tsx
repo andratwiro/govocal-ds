@@ -7,7 +7,29 @@ import {Tooltip, TooltipTrigger} from '../components/Tooltip';
 import {IconButton} from '../components/gv/IconButton';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {mergeLabels} from '../components/labels';
 import './PhonePreview.css';
+
+/** The words the phone preview's parts say themselves (docs/API.md rule 11): Phone preview's empty line, Phone
+ * header's logo, Phone image's name and Phone stage's eye. One object, each part reading its own keys. */
+export interface PhonePreviewLabels {
+  /** What an empty screen says, when no `emptyLabel` is given. */
+  empty: string;
+  /** The logo placeholder's name, when no `logo` is given. */
+  logo: string;
+  /** A picture's place, when no `aria-label` is given. */
+  image: string;
+  /** The stage's eye: its name and tooltip. */
+  open: string;
+}
+
+/** The phone preview's English words; a page passes its own over them with `labels`. */
+export const phonePreviewLabels: PhonePreviewLabels = {
+  empty: 'Nothing to preview yet',
+  logo: 'Platform logo',
+  image: 'Header image',
+  open: 'Open in external URL'
+};
 
 export interface PhonePreviewAction {
   /** "Edit project page" on the project; "Preview" on a phase. */
@@ -35,13 +57,15 @@ export interface PhonePreviewProps extends PlacementProps {
   footer?: ReactNode;
   /** Nothing to show yet (a new phase): the screen says so in place of its content. */
   isEmpty?: boolean;
-  /** @default 'Nothing to preview yet' */
+  /** What this empty screen says. @default `labels.empty` ("Nothing to preview yet") */
   emptyLabel?: string;
   /**
    * The phone's own action, shown on hover or keyboard focus as a smoked pill in the middle while the screen dims
    * ("Edit project page", "Preview ↗"). The phone lifts and takes a ring. None while it is empty.
    */
   action?: PhonePreviewAction;
+  /** Its own words (the empty line), over `phonePreviewLabels`. */
+  labels?: Partial<PhonePreviewLabels>;
 }
 
 /**
@@ -54,9 +78,10 @@ export function PhonePreview({
   surface = 'white',
   footer,
   isEmpty = false,
-  emptyLabel = 'Nothing to preview yet',
+  emptyLabel,
   action,
   'aria-label': label,
+  labels,
   className,
   style
 }: PhonePreviewProps) {
@@ -67,7 +92,7 @@ export function PhonePreview({
         {header}
         {isEmpty ? (
           <div className="gv-phone__empty">
-            <p>{emptyLabel}</p>
+            <p>{emptyLabel ?? mergeLabels(phonePreviewLabels, labels).empty}</p>
           </div>
         ) : (
           <div className="gv-phone__content">{children}</div>
@@ -96,23 +121,34 @@ export function PhonePreview({
 }
 
 /** The platform header inside the phone: a logo placeholder and the menu icon (the preview is inert). */
-export interface PhoneHeaderProps extends PlacementProps {logo?: string}
+export interface PhoneHeaderProps extends PlacementProps {
+  /** The logo placeholder's name. @default `labels.logo` ("Platform logo") */
+  logo?: string;
+  /** Its own words, over `phonePreviewLabels`. */
+  labels?: Partial<PhonePreviewLabels>;
+}
 
-export function PhoneHeader({logo = 'Platform logo', className, style}: PhoneHeaderProps) {
+export function PhoneHeader({logo, labels, className, style}: PhoneHeaderProps) {
   return (
     <div className={clsx('gv-phone-header', className)} style={style}>
-      <span className="gv-phone-header__logo" role="img" aria-label={logo} />
+      <span className="gv-phone-header__logo" role="img" aria-label={logo ?? mergeLabels(phonePreviewLabels, labels).logo} />
       <Menu className="gv-phone-header__menu" aria-hidden size={18} />
     </div>
   );
 }
 
 /** A picture's place: grey, with an image icon, until a picture is set. */
-export interface PhoneImageProps extends PlacementProps {'aria-label'?: string}
+export interface PhoneImageProps extends PlacementProps {
+  /** @default `labels.image` ("Header image") */
+  'aria-label'?: string;
+  /** Its own words, over `phonePreviewLabels`. */
+  labels?: Partial<PhonePreviewLabels>;
+}
 
-export function PhoneImage({'aria-label': label = 'Header image', className, style}: PhoneImageProps) {
+export function PhoneImage({'aria-label': label, labels, className, style}: PhoneImageProps) {
   return (
-    <span className={clsx('gv-phone-image', className)} style={style} role="img" aria-label={label}>
+    <span className={clsx('gv-phone-image', className)} style={style} role="img"
+      aria-label={label ?? mergeLabels(phonePreviewLabels, labels).image}>
       <ImageIcon aria-hidden size={24} />
     </span>
   );
@@ -156,21 +192,22 @@ export interface PhoneStageProps extends PlacementProps {
   caption?: ReactNode;
   /** The eye in the stage's top corner: opens the participant's view in another tab. */
   onOpen?: () => void;
-  /** @default 'Open in external URL' */
-  openLabel?: string;
+  /** Its own words (the eye's name and tooltip), over `phonePreviewLabels`. */
+  labels?: Partial<PhonePreviewLabels>;
 }
 
 /** The grey stage the phone stands on (prototype `#view-project` preview pane): the phone centred, the eye, the caption. */
-export function PhoneStage({children, caption, onOpen, openLabel = 'Open in external URL', className, style}: PhoneStageProps) {
+export function PhoneStage({children, caption, onOpen, labels, className, style}: PhoneStageProps) {
+  const {open} = mergeLabels(phonePreviewLabels, labels);
   return (
     <div className={clsx('gv-phone-stage', className)} style={style}>
       {onOpen && (
         <span className="gv-phone-stage__open">
           <TooltipTrigger>
-            <IconButton variant="bordered" aria-label={openLabel} onPress={onOpen}>
+            <IconButton variant="bordered" aria-label={open} onPress={onOpen}>
               <Eye aria-hidden />
             </IconButton>
-            <Tooltip placement="bottom end">{openLabel}</Tooltip>
+            <Tooltip placement="bottom end">{open}</Tooltip>
           </TooltipTrigger>
         </span>
       )}

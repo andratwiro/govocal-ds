@@ -85,7 +85,7 @@ function LiveMonitor({quarter}: {quarter: number}) {
       </div>
       <DashboardCard kind="participation-over-time" title="Health score over time"
         subtitle="Average of every sentiment question · per quarter">
-        <LineChart labels={shown} max={5} series={[{label: 'Health score', values: HEALTH.slice(0, quarter + 1), color: 'line-primary'}]} />
+        <LineChart xAxis={shown} max={5} series={[{label: 'Health score', values: HEALTH.slice(0, quarter + 1), color: 'line-primary'}]} />
       </DashboardCard>
       <h2 className="bo-section-title">Questions by category</h2>
       <div className="bo-community-monitor-stack">
@@ -128,14 +128,14 @@ function Participants({quarter}: {quarter: number}) {
     <div className="bo-community-monitor-body">
       <div className="bo-community-monitor-kpis">
         <StatTile label="Respondents" value={n(RESPONDENTS[quarter])} note={quarter === CURRENT ? 'updating live' : QUARTERS[quarter]}>
-          <Sparkline label="Respondents per quarter" labels={shown} values={RESPONDENTS.slice(0, quarter + 1)} height={34} showGrid={false} />
+          <Sparkline label="Respondents per quarter" xAxis={shown} values={RESPONDENTS.slice(0, quarter + 1)} height={34} showGrid={false} />
         </StatTile>
         <StatTile label="Popup shown" value={n(POPUP_SHOWN[quarter])} note="times this quarter" />
         <StatTile label="Response rate" value={`${rate}%`} note="of residents shown the popup" />
         <StatTile label="Respondents to date" value={n(allTime)} note={`since ${QUARTERS[0]}`} />
       </div>
       <DashboardCard kind="participation-over-time" title="Respondents over time" subtitle="People who answered · per quarter">
-        <LineChart labels={shown} series={[{label: 'Respondents', values: RESPONDENTS.slice(0, quarter + 1), color: 'line-primary'}]} />
+        <LineChart xAxis={shown} series={[{label: 'Respondents', values: RESPONDENTS.slice(0, quarter + 1), color: 'line-primary'}]} />
         <div className="bo-community-monitor-rows">
           <LegendRow color="--gv-chart-line-primary" label="Respondents" value={`${n(RESPONDENTS[quarter])} in ${QUARTERS[quarter]}`} />
         </div>

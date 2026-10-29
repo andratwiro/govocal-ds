@@ -318,10 +318,10 @@ export function Inputs() {
           </div>
           {preview && (
             <div className="bo-inputs-side">
-              <SidePanel isInline label={title(preview.project)} aria-label={`Input: ${preview.title}`} itemName="input"
+              <SidePanel isInline label={title(preview.project)} aria-label={`Input: ${preview.title}`}
                 position={at >= 0 ? {current: at + 1, total: rows.length} : undefined} onPositionChange={walk}
                 onOpenChange={o => !o && setOpen(null)} returnFocus={() => (open ? rowOf(open) : null)}
-                closeLabel="Close the input">
+                labels={{previous: 'Previous input', next: 'Next input', close: 'Close the input'}}>
                 <InputPanel key={preview.id} input={preview} patch={patch} onDelete={() => setToDelete([preview.id])} />
               </SidePanel>
             </div>

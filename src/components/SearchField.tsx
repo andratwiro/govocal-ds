@@ -13,6 +13,17 @@ import {Tooltip, TooltipTrigger} from './Tooltip';
 import {Search, X} from 'lucide-react';
 import './SearchField.css';
 import {keepClass} from './className';
+import {mergeLabels} from './labels';
+
+/** The words Search field says itself (docs/API.md rule 11). React Aria names the × ("Clear search") in the
+ * locale itself. */
+export interface SearchFieldLabels {
+  /** The collapsible field's button and its tooltip, when no `aria-label` or `label` names it. */
+  search: string;
+}
+
+/** Search field's English words; a page passes its own over them with `labels`. */
+export const searchFieldLabels: SearchFieldLabels = {search: 'Search'};
 
 export interface SearchFieldProps extends AriaSearchFieldProps {
   label?: string;
@@ -31,6 +42,8 @@ export interface SearchFieldProps extends AriaSearchFieldProps {
   defaultExpanded?: boolean;
   /** Collapsible only: called when the field opens or folds. */
   onExpandedChange?: (isExpanded: boolean) => void;
+  /** Its own words, over `searchFieldLabels`. */
+  labels?: Partial<SearchFieldLabels>;
 }
 
 /**
@@ -45,8 +58,10 @@ export function SearchField({
   isCollapsible,
   defaultExpanded,
   onExpandedChange,
+  labels,
   ...props
 }: SearchFieldProps) {
+  const l = mergeLabels(searchFieldLabels, labels);
   const filled = !!(props.value ?? props.defaultValue);
   const [expanded, setExpandedState] = useState(!isCollapsible || defaultExpanded || filled);
   // Where focus goes after the next render: into the field once it opens, onto the button once it folds.
@@ -69,7 +84,7 @@ export function SearchField({
   }, [expanded]);
 
   if (isCollapsible && !expanded) {
-    const name = props['aria-label'] ?? label ?? 'Search';
+    const name = props['aria-label'] ?? label ?? l.search;
     return (
       <TooltipTrigger>
         <IconButton id={buttonId} variant="bordered" emphasis="strong" aria-label={name} isDisabled={props.isDisabled}
@@ -77,7 +92,7 @@ export function SearchField({
           onPress={() => { opened.current = true; setExpanded(true, 'field'); }}>
           <Search aria-hidden size={16} />
         </IconButton>
-        <Tooltip>Search</Tooltip>
+        <Tooltip>{l.search}</Tooltip>
       </TooltipTrigger>
     );
   }

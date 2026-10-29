@@ -2,6 +2,7 @@ import type {ReactNode} from 'react';
 import {VisuallyHidden} from 'react-aria-components';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {mergeLabels} from '../labels';
 import './PropertyList.css';
 
 export interface PropertyListProps extends PlacementProps {
@@ -25,19 +26,30 @@ export function PropertyList({children, 'aria-label': ariaLabel, className, styl
   );
 }
 
+/** The words a Property list item says itself (docs/API.md rule 11). */
+export interface PropertyListItemLabels {
+  /** What a screen reader hears for an empty value (the eye sees "–"), when no `emptyLabel` is given. */
+  empty: string;
+}
+
+/** A property's English words; a page passes its own over them with `labels`. */
+export const propertyListItemLabels: PropertyListItemLabels = {empty: 'Not set'};
+
 export interface PropertyListItemProps extends PlacementProps {
   /** The property's name, e.g. "Status". */
   label: string;
   /** Its value. Left out (or empty), the row shows "–", read as `emptyLabel`. */
   children?: ReactNode;
-  /** What a screen reader says for an empty value. @default 'Not set' */
+  /** What a screen reader says for this empty value. @default `labels.empty` */
   emptyLabel?: string;
+  /** Its own words, over `propertyListItemLabels`. */
+  labels?: Partial<PropertyListItemLabels>;
 }
 
 const isEmpty = (v: ReactNode) => v === undefined || v === null || v === false || v === '';
 
 /** One row of a Property list: its label and its value. */
-export function PropertyListItem({label, children, emptyLabel = 'Not set', className, style}: PropertyListItemProps) {
+export function PropertyListItem({label, children, emptyLabel, labels, className, style}: PropertyListItemProps) {
   return (
     <div className={clsx('gv-property-list__item', className)} style={style}>
       <dt className="gv-property-list__label">{label}</dt>
@@ -45,7 +57,7 @@ export function PropertyListItem({label, children, emptyLabel = 'Not set', class
         {isEmpty(children) ? (
           <span className="gv-property-list__empty">
             <span aria-hidden>–</span>
-            <VisuallyHidden>{emptyLabel}</VisuallyHidden>
+            <VisuallyHidden>{emptyLabel ?? mergeLabels(propertyListItemLabels, labels).empty}</VisuallyHidden>
           </span>
         ) : (
           children

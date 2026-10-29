@@ -7,13 +7,24 @@ import {
   type ValidationResult
 } from 'react-aria-components/TextField';
 import {FieldError} from '../Form';
-import {RequiredMarker} from './RequiredMarker';
+import {RequiredMarker, type RequiredMarkerLabels} from './RequiredMarker';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
 import {localeDirection} from './LocaleSwitcher';
+import {mergeLabels} from '../labels';
 import './TitleField.css';
 
+/** The words Title field says itself (docs/API.md rule 11), with the Required marker's, which it hands on. */
+export interface TitleFieldLabels extends RequiredMarkerLabels {
+  /** The placeholder when no `placeholder` is given. */
+  placeholder: string;
+}
+
+/** Title field's English words; a page passes its own over them with `labels`. */
+export const titleFieldLabels: TitleFieldLabels = {placeholder: 'Add a title', required: 'Required'};
+
 export interface TitleFieldProps extends Omit<AriaTextFieldProps, 'className' | 'style'>, PlacementProps {
+  /** This field's hint. @default `labels.placeholder` ("Add a title") */
   placeholder?: string;
   /** Shows the Required dot + label inside the field, on its right (Figma: Title field always carries one). */
   isRequired?: boolean;
@@ -26,6 +37,8 @@ export interface TitleFieldProps extends Omit<AriaTextFieldProps, 'className' | 
   localeSwitcher?: ReactNode;
   /** The text's language (a locale code): the input reads in that language and runs its way (right to left for Arabic). */
   lang?: string;
+  /** Its own words (the default placeholder, Required), over `titleFieldLabels`. */
+  labels?: Partial<TitleFieldLabels>;
 }
 
 /**
@@ -35,16 +48,17 @@ export interface TitleFieldProps extends Omit<AriaTextFieldProps, 'className' | 
  * hidden from screen readers, which hear the input's own aria-required. With `localeSwitcher`, the
  * content-language button follows the marker in that end.
  */
-export function TitleField({placeholder = 'Add a title', isRequired, errorMessage, localeSwitcher, lang, className, style, ...props}: TitleFieldProps) {
+export function TitleField({placeholder, isRequired, errorMessage, localeSwitcher, lang, labels, className, style, ...props}: TitleFieldProps) {
+  const l = mergeLabels(titleFieldLabels, labels);
   const required = isRequired && (
     <span className="gv-title-field-required" aria-hidden="true">
-      <RequiredMarker placement="field" />
+      <RequiredMarker placement="field" labels={l} />
     </span>
   );
   return (
     <div className={clsx('gv-title-field-wrap', className)} style={style} data-required={isRequired || undefined} data-locale-switcher={localeSwitcher ? true : undefined}>
       <AriaTextField {...props} isRequired={isRequired} className="gv-title-field">
-        <Input className="react-aria-Input gv-base-input" placeholder={placeholder} lang={lang} dir={lang ? localeDirection(lang) : undefined} />
+        <Input className="react-aria-Input gv-base-input" placeholder={placeholder ?? l.placeholder} lang={lang} dir={lang ? localeDirection(lang) : undefined} />
         <FieldError>{errorMessage}</FieldError>
       </AriaTextField>
       {localeSwitcher ? (

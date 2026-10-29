@@ -150,7 +150,7 @@ function Manage({start = 3, footer, width}: {start?: number | null; footer?: boo
       </section>
       <SidePanel
         label="Collect ideas"
-        itemName="idea"
+        labels={{previous: 'Previous idea', next: 'Next idea'}}
         width={width}
         isOpen={idea !== null}
         onOpenChange={o => !o && setOpen(null)}
@@ -226,7 +226,7 @@ function Inline({n}: {n: number}) {
   const idea = ideas[at - 1];
   return (
     <div style={{height: 640}}>
-      <SidePanel isInline label="Collect ideas" itemName="idea" position={{current: at, total: ideas.length}}
+      <SidePanel isInline label="Collect ideas" labels={{previous: 'Previous idea', next: 'Next idea'}} position={{current: at, total: ideas.length}}
         onPositionChange={setAt}>
         <IdeaBody idea={idea} patch={patch} />
       </SidePanel>
@@ -298,7 +298,7 @@ export const RecordHead: Story = {
   render: () => (
     <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 16, minWidth: 900}}>
       <div style={{height: 300}}>
-        <SidePanel isInline label="Collect ideas" itemName="idea">
+        <SidePanel isInline label="Collect ideas" labels={{previous: 'Previous idea', next: 'Next idea'}}>
           <SidePanelSection>
             <SidePanelRecordHead author={IDEAS[2].author} date={IDEAS[2].date} actions={(
               <SidePanelActions items={QUICK}><ReactionCounts likes={IDEAS[2].likes} dislikes={IDEAS[2].dislikes} /></SidePanelActions>
@@ -309,7 +309,7 @@ export const RecordHead: Story = {
         </SidePanel>
       </div>
       <div style={{height: 300}}>
-        <SidePanel isInline label="Riverside park" itemName="input">
+        <SidePanel isInline label="Riverside park" labels={{previous: 'Previous input', next: 'Next input'}}>
           <SidePanelSection>
             <SidePanelRecordHead title="Shade over the playground" author="Resident F" authorRole="Registered user"
               date="24 October 2026"

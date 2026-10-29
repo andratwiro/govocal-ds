@@ -15,6 +15,7 @@ import {clsx} from 'clsx';
 import './Toast.css';
 import {flushSync} from 'react-dom';
 import {createContext, useContext, type CSSProperties, type ReactNode} from 'react';
+import {mergeLabels} from './labels';
 
 /**
  * What a toast shows. The prototype's `pjShowToast({title, body, action: 'Undo', onAction})` maps to
@@ -74,18 +75,30 @@ export function toast(title: string, description?: string, {timeout = 5000, ...o
  * nothing, so a page's own region and the app's never show a toast twice. */
 export const ToastRegionContext = createContext(false);
 
+/** The words the toasts say themselves (docs/API.md rule 11). */
+export interface ToastRegionLabels {
+  /** Each toast's × button. */
+  close: string;
+}
+
+/** The toasts' English words; `AppProvider labels` (or a `ToastRegion`'s own) puts the page's over them. */
+export const toastRegionLabels: ToastRegionLabels = {close: 'Close'};
+
 export interface ToastRegionProps {
   /** Places the region (it sits fixed at the window's bottom end); never paints it. */
   className?: string;
   style?: CSSProperties;
+  /** The toasts' own words, over `toastRegionLabels`. */
+  labels?: Partial<ToastRegionLabels>;
 }
 
 /**
  * Where toasts appear: fixed at the window's bottom end, newest on top. Render it once, at the app's root:
  * `AppProvider` does. A `ToastRegion` inside `AppProvider` draws nothing (see `ToastRegionContext`).
  */
-export function ToastRegion({className, style}: ToastRegionProps = {}) {
+export function ToastRegion({className, style, labels}: ToastRegionProps = {}) {
   if (useContext(ToastRegionContext)) return null;
+  const l = mergeLabels(toastRegionLabels, labels);
   return (
     <RACToastRegion queue={queue} className={clsx('react-aria-ToastRegion gv-base-toast-region', className)} style={style}>
       {({toast}) => {
@@ -111,7 +124,7 @@ export function ToastRegion({className, style}: ToastRegionProps = {}) {
                 </RACButton>
               )}
             </RACToastContent>
-            <Button slot="close" aria-label="Close" variant="quiet">
+            <Button slot="close" aria-label={l.close} variant="quiet">
               <X size={16} />
             </Button>
           </Toast>

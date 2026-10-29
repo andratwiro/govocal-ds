@@ -76,7 +76,7 @@ function ImpactListDialog() {
     <AlertDialog
       title="Edit form"
       confirmLabel="Yes, continue"
-      cancelLabel="No, cancel"
+      labels={{cancel: 'No, cancel'}}
       onCancel={() => {}}
       onConfirm={() => {}}
       impact={[

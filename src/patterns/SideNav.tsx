@@ -6,6 +6,8 @@ import {Link} from 'react-aria-components/Link';
 import {Tooltip, TooltipTrigger} from '../components/Tooltip';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {useNumberFormatter} from '../components/format';
+import {mergeLabels} from '../components/labels';
 import './SideNav.css';
 
 /**
@@ -43,11 +45,27 @@ export function SideNavGroup({isAtBottom, children, className, style}: SideNavGr
   );
 }
 
-/** The band at the top that leaves the back office for the resident site. */
-export interface SideNavHomeProps extends PlacementProps {href: string; children?: string}
+/** The words Side nav home says itself (docs/API.md rule 11). */
+export interface SideNavHomeLabels {
+  /** The band's words, when no `children` give them. */
+  home: string;
+}
 
-export function SideNavHome({href, children = 'To platform', className, style}: SideNavHomeProps) {
+/** Side nav home's English words; a page passes its own over them with `labels`. */
+export const sideNavHomeLabels: SideNavHomeLabels = {home: 'To platform'};
+
+/** The band at the top that leaves the back office for the resident site. */
+export interface SideNavHomeProps extends PlacementProps {
+  href: string;
+  /** @default `labels.home` ("To platform") */
+  children?: string;
+  /** Its own words, over `sideNavHomeLabels`. */
+  labels?: Partial<SideNavHomeLabels>;
+}
+
+export function SideNavHome({href, children: words, labels, className, style}: SideNavHomeProps) {
   const folded = useContext(Folded);
+  const children = words ?? mergeLabels(sideNavHomeLabels, labels).home;
   return (
     <WithTooltip label={children} on={folded}>
       <Link className={clsx('gv-side-nav__home', className)} style={style} href={href}>
@@ -76,11 +94,13 @@ interface RowContent {
 }
 
 function Content({icon, label, sub, count, countLabel, hasMenu, hasAccentIcon}: RowContent) {
+  const number = useNumberFormatter();
+  const shown = count ? number.format(count) : '';
   return (
     <>
       <span className="gv-side-nav__icon" data-accent={hasAccentIcon || undefined} aria-hidden>
         {icon}
-        {!!count && <span className="gv-side-nav__count" data-on-icon>{count}</span>}
+        {!!count && <span className="gv-side-nav__count" data-on-icon>{shown}</span>}
       </span>
       <span className="gv-side-nav__text">
         <span className="gv-side-nav__label">{label}</span>
@@ -88,8 +108,8 @@ function Content({icon, label, sub, count, countLabel, hasMenu, hasAccentIcon}: 
       </span>
       {!!count && (
         <span className="gv-side-nav__count">
-          <span aria-hidden>{count}</span>
-          <span className="gv-side-nav__hidden">{countLabel ?? String(count)}</span>
+          <span aria-hidden>{shown}</span>
+          <span className="gv-side-nav__hidden">{countLabel ?? shown}</span>
         </span>
       )}
       {hasMenu && <ChevronRight aria-hidden size={16} className="gv-side-nav__chevron" />}

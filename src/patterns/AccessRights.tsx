@@ -10,35 +10,81 @@ import {Link} from '../components/Link';
 import {RadioGroup} from '../components/RadioGroup';
 import {Select, SelectItem} from '../components/Select';
 import {Switch} from '../components/Switch';
-import {AlertDialog} from '../components/gv/AlertDialog';
+import {AlertDialog, type AlertDialogLabels} from '../components/gv/AlertDialog';
 import {ChoiceCard} from '../components/gv/ChoiceCard';
-import {Modal} from '../components/gv/Modal';
+import {Modal, type ModalLabels} from '../components/gv/Modal';
 import {SectionLabel} from '../components/gv/SectionLabel';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {mergeLabels} from '../components/labels';
 import './AccessRights.css';
 
 export type AccessWho = 'anyone' | 'signin' | 'admins';
 
-const WHO: Record<AccessWho, {icon: ReactNode; label: string; description: string}> = {
-  anyone: {
-    icon: <Users aria-hidden />,
-    label: 'Anyone',
-    description: 'No account needed'
-  },
-  signin: {
-    icon: <Shield aria-hidden />,
-    label: 'Require sign-in',
-    description: 'Participants sign in with email.'
-  },
-  admins: {
-    icon: <Lock aria-hidden />,
-    label: 'Administrators and managers',
-    description: 'Not open to participants'
-  }
+/** The words Access rights says itself (docs/API.md rule 11). */
+export interface AccessRightsLabels {
+  /** The three choices, each with its line. */
+  anyone: string;
+  anyoneDescription: string;
+  signin: string;
+  signinDescription: string;
+  admins: string;
+  adminsDescription: string;
+  /** The head: set for this phase, or following the defaults (given the link to them). */
+  overriding: string;
+  using: (link: ReactNode) => ReactNode;
+  platformDefaults: string;
+  override: string;
+  whoCanParticipate: string;
+  /** The line under Administrators and managers. */
+  adminsOnly: string;
+  /** Sign-in's settings. */
+  security: string;
+  requirePassword: string;
+  requirePasswordDescription: string;
+  limitToGroups: string;
+  groupsLead: string;
+  /** The groups list's name, and its first group when no `groups` are given. */
+  groupPicker: string;
+  allParticipants: string;
+  customizeError: string;
+}
+
+/** Access rights' English words; a page passes its own over them with `labels`. */
+export const accessRightsLabels: AccessRightsLabels = {
+  anyone: 'Anyone',
+  anyoneDescription: 'No account needed',
+  signin: 'Require sign-in',
+  signinDescription: 'Participants sign in with email.',
+  admins: 'Administrators and managers',
+  adminsDescription: 'Not open to participants',
+  overriding: 'Overriding platform defaults',
+  using: link => <>Using {link}</>,
+  platformDefaults: 'platform defaults',
+  override: 'Override',
+  whoCanParticipate: 'Who can participate',
+  adminsOnly: 'Only administrators and managers can take this action. No other requirements apply.',
+  security: 'Security requirements',
+  requirePassword: 'Require user to set a password',
+  requirePasswordDescription:
+    "If enabled, users must set a password before participating. If disabled, users won't be asked to set a password.",
+  limitToGroups: 'Limit to groups',
+  groupsLead: 'Participant must be in any one of the selected groups.',
+  groupPicker: 'Groups',
+  allParticipants: 'All participants (no group restriction)',
+  customizeError: 'Customize error message'
 };
 
-/** What an action's row says about who can take it (Participant action row's value). */
+const WHO_ICON: Record<AccessWho, ReactNode> = {
+  anyone: <Users aria-hidden />,
+  signin: <Shield aria-hidden />,
+  admins: <Lock aria-hidden />
+};
+
+/**
+ * What an action's row says about who can take it (Participant action row's value), in English: a page that speaks
+ * another language passes its own words as the row's `value`.
+ */
 export const ACCESS_WHO_VALUE: Record<AccessWho, string> = {
   anyone: 'Anyone can participate',
   signin: 'Sign-in required',
@@ -70,7 +116,7 @@ export interface AccessRightsProps extends PlacementProps {
   whoItems?: AccessWho[];
   /** Sign-in's security requirement: participants set a password. @default true */
   defaultRequirePassword?: boolean;
-  /** The groups an action can be limited to; the first is "no restriction". */
+  /** The groups an action can be limited to; the first is "no restriction". @default [`labels.allParticipants`] */
   groups?: string[];
   /** The "platform defaults" link: where the defaults are set. */
   onPlatformDefaults?: () => void;
@@ -78,6 +124,8 @@ export interface AccessRightsProps extends PlacementProps {
   onCustomizeError?: () => void;
   /** Which of Sign-in's settings start open. @default ['security', 'groups'] */
   defaultExpandedKeys?: Array<'security' | 'groups'>;
+  /** Its own words (the choices, the head, Sign-in's settings), over `accessRightsLabels`. */
+  labels?: Partial<AccessRightsLabels>;
 }
 
 /**
@@ -95,13 +143,21 @@ export function AccessRights({
   onWhoChange,
   whoItems = ['anyone', 'signin', 'admins'],
   defaultRequirePassword = true,
-  groups = ['All participants (no group restriction)'],
+  groups: groupsProp,
   onPlatformDefaults,
   onCustomizeError,
   defaultExpandedKeys = ['security', 'groups'],
+  labels,
   className,
   style
 }: AccessRightsProps) {
+  const l = mergeLabels(accessRightsLabels, labels);
+  const groups = groupsProp ?? [l.allParticipants];
+  const whoWords: Record<AccessWho, [string, string]> = {
+    anyone: [l.anyone, l.anyoneDescription],
+    signin: [l.signin, l.signinDescription],
+    admins: [l.admins, l.adminsDescription]
+  };
   const [overriding, setOverriding] = useValue(isOverriding, defaultOverriding, onOverridingChange);
   const [who, setWho] = useValue(whoProp, defaultWho, onWhoChange);
   const readOnly = !overriding;
@@ -127,41 +183,42 @@ export function AccessRights({
     <div ref={root} className={clsx('gv-access-rights', className)} style={style} data-overriding={overriding || undefined}>
       <div className="gv-access-rights__head">
         {overriding ? (
-          <span className="gv-access-rights__status">Overriding platform defaults</span>
+          <span className="gv-access-rights__status">{l.overriding}</span>
         ) : (
           <>
             <span className="gv-access-rights__status">
-              Using{' '}
-              <Link size="small" onPress={onPlatformDefaults}>
-                platform defaults
-              </Link>
+              {l.using(
+                <Link size="small" onPress={onPlatformDefaults}>
+                  {l.platformDefaults}
+                </Link>
+              )}
             </span>
             <Button variant="secondary" size={32} onPress={() => setOverriding(true)}>
               <Pencil aria-hidden size={16} />
-              Override
+              {l.override}
             </Button>
           </>
         )}
       </div>
       <div className="gv-access-rights__body" data-read-only={readOnly || undefined}>
-        <SectionLabel icon={<User />}>Who can participate</SectionLabel>
+        <SectionLabel icon={<User />}>{l.whoCanParticipate}</SectionLabel>
         <RadioGroup
-          aria-label="Who can participate"
+          aria-label={l.whoCanParticipate}
           orientation="horizontal"
           value={who}
           onChange={v => setWho(v as AccessWho)}
           isReadOnly={readOnly}
           className="gv-access-rights__who">
           {whoItems.map(key => (
-            <ChoiceCard key={key} value={key} media={WHO[key].icon} description={WHO[key].description}>
-              {WHO[key].label}
+            <ChoiceCard key={key} value={key} media={WHO_ICON[key]} description={whoWords[key][1]}>
+              {whoWords[key][0]}
             </ChoiceCard>
           ))}
         </RadioGroup>
         {who === 'admins' && (
           <p className="gv-access-rights__strip">
             <Info aria-hidden size={16} />
-            Only administrators and managers can take this action. No other requirements apply.
+            {l.adminsOnly}
           </p>
         )}
         {who === 'signin' && (
@@ -174,7 +231,7 @@ export function AccessRights({
                 <RACButton slot="trigger" className="gv-access-rights__section-trigger">
                   <ChevronRight aria-hidden size={16} className="gv-access-rights__chevron" />
                   <Shield aria-hidden size={16} />
-                  Security requirements
+                  {l.security}
                 </RACButton>
               </Heading>
               <DisclosurePanel className="gv-access-rights__section-panel">
@@ -182,9 +239,9 @@ export function AccessRights({
                   <Switch
                     defaultSelected={defaultRequirePassword}
                     isReadOnly={readOnly}
-                    description="If enabled, users must set a password before participating. If disabled, users won't be asked to set a password.">
+                    description={l.requirePasswordDescription}>
                     <Lock aria-hidden size={16} className="gv-access-rights__toggle-icon" />
-                    Require user to set a password
+                    {l.requirePassword}
                   </Switch>
                 </div>
               </DisclosurePanel>
@@ -194,13 +251,13 @@ export function AccessRights({
                 <RACButton slot="trigger" className="gv-access-rights__section-trigger">
                   <ChevronRight aria-hidden size={16} className="gv-access-rights__chevron" />
                   <Users aria-hidden size={16} />
-                  Limit to groups
+                  {l.limitToGroups}
                 </RACButton>
               </Heading>
               <DisclosurePanel className="gv-access-rights__section-panel">
 <div className="gv-access-rights__panel-body">
-                <p className="gv-access-rights__lead">Participant must be in any one of the selected groups.</p>
-                <Select aria-label="Groups" defaultValue="0" isDisabled={readOnly}>
+                <p className="gv-access-rights__lead">{l.groupsLead}</p>
+                <Select aria-label={l.groupPicker} defaultValue="0" isDisabled={readOnly}>
                   {groups.map((g, i) => (
                     <SelectItem key={g} id={String(i)}>
                       {g}
@@ -209,7 +266,7 @@ export function AccessRights({
                 </Select>
                 <Button variant="secondary" size={32} isDisabled={readOnly} onPress={onCustomizeError}>
                   <Pencil aria-hidden size={16} />
-                  Customize error message
+                  {l.customizeError}
                 </Button>
               </div>
 </DisclosurePanel>
@@ -221,13 +278,38 @@ export function AccessRights({
   );
 }
 
-export interface AccessRightsModalProps extends AccessRightsProps {
+/** The words Access rights modal says itself (docs/API.md rule 11), with Access rights', the Modal's × and the
+ * revert confirm's Cancel, which it hands on. */
+export interface AccessRightsModalLabels extends AccessRightsLabels, ModalLabels, Pick<AlertDialogLabels, 'cancel'> {
+  /** The footer's buttons; `revert` also titles the confirm. */
+  revert: string;
+  save: string;
+  /** The revert confirm's button and its words. */
+  confirmRevert: string;
+  revertBody: string;
+}
+
+/** Access rights modal's English words; a page passes its own over them with `labels`. */
+export const accessRightsModalLabels: AccessRightsModalLabels = {
+  ...accessRightsLabels,
+  close: 'Close',
+  cancel: 'Cancel',
+  revert: 'Revert to platform defaults',
+  save: 'Save changes',
+  confirmRevert: 'Revert to defaults',
+  revertBody:
+    'This action will follow the platform defaults again. The groups you set for it will be discarded and cannot be restored.'
+};
+
+export interface AccessRightsModalProps extends Omit<AccessRightsProps, 'labels'> {
   /** The question for this action ("Who can submit inputs?"). */
   title: string;
   isOpen?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (isOpen: boolean) => void;
   onSave?: () => void;
+  /** Its own words (Save changes, the revert and its confirm, ×, and Access rights'), over `accessRightsModalLabels`. */
+  labels?: Partial<AccessRightsModalLabels>;
 }
 
 /**
@@ -243,8 +325,10 @@ export function AccessRightsModal({
   isOverriding,
   defaultOverriding = false,
   onOverridingChange,
+  labels,
   ...rest
 }: AccessRightsModalProps) {
+  const l = mergeLabels(accessRightsModalLabels, labels);
   const [overriding, setOverriding] = useValue(isOverriding, defaultOverriding, onOverridingChange);
   const [reverting, setReverting] = useState(false);
   return (
@@ -255,31 +339,32 @@ export function AccessRightsModal({
         isOpen={isOpen}
         defaultOpen={defaultOpen}
         onOpenChange={onOpenChange}
+        labels={l}
         footer={
           <div className="gv-access-rights__footer">
             {overriding && (
               <Button variant="quiet" size={36} onPress={() => setReverting(true)}>
-                Revert to platform defaults
+                {l.revert}
               </Button>
             )}
             <Button size={36} onPress={onSave}>
-              Save changes
+              {l.save}
             </Button>
           </div>
         }>
-        <AccessRights {...rest} isOverriding={overriding} onOverridingChange={setOverriding} />
+        <AccessRights {...rest} isOverriding={overriding} onOverridingChange={setOverriding} labels={l} />
       </Modal>
       <AlertDialog
         isOpen={reverting}
         onOpenChange={setReverting}
-        title="Revert to platform defaults"
-        confirmLabel="Revert to defaults"
+        title={l.revert}
+        confirmLabel={l.confirmRevert}
+        labels={l}
         onConfirm={() => {
           setOverriding(false);
           setReverting(false);
         }}>
-        This action will follow the platform defaults again. The groups you set for it will be discarded and cannot be
-        restored.
+        {l.revertBody}
       </AlertDialog>
     </>
   );

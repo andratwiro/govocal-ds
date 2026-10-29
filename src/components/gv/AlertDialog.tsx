@@ -1,12 +1,26 @@
 'use client';
-import {type ReactNode, useContext, useRef, useState} from 'react';
+import {type ReactNode, useContext, useId, useRef, useState} from 'react';
 import {Heading, OverlayTriggerStateContext} from 'react-aria-components';
 import {TriangleAlert, CircleMinus, CircleAlert, CircleCheck, type LucideIcon} from 'lucide-react';
 import {Dialog} from 'react-aria-components/Dialog';
 import {Modal as StarterModal} from '../Modal';
 import {Button} from '../Button';
 import {TextField} from '../TextField';
+import {mergeLabels} from '../labels';
 import './AlertDialog.css';
+
+/** The words Alert dialog says itself (docs/API.md rule 11). */
+export interface AlertDialogLabels {
+  cancel: string;
+  /** Type-to-confirm's line, given the word to type (already bold). It also names the text field. */
+  typeToConfirm: (word: ReactNode) => ReactNode;
+}
+
+/** Alert dialog's English words; a page passes its own over them with `labels`. */
+export const alertDialogLabels: AlertDialogLabels = {
+  cancel: 'Cancel',
+  typeToConfirm: word => <>Type {word} to confirm</>
+};
 
 const IMPACT_ICON: Record<AlertDialogImpactRow['tone'], LucideIcon> = {
   danger: CircleMinus,
@@ -42,12 +56,10 @@ export interface AlertDialogProps {
    * confirms that lose data for good (§C).
    */
   confirmText?: {
-    /** "Type **Reset** to confirm" — the word to type, read out after "Type " and before " to confirm". */
+    /** The word to type, shown bold in `labels.typeToConfirm` ("Type **Reset** to confirm"). */
     match: string;
     placeholder?: string;
   };
-  /** @default 'Cancel' */
-  cancelLabel?: string;
   /** The confirm button's words: the action, e.g. "Delete input" (never "OK" or "Yes"). */
   confirmLabel: string;
   /** Called when it closes without a confirm: Cancel, Esc, or a click outside. Then it closes. */
@@ -62,6 +74,8 @@ export interface AlertDialogProps {
   onOpenChange?: (isOpen: boolean) => void;
   /** Close on a click outside, same as Esc (both act as Cancel). @default true */
   isDismissable?: boolean;
+  /** Its own words (Cancel, "Type … to confirm"), over `alertDialogLabels`. */
+  labels?: Partial<AlertDialogLabels>;
 }
 
 /**
@@ -91,15 +105,17 @@ export function AlertDialog({
   children,
   impact,
   confirmText,
-  cancelLabel = 'Cancel',
   confirmLabel,
   onCancel,
   onConfirm,
   isOpen,
   defaultOpen,
   onOpenChange,
-  isDismissable = true
+  isDismissable = true,
+  labels
 }: AlertDialogProps) {
+  const l = mergeLabels(alertDialogLabels, labels);
+  const confirmTextId = useId();
   const [typed, setTyped] = useState('');
   // Set by Confirm while it closes the dialog: every other close is a Cancel.
   const confirming = useRef(false);
@@ -150,11 +166,11 @@ export function AlertDialog({
             )}
             {confirmText && (
               <div className="gv-alert-dialog__confirm-text">
-                <p className="gv-alert-dialog__confirm-label">
-                  Type <strong>{confirmText.match}</strong> to confirm
+                <p id={confirmTextId} className="gv-alert-dialog__confirm-label">
+                  {l.typeToConfirm(<strong>{confirmText.match}</strong>)}
                 </p>
                 <TextField
-                  aria-label={`Type ${confirmText.match} to confirm`}
+                  aria-labelledby={confirmTextId}
                   value={typed}
                   onChange={setTyped}
                   placeholder={confirmText.placeholder}
@@ -164,7 +180,7 @@ export function AlertDialog({
             )}
             <div className="gv-alert-dialog__footer">
               <Button variant="quiet" autoFocus={tone === 'danger' && !confirmText} onPress={close}>
-                {cancelLabel}
+                {l.cancel}
               </Button>
               <Button
                 variant="primary"

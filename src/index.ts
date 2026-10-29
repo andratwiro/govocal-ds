@@ -236,6 +236,94 @@ export {PhaseTimeline, type TimelineStatus, type TimelinePhase, type PhaseTimeli
 export {RailHeader, type RailHeaderProps} from './patterns/RailHeader';
 export {RailPhase, type RailPhaseStatus, type RailPhaseProps} from './patterns/RailPhase';
 
+// Words (docs/API.md rule 11): each part's `labels` type and its English defaults, which a page's own words go over.
+export {loadMoreLabels, type LoadMoreLabels, type CountLabel} from './components/labels';
+export {buttonLabels, type ButtonLabels} from './components/Button';
+export {searchFieldLabels, type SearchFieldLabels} from './components/SearchField';
+export {selectLabels, type SelectLabels} from './components/Select';
+export {tabLabels, type TabLabels} from './components/Tabs';
+export {toastRegionLabels, type ToastRegionLabels} from './components/Toast';
+export {alertDialogLabels, type AlertDialogLabels} from './components/gv/AlertDialog';
+export {badgeLabels, type BadgeLabels} from './components/gv/Badge';
+export {bannerLabels, type BannerLabels} from './components/gv/Banner';
+export {breadcrumbsLabels, type BreadcrumbsLabels} from './components/gv/Breadcrumbs';
+export {cardLabels, type CardLabels} from './components/gv/Card';
+export {chartLabels, type ChartLabels} from './components/gv/Chart';
+export {coachmarkLabels, type CoachmarkLabels} from './components/gv/Coachmark';
+export {
+  dashboardStatementsLabels, type DashboardStatementsLabels, dashboardRankingLabels, type DashboardRankingLabels
+} from './components/gv/DashboardCard';
+export {
+  dataTableHeaderLabels, type DataTableHeaderLabels, dataTableAssigneeLabels, type DataTableAssigneeLabels,
+  dataTableTagsLabels, type DataTableTagsLabels, dataTableAddColumnLabels, type DataTableAddColumnLabels
+} from './components/gv/DataTable';
+export {dateRangeFieldLabels, type DateRangeFieldLabels} from './components/gv/DateRangeField';
+export {dropZoneLabels, type DropZoneLabels} from './components/gv/DropZone';
+export {fileListLabels, type FileListLabels} from './components/gv/FileList';
+export {helpPopoverLabels, type HelpPopoverLabels} from './components/gv/HelpPopover';
+export {listHeaderLabels, type ListHeaderLabels} from './components/gv/ListHeader';
+export {listHeaderCellLabels, type ListHeaderCellLabels} from './components/gv/ListHeaderCell';
+export {listRowLabels, type ListRowLabels} from './components/gv/ListRow';
+export {modalLabels, type ModalLabels} from './components/gv/Modal';
+export {newDotLabels, type NewDotLabels} from './components/gv/NewDot';
+export {optionListLabels, type OptionListLabels} from './components/gv/OptionList';
+export {pageHeaderLabels, type PageHeaderLabels} from './components/gv/PageHeader';
+export {paginationLabels, type PaginationLabels} from './components/gv/Pagination';
+export {propertyListItemLabels, type PropertyListItemLabels} from './components/gv/PropertyList';
+export {reactionCountsLabels, type ReactionCountsLabels} from './components/gv/ReactionCounts';
+export {requiredMarkerLabels, type RequiredMarkerLabels} from './components/gv/RequiredMarker';
+export {reviewStatusLabels, type ReviewStatusLabels} from './components/gv/ReviewStatus';
+export {richTextEditorLabels, type RichTextEditorLabels} from './components/gv/RichTextEditor';
+export {richTextToolbarLabels, type RichTextToolbarLabels} from './components/gv/RichTextToolbar';
+export {segmentedControlItemLabels, type SegmentedControlItemLabels} from './components/gv/SegmentedControl';
+export {
+  sidePanelLabels, type SidePanelLabels, sidePanelRecordHeadLabels, type SidePanelRecordHeadLabels,
+  sidePanelActionsLabels, type SidePanelActionsLabels
+} from './components/gv/SidePanel';
+export {statTileLabels, type StatTileLabels} from './components/gv/StatTile';
+export {statementRowLabels, type StatementRowLabels} from './components/gv/StatementRow';
+export {tableToolbarLabels, type TableToolbarLabels} from './components/gv/TableToolbar';
+export {tagPickerLabels, type TagPickerLabels} from './components/gv/TagPicker';
+export {titleFieldLabels, type TitleFieldLabels} from './components/gv/TitleField';
+export {
+  accessRightsLabels, type AccessRightsLabels, accessRightsModalLabels, type AccessRightsModalLabels
+} from './patterns/AccessRights';
+export {
+  actionRowLabels, type ActionRowLabels, actionRowListLabels, type ActionRowListLabels
+} from './patterns/ActionRow';
+export {
+  commentComposerLabels, type CommentComposerLabels, commentThreadLabels, type CommentThreadLabels
+} from './patterns/CommentThread';
+export {commonGroundRowLabels, type CommonGroundRowLabels} from './patterns/CommonGroundRow';
+export {filterChipsLabels, type FilterChipsLabels} from './patterns/FilterChips';
+export {filterMenuLabels, type FilterMenuLabels} from './patterns/FilterMenu';
+export {notificationListLabels, type NotificationListLabels} from './patterns/NotificationList';
+export {
+  notificationRowLabels, type NotificationRowLabels, notificationRowListLabels, type NotificationRowListLabels,
+  notificationEmailLabels, type NotificationEmailLabels
+} from './patterns/NotificationRow';
+export {officialUpdateLabels, type OfficialUpdateLabels} from './patterns/OfficialUpdate';
+export {
+  participantActionRowLabels, type ParticipantActionRowLabels, participantLimitLabels, type ParticipantLimitLabels,
+  participantActionListLabels, type ParticipantActionListLabels
+} from './patterns/ParticipantActionRow';
+export {phaseTimelineLabels, type PhaseTimelineLabels} from './patterns/PhaseTimeline';
+export {phonePreviewLabels, type PhonePreviewLabels} from './patterns/PhonePreview';
+export {projectHeaderLabels, type ProjectHeaderLabels} from './patterns/ProjectHeader';
+export {proposalsRowLabels, type ProposalsRowLabels} from './patterns/ProposalsRow';
+export {railHeaderLabels, type RailHeaderLabels} from './patterns/RailHeader';
+export {railPhaseLabels, type RailPhaseLabels} from './patterns/RailPhase';
+export {sectionToggleLabels, type SectionToggleLabels} from './patterns/SectionToggle';
+export {selectionBarLabels, type SelectionBarLabels} from './patterns/SelectionBar';
+export {setupStepLabels, type SetupStepLabels} from './patterns/SetupStep';
+export {sideNavHomeLabels, type SideNavHomeLabels} from './patterns/SideNav';
+export {
+  viewOptionRowLabels, type ViewOptionRowLabels, viewOptionListLabels, type ViewOptionListLabels
+} from './patterns/ViewOptionRow';
+export {volunteeringRowLabels, type VolunteeringRowLabels} from './patterns/VolunteeringRow';
+export {voteProgressLabels, type VoteProgressLabels} from './patterns/VoteProgress';
+export {votingRowLabels, type VotingRowLabels} from './patterns/VotingRow';
+
 // Placement: every part with a DOM root takes className and style; they place it (grid area, width, margin,
 // alignment) and never paint it.
 export type {PlacementProps} from './components/className';

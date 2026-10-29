@@ -5,12 +5,47 @@ import {PanelLeft} from 'lucide-react';
 import {Button} from '../components/Button';
 import {Menu} from '../components/Menu';
 import {Popover} from '../components/Popover';
-import {Breadcrumbs} from '../components/gv/Breadcrumbs';
+import {Breadcrumbs, type BreadcrumbsLabels} from '../components/gv/Breadcrumbs';
 import {IconButton} from '../components/gv/IconButton';
 import {SegmentedControl, SegmentedControlItem} from '../components/gv/SegmentedControl';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {mergeLabels} from '../components/labels';
 import './ProjectHeader.css';
+
+/** The words Project header says itself (docs/API.md rule 11), with the Breadcrumbs' Live and Draft, which it hands
+ * on (Live also names the bar's Live menu). */
+export interface ProjectHeaderLabels extends Pick<BreadcrumbsLabels, 'live' | 'draft'> {
+  /** The crumbs' navigation name. */
+  breadcrumb: string;
+  /** The panel toggle's name: project setup on the project, the timeline on a phase. */
+  toggleSetup: string;
+  toggleTimeline: string;
+  /** A phase's ← name, given the project's name. */
+  backToProject: (project: string) => string;
+  /** The project level's parent crumb, when no `parentLabel` is given. */
+  projects: string;
+  /** The bar's buttons and the mode switch's name. */
+  save: string;
+  share: string;
+  publish: string;
+  phaseView: string;
+}
+
+/** Project header's English words; a page passes its own over them with `labels`. */
+export const projectHeaderLabels: ProjectHeaderLabels = {
+  breadcrumb: 'Breadcrumb',
+  toggleSetup: 'Show or hide project setup',
+  toggleTimeline: 'Show or hide the timeline',
+  backToProject: project => `Back to ${project}`,
+  projects: 'Projects',
+  save: 'Save',
+  share: 'Share',
+  publish: 'Publish',
+  live: 'Live',
+  draft: 'Draft',
+  phaseView: 'Phase view'
+};
 
 export interface ProjectHeaderMode {
   id: string;
@@ -36,7 +71,7 @@ export interface ProjectHeaderProps extends PlacementProps {
   projectName: string;
   /** The phase's name (phase levels only). */
   phaseName?: string;
-  /** The project level's parent crumb. @default 'Projects' */
+  /** The project level's parent crumb. @default `labels.projects` ("Projects") */
   parentLabel?: string;
   /** Where the parent crumb leads (a link), or what it does (a press). */
   parentHref?: string;
@@ -71,6 +106,8 @@ export interface ProjectHeaderProps extends PlacementProps {
   publishMenu?: ReactNode;
   /** Project level: Share ▾ and its items (`MenuItem`s). */
   shareMenu?: ReactNode;
+  /** Its own words (the toggles' and ←'s names, Save, Share, Publish, Live, Draft), over `projectHeaderLabels`. */
+  labels?: Partial<ProjectHeaderLabels>;
 }
 
 function MenuButton({label, variant, children, menu}: {label: string; variant: 'primary' | 'secondary'; children: ReactNode; menu?: ReactNode}) {
@@ -96,7 +133,7 @@ export function ProjectHeader({
   level = 'project',
   projectName,
   phaseName = '',
-  parentLabel = 'Projects',
+  parentLabel,
   parentHref,
   onParentPress,
   projectHref,
@@ -111,16 +148,18 @@ export function ProjectHeader({
   status,
   publishMenu,
   shareMenu,
+  labels,
   className,
   style
 }: ProjectHeaderProps) {
+  const l = mergeLabels(projectHeaderLabels, labels);
   const isProject = level === 'project';
   const isBar = modes != null || people != null || onSave != null || (level === 'project' && status != null) || shareMenu != null;
   const crumbs = (
-    <nav className={clsx('gv-header', !isBar && className)} style={isBar ? undefined : style} data-level={level} aria-label="Breadcrumb">
+    <nav className={clsx('gv-header', !isBar && className)} style={isBar ? undefined : style} data-level={level} aria-label={l.breadcrumb}>
       {isProject && onTogglePanel && (
         <>
-          <IconButton onPress={onTogglePanel} aria-label="Show or hide project setup">
+          <IconButton onPress={onTogglePanel} aria-label={l.toggleSetup}>
             <PanelLeft aria-hidden />
           </IconButton>
           <span className="gv-header__divider" aria-hidden="true" />
@@ -129,7 +168,7 @@ export function ProjectHeader({
       {isProject ? (
         <Breadcrumbs
           items={[
-            {key: 'parent', label: parentLabel, href: parentHref, onPress: onParentPress},
+            {key: 'parent', label: parentLabel ?? l.projects, href: parentHref, onPress: onParentPress},
             {key: 'project', label: projectName}
           ]}
         />
@@ -143,8 +182,7 @@ export function ProjectHeader({
           ]}
           onTogglePanel={onTogglePanel}
           onBack={onBack}
-          togglePanelLabel="Show or hide the timeline"
-          backLabel={`Back to ${projectName}`}
+          labels={{togglePanel: l.toggleTimeline, back: l.backToProject(projectName), live: l.live, draft: l.draft}}
         />
       )}
     </nav>
@@ -154,7 +192,7 @@ export function ProjectHeader({
 
   const save = (
     <Button size={32} onPress={onSave} isDisabled={!isProject && !hasChanges}>
-      Save
+      {l.save}
     </Button>
   );
 
@@ -165,19 +203,19 @@ export function ProjectHeader({
     actions = (
       <>
         {shareMenu != null && (
-          <MenuButton label="Share" variant="secondary" menu={shareMenu}>
-            Share
+          <MenuButton label={l.share} variant="secondary" menu={shareMenu}>
+            {l.share}
           </MenuButton>
         )}
         {status === 'draft' && (
-          <MenuButton label="Publish" variant="primary" menu={publishMenu}>
-            Publish
+          <MenuButton label={l.publish} variant="primary" menu={publishMenu}>
+            {l.publish}
           </MenuButton>
         )}
         {status === 'live' && (
-          <MenuButton label="Live" variant="secondary" menu={publishMenu}>
+          <MenuButton label={l.live} variant="secondary" menu={publishMenu}>
             <span className="gv-project-header__live" aria-hidden="true" />
-            Live
+            {l.live}
           </MenuButton>
         )}
       </>
@@ -188,7 +226,7 @@ export function ProjectHeader({
       {crumbs}
       {!isProject && modes != null ? (
         <SegmentedControl
-          aria-label="Phase view"
+          aria-label={l.phaseView}
           disallowEmptySelection
           selectedKeys={mode != null ? [mode] : []}
           onSelectionChange={keys => {

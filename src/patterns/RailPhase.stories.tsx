@@ -117,7 +117,7 @@ export const Rail: StoryObj = {
     <aside
       aria-label="Participation"
       style={{width: 264, padding: '25px 18px', background: 'var(--gv-surface-panel)'}}>
-      <RailHeader title="Participation" onTogglePanel={() => {}} onAdd={() => {}} addLabel="Add a phase" />
+      <RailHeader title="Participation" onTogglePanel={() => {}} onAdd={() => {}} labels={{add: 'Add a phase'}} />
       <nav aria-label="Phases" style={{marginTop: 16}}>
         <SectionLabel>Timeline</SectionLabel>
         <ul style={{listStyle: 'none', margin: '0 -10px', padding: '4px 0 0'}}>

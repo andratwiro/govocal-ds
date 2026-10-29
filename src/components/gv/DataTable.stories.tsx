@@ -630,7 +630,7 @@ function BulkAndOpen() {
         </Panel>
         <p role="status" style={{margin: 0, font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>{said}</p>
       </div>
-      <SidePanel isOpen={idea !== undefined} label="Collect ideas" itemName="idea"
+      <SidePanel isOpen={idea !== undefined} label="Collect ideas" labels={{previous: 'Previous idea', next: 'Next idea'}}
         position={idea ? {current: at + 1, total: OPEN_LIST.length} : undefined}
         onPositionChange={n => setOpen(OPEN_LIST[n - 1].id)}
         onOpenChange={o => !o && setOpen(null)}
@@ -726,7 +726,7 @@ function VirtualPeople() {
         </Panel>
         <p role="status" style={{margin: 0, font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>{said}</p>
       </div>
-      <SidePanel isOpen={person !== undefined} label="Registered users" itemName="user"
+      <SidePanel isOpen={person !== undefined} label="Registered users" labels={{previous: 'Previous user', next: 'Next user'}}
         position={person ? {current: at + 1, total: rows.length} : undefined}
         onPositionChange={n => setOpen(rows[n - 1].id)}
         onOpenChange={o => !o && setOpen(null)}>

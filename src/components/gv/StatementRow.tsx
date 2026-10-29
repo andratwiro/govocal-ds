@@ -3,6 +3,8 @@ import type {ReactNode} from 'react';
 import type {ChartColor} from './Chart';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {useListFormatter, useNumberFormatter, usePercentFormatter} from '../format';
+import {mergeLabels} from '../labels';
 import './Chart.css';
 import './StatementRow.css';
 
@@ -13,6 +15,30 @@ export interface StatementCounts {
   /** With `unseenPercent`: the people who haven't seen the statement yet. */
   unseen?: number;
 }
+
+/** The words Statement row says itself (docs/API.md rule 11): the shares' names and how the bar reads out. */
+export interface StatementRowLabels {
+  /** The shares' names, in the hover card and the bar's name. */
+  agree: string;
+  disagree: string;
+  /** The third answer ("Unsure" in Manage). */
+  pass: string;
+  unseen: string;
+  /** One share read out, given its name, its percentage and (with `counts`) its count, as the locale writes them. */
+  share: (label: string, percent: string, count?: string) => string;
+  /** The bar's name with a `summary`, given the summary and the shares already joined. */
+  withSummary: (summary: string, shares: string) => string;
+}
+
+/** Statement row's English words; a page passes its own over them with `labels`. */
+export const statementRowLabels: StatementRowLabels = {
+  agree: 'Agree',
+  disagree: 'Disagree',
+  pass: 'Pass',
+  unseen: 'Not seen yet',
+  share: (label, percent, count) => (count != null ? `${count} ${label.toLowerCase()} (${percent})` : `${percent} ${label.toLowerCase()}`),
+  withSummary: (summary, shares) => `${summary} (${shares})`
+};
 
 export interface StatementRowProps extends PlacementProps {
   /** The Common Ground statement text. Omitted, the row is the bar alone (the Manage panel's "Where people stand"). */
@@ -30,12 +56,9 @@ export interface StatementRowProps extends PlacementProps {
   summary?: string;
   /** The people behind each share: the hover card gives them with the percentages. */
   counts?: StatementCounts;
-  /** The third answer's name ("Unsure" in Manage). @default 'Pass' */
-  passLabel?: string;
+  /** Its own words (the shares' names, how the bar reads out), over `statementRowLabels`. */
+  labels?: Partial<StatementRowLabels>;
 }
-
-const round = (n: number) => Math.round(n);
-const group = (n: number) => n.toLocaleString('en-GB');
 
 /**
  * A single Common Ground statement with its agree/disagree/pass bar —
@@ -53,27 +76,29 @@ export function StatementRow({
   unseenPercent,
   summary,
   counts,
-  passLabel = 'Pass',
+  labels,
   className,
   style
 }: StatementRowProps) {
+  const l = mergeLabels(statementRowLabels, labels);
+  const group = useNumberFormatter().format;
+  const percent = usePercentFormatter();
+  const list = useListFormatter({type: 'unit', style: 'short'});
   const shares: {kind: 'agree' | 'disagree' | 'pass' | 'unseen'; label: string; percent: number; count?: number; color?: ChartColor}[] = [
-    {kind: 'agree', label: 'Agree', percent: agreePercent, count: counts?.agree, color: 'agree'},
-    {kind: 'disagree', label: 'Disagree', percent: disagreePercent, count: counts?.disagree, color: 'disagree'},
-    {kind: 'pass', label: passLabel, percent: passPercent, count: counts?.pass, color: 'pass'}
+    {kind: 'agree', label: l.agree, percent: agreePercent, count: counts?.agree, color: 'agree'},
+    {kind: 'disagree', label: l.disagree, percent: disagreePercent, count: counts?.disagree, color: 'disagree'},
+    {kind: 'pass', label: l.pass, percent: passPercent, count: counts?.pass, color: 'pass'}
   ];
-  if (unseenPercent != null) shares.push({kind: 'unseen', label: 'Not seen yet', percent: unseenPercent, count: counts?.unseen});
+  if (unseenPercent != null) shares.push({kind: 'unseen', label: l.unseen, percent: unseenPercent, count: counts?.unseen});
   const four = unseenPercent != null;
-  const words = shares
-    .map(s => (s.count != null ? `${group(s.count)} ${s.label.toLowerCase()} (${round(s.percent)}%)` : `${round(s.percent)}% ${s.label.toLowerCase()}`))
-    .join(', ');
+  const words = list.format(shares.map(s => l.share(s.label, percent(s.percent), s.count != null ? group(s.count) : undefined)));
 
   return (
     <div className={clsx('gv-statement-row', className)} style={style} data-shares={four ? 4 : undefined} data-bar-only={statement == null || undefined}>
       <div className="gv-statement-row__in">
         {statement != null && <span className="gv-statement-row__statement">{statement}</span>}
         <span className="gv-statement-row__bar-wrap">
-          <span className="gv-statement-row__bar" role="img" aria-label={summary ? `${summary} (${words})` : words}>
+          <span className="gv-statement-row__bar" role="img" aria-label={summary ? l.withSummary(summary, words) : words}>
             {shares
               .filter(s => s.kind !== 'unseen' && (!four || s.percent > 0))
               .map(s => (
@@ -87,7 +112,7 @@ export function StatementRow({
                 <span className="gv-chart-card__label">{s.label}</span>
                 <span className="gv-chart-card__value">
                   {s.count != null ? `${group(s.count)} · ` : ''}
-                  {round(s.percent)}%
+                  {percent(s.percent)}
                 </span>
               </span>
             ))}

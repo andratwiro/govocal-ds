@@ -12,6 +12,7 @@ import './TextField.css';
 import {useState, type ReactNode} from 'react';
 import type React from 'react';
 import {keepClass} from './className';
+import {useNumberFormatter} from './format';
 
 export interface TextFieldProps<T = HTMLInputElement> extends AriaTextFieldProps {
   label?: string;
@@ -43,6 +44,7 @@ export function TextField({
   ...props
 }: TextFieldProps) {
   const [length, setLength] = useState(() => (value ?? defaultValue ?? '').length);
+  const number = useNumberFormatter();
   const hasDecoration = Boolean(prefix || suffix);
   const input = (
     <Input
@@ -78,7 +80,7 @@ export function TextField({
         <FieldError>{errorMessage}</FieldError>
         {showCounter && maxLength !== undefined && (
           <span className="gv-text-field-counter" aria-hidden="true">
-            {length}/{maxLength}
+            {number.format(length)}/{number.format(maxLength)}
           </span>
         )}
       </div>

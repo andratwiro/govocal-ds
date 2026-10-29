@@ -8,8 +8,35 @@ import {Plus, X} from 'lucide-react';
 import {Button} from '../Button';
 import {DatePicker} from '../DatePicker';
 import {TimeField} from '../TimeField';
-import {RequiredMarker} from './RequiredMarker';
+import {RequiredMarker, type RequiredMarkerLabels} from './RequiredMarker';
+import {mergeLabels} from '../labels';
 import './DateRangeField.css';
+
+/** The words Date range field says itself (docs/API.md rule 11), with the Required marker's, which it hands on. */
+export interface DateRangeFieldLabels extends RequiredMarkerLabels {
+  /** Each date and time field's name, given the field's `label` (none when it has no label). */
+  startDate: (label?: string) => string;
+  endDate: (label?: string) => string;
+  startTime: (label?: string) => string;
+  endTime: (label?: string) => string;
+  addEnd: string;
+  /** The × button's name. */
+  removeEnd: string;
+  /** The error under the fields when the end lands before the start. */
+  endBeforeStart: string;
+}
+
+/** Date range field's English words; a page passes its own over them with `labels`. */
+export const dateRangeFieldLabels: DateRangeFieldLabels = {
+  startDate: label => (label ? `${label}, start date` : 'Start date'),
+  endDate: label => (label ? `${label}, end date` : 'End date'),
+  startTime: label => (label ? `${label}, start time` : 'Start time'),
+  endTime: label => (label ? `${label}, end time` : 'End time'),
+  addEnd: 'Add end date',
+  removeEnd: 'Remove the end date',
+  endBeforeStart: "The end date can't be before the start date.",
+  required: 'Required'
+};
 
 /** The range as the field hands it back: React Aria date and time values (`String(value.start)` is "2026-11-02"). */
 export interface DateRange {
@@ -55,6 +82,8 @@ export interface DateRangeFieldProps {
   defaultValue?: DateRangeInput | null;
   /** Called with the whole range whenever a part changes, as React Aria values. */
   onChange?: (value: DateRange) => void;
+  /** Its own words (the fields' names, Add end date, the error), over `dateRangeFieldLabels`. */
+  labels?: Partial<DateRangeFieldLabels>;
   /** Places the field (a grid area, a width); never paints it. */
   className?: string;
   style?: CSSProperties;
@@ -79,9 +108,11 @@ export function DateRangeField({
   value,
   defaultValue,
   onChange,
+  labels,
   className,
   style
 }: DateRangeFieldProps) {
+  const l = mergeLabels(dateRangeFieldLabels, labels);
   const [inner, setInner] = useState<DateRange>(() => toDateRange(defaultValue));
   const current = value !== undefined ? toDateRange(value) : inner;
   const [endAdded, setEndAdded] = useState(false);
@@ -95,21 +126,18 @@ export function DateRangeField({
     onChange?.(next);
   }
 
-  const startLabel = label ? `${label}, start date` : 'Start date';
-  const endLabel = label ? `${label}, end date` : 'End date';
-
   return (
     <div className={clsx('gv-date-range-field', className)} style={style}
       data-invalid={isInvalid || undefined} data-disabled={isDisabled || undefined}>
       {label && (
         <span className="gv-date-range-field__label">
           {label}
-          {isRequired && <RequiredMarker />}
+          {isRequired && <RequiredMarker labels={l} />}
         </span>
       )}
       <div className="gv-date-range-field__row">
         <DatePicker
-          aria-label={startLabel}
+          aria-label={l.startDate(label)}
           value={current.start}
           onChange={start => set({start})}
           isRequired={isRequired}
@@ -118,7 +146,7 @@ export function DateRangeField({
         />
         {showTime && current.start && (
           <TimeField
-            aria-label={label ? `${label}, start time` : 'Start time'}
+            aria-label={l.startTime(label)}
             value={current.startTime}
             onChange={startTime => set({startTime})}
             isDisabled={isDisabled}
@@ -130,7 +158,7 @@ export function DateRangeField({
               –
             </span>
             <DatePicker
-              aria-label={endLabel}
+              aria-label={l.endDate(label)}
               value={current.end}
               onChange={end => set({end})}
               isDisabled={isDisabled}
@@ -139,7 +167,7 @@ export function DateRangeField({
             />
             {showTime && current.end && (
               <TimeField
-                aria-label={label ? `${label}, end time` : 'End time'}
+                aria-label={l.endTime(label)}
                 value={current.endTime}
                 onChange={endTime => set({endTime})}
                 isDisabled={isDisabled}
@@ -149,7 +177,7 @@ export function DateRangeField({
               variant="quiet"
               size={32}
               isDisabled={isDisabled}
-              aria-label="Remove the end date"
+              aria-label={l.removeEnd}
               onPress={() => {
                 setEndAdded(false);
                 set({end: null, endTime: null});
@@ -160,7 +188,7 @@ export function DateRangeField({
         ) : (
           <Button variant="quiet" size={32} isDisabled={isDisabled} onPress={() => setEndAdded(true)}>
             <Plus aria-hidden size={16} />
-            Add end date
+            {l.addEnd}
           </Button>
         )}
         {timeZone && <span className="gv-date-range-field__zone">{timeZone}</span>}
@@ -168,7 +196,7 @@ export function DateRangeField({
       {description && !isInvalid && <p className="gv-date-range-field__description">{description}</p>}
       {isInvalid && (
         <p className="gv-date-range-field__error" role="alert">
-          The end date can't be before the start date.
+          {l.endBeforeStart}
         </p>
       )}
     </div>

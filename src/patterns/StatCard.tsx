@@ -2,7 +2,7 @@
 import type {ReactNode} from 'react';
 import {Button} from 'react-aria-components/Button';
 import {ChevronRight} from 'lucide-react';
-import {Sparkline} from '../components/gv/Chart';
+import {Sparkline, type ChartLabels} from '../components/gv/Chart';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
 import './StatCard.css';
@@ -18,13 +18,15 @@ export interface StatCardProps extends PlacementProps {
   caption?: ReactNode;
   /** Opens the figure's detail (Audience). Without it the card is display only, with no chevron. */
   onPress?: () => void;
+  /** The sparkline's words (its trend sentence), over `chartLabels`. */
+  labels?: Partial<ChartLabels>;
 }
 
 /**
  * A stat with its sparkline (prototype `.pj-aud`, "Collecting now"): label over a number, the Sparkline, a caption,
  * and a chevron when it opens a detail. Not in Figma yet.
  */
-export function StatCard({label, value, series, caption, onPress, className, style}: StatCardProps) {
+export function StatCard({label, value, series, caption, onPress, labels, className, style}: StatCardProps) {
   const body = (
     <>
       <span className="gv-stat-card__head">
@@ -34,7 +36,7 @@ export function StatCard({label, value, series, caption, onPress, className, sty
         </span>
         {onPress && <ChevronRight className="gv-stat-card__chevron" aria-hidden size={16} />}
       </span>
-      {series && series.length > 1 && <Sparkline className="gv-stat-card__spark" values={series} label={label} height={34} showGrid={false} />}
+      {series && series.length > 1 && <Sparkline className="gv-stat-card__spark" values={series} label={label} height={34} showGrid={false} labels={labels} />}
       {caption && <span className="gv-stat-card__caption">{caption}</span>}
     </>
   );

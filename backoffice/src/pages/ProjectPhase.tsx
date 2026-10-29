@@ -106,8 +106,8 @@ export function ProjectRail({project, href, current, added, onAdd, onHide, remov
   const phases = [...timeline(project, href, current), ...addedTimeline(added)].filter(p => !removed.has(p.id));
   return (
     <aside className="bo-phase-panel bo-phase-rail" aria-label="Participation">
-      <RailHeader title="Participation" onAdd={onAdd} addLabel="Add a phase"
-        onTogglePanel={onHide} togglePanelLabel="Hide the participation rail" />
+      <RailHeader title="Participation" onAdd={onAdd} onTogglePanel={onHide}
+        labels={{add: 'Add a phase', togglePanel: 'Hide the participation rail'}} />
       <nav aria-label="Phases" className="bo-phase-rail-section">
         <SectionLabel>Timeline</SectionLabel>
         {/* Phase timeline's rows, drawn here as Rail phases: the timeline takes no delete (Rail phase's onDelete). The
@@ -178,7 +178,7 @@ function SetTopicTags({onChange}: {onChange?: () => void}) {
     <SetupStep kind="pick" title="Set topic tags" value={tags.length ? counted(tags.length, 'tag', 'tags') : undefined}
       isDone={tags.length > 0} picker={
         <OptionList aria-label="Topic tags" items={TOPICS.map(t => ({id: t, label: t}))} value={tags} onChange={t => { setTags(t); onChange?.(); }}
-          placeholder="Search tags..." searchLabel="Search tags"
+          placeholder="Search tags..." labels={{search: () => 'Search tags'}}
           selectionLabel={k => (k ? `${counted(k, 'tag', 'tags')} selected` : 'No tags selected')} />
       } />
   );
@@ -238,7 +238,7 @@ function Build({project, phase, onSettings, onChange}: {project: Project; phase:
         actions={<IconButton aria-label="Project settings" onPress={() => onSettings('General')}><Settings aria-hidden size={16} /></IconButton>}>
         {email ? (
           <NotificationEmail key={email.id} name={email.name} who={email.who} when={email.when}
-            backLabel={`Back to ${phase.method} setup`} onBack={() => setEmailId(null)}
+            labels={{back: `Back to ${phase.method} setup`}} onBack={() => setEmailId(null)}
             isSelected={emailsOn.has(email.id)} onChange={on => setEmail(email.id, on)}
             replyTo="support@example.org" subject={email.name} buttonText="View it" />
         ) : (
@@ -720,7 +720,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
           </DataTableBody>
         </DataTable>
       </Panel>
-      <SidePanel label={phase.title} itemName="idea" isOpen={!!idea} onOpenChange={o => !o && setOpen(null)}
+      <SidePanel label={phase.title} labels={{previous: 'Previous idea', next: 'Next idea'}} isOpen={!!idea} onOpenChange={o => !o && setOpen(null)}
         position={at >= 0 ? {current: at + 1, total: shown.length} : undefined}
         onPositionChange={openAt}
         returnFocus={() => (open ? rowOf(open) : null)}>
@@ -968,7 +968,7 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
         <StatTile label="Participation rate" value="30.1%" />
       </div>
       <DashboardCard kind="participation-over-time" title="Participation over time">
-        <LineChart showLegend labels={INSIGHT_WEEKS} series={[
+        <LineChart showLegend xAxis={INSIGHT_WEEKS} series={[
           {label: 'Participants', values: PARTICIPATION_WEEKS.participants}, {label: 'Visitors', values: PARTICIPATION_WEEKS.visitors}
         ]} />
       </DashboardCard>
@@ -1002,7 +1002,7 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
     body = <>
       <div className="bo-phase-tiles"><StatTile label="Visitors" value={phase.count?.split(' ')[0] ?? '0'} /></div>
       <DashboardCard kind="visitors-over-time" title="Visitors over time">
-        <LineChart labels={INSIGHT_WEEKS} series={[{label: 'Visitors', values: PARTICIPATION_WEEKS.visitors}]} />
+        <LineChart xAxis={INSIGHT_WEEKS} series={[{label: 'Visitors', values: PARTICIPATION_WEEKS.visitors}]} />
       </DashboardCard>
     </>;
   }

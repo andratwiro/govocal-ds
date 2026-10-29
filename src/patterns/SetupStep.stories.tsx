@@ -60,7 +60,7 @@ function SetTopicTags({initial = []}: {initial?: string[]}) {
     <SetupStep kind="pick" title="Set topic tags" value={tags.length ? count(tags.length, 'tag', 'tags') : undefined}
       isDone={tags.length > 0} picker={
         <OptionList aria-label="Topic tags" items={TOPICS} value={tags} onChange={setTags} placeholder="Search tags..."
-          searchLabel="Search tags" selectionLabel={n => (n ? `${count(n, 'tag', 'tags')} selected` : 'No tags selected')} />
+          labels={{search: () => 'Search tags'}} selectionLabel={n => (n ? `${count(n, 'tag', 'tags')} selected` : 'No tags selected')} />
       } />
   );
 }

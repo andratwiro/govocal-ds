@@ -5,7 +5,17 @@ import {Info, Clock, TriangleAlert, CircleCheck, Sparkles, X} from 'lucide-react
 import {IconButton} from './IconButton';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {mergeLabels} from '../labels';
 import './Banner.css';
+
+/** The words Banner says itself (docs/API.md rule 11). */
+export interface BannerLabels {
+  /** The dismiss ×'s name. */
+  dismiss: string;
+}
+
+/** Banner's English words; a page passes its own over them with `labels`. */
+export const bannerLabels: BannerLabels = {dismiss: 'Dismiss'};
 
 /** The tone's default icon; `icon={null}` hides it, any other node overrides it. */
 const TONE_ICON = {
@@ -45,9 +55,10 @@ export interface BannerProps extends PlacementProps {
   linkPlacement?: 'inline' | 'trailing';
   /** A block action under the message, e.g. a "Review" button (the screening banner). */
   actions?: ReactNode;
-  /** Shows a dismiss × in the corner and calls this when it's pressed. */
+  /** Shows a dismiss × in the corner and calls this when it's pressed. Its name is `labels.dismiss`. */
   onDismiss?: () => void;
-  dismissLabel?: string;
+  /** Its own words (the dismiss ×'s name), over `bannerLabels`. */
+  labels?: Partial<BannerLabels>;
   /**
    * `compact`: the phase status strip, one row (icon, bold title, lighter meta), not the padded message card;
    * `title` + `children` (the meta, e.g. "Starts in 4 days").
@@ -69,7 +80,7 @@ export function Banner({
   linkPlacement = 'trailing',
   actions,
   onDismiss,
-  dismissLabel = 'Dismiss',
+  labels,
   density = 'default',
   className,
   style
@@ -115,7 +126,7 @@ export function Banner({
       </div>
       {onDismiss && (
         <span className="gv-banner__dismiss">
-          <IconButton variant="ghost" emphasis="strong" size={24} aria-label={dismissLabel} onPress={onDismiss}>
+          <IconButton variant="ghost" emphasis="strong" size={24} aria-label={mergeLabels(bannerLabels, labels).dismiss} onPress={onDismiss}>
             <X aria-hidden size={16} strokeWidth={1.75} />
           </IconButton>
         </span>

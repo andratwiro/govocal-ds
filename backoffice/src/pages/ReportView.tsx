@@ -330,7 +330,7 @@ function BlockBody({block, lang, nums, pageOf, blocks, reportTitle}: {
     case 'line':
       return (
         <FigureStandIn figure={block.figure} lang={lang}>
-          <LineChart labels={block.labels} showLegend height={160}
+          <LineChart xAxis={block.labels} showLegend height={160}
             series={[{label: 'Observed', values: block.observed, color: 'line-primary'},
               ...(block.showEstimate ? [{label: 'Estimated at close', values: block.estimate, color: 'line-secondary' as const}] : [])]} />
         </FigureStandIn>
@@ -1139,7 +1139,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
         {showRight && (
           <div className="bo-report-column bo-report-side">
             <SidePanel isInline isOpen label={panelLabel} onOpenChange={closePanel}
-              closeLabel={right === 'history' ? 'Close the version history' : block ? 'Close the widget settings' : 'Close the assistant'}
+              labels={{close: right === 'history' ? 'Close the version history' : block ? 'Close the widget settings' : 'Close the assistant'}}
               footer={right === 'auto' && block ? (
                 <div className="bo-report-panel-foot">
                   {!STRUCTURE.includes(block.kind) && (

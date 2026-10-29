@@ -12,7 +12,17 @@ import {Tooltip, TooltipTrigger} from '../Tooltip';
 import {NewDot} from './NewDot';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {mergeLabels} from '../labels';
 import './SegmentedControl.css';
+
+/** The words a Segmented control item says itself (docs/API.md rule 11). */
+export interface SegmentedControlItemLabels {
+  /** What the New dot means to a screen reader. */
+  unread: string;
+}
+
+/** A segment's English words; a page passes its own over them with `labels`. */
+export const segmentedControlItemLabels: SegmentedControlItemLabels = {unread: 'Unread'};
 
 export interface SegmentedControlProps extends Omit<ToggleButtonGroupProps, 'className' | 'style'>, PlacementProps {
   /**
@@ -43,17 +53,19 @@ export interface SegmentedControlItemProps extends Omit<ToggleButtonProps, 'clas
    * ("18 new ideas", the phase tabs). Not in Figma.
    */
   tooltip?: ReactNode;
+  /** Its own words (the New dot's meaning), over `segmentedControlItemLabels`. */
+  labels?: Partial<SegmentedControlItemLabels>;
 }
 
 /** Segmented control item (Figma node 14:882): one segment of the control. */
-export function SegmentedControlItem({children, isUnread, tooltip, className, style, ...props}: SegmentedControlItemProps) {
+export function SegmentedControlItem({children, isUnread, tooltip, labels, className, style, ...props}: SegmentedControlItemProps) {
   const segment = (
     <ToggleButton {...props} className={clsx('gv-segment', className)} style={style} data-unread={isUnread || undefined}>
       {composeRenderProps(children, resolvedChildren => (
         <>
           <SelectionIndicator className="gv-segment-indicator" data-selected />
           <span className="gv-segment-label">{resolvedChildren}</span>
-          {isUnread && <NewDot aria-label="Unread" />}
+          {isUnread && <NewDot aria-label={mergeLabels(segmentedControlItemLabels, labels).unread} />}
         </>
       ))}
     </ToggleButton>

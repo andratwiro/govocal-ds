@@ -3,13 +3,25 @@ import {TriangleAlert} from 'lucide-react';
 import {Checkbox} from './Checkbox';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {mergeLabels} from '../labels';
 import './ListRow.css';
+
+/** The words List row says itself (docs/API.md rule 11). Common ground row takes the same keys. */
+export interface ListRowLabels {
+  /** The row checkbox's name, when its own `aria-label` isn't given. */
+  select: string;
+  /** The warning mark's name. */
+  needsAttention: string;
+}
+
+/** List row's English words; a page passes its own over them with `labels`. */
+export const listRowLabels: ListRowLabels = {select: 'Select', needsAttention: 'Needs attention'};
 
 /** A row's checkbox in its leading 28px slot (the prototype's Manage tables). */
 export interface ListRowSelect {
   isSelected?: boolean;
   onChange?: (isSelected: boolean) => void;
-  /** @default 'Select' */
+  /** This row's checkbox name ("Select Bike lanes"). @default `labels.select` */
   'aria-label'?: string;
 }
 
@@ -27,6 +39,8 @@ export interface ListRowProps extends PlacementProps {
    * checked row is tinted. The prototype's Manage table. Not in Figma (its leading 28 is empty).
    */
   select?: ListRowSelect;
+  /** Its own words, over `listRowLabels`. */
+  labels?: Partial<ListRowLabels>;
 }
 
 /**
@@ -35,7 +49,8 @@ export interface ListRowProps extends PlacementProps {
  * (checkbox) and a trailing 28px slot (under the header's add-column button).
  * Pair it with `ListHeader` (pass `selectAll` so the columns line up).
  */
-export function ListRow({title, status, thumbnail, hasWarning, select, className, style}: ListRowProps) {
+export function ListRow({title, status, thumbnail, hasWarning, select, labels, className, style}: ListRowProps) {
+  const l = mergeLabels(listRowLabels, labels);
   return (
     <div
       className={clsx('gv-list-row', className)} style={style}
@@ -46,7 +61,7 @@ export function ListRow({title, status, thumbnail, hasWarning, select, className
           <Checkbox
             isSelected={select.isSelected}
             onChange={select.onChange}
-            aria-label={select['aria-label'] ?? 'Select'}
+            aria-label={select['aria-label'] ?? l.select}
           />
         )}
       </span>
@@ -60,7 +75,7 @@ export function ListRow({title, status, thumbnail, hasWarning, select, className
             <span className="gv-list-row__marks">
               <TriangleAlert
                 role="img"
-                aria-label="Needs attention"
+                aria-label={l.needsAttention}
                 className="gv-list-row__warning"
                 size={16}
                 strokeWidth={1.75}

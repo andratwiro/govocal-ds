@@ -118,7 +118,7 @@ export const InASidePanel: Story = {
   name: 'In a side panel',
   render: () => (
     <div style={{width: 560, height: 420}}>
-      <SidePanel isInline label="Collect ideas" itemName="idea" position={{current: 3, total: 124}}>
+      <SidePanel isInline label="Collect ideas" labels={{previous: 'Previous idea', next: 'Next idea'}} position={{current: 3, total: 124}}>
         <SidePanelSection>
           <p style={{margin: 0, font: 'var(--gv-type-body)'}}>
             Organise open-air cinema nights on Linden Avenue in summer. It would be a great way for neighbours to meet.

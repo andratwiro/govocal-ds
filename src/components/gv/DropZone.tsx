@@ -6,14 +6,25 @@ import {Upload} from 'lucide-react';
 import type {ReactNode} from 'react';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {mergeLabels} from '../labels';
 import './DropZone.css';
+
+/** The words Drop zone says itself (docs/API.md rule 11). */
+export interface DropZoneLabels {
+  /** The label when no `children` give one. */
+  prompt: string;
+}
+
+/** Drop zone's English words; a page passes its own over them with `labels`. */
+export const dropZoneLabels: DropZoneLabels = {prompt: 'Drop a file here or browse'};
 
 export interface DropZoneProps extends Omit<RACDropZoneProps, 'className' | 'style'>, PlacementProps {
   /** Mime types FileTrigger accepts, e.g. ['image/*']. */
   acceptedFileTypes?: ReadonlyArray<string>;
   allowsMultiple?: boolean;
   onSelect?: (files: FileList | null) => void;
-  /** The label, in place of "Drop a file here or browse". Plain text: the whole zone is the button. */
+  /** This zone's label, in place of `labels.prompt` ("Drop a file here or browse"). Plain text: the whole zone is the
+   * button. */
   children?: ReactNode;
   /** A line under the label, shown only at `density="compact"` (e.g. "PNG or JPG · max 5 MB"). */
   hint?: ReactNode;
@@ -24,6 +35,8 @@ export interface DropZoneProps extends Omit<RACDropZoneProps, 'className' | 'sty
    * @default 'default'
    */
   density?: 'default' | 'compact';
+  /** Its own words, over `dropZoneLabels`. */
+  labels?: Partial<DropZoneLabels>;
 }
 
 /**
@@ -39,6 +52,7 @@ export function DropZone({
   children,
   hint,
   density = 'default',
+  labels,
   className,
   style,
   ...props
@@ -49,7 +63,7 @@ export function DropZone({
         <Button className="gv-drop-zone-trigger" isDisabled={props.isDisabled}>
           <Upload aria-hidden="true" className="gv-drop-zone-icon" />
           <span className="gv-drop-zone-text">
-            <span className="gv-drop-zone-label">{children ?? 'Drop a file here or browse'}</span>
+            <span className="gv-drop-zone-label">{children ?? mergeLabels(dropZoneLabels, labels).prompt}</span>
             {density === 'compact' && hint && <span className="gv-drop-zone-hint">{hint}</span>}
           </span>
         </Button>

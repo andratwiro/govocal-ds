@@ -11,7 +11,78 @@ import {TriangleAlert, X} from 'lucide-react';
 import '../components/TextField.css';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {useNumberFormatter} from '../components/format';
+import {mergeLabels, type CountLabel} from '../components/labels';
 import './CommentThread.css';
+
+/** The words Comment composer says itself (docs/API.md rule 11). Comment thread takes the same keys. */
+export interface CommentComposerLabels {
+  /** The line over the field while replying, given the author answered, and its cancel's name. */
+  replying: (author: string) => string;
+  cancelReply: string;
+  /** The field's name and hint: public, a reply (given the author), internal. */
+  field: string;
+  placeholder: string;
+  replyTo: (author: string) => string;
+  internalField: string;
+  internalPlaceholder: string;
+  post: string;
+}
+
+/** Comment composer's English words; a page passes its own over them with `labels`. */
+export const commentComposerLabels: CommentComposerLabels = {
+  replying: author => `Replying to ${author}`,
+  cancelReply: 'Cancel reply',
+  field: 'Comment',
+  placeholder: 'Reply as the project team',
+  replyTo: author => `Reply to ${author}`,
+  internalField: 'Internal comment',
+  internalPlaceholder: 'This comment is not visible to regular users',
+  post: 'Post'
+};
+
+/** The words Comment thread says itself (docs/API.md rule 11), with the composer's, which it hands on. */
+export interface CommentThreadLabels extends CommentComposerLabels {
+  /** The heading and the tabs, given how many comments each holds. */
+  comments: CountLabel;
+  internal: CountLabel;
+  /** The tab list's name. */
+  conversation: string;
+  /** The lists' names, and what an empty one says. */
+  commentsList: string;
+  internalList: string;
+  noComments: string;
+  noInternal: string;
+  /** A reply list's name, given the author answered. */
+  repliesTo: (author: string) => string;
+  new: string;
+  /** The content warning line, given what the check found. */
+  warning: (found: string) => string;
+  /** A comment's actions; Reply is named with `replyTo`, Delete with `deleteComment` (given the author). */
+  reply: string;
+  dismissWarning: string;
+  delete: string;
+  deleteComment: (author: string) => string;
+}
+
+/** Comment thread's English words; a page passes its own over them with `labels`. */
+export const commentThreadLabels: CommentThreadLabels = {
+  ...commentComposerLabels,
+  comments: (count, n) => `Comments (${n})`,
+  internal: (count, n) => `Internal conversation (${n})`,
+  conversation: 'Conversation',
+  commentsList: 'Comments',
+  internalList: 'Internal comments',
+  noComments: 'No comments yet',
+  noInternal: 'No internal comments yet',
+  repliesTo: author => `Replies to ${author}`,
+  new: 'New',
+  warning: found => `Content warning: ${found}. Detected automatically.`,
+  reply: 'Reply',
+  dismissWarning: 'Dismiss warning',
+  delete: 'Delete',
+  deleteComment: author => `Delete ${author}'s comment`
+};
 
 export interface ThreadComment {
   id: string;
@@ -58,6 +129,9 @@ export interface CommentThreadProps extends PlacementProps {
   onDelete?: (id: string, tab: ThreadTab) => void;
   /** "Dismiss warning" was pressed. Apply it at once, with an Undo toast. */
   onDismissWarning?: (id: string) => void;
+  /** Its own words (the heading and tabs, each action, the warning line, the composer's), over
+   * `commentThreadLabels`. */
+  labels?: Partial<CommentThreadLabels>;
 }
 
 const count = (list: ThreadComment[]) => list.reduce((n, c) => n + 1 + (c.replies?.length ?? 0), 0);
@@ -79,17 +153,21 @@ export function CommentThread({
   onPost,
   onDelete,
   onDismissWarning,
+  labels,
   className,
   style
 }: CommentThreadProps) {
+  const l = mergeLabels(commentThreadLabels, labels);
+  const number = useNumberFormatter();
+  const counted = (say: CountLabel, list: ThreadComment[]) => say(count(list), number.format(count(list)));
   const pane = (which: ThreadTab, list: ThreadComment[]) => (
     <ThreadPane key={which} tab={which} list={list} me={me} onPost={onPost} onDelete={onDelete}
-      onDismissWarning={onDismissWarning} />
+      onDismissWarning={onDismissWarning} l={l} />
   );
   if (!internal) {
     return (
       <div className={clsx('gv-comment-thread', className)} style={style}>
-        <h3 className="gv-comment-thread__title">Comments ({count(comments)})</h3>
+        <h3 className="gv-comment-thread__title">{counted(l.comments, comments)}</h3>
         {pane('comments', comments)}
       </div>
     );
@@ -97,9 +175,9 @@ export function CommentThread({
   return (
     <Tabs className={clsx('react-aria-Tabs gv-base-tabs gv-comment-thread', className)} style={style} selectedKey={tab} defaultSelectedKey={defaultTab}
       onSelectionChange={k => onTabChange?.(k as ThreadTab)}>
-      <TabList aria-label="Conversation" className="react-aria-TabList gv-base-tab-list gv-comment-thread__tabs">
-        <Tab id="comments">Comments ({count(comments)})</Tab>
-        <Tab id="internal">Internal conversation ({count(internal)})</Tab>
+      <TabList aria-label={l.conversation} className="react-aria-TabList gv-base-tab-list gv-comment-thread__tabs">
+        <Tab id="comments">{counted(l.comments, comments)}</Tab>
+        <Tab id="internal">{counted(l.internal, internal)}</Tab>
       </TabList>
       <TabPanel id="comments" className="react-aria-TabPanel gv-base-tab-panel gv-comment-thread__panel">{pane('comments', comments)}</TabPanel>
       <TabPanel id="internal" className="react-aria-TabPanel gv-base-tab-panel gv-comment-thread__panel">{pane('internal', internal)}</TabPanel>
@@ -110,10 +188,11 @@ export function CommentThread({
 interface PaneProps extends Pick<CommentThreadProps, 'me' | 'onPost' | 'onDelete' | 'onDismissWarning'> {
   tab: ThreadTab;
   list: ThreadComment[];
+  l: CommentThreadLabels;
 }
 
 /** One tab's comments and its composer. Reply points the composer at a comment and moves focus there. */
-function ThreadPane({tab, list, me, onPost, onDelete, onDismissWarning}: PaneProps) {
+function ThreadPane({tab, list, me, onPost, onDelete, onDismissWarning, l}: PaneProps) {
   const [replyTo, setReplyTo] = useState<{id: string; author: string} | null>(null);
   const field = useRef<HTMLTextAreaElement>(null);
   const reply = (id: string, author: string) => {
@@ -122,12 +201,12 @@ function ThreadPane({tab, list, me, onPost, onDelete, onDismissWarning}: PanePro
   };
   const item = (c: ThreadComment, parent?: ThreadComment) => (
     <li key={c.id} className="gv-comment-thread__item">
-      <CommentRow comment={c} isReply={!!parent}
+      <CommentRow comment={c} isReply={!!parent} l={l}
         onReply={onPost && (() => reply(parent?.id ?? c.id, c.author))}
         onDelete={onDelete && (() => onDelete(c.id, tab))}
         onDismissWarning={onDismissWarning && (() => onDismissWarning(c.id))} />
       {!!c.replies?.length && (
-        <ol className="gv-comment-thread__replies" aria-label={`Replies to ${c.author}`}>
+        <ol className="gv-comment-thread__replies" aria-label={l.repliesTo(c.author)}>
           {c.replies.map(r => item(r, c))}
         </ol>
       )}
@@ -136,12 +215,12 @@ function ThreadPane({tab, list, me, onPost, onDelete, onDismissWarning}: PanePro
   return (
     <>
       {list.length === 0
-        ? <p className="gv-comment-thread__empty">{tab === 'internal' ? 'No internal comments yet' : 'No comments yet'}</p>
-        : <ol className="gv-comment-thread__list" aria-label={tab === 'internal' ? 'Internal comments' : 'Comments'}>
+        ? <p className="gv-comment-thread__empty">{tab === 'internal' ? l.noInternal : l.noComments}</p>
+        : <ol className="gv-comment-thread__list" aria-label={tab === 'internal' ? l.internalList : l.commentsList}>
           {list.map(c => item(c))}
         </ol>}
       {onPost && (
-        <CommentComposer me={me} fieldRef={field} isInternal={tab === 'internal'} replyTo={replyTo?.author}
+        <CommentComposer me={me} fieldRef={field} isInternal={tab === 'internal'} replyTo={replyTo?.author} labels={l}
           onCancelReply={() => { setReplyTo(null); field.current?.focus(); }}
           onPost={text => { onPost(text, {tab, replyTo: replyTo?.id}); setReplyTo(null); }} />
       )}
@@ -155,10 +234,11 @@ interface CommentRowProps {
   onReply?: () => void;
   onDelete?: () => void;
   onDismissWarning?: () => void;
+  l: CommentThreadLabels;
 }
 
 /** One comment: avatar, then name · time · New, the warning line, the words, and its actions. */
-function CommentRow({comment: c, isReply, onReply, onDelete, onDismissWarning}: CommentRowProps) {
+function CommentRow({comment: c, isReply, onReply, onDelete, onDismissWarning, l}: CommentRowProps) {
   const head = useId();
   return (
     <article className="gv-comment-thread__comment" data-new={c.isNew || undefined} data-reply={isReply || undefined}
@@ -168,24 +248,24 @@ function CommentRow({comment: c, isReply, onReply, onDelete, onDismissWarning}: 
         <div id={head} className="gv-comment-thread__head">
           <span className="gv-comment-thread__author">{c.author}</span>{' '}
           <span className="gv-comment-thread__time">{c.time}</span>{' '}
-          {c.isNew && <span className="gv-comment-thread__new">New</span>}
+          {c.isNew && <span className="gv-comment-thread__new">{l.new}</span>}
         </div>
         {c.warning && (
           <p className="gv-comment-thread__warning">
             <TriangleAlert aria-hidden size={14} />
-            <span>Content warning: {c.warning}. Detected automatically.</span>
+            <span>{l.warning(c.warning)}</span>
           </p>
         )}
         <div className="gv-comment-thread__text">{c.text}</div>
         {(onReply || onDelete || (c.warning && onDismissWarning)) && (
           <div className="gv-comment-thread__actions">
             {onReply && <AriaButton className="gv-comment-thread__action" onPress={onReply}
-              aria-label={`Reply to ${c.author}`}>Reply</AriaButton>}
+              aria-label={l.replyTo(c.author)}>{l.reply}</AriaButton>}
             {c.warning && onDismissWarning && (
-              <AriaButton className="gv-comment-thread__action" onPress={onDismissWarning}>Dismiss warning</AriaButton>
+              <AriaButton className="gv-comment-thread__action" onPress={onDismissWarning}>{l.dismissWarning}</AriaButton>
             )}
             {onDelete && <AriaButton className="gv-comment-thread__action" onPress={onDelete}
-              aria-label={`Delete ${c.author}'s comment`}>Delete</AriaButton>}
+              aria-label={l.deleteComment(c.author)}>{l.delete}</AriaButton>}
           </div>
         )}
       </div>
@@ -203,11 +283,14 @@ export interface CommentComposerProps extends PlacementProps {
   onCancelReply?: () => void;
   onPost: (text: string) => void;
   fieldRef?: Ref<HTMLTextAreaElement>;
+  /** Its own words (the field's name and hint, Post, the reply line), over `commentComposerLabels`. */
+  labels?: Partial<CommentComposerLabels>;
 }
 
 /** The team's composer: their avatar, a field that grows with the words, and Post (on until there are words).
  * ⌘/Ctrl + Enter posts; Enter starts a new line. */
-export function CommentComposer({me, isInternal, replyTo, onCancelReply, onPost, fieldRef, className, style}: CommentComposerProps) {
+export function CommentComposer({me, isInternal, replyTo, onCancelReply, onPost, fieldRef, labels, className, style}: CommentComposerProps) {
+  const l = mergeLabels(commentComposerLabels, labels);
   const [text, setText] = useState('');
   const post = () => {
     if (!text.trim()) return;
@@ -220,14 +303,13 @@ export function CommentComposer({me, isInternal, replyTo, onCancelReply, onPost,
       post();
     }
   };
-  const placeholder = isInternal ? 'This comment is not visible to regular users'
-    : replyTo ? `Reply to ${replyTo}` : 'Reply as the project team';
+  const placeholder = isInternal ? l.internalPlaceholder : replyTo ? l.replyTo(replyTo) : l.placeholder;
   return (
     <div className={clsx('gv-comment-thread__composer', className)} style={style}>
       {replyTo && (
         <p className="gv-comment-thread__replying">
-          Replying to {replyTo}
-          <AriaButton className="gv-comment-thread__cancel" aria-label="Cancel reply" onPress={onCancelReply}>
+          {l.replying(replyTo)}
+          <AriaButton className="gv-comment-thread__cancel" aria-label={l.cancelReply} onPress={onCancelReply}>
             <X aria-hidden size={14} />
           </AriaButton>
         </p>
@@ -235,11 +317,11 @@ export function CommentComposer({me, isInternal, replyTo, onCancelReply, onPost,
       <div className="gv-comment-thread__compose-row">
         <span className="gv-comment-thread__avatar" aria-hidden><Avatar initials={me} /></span>
         <AriaTextField className="react-aria-TextField gv-base-text-field gv-comment-thread__field" value={text} onChange={setText}
-          aria-label={isInternal ? 'Internal comment' : replyTo ? `Reply to ${replyTo}` : 'Comment'}>
+          aria-label={isInternal ? l.internalField : replyTo ? l.replyTo(replyTo) : l.field}>
           <AriaTextArea ref={fieldRef} rows={1} placeholder={placeholder} onKeyDown={onKeyDown}
             className="react-aria-TextArea gv-base-text-area inset gv-comment-thread__input" />
         </AriaTextField>
-        <Button variant="secondary" isDisabled={!text.trim()} onPress={post}>Post</Button>
+        <Button variant="secondary" isDisabled={!text.trim()} onPress={post}>{l.post}</Button>
       </div>
     </div>
   );

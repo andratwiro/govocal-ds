@@ -4,7 +4,19 @@ import {
   type PopoverProps as AriaPopoverProps
 } from 'react-aria-components/Popover';
 import type {RefObject} from 'react';
+import {mergeLabels} from '../labels';
 import './Coachmark.css';
+
+/** The words Coachmark says itself (docs/API.md rule 11). */
+export interface CoachmarkLabels {
+  /** The ×'s name. */
+  dismiss: string;
+  skip: string;
+  gotIt: string;
+}
+
+/** Coachmark's English words; a page passes its own over them with `labels`. */
+export const coachmarkLabels: CoachmarkLabels = {dismiss: 'Dismiss', skip: 'Skip', gotIt: 'Got it'};
 
 export interface CoachmarkProps
   extends Omit<AriaPopoverProps, 'children' | 'className' | 'style'> {
@@ -16,6 +28,8 @@ export interface CoachmarkProps
   onDismiss?: () => void;
   /** Called when "Skip" is pressed. */
   onSkip?: () => void;
+  /** Its own words (×, Skip, Got it), over `coachmarkLabels`. */
+  labels?: Partial<CoachmarkLabels>;
 }
 
 /**
@@ -28,8 +42,10 @@ export function Coachmark({
   onDismiss,
   onSkip,
   placement = 'right',
+  labels,
   ...props
 }: CoachmarkProps) {
+  const l = mergeLabels(coachmarkLabels, labels);
   return (
     <AriaPopover {...props} placement={placement} className="gv-coachmark">
       <OverlayArrow className="gv-coachmark__arrow">
@@ -42,7 +58,7 @@ export function Coachmark({
         <button
           type="button"
           className="gv-coachmark__x"
-          aria-label="Dismiss"
+          aria-label={l.dismiss}
           onClick={() => {
             onSkip?.();
             onDismiss?.();
@@ -70,7 +86,7 @@ export function Coachmark({
           onClick={() => {
             onSkip?.();
           }}>
-          Skip
+          {l.skip}
         </button>
         <button
           type="button"
@@ -78,7 +94,7 @@ export function Coachmark({
           onClick={() => {
             onDismiss?.();
           }}>
-          Got it
+          {l.gotIt}
         </button>
       </div>
     </AriaPopover>

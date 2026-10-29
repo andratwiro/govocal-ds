@@ -2,7 +2,8 @@
 
 How a page imports the system, what every part accepts from it, and how props are named. Written 29 Oct 2026, when
 every Component and Pattern was brought to these rules in one pass, with no aliases left behind (the old names no
-longer compile). `tests/system-first.test.mjs` guards the imports and the entry points; review guards the names.
+longer compile). `tests/system-first.test.mjs` guards the imports and the entry points, `tests/words.test.mjs` the
+words (point 11); review guards the names.
 
 ## Import from the entry points
 
@@ -11,7 +12,7 @@ and Storybook's alias all read it):
 
 | Import | What it carries |
 | --- | --- |
-| `govocal-ds` | Every Component and Pattern with its props types; the content parts (`Heading`, `Text`, `Header`, `Keyboard`, `Separator`); `PlacementProps`; React Aria's value types (`Key`, `Selection`, `SortDescriptor`, `DateValue`, `TimeValue`, `RangeValue`). |
+| `govocal-ds` | Every Component and Pattern with its props types and, for a part with words, its `XLabels` type and `xLabels` English defaults (point 11); the content parts (`Heading`, `Text`, `Header`, `Keyboard`, `Separator`); `PlacementProps`; React Aria's value types (`Key`, `Selection`, `SortDescriptor`, `DateValue`, `TimeValue`, `RangeValue`). |
 | `govocal-ds/base` | Primitives: starter React Aria parts no Component covers yet (`Calendar`, `DatePicker`, `Table`, `Tree`, `Dialog`, `Popover`, `ListBox`, `Toolbar`, …). Use one only when `govocal-ds` has nothing for the job. |
 | `govocal-ds/tokens.css` | The `--gv-*` tokens. Import once, at the app's root. Each part imports its own CSS. |
 
@@ -186,10 +187,58 @@ prop or moves to Patterns, decided by its use: generic and used on two or more s
 <ProjectHeader level="phase" status="draft" … />   {/* a Pattern: phase is its word */}
 ```
 
+### 11. Words come from the page
+
+The system never translates. Go Vocal's platform runs in about 30 locales and keeps its messages in its own i18n, so a
+part says only words the page gives it, with English defaults so a story or a prototype reads without any. One rule
+for every Component, Pattern and painted starter part:
+
+- **Content is a prop, as before.** What belongs to this instance (`title`, `label`, `aria-label`, `placeholder`,
+  `description`, `emptyLabel`, `children`, `confirmLabel`, `selectionLabel`, …) stays a prop. Where one has a default,
+  the default lives in the part's labels and the prop wins when given.
+- **The part's own words are `labels`.** A part that says a word of its own (a control's name, a state, a count, a
+  join) takes `labels?: Partial<XLabels>` and exports two names beside it: the interface `XLabels` and the object
+  `xLabels`, its English defaults. The part merges the page's words over the defaults (`mergeLabels`); a key left out
+  keeps its default.
+- **Counts and phrases are functions.** A count is a `CountLabel`, `(count: number, formatted: string) => string`: the
+  count for the host's plural rules, then the number as the locale writes it, which the English defaults print. Other
+  values arrive already formatted as strings (a name, "42%", "3 of 124"). A phrase around markup takes and returns a
+  `ReactNode` (`postedBy: author => <>Posted by {author}</>`).
+- **A part that draws another's words hands them on.** Its labels extend the other part's and go to it
+  (`FilterMenuLabels extends OptionListLabels`, `CardLabels extends RequiredMarkerLabels, ReviewStatusLabels`). Parts
+  drawn as one family share one object (`phonePreviewLabels`, `officialUpdateLabels`).
+- **Flat keys.** `Partial` is shallow, so a key is never an object.
+- **No one-off word props.** `closeLabel`, `cancelLabel`, `itemName` and the like are `labels` keys (point 9).
+- **Numbers, lists and dates follow the locale:** React Aria's, set by `AppProvider`'s `locale` (the browser's
+  language when nothing sets one). Never a fixed locale, never `toLocaleString()`. Inside the system,
+  `src/components/format.ts` (`useNumberFormatter`, `usePercentFormatter`, `useListFormatter`) does it.
+
+```tsx
+import {AppProvider, FilterChips, type FilterChipsLabels} from 'govocal-ds';
+
+// The host's i18n fills the words; the system never sees a message id.
+const chips: Partial<FilterChipsLabels> = {
+  clear: formatMessage(messages.clear),
+  remove: name => formatMessage(messages.removeFilter, {name}),
+  operator: count => formatMessage(messages.operator, {count}) // {count, plural, one {is} other {is any of}}
+};
+
+<AppProvider locale="nl-BE">
+  <FilterChips facets={facets} value={value} onChange={setValue} labels={chips} />
+  <Modal title={formatMessage(messages.title)} labels={{close: formatMessage(messages.close)}}>…</Modal>
+</AppProvider>
+```
+
+`tests/words.test.mjs` guards it: no fixed locale, and no JSX text or word literal outside a `…Labels` object but for a
+short list of symbols and dying starter parts, which may only shrink. Its comment names what it can't see (words kept
+in a variable or a table, a lowercase one-word default, words a function returns); review reads for those.
+
 ## Adding a part
 
-1. Props follow the ten points above; a prop type is `<Part>Props` and extends `PlacementProps` when the part renders
-   an element.
+1. Props follow the eleven points above; a prop type is `<Part>Props` and extends `PlacementProps` when the part
+   renders an element.
 2. Merge `className` (`clsx('gv-part', className)`, or `keepClass` / `ownClass` over React Aria) and pass `style`.
-3. Export the part and its props type from `src/index.ts` in its Storybook group.
-4. `npm run typecheck && npm test`.
+3. Every word it says itself goes in `<part>Labels` (point 11), taken as `labels`; numbers through `format.ts`.
+4. Export the part, its props type and its labels from `src/index.ts`: the part in its Storybook group, the labels in
+   the Words block.
+5. `npm run typecheck && npm test`.
