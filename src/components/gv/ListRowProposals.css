@@ -1,0 +1,105 @@
+@import '../theme.css';
+
+.gv-list-row-proposals {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 54px;
+  padding: var(--gv-space-9) var(--gv-space-28);
+  gap: var(--gv-space-16);
+  border-bottom: 1px solid var(--gv-border-row);
+}
+
+.gv-list-row-proposals__title-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-12);
+  flex: 1 1 176px;
+  min-width: 0;
+  padding-right: var(--gv-space-16);
+}
+
+.gv-list-row-proposals__thumbnail {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: var(--gv-radius-6);
+  background: var(--gv-surface-hover);
+  object-fit: cover;
+}
+
+.gv-list-row-proposals__title {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--gv-space-6);
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+}
+
+.gv-list-row-proposals__warning {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--gv-icon-warning);
+}
+
+.gv-list-row-proposals__cell {
+  flex: 0 0 144px;
+  padding: 0 var(--gv-space-8);
+  font: var(--gv-type-ui);
+  color: var(--gv-text-secondary);
+}
+
+.gv-list-row-proposals__votes-cell {
+  flex-basis: 200px;
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+}
+
+.gv-list-row-proposals__vote-count {
+  font: var(--gv-type-ui-strong);
+  color: var(--gv-text-primary);
+}
+
+.gv-list-row-proposals__vote-of {
+  flex-shrink: 0;
+}
+
+.gv-list-row-proposals__bar {
+  flex: 1;
+  height: 4px;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-stage);
+  overflow: hidden;
+}
+
+.gv-list-row-proposals__bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-icon-default);
+
+  &[data-reached] {
+    background: var(--gv-surface-brand-mark);
+  }
+}
+
+.gv-list-row-proposals__comments-cell {
+  flex-basis: 112px;
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+}
+
+.gv-list-row-proposals__new {
+  font: var(--gv-type-small-strong);
+  color: var(--gv-text-accent);
+}
+
+.gv-list-row-proposals__time-cell {
+  flex-basis: 104px;
+}
+
+.gv-list-row-proposals__closed {
+  color: var(--gv-text-tertiary);
+}
