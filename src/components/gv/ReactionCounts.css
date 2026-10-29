@@ -1,0 +1,29 @@
+@import '../theme.css';
+
+/* Reaction counts (the prototype's .pj-react / .pj-mlrow__st): items 14 apart, each a 16 icon in the default icon
+   grey and its number 4 after it, Small in the secondary text, tabular figures so counts line up row to row. */
+.gv-reaction-counts {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gv-space-14);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  font-variant-numeric: tabular-nums;
+  color: var(--gv-text-secondary);
+}
+
+.gv-reaction-counts__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-4);
+  white-space: nowrap;
+
+  > svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    stroke-width: 1.75;
+    color: var(--gv-icon-default);
+  }
+}
