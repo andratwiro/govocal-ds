@@ -39,6 +39,17 @@ test('Choice card: arrow keys move the selection within a radio group', async ({
   await expect(second).toBeFocused();
 });
 
+test('File list: Delete removes the row from the dialog', async ({page}) => {
+  await page.goto(story('components-data-display-file-list--in-a-dialog'));
+  const row = page.getByRole('row', {name: /street\.webp/});
+  await expect(row).toBeVisible();
+  await row.getByRole('link', {name: 'Delete'}).click();
+  await expect(page.getByRole('row', {name: /street\.webp/})).toHaveCount(0);
+  // The other attachment and the Drop zone stay.
+  await expect(page.getByRole('row', {name: /consultation-summary\.pdf/})).toBeVisible();
+  await expect(page.getByRole('button', {name: 'Drop a file here or browse'})).toBeVisible();
+});
+
 test('Choice card: revealed content shows only while its tile is chosen', async ({page}) => {
   await page.goto(story('components-forms-choice-card--with-revealed-content'));
   // The story starts on Budget allocation, so its Min/Max are already open. The native radio input

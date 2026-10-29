@@ -1,0 +1,100 @@
+@import '../theme.css';
+
+/*
+ * File list (Figma not yet drawn; the prototype's `.attlist` / `.attf` rows): a plain vertical list,
+ * one hairline-separated row per file — icon, name + meta, View / Delete. Its own classes replace
+ * GridList's default card-grid look (`react-aria-GridList`/`Item`), so the rows read as a list, not
+ * a gallery.
+ */
+.gv-file-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.gv-file-list__grid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: none;
+  min-height: 0;
+  padding: 0;
+  gap: 0;
+  outline: none;
+
+  &[data-focus-visible] {
+    outline: none;
+  }
+}
+
+.gv-file-list__row {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-12);
+  width: 100%;
+  max-width: none;
+  padding: var(--gv-space-9) 2px;
+  border-top: 1px solid var(--gv-border-row);
+  border-radius: 0;
+  background: none;
+  outline: none;
+  cursor: default;
+
+  &:first-child {
+    border-top: none;
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: -2px;
+    border-radius: var(--gv-radius-6);
+  }
+}
+
+.gv-file-list__icon {
+  flex: none;
+  stroke-width: 1.75;
+  color: var(--gv-icon-default);
+}
+
+.gv-file-list__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.gv-file-list__name {
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gv-file-list__meta {
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-tertiary);
+}
+
+.gv-file-list__actions {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-12);
+}
+
+.gv-file-list__empty {
+  margin: 0;
+  padding: var(--gv-space-16) 2px;
+  text-align: center;
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-tertiary);
+}
+
+.gv-file-list__add {
+  margin-top: var(--gv-space-12);
+}
