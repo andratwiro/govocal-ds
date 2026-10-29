@@ -19,7 +19,7 @@ export interface CoachmarkProps
 }
 
 /**
- * Tali's onboarding coachmark (augur-design.html #pj-coach / .pj-coach__bubble): a dark
+ * Onboarding coachmark. Not in Figma: from the prototype (augur-design.html #pj-coach / .pj-coach__bubble): a dark
  * popover with a tail, shown once per new PM, pointing at the UI it explains.
  */
 export function Coachmark({

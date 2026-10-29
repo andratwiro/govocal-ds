@@ -1,7 +1,7 @@
 @import '../theme.css';
 
 /*
- * Tali's Breadcrumb (Figma node 14:875, Level=Project/Phase·Draft/Phase·Live; prototype `.pj-bc`).
+ * Breadcrumb (Figma node 14:875, Level=Project/Phase·Draft/Phase·Live; prototype `.pj-bc`).
  * Everything 5 apart (Figma's gap). Project level: link › current (in a 22-tall box, where a rename
  * lives). Phase level: Icon button | Icon button, link / current, then a Status pill. The icon
  * buttons are IconButton and the pill is Status; this file only lays them out.

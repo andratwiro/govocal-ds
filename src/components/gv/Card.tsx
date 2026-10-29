@@ -110,7 +110,7 @@ function Trailing({iconActions, actions}: Pick<CardProps, 'iconActions' | 'actio
 }
 
 /**
- * Tali's Card: a titled box with a status line (Required, review notice, summary, pills), a control
+ * Card: a titled box with a status line (Required, review notice, summary, pills), a control
  * (chevron, icon buttons, compact buttons, a switch) and an optional body. One card covers Figma's 23 types.
  */
 export function Card({

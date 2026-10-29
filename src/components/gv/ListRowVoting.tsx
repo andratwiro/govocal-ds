@@ -11,17 +11,17 @@ export interface ListRowVotingProps {
   voteCount: number;
   /** The bar fill, 0-100, relative to the option with the most votes. */
   fillPercent: number;
-  /** Unseen votes since Rob's last visit. */
+  /** Unseen votes since the admin's last visit. */
   newVoteCount?: number;
   onlineCount: number;
   offlineCount: number;
   commentCount: number;
-  /** Unseen comments since Rob's last visit. */
+  /** Unseen comments since the admin's last visit. */
   newCommentCount?: number;
 }
 
 /**
- * The content of one Voting-method list row, built around Tali's Vote
+ * The content of one Voting-method list row, built around Vote
  * progress (Type=Count / Count · new). Place inside a selectable `Row`/`Cell`
  * (Table) or `GridListItem` — see the `InATable` story.
  */

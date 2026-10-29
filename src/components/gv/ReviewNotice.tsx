@@ -3,7 +3,7 @@ import './ReviewNotice.css';
 
 export interface ReviewNoticeProps {
   /**
-   * Where a card's review stands. Figma draws "To review"; Tali's prototype adds "To set" (a decision with no value
+   * Where a card's review stands. Figma draws "To review"; the prototype adds "To set" (a decision with no value
    * yet) and "Reviewed" (green, once the admin has visited the card).
    *
    * @default 'to-review'

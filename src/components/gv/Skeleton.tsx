@@ -13,7 +13,7 @@ export interface SkeletonProps {
 }
 
 /**
- * Tali's grey placeholder (augur-design.html .pj-skel), used while the phone preview
+ * A grey placeholder. Not in Figma: from the prototype (augur-design.html .pj-skel), used while the phone preview
  * or a list of rows is still loading. Display-only: a calm pulse, never focusable.
  */
 export function Skeleton({width, height, shape = 'line', className, style}: SkeletonProps) {

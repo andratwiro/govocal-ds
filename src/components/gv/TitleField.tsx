@@ -11,13 +11,13 @@ import './TitleField.css';
 
 export interface TitleFieldProps extends AriaTextFieldProps {
   placeholder?: string;
-  /** Shows Tali's Required dot + label after the field (Figma: Title field always carries one). */
+  /** Shows the Required dot + label after the field (Figma: Title field always carries one). */
   isRequired?: boolean;
   errorMessage?: string | ((validation: ValidationResult) => string);
 }
 
 /**
- * Tali's Title field (Figma node 4:123): the big project/page name input at the top of an editor.
+ * Title field (Figma node 4:123): the big project/page name input at the top of an editor.
  * A plain React Aria TextField — no visible <Label>, the placeholder carries the hint.
  */
 export function TitleField({placeholder = 'Add a title', isRequired, errorMessage, ...props}: TitleFieldProps) {

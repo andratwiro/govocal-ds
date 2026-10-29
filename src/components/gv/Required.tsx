@@ -5,7 +5,7 @@ export interface RequiredProps {
   placement?: 'card' | 'field';
 }
 
-/** Tali's Required (Figma node 14:878): a small dot + "Required" label. Display-only. */
+/** Required (Figma node 14:878): a small dot + "Required" label. Display-only. */
 export function Required({placement = 'field'}: RequiredProps) {
   return (
     <span className="gv-required" data-placement={placement}>

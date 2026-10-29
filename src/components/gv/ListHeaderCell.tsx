@@ -5,7 +5,7 @@ import './ListHeaderCell.css';
 
 export interface ListHeaderCellProps {
   /**
-   * Label cells align their text left; Number cells align right (Tali's Figma `Type`).
+   * Label cells align their text left; Number cells align right (Figma's `Type`).
    *
    * @default 'label'
    */

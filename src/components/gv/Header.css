@@ -1,6 +1,6 @@
 @import '../theme.css';
 
-/* Tali's Header (Figma 14:876): 48 tall, padding 5/6, radius 8, around a Breadcrumb (Breadcrumb.css). */
+/* Header (Figma 14:876): 48 tall, padding 5/6, radius 8, around a Breadcrumb (Breadcrumb.css). */
 .gv-header {
   display: inline-flex;
   align-items: center;

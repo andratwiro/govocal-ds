@@ -25,7 +25,7 @@ export interface HeaderProps {
 }
 
 /**
- * Tali's page header (Figma 14:876): a 48-tall frame around her Breadcrumb, as in Figma, where each
+ * The page header (Figma 14:876): a 48-tall frame around the Breadcrumb, as in Figma, where each
  * Level holds a Breadcrumb instance of the same level.
  */
 export function Header({

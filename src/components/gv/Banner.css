@@ -1,6 +1,6 @@
 @import '../theme.css';
 
-/* Tali's Banner (Figma 33:479; prototype .bn--info): surface-info, radius 12, gap 12. */
+/* Banner (Figma 33:479; prototype .bn--info): surface-info, radius 12, gap 12. */
 .gv-banner {
   display: flex;
   align-items: flex-start;

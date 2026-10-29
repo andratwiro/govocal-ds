@@ -29,7 +29,7 @@ export interface ModalProps {
   closeLabel?: string;
 }
 
-/** Tali's Modal: head (title + ×), a body, and a footer of buttons over a hairline. Wraps the starter Modal + Dialog. */
+/** Modal: head (title + ×), a body, and a footer of buttons over a hairline. Wraps the starter Modal + Dialog. */
 export function Modal({
   title,
   children,

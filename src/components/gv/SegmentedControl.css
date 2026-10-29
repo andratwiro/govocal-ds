@@ -1,7 +1,7 @@
 @import '../theme.css';
 
 /*
- * Tali's Segmented control (Figma node 14:883) + Segment (14:882).
+ * Segmented control (Figma node 14:883) + Segment (14:882).
  * Figma and the prototype's `.pj-hseg`/`.pj-hseg__b` agree: radius 5 (not a full pill), a sliding
  * selected segment with --gv-shadow-segment-selected, text --gv-text-segment (default) /
  * --gv-text-primary + type ui-strong (selected).

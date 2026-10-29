@@ -1,6 +1,6 @@
 @import '../theme.css';
 
-/* Tali's Review notice (Figma 4:224; prototype .rv): a 14 dashed circle + Small, gap 4. */
+/* Review notice (Figma 4:224; prototype .rv): a 14 dashed circle + Small, gap 4. */
 .gv-review-notice {
   display: inline-flex;
   align-items: center;
@@ -18,7 +18,7 @@
   color: var(--gv-icon-default);
 }
 
-/* Reviewed has to catch the eye (Tali, 22 Oct): green, medium, a filled check, no chip. */
+/* Reviewed has to catch the eye (the prototype, 22 Oct): green, medium, a filled check, no chip. */
 .gv-review-notice[data-state='reviewed'] {
   font: var(--gv-type-small-strong);
   color: var(--gv-text-reviewed);

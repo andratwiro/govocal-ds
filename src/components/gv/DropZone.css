@@ -1,6 +1,6 @@
 @import '../theme.css';
 
-/* Tali's Drop zone (Figma node 5:490): toolbar fill, control border (dashed per the prototype), radius 10. */
+/* Drop zone (Figma node 5:490): toolbar fill, control border (dashed per the prototype), radius 10. */
 .gv-drop-zone {
   display: flex;
   flex-direction: column;

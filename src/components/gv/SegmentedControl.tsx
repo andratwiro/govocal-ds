@@ -23,7 +23,7 @@ export interface SegmentedControlProps extends ToggleButtonGroupProps {
 }
 
 /**
- * Tali's Segmented control (Figma node 14:883; prototype `.pj-hseg`).
+ * Segmented control (Figma node 14:883; prototype `.pj-hseg`).
  * Built on the starter's own primitives (ToggleButtonGroup + ToggleButton + SelectionIndicator,
  * the same ones `src/components/SegmentedControl.tsx` uses) rather than wrapping that file
  * directly: its hardcoded className/data-variant on the RAC elements leaves no way for a
@@ -35,11 +35,11 @@ export function SegmentedControl({size = 'default', ...props}: SegmentedControlP
 
 export interface SegmentProps extends ToggleButtonProps {
   children?: ReactNode;
-  /** Shows Tali's New dot before the label (Figma `Segment` State=Unread). */
+  /** Shows the New dot before the label (Figma `Segment` State=Unread). */
   isUnread?: boolean;
 }
 
-/** Tali's Segment (Figma node 14:882). */
+/** Segment (Figma node 14:882). */
 export function Segment({children, isUnread, ...props}: SegmentProps) {
   return (
     <ToggleButton {...props} className="gv-segment" data-unread={isUnread || undefined}>

@@ -1,6 +1,6 @@
 @import '../theme.css';
 
-/* Tali's loading placeholder (augur-design.html .pj-skel): flat grey block, a calm
+/* Loading placeholder. Not in Figma: from the prototype (augur-design.html .pj-skel): flat grey block, a calm
    opacity pulse (never a shimmer sweep), respects reduced motion. */
 .gv-skeleton {
   display: block;

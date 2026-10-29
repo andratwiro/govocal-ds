@@ -10,7 +10,7 @@ export interface CheckboxProps extends CheckboxFieldProps {
   errorMessage?: string | ((validation: ValidationResult) => string);
 }
 
-/** Tali's Checkbox: a 15x15 rounded box, token-fill when checked/indeterminate. Wraps the starter's Checkbox. */
+/** Checkbox: a 15x15 rounded box, token-fill when checked/indeterminate. Wraps the starter's Checkbox. */
 export function Checkbox({children, description, errorMessage, ...props}: CheckboxProps) {
   return (
     <StarterCheckbox

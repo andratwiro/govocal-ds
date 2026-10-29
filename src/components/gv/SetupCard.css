@@ -1,6 +1,6 @@
 @import '../theme.css';
 
-/* Tali's Setup card (Figma 14:874): 46 tall, panel fill, 1px border-subtle, radius 8. */
+/* Setup card (Figma 14:874): 46 tall, panel fill, 1px border-subtle, radius 8. */
 .gv-setup-card {
   box-sizing: border-box;
   width: 100%;
@@ -51,7 +51,7 @@
   color: var(--gv-icon-primary);
 }
 
-/* Done: a filled check (Tali, 7 Oct: the success green, white tick). */
+/* Done: a filled check (the prototype, 7 Oct: the success green, white tick). */
 .gv-setup-card__check--done {
   color: var(--gv-icon-inverse);
 

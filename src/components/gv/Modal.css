@@ -1,6 +1,6 @@
 @import '../theme.css';
 
-/* Tali's Modal (Figma 5:513): 420 wide, radius 14, panel fill, 1px border-subtle, the dialog shadow.
+/* Modal (Figma 5:513): 420 wide, radius 14, panel fill, 1px border-subtle, the dialog shadow.
    The starter Modal places it (overlay, centring, entrance); these rules only repaint the shell it draws. */
 .react-aria-Modal:has(> .gv-modal) {
   max-width: 94vw;

@@ -34,7 +34,7 @@
   gap: var(--gv-space-2);
   min-inline-size: 0;
 }
-/* Title role, at the prototype's weight 400 (Tali, 14 Oct: "títulos de sección 16/400"); Figma's Title is 500. */
+/* Title role, at the prototype's weight 400 (the prototype's 14 Oct override: section titles 16/400); Figma's Title is 500. */
 .gv-dashboard-card__title {
   display: flex;
   align-items: center;

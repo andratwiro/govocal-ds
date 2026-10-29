@@ -1,6 +1,6 @@
 @import '../theme.css';
 
-/* Tali's Card (Figma 14:879, 23 types). Build cards: 1px border-card, no fill, radius 8.
+/* Card (Figma 14:879, 23 types). Build cards: 1px border-card, no fill, radius 8.
    Manage / Insights cards: panel fill, 1px border-subtle. */
 .gv-card {
   box-sizing: border-box;

@@ -15,7 +15,7 @@ export interface DropZoneProps extends RACDropZoneProps {
 }
 
 /**
- * Tali's Drop zone (Figma node 5:490): a dashed-bordered area with an upload icon and a
+ * Drop zone (Figma node 5:490): a dashed-bordered area with an upload icon and a
  * "Drop a file here or browse" label, "browse" opening the OS file picker via FileTrigger.
  * The prototype's `.pj-sub__upload` agrees with Figma on padding/radius/colour but uses a
  * dashed border where Figma shows solid — followed the prototype here (dashed reads as "drop

@@ -1,6 +1,6 @@
 @import '../theme.css';
 
-/* Tali's Required (Figma node 14:878, Placement=Card/Field): identical look, different surrounding gap. */
+/* Required (Figma node 14:878, Placement=Card/Field): identical look, different surrounding gap. */
 .gv-required {
   display: inline-flex;
   align-items: center;

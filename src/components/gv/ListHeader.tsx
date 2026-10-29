@@ -12,7 +12,7 @@ export interface ListHeaderColumn {
   square?: boolean;
   /** This column is the one the list is currently sorted by. */
   sorted?: boolean;
-  /** Fixed column width in px, matching Tali's spec per method. */
+  /** Fixed column width in px, matching Figma's spec per method. */
   width?: number;
 }
 

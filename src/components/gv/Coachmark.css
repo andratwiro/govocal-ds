@@ -1,6 +1,6 @@
 @import '../theme.css';
 
-/* Tali's onboarding coachmark (augur-design.html #pj-coach / .pj-coach__bubble): a dark,
+/* Onboarding coachmark. Not in Figma: from the prototype (augur-design.html #pj-coach / .pj-coach__bubble): a dark,
    fixed-width card with a rotated-square tail pointing at the UI it explains. */
 .gv-coachmark {
   position: relative;

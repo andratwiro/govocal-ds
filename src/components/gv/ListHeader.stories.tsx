@@ -84,7 +84,7 @@ export const Voting: Story = () => <ListHeader columns={voting} />;
  * `Table`: the starter `Table`/`TableHeader`/`Row` already add the checkbox
  * column when `selectionMode="multiple"`, and handle focus, keyboard
  * navigation and selection state — `ListHeader`/`ListRow` only supply
- * Tali's look, as the single (non-tree) column's content. The same pattern
+ * the design system's look, as the single (non-tree) column's content. The same pattern
  * works with `GridList`/`GridListItem` for a looser, card-less list.
  */
 export const InATable: Story = () => (

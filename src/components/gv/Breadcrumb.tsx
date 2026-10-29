@@ -35,7 +35,7 @@ export interface BreadcrumbProps extends Omit<BreadcrumbsProps<object>, 'childre
 }
 
 /**
- * Tali's Breadcrumb (Figma node 14:875, Level=Project/Phase·Draft/Phase·Live; prototype `.pj-bc`).
+ * Breadcrumb (Figma node 14:875, Level=Project/Phase·Draft/Phase·Live; prototype `.pj-bc`).
  * The phase levels lead with two ghost Icon buttons split by a divider and end with a Status pill,
  * as Figma's instances do. The last crumb is the current page (`aria-current="page"`).
  */

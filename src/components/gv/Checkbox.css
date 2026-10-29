@@ -1,7 +1,7 @@
 @import '../theme.css';
 
 /*
- * Tali's Checkbox (Figma node 5:317, 15x15 box, radius 4, panel fill + control border).
+ * Checkbox (Figma node 5:317, 15x15 box, radius 4, panel fill + control border).
  * The prototype's checked state (`.gv-checkbox input:checked + .box`) fills with its link/brand
  * colour; nearest token is --gv-action-checked (same brand-650 step as --gv-border-selected).
  */

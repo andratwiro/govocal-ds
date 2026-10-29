@@ -1,6 +1,6 @@
 @import '../theme.css';
 
-/* Tali's Title field (Figma node 4:123): a full-width 36.8px input, placeholder text, no label. */
+/* Title field (Figma node 4:123): a full-width 36.8px input, placeholder text, no label. */
 .gv-title-field-wrap {
   display: flex;
   align-items: center;

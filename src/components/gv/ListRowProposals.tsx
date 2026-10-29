@@ -14,7 +14,7 @@ export interface ListRowProposalsProps {
   /** A short status, e.g. "Gathering support", "Threshold reached", "Official response". */
   statusLabel: string;
   commentCount: number;
-  /** Unseen comments since Rob's last visit. */
+  /** Unseen comments since the admin's last visit. */
   newCommentCount?: number;
   /** "N days left", or omit and set `closed` once voting has ended. */
   daysLeft?: number;
@@ -22,7 +22,7 @@ export interface ListRowProposalsProps {
 }
 
 /**
- * The content of one Proposals list row, built around Tali's Vote progress
+ * The content of one Proposals list row, built around Vote progress
  * (Type=Threshold). Place inside a selectable `Row`/`Cell` (Table) or
  * `GridListItem` — see the `InATable` story.
  */
