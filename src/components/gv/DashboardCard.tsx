@@ -1,0 +1,229 @@
+import {useId, type HTMLAttributes, type Key, type ReactNode} from 'react';
+import {Button} from 'react-aria-components/Button';
+import {ChevronRight} from 'lucide-react';
+import type {ChartColor} from './Chart';
+import './Chart.css';
+import './DashboardCard.css';
+
+/** Figma "Dashboard card" · Type. Sets the spacing each variant uses between its parts. */
+export type DashboardCardType =
+  | 'statements'
+  | 'visitors-over-time'
+  | 'participation-over-time'
+  | 'ai-summary'
+  | 'topic-breakdown'
+  | 'status-breakdown'
+  | 'votes-over-time'
+  | 'live-ranking'
+  | 'demographic-age'
+  | 'demographic-commute';
+
+export interface DashboardCardProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
+  type?: DashboardCardType;
+  /** Card title (Title type). Demographic cards have none: their label sits in the body. */
+  title?: ReactNode;
+  /** The grey line under the title ("By votes · updating live"). */
+  subtitle?: ReactNode;
+  /** An icon before the title (AI summary: lucide `Sparkles`). Decorative. */
+  icon?: ReactNode;
+  /** Header, inline end: a control for the whole card (Votes over time: Daily / Weekly). */
+  action?: ReactNode;
+  /** The card's content: a LineChart, Sparkline, Kpi row or one of the Dashboard* lists below. */
+  children?: ReactNode;
+  /** Under the body: a ChartLegend. */
+  legend?: ReactNode;
+  /** The foot row, ends pushed apart (AI summary: "1 / 34" and Explore). */
+  footer?: ReactNode;
+  /** Heading level of the title. */
+  headingLevel?: 2 | 3 | 4;
+}
+
+const cx = (...c: (string | false | undefined)[]) => c.filter(Boolean).join(' ');
+
+/** A white dashboard tile with a header, a body and optional legend and footer (Figma "Dashboard card"). */
+export function DashboardCard({
+  type,
+  title,
+  subtitle,
+  icon,
+  action,
+  children,
+  legend,
+  footer,
+  headingLevel = 3,
+  className,
+  ...rest
+}: DashboardCardProps) {
+  const id = useId();
+  const H = `h${headingLevel}` as const;
+  const hasHeader = title != null || subtitle != null || action != null;
+  return (
+    <section
+      {...rest}
+      aria-labelledby={title != null ? id : rest['aria-labelledby']}
+      className={cx('gv-dashboard-card', type && `gv-dashboard-card--${type}`, className)}>
+      {hasHeader && (
+        <div className="gv-dashboard-card__header">
+          <div className="gv-dashboard-card__heading">
+            {title != null && (
+              <H id={id} className="gv-dashboard-card__title">
+                {icon != null && <span className="gv-dashboard-card__icon" aria-hidden>{icon}</span>}
+                {title}
+              </H>
+            )}
+            {subtitle != null && <p className="gv-dashboard-card__subtitle">{subtitle}</p>}
+          </div>
+          {action != null && <div className="gv-dashboard-card__action">{action}</div>}
+        </div>
+      )}
+      {children != null && <div className="gv-dashboard-card__body">{children}</div>}
+      {legend != null && <div className="gv-dashboard-card__legend">{legend}</div>}
+      {footer != null && <div className="gv-dashboard-card__footer">{footer}</div>}
+    </section>
+  );
+}
+
+/* ────────────── Body parts. Drawn here in plain CSS; swap for Statement row / Bar row / Legend row later. ────────────── */
+
+const pct = (n: number) => `${Math.max(0, Math.min(100, n))}%`;
+
+export interface DashboardStatement {
+  statement: ReactNode;
+  /** Reactions, as counts or percentages: the bar shows their shares. */
+  agree: number;
+  disagree: number;
+  pass: number;
+}
+
+/** Statements (Common Ground): each statement with its agree / disagree / pass bar and "% agree". */
+export function DashboardStatements({items}: {items: DashboardStatement[]}) {
+  return (
+    <ul className="gv-dashboard-statements">
+      {items.map((s, i) => {
+        const total = s.agree + s.disagree + s.pass || 1;
+        const [a, d, p] = [s.agree, s.disagree, s.pass].map(v => Math.round((v / total) * 100));
+        return (
+          <li key={i} className="gv-dashboard-statements__row">
+            <span className="gv-dashboard-statements__text">{s.statement}</span>
+            <span className="gv-dashboard-statements__bar" role="img" aria-label={`${a}% agree, ${d}% disagree, ${p}% pass`}>
+              <span data-chart-color="agree" style={{inlineSize: pct((s.agree / total) * 100)}} />
+              <span data-chart-color="disagree" style={{inlineSize: pct((s.disagree / total) * 100)}} />
+              <span data-chart-color="pass" style={{inlineSize: pct((s.pass / total) * 100)}} />
+            </span>
+            <span className="gv-dashboard-statements__value" aria-hidden>{a}% agree</span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+export interface DashboardBar {
+  label: ReactNode;
+  /** Share of the whole, 0–100: the bar's length. */
+  percent: number;
+  /** Shown after the percentage ("18% · 6"). */
+  count?: number;
+  color?: ChartColor;
+}
+
+/** Status breakdown: a label, a thin track and "percent · count" per row (Figma Bar row look). */
+export function DashboardBars({items}: {items: DashboardBar[]}) {
+  return (
+    <ul className="gv-dashboard-bars">
+      {items.map((b, i) => (
+        <li key={i} className="gv-dashboard-bars__row">
+          <span className="gv-dashboard-bars__label">{b.label}</span>
+          <span className="gv-dashboard-bars__track" aria-hidden>
+            <span data-chart-color={b.color ?? 'bar'} style={{inlineSize: pct(b.percent)}} />
+          </span>
+          <span className="gv-dashboard-bars__value">
+            {Math.round(b.percent)}%{b.count != null && ` · ${b.count.toLocaleString('en-GB')}`}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export interface DashboardRankingItem {
+  title: ReactNode;
+  votes: number;
+}
+
+/** Live ranking: options by votes, with rank, share bar (the leader in green) and count. */
+export function DashboardRanking({items, unit = 'votes'}: {items: DashboardRankingItem[]; unit?: string}) {
+  const total = items.reduce((s, o) => s + o.votes, 0) || 1;
+  const ranked = [...items].sort((x, y) => y.votes - x.votes);
+  return (
+    <ol className="gv-dashboard-ranking">
+      {ranked.map((o, i) => {
+        const share = Math.round((o.votes / total) * 100);
+        return (
+          <li key={i} className="gv-dashboard-ranking__row">
+            <span className="gv-dashboard-ranking__rank" aria-hidden>#{i + 1}</span>
+            <div className="gv-dashboard-ranking__main">
+              <span className="gv-dashboard-ranking__title">{o.title}</span>
+              <span className="gv-dashboard-ranking__track" aria-hidden>
+                <span data-chart-color={i === 0 ? 'agree' : 'bar'} style={{inlineSize: pct(share)}} />
+              </span>
+            </div>
+            <span className="gv-dashboard-ranking__value">
+              {share}%<small>{o.votes.toLocaleString('en-GB')} {unit}</small>
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+export interface DashboardTopic {
+  id: Key;
+  label: ReactNode;
+  /** "34 inputs · 0 topics" */
+  meta: ReactNode;
+}
+
+/** Topic breakdown: rows that open a topic view (React Aria Buttons with a chevron). */
+export function DashboardTopics({items, onAction}: {items: DashboardTopic[]; onAction?: (id: Key) => void}) {
+  return (
+    <div className="gv-dashboard-topics">
+      {items.map(t => (
+        <Button key={t.id} className="gv-dashboard-topics__row" onPress={() => onAction?.(t.id)}>
+          <span className="gv-dashboard-topics__label">{t.label}</span>
+          <span className="gv-dashboard-topics__meta">{t.meta}</span>
+          <ChevronRight className="gv-dashboard-topics__chevron" aria-hidden size={16} />
+        </Button>
+      ))}
+    </div>
+  );
+}
+
+export interface DashboardDemographicItem {
+  label: ReactNode;
+  percent: number;
+  color: ChartColor;
+}
+
+/** Demographic · age / commute: a labelled stacked bar over its legend rows. */
+export function DashboardDemographic({label, items}: {label: ReactNode; items: DashboardDemographicItem[]}) {
+  const id = useId();
+  return (
+    <div className="gv-dashboard-demographic">
+      <div id={id} className="gv-dashboard-demographic__label">{label}</div>
+      <div className="gv-dashboard-demographic__bar" aria-hidden>
+        {items.map((it, i) => <span key={i} data-chart-color={it.color} style={{inlineSize: pct(it.percent)}} />)}
+      </div>
+      <ul className="gv-dashboard-demographic__legend" aria-labelledby={id}>
+        {items.map((it, i) => (
+          <li key={i} className="gv-dashboard-demographic__row">
+            <span className="gv-dashboard-demographic__swatch" data-chart-color={it.color} aria-hidden />
+            <span className="gv-dashboard-demographic__name">{it.label}</span>
+            <span className="gv-dashboard-demographic__value">{Math.round(it.percent)}%</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}

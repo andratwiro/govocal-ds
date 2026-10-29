@@ -1,0 +1,373 @@
+@import '../theme.css';
+
+/* Figma "Dashboard card" (33:481) + prototype #pj-dash .pj-dcard: 16 padding, radius 8, hairline border, no shadow. */
+.gv-dashboard-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-8);
+  min-inline-size: 0;
+  padding: var(--gv-space-16);
+  border: 1px solid var(--gv-border-subtle);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-panel);
+  font-family: var(--gv-font-family);
+  color: var(--gv-text-primary);
+}
+
+/* Per-variant spacing between header, body, legend and footer (Figma item spacing). */
+.gv-dashboard-card--statements { gap: var(--gv-space-12); }
+.gv-dashboard-card--topic-breakdown { gap: 0; }
+.gv-dashboard-card--status-breakdown { gap: var(--gv-space-6); }
+.gv-dashboard-card--votes-over-time,
+.gv-dashboard-card--live-ranking { gap: var(--gv-space-10); }
+
+.gv-dashboard-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gv-space-12);
+}
+.gv-dashboard-card__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-2);
+  min-inline-size: 0;
+}
+/* Title role, at the prototype's weight 400 (Tali, 14 Oct: "títulos de sección 16/400"); Figma's Title is 500. */
+.gv-dashboard-card__title {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-7);
+  margin: 0;
+  font: var(--gv-type-title);
+  font-weight: 400;
+  letter-spacing: var(--gv-type-title-tracking);
+  color: var(--gv-text-primary);
+}
+.gv-dashboard-card__icon {
+  display: inline-flex;
+  flex: none;
+  color: var(--gv-action-checked);
+}
+.gv-dashboard-card__icon > svg {
+  inline-size: 16px;
+  block-size: 16px;
+}
+.gv-dashboard-card__subtitle {
+  margin: 0;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+}
+.gv-dashboard-card__action {
+  flex: none;
+}
+/* Range switch (Votes over time): the starter SegmentedControl, painted as Tali's (prototype .pj-dseg)
+   until Tali's own Segmented control replaces it. Scoped to this slot only. */
+.gv-dashboard-card .gv-dashboard-card__action .segmented-control {
+  --button-color: var(--gv-surface-stage);
+  --button-border: transparent;
+  padding: var(--gv-space-3);
+  border-radius: var(--gv-radius-8);
+}
+.gv-dashboard-card .gv-dashboard-card__action .segmented-control-item {
+  height: auto;
+  padding: var(--gv-space-4) var(--gv-space-11);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+}
+.gv-dashboard-card .gv-dashboard-card__action .segmented-control-item[data-selected] {
+  color: var(--gv-text-primary);
+}
+.gv-dashboard-card .gv-dashboard-card__action .react-aria-SelectionIndicator {
+  --button-color: var(--gv-surface-panel);
+  --button-border: transparent;
+  border-radius: var(--gv-radius-6);
+  box-shadow: var(--gv-shadow-segment-selected);
+}
+.gv-dashboard-card__body {
+  min-inline-size: 0;
+}
+.gv-dashboard-card__body > p {
+  margin: 0;
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-body);
+}
+.gv-dashboard-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-12);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+/* AI summary: 8 under the header, 12 above the footer. */
+.gv-dashboard-card--ai-summary .gv-dashboard-card__footer {
+  margin-block-start: var(--gv-space-4);
+}
+
+/* ── Statements: text · agree/disagree/pass bar · "% agree" (Figma Statement row) ── */
+.gv-dashboard-statements {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-14);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gv-dashboard-statements__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 200px 72px;
+  align-items: center;
+  gap: var(--gv-space-14);
+}
+.gv-dashboard-statements__text {
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-primary);
+}
+.gv-dashboard-statements__bar {
+  display: flex;
+  block-size: 8px;
+  border-radius: var(--gv-radius-full);
+  overflow: hidden;
+  background: var(--gv-surface-pill);
+}
+.gv-dashboard-statements__bar > span {
+  display: block;
+  block-size: 100%;
+  background: var(--chart-color);
+}
+.gv-dashboard-statements__value {
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-secondary);
+  text-align: end;
+  white-space: nowrap;
+}
+
+/* ── Status breakdown: label · track · "18% · 6" (Figma Bar row) ── */
+/* One grid for all rows (subgrid), so every track starts and ends at the same place. */
+.gv-dashboard-bars {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) max-content;
+  column-gap: var(--gv-space-12);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gv-dashboard-bars__row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+  padding-block: var(--gv-space-6);
+}
+.gv-dashboard-bars__label {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-body);
+}
+.gv-dashboard-bars__track {
+  display: block;
+  block-size: 6px;
+  border-radius: var(--gv-radius-3);
+  overflow: hidden;
+  background: var(--gv-surface-stage);
+}
+.gv-dashboard-bars__track > span {
+  display: block;
+  block-size: 100%;
+  border-radius: var(--gv-radius-3);
+  background: var(--chart-color);
+}
+.gv-dashboard-bars__value {
+  min-inline-size: 40px;
+  text-align: end;
+  white-space: nowrap;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-body);
+}
+
+/* ── Live ranking: #rank · title over share bar · % and count (prototype .pj-vrrow) ── */
+.gv-dashboard-ranking {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gv-dashboard-ranking__row {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-12);
+  padding-block: var(--gv-space-11);
+  border-block-end: 1px solid var(--gv-divider-default);
+}
+.gv-dashboard-ranking__row:last-child {
+  border-block-end: 0;
+}
+.gv-dashboard-ranking__rank {
+  flex: none;
+  inline-size: 26px;
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-accent);
+}
+.gv-dashboard-ranking__main {
+  flex: 1;
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-7);
+}
+.gv-dashboard-ranking__title {
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-primary);
+}
+.gv-dashboard-ranking__track {
+  display: block;
+  block-size: 8px;
+  border-radius: var(--gv-radius-full);
+  overflow: hidden;
+  background: var(--gv-surface-pill);
+}
+.gv-dashboard-ranking__track > span {
+  display: block;
+  block-size: 100%;
+  background: var(--chart-color);
+}
+.gv-dashboard-ranking__value {
+  flex: none;
+  min-inline-size: 72px;
+  text-align: end;
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-primary);
+}
+.gv-dashboard-ranking__value > small {
+  display: block;
+  margin-block-start: var(--gv-space-1);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+}
+
+/* ── Topic breakdown: rows that open a view (prototype .pj-trow, Figma Row) ── */
+.gv-dashboard-topics {
+  display: flex;
+  flex-direction: column;
+}
+.gv-dashboard-topics__row {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-12);
+  inline-size: 100%;
+  margin: 0;
+  padding: var(--gv-space-10) var(--gv-space-4);
+  border: 0;
+  border-block-start: 1px solid var(--gv-border-row);
+  background: transparent;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  outline: none;
+}
+.gv-dashboard-topics__row:first-child {
+  border-block-start: 0;
+}
+.gv-dashboard-topics__row[data-hovered] {
+  background: var(--gv-surface-hover);
+}
+.gv-dashboard-topics__row[data-pressed] {
+  background: var(--gv-surface-hover-strong);
+}
+.gv-dashboard-topics__row[data-focus-visible] {
+  outline: 2px solid var(--gv-border-selected);
+  outline-offset: -2px;
+  border-radius: var(--gv-radius-4);
+}
+.gv-dashboard-topics__label {
+  flex: 1;
+  min-inline-size: 0;
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-primary);
+}
+.gv-dashboard-topics__meta {
+  flex: none;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+}
+.gv-dashboard-topics__chevron {
+  flex: none;
+  color: var(--gv-icon-quiet);
+}
+[dir='rtl'] .gv-dashboard-topics__chevron {
+  transform: scaleX(-1);
+}
+
+/* ── Demographic: label · stacked bar · legend rows (prototype .pj-demo, Figma Legend row) ── */
+.gv-dashboard-demographic {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-12);
+}
+.gv-dashboard-demographic__label {
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-secondary);
+}
+.gv-dashboard-demographic__bar {
+  display: flex;
+  block-size: 6px;
+  border-radius: var(--gv-radius-3);
+  overflow: hidden;
+}
+.gv-dashboard-demographic__bar > span {
+  display: block;
+  block-size: 100%;
+  background: var(--chart-color);
+}
+.gv-dashboard-demographic__legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gv-dashboard-demographic__row {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+}
+.gv-dashboard-demographic__swatch {
+  flex: none;
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: var(--gv-radius-2);
+  background: var(--chart-color);
+}
+.gv-dashboard-demographic__name {
+  flex: 1;
+  min-inline-size: 0;
+  color: var(--gv-text-body);
+}
+.gv-dashboard-demographic__value {
+  flex: none;
+  color: var(--gv-text-secondary);
+}
