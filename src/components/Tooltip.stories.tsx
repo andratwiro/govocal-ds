@@ -23,3 +23,18 @@ export const Example: Story = args => (
     <Tooltip {...args}>Save</Tooltip>
   </TooltipTrigger>
 );
+
+export const AllStates: StoryFn<typeof Tooltip> = () => (
+  <div style={{display: 'flex', gap: 32}}>
+    <TooltipTrigger isOpen>
+      <Button>Publish project</Button>
+      <Tooltip>Platform menu</Tooltip>
+    </TooltipTrigger>
+    <TooltipTrigger isOpen>
+      <Button>Green Corridors for Riverside</Button>
+      <Tooltip>
+        Private, so it does not appear on the homepage, in search or in widgets.
+      </Tooltip>
+    </TooltipTrigger>
+  </div>
+);

@@ -1,20 +1,24 @@
 @import './theme.css';
 
+/* GVTooltip's look (augur-design.html #gv-tooltip): dark, hug-content, no shadow,
+   no arrow by default — Tali explicitly dropped the arrow (29 Sep note in prototype). */
 .react-aria-Tooltip {
-  box-shadow: var(--gv-shadow-subtle);
-  border-radius: var(--radius);
-  background: var(--highlight-background);
-  color: var(--highlight-foreground);
+  box-shadow: none;
+  border-radius: var(--gv-radius-4);
+  background: var(--gv-color-neutral-800);
+  color: var(--gv-text-inverse);
   forced-color-adjust: none;
   outline: none;
-  padding: var(--spacing-1) var(--spacing-2);
-  max-width: 150px;
+  padding: var(--gv-space-4) var(--gv-space-8);
+  max-width: 320px;
+  width: max-content;
+  text-align: left;
   /* fixes FF gap */
   transform: translate3d(0, 0, 0);
   transition:
     transform 200ms,
     opacity 200ms;
-  font: var(--font-size) var(--gv-font-family);
+  font: var(--gv-type-small) var(--gv-font-family);
 
   &[data-entering],
   &[data-exiting] {
@@ -51,8 +55,13 @@
     }
   }
 
+  .react-aria-OverlayArrow {
+    /* Tali (29 Sep, prototype): no arrow on the tooltip. */
+    display: none;
+  }
+
   .react-aria-OverlayArrow svg {
     display: block;
-    fill: var(--highlight-background);
+    fill: var(--gv-color-neutral-800);
   }
 }
