@@ -1,0 +1,172 @@
+@import '../theme.css';
+
+/*
+ * Locale switcher (Not in Figma; the designer's drawings for multilingual fields are pending, so the look lives here,
+ * in tokens, to follow them). Built from the platform's switcher (a row of locale chips over the field, a dot per
+ * language, the shown one filled in the primary colour) and the prototype's language button in the title field.
+ */
+
+/* buttons: the chips wrap onto a second line when the platform has many languages. */
+.gv-locale-switcher[data-kind='buttons'] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gv-space-4);
+}
+
+/* A chip: 24 tall, Small strong, the pill grey; hovered a step darker (the Select pill's hover); the shown language
+   in the primary fill with white text, as the starter's selected toggle and the platform's switcher. */
+.gv-locale-switcher__item {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+  height: var(--gv-size-control-24);
+  padding: 0 var(--gv-space-8);
+  border-radius: var(--gv-radius-6);
+  background: var(--gv-surface-pill);
+  color: var(--gv-text-pill);
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  white-space: nowrap;
+  cursor: pointer;
+  transition-property: background, color;
+  transition-duration: var(--gv-motion-duration-fast);
+  transition-timing-function: var(--gv-motion-easing-standard);
+  -webkit-tap-highlight-color: transparent;
+
+  &[data-hovered] {
+    background: var(--gv-color-slate-200);
+  }
+
+  &[data-selected] {
+    background: var(--gv-action-primary);
+    color: var(--gv-text-inverse);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
+  }
+
+  &[data-disabled] {
+    cursor: default;
+    color: var(--text-color-disabled);
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid ButtonBorder;
+
+    &[data-selected] {
+      background: Highlight;
+      color: HighlightText;
+    }
+  }
+}
+
+/* A language's mark: the 8 dot of Tabs' status dots, with the same colours, so the two never drift. Green has text,
+   grey is empty and optional, amber is empty and required, red holds an error. */
+.gv-locale-mark {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-icon-quiet);
+
+  &[data-status='filled'] {
+    background: var(--gv-chart-agree);
+  }
+
+  &[data-status='required'] {
+    background: var(--gv-icon-warning);
+  }
+
+  &[data-status='invalid'] {
+    background: var(--gv-state-notification);
+  }
+
+  @media (forced-colors: active) {
+    forced-color-adjust: none;
+    border: 1px solid CanvasText;
+  }
+}
+
+/* menu: the prototype's language button in the title field's end: 24 tall, the language icon, the code (Small
+   strong), "n/m" while languages are empty, a 12 chevron; no fill until hovered or open. */
+.gv-locale-switcher[data-kind='menu'] {
+  display: inline-flex;
+}
+
+.gv-locale-switcher__trigger {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+  height: var(--gv-size-control-24);
+  padding: 0 var(--gv-space-4) 0 var(--gv-space-8);
+  border-radius: var(--gv-radius-6);
+  color: var(--gv-text-primary);
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+  -webkit-tap-highlight-color: transparent;
+
+  &[data-hovered],
+  &[data-pressed] {
+    background: var(--gv-surface-hover-strong);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
+  }
+
+  &[data-disabled] {
+    cursor: default;
+    color: var(--text-color-disabled);
+  }
+}
+
+.gv-locale-switcher[data-open] .gv-locale-switcher__trigger {
+  background: var(--gv-surface-hover-strong);
+}
+
+.gv-locale-switcher__icon {
+  flex: none;
+  width: var(--gv-size-icon-14);
+  height: var(--gv-size-icon-14);
+  color: var(--gv-icon-default);
+}
+
+.gv-locale-switcher__value {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+}
+
+.gv-locale-switcher__count {
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-locale-switcher[data-invalid] .gv-locale-switcher__count {
+  color: var(--gv-state-notification);
+}
+
+.gv-locale-switcher__chevron {
+  flex: none;
+  width: var(--gv-size-icon-12);
+  height: var(--gv-size-icon-12);
+}
+
+/* The list: as wide as its longest language name, never narrower than the prototype's 168; the dropdown rows bring
+   their own padding. */
+.gv-locale-switcher__popover[data-trigger='Select'] {
+  width: max-content;
+  min-width: 168px;
+  max-width: 320px;
+  padding: 0;
+}
