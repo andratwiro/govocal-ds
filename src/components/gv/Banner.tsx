@@ -44,7 +44,9 @@ export interface BannerProps extends PlacementProps {
   icon?: ReactNode | null;
   /** A link with the message, e.g. "Go to project", "Open AI analysis". */
   linkLabel?: string;
+  /** Where the link goes, when it is an ordinary link. Pass this or `onLinkPress`. */
   linkHref?: string;
+  /** Fires when the link is pressed, for a link that acts rather than navigates. */
   onLinkPress?: () => void;
   /**
    * Where the link sits: `inline`, right after the words (Figma's Info · link); `trailing`, at the end of the row (the

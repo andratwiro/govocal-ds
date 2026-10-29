@@ -17,9 +17,11 @@ export interface SidePanelLabels {
   pager: string;
   /** The pager's buttons, named for what a record is ("Previous idea", "Next idea"). */
   previous: string;
+  /** The next-record button's name. */
   next: string;
   /** The pager's place, given both numbers as the locale writes them ("3 of 124"). */
   position: (current: string, total: string) => string;
+  /** The × button's name. */
   close: string;
 }
 
@@ -106,6 +108,7 @@ export interface SidePanelProps {
   labels?: Partial<SidePanelLabels>;
   /** Places the panel (e.g. a grid area for an inline one); never paints it. */
   className?: string;
+  /** Places the panel; never paints it. */
   style?: CSSProperties;
 }
 
@@ -288,9 +291,11 @@ export interface SidePanelSectionProps {
   title?: string;
   /** The heading level of `title`. @default 3 */
   headingLevel?: 2 | 3 | 4 | 5 | 6;
+  /** The section's content. */
   children: ReactNode;
   /** Places the section; never paints it. */
   className?: string;
+  /** Places the section; never paints it. */
   style?: CSSProperties;
 }
 
@@ -333,6 +338,7 @@ export interface SidePanelRecordHeadProps {
   actions?: ReactNode;
   /** Places the head; never paints it. */
   className?: string;
+  /** Places the head; never paints it. */
   style?: CSSProperties;
 }
 
@@ -374,11 +380,13 @@ export function SidePanelRecordHead({
 }
 
 export interface SidePanelAction {
+  /** A stable key for the button. */
   id: string;
   /** The button's name and its tooltip, e.g. "View on the site". */
   label: string;
   /** A 16px Lucide icon, `aria-hidden`. */
   icon: ReactNode;
+  /** Fires when the button is pressed. */
   onPress?: () => void;
 }
 
@@ -400,6 +408,7 @@ export interface SidePanelActionsProps {
   labels?: Partial<SidePanelActionsLabels>;
   /** Places the row; never paints it. */
   className?: string;
+  /** Places the row; never paints it. */
   style?: CSSProperties;
 }
 
@@ -428,6 +437,7 @@ export interface SidePanelDecisionProps {
   children: ReactNode;
   /** Places the strip; never paints it. */
   className?: string;
+  /** Places the strip; never paints it. */
   style?: CSSProperties;
 }
 

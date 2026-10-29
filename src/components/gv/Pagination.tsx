@@ -14,7 +14,9 @@ import './Pagination.css';
 export interface PaginationLabels {
   /** The landmark's name when no `aria-label` is given. */
   pagination: string;
+  /** The Previous page button's name. */
   previous: string;
+  /** The Next page button's name. */
   next: string;
   /** Each page button's name, given its number, then as the locale writes it. */
   page: (page: number, formatted: string) => string;

@@ -34,6 +34,7 @@ export interface PanelProps extends PlacementProps {
    * @default false
    */
   isFlush?: boolean;
+  /** The body, under the head and toolbar. */
   children?: ReactNode;
 }
 

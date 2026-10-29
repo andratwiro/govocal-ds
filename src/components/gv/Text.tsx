@@ -25,6 +25,7 @@ export interface TextProps extends Omit<RACTextProps, 'className' | 'style' | 'c
   elementType?: string;
   /** Places the text (a margin, a grid area); never paints it: the look comes from `kind` and `color`. */
   className?: string;
+  /** Places the text; never paints it. */
   style?: CSSProperties;
 }
 

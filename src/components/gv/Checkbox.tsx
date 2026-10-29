@@ -8,7 +8,9 @@ import './Checkbox.css';
 
 export interface CheckboxProps extends Omit<CheckboxFieldProps, 'className' | 'style'>, PlacementProps {
   children?: ReactNode;
+  /** A grey line under the checkbox's words. */
   description?: string;
+  /** The error shown under it when it is invalid: text, or a function of React Aria's validation result. */
   errorMessage?: string | ((validation: ValidationResult) => string);
   /**
    * Figma's Checkbox as drawn: dimmed at rest, full strength once hovered, checked or

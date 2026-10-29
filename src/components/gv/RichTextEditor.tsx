@@ -26,12 +26,18 @@ export interface RichTextEditorProps extends Omit<RichTextToolbarProps, 'labels'
   'aria-label'?: string;
   /** @default `labels.placeholder` ("Add a short description") */
   placeholder?: string;
+  /** The text in the area (controlled). */
   value?: string;
+  /** Fires as the text changes, with the new text. */
   onChange?: (value: string) => void;
   /** Its own words (the text area's name and hint, the toolbar's), over `richTextEditorLabels`. */
   labels?: Partial<RichTextEditorLabels>;
 }
 
+/**
+ * A formatting toolbar over a text area, for a description. The toolbar only reports presses; the page applies them.
+ * For plain text use Text area; for one per language, Multilingual rich text editor.
+ */
 export function RichTextEditor({
   'aria-label': ariaLabel,
   placeholder,

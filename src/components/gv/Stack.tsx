@@ -17,8 +17,11 @@ export interface StackProps extends PaddingProps, PlacementProps {
   /** The element. A `ul` or `ol` loses its bullets and indent; each child is then an `<li>`. @default 'div' */
   elementType?: 'div' | 'section' | 'article' | 'aside' | 'header' | 'footer' | 'main' | 'nav' | 'form' | 'ul' | 'ol' |
     'li';
+  /** The element's `id`. */
   id?: string;
+  /** A name for the element, when it is a landmark or a list (`section`, `ul`, `nav`). */
   'aria-label'?: string;
+  /** The `id` of the heading that names the element, instead of `aria-label`. */
   'aria-labelledby'?: string;
 }
 

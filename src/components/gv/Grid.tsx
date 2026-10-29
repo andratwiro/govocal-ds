@@ -32,8 +32,11 @@ export interface GridProps extends PaddingProps, PlacementProps {
   alignItems?: 'stretch' | 'start' | 'center' | 'end';
   /** The element. A `ul` or `ol` loses its bullets and indent; each child is then an `<li>`. @default 'div' */
   elementType?: 'div' | 'section' | 'article' | 'main' | 'form' | 'ul' | 'ol';
+  /** The element's `id`. */
   id?: string;
+  /** A name for the element, when it is a landmark or a list (`section`, `ul`, `nav`). */
   'aria-label'?: string;
+  /** The `id` of the heading that names the element, instead of `aria-label`. */
   'aria-labelledby'?: string;
 }
 
@@ -82,8 +85,11 @@ export interface GridItemProps extends PlacementProps {
   rowSpan?: number;
   /** The element: `li` inside a Grid that is a `ul` or `ol`. @default 'div' */
   elementType?: 'div' | 'section' | 'article' | 'aside' | 'li';
+  /** The element's `id`. */
   id?: string;
+  /** A name for the region, when it is a landmark (`section`, `aside`). */
   'aria-label'?: string;
+  /** The `id` of the heading that names the element, instead of `aria-label`. */
   'aria-labelledby'?: string;
 }
 

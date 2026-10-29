@@ -27,6 +27,7 @@ export type DashboardCardKind =
   | 'demographic-commute';
 
 export interface DashboardCardProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
+  /** Which dashboard card this is; sets the spacing between its parts. */
   kind?: DashboardCardKind;
   /** Card title (Title type). Demographic cards have none: their label sits in the body. */
   title?: ReactNode;
@@ -99,10 +100,13 @@ export function DashboardCard({
 const pct = (n: number) => `${Math.max(0, Math.min(100, n))}%`;
 
 export interface DashboardStatement {
+  /** The statement's text. */
   statement: ReactNode;
   /** Reactions, as counts or percentages: the bar shows their shares. */
   agree: number;
+  /** Disagree reactions, as counts or percentages. */
   disagree: number;
+  /** Pass reactions, as counts or percentages. */
   pass: number;
 }
 
@@ -117,6 +121,7 @@ export const dashboardStatementsLabels: DashboardStatementsLabels = {...statemen
 
 /** Statements (Common Ground): each statement with its agree / disagree / pass bar and "% agree". */
 export interface DashboardStatementsProps extends PlacementProps {
+  /** The statements, one row each. */
   items: DashboardStatement[];
   /** Its own words ("% agree", the bar's), over `dashboardStatementsLabels`. */
   labels?: Partial<DashboardStatementsLabels>;
@@ -148,16 +153,21 @@ export function DashboardStatements({items, labels, className, style}: Dashboard
 }
 
 export interface DashboardBar {
+  /** The bar's name, e.g. a status. */
   label: ReactNode;
   /** Share of the whole, 0–100: the bar's length. */
   percent: number;
   /** Shown after the percentage ("18% · 6"). */
   count?: number;
+  /** The bar's colour. Defaults to the shared bar colour. */
   color?: ChartColor;
 }
 
 /** Status breakdown: one Bar row per status (label, thin track, "percent · count"). */
-export interface DashboardBarsProps extends PlacementProps {items: DashboardBar[]}
+export interface DashboardBarsProps extends PlacementProps {
+  /** The statuses, one bar each. */
+  items: DashboardBar[];
+}
 
 export function DashboardBars({items, className, style}: DashboardBarsProps) {
   const percent = usePercentFormatter();
@@ -179,6 +189,7 @@ export function DashboardBars({items, className, style}: DashboardBarsProps) {
 }
 
 export interface DashboardRankingItem {
+  /** The option's name. */
   title: ReactNode;
   /** What it counts (votes on the Live ranking), said with `labels.count`. */
   count: number;
@@ -195,6 +206,7 @@ export const dashboardRankingLabels: DashboardRankingLabels = {count: (count, n)
 
 /** Live ranking: options by their count, with rank, share bar (the leader in green) and count. */
 export interface DashboardRankingProps extends PlacementProps {
+  /** The options with their counts; the rows come out ranked by count. */
   items: DashboardRankingItem[];
   /** Its own words (each count with its word), over `dashboardRankingLabels`. */
   labels?: Partial<DashboardRankingLabels>;
@@ -230,14 +242,21 @@ export function DashboardRanking({items, labels, className, style}: DashboardRan
 }
 
 export interface DashboardTopic {
+  /** The topic's key, passed to `onAction`. */
   id: Key;
+  /** The topic's name. */
   label: ReactNode;
   /** "34 inputs · 0 topics" */
   meta: ReactNode;
 }
 
 /** Topic breakdown: rows that open a topic view (React Aria Buttons with a chevron). */
-export interface DashboardTopicsProps extends PlacementProps {items: DashboardTopic[]; onAction?: (id: Key) => void}
+export interface DashboardTopicsProps extends PlacementProps {
+  /** The topics, one row each. */
+  items: DashboardTopic[];
+  /** Fires with the topic's `id` when its row is pressed. */
+  onAction?: (id: Key) => void;
+}
 
 export function DashboardTopics({items, onAction, className, style}: DashboardTopicsProps) {
   return (
@@ -254,12 +273,16 @@ export function DashboardTopics({items, onAction, className, style}: DashboardTo
 }
 
 export interface DashboardDemographicItem {
+  /** The group's name, e.g. an age band. */
   label: ReactNode;
+  /** Its share of the whole, 0-100: the segment's length. */
   percent: number;
+  /** The segment's colour, also the swatch on its row. */
   color: ChartColor;
 }
 
 export interface DashboardListItem {
+  /** A stable key for the row. */
   id: Key;
   /** The input's title. */
   title: ReactNode;
@@ -276,6 +299,7 @@ export interface DashboardListItem {
  * status. Rows 11 apart over a hairline (prototype `.pj-mlrow`). Not in Figma.
  */
 export interface DashboardListProps extends PlacementProps {
+  /** The inputs, one row each. */
   items: DashboardListItem[];
   /** The reaction counts' words for every row (an item's own `reactions.labels` win), over `reactionCountsLabels`. */
   labels?: Partial<ReactionCountsLabels>;
@@ -306,7 +330,12 @@ export function DashboardList({items, labels, className, style}: DashboardListPr
  * Demographic · age / commute: a labelled stacked bar over its legend rows. Hovering or focusing a row (or hovering a
  * segment) picks that share out: the other segments and rows dim (Not in Figma).
  */
-export interface DashboardDemographicProps extends PlacementProps {label: ReactNode; items: DashboardDemographicItem[]}
+export interface DashboardDemographicProps extends PlacementProps {
+  /** What is broken down, e.g. "Age". */
+  label: ReactNode;
+  /** The shares, one segment and legend row each. */
+  items: DashboardDemographicItem[];
+}
 
 export function DashboardDemographic({label, items, className, style}: DashboardDemographicProps) {
   const id = useId();

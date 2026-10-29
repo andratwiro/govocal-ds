@@ -11,6 +11,7 @@ import './AlertDialog.css';
 
 /** The words Alert dialog says itself (docs/API.md rule 11). */
 export interface AlertDialogLabels {
+  /** The Cancel button's name. */
   cancel: string;
   /** Type-to-confirm's line, given the word to type (already bold). It also names the text field. */
   typeToConfirm: (word: ReactNode) => ReactNode;
@@ -31,7 +32,9 @@ const IMPACT_ICON: Record<AlertDialogImpactRow['tone'], LucideIcon> = {
 export interface AlertDialogImpactRow {
   /** What the change does to the data: `danger` loses it, `warning` may skew it, `success` leaves it be. */
   tone: 'danger' | 'warning' | 'success';
+  /** The row's bold line, e.g. what is affected. */
   title: string;
+  /** A line under it saying what happens. */
   description: string;
 }
 

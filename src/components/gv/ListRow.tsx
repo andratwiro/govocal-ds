@@ -19,7 +19,9 @@ export const listRowLabels: ListRowLabels = {select: 'Select', needsAttention: '
 
 /** A row's checkbox in its leading 28px slot (the prototype's Manage tables). */
 export interface ListRowSelect {
+  /** Whether this row is selected (ticked and tinted). */
   isSelected?: boolean;
+  /** Fires when the row's box is toggled, with the new state. */
   onChange?: (isSelected: boolean) => void;
   /** This row's checkbox name ("Select Bike lanes"). @default `labels.select` */
   'aria-label'?: string;

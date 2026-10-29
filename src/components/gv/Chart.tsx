@@ -18,6 +18,7 @@ export type ChartColor =
 export interface ChartSeries {
   /** What the line counts ("Participants"): used in the legend and the spoken trend. */
   label: string;
+  /** The numbers to draw, one per x-axis point. */
   values: number[];
   /**
    * The line's colour. Figma draws lines in `line-primary` (brand) or `line-secondary` (orange). Defaults: one
@@ -42,10 +43,15 @@ export interface ChartLabels {
   trend: string;
   /** A line chart's name: its series' sentences, and the first and last x labels when there are two or more. */
   lineChart: (sentences: string[], from?: string, to?: string) => string;
+  /** The sentence for a series with no data, given its name. */
   noData: (label: string) => string;
+  /** The sentence for a series that holds one value, given its name and the value. */
   stayed: (label: string, value: string) => string;
+  /** The sentence for a series that starts and ends on the same value, given its name, the value and the `peak` clause. */
   beganAndEnded: (label: string, value: string, peak: string) => string;
+  /** The sentence for a series that ends higher, given its name, its first and last values and the `peak` clause. */
   rose: (label: string, from: string, to: string, peak: string) => string;
+  /** The sentence for a series that ends lower, given its name, its first and last values and the `peak` clause. */
   fell: (label: string, from: string, to: string, peak: string) => string;
   /** The inner peak's clause, given its value and, when the x axis names it, its point. */
   peak: (value: string, at?: string) => string;
@@ -118,17 +124,21 @@ const cx = (...c: (string | false | null | undefined)[]) => c.filter(Boolean).jo
 /* ───────────────────────────── Legend ───────────────────────────── */
 
 export interface ChartLegendItem {
+  /** The series' name. */
   label: ReactNode;
+  /** The swatch's colour, the same as its series'. */
   color: ChartColor;
 }
 
 export interface ChartLegendProps extends PlacementProps {
+  /** One swatch and word per series. */
   items: ChartLegendItem[];
   /**
    * The swatch: `dot`, round 9px (line charts); `square`, 8px, radius 2 (Statements: agree / disagree / pass).
    * @default 'dot'
    */
   variant?: 'dot' | 'square';
+  /** Whether the items sit in the centre or at the start. @default 'center' */
   align?: 'center' | 'start';
   /** The series picked out (its index): the other items dim, as their series do. */
   highlightedSeries?: number | null;
@@ -436,6 +446,7 @@ export function LineChart({series, xAxis, max, height = 141, showLegend = false,
 /* ───────────────────────────── Sparkline ───────────────────────────── */
 
 export interface SparklineProps extends PlacementProps {
+  /** The numbers to draw, one per point. */
   values: number[];
   /** What is counted ("Votes cast"): starts the spoken trend and names the value card's row. @default `labels.trend` */
   label?: string;

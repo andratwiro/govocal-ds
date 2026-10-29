@@ -8,7 +8,9 @@ export interface SkeletonProps {
   height?: number | string;
   /** Its shape: a text line, a solid block, a chip (pill) or a circle (avatar). @default 'line' */
   variant?: 'line' | 'block' | 'pill' | 'circle';
+  /** Places the placeholder (a margin, a grid area). */
   className?: string;
+  /** Places or sizes the placeholder. */
   style?: CSSProperties;
 }
 

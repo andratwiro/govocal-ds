@@ -41,6 +41,7 @@ export interface ListHeaderCellProps extends PlacementProps {
   children?: React.ReactNode;
   /** Sort / add-column press handler. */
   onPress?: () => void;
+  /** The add-column button's name, over `labels.addColumn`. A label or number cell is named by its text. */
   'aria-label'?: string;
   /** Its own words, over `listHeaderCellLabels`. */
   labels?: Partial<ListHeaderCellLabels>;

@@ -34,7 +34,9 @@ export const optionListLabels: OptionListLabels = {
 };
 
 export interface OptionListItem {
+  /** The option's value, and a stable key. */
   id: string;
+  /** The option's text. */
   label: string;
   /** Overrides the list's `icon` for this option, e.g. a gv Avatar for a person. */
   icon?: ReactNode;
@@ -51,6 +53,7 @@ export interface OptionListProps extends PlacementProps {
   value?: readonly string[];
   /** The ids chosen at first, when the list keeps its own value. @default [] */
   defaultValue?: readonly string[];
+  /** Fires when an option is ticked or unticked, with the ids of everything now chosen. */
   onChange?: (value: string[]) => void;
   /**
    * Several (a box at the start of each row; the list stays open) or one (a check at the end of the chosen row; the

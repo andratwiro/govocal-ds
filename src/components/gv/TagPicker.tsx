@@ -16,6 +16,7 @@ import './TagPicker.css';
 
 /** The words Tag picker says itself (docs/API.md rule 11), with the Option list's, which it hands on. */
 export interface TagPickerLabels extends OptionListLabels {
+  /** The Add tag button's text. */
   add: string;
   /** A tag's × name, given the tag. */
   remove: (tag: string) => string;
@@ -39,6 +40,7 @@ export interface TagPickerProps extends PlacementProps {
   value?: readonly string[];
   /** The tags chosen at first, when the picker keeps its own value. @default [] */
   defaultValue?: readonly string[];
+  /** Fires when a tag is added or removed, with the ids of all the tags now chosen. */
   onChange?: (value: string[]) => void;
   /** The search's placeholder in the list (shown past five tags). @default `labels.placeholder` ("Search tags...") */
   placeholder?: string;

@@ -111,7 +111,7 @@ Interface, from `src/patterns/AccessRights.tsx`.
 - `allParticipants: string` (no description)
 - `anyone: string`
 - `anyoneDescription: string` (no description)
-- `cancel: string` (no description)
+- `cancel: string`
 - `close: string`
 - `confirmRevert: string`
 - `customizeError: string` (no description)
@@ -271,10 +271,10 @@ Interface, from `src/components/gv/ActivityFeed.tsx`.
 - `hideChanges: string` (no description)
 - `hidePrompt: string` (no description)
 - `more: string`
-- `next: string` (no description)
+- `next: string`
 - `page: (page: number, formatted: string) => string`
 - `pagination: string`
-- `previous: string` (no description)
+- `previous: string`
 - `restore: string` (no description)
 - `showChanges: CountLabel`
 - `showOlder: string`
@@ -308,8 +308,8 @@ Component, from `src/components/gv/AlertDialog.tsx`.
 
 Interface, from `src/components/gv/AlertDialog.tsx`.
 
-- `description: string` (no description)
-- `title: string` (no description)
+- `description: string`
+- `title: string`
 - `tone: 'danger' | 'warning' | 'success'`
 
 ### `alertDialogLabels`
@@ -324,7 +324,7 @@ AlertDialogLabels
 
 Interface, from `src/components/gv/AlertDialog.tsx`.
 
-- `cancel: string` (no description)
+- `cancel: string`
 - `typeToConfirm: (word: ReactNode) => ReactNode`
 
 ### `AlertDialogProps`
@@ -441,7 +441,7 @@ Interface, from `src/components/gv/Avatar.tsx`. The props of `Avatar`, listed th
 
 Component, from `src/components/gv/Badge.tsx`.
 
-- `children: ReactNode` (no description)
+- `children: ReactNode`
 - `className?: string`
 - `icon?: ReactNode`
 - `labels?: Partial<BadgeLabels>`
@@ -477,11 +477,11 @@ Component, from `src/components/gv/Banner.tsx`.
 - `density?: 'default' | 'compact'`
 - `icon?: ReactNode | null`
 - `labels?: Partial<BannerLabels>`
-- `linkHref?: string` (no description)
+- `linkHref?: string`
 - `linkLabel?: string`
 - `linkPlacement?: 'inline' | 'trailing'`
 - `onDismiss?: () => void`
-- `onLinkPress?: () => void` (no description)
+- `onLinkPress?: () => void`
 - `style?: CSSProperties`
 - `title?: string`
 - `tone?: BannerTone`
@@ -533,9 +533,9 @@ Interface, from `src/components/gv/BarRow.tsx`. The props of `BarRow`, listed th
 
 Interface, from `src/components/gv/Breadcrumbs.tsx`.
 
-- `href?: string` (no description)
-- `key: string` (no description)
-- `label: string` (no description)
+- `href?: string`
+- `key: string`
+- `label: string`
 - `onPress?: () => void`
 
 ### `Breadcrumbs`
@@ -544,7 +544,7 @@ Component, from `src/components/gv/Breadcrumbs.tsx`.
 
 - `items: BreadcrumbItem[]`
 - `labels?: Partial<BreadcrumbsLabels>`
-- `onBack?: () => void` (no description)
+- `onBack?: () => void`
 - `onTogglePanel?: () => void`
 - `status?: 'draft' | 'live'`
 - `variant?: 'default' | 'editor'`
@@ -564,7 +564,7 @@ BreadcrumbsLabels
 Interface, from `src/components/gv/Breadcrumbs.tsx`.
 
 - `back: string`
-- `draft: string` (no description)
+- `draft: string`
 - `live: string`
 - `togglePanel: string`
 
@@ -629,21 +629,21 @@ Component, from `src/components/gv/Card.tsx`.
 - `children?: ReactNode`
 - `className?: string`
 - `control?: 'expand' | 'open' | 'placeholder' | 'menu'`
-- `defaultExpanded?: boolean` (no description)
+- `defaultExpanded?: boolean`
 - `defaultValue?: string`
 - `iconActions?: CardIconAction[]`
-- `isExpanded?: boolean` (no description)
+- `isExpanded?: boolean`
 - `isRequired?: boolean`
 - `labels?: Partial<CardLabels>`
 - `layout?: 'row' | 'stacked'`
 - `media?: ReactNode`
 - `menuItems?: CardMenuItem[]`
 - `onChange?: (id: string) => void`
-- `onExpandedChange?: (isExpanded: boolean) => void` (no description)
+- `onExpandedChange?: (isExpanded: boolean) => void`
 - `onOpen?: () => void`
 - `pills?: CardPill[]`
 - `status?: ReviewStatusProps['status']`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 - `summary?: string`
 - `title?: ReactNode`
 - `value?: string`
@@ -653,10 +653,10 @@ Component, from `src/components/gv/Card.tsx`.
 
 Interface, from `src/components/gv/Card.tsx`.
 
-- `icon: LucideIcon` (no description)
+- `icon: LucideIcon`
 - `isDisabled?: boolean`
 - `label: string`
-- `onPress?: () => void` (no description)
+- `onPress?: () => void`
 - `tooltip?: string`
 
 ### `cardLabels`
@@ -672,25 +672,25 @@ CardLabels
 Interface, from `src/components/gv/Card.tsx`.
 
 - `open: (title: string) => string`
-- `required: string` (no description)
-- `reviewed: string` (no description)
-- `toReview: string` (no description)
-- `toSet: string` (no description)
+- `required: string`
+- `reviewed: string`
+- `toReview: string`
+- `toSet: string`
 
 ### `CardMenuItem`
 
 Interface, from `src/components/gv/Card.tsx`.
 
 - `icon?: LucideIcon`
-- `id: string` (no description)
-- `label: string` (no description)
+- `id: string`
+- `label: string`
 
 ### `CardPill`
 
 Interface, from `src/components/gv/Card.tsx`.
 
 - `icon?: LucideIcon`
-- `label: string` (no description)
+- `label: string`
 
 ### `CardProps`
 
@@ -700,8 +700,8 @@ Interface, from `src/components/gv/Card.tsx`. The props of `Card`, listed there.
 
 Component, from `src/components/gv/Card.tsx`.
 
-- `children: ReactNode` (no description)
-- `description?: ReactNode` (no description)
+- `children: ReactNode`
+- `description?: ReactNode`
 - Passed through from @react-types/shared (86): `aria-describedby`, `aria-details`, `aria-label`, `aria-labelledby`, `autoFocus`, `dir`, `hidden`, `id`, `inert`, `lang`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onBlur`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onFocus`, `onFocusChange`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onKeyDown`, `onKeyUp`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onPress`, `onPressChange`, `onPressEnd`, `onPressStart`, `onPressUp`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`
 - Passed through from react-aria (2): `isDisabled`, `value`
 - Passed through from react-aria-components (4): `inputRef`, `render`, `slot`, `style`
@@ -743,13 +743,13 @@ ChartLabels
 
 Interface, from `src/components/gv/Chart.tsx`.
 
-- `beganAndEnded: (label: string, value: string, peak: string) => string` (no description)
-- `fell: (label: string, from: string, to: string, peak: string) => string` (no description)
+- `beganAndEnded: (label: string, value: string, peak: string) => string`
+- `fell: (label: string, from: string, to: string, peak: string) => string`
 - `lineChart: (sentences: string[], from?: string, to?: string) => string`
-- `noData: (label: string) => string` (no description)
+- `noData: (label: string) => string`
 - `peak: (value: string, at?: string) => string`
-- `rose: (label: string, from: string, to: string, peak: string) => string` (no description)
-- `stayed: (label: string, value: string) => string` (no description)
+- `rose: (label: string, from: string, to: string, peak: string) => string`
+- `stayed: (label: string, value: string) => string`
 - `trend: string`
 - `values: (names: string) => string`
 
@@ -757,10 +757,10 @@ Interface, from `src/components/gv/Chart.tsx`.
 
 Component, from `src/components/gv/Chart.tsx`.
 
-- `align?: 'center' | 'start'` (no description)
+- `align?: 'center' | 'start'`
 - `className?: string`
 - `highlightedSeries?: number | null`
-- `items: ChartLegendItem[]` (no description)
+- `items: ChartLegendItem[]`
 - `onHighlightChange?: (index: number | null) => void`
 - `style?: CSSProperties`
 - `variant?: 'dot' | 'square'`
@@ -769,8 +769,8 @@ Component, from `src/components/gv/Chart.tsx`.
 
 Interface, from `src/components/gv/Chart.tsx`.
 
-- `color: ChartColor` (no description)
-- `label: ReactNode` (no description)
+- `color: ChartColor`
+- `label: ReactNode`
 
 ### `ChartLegendProps`
 
@@ -782,7 +782,7 @@ Interface, from `src/components/gv/Chart.tsx`.
 
 - `color?: ChartColor`
 - `label: string`
-- `values: number[]` (no description)
+- `values: number[]`
 
 ### `ChatChoice`
 
@@ -936,8 +936,8 @@ Component, from `src/components/gv/Checkbox.tsx`.
 
 - `children?: ReactNode`
 - `className?: string`
-- `description?: string` (no description)
-- `errorMessage?: string | ((validation: ValidationResult) => string)` (no description)
+- `description?: string`
+- `errorMessage?: string | ((validation: ValidationResult) => string)`
 - `isQuiet?: boolean`
 - `style?: CSSProperties`
 - Passed through from @react-types/shared (95): `aria-describedby`, `aria-details`, `aria-errormessage`, `aria-label`, `aria-labelledby`, `autoFocus`, `dir`, `excludeFromTabOrder`, `form`, `hidden`, `id`, `inert`, `isDisabled`, `isInvalid`, `isReadOnly`, `isRequired`, `lang`, `name`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onBlur`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onFocus`, `onFocusChange`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onKeyDown`, `onKeyUp`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onPress`, `onPressChange`, `onPressEnd`, `onPressStart`, `onPressUp`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`, `validate`
@@ -1002,7 +1002,7 @@ Interface, from `src/components/gv/ChoiceCard.tsx`. The props of `ChoiceCardChec
 
 Component, from `src/components/gv/ChoiceCard.tsx`.
 
-- `children: ReactNode` (no description)
+- `children: ReactNode`
 - `className?: string`
 - `style?: CSSProperties`
 
@@ -1018,11 +1018,11 @@ Interface, from `src/components/gv/ChoiceCard.tsx`. The props of `ChoiceCard`, l
 
 Component, from `src/components/gv/Coachmark.tsx`.
 
-- `children: React.ReactNode` (no description)
+- `children: React.ReactNode`
 - `labels?: Partial<CoachmarkLabels>`
 - `onDismiss?: () => void`
 - `onSkip?: () => void`
-- `title: string` (no description)
+- `title: string`
 - `triggerRef: RefObject<Element | null>`
 - Passed through from @react-types/shared (74): `aria-describedby`, `aria-details`, `aria-label`, `aria-labelledby`, `dir`, `hidden`, `inert`, `lang`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`
 - Passed through from react-aria (17): `arrowBoundaryOffset`, `arrowRef`, `boundaryElement`, `containerPadding`, `crossOffset`, `getTargetRect`, `isKeyboardDismissDisabled`, `isNonModal`, `maxHeight`, `onBlurWithin`, `onFocusWithin`, `onFocusWithinChange`, `placement`, `scrollRef`, `shouldCloseOnInteractOutside`, `shouldFlip`, `shouldUpdatePosition`
@@ -1042,8 +1042,8 @@ CoachmarkLabels
 Interface, from `src/components/gv/Coachmark.tsx`.
 
 - `dismiss: string`
-- `gotIt: string` (no description)
-- `skip: string` (no description)
+- `gotIt: string`
+- `skip: string`
 
 ### `CoachmarkProps`
 
@@ -1184,7 +1184,7 @@ Interface, from `src/patterns/CommonGroundRow.tsx`. The props of `CommonGroundRo
 
 Component, from `src/components/gv/CompactButton.tsx`.
 
-- `children: React.ReactNode` (no description)
+- `children: React.ReactNode`
 - `className?: string`
 - `icon?: React.ReactNode`
 - `style?: CSSProperties`
@@ -1209,9 +1209,9 @@ type CountLabel = (count: number, formatted: string) => string
 
 Interface, from `src/components/gv/DashboardCard.tsx`.
 
-- `color?: ChartColor` (no description)
+- `color?: ChartColor`
 - `count?: number`
-- `label: ReactNode` (no description)
+- `label: ReactNode`
 - `percent: number`
 
 ### `DashboardBars`
@@ -1219,7 +1219,7 @@ Interface, from `src/components/gv/DashboardCard.tsx`.
 Component, from `src/components/gv/DashboardCard.tsx`.
 
 - `className?: string`
-- `items: DashboardBar[]` (no description)
+- `items: DashboardBar[]`
 - `style?: CSSProperties`
 
 ### `DashboardBarsProps`
@@ -1235,7 +1235,7 @@ Component, from `src/components/gv/DashboardCard.tsx`.
 - `footer?: ReactNode`
 - `headingLevel?: 2 | 3 | 4`
 - `icon?: ReactNode`
-- `kind?: DashboardCardKind` (no description)
+- `kind?: DashboardCardKind`
 - `legend?: ReactNode`
 - `subtitle?: ReactNode`
 - `title?: ReactNode`
@@ -1260,17 +1260,17 @@ Interface, from `src/components/gv/DashboardCard.tsx`. The props of `DashboardCa
 Component, from `src/components/gv/DashboardCard.tsx`.
 
 - `className?: string`
-- `items: DashboardDemographicItem[]` (no description)
-- `label: ReactNode` (no description)
+- `items: DashboardDemographicItem[]`
+- `label: ReactNode`
 - `style?: CSSProperties`
 
 ### `DashboardDemographicItem`
 
 Interface, from `src/components/gv/DashboardCard.tsx`.
 
-- `color: ChartColor` (no description)
-- `label: ReactNode` (no description)
-- `percent: number` (no description)
+- `color: ChartColor`
+- `label: ReactNode`
+- `percent: number`
 
 ### `DashboardDemographicProps`
 
@@ -1281,7 +1281,7 @@ Interface, from `src/components/gv/DashboardCard.tsx`. The props of `DashboardDe
 Component, from `src/components/gv/DashboardCard.tsx`.
 
 - `className?: string`
-- `items: DashboardListItem[]` (no description)
+- `items: DashboardListItem[]`
 - `labels?: Partial<ReactionCountsLabels>`
 - `style?: CSSProperties`
 
@@ -1289,7 +1289,7 @@ Component, from `src/components/gv/DashboardCard.tsx`.
 
 Interface, from `src/components/gv/DashboardCard.tsx`.
 
-- `id: Key` (no description)
+- `id: Key`
 - `meta?: ReactNode`
 - `reactions?: ReactionCountsProps`
 - `status?: ReactNode`
@@ -1304,7 +1304,7 @@ Interface, from `src/components/gv/DashboardCard.tsx`. The props of `DashboardLi
 Component, from `src/components/gv/DashboardCard.tsx`.
 
 - `className?: string`
-- `items: DashboardRankingItem[]` (no description)
+- `items: DashboardRankingItem[]`
 - `labels?: Partial<DashboardRankingLabels>`
 - `style?: CSSProperties`
 
@@ -1313,7 +1313,7 @@ Component, from `src/components/gv/DashboardCard.tsx`.
 Interface, from `src/components/gv/DashboardCard.tsx`.
 
 - `count: number`
-- `title: ReactNode` (no description)
+- `title: ReactNode`
 
 ### `dashboardRankingLabels`
 
@@ -1338,16 +1338,16 @@ Interface, from `src/components/gv/DashboardCard.tsx`. The props of `DashboardRa
 Interface, from `src/components/gv/DashboardCard.tsx`.
 
 - `agree: number`
-- `disagree: number` (no description)
-- `pass: number` (no description)
-- `statement: ReactNode` (no description)
+- `disagree: number`
+- `pass: number`
+- `statement: ReactNode`
 
 ### `DashboardStatements`
 
 Component, from `src/components/gv/DashboardCard.tsx`.
 
 - `className?: string`
-- `items: DashboardStatement[]` (no description)
+- `items: DashboardStatement[]`
 - `labels?: Partial<DashboardStatementsLabels>`
 - `style?: CSSProperties`
 
@@ -1364,11 +1364,11 @@ DashboardStatementsLabels
 Interface, from `src/components/gv/DashboardCard.tsx`.
 
 - `agree: string`
-- `disagree: string` (no description)
+- `disagree: string`
 - `pass: string`
 - `share: (label: string, percent: string, count?: string) => string`
 - `summary: (agreePercent: string) => string`
-- `unseen: string` (no description)
+- `unseen: string`
 - `withSummary: (summary: string, shares: string) => string`
 
 ### `DashboardStatementsProps`
@@ -1379,8 +1379,8 @@ Interface, from `src/components/gv/DashboardCard.tsx`. The props of `DashboardSt
 
 Interface, from `src/components/gv/DashboardCard.tsx`.
 
-- `id: Key` (no description)
-- `label: ReactNode` (no description)
+- `id: Key`
+- `label: ReactNode`
 - `meta: ReactNode`
 
 ### `DashboardTopics`
@@ -1388,8 +1388,8 @@ Interface, from `src/components/gv/DashboardCard.tsx`.
 Component, from `src/components/gv/DashboardCard.tsx`.
 
 - `className?: string`
-- `items: DashboardTopic[]` (no description)
-- `onAction?: (id: Key) => void` (no description)
+- `items: DashboardTopic[]`
+- `onAction?: (id: Key) => void`
 - `style?: CSSProperties`
 
 ### `DashboardTopicsProps`
@@ -1697,9 +1697,9 @@ Interface, from `src/components/gv/DataTable.tsx`. The props of `DataTableThumbn
 Interface, from `src/components/gv/DateRangeField.tsx`.
 
 - `end: DateValue | null`
-- `endTime: TimeValue | null` (no description)
-- `start: DateValue | null` (no description)
-- `startTime: TimeValue | null` (no description)
+- `endTime: TimeValue | null`
+- `start: DateValue | null`
+- `startTime: TimeValue | null`
 
 ### `DateRangeField`
 
@@ -1707,14 +1707,14 @@ Component, from `src/components/gv/DateRangeField.tsx`.
 
 - `className?: string`
 - `defaultValue?: DateRangeInput | null`
-- `description?: string` (no description)
-- `isDisabled?: boolean` (no description)
-- `isRequired?: boolean` (no description)
+- `description?: string`
+- `isDisabled?: boolean`
+- `isRequired?: boolean`
 - `label?: string`
 - `labels?: Partial<DateRangeFieldLabels>`
 - `onChange?: (value: DateRange) => void`
 - `showTime?: boolean`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 - `timeZone?: string`
 - `value?: DateRangeInput | null`
 
@@ -1730,14 +1730,14 @@ DateRangeFieldLabels
 
 Interface, from `src/components/gv/DateRangeField.tsx`.
 
-- `addEnd: string` (no description)
+- `addEnd: string`
 - `endBeforeStart: string`
-- `endDate: (label?: string) => string` (no description)
-- `endTime: (label?: string) => string` (no description)
+- `endDate: (label?: string) => string`
+- `endTime: (label?: string) => string`
 - `removeEnd: string`
-- `required: string` (no description)
+- `required: string`
 - `startDate: (label?: string) => string`
-- `startTime: (label?: string) => string` (no description)
+- `startTime: (label?: string) => string`
 
 ### `DateRangeFieldProps`
 
@@ -1747,10 +1747,10 @@ Interface, from `src/components/gv/DateRangeField.tsx`. The props of `DateRangeF
 
 Interface, from `src/components/gv/DateRangeField.tsx`.
 
-- `end?: DateValue | string | null` (no description)
-- `endTime?: TimeValue | string | null` (no description)
-- `start?: DateValue | string | null` (no description)
-- `startTime?: TimeValue | string | null` (no description)
+- `end?: DateValue | string | null`
+- `endTime?: TimeValue | string | null`
+- `start?: DateValue | string | null`
+- `startTime?: TimeValue | string | null`
 
 ### `DateValue`
 
@@ -1779,13 +1779,13 @@ Interface, from `src/components/gv/Divider.tsx`. The props of `Divider`, listed 
 Component, from `src/components/gv/DropZone.tsx`.
 
 - `acceptedFileTypes?: ReadonlyArray<string>`
-- `allowsMultiple?: boolean` (no description)
+- `allowsMultiple?: boolean`
 - `children?: ReactNode`
 - `className?: string`
 - `density?: 'default' | 'compact'`
 - `hint?: ReactNode`
 - `labels?: Partial<DropZoneLabels>`
-- `onSelect?: (files: FileList | null) => void` (no description)
+- `onSelect?: (files: FileList | null) => void`
 - `style?: CSSProperties`
 - Passed through from @react-types/shared (77): `aria-describedby`, `aria-details`, `aria-label`, `aria-labelledby`, `dir`, `hidden`, `inert`, `lang`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onHoverChange`, `onHoverEnd`, `onHoverStart`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`
 - Passed through from react-aria (7): `getDropOperation`, `isDisabled`, `onDrop`, `onDropActivate`, `onDropEnter`, `onDropExit`, `onDropMove`
@@ -1840,20 +1840,20 @@ Interface, from `src/components/gv/EmptyState.tsx`. The props of `EmptyState`, l
 
 Component, from `src/components/gv/FileList.tsx`.
 
-- `aria-label: string` (no description)
+- `aria-label: string`
 - `className?: string`
 - `emptyLabel?: string`
 - `footer?: ReactNode`
-- `items: FileListItemData[]` (no description)
+- `items: FileListItemData[]`
 - `labels?: Partial<FileListLabels>`
 - `onDelete?: (item: FileListItemData) => void`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 
 ### `FileListItemData`
 
 Interface, from `src/components/gv/FileList.tsx`.
 
-- `id: string` (no description)
+- `id: string`
 - `meta: string`
 - `name: string`
 - `url?: string`
@@ -1870,7 +1870,7 @@ FileListLabels
 
 Interface, from `src/components/gv/FileList.tsx`.
 
-- `delete: string` (no description)
+- `delete: string`
 - `empty: string`
 - `view: string`
 
@@ -1976,15 +1976,15 @@ Component, from `src/components/gv/Grid.tsx`.
 
 - `alignItems?: 'stretch' | 'start' | 'center' | 'end'`
 - `areas?: string[]`
-- `aria-label?: string` (no description)
-- `aria-labelledby?: string` (no description)
+- `aria-label?: string`
+- `aria-labelledby?: string`
 - `children?: ReactNode`
 - `className?: string`
 - `columnGap?: Space`
 - `columns?: number | string`
 - `elementType?: 'div' | 'section' | 'article' | 'main' | 'form' | 'ul' | 'ol'`
 - `gap?: Space`
-- `id?: string` (no description)
+- `id?: string`
 - `padding?: Space`
 - `paddingBlock?: Space`
 - `paddingInline?: Space`
@@ -1997,14 +1997,14 @@ Component, from `src/components/gv/Grid.tsx`.
 Component, from `src/components/gv/Grid.tsx`.
 
 - `area?: string`
-- `aria-label?: string` (no description)
-- `aria-labelledby?: string` (no description)
+- `aria-label?: string`
+- `aria-labelledby?: string`
 - `children?: ReactNode`
 - `className?: string`
 - `columnSpan?: number | 'all'`
 - `columnStart?: number`
 - `elementType?: 'div' | 'section' | 'article' | 'aside' | 'li'`
-- `id?: string` (no description)
+- `id?: string`
 - `rowSpan?: number`
 - `style?: CSSProperties`
 
@@ -2150,13 +2150,13 @@ Interface, from `src/components/gv/IconButton.tsx`. The props of `IconButton`, l
 Component, from `src/components/gv/Illustration.tsx`.
 
 - `alt?: string`
-- `className?: string` (no description)
+- `className?: string`
 - `height?: number`
 - `isPaused?: boolean`
 - `motion?: IllustrationMotion`
 - `name: IllustrationName`
 - `size?: number`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 
 ### `IllustrationGroup`
 
@@ -2170,11 +2170,11 @@ type IllustrationGroup = 'Empty states' | 'Method scenes' | 'Other'
 
 Interface, from `src/components/gv/Illustration.tsx`.
 
-- `group: IllustrationGroup` (no description)
-- `height: number` (no description)
+- `group: IllustrationGroup`
+- `height: number`
 - `loops: number`
 - `motion: IllustrationMotion`
-- `name: IllustrationName` (no description)
+- `name: IllustrationName`
 - `sizes: number[]`
 - `source: string`
 - `width: number`
@@ -2204,13 +2204,13 @@ Interface, from `src/components/gv/Illustration.tsx`. The props of `Illustration
 Component, from `src/components/gv/Inline.tsx`.
 
 - `alignItems?: 'center' | 'start' | 'end' | 'stretch' | 'baseline'`
-- `aria-label?: string` (no description)
-- `aria-labelledby?: string` (no description)
+- `aria-label?: string`
+- `aria-labelledby?: string`
 - `children?: ReactNode`
 - `className?: string`
 - `elementType?: 'div' | 'span' | 'section' | 'header' | 'footer' | 'nav' | 'ul' | 'ol' | 'li'`
 - `gap?: Space`
-- `id?: string` (no description)
+- `id?: string`
 - `justifyContent?: 'start' | 'center' | 'end' | 'space-between'`
 - `padding?: Space`
 - `paddingBlock?: Space`
@@ -2366,11 +2366,11 @@ Interface, from `src/components/Link.tsx`. The props of `Link`, listed there.
 Component, from `src/components/gv/ListHeader.tsx`.
 
 - `className?: string`
-- `columns: ListHeaderColumn[]` (no description)
+- `columns: ListHeaderColumn[]`
 - `hasLeadSlot?: boolean`
 - `labels?: Partial<ListHeaderLabels>`
 - `onAddColumn?: () => void`
-- `onSort?: (key: string) => void` (no description)
+- `onSort?: (key: string) => void`
 - `selectAll?: ListHeaderSelectAll`
 - `style?: CSSProperties`
 
@@ -2378,7 +2378,7 @@ Component, from `src/components/gv/ListHeader.tsx`.
 
 Component, from `src/components/gv/ListHeaderCell.tsx`.
 
-- `aria-label?: string` (no description)
+- `aria-label?: string`
 - `children?: React.ReactNode`
 - `className?: string`
 - `isSorted?: boolean`
@@ -2414,7 +2414,7 @@ Interface, from `src/components/gv/ListHeader.tsx`.
 - `isStatic?: boolean`
 - `key: string`
 - `kind?: 'label' | 'number'`
-- `label: string` (no description)
+- `label: string`
 - `width?: number`
 
 ### `listHeaderLabels`
@@ -2441,9 +2441,9 @@ Interface, from `src/components/gv/ListHeader.tsx`. The props of `ListHeader`, l
 Interface, from `src/components/gv/ListHeader.tsx`.
 
 - `aria-label?: string`
-- `isIndeterminate?: boolean` (no description)
-- `isSelected?: boolean` (no description)
-- `onChange?: (isSelected: boolean) => void` (no description)
+- `isIndeterminate?: boolean`
+- `isSelected?: boolean`
+- `onChange?: (isSelected: boolean) => void`
 
 ### `ListRow`
 
@@ -2482,8 +2482,8 @@ Interface, from `src/components/gv/ListRow.tsx`. The props of `ListRow`, listed 
 Interface, from `src/components/gv/ListRow.tsx`.
 
 - `aria-label?: string`
-- `isSelected?: boolean` (no description)
-- `onChange?: (isSelected: boolean) => void` (no description)
+- `isSelected?: boolean`
+- `onChange?: (isSelected: boolean) => void`
 
 ### `loadMoreLabels`
 
@@ -2865,14 +2865,14 @@ Component, from `src/components/gv/Modal.tsx`.
 
 - `children: ReactNode`
 - `className?: string`
-- `defaultOpen?: boolean` (no description)
+- `defaultOpen?: boolean`
 - `footer?: ReactNode`
 - `height?: 'auto' | 'fixed'`
 - `isDismissable?: boolean`
 - `isFlush?: boolean`
 - `isOpen?: boolean`
 - `labels?: Partial<ModalLabels>`
-- `onOpenChange?: (isOpen: boolean) => void` (no description)
+- `onOpenChange?: (isOpen: boolean) => void`
 - `style?: CSSProperties`
 - `title: string`
 - `width?: 'default' | 'wide'`
@@ -2919,7 +2919,7 @@ Interface, from `src/components/gv/MultilingualTextField.tsx`.
 - `markInvalid: string` (no description)
 - `markRequired: string` (no description)
 - `missing: (language: string, more: number, formatted: string) => string`
-- `required: string` (no description)
+- `required: string`
 - `shortCount: (filled: string, total: string) => string`
 - `text: string`
 
@@ -2956,23 +2956,23 @@ Component, from `src/components/gv/MultilingualRichTextEditor.tsx`.
 - `defaultValue?: Multiloc`
 - `description?: string`
 - `errorMessage?: string | Multiloc`
-- `isBold?: boolean` (no description)
+- `isBold?: boolean`
 - `isInvalid?: boolean`
-- `isItalic?: boolean` (no description)
-- `isList?: boolean` (no description)
+- `isItalic?: boolean`
+- `isList?: boolean`
 - `isRequired?: boolean`
 - `label?: string`
 - `labels?: Partial<MultilingualRichTextEditorLabels>`
 - `locale?: string`
 - `locales: readonly string[]`
-- `onBoldChange?: (v: boolean) => void` (no description)
+- `onBoldChange?: (v: boolean) => void`
 - `onChange?: (value: Multiloc, locale: string) => void`
-- `onImage?: () => void` (no description)
-- `onItalicChange?: (v: boolean) => void` (no description)
-- `onLink?: () => void` (no description)
-- `onListChange?: (v: boolean) => void` (no description)
+- `onImage?: () => void`
+- `onItalicChange?: (v: boolean) => void`
+- `onLink?: () => void`
+- `onListChange?: (v: boolean) => void`
 - `onLocaleChange?: (locale: string) => void` (no description)
-- `onVideo?: () => void` (no description)
+- `onVideo?: () => void`
 - `placeholder?: string`
 - `showLocaleSwitcher?: boolean`
 - `style?: CSSProperties`
@@ -2990,30 +2990,30 @@ MultilingualRichTextEditorLabels
 
 Interface, from `src/components/gv/MultilingualRichTextEditor.tsx`.
 
-- `bold: string` (no description)
+- `bold: string`
 - `counter: (length: string, max: string) => string`
 - `details: (language: string, status?: string) => string`
 - `field: string`
-- `image: string` (no description)
+- `image: string`
 - `inputName: (name: string, language: string) => string`
-- `italic: string` (no description)
+- `italic: string`
 - `language: string`
 - `languageError: (language: string, message: string) => string`
 - `languageOf: (name: string) => string`
 - `languagesFilled: (filled: number, formatted: string, total: string) => string`
-- `link: string` (no description)
-- `list: string` (no description)
+- `link: string`
+- `list: string`
 - `markEmpty: string` (no description)
 - `markFilled: string`
 - `markInvalid: string` (no description)
 - `markRequired: string` (no description)
 - `missing: (language: string, more: number, formatted: string) => string`
 - `placeholder: string`
-- `required: string` (no description)
+- `required: string`
 - `shortCount: (filled: string, total: string) => string`
 - `text: string`
-- `toolbar: string` (no description)
-- `video: string` (no description)
+- `toolbar: string`
+- `video: string`
 
 ### `MultilingualRichTextEditorProps`
 
@@ -3128,20 +3128,20 @@ NotificationEmailLabels
 Interface, from `src/patterns/NotificationRow.tsx`.
 
 - `back: string`
-- `bold: string` (no description)
+- `bold: string`
 - `buttonText: string` (no description)
-- `image: string` (no description)
+- `image: string`
 - `introduction: string` (no description)
 - `introductionPlaceholder: string` (no description)
-- `italic: string` (no description)
-- `link: string` (no description)
-- `list: string` (no description)
+- `italic: string`
+- `link: string`
+- `list: string`
 - `replyTo: string`
 - `send: string`
 - `subject: string` (no description)
 - `title: string` (no description)
-- `toolbar: string` (no description)
-- `video: string` (no description)
+- `toolbar: string`
+- `video: string`
 
 ### `NotificationEmailProps`
 
@@ -3353,7 +3353,7 @@ Component, from `src/components/gv/OptionList.tsx`.
 - `isSearchable?: boolean`
 - `items: OptionListItem[]`
 - `labels?: Partial<OptionListLabels>`
-- `onChange?: (value: string[]) => void` (no description)
+- `onChange?: (value: string[]) => void`
 - `onDone?: () => void`
 - `placeholder?: string`
 - `selectionLabel?: (n: number) => string`
@@ -3367,8 +3367,8 @@ Interface, from `src/components/gv/OptionList.tsx`.
 
 - `count?: number`
 - `icon?: ReactNode`
-- `id: string` (no description)
-- `label: string` (no description)
+- `id: string`
+- `label: string`
 
 ### `optionListLabels`
 
@@ -3409,7 +3409,7 @@ Component, from `src/components/gv/PageHeader.tsx`.
 - `description?: ReactNode`
 - `headingLevel?: 1 | 2 | 3 | 4 | 5 | 6`
 - `labels?: Partial<PageHeaderLabels>`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 - `title: ReactNode`
 
 ### `pageHeaderLabels`
@@ -3463,10 +3463,10 @@ PaginationLabels
 
 Interface, from `src/components/gv/Pagination.tsx`.
 
-- `next: string` (no description)
+- `next: string`
 - `page: (page: number, formatted: string) => string`
 - `pagination: string`
-- `previous: string` (no description)
+- `previous: string`
 
 ### `PaginationProps`
 
@@ -3477,7 +3477,7 @@ Interface, from `src/components/gv/Pagination.tsx`. The props of `Pagination`, l
 Component, from `src/components/gv/Panel.tsx`.
 
 - `actions?: ReactNode`
-- `children?: ReactNode` (no description)
+- `children?: ReactNode`
 - `className?: string`
 - `count?: number | string`
 - `description?: ReactNode`
@@ -3821,7 +3821,7 @@ Interface, from `src/patterns/ProjectHeader.tsx`.
 
 - `backToProject: (project: string) => string`
 - `breadcrumb: string`
-- `draft: string` (no description)
+- `draft: string`
 - `live: string`
 - `phaseView: string` (no description)
 - `projects: string`
@@ -4149,9 +4149,9 @@ ReactionCountsLabels
 
 Interface, from `src/components/gv/ReactionCounts.tsx`.
 
-- `comments: CountLabel` (no description)
-- `dislikes: CountLabel` (no description)
-- `likes: CountLabel` (no description)
+- `comments: CountLabel`
+- `dislikes: CountLabel`
+- `likes: CountLabel`
 
 ### `ReactionCountsProps`
 
@@ -4178,7 +4178,7 @@ RequiredMarkerLabels
 
 Interface, from `src/components/gv/RequiredMarker.tsx`.
 
-- `required: string` (no description)
+- `required: string`
 
 ### `RequiredMarkerProps`
 
@@ -4205,9 +4205,9 @@ ReviewStatusLabels
 
 Interface, from `src/components/gv/ReviewStatus.tsx`.
 
-- `reviewed: string` (no description)
-- `toReview: string` (no description)
-- `toSet: string` (no description)
+- `reviewed: string`
+- `toReview: string`
+- `toSet: string`
 
 ### `ReviewStatusProps`
 
@@ -4219,20 +4219,20 @@ Component, from `src/components/gv/RichTextEditor.tsx`.
 
 - `aria-label?: string`
 - `className?: string`
-- `isBold?: boolean` (no description)
-- `isItalic?: boolean` (no description)
-- `isList?: boolean` (no description)
+- `isBold?: boolean`
+- `isItalic?: boolean`
+- `isList?: boolean`
 - `labels?: Partial<RichTextEditorLabels>`
-- `onBoldChange?: (v: boolean) => void` (no description)
-- `onChange?: (value: string) => void` (no description)
-- `onImage?: () => void` (no description)
-- `onItalicChange?: (v: boolean) => void` (no description)
-- `onLink?: () => void` (no description)
-- `onListChange?: (v: boolean) => void` (no description)
-- `onVideo?: () => void` (no description)
+- `onBoldChange?: (v: boolean) => void`
+- `onChange?: (value: string) => void`
+- `onImage?: () => void`
+- `onItalicChange?: (v: boolean) => void`
+- `onLink?: () => void`
+- `onListChange?: (v: boolean) => void`
+- `onVideo?: () => void`
 - `placeholder?: string`
 - `style?: CSSProperties`
-- `value?: string` (no description)
+- `value?: string`
 
 ### `richTextEditorLabels`
 
@@ -4246,15 +4246,15 @@ RichTextEditorLabels
 
 Interface, from `src/components/gv/RichTextEditor.tsx`.
 
-- `bold: string` (no description)
+- `bold: string`
 - `field: string`
-- `image: string` (no description)
-- `italic: string` (no description)
-- `link: string` (no description)
-- `list: string` (no description)
+- `image: string`
+- `italic: string`
+- `link: string`
+- `list: string`
 - `placeholder: string`
-- `toolbar: string` (no description)
-- `video: string` (no description)
+- `toolbar: string`
+- `video: string`
 
 ### `RichTextEditorProps`
 
@@ -4265,16 +4265,16 @@ Interface, from `src/components/gv/RichTextEditor.tsx`. The props of `RichTextEd
 Component, from `src/components/gv/RichTextToolbar.tsx`.
 
 - `className?: string`
-- `isBold?: boolean` (no description)
-- `isItalic?: boolean` (no description)
-- `isList?: boolean` (no description)
+- `isBold?: boolean`
+- `isItalic?: boolean`
+- `isList?: boolean`
 - `labels?: Partial<RichTextToolbarLabels>`
-- `onBoldChange?: (v: boolean) => void` (no description)
-- `onImage?: () => void` (no description)
-- `onItalicChange?: (v: boolean) => void` (no description)
-- `onLink?: () => void` (no description)
-- `onListChange?: (v: boolean) => void` (no description)
-- `onVideo?: () => void` (no description)
+- `onBoldChange?: (v: boolean) => void`
+- `onImage?: () => void`
+- `onItalicChange?: (v: boolean) => void`
+- `onLink?: () => void`
+- `onListChange?: (v: boolean) => void`
+- `onVideo?: () => void`
 - `style?: CSSProperties`
 
 ### `RichTextToolbarButton`
@@ -4305,13 +4305,13 @@ RichTextToolbarLabels
 
 Interface, from `src/components/gv/RichTextToolbar.tsx`.
 
-- `bold: string` (no description)
-- `image: string` (no description)
-- `italic: string` (no description)
-- `link: string` (no description)
-- `list: string` (no description)
-- `toolbar: string` (no description)
-- `video: string` (no description)
+- `bold: string`
+- `image: string`
+- `italic: string`
+- `link: string`
+- `list: string`
+- `toolbar: string`
+- `video: string`
 
 ### `RichTextToolbarProps`
 
@@ -4721,7 +4721,7 @@ Component, from `src/components/gv/SidePanel.tsx`.
 - `position?: SidePanelPosition`
 - `returnFocus?: () => HTMLElement | null | undefined`
 - `showHead?: boolean`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 - `width?: 'default' | 'narrow'`
 
 ### `SidePanelAction`
@@ -4729,9 +4729,9 @@ Component, from `src/components/gv/SidePanel.tsx`.
 Interface, from `src/components/gv/SidePanel.tsx`.
 
 - `icon: ReactNode`
-- `id: string` (no description)
+- `id: string`
 - `label: string`
-- `onPress?: () => void` (no description)
+- `onPress?: () => void`
 
 ### `SidePanelActions`
 
@@ -4741,7 +4741,7 @@ Component, from `src/components/gv/SidePanel.tsx`.
 - `className?: string`
 - `items: SidePanelAction[]`
 - `labels?: Partial<SidePanelActionsLabels>`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 
 ### `sidePanelActionsLabels`
 
@@ -4767,7 +4767,7 @@ Component, from `src/components/gv/SidePanel.tsx`.
 
 - `children: ReactNode`
 - `className?: string`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 - `title: string`
 
 ### `SidePanelDecisionProps`
@@ -4786,8 +4786,8 @@ SidePanelLabels
 
 Interface, from `src/components/gv/SidePanel.tsx`.
 
-- `close: string` (no description)
-- `next: string` (no description)
+- `close: string`
+- `next: string`
 - `pager: string`
 - `position: (current: string, total: string) => string`
 - `previous: string`
@@ -4815,7 +4815,7 @@ Component, from `src/components/gv/SidePanel.tsx`.
 - `date?: ReactNode`
 - `headingLevel?: 2 | 3 | 4 | 5 | 6`
 - `labels?: Partial<SidePanelRecordHeadLabels>`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 - `title?: ReactNode`
 
 ### `sidePanelRecordHeadLabels`
@@ -4840,10 +4840,10 @@ Interface, from `src/components/gv/SidePanel.tsx`. The props of `SidePanelRecord
 
 Component, from `src/components/gv/SidePanel.tsx`.
 
-- `children: ReactNode` (no description)
+- `children: ReactNode`
 - `className?: string`
 - `headingLevel?: 2 | 3 | 4 | 5 | 6`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 - `title?: string`
 
 ### `SidePanelSectionProps`
@@ -4854,9 +4854,9 @@ Interface, from `src/components/gv/SidePanel.tsx`. The props of `SidePanelSectio
 
 Component, from `src/components/gv/Skeleton.tsx`.
 
-- `className?: string` (no description)
+- `className?: string`
 - `height?: number | string`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 - `variant?: 'line' | 'block' | 'pill' | 'circle'`
 - `width?: number | string`
 
@@ -4892,7 +4892,7 @@ Component, from `src/components/gv/Chart.tsx`.
 - `showArea?: boolean`
 - `showGrid?: boolean`
 - `style?: CSSProperties`
-- `values: number[]` (no description)
+- `values: number[]`
 - `xAxis?: string[]`
 
 ### `SparklineProps`
@@ -4904,13 +4904,13 @@ Interface, from `src/components/gv/Chart.tsx`. The props of `Sparkline`, listed 
 Component, from `src/components/gv/Stack.tsx`.
 
 - `alignItems?: 'stretch' | 'start' | 'center' | 'end'`
-- `aria-label?: string` (no description)
-- `aria-labelledby?: string` (no description)
+- `aria-label?: string`
+- `aria-labelledby?: string`
 - `children?: ReactNode`
 - `className?: string`
 - `elementType?: 'div' | 'section' | 'article' | 'aside' | 'header' | 'footer' | 'main' | 'nav' | 'form' | 'ul' | 'ol' | 'li'`
 - `gap?: Space`
-- `id?: string` (no description)
+- `id?: string`
 - `justifyContent?: 'start' | 'center' | 'end' | 'space-between'`
 - `padding?: Space`
 - `paddingBlock?: Space`
@@ -4942,9 +4942,9 @@ Interface, from `src/patterns/StatCard.tsx`. The props of `StatCard`, listed the
 
 Interface, from `src/components/gv/StatementRow.tsx`.
 
-- `agree: number` (no description)
-- `disagree: number` (no description)
-- `pass: number` (no description)
+- `agree: number`
+- `disagree: number`
+- `pass: number`
 - `unseen?: number`
 
 ### `StatementRow`
@@ -4954,9 +4954,9 @@ Component, from `src/components/gv/StatementRow.tsx`.
 - `agreePercent: number`
 - `className?: string`
 - `counts?: StatementCounts`
-- `disagreePercent: number` (no description)
+- `disagreePercent: number`
 - `labels?: Partial<StatementRowLabels>`
-- `passPercent: number` (no description)
+- `passPercent: number`
 - `statement?: ReactNode`
 - `style?: CSSProperties`
 - `summary?: string`
@@ -4975,10 +4975,10 @@ StatementRowLabels
 Interface, from `src/components/gv/StatementRow.tsx`.
 
 - `agree: string`
-- `disagree: string` (no description)
+- `disagree: string`
 - `pass: string`
 - `share: (label: string, percent: string, count?: string) => string`
-- `unseen: string` (no description)
+- `unseen: string`
 - `withSummary: (summary: string, shares: string) => string`
 
 ### `StatementRowProps`
@@ -5033,8 +5033,8 @@ StatTileLabels
 Interface, from `src/components/gv/StatTile.tsx`.
 
 - `about: string`
-- `down: string` (no description)
-- `flat: string` (no description)
+- `down: string`
+- `flat: string`
 - `help: (title: string) => string`
 - `up: string`
 
@@ -5062,7 +5062,7 @@ Interface, from `src/components/gv/StatTile.tsx`.
 
 Component, from `src/components/gv/StatusBadge.tsx`.
 
-- `children: ReactNode` (no description)
+- `children: ReactNode`
 - `className?: string`
 - `status: 'draft' | 'live'`
 - `style?: CSSProperties`
@@ -5231,7 +5231,7 @@ Component, from `src/components/gv/TagPicker.tsx`.
 - `isDisabled?: boolean`
 - `items: OptionListItem[]`
 - `labels?: Partial<TagPickerLabels>`
-- `onChange?: (value: string[]) => void` (no description)
+- `onChange?: (value: string[]) => void`
 - `placeholder?: string`
 - `selectionLabel?: (n: number) => string`
 - `style?: CSSProperties`
@@ -5249,7 +5249,7 @@ TagPickerLabels
 
 Interface, from `src/components/gv/TagPicker.tsx`.
 
-- `add: string` (no description)
+- `add: string`
 - `done: string`
 - `empty: string`
 - `placeholder: string`
@@ -5269,7 +5269,7 @@ Component, from `src/components/gv/Text.tsx`.
 - `elementType?: string`
 - `isStrong?: boolean`
 - `kind?: TextKind`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 - Passed through from react-aria-components (1): `render`
 - Passed through: 53 of react's AriaAttributes
 - Passed through: 160 of react's DOMAttributes
@@ -5363,15 +5363,15 @@ Interface, from `src/patterns/CommentThread.tsx`.
 
 Component, from `src/components/gv/TileGrid.tsx`.
 
-- `aria-label?: string` (no description)
-- `aria-labelledby?: string` (no description)
+- `aria-label?: string`
+- `aria-labelledby?: string`
 - `children: ReactNode`
 - `className?: string`
 - `density?: 'default' | 'compact'`
 - `elementType?: 'div' | 'ul' | 'ol'`
 - `layout?: 'row' | 'gallery'`
 - `minTileWidth?: 160 | 220 | 280 | 360`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 
 ### `TileGridProps`
 
@@ -5412,7 +5412,7 @@ type TimeValue = Time | CalendarDateTime | ZonedDateTime
 Component, from `src/components/gv/TitleField.tsx`.
 
 - `className?: string`
-- `errorMessage?: string | ((validation: ValidationResult) => string)` (no description)
+- `errorMessage?: string | ((validation: ValidationResult) => string)`
 - `isRequired?: boolean`
 - `labels?: Partial<TitleFieldLabels>`
 - `lang?: string`
@@ -5436,7 +5436,7 @@ TitleFieldLabels
 Interface, from `src/components/gv/TitleField.tsx`.
 
 - `placeholder: string`
-- `required: string` (no description)
+- `required: string`
 
 ### `TitleFieldProps`
 
@@ -5624,7 +5624,7 @@ Component, from `src/components/gv/VisuallyHidden.tsx`.
 
 - `children: ReactNode`
 - `elementType?: 'span' | 'div' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label'`
-- `id?: string` (no description)
+- `id?: string`
 - `isFocusable?: boolean`
 
 ### `VisuallyHiddenProps`

@@ -38,7 +38,10 @@ export interface BarRowProps extends PlacementProps {
   detail?: string;
 }
 
-/** Figma "Bar row": a label, a thin bar and its value. Hover darkens the bar; a `detail` card gives the exact numbers. */
+/**
+ * One row of a ranking: a label, a bar sized by its share and a value; stack rows in order (status breakdown, Top themes).
+ * Figma's "Bar row". Hover darkens the bar; a `detail` card gives the exact numbers.
+ */
 export function BarRow({label, percent, value, barColor = '--gv-chart-bar', labelLines = 1, detail, className, style}: BarRowProps) {
   const isEmpty = percent === undefined;
   const share = Math.max(0, Math.min(100, percent ?? 0));

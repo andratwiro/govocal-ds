@@ -9,7 +9,9 @@ import './StatTile.css';
 export interface StatTileLabels extends HelpPopoverLabels {
   /** The trend's direction, read before the change ("Up 12%, 7-day change"). */
   up: string;
+  /** Read before a downward trend's change. */
   down: string;
+  /** Read when the trend shows no change. */
   flat: string;
   /** The Help popover's heading when neither `infoTitle` nor a text `label` gives one. */
   about: string;

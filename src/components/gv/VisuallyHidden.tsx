@@ -9,6 +9,7 @@ export interface VisuallyHiddenProps {
   elementType?: 'span' | 'div' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label';
   /** Shows the content while it holds keyboard focus (a "Skip to content" link). */
   isFocusable?: boolean;
+  /** The element's `id`. */
   id?: string;
 }
 

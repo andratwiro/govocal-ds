@@ -24,10 +24,13 @@ export interface TileGridProps {
   density?: 'default' | 'compact';
   /** `ul` or `ol` for a list of tiles (its bullets and indent removed). @default 'div' */
   elementType?: 'div' | 'ul' | 'ol';
+  /** A name for the grid, when it is a list (`ul`, `ol`). */
   'aria-label'?: string;
+  /** The `id` of the heading that names the element, instead of `aria-label`. */
   'aria-labelledby'?: string;
   /** Places the grid (its margin, a grid area, `align-items`); never paints it. */
   className?: string;
+  /** Places the grid; never paints it. */
   style?: CSSProperties;
 }
 

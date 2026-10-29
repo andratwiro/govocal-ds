@@ -18,6 +18,7 @@ export const badgeLabels: BadgeLabels = {remove: name => (name ? `Remove ${name}
 export interface BadgeProps extends PlacementProps {
   /** A small leading icon (Figma "Icon: Yes/No"), e.g. `<Lightbulb aria-hidden size={14} />`. */
   icon?: ReactNode;
+  /** The badge's words (or a number). */
   children: ReactNode;
   /**
    * Figma draws the filled grey pill ("Idea", "6 questions"). The others are the prototype's, not in Figma yet:

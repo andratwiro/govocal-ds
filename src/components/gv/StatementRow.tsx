@@ -9,8 +9,11 @@ import './Chart.css';
 import './StatementRow.css';
 
 export interface StatementCounts {
+  /** How many people agreed. */
   agree: number;
+  /** How many people disagreed. */
   disagree: number;
+  /** How many people passed. */
   pass: number;
   /** With `unseenPercent`: the people who haven't seen the statement yet. */
   unseen?: number;
@@ -20,9 +23,11 @@ export interface StatementCounts {
 export interface StatementRowLabels {
   /** The shares' names, in the hover card and the bar's name. */
   agree: string;
+  /** The Disagree share's name. */
   disagree: string;
   /** The third answer ("Unsure" in Manage). */
   pass: string;
+  /** The unseen share's name ("Not seen yet"). */
   unseen: string;
   /** One share read out, given its name, its percentage and (with `counts`) its count, as the locale writes them. */
   share: (label: string, percent: string, count?: string) => string;
@@ -45,7 +50,9 @@ export interface StatementRowProps extends PlacementProps {
   statement?: ReactNode;
   /** Percent who agree, disagree and pass. Should sum to roughly 100 (with `unseenPercent`, all four do). */
   agreePercent: number;
+  /** Percent who disagree. */
   disagreePercent: number;
+  /** Percent who pass. */
   passPercent: number;
   /**
    * The fourth share: who hasn't seen the statement yet (the Manage panel). The three answers sit 2 apart and the

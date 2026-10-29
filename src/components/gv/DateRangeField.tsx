@@ -14,11 +14,15 @@ import './DateRangeField.css';
 
 /** The words Date range field says itself (docs/API.md rule 11), with the Required marker's, which it hands on. */
 export interface DateRangeFieldLabels extends RequiredMarkerLabels {
-  /** Each date and time field's name, given the field's `label` (none when it has no label). */
+  /** The start date field's name, given the field's `label` (none when it has no label). */
   startDate: (label?: string) => string;
+  /** The end date field's name, given the field's `label` (none when it has no label). */
   endDate: (label?: string) => string;
+  /** The start time field's name, given the field's `label` (none when it has no label). */
   startTime: (label?: string) => string;
+  /** The end time field's name, given the field's `label` (none when it has no label). */
   endTime: (label?: string) => string;
+  /** The button that adds an end date. */
   addEnd: string;
   /** The × button's name. */
   removeEnd: string;
@@ -40,19 +44,26 @@ export const dateRangeFieldLabels: DateRangeFieldLabels = {
 
 /** The range as the field hands it back: React Aria date and time values (`String(value.start)` is "2026-11-02"). */
 export interface DateRange {
+  /** The start date; `null` when none is set. */
   start: DateValue | null;
   /** No end: the range is open-ended. */
   end: DateValue | null;
+  /** The start time; `null` when none is set. */
   startTime: TimeValue | null;
+  /** The end time; `null` when none is set. */
   endTime: TimeValue | null;
 }
 
 /** The range as a page may give it: each part a React Aria value or an ISO string ("2026-11-02", "18:30"). A part
  * left out is empty. */
 export interface DateRangeInput {
+  /** The start date. */
   start?: DateValue | string | null;
+  /** The end date; left out or `null`, the range is open-ended. */
   end?: DateValue | string | null;
+  /** The start time. */
   startTime?: TimeValue | string | null;
+  /** The end time. */
   endTime?: TimeValue | string | null;
 }
 
@@ -68,8 +79,11 @@ export function toDateRange(input: DateRangeInput | null | undefined): DateRange
 export interface DateRangeFieldProps {
   /** The field's label, e.g. "Dates". */
   label?: string;
+  /** A grey line under the fields, hidden while the error shows. */
   description?: string;
+  /** Whether a start date is required: adds the Required marker beside the label. */
   isRequired?: boolean;
+  /** Whether the fields and the end-date button are greyed out. */
   isDisabled?: boolean;
   /** Adds a time field after each date (the prototype's event setup). */
   showTime?: boolean;
@@ -86,6 +100,7 @@ export interface DateRangeFieldProps {
   labels?: Partial<DateRangeFieldLabels>;
   /** Places the field (a grid area, a width); never paints it. */
   className?: string;
+  /** Places the field; layout only. */
   style?: CSSProperties;
 }
 

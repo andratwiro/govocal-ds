@@ -9,8 +9,11 @@ import './ReactionCounts.css';
 
 /** The words Reaction counts says itself (docs/API.md rule 11): each count read out with its word ("128 likes"). */
 export interface ReactionCountsLabels {
+  /** Reads out the likes count, given the number and its formatted form ("128 likes"). */
   likes: CountLabel;
+  /** Reads out the dislikes count, given the number and its formatted form ("128 dislikes"). */
   dislikes: CountLabel;
+  /** Reads out the comments count, given the number and its formatted form ("128 comments"). */
   comments: CountLabel;
 }
 

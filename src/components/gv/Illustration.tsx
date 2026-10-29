@@ -22,10 +22,13 @@ export type IllustrationMotion = 'auto' | 'once' | 'loop' | 'hover' | 'still';
 export type IllustrationGroup = 'Empty states' | 'Method scenes' | 'Other';
 
 export interface IllustrationInfo {
+  /** Its name, as `Illustration`'s `name` takes it. */
   name: IllustrationName;
   /** The drawing's own size (its viewBox). */
   width: number;
+  /** The drawing's own height (its viewBox). */
   height: number;
+  /** The gallery group it is listed under. */
   group: IllustrationGroup;
   /** The motion it is drawn for. */
   motion: IllustrationMotion;
@@ -118,7 +121,9 @@ export interface IllustrationProps {
   isPaused?: boolean;
   /** What the picture says, when it says something the text around it doesn't. Leave out for decoration. */
   alt?: string;
+  /** Places the illustration (a margin, a grid area); never paints it. */
   className?: string;
+  /** Places the illustration; it can't change the drawing. */
   style?: CSSProperties;
 }
 

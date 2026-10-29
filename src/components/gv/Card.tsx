@@ -40,22 +40,27 @@ export const cardLabels: CardLabels = {
 };
 
 export interface CardPill {
+  /** The pill's words. */
   label: string;
   /** A 14 lucide icon before the label (Figma "Badge · Icon=Yes"). */
   icon?: LucideIcon;
 }
 
 export interface CardMenuItem {
+  /** The value's id, as `value` and `onChange` carry it. */
   id: string;
+  /** The value's words. */
   label: string;
   /** A 16 lucide icon before the label (the input term menu: Idea, Option, Project…); the chosen one's pill shows it. */
   icon?: LucideIcon;
 }
 
 export interface CardIconAction {
+  /** The lucide icon, drawn at 16. */
   icon: LucideIcon;
   /** The button's accessible name, e.g. "Add an attachment". */
   label: string;
+  /** Fires when the button is pressed. */
   onPress?: () => void;
   /**
    * Nothing to do yet (Download volunteers before anyone signs up). The button stays focusable (`aria-disabled`) so
@@ -121,13 +126,17 @@ export interface CardProps {
   actions?: ReactNode;
   /** The body. With `control="expand"` it shows only while the card is open. */
   children?: ReactNode;
+  /** `control="expand"`: whether the body starts open (uncontrolled). */
   defaultExpanded?: boolean;
+  /** `control="expand"`: whether the body is open (controlled). */
   isExpanded?: boolean;
+  /** `control="expand"`: fires with the new open state when the person opens or closes the body. */
   onExpandedChange?: (isExpanded: boolean) => void;
   /** Its own words (the → button's name, Required, the review status), over `cardLabels`. */
   labels?: Partial<CardLabels>;
   /** Places the card (a grid area, a width); never paints it. */
   className?: string;
+  /** Places the card; layout only. */
   style?: CSSProperties;
 }
 
@@ -391,7 +400,12 @@ export function CardRadio({
   children,
   description,
   ...props
-}: Omit<RadioProps, 'className' | 'children' | 'description'> & {children: ReactNode; description?: ReactNode}) {
+}: Omit<RadioProps, 'className' | 'children' | 'description'> & {
+  /** The choice's title. */
+  children: ReactNode;
+  /** A grey line under the title. */
+  description?: ReactNode;
+}) {
   return (
     <Radio {...props} className={({defaultClassName}) => `${defaultClassName} gv-card__radio`}>
       <span className="gv-card__radio-text">

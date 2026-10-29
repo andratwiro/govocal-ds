@@ -21,6 +21,7 @@ export interface BreadcrumbsLabels {
   back: string;
   /** What the trailing Status badge says. */
   live: string;
+  /** What the Status badge says when `status` is `draft`. */
   draft: string;
 }
 
@@ -28,8 +29,11 @@ export interface BreadcrumbsLabels {
 export const breadcrumbsLabels: BreadcrumbsLabels = {togglePanel: 'Toggle panel', back: 'Back', live: 'Live', draft: 'Draft'};
 
 export interface BreadcrumbItem {
+  /** A stable id for the crumb. */
   key: string;
+  /** The crumb's words. */
   label: string;
+  /** Where the crumb goes. */
   href?: string;
   /** What pressing the crumb does, for a crumb that isn't a plain link (e.g. "back to the project"). */
   onPress?: () => void;
@@ -48,6 +52,7 @@ export interface BreadcrumbsProps extends Omit<RACBreadcrumbsProps<object>, 'chi
   items: BreadcrumbItem[];
   /** `editor` only: handlers for the leading chrome buttons. */
   onTogglePanel?: () => void;
+  /** `editor` only: fires when the back arrow is pressed. */
   onBack?: () => void;
   /** Its own words (the toggle's and back arrow's names, Live, Draft), over `breadcrumbsLabels`. */
   labels?: Partial<BreadcrumbsLabels>;

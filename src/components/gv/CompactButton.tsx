@@ -15,6 +15,7 @@ export interface CompactButtonProps extends Omit<RACButtonProps, 'children' | 'c
   variant?: 'secondary' | 'primary';
   /** A small leading icon, e.g. `<Plus aria-hidden size={16} />`. */
   icon?: React.ReactNode;
+  /** The button's words. */
   children: React.ReactNode;
 }
 

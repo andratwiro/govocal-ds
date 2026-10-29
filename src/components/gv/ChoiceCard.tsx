@@ -88,7 +88,10 @@ export function ChoiceCardCheckbox({media, children, description, revealed, clas
  * The label above a group of choice cards ("Project context", "Phases" in the Create report checklist): a Section label,
  * sentence case.
  */
-export interface ChoiceCardGroupHeadingProps extends PlacementProps {children: ReactNode}
+export interface ChoiceCardGroupHeadingProps extends PlacementProps {
+  /** The heading's words. */
+  children: ReactNode;
+}
 
 export function ChoiceCardGroupHeading({children, className, style}: ChoiceCardGroupHeadingProps) {
   return <SectionLabel className={className} style={style}>{children}</SectionLabel>;

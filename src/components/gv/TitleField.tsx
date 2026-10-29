@@ -28,6 +28,7 @@ export interface TitleFieldProps extends Omit<AriaTextFieldProps, 'className' | 
   placeholder?: string;
   /** Shows the Required dot + label inside the field, on its right (Figma: Title field always carries one). */
   isRequired?: boolean;
+  /** The message shown when the field is invalid: text, or a function of React Aria's validation result. */
   errorMessage?: string | ((validation: ValidationResult) => string);
   /**
    * The content-language button, in the end Figma keeps clear for it: a `<LocaleSwitcher kind="menu" />`. The field

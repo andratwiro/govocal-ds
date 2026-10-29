@@ -48,7 +48,9 @@ export interface ModalProps extends PlacementProps {
   isFlush?: boolean;
   /** Controlled open state; inside a `DialogTrigger` the trigger handles it. */
   isOpen?: boolean;
+  /** Whether the modal is open at first, when the page doesn't control `isOpen`. */
   defaultOpen?: boolean;
+  /** Fires when the modal opens or closes (×, Esc, a click outside, a `slot="close"` button), with the new state. */
   onOpenChange?: (isOpen: boolean) => void;
   /** Close on a click outside. @default true */
   isDismissable?: boolean;

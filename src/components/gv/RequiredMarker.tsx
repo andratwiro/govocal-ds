@@ -6,6 +6,7 @@ import './RequiredMarker.css';
 /** The words Required marker says itself (docs/API.md rule 11). A part that draws one (Card, Title field, Date
  * range field) takes the same key in its own `labels` and hands it on. */
 export interface RequiredMarkerLabels {
+  /** The word beside the dot. */
   required: string;
 }
 

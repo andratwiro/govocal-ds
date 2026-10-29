@@ -10,12 +10,19 @@ import './RichTextToolbar.css';
 /** The words Rich text toolbar says itself (docs/API.md rule 11): its name and each button's. Rich text editor and
  * Notification email take the same keys and hand them on. */
 export interface RichTextToolbarLabels {
+  /** The toolbar's name. */
   toolbar: string;
+  /** The Bold button's name. */
   bold: string;
+  /** The Italic button's name. */
   italic: string;
+  /** The List button's name. */
   list: string;
+  /** The link button's name. */
   link: string;
+  /** The image button's name. */
   image: string;
+  /** The video button's name. */
   video: string;
 }
 
@@ -31,14 +38,23 @@ export const richTextToolbarLabels: RichTextToolbarLabels = {
 };
 
 export interface RichTextToolbarProps extends PlacementProps {
+  /** Whether Bold is on (its button is pressed). */
   isBold?: boolean;
+  /** Fires when Bold is pressed, with the new state. */
   onBoldChange?: (v: boolean) => void;
+  /** Whether Italic is on (its button is pressed). */
   isItalic?: boolean;
+  /** Fires when Italic is pressed, with the new state. */
   onItalicChange?: (v: boolean) => void;
+  /** Whether List is on (its button is pressed). */
   isList?: boolean;
+  /** Fires when List is pressed, with the new state. */
   onListChange?: (v: boolean) => void;
+  /** Fires when Add link is pressed; open the page's link picker. */
   onLink?: () => void;
+  /** Fires when Add image is pressed; open the page's image picker. */
   onImage?: () => void;
+  /** Fires when Embed video is pressed; open the page's video picker. */
   onVideo?: () => void;
   /** Its own words (the toolbar's and each button's name), over `richTextToolbarLabels`. */
   labels?: Partial<RichTextToolbarLabels>;

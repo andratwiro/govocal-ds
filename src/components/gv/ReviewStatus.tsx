@@ -6,8 +6,11 @@ import './ReviewStatus.css';
 /** The words Review status says itself (docs/API.md rule 11): one per status. Card takes the same keys and hands
  * them on. */
 export interface ReviewStatusLabels {
+  /** The word for a card nobody has looked at yet. */
   toReview: string;
+  /** The word for a decision with no value yet. */
   toSet: string;
+  /** The word once the admin has visited the card. */
   reviewed: string;
 }
 

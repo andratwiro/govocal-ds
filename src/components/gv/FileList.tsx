@@ -11,6 +11,7 @@ import './FileList.css';
 export interface FileListLabels {
   /** Each row's links. */
   view: string;
+  /** The Delete link's text and name. */
   delete: string;
   /** What an empty list says, when no `emptyLabel` is given. */
   empty: string;
@@ -20,6 +21,7 @@ export interface FileListLabels {
 export const fileListLabels: FileListLabels = {view: 'View', delete: 'Delete', empty: 'No files yet'};
 
 export interface FileListItemData {
+  /** A stable key for the row. */
   id: string;
   /** The file's name, e.g. "street.webp". */
   name: string;
@@ -30,6 +32,7 @@ export interface FileListItemData {
 }
 
 export interface FileListProps {
+  /** The files, one row each. */
   items: FileListItemData[];
   /** Called by a row's Delete with its file. Left out, "Delete" isn't shown. The latest handler always runs, so it
    * may read the page's list as rendered (`setFiles(files.filter(…))`). */
@@ -38,11 +41,13 @@ export interface FileListProps {
   emptyLabel?: string;
   /** A trailing row under the list, e.g. a compact Drop zone or an "Add a file" button. */
   footer?: ReactNode;
+  /** Names the list, e.g. "Attachments". */
   'aria-label': string;
   /** Its own words (View, Delete, the empty line), over `fileListLabels`. */
   labels?: Partial<FileListLabels>;
   /** Places the list (a margin, a grid area); never paints it. */
   className?: string;
+  /** Places the list; never paints it. */
   style?: CSSProperties;
 }
 

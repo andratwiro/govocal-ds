@@ -20,6 +20,7 @@ export const listHeaderLabels: ListHeaderLabels = {selectAll: 'Select all', addC
 export interface ListHeaderColumn {
   /** A stable key, used when the list is sorted. */
   key: string;
+  /** The column head's text. */
   label: string;
   /** @default 'label' */
   kind?: 'label' | 'number';
@@ -36,15 +37,20 @@ export interface ListHeaderColumn {
 
 /** The select-all checkbox in the header's leading 28px slot (Figma's Checkbox instance). */
 export interface ListHeaderSelectAll {
+  /** Whether every row is selected. */
   isSelected?: boolean;
+  /** Whether only some rows are selected (the box shows a dash). */
   isIndeterminate?: boolean;
+  /** Fires when the box is toggled, with the new state. */
   onChange?: (isSelected: boolean) => void;
   /** @default `labels.selectAll` */
   'aria-label'?: string;
 }
 
 export interface ListHeaderProps extends PlacementProps {
+  /** The column heads, in order. */
   columns: ListHeaderColumn[];
+  /** Fires when a sortable column head is pressed, with that column's `key`. */
   onSort?: (key: string) => void;
   /** Shows the trailing "Add column" cell, e.g. for the Ideation method. */
   onAddColumn?: () => void;

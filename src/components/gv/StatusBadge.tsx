@@ -10,6 +10,7 @@ export interface StatusBadgeProps extends PlacementProps {
    * through `draft` (grey) or `live` (green), whichever tone it reads as.
    */
   status: 'draft' | 'live';
+  /** The badge's text, e.g. "Draft" or "Sent". */
   children: ReactNode;
 }
 

@@ -12,6 +12,10 @@ export interface RichTextToolbarButtonProps extends Omit<ToggleButtonProps, 'chi
   'aria-label': string;
 }
 
+/**
+ * A pressed-or-not tool button for a Rich text toolbar (Bold, Italic, List). Link, image and video open a picker, so
+ * they are plain Buttons.
+ */
 export function RichTextToolbarButton({className, style, ...props}: RichTextToolbarButtonProps) {
   return (
     <ToggleButton {...props} className={clsx('gv-editor-tool', className)} style={style}>

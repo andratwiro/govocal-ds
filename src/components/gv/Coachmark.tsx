@@ -11,7 +11,9 @@ import './Coachmark.css';
 export interface CoachmarkLabels {
   /** The ×'s name. */
   dismiss: string;
+  /** The Skip button's name. */
   skip: string;
+  /** The Got it button's name. */
   gotIt: string;
 }
 
@@ -22,7 +24,9 @@ export interface CoachmarkProps
   extends Omit<AriaPopoverProps, 'children' | 'className' | 'style'> {
   /** The element the coachmark points at. */
   triggerRef: RefObject<Element | null>;
+  /** The bold line at the top. */
   title: string;
+  /** What the coachmark explains. */
   children: React.ReactNode;
   /** Called when "Got it" is pressed. */
   onDismiss?: () => void;

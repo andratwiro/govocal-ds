@@ -29,6 +29,7 @@ export interface PageHeaderProps {
   labels?: Partial<PageHeaderLabels>;
   /** Places the header (its margin below, a grid area); never paints it. */
   className?: string;
+  /** Places the header; never paints it. */
   style?: CSSProperties;
 }
 

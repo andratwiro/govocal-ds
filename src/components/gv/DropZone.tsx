@@ -21,7 +21,9 @@ export const dropZoneLabels: DropZoneLabels = {prompt: 'Drop a file here or brow
 export interface DropZoneProps extends Omit<RACDropZoneProps, 'className' | 'style'>, PlacementProps {
   /** Mime types FileTrigger accepts, e.g. ['image/*']. */
   acceptedFileTypes?: ReadonlyArray<string>;
+  /** Whether the file picker lets several files be chosen at once. @default false */
   allowsMultiple?: boolean;
+  /** Fires with the files the person picked in the file picker. */
   onSelect?: (files: FileList | null) => void;
   /** This zone's label, in place of `labels.prompt` ("Drop a file here or browse"). Plain text: the whole zone is the
    * button. */
