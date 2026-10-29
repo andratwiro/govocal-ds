@@ -2,6 +2,14 @@
   "name": "govocal-ds",
   "private": true,
   "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./base": "./src/base.ts",
+    "./tokens.css": "./src/tokens.css"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "storybook": "storybook dev -p 6006",
     "prestorybook": "node scripts/token-usage.mjs",

@@ -84,3 +84,4 @@ export function TreeSection(props: React.ComponentProps<typeof AriaTreeSection>)
 export function TreeHeader(props: React.ComponentProps<typeof AriaTreeHeader>) {
   return <AriaTreeHeader {...props} className={clsx('react-aria-TreeHeader', props.className)} />;
 }
+export type {TreeProps};

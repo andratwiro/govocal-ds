@@ -72,3 +72,4 @@ export function GridListHeader(props: GridListHeaderProps) {
 }
 
 export {Text};
+export type {GridListProps, GridListSectionProps, GridListHeaderProps};

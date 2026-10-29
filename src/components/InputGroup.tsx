@@ -7,7 +7,7 @@ import {useId} from 'react';
 import './InputGroup.css';
 import {keepClass} from './className';
 
-interface InputGroupProps extends GroupProps {
+export interface InputGroupProps extends GroupProps {
   label?: string;
 }
 

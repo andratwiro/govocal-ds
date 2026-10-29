@@ -11,3 +11,4 @@ export function ColorArea(props: ColorAreaProps) {
     </AriaColorArea>
   );
 }
+export type {ColorAreaProps};

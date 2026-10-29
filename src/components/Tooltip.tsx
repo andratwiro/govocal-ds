@@ -4,7 +4,7 @@ import {
   Tooltip as AriaTooltip,
   type TooltipProps as AriaTooltipProps,
   TooltipTrigger as AriaTooltipTrigger,
-  type TooltipTriggerComponentProps
+  type TooltipTriggerComponentProps as TooltipTriggerProps
 } from 'react-aria-components/Tooltip';
 import {useCallback} from 'react';
 import './Tooltip.css';
@@ -59,6 +59,7 @@ export function Tooltip({children, showArrow, className, ...props}: TooltipProps
 }
 
 /** The prototype shows a tooltip 120 ms after the pointer arrives and hides it as soon as it leaves. */
-export function TooltipTrigger({delay = 120, closeDelay = 0, ...props}: TooltipTriggerComponentProps) {
+export function TooltipTrigger({delay = 120, closeDelay = 0, ...props}: TooltipTriggerProps) {
   return <AriaTooltipTrigger delay={delay} closeDelay={closeDelay} {...props} />;
 }
+export type {TooltipTriggerProps};

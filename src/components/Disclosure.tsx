@@ -35,3 +35,4 @@ export function DisclosurePanel(props: DisclosurePanelProps) {
     </AriaDisclosurePanel>
   );
 }
+export type {DisclosureProps, DisclosurePanelProps};

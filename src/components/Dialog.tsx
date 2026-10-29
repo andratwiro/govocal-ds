@@ -28,3 +28,4 @@ export function DialogTrigger(props: DialogTriggerProps) {
 }
 
 export {Heading} from './Content';
+export type {DialogTriggerProps};

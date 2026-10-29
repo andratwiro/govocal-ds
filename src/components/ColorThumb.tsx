@@ -5,3 +5,4 @@ import {keepClass} from './className';
 export function ColorThumb(props: ColorThumbProps) {
   return <AriaColorThumb {...props} className={keepClass(props.className)} />;
 }
+export type {ColorThumbProps};

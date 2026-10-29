@@ -7,7 +7,7 @@ import {
 import './ToggleButton.css';
 import {keepClass} from './className';
 
-interface ToggleButtonProps extends RACToggleButtonProps {
+export interface ToggleButtonProps extends RACToggleButtonProps {
   /**
    * The visual style of the button (Vanilla CSS implementation specific).
    *

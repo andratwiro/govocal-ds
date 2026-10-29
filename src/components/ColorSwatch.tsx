@@ -18,3 +18,4 @@ export function ColorSwatch(props: ColorSwatchProps) {
     />
   );
 }
+export type {ColorSwatchProps};

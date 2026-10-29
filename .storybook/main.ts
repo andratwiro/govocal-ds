@@ -1,4 +1,15 @@
 import type {StorybookConfig} from '@storybook/react-vite';
+import {readFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+
+// 'govocal-ds', 'govocal-ds/base' and 'govocal-ds/tokens.css' resolve as in the back office: package.json's exports.
+const pkgDir = resolve(import.meta.dirname, '..');
+const {name, exports} = JSON.parse(readFileSync(resolve(pkgDir, 'package.json'), 'utf8'));
+const alias = Object.entries<string>(exports).map(([entry, file]) => ({
+  find: new RegExp(`^${(name + entry.slice(1)).replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}$`),
+  replacement: resolve(pkgDir, file)
+}));
+
 const config: StorybookConfig = {
   stories: [
     '../src/**/*.mdx',
@@ -21,6 +32,15 @@ const config: StorybookConfig = {
   framework: {name: '@storybook/react-vite', options: {}},
   // Status marks (docs/NAMING.md): filter the sidebar by them; `covered` hides a Base entry a Components entry wraps.
   tags: {'not-in-figma': {}, deprecated: {}, covered: {excludeFromSidebar: true}},
-  core: {disableTelemetry: true}
+  core: {disableTelemetry: true},
+  // Stories and docs may import from 'govocal-ds' like any consumer.
+  viteFinal: config => ({...config, resolve: {...config.resolve, alias: [...toAliasArray(config.resolve?.alias), ...alias]}})
 };
+
+function toAliasArray(a: unknown): {find: string | RegExp; replacement: string}[] {
+  if (!a) return [];
+  if (Array.isArray(a)) return a;
+  return Object.entries(a as Record<string, string>).map(([find, replacement]) => ({find, replacement}));
+}
+
 export default config;

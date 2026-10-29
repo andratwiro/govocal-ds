@@ -151,3 +151,4 @@ export function TableLoadMoreItem(props: TableLoadMoreItemProps) {
     </AriaTableLoadMoreItem>
   );
 }
+export type {TableProps, TableHeaderProps, RowProps, TableBodyProps, CellProps};

@@ -7,29 +7,28 @@ import {
   MenuSection as AriaMenuSection,
   MenuTrigger as AriaMenuTrigger,
   SubmenuTrigger as AriaSubmenuTrigger,
-  Separator as AriaSeparator,
-  type SeparatorProps,
   type MenuItemProps as AriaMenuItemProps,
   type MenuLoadMoreItemProps,
   type MenuProps,
   type MenuSectionProps,
-  type MenuTriggerProps,
+  type MenuTriggerProps as AriaMenuTriggerProps,
   type SubmenuTriggerProps
 } from 'react-aria-components/Menu';
 import {Popover, type PopoverProps} from './Popover';
 import {ProgressCircle} from './ProgressCircle';
 import {Text, Header, Keyboard} from './Content';
+import {Separator, type SeparatorProps} from './Separator';
 import React, {type ReactNode} from 'react';
 import './Menu.css';
 import {keepClass} from './className';
 import clsx from 'clsx';
 
-export interface MenuTriggerOwnProps extends MenuTriggerProps {
+export interface MenuTriggerProps extends AriaMenuTriggerProps {
   /** Where the menu opens against its trigger. @default 'bottom start' */
   placement?: PopoverProps['placement'];
 }
 
-export function MenuTrigger({placement, ...props}: MenuTriggerOwnProps) {
+export function MenuTrigger({placement, ...props}: MenuTriggerProps) {
   let [trigger, menu] = React.Children.toArray(props.children) as [
     React.ReactElement,
     React.ReactElement
@@ -121,9 +120,5 @@ export function SubmenuTrigger(props: SubmenuTriggerProps) {
   );
 }
 
-/** A line between a menu's groups of items. Outside a menu, the line between blocks is a Divider. */
-export function Separator(props: SeparatorProps) {
-  return <AriaSeparator {...props} className={clsx('react-aria-Separator', props.className)} />;
-}
-
-export {Text, Header, Keyboard};
+export {Text, Header, Keyboard, Separator};
+export type {MenuProps, MenuSectionProps, MenuLoadMoreItemProps, SubmenuTriggerProps, SeparatorProps};

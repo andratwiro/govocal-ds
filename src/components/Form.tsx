@@ -27,3 +27,4 @@ export function Description(props: TextProps) {
 export function FieldButton(props: ButtonProps) {
   return <Button {...props} className={ownClass('field-Button', props.className)} />;
 }
+export type {FormProps, LabelProps, FieldErrorProps};

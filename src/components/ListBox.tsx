@@ -76,3 +76,4 @@ export function DropdownItem({icon, description, ...props}: DropdownItemProps) {
 }
 
 export {Text, Header};
+export type {ListBoxProps, ListBoxItemProps, ListBoxSectionProps};
