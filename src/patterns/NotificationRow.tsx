@@ -95,7 +95,7 @@ export interface NotificationRowListProps extends PlacementProps {
 /** The emails, one row each. (The app shell's bell list is `NotificationList`.) */
 export function NotificationRowList({children, 'aria-label': ariaLabel = 'Emails', className, style}: NotificationRowListProps) {
   return (
-    <div className={clsx('gv-notification-list', className)} style={style} role="group" aria-label={ariaLabel}>
+    <div className={clsx('gv-notification-row-list', className)} style={style} role="group" aria-label={ariaLabel}>
       {children}
     </div>
   );

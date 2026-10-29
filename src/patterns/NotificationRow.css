@@ -2,7 +2,7 @@
 
 /* Prototype .pjacc2.pjnf: switch | name over two meta lines (who, what sends it) | chevron. The switch sits on the
    name's line; the name and meta are one button to the email's page. Off: the name greys and nothing opens. */
-.gv-notification-list {
+.gv-notification-row-list {
   display: flex;
   flex-direction: column;
 }
