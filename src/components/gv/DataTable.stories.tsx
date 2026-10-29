@@ -1,4 +1,5 @@
-import {useMemo, useState, type ReactNode} from 'react';
+import {useCallback, useMemo, useRef, useState, type ReactNode} from 'react';
+import type {Key} from 'react-aria-components';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {
   DataTable,
@@ -26,12 +27,14 @@ import {Pagination} from './Pagination';
 import {Panel} from './Panel';
 import {StatusBadge} from './StatusBadge';
 import {TableToolbar, TableToolbarHeading} from './TableToolbar';
-import {ClipboardList, Map as MapIcon, MapPin, Plus, TriangleAlert, Users} from 'lucide-react';
+import {ClipboardList, Download, Map as MapIcon, MapPin, Plus, TriangleAlert, UserPlus, Users} from 'lucide-react';
 import {FilterMenu, type FilterValue} from '../../patterns/FilterMenu';
 import {FilterChips} from '../../patterns/FilterChips';
 import {SelectionBar} from '../../patterns/SelectionBar';
 import {StatCard} from '../../patterns/StatCard';
 import {SidePanel, SidePanelRecordHead, SidePanelSection} from './SidePanel';
+import {PropertyList, PropertyListItem} from './PropertyList';
+import {inventPeople, sortPeople as sortList, type ListPerson} from './story-data/people';
 import {IDEA_FACETS} from '../../patterns/FilterMenu.stories';
 import {
   DISMISS_WARNINGS, ExportMenu, IDEA_ACTIONS, IDEAS as MANAGE_IDEAS, METRICS, filterIdeas, ideaCount,
@@ -656,6 +659,154 @@ export const WithBulkSelectionAndAnOpenRow: Story = {
   name: 'With bulk selection and an open row',
   parameters: {layout: 'fullscreen', docs: {story: {inline: false, iframeHeight: 720}}},
   render: () => <BulkAndOpen />
+};
+
+// ── Long lists: virtualised ──────────────────────────────────────────────────────────────────────
+const USER_ACTIONS = [
+  {id: 'group', label: 'Add to group', icon: <UserPlus aria-hidden size={16} />},
+  {id: 'export', label: 'Export', icon: <Download aria-hidden size={16} />}
+];
+const usersWord = (n: number) => `${n.toLocaleString('en-GB')} ${n === 1 ? 'user' : 'users'}`;
+
+function PersonCells({person}: {person: ListPerson}) {
+  return (
+    <>
+      <DataTableCell><DataTablePerson name={person.name} initials={person.initials} sub={person.email} /></DataTableCell>
+      <DataTableCell>{person.role}</DataTableCell>
+      <DataTableCell align="number">{person.ideas}</DataTableCell>
+      <DataTableCell>{person.joinedLabel}</DataTableCell>
+      <DataTableCell align="options">
+        <DataTableOptions aria-label={`Options for ${person.name}`}>
+          <MenuItem>Add to group</MenuItem>
+          <MenuItem>Block user</MenuItem>
+        </DataTableOptions>
+      </DataTableCell>
+    </>
+  );
+}
+
+function VirtualPeople() {
+  // Generated once per mount (a few milliseconds), dates formatted with it, not in each row.
+  const people = useMemo(() => inventPeople(5000), []);
+  const [sort, setSort] = useState<SortDescriptor>({column: 'name', direction: 'ascending'});
+  const [selected, setSelected] = useState<Set<Key>>(new Set());
+  const [open, setOpen] = useState<string | null>(null);
+  const [said, setSaid] = useState('Click a row to open the person; tick boxes for bulk actions.');
+  const rows = useMemo(() => sortList(people, String(sort.column), sort.direction), [people, sort]);
+  const at = open == null ? -1 : rows.findIndex(p => p.id === open);
+  const person = at >= 0 ? rows[at] : undefined;
+  return (
+    <div style={{minHeight: '100vh', boxSizing: 'border-box', padding: 24, background: 'var(--gv-surface-app)'}}>
+      <div style={{display: 'grid', gap: 8, maxWidth: 920}}>
+        <Panel title="Registered users" isFlush
+          toolbar={(
+            <TableToolbar start={(
+              <SelectionBar count={selected.size} items={USER_ACTIONS} onClear={() => setSelected(new Set())}
+                onAction={id => setSaid(`${id === 'export' ? 'Export' : 'Add to group'}: ${usersWord(selected.size)}`)}>
+                <TableToolbarHeading>{usersWord(rows.length)}</TableToolbarHeading>
+              </SelectionBar>
+            )} />
+          )}>
+          <DataTable aria-label="Users" isVirtualized rowLines={2} style={{height: 560}}
+            selectionMode="multiple" selectedKeys={selected}
+            onSelectionChange={k => setSelected(toKeySet<Key>(k, rows.map(p => p.id)))}
+            sortDescriptor={sort} onSortChange={d => setSort(d as SortDescriptor)}
+            onRowAction={key => setOpen(String(key))} openKey={open}>
+            <DataTableHeader>
+              <DataTableColumn id="name" isRowHeader allowsSorting width="2fr">Name</DataTableColumn>
+              <DataTableColumn id="role" allowsSorting>Role</DataTableColumn>
+              <DataTableColumn id="ideas" align="number" allowsSorting>Ideas</DataTableColumn>
+              <DataTableColumn id="joined" allowsSorting>Joined</DataTableColumn>
+              <DataTableColumn id="options" align="options" showLabel={false}>Options</DataTableColumn>
+            </DataTableHeader>
+            <DataTableBody items={rows}>
+              {p => <DataTableRow id={p.id} textValue={p.name}><PersonCells person={p} /></DataTableRow>}
+            </DataTableBody>
+          </DataTable>
+        </Panel>
+        <p role="status" style={{margin: 0, font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>{said}</p>
+      </div>
+      <SidePanel isOpen={person !== undefined} label="Registered users" itemName="user"
+        position={person ? {current: at + 1, total: rows.length} : undefined}
+        onPositionChange={n => setOpen(rows[n - 1].id)}
+        onOpenChange={o => !o && setOpen(null)}>
+        {person && (
+          <SidePanelSection>
+            <SidePanelRecordHead title={person.name}>{person.email}</SidePanelRecordHead>
+            <PropertyList aria-label="Details">
+              <PropertyListItem label="Role">{person.role}</PropertyListItem>
+              <PropertyListItem label="Ideas">{person.ideas}</PropertyListItem>
+              <PropertyListItem label="Joined">{person.joinedLabel}</PropertyListItem>
+            </PropertyList>
+          </SidePanelSection>
+        )}
+      </SidePanel>
+    </div>
+  );
+}
+
+/**
+ * A long list, virtualised: 5,000 invented people, of whom the table draws only the few dozen in view (`isVirtualized`).
+ * The same table otherwise: sort by any column, tick rows (the header's box ticks all 5,000, which `toKeySet` turns
+ * into 5,000 keys), click a row to open it beside the table (`openKey` keeps its mark as it scrolls away and back), and
+ * the keyboard walks every row (↑ ↓, Page Up / Down, Home / End). What it needs: a bounded height (`style={{height:
+ * 560}}` here), one row height (`rowLines={2}`: a name over an email), rows as `items` with a function, and a `width`
+ * on a column that wants more than its even share.
+ */
+export const Virtualized5000People: Story = {
+  name: 'Virtualized · 5,000 people',
+  parameters: {layout: 'fullscreen', docs: {story: {inline: false, iframeHeight: 760}}},
+  render: () => <VirtualPeople />
+};
+
+const PAGE = 100;
+const TOTAL = 1000;
+
+function LoadingMore() {
+  const [people, setPeople] = useState(() => inventPeople(PAGE));
+  const [isLoading, setLoading] = useState(false);
+  const busy = useRef(false);
+  // A page of 100 arrives 400 ms after the last row comes near the view, up to 1,000 (an invented server).
+  const loadMore = useCallback(() => {
+    if (busy.current) return;
+    busy.current = true;
+    setLoading(true);
+    setTimeout(() => {
+      setPeople(list => [...list, ...inventPeople(PAGE, list.length + 1)]);
+      setLoading(false);
+      busy.current = false;
+    }, 400);
+  }, []);
+  const hasMore = people.length < TOTAL;
+  return (
+    <div style={{boxSizing: 'border-box', padding: 24, maxWidth: 968}}>
+      <Panel title="Registered users" isFlush toolbar={<TableToolbar heading={`${people.length} of ${usersWord(TOTAL)} loaded`} />}>
+        <DataTable aria-label="Users" isVirtualized rowLines={2} style={{height: 480}}>
+          <DataTableHeader>
+            <DataTableColumn id="name" isRowHeader width="2fr">Name</DataTableColumn>
+            <DataTableColumn id="role">Role</DataTableColumn>
+            <DataTableColumn id="ideas" align="number">Ideas</DataTableColumn>
+            <DataTableColumn id="joined">Joined</DataTableColumn>
+            <DataTableColumn id="options" align="options" showLabel={false}>Options</DataTableColumn>
+          </DataTableHeader>
+          <DataTableBody items={people} onLoadMore={hasMore ? loadMore : undefined} isLoading={isLoading}>
+            {p => <DataTableRow id={p.id} textValue={p.name}><PersonCells person={p} /></DataTableRow>}
+          </DataTableBody>
+        </DataTable>
+      </Panel>
+    </div>
+  );
+}
+
+/**
+ * A list that arrives in pages as it scrolls (infinite loading): `DataTableBody`'s `onLoadMore` runs when the last row
+ * comes near the view, `isLoading` shows "Loading more…" under it while the page fetches, and the new rows join
+ * `items`. Pass `onLoadMore` only while more remain. Here 100 at a time, up to 1,000.
+ */
+export const VirtualizedLoadingMore: Story = {
+  name: 'Virtualized · loading more',
+  parameters: {layout: 'fullscreen', docs: {story: {inline: false, iframeHeight: 640}}},
+  render: () => <LoadingMore />
 };
 
 /** Right to left (Arabic): columns, padding, the check column and the "…" mirror. */

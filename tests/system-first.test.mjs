@@ -63,6 +63,7 @@ const INTERNAL = new Set([
   'keepClass', 'ownClass', // the className contract's helpers
   'boundsOf', 'initialView', 'worldPoint', 'clusterPoints', 'nextInDirection', 'parseCredits', 'placeCard', // the map's maths, unit-tested
   'createMapLibreEngine', // loaded on demand by maplibreEngine(); importing it would pull MapLibre into the page's bundle
+  'virtualMetrics', // the virtualised Data table's fallback row metrics, for its tests
   'useShownLocale', // the multilingual fields' shown-language state; pages use the fields' `locale` props
   'Text' // Content.tsx's slot Text stays the starter files' own; the barrel's Text is gv/Text (React Aria's underneath)
 ]);

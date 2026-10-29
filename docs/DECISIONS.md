@@ -26,6 +26,25 @@ Calls made while adding the Map view (Components/Data display): an external revi
 - Rotation and pitch → **off: a flat, north-up map** → the back office's maps are for placing inputs, and a turned map loses people.
 - Strings → **fixed English labels (Zoom in, Zoom out, the cluster's "N pins: zoom in", "The map can't be shown here.")** → as the other components' built-in words today.
 
+## Long lists (29 Oct 2026)
+
+Calls made while making Data table virtualise (an external review: nothing supported the admin's users and inputs lists, which run to thousands of rows).
+
+- A second component for long lists (React Aria ships a `Virtualizer` around the same Table) vs a switch on the one table → **`isVirtualized` on DataTable: the same parts, look, keyboard, sorting, bulk selection, open row and `toKeySet`** → a page turns it on past ~200 rows without rewriting its table; two tables would drift apart.
+- A pixel `rowHeight` prop vs the table's own row → **`rowLines={1 | 2}` (one line, or a line over a sub-line), the heights the stylesheet's (tokens) for each density** → a page names what its rows hold, not a number that goes stale when the tokens move; every row one height is what the layout needs.
+- The layout needs numbers, the look lives in tokens → **the stylesheet sums the row, header, check and "…" sizes into four registered `--gv-data-table-*` lengths, and the table reads them in px before its first paint; `virtualMetrics()` holds the same sums as a fallback, and a unit test keeps the two equal** → one source (the tokens) for both tables, with no second set of constants to keep in step.
+- `:first-child`, `:last-child` and the selected run's corners need siblings in order, which a virtualised table's reused, absolutely placed rows and cells aren't → **the table marks its own edges, last row and run ends in the page (`data-edge`, `data-last`, `data-run`, from `aria-colindex` / `aria-rowindex`), and the stylesheet reads those when virtualised** → the plain table's rules stay as they were (its computed styles unchanged); the marks are kept in step as rows scroll in.
+- Grid columns from CSS vs React Aria's layout → **the layout places the columns: evenly, or by a column's `width` (`200`, `"30%"`, `"2fr"`); the check, "…" and "+" columns get their stylesheet widths** → the virtualised rows are positioned boxes, not a CSS grid, so the layout has to know each width.
+- The open row as a prop each row reads → **the table marks it in the page (`data-open`, `aria-current`) from `openKey`, both modes** → with 5,000 rows, opening one rebuilt every row (about 300 ms); now about 70–110 ms, and the mark survives the row scrolling away and back.
+- React Aria moves focus on Page Up / Down, Home and End but left the browser's own scroll on (1.22, a table without selection-follows-focus), so the view jumped a second time, past the row and under the pinned header → **the table keeps those keys (outside a text field), in both modes; a focused row stops below the header (`scroll-padding`)** → one move per key, as in a list; the plain table's page no longer scrolls under a Page Down either.
+- Window scrolling (React Aria can virtualise against the page) vs a bounded height → **the table scrolls inside itself with its header pinned; it needs a height (`style`, or a parent with one) and warns once in development without one** → the admin's lists sit in panels under a toolbar, where a pinned header is the point.
+- A virtualised table has no content width of its own → **it fills its container's width; noted in the recipe** → the plain table grows to fit its rows; a positioned layout can't, so a shrink-to-fit parent collapses it.
+- A framed table's border made the layout measure itself without end (a `width: 100%` block 2px wider than its box) → **the virtualised table is border-box, as a plain table's width already is** → the same outer size in both modes.
+- Cells of any height vs one height per row → **each virtualised cell keeps to its line and clips with an ellipsis (`__fit`, 4px of room for a focus ring)** → a taller cell would spill over the next row.
+- Paging as a separate pattern vs infinite loading → **`DataTableBody`'s `onLoadMore`, `isLoading` and `loadingLabel` ("Loading more…"), on React Aria's load-more row** → it was cheap: React Aria fires it as the last row nears the view, in either mode; the page passes `onLoadMore` only while more remain.
+- Rows by `.map()` vs `items` with a function → **the recipe and stories use `items`** → React Aria reuses the rows it has built for unchanged items; `.map()` rebuilds all of them on every change.
+- Right to left by the page's `dir` vs React Aria's locale → **the virtualised layout follows the locale (`I18nProvider`)** → React Aria places the columns from the locale's direction, as every other component's keyboard already does.
+
 ## Composition contracts in code (29 Oct 2026, architecture review)
 
 Calls made while putting the review's invisible contracts into the parts themselves (rv-contracts).
