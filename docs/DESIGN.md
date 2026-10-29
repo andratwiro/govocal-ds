@@ -12,7 +12,7 @@ public URL:
   accessibility results per component. After **Overview** (Welcome, Accessibility), four sections, each built only
   from the ones above it:
   - **Foundations**: a page per topic, none with a box that scrolls inside the page: Colour, Typography, Spacing,
-    Radius, Shadows (the tokens, with which components use each), Motion, **Icons** (every icon the system uses,
+    Radius, Shadows (the tokens, with which components use each), Motion, Size (icons, controls, avatars), **Icons** (every icon the system uses,
     Storybook's own `IconGallery` doc block) and Illustrations.
   - **Components**: React Aria primitives painted with the tokens.
   - **Patterns**: compositions that repeat but aren't primitives (the phase timeline, a stat card with a sparkline, a

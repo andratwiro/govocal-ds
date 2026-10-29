@@ -110,6 +110,21 @@ dashboards, Build tab).
 - Token snaps: the 16 avatar's initials 11 → 12px; compact table rows' 18px line → 20 (UI line).
 - Candidates for new Figma tokens: project tile fills by method (teal, blue).
 
+**Tokens everywhere** (the project lead, 29 Oct: every spacing, radius, type and shadow value is a token; a design value with no token snaps to the nearest, guarded by `tests/tokens-only.test.mjs`)
+
+- Sizes had no tokens → **a Not-in-Figma size set** (`--gv-size-icon-12…24`, `control-24…40`, `avatar-16…28`; Foundations/Size), like motion → icons, controls and avatars repeat a handful of sizes; naming them keeps the next screen on them.
+- Toast padding: the prototype's 13 → **12** → no 13 token; the card is 2px shorter.
+- Toast tick and ×: the prototype's 11 and 15 → **icon-12 and icon-16** → no 11 or 15 size; the × matches the 16 the component already asked for.
+- Icon button 24's icon: the prototype's 15 → **16**, the same as the 28's → one icon size in every button.
+- Coachmark padding: the prototype's 15 / 17 / 13 → **16 / 16 / 12** → no 13 or 17 token; each side moves 1px.
+- Empty state padding: the prototype's 40 → **44** → no 40 token, 44 is nearest; 4px more above and below where the panel isn't a fixed height.
+- Title field's Required marker: Figma's 52.5 from the end → **56** → nearest token, still inside Figma's 104 clear zone.
+- Folded side nav count: the prototype's 10/14 text in a 14 badge → **the unfolded count (Small strong 12/16)** → 10px text has no type role; the badge is 2px taller.
+
+**Charts are interactive** (the project lead, 29 Oct; Figma draws them static)
+
+- Figma's charts are static → **hover and keyboard value cards on every chart, a legend row that emphasises its series, hover states on bar and statement rows** → the prototype's dashboards have them, and a back-office reader needs exact values. React Aria has no charts and the system keeps one chart system (no chart library): built on our SVG with React Aria's hooks.
+
 **Prototype bugs found on the way** (not copied into the system):
 - Space and Folder search: an empty popover with no "No results" text, arrow keys don't move, no search icon.
 - Ideation Manage: with every column on, columns run into the "+" column; the count heading ignores the search.

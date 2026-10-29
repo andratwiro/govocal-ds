@@ -41,11 +41,11 @@ entry, stories keep their file order.
 
 ```
 Overview                Welcome · Accessibility
-Foundations             Colour · Typography · Spacing · Radius · Shadows · Motion · Icons · Illustrations (a page each)
+Foundations             Colour · Typography · Spacing · Radius · Shadows · Motion · Icons · Illustrations · Size (a page each)
 Components              src/components/gv/
   Actions               Button · Compact button · Icon button · Menu · Segmented control (with Segmented control item)
   Charts                Bar row · Chart · Dashboard card · Legend row · Statement row
-  Data display          Avatar (with Avatar group) · Data table · File list · List header · List header cell · List row
+  Data display          Avatar (with Avatar group) · Data table · File list · Illustration · List header · List header cell · List row
                         · Property list · Reaction counts · Stat row · Stat tile · Table toolbar
   Forms                 Checkbox · Choice card · Date range field · Drop zone · Number field · Option list · Required marker
                         · Rich text editor · Rich text toolbar · Rich text toolbar button · Search field · Select · Switch
@@ -53,7 +53,7 @@ Components              src/components/gv/
   Layout & containers   Card · Divider · Panel
   Navigation            Breadcrumbs · Pagination
   Overlays              Alert dialog · Coachmark · Help popover · Modal · Side panel · Tooltip
-  Status & feedback     Badge · Banner · New dot · Review status · Skeleton · Status badge · Toast
+  Status & feedback     Badge · Banner · Empty state · New dot · Review status · Skeleton · Status badge · Toast
 Patterns                src/patterns/
   App shell             Notification list · Side nav
   Lists                 Filter chips · Filter menu · Selection bar (used by every list page)
