@@ -1,0 +1,127 @@
+@import '../components/theme.css';
+
+/* The prototype's active-filter strip (.pj-infbar / .pj-infchip): a quiet rounded strip, chips of
+   key | operator | value | × split by hairlines, "Clear" at the far end. */
+.gv-filter-chips {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+  min-block-size: 40px;
+  box-sizing: border-box;
+  padding: var(--gv-space-6) var(--gv-space-8);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-toolbar);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  font-family: var(--gv-font-family);
+}
+
+.gv-filter-chips__group {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.gv-filter-chips__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gv-space-6);
+  outline: none;
+}
+
+.gv-filter-chip {
+  display: inline-flex;
+  align-items: stretch;
+  block-size: var(--gv-space-28);
+  box-sizing: border-box;
+  border: 1px solid var(--gv-border-control);
+  border-radius: var(--gv-radius-6);
+  background: var(--gv-surface-panel);
+  color: var(--gv-text-primary);
+  overflow: hidden;
+  outline: none;
+  cursor: default;
+
+  /* React Aria puts the chip's content in one grid cell: that cell lays out the four parts. */
+  > [role='gridcell'] {
+    display: flex;
+    align-items: stretch;
+  }
+
+  > [role='gridcell'] > * {
+    display: inline-flex;
+    align-items: center;
+    padding-inline: var(--gv-space-8);
+    white-space: nowrap;
+  }
+
+  > [role='gridcell'] > * + * {
+    border-inline-start: 1px solid var(--gv-border-card);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 1px;
+  }
+}
+
+.gv-filter-chip__key {
+  gap: var(--gv-space-6);
+}
+
+.gv-filter-chip__icon {
+  display: inline-flex;
+  color: var(--gv-icon-default);
+
+  > svg {
+    inline-size: 14px;
+    block-size: 14px;
+  }
+}
+
+.gv-filter-chip__op {
+  color: var(--gv-text-secondary);
+}
+
+.gv-filter-chip__remove {
+  margin: 0;
+  border: 0;
+  background: none;
+  color: var(--gv-icon-default);
+  cursor: pointer;
+  outline: none;
+
+  &[data-hovered] {
+    background: var(--gv-surface-hover);
+    color: var(--gv-icon-primary);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: -2px;
+  }
+}
+
+.gv-filter-chips__clear {
+  flex: none;
+  align-self: flex-start;
+  block-size: var(--gv-space-28);
+  margin: 0;
+  padding: 0 var(--gv-space-10);
+  border: 0;
+  border-radius: var(--gv-radius-8);
+  background: none;
+  color: var(--gv-text-primary);
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  cursor: pointer;
+  outline: none;
+
+  &[data-hovered] {
+    background: var(--gv-surface-hover-strong);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 1px;
+  }
+}

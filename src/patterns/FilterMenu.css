@@ -1,0 +1,70 @@
+@import '../components/theme.css';
+
+/* The filter button: the prototype's `.pj-intools .btn-icon.is-active`, a selected border and icon plus a 7px dot
+   on the top end corner, ringed in the panel colour so it reads over the border. */
+.gv-filter-menu__trigger {
+  position: relative;
+  display: inline-flex;
+
+  &[data-active] {
+    .gv-icon-button {
+      border-color: var(--gv-border-selected);
+      color: var(--gv-text-accent);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset-block-start: -3px;
+      inset-inline-end: -3px;
+      inline-size: 7px;
+      block-size: 7px;
+      box-sizing: content-box;
+      border: 1.5px solid var(--gv-surface-panel);
+      border-radius: var(--gv-radius-full);
+      background: var(--gv-action-checked);
+      pointer-events: none;
+    }
+  }
+}
+
+/* The facet menu: 220 wide (the prototype's `.pj-pop--infilter`), the system Menu's rows. */
+.gv-filter-menu.react-aria-Menu {
+  inline-size: 220px;
+  min-width: 0;
+}
+
+.gv-filter-menu .react-aria-MenuItem {
+  .gv-filter-menu__icon {
+    grid-area: icon;
+    display: inline-flex;
+    align-items: center;
+    margin-inline-end: var(--gv-space-10);
+    color: var(--gv-icon-strong);
+
+    > svg {
+      inline-size: var(--gv-space-16);
+      block-size: var(--gv-space-16);
+    }
+  }
+
+  .gv-filter-menu__label {
+    grid-area: label;
+    display: flex;
+    align-items: center;
+  }
+
+  /* How many values are ticked: just before the chevron. */
+  .gv-filter-menu__count {
+    grid-area: label;
+    justify-self: end;
+    font: var(--gv-type-small);
+    letter-spacing: var(--gv-type-small-tracking);
+    color: var(--gv-text-tertiary);
+  }
+}
+
+/* The submenu: a dialog in the system Popover, holding the searchable option list. */
+.gv-filter-menu__sub {
+  outline: none;
+}

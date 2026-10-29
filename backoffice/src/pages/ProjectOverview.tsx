@@ -1,7 +1,10 @@
 import {useState} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router';
-import {ChevronUp, Info, PanelLeft, Plus, Settings} from 'lucide-react';
+import {ChevronUp, Eye, Info, Link, PanelLeft, Plus, Settings, UserPlus} from 'lucide-react';
 import {Button} from '../../../src/components/Button';
+import {Menu, MenuItem, MenuTrigger, Separator} from '../../../src/components/Menu';
+import {TextField} from '../../../src/components/TextField';
+import {Modal} from '../../../src/components/gv/Modal';
 import {Avatar} from '../../../src/components/gv/Avatar';
 import {Divider} from '../../../src/components/gv/Divider';
 import {Header} from '../../../src/components/gv/Header';
@@ -17,8 +20,17 @@ import {PhaseTimeline} from '../../../src/patterns/PhaseTimeline';
 import {AvatarStack, PhoneFrame, PhoneHeader, PhoneImage} from '../../../src/patterns/PhonePreview';
 import {StatCard} from '../../../src/patterns/StatCard';
 import {ME, PROJECTS, type Project} from '../data';
-import {NO_OVERVIEW, OVERVIEWS, timeline, type Overview} from '../data-project';
-import {CHECKLIST} from './ProjectPhase';
+import {NO_OVERVIEW, OVERVIEWS, addedTimeline, timeline, type NewPhase, type Overview} from '../data-project';
+import {AddPhase, CHECKLIST, CHECKLIST_TAB, CardStub, ProjectSettings, type SettingsTab} from './ProjectPhase';
+
+// The project's publication status, as the prototype's status pill: one next step from each state.
+type PubStatus = 'Draft' | 'Published' | 'Archived';
+const NEXT: Record<PubStatus, {to: PubStatus; label: string}> = {
+  Draft: {to: 'Published', label: 'Publish project'},
+  Published: {to: 'Archived', label: 'Archive project'},
+  Archived: {to: 'Draft', label: 'Restore to draft'}
+};
+const PANELS = ['setup', 'rail', 'preview'] as const;
 
 // A project's own page, after the prototype's live project screen: a breadcrumb bar over three columns,
 // Project setup | the Participation rail | what a resident sees on a phone.
@@ -26,11 +38,21 @@ export function ProjectOverview() {
   const {projectId} = useParams();
   const [setupOpen, setSetupOpen] = useState(true);
   const [railOpen, setRailOpen] = useState(true);
+  const [previewOpen, setPreviewOpen] = useState(true);
   const [draftsOpen, setDraftsOpen] = useState(true);
+  const [settings, setSettings] = useState<SettingsTab | null>(null);
+  const [adding, setAdding] = useState(false);
+  const [added, setAdded] = useState<NewPhase[]>([]);
+  const [inviting, setInviting] = useState(false);
+  const [confirm, setConfirm] = useState<PubStatus | null>(null);
+  const [note, setNote] = useState('');
   const project = PROJECTS.find(p => p.id === projectId);
+  const [status, setStatus] = useState<PubStatus>(project?.status === 'Live' ? 'Published' : 'Draft');
   if (!project) return <Navigate to="/projects" replace />;
   const o = OVERVIEWS[project.id] ?? NO_OVERVIEW;
-  const live = project.status === 'Live';
+  const live = status === 'Published';
+  const shown = new Set(PANELS.filter((_, i) => [setupOpen, railOpen, previewOpen][i]));
+  const next = NEXT[status];
 
   return (
     <div className="bo-phase bo-project">
@@ -41,40 +63,86 @@ export function ProjectOverview() {
         </IconButton>
         <Header projectName={project.title} parentHref="#/projects" />
         <span className="bo-push" />
+        <p role="status" className="bo-note bo-phase-flush">{note}</p>
         <Avatar initials={ME.slice(-1)} aria-label={`${ME} is here`} />
-        <Button variant="secondary" size={32} hasMenu>Share</Button>
-        <Button variant="quiet" size={32} hasMenu iconOnly={false} aria-label={live ? 'Live: change status' : 'Draft: change status'}>
-          <Status state={live ? 'live' : 'draft'}>{live ? '● Live' : 'Draft'}</Status>
-        </Button>
+        <MenuTrigger>
+          <Button variant="secondary" size={32} hasMenu><Eye aria-hidden size={16} />View</Button>
+          <Menu aria-label="View" selectionMode="multiple" selectedKeys={shown}
+            onSelectionChange={k => {
+              const on = k === 'all' ? new Set<string>(PANELS) : new Set([...k].map(String));
+              setSetupOpen(on.has('setup')); setRailOpen(on.has('rail')); setPreviewOpen(on.has('preview'));
+            }}>
+            <MenuItem id="setup">Project setup</MenuItem>
+            <MenuItem id="rail">Participation</MenuItem>
+            <MenuItem id="preview">Resident preview</MenuItem>
+          </Menu>
+        </MenuTrigger>
+        <MenuTrigger>
+          <Button variant="secondary" size={32} hasMenu>Share</Button>
+          <Menu aria-label="Share" onAction={k => (k === 'invite' ? setInviting(true) : setNote('Link copied'))}>
+            <MenuItem id="invite" textValue="Invite people"><UserPlus aria-hidden />Invite people</MenuItem>
+            <MenuItem id="copy" textValue="Copy link" isDisabled={!live}><Link aria-hidden />Copy link</MenuItem>
+          </Menu>
+        </MenuTrigger>
+        <MenuTrigger>
+          <Button variant="quiet" size={32} hasMenu iconOnly={false} aria-label={`${live ? 'Live' : status}: change status`}>
+            <Status state={live ? 'live' : 'draft'}>{live ? '● Live' : status}</Status>
+          </Button>
+          <Menu aria-label="Project status" onAction={() => setConfirm(next.to)}>
+            <MenuItem id={next.to}>{next.label}</MenuItem>
+          </Menu>
+        </MenuTrigger>
       </div>
       <div className="bo-phase-body bo-project-body">
-        {setupOpen && <Setup project={project} o={o} />}
-        {railOpen ? <Rail project={project} o={o} onHide={() => setRailOpen(false)} /> : (
+        {setupOpen && <Setup project={project} o={o} live={live} onSettings={setSettings} />}
+        {railOpen ? <Rail project={project} o={o} added={added} onAdd={() => setAdding(true)} onHide={() => setRailOpen(false)} /> : (
           <aside className="bo-phase-panel bo-project-rail-closed" aria-label="Participation">
             <IconButton aria-label="Show the participation rail" onPress={() => setRailOpen(true)}><PanelLeft aria-hidden size={16} /></IconButton>
           </aside>
         )}
-        <section className="bo-phase-stage bo-phase-grow" aria-label="Preview">
-          <Phone project={project} o={o} />
-        </section>
+        {previewOpen && (
+          <section className="bo-phase-stage bo-phase-grow" aria-label="Preview">
+            <Phone project={project} o={o} />
+          </section>
+        )}
       </div>
       {draftsOpen && o.drafts > 0 && (
         <div className="bo-project-drafts">
           <DraftsBar count={o.drafts} onShow={() => {}} onHistory={() => {}} onClose={() => setDraftsOpen(false)} />
         </div>
       )}
+      <ProjectSettings project={project} tab={settings} onTabChange={setSettings} onClose={() => setSettings(null)} />
+      <AddPhase isOpen={adding} onOpenChange={setAdding} onAdd={p => setAdded(a => [...a, p])} />
+      <Modal title="Invite people" isOpen={inviting} onOpenChange={setInviting}
+        footer={<>
+          <Button variant="secondary" size={32} slot="close">Cancel</Button>
+          <Button size={32} onPress={() => { setInviting(false); setNote('Invitation sent'); }}>Send invite</Button>
+        </>}>
+        <TextField label="Email" type="email" placeholder="name@example.org" autoFocus />
+      </Modal>
+      <Modal title={confirm ? `${NEXT[status].label}?` : ''} isOpen={confirm !== null} onOpenChange={v => { if (!v) setConfirm(null); }}
+        footer={<>
+          <Button variant="secondary" size={32} slot="close">Cancel</Button>
+          <Button size={32} onPress={() => { if (confirm) setStatus(confirm); setConfirm(null); }}>{NEXT[status].label}</Button>
+        </>}>
+        <p className="bo-note bo-phase-flush">
+          {status === 'Draft' ? 'Residents can see the project and take part as soon as it is published.'
+            : status === 'Published' ? 'Residents can still read the project, but can no longer take part.'
+            : 'The project goes back to draft: only managers can see it.'}
+        </p>
+      </Modal>
     </div>
   );
 }
 
-function Setup({project, o}: {project: Project; o: Overview}) {
+function Setup({project, o, live, onSettings}: {project: Project; o: Overview; live: boolean; onSettings: (tab: SettingsTab) => void}) {
   const navigate = useNavigate();
-  const live = project.status === 'Live';
+  const [stub, setStub] = useState<string | null>(null);
   return (
     <aside className="bo-phase-panel bo-project-setup" aria-label="Project setup">
       <div className="bo-phase-panel-header">
         <h2 className="bo-section-title bo-phase-flush">Project setup</h2>
-        <IconButton aria-label="Project settings" onPress={() => navigate('/projects')}><Settings aria-hidden size={16} /></IconButton>
+        <IconButton aria-label="Project settings" onPress={() => onSettings('General')}><Settings aria-hidden size={16} /></IconButton>
       </div>
       {live ? (
         <>
@@ -95,7 +163,7 @@ function Setup({project, o}: {project: Project; o: Overview}) {
             {CHECKLIST.map(c => (
               <li key={c.title} data-gv="setup-card">
                 {c.action === 'open'
-                  ? <SetupCard title={c.title} onPress={() => {}} />
+                  ? <SetupCard title={c.title} onPress={() => { const t = CHECKLIST_TAB[c.title]; if (t) onSettings(t); else setStub(c.title); }} />
                   : <SetupCard action="expand" title={c.title}><p className="bo-note bo-phase-flush">{c.body}</p></SetupCard>}
               </li>
             ))}
@@ -111,22 +179,23 @@ function Setup({project, o}: {project: Project; o: Overview}) {
           <dt>Managers</dt><dd>{project.managers?.length ? project.managers.join(', ') : 'Nobody yet'}</dd>
         </dl>
       </PanelSection>
+      <CardStub title={stub} onClose={() => setStub(null)} />
     </aside>
   );
 }
 
-function Rail({project, o, onHide}: {project: Project; o: Overview; onHide: () => void}) {
+function Rail({project, o, added, onAdd, onHide}: {project: Project; o: Overview; added: NewPhase[]; onAdd: () => void; onHide: () => void}) {
   return (
     <aside className="bo-phase-panel bo-phase-rail bo-project-rail" aria-label="Participation">
       <div className="bo-project-rail-head">
         <RailHeader title="Participation" />
         <IconButton tone="strong" aria-label="Hide the participation rail" onPress={onHide}><PanelLeft aria-hidden size={16} /></IconButton>
-        <IconButton tone="strong" aria-label="Add a phase"><Plus aria-hidden size={16} /></IconButton>
+        <IconButton tone="strong" aria-label="Add a phase" onPress={onAdd}><Plus aria-hidden size={16} /></IconButton>
       </div>
       <nav aria-label="Phases" className="bo-phase-rail-section">
         <RailSectionLabel>Timeline</RailSectionLabel>
         <div className="bo-project-rail-list">
-          <PhaseTimeline phases={timeline(project, p => `#/projects/${project.id}/phases/${p.id}/build`)} />
+          <PhaseTimeline phases={[...timeline(project, p => `#/projects/${project.id}/phases/${p.id}/build`), ...addedTimeline(added)]} />
         </div>
       </nav>
       {o.spotlight.length > 0 && (

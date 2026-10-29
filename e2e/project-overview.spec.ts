@@ -131,3 +131,51 @@ async function violations(page: Page, within?: string) {
     .filter(v => v.nodes.length)
     .map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`);
 }
+
+test('the header menus: View hides and shows the columns, Share invites, status offers the next step', async ({page}) => {
+  await page.goto(URL);
+  await page.getByRole('button', {name: 'View'}).click();
+  await page.getByRole('menuitemcheckbox', {name: 'Resident preview'}).click();
+  await expect(page.getByRole('region', {name: 'Preview', exact: true})).toHaveCount(0);
+  await page.getByRole('menuitemcheckbox', {name: 'Resident preview'}).click();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('region', {name: 'Preview', exact: true})).toBeVisible();
+
+  await page.getByRole('button', {name: 'Share'}).click();
+  await page.getByRole('menuitem', {name: 'Invite people'}).click();
+  await expect(page.getByRole('dialog', {name: 'Invite people'}).getByRole('textbox', {name: 'Email'})).toBeVisible();
+  await page.getByRole('button', {name: 'Cancel'}).click();
+
+  // A published project, one week in: the next step is to archive it, after a confirmation.
+  await page.getByRole('button', {name: 'Live: change status'}).click();
+  await page.getByRole('menuitem', {name: 'Archive project'}).click();
+  const confirm = page.getByRole('dialog', {name: 'Archive project?'});
+  await confirm.getByRole('button', {name: 'Archive project'}).click();
+  await expect(page.getByRole('button', {name: 'Archived: change status'})).toBeVisible();
+});
+
+test('the settings cog opens the project settings, tab by tab', async ({page}) => {
+  await page.goto(URL);
+  await page.getByRole('complementary', {name: 'Project setup'}).getByRole('button', {name: 'Project settings'}).click();
+  const dialog = page.getByRole('dialog', {name: 'Project settings'});
+  const tabs = dialog.getByRole('tablist', {name: 'Project settings'});
+  for (const t of ['General', 'Project page', 'Input tags', 'Access rights', 'Audience', 'Messaging', 'Files', 'Events'])
+    await expect(tabs.getByRole('tab', {name: t})).toBeVisible();
+  await expect(dialog.getByRole('textbox', {name: 'Title'})).toHaveValue('Green Corridors for Larkvale');
+  await tabs.getByRole('tab', {name: 'Input tags'}).click();
+  await expect(dialog.getByRole('row', {name: 'Cycling'})).toBeVisible();
+});
+
+test('Add a phase puts a new upcoming phase on the timeline', async ({page}) => {
+  await page.goto(URL);
+  await page.getByRole('complementary', {name: 'Participation'}).getByRole('button', {name: 'Add a phase'}).click();
+  const dialog = page.getByRole('dialog', {name: 'Add a phase'});
+  await expect(dialog.getByRole('button', {name: 'Add phase'})).toBeDisabled();
+  await dialog.getByRole('textbox', {name: 'Title'}).fill('Walk the route');
+  await dialog.getByRole('textbox', {name: 'Dates'}).fill('9 to 23 Feb');
+  await dialog.getByRole('button', {name: 'Add phase'}).click();
+  await expect(dialog).toHaveCount(0);
+  const rail = page.getByRole('navigation', {name: 'Phases'});
+  await expect(rail).toContainText('Walk the route');
+  await expect(rail).toContainText('Upcoming · 9 to 23 Feb · Ideation');
+});

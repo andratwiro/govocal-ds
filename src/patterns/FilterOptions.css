@@ -1,0 +1,97 @@
+@import '../components/theme.css';
+
+/* The prototype's filter submenu (.pj-fsub): 240 wide, a search field over rows of
+   box · icon · value · count. Rows keep the system Menu's rhythm (32 tall, radius 8, UI type). */
+.gv-filter-options {
+  display: grid;
+  gap: var(--gv-space-6);
+  inline-size: 240px;
+  max-inline-size: 100%;
+  box-sizing: border-box;
+  padding: var(--gv-space-6) var(--gv-space-6) 0;
+}
+
+.gv-filter-options__search {
+  inline-size: 100%;
+
+  .react-aria-Input {
+    block-size: var(--gv-space-32);
+    background: var(--gv-surface-toolbar);
+  }
+}
+
+/* The list carries no padding of its own: the wrapper's 6 frames both the search and the rows. */
+.gv-filter-options .gv-filter-options__list {
+  padding: 0 0 var(--gv-space-6);
+  min-width: 0;
+  max-block-size: 320px;
+}
+
+.gv-filter-options__item {
+  /* The box sits in the Menu's check column, the icon in its icon column. */
+  .gv-filter-options__box {
+    grid-area: check;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--gv-space-15);
+    block-size: var(--gv-space-15);
+    box-sizing: border-box;
+    border: 1px solid var(--gv-border-control);
+    border-radius: var(--gv-radius-4);
+    background: var(--gv-surface-panel);
+    color: var(--gv-text-inverse);
+    opacity: 0;
+    transition: opacity 0.1s;
+
+    /* The system Menu paints a selected item's check in the checked colour; on the filled box it is white. */
+    .lucide-check {
+      grid-area: auto;
+      inline-size: 11px;
+      block-size: 11px;
+      color: var(--gv-text-inverse);
+    }
+
+    &[data-selected] {
+      opacity: 1;
+      background: var(--gv-action-checked);
+      border-color: var(--gv-action-checked);
+    }
+  }
+
+  &[data-focused] .gv-filter-options__box,
+  &[data-hovered] .gv-filter-options__box {
+    opacity: 1;
+  }
+
+  .gv-filter-options__icon {
+    grid-area: icon;
+    display: inline-flex;
+    align-items: center;
+    margin-inline-end: var(--gv-space-10);
+    color: var(--gv-icon-default);
+
+    > svg {
+      inline-size: var(--gv-space-16);
+      block-size: var(--gv-space-16);
+    }
+  }
+
+  .gv-filter-options__label {
+    grid-area: label;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .gv-filter-options__count {
+    grid-area: end;
+    justify-self: end;
+    margin-inline-start: var(--gv-space-10);
+    font: var(--gv-type-small);
+    letter-spacing: var(--gv-type-small-tracking);
+    color: var(--gv-text-tertiary);
+    white-space: nowrap;
+  }
+}
