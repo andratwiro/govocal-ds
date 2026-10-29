@@ -1,4 +1,5 @@
 import {test, expect} from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 test('inspiration hub follows the real admin: highlighted projects, then all projects with filters and sort', async ({page}) => {
   await page.goto('/backoffice/#/inspiration-hub');
@@ -60,4 +61,33 @@ test('inspiration hub names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/inspiration-hub');
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
   expect(gaps).toEqual(expect.arrayContaining(['Project image', 'Quote']));
+});
+
+// ── The first clicks: a card opens a preview of its project ──
+
+test('a project card opens a preview, and the preview passes axe', async ({page}) => {
+  await page.goto('/backoffice/#/inspiration-hub');
+  const all = page.getByRole('list', {name: 'All projects'});
+  await all.getByRole('link', {name: 'Cycle lanes on the ring road', exact: true}).click();
+  const dialog = page.getByRole('dialog', {name: 'Cycle lanes on the ring road'});
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText('Quillbrook');
+  await expect(dialog).toContainText('2,475 participants');
+  await expect(dialog.getByRole('heading', {name: 'Phases'})).toBeVisible();
+  const r = await new AxeBuilder({page}).include('.gv-modal').withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+  expect(r.violations.map(v => v.id)).toEqual([]);
+  await dialog.getByRole('button', {name: 'Close'}).first().click();
+  await expect(dialog).toHaveCount(0);
+});
+
+test('the preview icon opens the same preview, and copying from it marks the card', async ({page}) => {
+  await page.goto('/backoffice/#/inspiration-hub');
+  const all = page.getByRole('list', {name: 'All projects'}).getByRole('listitem');
+  const card = all.filter({has: page.getByRole('heading', {level: 3, name: 'Safe routes to school'})});
+  await card.getByRole('button', {name: 'Preview: Safe routes to school'}).click();
+  const dialog = page.getByRole('dialog', {name: 'Safe routes to school'});
+  await expect(dialog).toContainText('Survey');
+  await dialog.getByRole('button', {name: 'Copy project'}).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(card.getByText('Copied to your drafts')).toBeVisible();
 });

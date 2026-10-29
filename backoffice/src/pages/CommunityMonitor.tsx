@@ -1,10 +1,14 @@
 import {useState} from 'react';
-import {ArrowLeft, ArrowRight, Eye, Plus, Upload, Pencil} from 'lucide-react';
+import {ArrowLeft, ArrowRight, Download, Eye, Plus, Upload, Pencil} from 'lucide-react';
 import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {Button} from '../../../src/components/Button';
 import {NumberField} from '../../../src/components/NumberField';
 import {CheckboxGroup} from '../../../src/components/CheckboxGroup';
+import {TextField} from '../../../src/components/TextField';
+import {RadioGroup, Radio} from '../../../src/components/RadioGroup';
+import {Modal} from '../../../src/components/gv/Modal';
+import {DropZone} from '../../../src/components/gv/DropZone';
 import {DashboardCard, DashboardDemographic} from '../../../src/components/gv/DashboardCard';
 import {Kpi} from '../../../src/components/gv/Kpi';
 import {LineChart, Sparkline} from '../../../src/components/gv/Chart';
@@ -17,8 +21,8 @@ import {Status} from '../../../src/components/gv/Status';
 import {Pill} from '../../../src/components/gv/Pill';
 import {Banner} from '../../../src/components/gv/Banner';
 import {Divider} from '../../../src/components/gv/Divider';
-import {CATEGORIES, CURRENT, MANAGERS, POPUP_CONDITIONS, POPUP_SHOWN, QUARTERS, QUESTIONS, REPORTS, RESPONDENTS,
-  SENTIMENT, WHO} from '../data-community-monitor';
+import {CANDIDATES, CATEGORIES, CURRENT, MANAGERS, POPUP_CONDITIONS, POPUP_SHOWN, QUARTERS, QUESTIONS, REPORTS, RESPONDENTS,
+  SENTIMENT, SURVEY_ACCESS, WHO, type Report} from '../data-community-monitor';
 import {Page} from './Page';
 import {SectionHeading} from '../SectionHeading';
 
@@ -48,7 +52,7 @@ function distribution(avg: number) {
 }
 
 /** The real admin's ← Q4 2026 → picker and View button, as the system's buttons and Select. */
-function QuarterPicker({quarter, onChange, show}: {quarter: number; onChange: (q: number) => void; show: boolean}) {
+function QuarterPicker({quarter, onChange, show, onViewSurvey}: {quarter: number; onChange: (q: number) => void; show: boolean; onViewSurvey: () => void}) {
   return (
     <div className="bo-community-monitor-actions">
       {show && <>
@@ -60,7 +64,7 @@ function QuarterPicker({quarter, onChange, show}: {quarter: number; onChange: (q
       <Button variant="secondary" size={32} aria-label="Next quarter" isDisabled={quarter === CURRENT}
         onPress={() => onChange(quarter + 1)}><ArrowRight aria-hidden size={16} /></Button>
       </>}
-      <Button variant="primary" size={32}><Eye aria-hidden size={16} /> View survey</Button>
+      <Button variant="primary" size={32} onPress={onViewSurvey}><Eye aria-hidden size={16} /> View survey</Button>
     </div>
   );
 }
@@ -157,78 +161,268 @@ function Participants({quarter}: {quarter: number}) {
   );
 }
 
+/** View survey: the survey as residents get it, its questions in order with the sentiment scale. */
+function SurveyModal({isOpen, onOpenChange}: {isOpen: boolean; onOpenChange: (o: boolean) => void}) {
+  return (
+    <Modal title="Community monitor survey" size="wide" isOpen={isOpen} onOpenChange={onOpenChange}
+      footer={<Button variant="secondary" slot="close">Close</Button>}>
+      <div className="bo-community-monitor-modal">
+        <p className="bo-note">How residents see it: a short popup, eleven questions, each answered on the same five-point scale.</p>
+        {CATEGORIES.map(c => (
+          <section key={c.id} className="bo-community-monitor-modal" aria-label={c.label}>
+            <h3 className="bo-section-title">{c.label}</h3>
+            <ol className="bo-community-monitor-questions">
+              {QUESTIONS.map((q, i) => ({q, i})).filter(r => r.q.category === c.id).map(({q, i}) => (
+                <li key={q.title}>{`${i + 1}. ${q.title}`}</li>
+              ))}
+            </ol>
+          </section>
+        ))}
+        <RadioGroup label="Every question is answered on this scale (try it)" orientation="horizontal">
+          {SENTIMENT.map(s => <Radio key={s.label} value={s.label}>{s.label}</Radio>)}
+        </RadioGroup>
+      </div>
+    </Modal>
+  );
+}
+
+/** A report opened: the quarter's headline scores, as the report's first page. */
+function ReportModal({report, onClose}: {report: Report | null; onClose: () => void}) {
+  const q = report ? Math.max(0, QUARTERS.indexOf(report.quarter)) : CURRENT;
+  return (
+    <Modal title={report?.title ?? 'Report'} size="wide" isOpen={report !== null} onOpenChange={o => { if (!o) onClose(); }}
+      footer={<Button variant="secondary" slot="close">Close</Button>}>
+      {report && (
+        <div className="bo-community-monitor-modal">
+          <div className="bo-community-monitor-buttons">
+            <Status state={report.published ? 'live' : 'draft'}>{report.published ? 'Published' : 'Draft'}</Status>
+            <span className="bo-note">{report.quarter} · updated {report.updated}</span>
+          </div>
+          <div className="bo-community-monitor-kpis">
+            <Kpi label="Health score" value={score(HEALTH[q])} note={report.quarter} />
+            <Kpi label="Respondents" value={n(RESPONDENTS[q])} note={`${Math.round((RESPONDENTS[q] / POPUP_SHOWN[q]) * 100)}% response rate`} />
+          </div>
+          <DashboardCard title="Scores by category" subtitle={report.quarter}>
+            {CATEGORIES.map(c => <BarRow key={c.id} label={c.label} percent={(c.scores[q] / 5) * 100} value={score(c.scores[q])} />)}
+          </DashboardCard>
+        </div>
+      )}
+    </Modal>
+  );
+}
+
+/** Create report: a title and the quarter it reports on. */
+function CreateReportModal({isOpen, onOpenChange, onCreate}: {isOpen: boolean; onOpenChange: (o: boolean) => void; onCreate: (r: Report) => void}) {
+  const [title, setTitle] = useState('');
+  const [quarter, setQuarter] = useState(QUARTERS[CURRENT]);
+  const create = () => {
+    onCreate({title: title.trim() || 'Untitled report', quarter, updated: '29 Oct 2026', published: false});
+    setTitle('');
+    onOpenChange(false);
+  };
+  return (
+    <Modal title="Create a report" isOpen={isOpen} onOpenChange={onOpenChange}
+      footer={<>
+        <Button variant="secondary" slot="close">Cancel</Button>
+        <Button variant="primary" onPress={create}>Create</Button>
+      </>}>
+      <div className="bo-community-monitor-modal">
+        <TextField label="Report title" value={title} onChange={setTitle} placeholder="e.g. Q4 2026 results" />
+        <Select label="Quarter" selectedKey={quarter} onSelectionChange={k => setQuarter(String(k))}>
+          {QUARTERS.map(q => <SelectItem key={q} id={q}>{q}</SelectItem>)}
+        </Select>
+        <p className="bo-note">The report starts as a draft with this quarter's scores; publish it when it reads right.</p>
+      </div>
+    </Modal>
+  );
+}
+
 function Reports() {
+  const [reports, setReports] = useState<Report[]>(REPORTS);
+  const [creating, setCreating] = useState(false);
+  const [open, setOpen] = useState<Report | null>(null);
   return (
     <div className="bo-community-monitor-body">
       <div className="bo-community-monitor-bar">
         <p className="bo-note">Reports built from the monitor's quarterly results.</p>
-        <Button variant="primary" size={32}><Plus aria-hidden size={16} /> Create report</Button>
+        <Button variant="primary" size={32} onPress={() => setCreating(true)}><Plus aria-hidden size={16} /> Create report</Button>
       </div>
       <ul className="bo-community-monitor-list">
-        {REPORTS.map(r => (
+        {reports.map(r => (
           <li key={r.title}>
             <Card tone="manage" title={r.title} summary={`Updated ${r.updated}`} pills={[{label: r.quarter}]}
               actions={<Status state={r.published ? 'live' : 'draft'}>{r.published ? 'Published' : 'Draft'}</Status>}
-              control="open" onOpen={() => {}} />
+              control="open" onOpen={() => setOpen(r)} />
           </li>
         ))}
       </ul>
+      <CreateReportModal isOpen={creating} onOpenChange={setCreating} onCreate={r => setReports(prev => [r, ...prev])} />
+      <ReportModal report={open} onClose={() => setOpen(null)} />
     </div>
   );
 }
 
+/** Edit survey: the questions' wording, one field each, grouped by category. */
+function EditSurveyModal({isOpen, onOpenChange, onSave}: {isOpen: boolean; onOpenChange: (o: boolean) => void; onSave: () => void}) {
+  return (
+    <Modal title="Edit survey" size="wide" isOpen={isOpen} onOpenChange={onOpenChange}
+      footer={<>
+        <Button variant="secondary" slot="close">Cancel</Button>
+        <Button variant="primary" onPress={() => { onSave(); onOpenChange(false); }}>Save</Button>
+      </>}>
+      <div className="bo-community-monitor-modal">
+        <Banner>Changing a question's wording starts a new comparison: earlier quarters keep the old wording.</Banner>
+        {CATEGORIES.map(c => (
+          <section key={c.id} className="bo-community-monitor-modal" aria-label={c.label}>
+            <h3 className="bo-section-title">{c.label}</h3>
+            {QUESTIONS.map((q, i) => ({q, i})).filter(r => r.q.category === c.id).map(({q, i}) => (
+              <TextField key={q.title} label={`Question ${i + 1}`} defaultValue={q.title} />
+            ))}
+          </section>
+        ))}
+      </div>
+    </Modal>
+  );
+}
+
+/** Import answers: answers collected offline, from the survey's spreadsheet template. */
+function ImportModal({isOpen, onOpenChange, onImport}: {isOpen: boolean; onOpenChange: (o: boolean) => void; onImport: (file: string) => void}) {
+  const [file, setFile] = useState<string | null>(null);
+  const [template, setTemplate] = useState(false);
+  return (
+    <Modal title="Import answers" isOpen={isOpen} onOpenChange={o => { onOpenChange(o); if (!o) { setFile(null); setTemplate(false); } }}
+      footer={<>
+        <Button variant="secondary" slot="close">Cancel</Button>
+        <Button variant="primary" isDisabled={!file} onPress={() => { if (file) onImport(file); onOpenChange(false); setFile(null); }}>Import</Button>
+      </>}>
+      <div className="bo-community-monitor-modal">
+        <p className="bo-note">Answers collected on paper or at an event: fill in the template, one row per respondent, then upload it.</p>
+        <div className="bo-community-monitor-buttons">
+          <Button variant="secondary" size={32} onPress={() => setTemplate(true)}><Download aria-hidden size={16} /> Download the template</Button>
+          <span role="status" className="bo-note">{template ? 'community-monitor-template.xlsx downloaded' : ''}</span>
+        </div>
+        <DropZone acceptedFileTypes={['.xlsx', '.csv']} aria-label="Answers file"
+          onSelect={files => setFile(files?.[0]?.name ?? null)}
+          onDrop={() => setFile('answers.xlsx')} />
+        <span role="status" className="bo-note">{file ? `Ready to import: ${file}` : ''}</span>
+      </div>
+    </Modal>
+  );
+}
+
+/** Add a manager: one of the platform's users, picked from a list. */
+function AddManagerModal({isOpen, onOpenChange, options, onAdd}: {isOpen: boolean; onOpenChange: (o: boolean) => void; options: string[]; onAdd: (m: string) => void}) {
+  const [picked, setPerson] = useState<string | null>(null);
+  // Someone already added drops out of the list, so fall back to the first one still there.
+  const person = picked && options.includes(picked) ? picked : options[0] ?? null;
+  return (
+    <Modal title="Add a manager" isOpen={isOpen} onOpenChange={onOpenChange}
+      footer={<>
+        <Button variant="secondary" slot="close">Cancel</Button>
+        <Button variant="primary" isDisabled={!person} onPress={() => { if (person) onAdd(person); onOpenChange(false); }}>Add</Button>
+      </>}>
+      <div className="bo-community-monitor-modal">
+        <p className="bo-note">Managers can edit the survey and its permissions, see the answers and create reports.</p>
+        <Select label="Person" selectedKey={person} onSelectionChange={k => setPerson(k === null ? null : String(k))}>
+          {options.map(o => <SelectItem key={o} id={o}>{o}</SelectItem>)}
+        </Select>
+      </div>
+    </Modal>
+  );
+}
+
+const SETTINGS = ['Survey', 'Popup', 'Access rights', 'Managers'];
+
+/** The real admin's settings, under its four sub-tabs: Survey, Popup, Access rights, Managers. */
 function Settings() {
   const [open, setOpen] = useState(true);
   const [anonymous, setAnonymous] = useState(false);
+  const [access, setAccess] = useState(SURVEY_ACCESS[0].id);
   const [conditions, setConditions] = useState<string[]>(['home']);
   const [frequency, setFrequency] = useState(100);
   const [dirty, setDirty] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [modal, setModal] = useState<'edit' | 'import' | 'manager' | null>(null);
+  const [surveyNote, setSurveyNote] = useState('');
+  const [managers, setManagers] = useState(MANAGERS);
   const touch = () => { setDirty(true); setSaved(false); };
+  const show = (m: typeof modal) => () => setModal(m);
+  const shut = (o: boolean) => { if (!o) setModal(null); };
   return (
-    <div className="bo-community-monitor-body">
-      <Card title="Survey" summary={open ? 'Accepting answers' : 'Closed'}
-        actions={<CardSwitch aria-label="Open for responses" isSelected={open} onChange={setOpen} />}>
-        <div className="bo-community-monitor-section">
-          <Status state={open ? 'live' : 'draft'}>{open ? 'Open for responses' : 'Closed'}</Status>
-          <div className="bo-community-monitor-buttons">
-            <Button variant="secondary" size={32}><Pencil aria-hidden size={16} /> Edit survey</Button>
-            <Button variant="secondary" size={32}><Upload aria-hidden size={16} /> Import answers</Button>
-          </div>
+    <>
+    <Tabs defaultSelectedKey="Survey">
+      <TabList aria-label="Settings sections" className="react-aria-TabList bo-community-monitor-subtabs">
+        {SETTINGS.map(t => <Tab key={t} id={t}>{t}</Tab>)}
+      </TabList>
+      <TabPanel id="Survey">
+        <div className="bo-community-monitor-body">
+          <Card title="Survey" summary={open ? 'Accepting answers' : 'Closed'}
+            actions={<CardSwitch aria-label="Open for responses" isSelected={open} onChange={setOpen} />}>
+            <div className="bo-community-monitor-section">
+              <Status state={open ? 'live' : 'draft'}>{open ? 'Open for responses' : 'Closed'}</Status>
+              <div className="bo-community-monitor-buttons">
+                <Button variant="secondary" size={32} onPress={show('edit')}><Pencil aria-hidden size={16} /> Edit survey</Button>
+                <Button variant="secondary" size={32} onPress={show('import')}><Upload aria-hidden size={16} /> Import answers</Button>
+                <span role="status" className="bo-note">{surveyNote}</span>
+              </div>
+            </div>
+          </Card>
         </div>
-      </Card>
-      <Card title="Popup settings" layout="stacked">
-        <div className="bo-community-monitor-section">
-          <CheckboxGroup label="Under what conditions can the popup appear?" value={conditions}
-            onChange={v => { setConditions(v); touch(); }}>
-            {POPUP_CONDITIONS.map(c => <Checkbox key={c.id} value={c.id}>{c.label}</Checkbox>)}
-          </CheckboxGroup>
-          <NumberField label="Popup frequency (0 to 100)" description="The share of eligible visits that show the popup. The default is 100."
-            minValue={0} maxValue={100} value={frequency} onChange={v => { setFrequency(v); touch(); }} />
-          <Divider />
-          <div className="bo-community-monitor-buttons">
-            <Button variant="primary" aria-label="Save popup settings" isDisabled={!dirty}
-              onPress={() => { setDirty(false); setSaved(true); }}>Save</Button>
-            <span role="status" className="bo-note">{saved ? 'Popup settings saved' : ''}</span>
-          </div>
+      </TabPanel>
+      <TabPanel id="Popup">
+        <div className="bo-community-monitor-body">
+          <Card title="Popup settings" layout="stacked">
+            <div className="bo-community-monitor-section">
+              <CheckboxGroup label="Under what conditions can the popup appear?" value={conditions}
+                onChange={v => { setConditions(v); touch(); }}>
+                {POPUP_CONDITIONS.map(c => <Checkbox key={c.id} value={c.id}>{c.label}</Checkbox>)}
+              </CheckboxGroup>
+              <NumberField label="Popup frequency (0 to 100)" description="The share of eligible visits that show the popup. The default is 100."
+                minValue={0} maxValue={100} value={frequency} onChange={v => { setFrequency(v); touch(); }} />
+              <Divider />
+              <div className="bo-community-monitor-buttons">
+                <Button variant="primary" aria-label="Save popup settings" isDisabled={!dirty}
+                  onPress={() => { setDirty(false); setSaved(true); }}>Save</Button>
+                <span role="status" className="bo-note">{saved ? 'Popup settings saved' : ''}</span>
+              </div>
+            </div>
+          </Card>
         </div>
-      </Card>
-      <Card title="Access and user data"
-        summary={anonymous ? 'Answers are stored without a profile' : 'Answers are linked to profiles'}
-        actions={<CardSwitch aria-label="Anonymize all user data" isSelected={anonymous} onChange={setAnonymous} />}>
-        <p className="bo-note">Anonymize all user data: answers are kept without the respondent's profile, so the
-          Participants breakdowns stay empty. This applies to answers collected from now on.</p>
-      </Card>
-      <Card title="Management" layout="stacked">
-        <div className="bo-community-monitor-section">
-          <p className="bo-note">Who are the managers? Admins and these community monitor managers see results and edit the survey.</p>
-          <div className="bo-community-monitor-buttons">
-            {MANAGERS.map(m => <Pill key={m}>{m}</Pill>)}
-            <Button variant="quiet" size={32}><Plus aria-hidden size={16} /> Add a manager</Button>
-          </div>
+      </TabPanel>
+      <TabPanel id="Access rights">
+        <div className="bo-community-monitor-body">
+          <Card title="Who can respond" layout="stacked">
+            <RadioGroup label="Who can take the survey?" value={access} onChange={setAccess}>
+              {SURVEY_ACCESS.map(a => <Radio key={a.id} value={a.id}>{a.label}</Radio>)}
+            </RadioGroup>
+          </Card>
+          <Card title="Access and user data"
+            summary={anonymous ? 'Answers are stored without a profile' : 'Answers are linked to profiles'}
+            actions={<CardSwitch aria-label="Anonymize all user data" isSelected={anonymous} onChange={setAnonymous} />}>
+            <p className="bo-note">Anonymize all user data: answers are kept without the respondent's profile, so the
+              Participants breakdowns stay empty. This applies to answers collected from now on.</p>
+          </Card>
         </div>
-      </Card>
-    </div>
+      </TabPanel>
+      <TabPanel id="Managers">
+        <div className="bo-community-monitor-body">
+          <Card title="Management" layout="stacked">
+            <div className="bo-community-monitor-section">
+              <p className="bo-note">Who are the managers? Admins and these community monitor managers see results and edit the survey.</p>
+              <div className="bo-community-monitor-buttons">
+                {managers.map(m => <Pill key={m}>{m}</Pill>)}
+                <Button variant="quiet" size={32} onPress={show('manager')}><Plus aria-hidden size={16} /> Add a manager</Button>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </TabPanel>
+    </Tabs>
+      <EditSurveyModal isOpen={modal === 'edit'} onOpenChange={shut} onSave={() => setSurveyNote('Survey saved')} />
+      <ImportModal isOpen={modal === 'import'} onOpenChange={shut} onImport={f => setSurveyNote(`Importing ${f}`)} />
+      <AddManagerModal isOpen={modal === 'manager'} onOpenChange={shut}
+        options={CANDIDATES.filter(c => !managers.includes(c))} onAdd={m => setManagers(prev => [...prev, m])} />
+    </>
   );
 }
 
@@ -237,8 +431,9 @@ export function CommunityMonitor() {
   const [section, setSection] = useState('Live monitor');
   // The quarter only applies to the results (Live monitor, Participants), as in the real admin.
   const byQuarter = section === 'Live monitor' || section === 'Participants';
+  const [survey, setSurvey] = useState(false);
   return (
-    <Page title="Community monitor" actions={<QuarterPicker quarter={quarter} onChange={setQuarter} show={byQuarter} />}>
+    <Page title="Community monitor" actions={<QuarterPicker quarter={quarter} onChange={setQuarter} show={byQuarter} onViewSurvey={() => setSurvey(true)} />}>
       <Tabs selectedKey={section} onSelectionChange={k => setSection(String(k))}>
         <TabList aria-label="Community monitor sections">{SECTIONS.map(s => <Tab key={s} id={s}>{s}</Tab>)}</TabList>
         <TabPanel id="Live monitor"><LiveMonitor quarter={quarter} /></TabPanel>
@@ -246,6 +441,7 @@ export function CommunityMonitor() {
         <TabPanel id="Reports"><SectionHeading>Reports</SectionHeading><Reports /></TabPanel>
         <TabPanel id="Settings"><SectionHeading>Settings</SectionHeading><Settings /></TabPanel>
       </Tabs>
+      <SurveyModal isOpen={survey} onOpenChange={setSurvey} />
     </Page>
   );
 }

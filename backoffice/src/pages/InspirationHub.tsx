@@ -1,6 +1,8 @@
 import {useMemo, useState} from 'react';
 import {BadgeCheck, Copy, ExternalLink, Users} from 'lucide-react';
 import {Button} from '../../../src/components/Button';
+import {Link} from '../../../src/components/Link';
+import {Modal} from '../../../src/components/gv/Modal';
 import {SearchField} from '../../../src/components/SearchField';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {Tag, TagGroup} from '../../../src/components/TagGroup';
@@ -10,7 +12,7 @@ import {Card} from '../../../src/components/gv/Card';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {Pill} from '../../../src/components/gv/Pill';
 import {Status} from '../../../src/components/gv/Status';
-import {COUNTRIES, LIBRARY, METHODS, POPULATIONS, SORTS, TOPICS, type Country, type LibraryProject} from '../data-inspiration-hub';
+import {COUNTRIES, LIBRARY, METHODS, PHASE_TITLES, POPULATIONS, SORTS, TOPICS, type Country, type LibraryProject} from '../data-inspiration-hub';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
 
@@ -47,13 +49,13 @@ function sortBy(list: LibraryProject[], sort: string) {
 }
 
 // The prototype's project card (.gv-pcard): image on top, title, then the platform line, the methods and the action.
-function ProjectCard({project, highlighted, copied, onCopy}: {project: LibraryProject; highlighted?: boolean; copied: boolean; onCopy: () => void}) {
+function ProjectCard({project, highlighted, copied, onCopy, onOpen}: {project: LibraryProject; highlighted?: boolean; copied: boolean; onCopy: () => void; onOpen: () => void}) {
   const Art = project.art;
   return (
     <Card
       layout="stacked"
-      title={project.title}
-      actions={<IconButton aria-label={`Preview: ${project.title}`}><ExternalLink aria-hidden size={16} /></IconButton>}>
+      title={<Link onPress={onOpen} className="react-aria-Link bo-inspiration-hub-title">{project.title}</Link>}
+      actions={<IconButton aria-label={`Preview: ${project.title}`} onPress={onOpen}><ExternalLink aria-hidden size={16} /></IconButton>}>
       <div className="bo-inspiration-hub-body">
         <Gap name="Project image" inline>
           <span className="bo-inspiration-hub-art">
@@ -87,12 +89,52 @@ function ProjectCard({project, highlighted, copied, onCopy}: {project: LibraryPr
   );
 }
 
+const longDate = (iso: string) => new Date(`${iso}T12:00:00`).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+
+/** The project's preview: what it asked, how (its phases, one per method), and how many took part. */
+function ProjectPreview({project, copied, onCopy, onClose}: {project: LibraryProject | null; copied: boolean; onCopy: () => void; onClose: () => void}) {
+  return (
+    <Modal title={project?.title ?? 'Project'} size="wide" isOpen={project !== null} onOpenChange={o => { if (!o) onClose(); }}
+      footer={<>
+        <Button variant="secondary" slot="close">Close</Button>
+        <Button variant="primary" isDisabled={copied} onPress={() => { onCopy(); onClose(); }}>
+          <Copy aria-hidden size={16} />{copied ? 'Copied' : 'Copy project'}
+        </Button>
+      </>}>
+      {project && (
+        <div className="bo-inspiration-hub-preview">
+          <p className="bo-inspiration-hub-platform">
+            <Avatar initials={initials(project.platform)} size={24} />
+            <span className="bo-note">{project.platform} · {project.country} · {project.participants.toLocaleString('en')} participants</span>
+          </p>
+          <p>{project.summary}</p>
+          <div className="bo-inspiration-hub-tags">{project.methods.map(m => <Pill key={m}>{m}</Pill>)}</div>
+          <dl className="bo-inspiration-hub-facts">
+            {[['Topic', project.topic], ['Population', project.population], ['Started', longDate(project.start)]].map(([k, v]) => (
+              <div key={k}><dt className="bo-note">{k}</dt><dd>{v}</dd></div>
+            ))}
+          </dl>
+          <h3 className="bo-section-title">Phases</h3>
+          <ol className="bo-inspiration-hub-phases">
+            {project.methods.map((m, i) => (
+              <li key={m} className="bo-inspiration-hub-phase">
+                <span className="bo-note">{`Phase ${i + 1}`}</span><span>{PHASE_TITLES[m]}</span><Pill>{m}</Pill>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+    </Modal>
+  );
+}
+
 export function InspirationHub() {
   const [pinCountry, setPinCountry] = useState<Country>('Northmark');
   const [filters, setFilters] = useState(NO_FILTERS);
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<string>(SORTS[0]);
   const [copied, setCopied] = useState<Set<string>>(new Set());
+  const [preview, setPreview] = useState<LibraryProject | null>(null);
 
   const pinned = LIBRARY.filter(p => p.highlight && p.country === pinCountry);
   const shown = useMemo(() => sortBy(LIBRARY.filter(p => matches(p, filters, query)), sort), [filters, query, sort]);
@@ -100,7 +142,7 @@ export function InspirationHub() {
   const copy = (id: string) => setCopied(prev => new Set(prev).add(id));
   const card = (p: LibraryProject, highlighted?: boolean) => (
     <li key={p.id} className="bo-inspiration-hub-item">
-      <ProjectCard project={p} highlighted={highlighted} copied={copied.has(p.id)} onCopy={() => copy(p.id)} />
+      <ProjectCard project={p} highlighted={highlighted} copied={copied.has(p.id)} onCopy={() => copy(p.id)} onOpen={() => setPreview(p)} />
     </li>
   );
 
@@ -158,6 +200,8 @@ export function InspirationHub() {
         <Banner>Seems like there are no more projects. Try changing the filters.</Banner>
       </div>
       <GapLegend names={['project images', 'the highlight quote']} />
+      <ProjectPreview project={preview} copied={preview ? copied.has(preview.id) : false}
+        onCopy={() => { if (preview) copy(preview.id); }} onClose={() => setPreview(null)} />
     </Page>
   );
 }

@@ -15,11 +15,12 @@ import {Reporting} from './pages/Reporting';
 import {CommunityMonitor} from './pages/CommunityMonitor';
 import {InspirationHub} from './pages/InspirationHub';
 import {PagesMenu} from './pages/PagesMenu';
+import {Platform} from './pages/Platform';
 
 export const router = createHashRouter([{
   path: '/', element: <Layout />, children: [
     {index: true, element: <Navigate to="/projects" replace />},
-    {path: 'dashboard', element: <Dashboard />},
+    {path: 'dashboard/:tab?', element: <Dashboard />},
     {path: 'projects', element: <Projects />},
     {path: 'inputs', element: <Inputs />},
     {path: 'users', element: <Users />},
@@ -35,4 +36,4 @@ export const router = createHashRouter([{
     ...NAV.filter(n => !['community-monitor', 'dashboard', 'inputs', 'inspiration-hub', 'messaging', 'pages-menu', 'projects', 'reporting', 'settings', 'tools', 'users'].includes(n.id))
       .map(n => ({path: n.id, element: <Placeholder item={n} />}))
   ]
-}]);
+}, {path: '/platform', element: <Platform />}]);

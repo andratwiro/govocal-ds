@@ -1,4 +1,5 @@
-import {test, expect} from '@playwright/test';
+import {test, expect, type Page} from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 const CATEGORIES = ['Quality of life', 'Service delivery', 'Governance and trust'];
 
@@ -48,13 +49,19 @@ test('participants, reports and settings tabs', async ({page}) => {
   await expect(page.getByRole('button', {name: 'Create report'})).toBeVisible();
   await expect(page.locator('.gv-card', {hasText: 'Q3 2026 results'})).toBeVisible();
 
+  // Settings now splits into the real admin's four sub-tabs, one card group each (was: four cards on one screen).
   await tabs.getByRole('tab', {name: 'Settings'}).click();
-  for (const t of ['Survey', 'Popup settings', 'Access and user data', 'Management']) {
-    await expect(page.locator('.gv-card', {hasText: t}).first()).toBeVisible();
-  }
+  const sub = page.getByRole('tablist', {name: 'Settings sections'});
+  await expect(page.locator('.gv-card', {hasText: 'Survey'}).first()).toBeVisible();
   await expect(page.getByRole('switch', {name: 'Open for responses'})).toBeChecked();
-  await expect(page.getByRole('switch', {name: 'Anonymize all user data'})).not.toBeChecked();
+  await sub.getByRole('tab', {name: 'Popup'}).click();
+  await expect(page.locator('.gv-card', {hasText: 'Popup settings'})).toBeVisible();
   await expect(page.getByRole('textbox', {name: 'Popup frequency (0 to 100)'})).toHaveValue('100');
+  await sub.getByRole('tab', {name: 'Access rights'}).click();
+  await expect(page.locator('.gv-card', {hasText: 'Access and user data'})).toBeVisible();
+  await expect(page.getByRole('switch', {name: 'Anonymize all user data'})).not.toBeChecked();
+  await sub.getByRole('tab', {name: 'Managers'}).click();
+  await expect(page.locator('.gv-card', {hasText: 'Management'})).toBeVisible();
 });
 
 test('community monitor has no gaps left', async ({page}) => {
@@ -70,4 +77,95 @@ test('the quarter picker shows only on the results sections', async ({page}) => 
   await tabs.getByRole('tab', {name: 'Reports'}).click();
   await expect(page.getByRole('button', {name: 'Previous quarter'})).toHaveCount(0);
   await expect(page.getByRole('button', {name: 'View survey'})).toBeVisible();
+});
+
+// ── The first clicks: every button on the monitor opens something ──
+
+async function axeOn(page: Page, selector: string) {
+  const r = await new AxeBuilder({page}).include(selector).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+  return r.violations.map(v => v.id);
+}
+
+async function openSettings(page: Page, sub: string) {
+  await page.goto('/backoffice/#/community-monitor');
+  await page.getByRole('tablist', {name: 'Community monitor sections'}).getByRole('tab', {name: 'Settings'}).click();
+  await page.getByRole('tablist', {name: 'Settings sections'}).getByRole('tab', {name: sub}).click();
+}
+
+test('settings has the real admin\'s four sub-tabs', async ({page}) => {
+  await openSettings(page, 'Survey');
+  const sub = page.getByRole('tablist', {name: 'Settings sections'});
+  for (const t of ['Survey', 'Popup', 'Access rights', 'Managers']) await expect(sub.getByRole('tab', {name: t})).toBeVisible();
+  await sub.getByRole('tab', {name: 'Access rights'}).click();
+  await expect(page.getByRole('radiogroup', {name: 'Who can take the survey?'})).toBeVisible();
+});
+
+test('View survey opens the survey as residents see it, and passes axe', async ({page}) => {
+  await page.goto('/backoffice/#/community-monitor');
+  await page.getByRole('button', {name: 'View survey'}).click();
+  const dialog = page.getByRole('dialog', {name: 'Community monitor survey'});
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText('1. The city as a place to live');
+  await expect(dialog).toContainText('11. Transparency');
+  expect(await axeOn(page, '.gv-modal')).toEqual([]);
+  await dialog.getByRole('button', {name: 'Close'}).first().click();
+  await expect(dialog).toHaveCount(0);
+});
+
+test('Create report adds a draft report', async ({page}) => {
+  await page.goto('/backoffice/#/community-monitor');
+  await page.getByRole('tab', {name: 'Reports'}).click();
+  await page.getByRole('button', {name: 'Create report'}).click();
+  const dialog = page.getByRole('dialog', {name: 'Create a report'});
+  await expect(dialog).toBeVisible();
+  expect(await axeOn(page, '.gv-modal')).toEqual([]);
+  await dialog.getByRole('textbox', {name: 'Report title'}).fill('Parks check-in');
+  await dialog.getByRole('button', {name: 'Create'}).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(page.locator('.gv-card', {hasText: 'Parks check-in'})).toContainText('Draft');
+});
+
+test('a report card opens its report', async ({page}) => {
+  await page.goto('/backoffice/#/community-monitor');
+  await page.getByRole('tab', {name: 'Reports'}).click();
+  await page.getByRole('button', {name: 'Open Q3 2026 results'}).click();
+  const dialog = page.getByRole('dialog', {name: 'Q3 2026 results'});
+  await expect(dialog.locator('.gv-kpi', {hasText: 'Health score'})).toBeVisible();
+  await expect(dialog).toContainText('Respondents');
+  expect(await axeOn(page, '.gv-modal')).toEqual([]);
+});
+
+test('Edit survey opens the questions to edit, and saving says so', async ({page}) => {
+  await openSettings(page, 'Survey');
+  await page.getByRole('button', {name: 'Edit survey'}).click();
+  const dialog = page.getByRole('dialog', {name: 'Edit survey'});
+  await expect(dialog.getByRole('textbox', {name: 'Question 1', exact: true})).toHaveValue('The city as a place to live');
+  expect(await axeOn(page, '.gv-modal')).toEqual([]);
+  await dialog.getByRole('textbox', {name: 'Question 1', exact: true}).fill('The town as a place to live');
+  await dialog.getByRole('button', {name: 'Save'}).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(page.getByRole('status').filter({hasText: 'Survey saved'})).toBeVisible();
+});
+
+test('Import answers opens a drop zone', async ({page}) => {
+  await openSettings(page, 'Survey');
+  await page.getByRole('button', {name: 'Import answers'}).click();
+  const dialog = page.getByRole('dialog', {name: 'Import answers'});
+  await expect(dialog.getByRole('button', {name: 'browse'})).toBeVisible();
+  await expect(dialog.getByRole('button', {name: 'Download the template'})).toBeVisible();
+  expect(await axeOn(page, '.gv-modal')).toEqual([]);
+});
+
+test('Add a manager picks someone and adds them', async ({page}) => {
+  await openSettings(page, 'Managers');
+  await expect(page.locator('.gv-pill')).toHaveCount(3);
+  await page.getByRole('button', {name: 'Add a manager'}).click();
+  const dialog = page.getByRole('dialog', {name: 'Add a manager'});
+  expect(await axeOn(page, '.gv-modal')).toEqual([]);
+  await dialog.getByRole('button', {name: /Person/}).click();
+  await page.getByRole('option', {name: 'Admin D'}).click();
+  await dialog.getByRole('button', {name: 'Add'}).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(page.locator('.gv-pill')).toHaveCount(4);
+  await expect(page.locator('.gv-pill', {hasText: 'Admin D'})).toBeVisible();
 });

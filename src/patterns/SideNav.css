@@ -1,0 +1,199 @@
+@import '../components/theme.css';
+
+/* The real admin's sidebar (224px, dark, 60px "To platform" band) with the prototype's folded rail
+   (.gv-bo-side.is-rail: 52px, 40x36 items, labels hidden). */
+.gv-side-nav {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-8);
+  block-size: 100vh;
+  position: sticky;
+  inset-block-start: 0;
+  overflow-y: auto;
+  padding-block-end: var(--gv-space-16);
+  background: var(--gv-surface-nav);
+  color: var(--gv-text-inverse);
+}
+
+.gv-side-nav__group {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--gv-space-8);
+  display: grid;
+  gap: var(--gv-space-2);
+
+  &[data-push] {
+    margin-block-start: auto;
+  }
+}
+
+.gv-side-nav__home,
+.gv-side-nav__row {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-10);
+  inline-size: 100%;
+  color: var(--gv-text-inverse);
+  font: var(--gv-type-ui);
+  text-decoration: none;
+  text-align: start;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-icon-nav-active);
+    outline-offset: -2px;
+  }
+}
+
+/* "To platform": the lighter teal band across the top. */
+.gv-side-nav__home {
+  min-block-size: 60px;
+  padding: var(--gv-space-10) var(--gv-space-8) var(--gv-space-10) var(--gv-space-16);
+  background: var(--gv-surface-brand-mark);
+
+  > svg {
+    flex: none;
+    color: var(--gv-icon-inverse);
+  }
+}
+
+.gv-side-nav__row {
+  min-block-size: 36px;
+  padding: var(--gv-space-6) var(--gv-space-8);
+  border: 0;
+  border-radius: var(--gv-radius-6);
+  background: transparent;
+
+  &[data-hovered],
+  &[aria-current='page'],
+  &[aria-expanded='true'] {
+    background: var(--gv-surface-nav-active);
+  }
+
+  &[aria-current='page'] .gv-side-nav__icon {
+    color: var(--gv-icon-nav-active);
+  }
+}
+
+.gv-side-nav__icon {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--gv-space-24);
+  color: var(--gv-icon-nav);
+
+  &[data-accent] {
+    color: var(--gv-color-green-400);
+  }
+}
+
+.gv-side-nav__text {
+  flex: 1;
+  min-inline-size: 0;
+  display: grid;
+}
+
+.gv-side-nav__label,
+.gv-side-nav__sub {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The role under the account name. No text token for muted text on the nav yet: the nav icon
+   colour, 8:1 on the nav surface. */
+.gv-side-nav__sub {
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-icon-nav);
+}
+
+/* The real admin's red count (CountBadge): white on the notification red, 4.6:1. */
+.gv-side-nav__count {
+  flex: none;
+  min-inline-size: var(--gv-space-16);
+  padding: 0 var(--gv-space-4);
+  box-sizing: border-box;
+  border-radius: var(--gv-radius-4);
+  background: var(--gv-state-notification);
+  color: var(--gv-text-inverse);
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  text-align: center;
+
+  &[data-on-icon] {
+    display: none;
+  }
+}
+
+.gv-side-nav__chevron {
+  flex: none;
+  color: var(--gv-icon-nav);
+}
+
+[dir='rtl'] .gv-side-nav__chevron,
+[dir='rtl'] .gv-side-nav__home > svg {
+  transform: scaleX(-1);
+}
+
+.gv-side-nav__hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── Folded: the icon rail ── */
+.gv-side-nav[data-folded] {
+  .gv-side-nav__group {
+    padding-inline: var(--gv-space-6);
+  }
+
+  .gv-side-nav__home {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .gv-side-nav__row {
+    justify-content: center;
+    inline-size: 40px;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+
+  /* Labels, roles, chevrons and the trailing count stay in the accessibility tree only. */
+  .gv-side-nav__home .gv-side-nav__label,
+  .gv-side-nav__text,
+  .gv-side-nav__row > .gv-side-nav__count {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .gv-side-nav__chevron {
+    display: none;
+  }
+
+  /* The count sits on the icon's corner. */
+  .gv-side-nav__count[data-on-icon] {
+    display: block;
+    position: absolute;
+    inset-block-start: calc(-1 * var(--gv-space-6));
+    inset-inline-end: calc(-1 * var(--gv-space-8));
+    min-inline-size: var(--gv-space-14);
+    padding: 0 var(--gv-space-3);
+    font-size: 10px;
+    line-height: var(--gv-space-14);
+  }
+}

@@ -72,3 +72,13 @@ export const POPUP_CONDITIONS = [
   {id: 'after-action', label: 'After a resident takes part in a project'},
   {id: 'returning', label: 'Only for returning visitors'}
 ];
+
+/** Platform users who can be made community monitor managers. */
+export const CANDIDATES = ['Admin D', 'Manager E', 'Manager F'];
+
+/** Access rights: who can take the survey. */
+export const SURVEY_ACCESS = [
+  {id: 'anyone', label: 'Anyone, without signing in'},
+  {id: 'registered', label: 'Registered residents only'},
+  {id: 'groups', label: 'Residents in specific groups'}
+];
