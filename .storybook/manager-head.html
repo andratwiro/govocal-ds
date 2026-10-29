@@ -75,7 +75,7 @@
 </style>
 <script>
   // Old links after the naming revamp (29 Oct 2026, docs/NAMING.md): a moved entry's ?path= is rewritten before
-  // Storybook reads it. One line per moved title (old id prefix: new one); drop this block after a month.
+  // Storybook reads it. One line per moved title (old id prefix: new one); drop this block on 29 Nov 2026.
   (function () {
     var MOVED = {
       'base-button': 'components-actions-button',
@@ -154,9 +154,30 @@
       'base-searchfield': 'components-forms-search-field',
       'base-tabs': 'components-navigation-tabs'
     };
+    // Removed entries (the dead starter parts, 29 Oct 2026): their stories are gone, so the link opens the docs page
+    // of the entry that replaces them, or the page that says what Base is.
+    var GONE = {
+      'base-breadcrumbs': 'components-navigation-breadcrumbs',
+      'base-togglebuttongroup': 'components-actions-segmented-control',
+      'base-sheet': 'components-overlays-side-panel',
+      'base-colorarea': 'overview-welcome',
+      'base-colorpicker': 'overview-welcome',
+      'base-colorslider': 'overview-welcome',
+      'base-colorswatchpicker': 'overview-welcome',
+      'base-colorwheel': 'overview-welcome',
+      'base-combobox': 'overview-welcome',
+      'base-commandpalette': 'overview-welcome',
+      'base-navigationtree': 'overview-welcome',
+      'base-progressbar': 'overview-welcome',
+      'base-slider': 'overview-welcome',
+      'base-tokenfield': 'overview-welcome'
+    };
     var u = new URL(location.href), m = (u.searchParams.get('path') || '').match(/^\/(story|docs)\/(.+?)--(.+)$/);
     if (m && MOVED[m[2]]) {
       u.searchParams.set('path', '/' + m[1] + '/' + MOVED[m[2]] + '--' + m[3]);
+      history.replaceState(null, '', u);
+    } else if (m && GONE[m[2]]) {
+      u.searchParams.set('path', '/docs/' + GONE[m[2]] + '--docs');
       history.replaceState(null, '', u);
     }
   })();

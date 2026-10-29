@@ -5,19 +5,11 @@ name, export, what it is for, its stories (each story is a configuration to copy
 then open that entry's stories file for the usage. Import paths and props: docs/API.md.
 
 ## Base
-- **Breadcrumbs** `Breadcrumbs` Stories: Example.
 - **Calendar** `Calendar` Stories: Example.
 - **Checkbox** `Checkbox` Stories: Example.
 - **CheckboxGroup** `CheckboxGroup` Stories: Example.
-- **ColorArea** `ColorArea` Stories: Example.
 - **ColorField** `ColorField` Stories: Example.
-- **ColorPicker** `ColorPicker` Stories: Example.
-- **ColorSlider** `ColorSlider` Stories: Example.
 - **ColorSwatch** `ColorSwatch` Stories: Example.
-- **ColorSwatchPicker** `ColorSwatchPicker` Stories: Example.
-- **ColorWheel** `ColorWheel` Stories: Example.
-- **ComboBox** `ComboBox` Stories: Example.
-- **CommandPalette** `CommandPalette` Stories: Example.
 - **DateField** `DateField` Stories: Example.
 - **DatePicker** `DatePicker` Stories: Example.
 - **DateRangePicker** `DateRangePicker` Stories: Example.
@@ -30,19 +22,13 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **ListBox** `ListBox` Stories: Example, Sections.
 - **Meter** `Meter` Stories: Example.
 - **Modal** `Modal` Stories: Example.
-- **NavigationTree** `NavigationTree` Stories: Example, Sections.
 - **Popover** `Popover` Stories: Example.
-- **ProgressBar** `ProgressBar` Stories: Example.
 - **RadioGroup** `RadioGroup` Stories: Example.
 - **RangeCalendar** `RangeCalendar` Stories: Example.
-- **Sheet** `Sheet`: `className` and `style` place the sheet itself (not its overlay); they never paint it. Stories: Example, Snap Points.
-- **Slider** `Slider` Stories: Example.
 - **Table** `Table` Stories: Example.
 - **TagGroup** `TagGroup` Stories: Example.
 - **TimeField** `TimeField` Stories: Example.
 - **ToggleButton** `ToggleButton` Stories: Example.
-- **ToggleButtonGroup** `ToggleButtonGroup` Stories: Example.
-- **TokenField** `TokenField` Stories: Example, Auto Tokenize, Tag Field.
 - **Toolbar** `Toolbar` Stories: Example.
 - **Tree** `Tree` Stories: Example.
 

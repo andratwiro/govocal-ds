@@ -12,18 +12,18 @@ and Storybook's alias all read it):
 | Import | What it carries |
 | --- | --- |
 | `govocal-ds` | Every Component and Pattern with its props types; the content parts (`Heading`, `Text`, `Header`, `Keyboard`, `Separator`); `PlacementProps`; React Aria's value types (`Key`, `Selection`, `SortDescriptor`, `DateValue`, `TimeValue`, `RangeValue`). |
-| `govocal-ds/base` | Starter React Aria parts no Component covers yet (`Calendar`, `ComboBox`, `Table`, `Tree`, `Dialog`, `Popover`, `Link`, `Toolbar`, …). Use one only when `govocal-ds` has nothing for the job. |
+| `govocal-ds/base` | Starter React Aria parts no Component covers yet (`Calendar`, `DatePicker`, `Table`, `Tree`, `Dialog`, `Popover`, `Link`, `Toolbar`, …). Use one only when `govocal-ds` has nothing for the job. |
 | `govocal-ds/tokens.css` | The `--gv-*` tokens. Import once, at the app's root. Each part imports its own CSS. |
 
 ```tsx
 import 'govocal-ds/tokens.css';
 import {Button, EmptyState, Panel, type PanelProps} from 'govocal-ds';
-import {ComboBox, ComboBoxItem} from 'govocal-ds/base';
+import {DatePicker, Popover} from 'govocal-ds/base';
 ```
 
 - Never import a file path (`../../src/components/gv/Panel`). The guard fails on it.
 - Each name is exported once, across both entry points. Where a Component replaces a starter part under the same name
-  (`Breadcrumbs`, `Checkbox`, `DropZone`, `Modal`), only the Component is exported.
+  (`Checkbox`, `Modal`), only the Component is exported.
 - A page that still has deep imports: `npm run api:imports` (or `node scripts/use-public-api.mjs <dir>`) rewrites them
   in place, one import per entry point, names sorted, local names and `type` marks kept. It is re-runnable;
   `--check` exits 1 when a file would change. It leaves (and lists) anything no entry point exports.

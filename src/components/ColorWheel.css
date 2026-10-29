@@ -1,9 +1,0 @@
-@import './theme.css';
-
-.react-aria-ColorWheel {
-  &[data-disabled] {
-    .react-aria-ColorWheelTrack {
-      background: var(--gv-color-slate-400) !important; /* raw: colour picker chrome, a disabled well */
-    }
-  }
-}

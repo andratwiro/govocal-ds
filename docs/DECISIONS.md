@@ -4,6 +4,12 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Structure: one place for each part (29 Oct 2026, architecture review)
+
+Calls made while reshaping the tree (the review's structure moves). Newest first.
+
+- The review counted 22 dead starter parts; on today's main 5 of them are used (Separator through the barrel; Disclosure group, Toolbar and Tree by the Report view; the starter Segmented control was already gone) → **17 deleted: Breadcrumbs, Colour area, Colour picker, Colour slider, Colour swatch picker, Colour thumb, Colour wheel, Combo box, Command palette, Drop zone, Input group, Navigation tree, Progress bar, Sheet, Slider, Toggle button group, Token field; their `govocal-ds/base` exports go with them** → a part nothing reaches but its own story is a sidebar entry the product never uses. Old links open the docs of the entry that replaces it (Breadcrumbs, Segmented control, Side panel) or a page about Base.
+
 ## Composition contracts in code (29 Oct 2026, architecture review)
 
 Calls made while putting the review's invisible contracts into the parts themselves (rv-contracts).

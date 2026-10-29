@@ -91,8 +91,8 @@ project lead (base 4).
 - When do Figma's variables take the new token names? — nothing in code waits on it; one script, run by the agent through the Figma MCP, renames each variable by its id and sets its code syntax and description — see `tokens/variable-ids.json` (the bridge by id).
 - Merge colour primitives nobody can tell apart (slate 150 into 200, 650 into 600, 750 into 700 or 800; brand blue 650 into 700; neutral 25 into 0; teal 75 into 50)? — all kept — see `foundations-colour--docs`.
 - Merge the segment text colour (slate 800) into the pill text colour (slate 700), ΔE 2.4? — two tokens — see `foundations-colour--docs`.
-- Fold the slate 750 text in Tabs, Navigation tree and Radio group into that same neutral text colour (ΔE 1.6)? — the slate 750 primitive — see `components-navigation-tabs--all-variants`, `base-navigationtree--example`, `base-radiogroup--all-states`.
-- Border and track greys in Tag group and Slider: which token? — primitives — see `base-taggroup--example`, `base-slider--all-states`.
+- Fold the slate 750 text in Tabs and Radio group into that same neutral text colour (ΔE 1.6)? — the slate 750 primitive — see `components-navigation-tabs--all-variants`, `base-radiogroup--all-states`.
+- Border and track greys in Tag group and Meter's empty track: which token? — primitives — see `base-taggroup--example`, `base-meter--example`.
 - Card's switch from slate 750 to near-black, matching Switch? — slate 750 — see `components-layout-containers-card--manage-toggle`.
 - Tooltip on the inverse surface (it would darken one step)? — neutral 800 — see `components-overlays-tooltip--all-variants`.
 - One success green for text, or two? — two (the live green and the reviewed green) — see `foundations-colour--docs`.

@@ -52,13 +52,13 @@ const fromModule = f => './' + relative('src', f).replace(/\.tsx?$/, '');
 const STARTER_COMPONENTS = ['Button', 'Menu', 'NumberField', 'SearchField', 'Select', 'Switch', 'Tabs', 'TextField',
   'Toast', 'Tooltip', 'Content', 'Separator'];
 // Starter files a Component replaces under the same name, kept out of both entry points.
-const REPLACED = ['Breadcrumbs', 'Checkbox', 'DropZone', 'Modal', 'ToggleButtonGroup'];
+const REPLACED = ['Checkbox', 'Modal'];
 // Exported for the file's own tests, stories or siblings, never for a page.
 const INTERNAL = new Set([
   'niceScale', 'describeSeries', 'describeChart', 'describePoint', 'nearestIndex', // Chart's maths, unit-tested
   'illustrations', 'loopSeconds', 'motionPlan', 'AUTO_LIMIT_S', 'cycleSeconds', // the Illustrations gallery's
   'listColumnsTemplate', 'pageItems', 'activeFacets',
-  'SelectListBox', 'ComboBoxListBox', 'DropdownListBox', 'DropdownItem', // the list boxes inside Select and ComboBox
+  'SelectListBox', 'DropdownListBox', 'DropdownItem', // the list boxes inside Select
   'Toast', // ToastRegion draws it
   'keepClass', 'ownClass', // the className contract's helpers
   'Text' // Content.tsx's slot Text stays the starter files' own; the barrel's Text is gv/Text (React Aria's underneath)
