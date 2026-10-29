@@ -11,7 +11,7 @@ import {Label, FieldError, Description} from './Form';
 import {FieldButton} from './Form';
 import {Calendar} from './Calendar';
 import {Popover} from './Popover';
-import {ChevronDown} from 'lucide-react';
+import {Calendar as CalendarIcon} from 'lucide-react';
 import './DatePicker.css';
 
 export interface DatePickerProps<T extends DateValue> extends AriaDatePickerProps<T> {
@@ -29,10 +29,10 @@ export function DatePicker<T extends DateValue>({
   return (
     <AriaDatePicker {...props}>
       <Label>{label}</Label>
-      <Group>
+      <Group className="react-aria-Group inset">
         <DateInput>{segment => <DateSegment segment={segment} />}</DateInput>
         <FieldButton>
-          <ChevronDown />
+          <CalendarIcon />
         </FieldButton>
       </Group>
       {description && <Description>{description}</Description>}

@@ -1,45 +1,54 @@
 @import './theme.css';
+@import './utilities.css';
 
+/* One field (the Group carries TextField's chrome), the date segments, and a calendar button at the end, as the
+   prototype's .pj-dateinput draws its calendar glyph inside the box. */
 .react-aria-DatePicker {
+  color: var(--text-color);
   max-width: 100%;
 
   .react-aria-Group {
     display: flex;
-    width: 100%;
     align-items: center;
-    height: var(--gv-space-32);
-    border-radius: var(--gv-radius-2);
+    width: fit-content;
+    min-width: 168px;
+    max-width: 100%;
+    height: var(--spacing-8);
+    box-sizing: border-box;
+    padding: 0 var(--spacing-1) 0 var(--spacing-3);
+    border-radius: var(--radius);
     overflow: clip;
+    cursor: text;
+
+    &[data-focus-within] {
+      outline: 2px solid var(--focus-ring-color);
+      outline-offset: -1px;
+    }
+
+    &[data-disabled] {
+      color: var(--text-color-disabled);
+    }
   }
 
   .react-aria-DateInput {
     flex: 1;
+    width: unset;
     min-width: 0;
-    border: none;
-    padding-right: var(--gv-space-10);
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: none;
     overflow-x: auto;
     overflow-y: clip;
     scrollbar-width: none;
-  }
 
-  /* the Group itself carries the border so the field + trigger button share one chrome */
-  &:has(.react-aria-Group) .react-aria-Group,
-  .react-aria-Group {
-    border: 1px solid var(--gv-border-control);
-    background: var(--gv-surface-panel);
-  }
-
-  &:hover .react-aria-Group {
-    border-color: var(--gv-border-control-hover);
-  }
-
-  .react-aria-Group[data-focus-within] {
-    border-color: var(--gv-border-selected);
-    box-shadow: 0 0 0 3px var(--gv-surface-info);
+    &[data-focus-within] {
+      outline: none;
+    }
   }
 
   .field-Button {
-    margin-right: var(--gv-space-4);
-    color: var(--gv-icon-default);
+    margin-left: var(--spacing-2);
   }
 }

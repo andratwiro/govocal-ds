@@ -11,7 +11,7 @@ import {Description, FieldButton} from './Form';
 import {Popover} from './Popover';
 import {Label, FieldError} from './Form';
 import {RangeCalendar} from './RangeCalendar';
-import {ChevronDown} from 'lucide-react';
+import {Calendar as CalendarIcon} from 'lucide-react';
 import './DateRangePicker.css';
 
 export interface DateRangePickerProps<T extends DateValue> extends AriaDateRangePickerProps<T> {
@@ -36,7 +36,7 @@ export function DateRangePicker<T extends DateValue>({
           <DateInput slot="end">{segment => <DateSegment segment={segment} />}</DateInput>
         </div>
         <FieldButton>
-          <ChevronDown />
+          <CalendarIcon />
         </FieldButton>
       </Group>
       {description && <Description>{description}</Description>}

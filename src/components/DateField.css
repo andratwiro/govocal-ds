@@ -6,50 +6,42 @@
   flex-direction: column;
 }
 
-/* The prototype's date input (augur-design.html .pj-dateinput): bordered field, small radius,
-   8/10px padding, UI-size text, calendar glyph at the right (DatePicker supplies the
-   real chevron button; a plain DateField just gets the same field chrome). */
+/* The date input reads as one of the fields (TextField's chrome: 32 tall, radius 8, the 1px control border from the
+   `inset` utility, the 2px selected ring inside on focus). The prototype's .pj-dateinput is that same bordered,
+   radius-8 box with UI text. */
 .react-aria-DateInput {
   display: inline-flex;
   align-items: center;
-  padding: 0 var(--gv-space-10);
   box-sizing: border-box;
-  border: 1px solid var(--gv-border-control);
-  border-radius: var(--gv-radius-2);
-  font: var(--gv-type-ui) var(--gv-font-family);
-  color: var(--gv-text-primary);
-  height: var(--gv-space-32);
-  line-height: var(--gv-space-32);
+  height: var(--spacing-8);
   width: fit-content;
   min-width: 150px;
+  padding: 0 var(--spacing-3);
+  border-radius: var(--radius);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--field-text-color);
   white-space: nowrap;
   forced-color-adjust: none;
   cursor: text;
-  transition: border-color 140ms ease, box-shadow 140ms ease;
-
-  &:hover {
-    border-color: var(--gv-border-control-hover);
-  }
 
   &[data-focus-within] {
-    outline: none;
-    border-color: var(--gv-border-selected);
-    box-shadow: 0 0 0 3px var(--gv-surface-info);
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: -1px;
   }
 
   &[data-disabled] {
-    color: var(--gv-text-quiet);
+    color: var(--text-color-disabled);
     cursor: default;
-    border-color: var(--gv-border-subtle);
   }
 }
 
 .react-aria-DateSegment {
-  padding: 2px;
-  font-size: 13px;
+  padding: 0 1px;
+  border-radius: var(--gv-radius-4);
   font-variant-numeric: tabular-nums;
   text-align: end;
-  color: var(--gv-text-primary);
+  color: var(--field-text-color);
   -webkit-tap-highlight-color: transparent;
 
   &[data-type='literal'] {
@@ -58,14 +50,13 @@
   }
 
   &[data-placeholder] {
-    color: var(--gv-text-placeholder);
+    color: var(--text-color-placeholder);
   }
 
   &:focus {
     color: var(--gv-text-inverse);
-    background: var(--gv-action-primary);
+    background: var(--gv-action-checked);
     outline: none;
-    border-radius: 4px;
     caret-color: transparent;
   }
 
@@ -79,7 +70,7 @@
   }
 
   &[data-disabled] {
-    color: var(--gv-text-quiet);
+    color: var(--text-color-disabled);
     cursor: default;
   }
 }
