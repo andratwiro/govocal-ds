@@ -5,7 +5,10 @@
 //     theme.css drops every one nothing reads;
 //   - a 2px focus outline → outline: var(--gv-focus-ring), and its offset → --gv-focus-ring-offset(-inset);
 //   - per-role tracking declarations go (one --gv-font-tracking on :root); weights, sizes and lines → font primitives;
-//   - z-index 10, 50, 100 → --gv-layer-*; a disabled or dragging opacity → --gv-opacity-*.
+//   - z-index 10, 50, 100 → --gv-layer-*; a disabled or dragging opacity → --gv-opacity-*;
+//   - in a component's stylesheet (src/components, src/patterns, backoffice/src): a tint that is a token
+//     (color-mix(in srgb, var(--gv-color-red-500) 12%, transparent) → var(--gv-surface-danger)), and a primitive that
+//     paints a whole colour → the semantic token with its value (tokens/renames.json, paint).
 // Stylesheets, the <style> of an .html page or an .svg illustration, and TS, TSX and MDX (by the style key).
 // Whatever it can't decide, it prints. `-- --check` changes nothing and exits 1 if anything would change.
 import {readFileSync, writeFileSync, readdirSync, statSync, existsSync} from 'node:fs';
@@ -15,6 +18,8 @@ import {declarations} from './lib/cssdecl.mjs';
 
 const ROOTS = ['src', 'backoffice/src', '.storybook', 'e2e'];
 const THEME = 'src/components/theme.css';
+// Component stylesheets: where paint comes only from semantic tokens (tests/paint.test.mjs).
+const PAINT = f => /^(src\/components|src\/patterns|backoffice\/src)\//.test(f) && f !== THEME;
 const check = process.argv.includes('--check');
 const map = JSON.parse(readFileSync('tokens/renames.json', 'utf8'));
 const rules = compile(map);
@@ -35,7 +40,7 @@ const notes = [];
 const out = new Map();
 for (const [f, text] of sources) {
   let result;
-  if (f.endsWith('.css')) result = renameCss(text, rules, {file: f, local});
+  if (f.endsWith('.css')) result = renameCss(text, rules, {file: f, local, paint: PAINT(f)});
   else if (/\.(html|svg)$/.test(f)) {
     const ns = [];
     const html = text.replace(/(<style[^>]*>)([\s\S]*?)(<\/style>)/g, (m, a, css, b) => {

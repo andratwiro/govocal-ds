@@ -11,11 +11,15 @@ const OFFSET = {'2px': 'var(--gv-focus-ring-offset)', 'var(--gv-space-2)': 'var(
   'calc(var(--gv-space-2) * -1)': 'var(--gv-focus-ring-offset-inset)'};
 const LAYER = {10: 'var(--gv-layer-sticky)', 50: 'var(--gv-layer-panel)', 100: 'var(--gv-layer-overlay)'};
 const DISABLED_OPACITY = new Set(['0.45', '.45', '0.5', '.5', '0.55', '.55']);
-const SCALE_PROP = /^(padding(-[a-z-]+)?|gap|row-gap|column-gap|--[\w-]*(padding|gap)[\w-]*)$/;
+// Where a dropped step (space 1, space 3) stays its raw length: a position or offset (top, inset, translate, a margin
+// that nudges) and a stroke's width. Anywhere else (a padding, a gap, a size, a radius) it takes the scale step, so a
+// size computed from a padding moves with it.
+const RAW_PROP = /^(top|right|bottom|left|inset(-[a-z-]+)?|margin(-[a-z-]+)?|translate|transform|outline(-width|-offset)?|column-rule(-width)?|border(-(top|right|bottom|left|block|inline)(-(start|end))?)?(-width)?|--[\w-]*(offset|shift|margin)[\w-]*)$/;
 
 export function compile(map) {
   const byFrom = new Map(map.renames.map(r => [r.from, r]));
-  return {byFrom, starter: map.starter ?? {}};
+  const paint = new Map((map.paint?.primitives ?? []).map(p => [p.from, p]));
+  return {byFrom, starter: map.starter ?? {}, paint, tints: map.paint?.tints ?? []};
 }
 
 /** Retired names: every `from` the codemod rewrites everywhere (a `when` rename keeps its old name elsewhere). */
@@ -69,19 +73,60 @@ export function renameValue(value, rules, prop = '', sel = '', notes = [], where
   let v = value.replace(/var\(\s*(--gv-[a-z0-9-]+)\s*\)/g, (m, name) => {
     const r = rules.byFrom.get(name);
     if (!r?.drop) return m;
-    return SCALE_PROP.test(prop) ? `var(${r.scale})` : r.drop;
+    return RAW_PROP.test(prop) ? r.drop : `var(${r.scale})`;
   });
   v = v.replace(/calc\(\s*-1\s*\*\s*(\d+px)\s*\)|calc\(\s*(\d+px)\s*\*\s*-1\s*\)/g, (m, a, b) => `-${a ?? b}`);
   return v.replace(NAME, name => renameName(name, rules, prop, sel, notes, where));
 }
 
+const TINT = /color-mix\(\s*in\s+srgb\s*,\s*var\(\s*(--gv-[a-z0-9-]+)\s*\)\s+(\d+(?:\.\d+)?)%\s*,\s*(?:transparent|var\(\s*--gv-surface-panel\s*\))\s*\)/g;
+const kindOf = token => /^--gv-(surface|text|icon|border)-/.exec(token)?.[1];
+
+// Each color-mix(…) in a value, as [start, end): a primitive inside one is a recipe, left for the designer.
+function mixSpans(value) {
+  const spans = [];
+  for (const m of value.matchAll(/color-mix\(/g)) {
+    let depth = 0, i = m.index;
+    for (; i < value.length; i++) {
+      if (value[i] === '(') depth++;
+      else if (value[i] === ')' && --depth === 0) break;
+    }
+    spans.push([m.index, i + 1]);
+  }
+  return spans;
+}
+
+/**
+ * Paint in a component (src/components, src/patterns, backoffice/src): a tint recipe that is a token
+ * (`color-mix(in srgb, var(--gv-color-red-500) 12%, transparent)` → `var(--gv-surface-danger)`), and a primitive
+ * that paints a whole colour → the semantic token with its value for the property it sits on (tokens/renames.json,
+ * paint). What has no token stays as it is; tests/paint.test.mjs lists it for the designer.
+ */
+export function paintValue(value, rules, prop = '', sel = '') {
+  const kind = classify(prop, sel);
+  let v = value.replace(TINT, (m, token, pct) => {
+    const t = rules.tints.find(t => t.mix.includes(token) && t.pct.includes(Number(pct)) && kindOf(t.to) === kind);
+    return t ? `var(${t.to})` : m;
+  });
+  const spans = mixSpans(v);
+  v = v.replace(/var\(\s*(--gv-color-[a-z0-9-]+)\s*\)/g, (m, name, at) => {
+    const p = rules.paint.get(name);
+    if (!p || spans.some(([a, b]) => at > a && at < b)) return m;
+    if (p.when && !new RegExp(p.when, 'i').test(sel)) return m;
+    const to = pick(p.by, kind);
+    return to ? `var(${to})` : m;
+  });
+  return v;
+}
+
 const aliasOf = (aliases, local) => name => aliases[name] && !local.has(name);
 
 /**
- * A stylesheet with every rule applied: the focus ring, the starter's names, the renames, layers and opacities.
- * Returns {text, notes}. `local` holds starter names some stylesheet defines for itself (left as they are).
+ * A stylesheet with every rule applied: the focus ring, the starter's names, the renames, layers and opacities, and
+ * (with `paint`, for a component's stylesheet) tints and primitives onto semantic tokens. Returns {text, notes}.
+ * `local` holds starter names some stylesheet defines for itself (left as they are).
  */
-export function renameCss(source, rules, {file = '', local = new Set()} = {}) {
+export function renameCss(source, rules, {file = '', local = new Set(), paint = false} = {}) {
   const notes = [];
   const edits = [];
   const decls = declarations(source);
@@ -117,6 +162,7 @@ export function renameCss(source, rules, {file = '', local = new Set()} = {}) {
     }
     v = v.replace(/var\(\s*(--[\w-]+)/g, (m, name) => isAlias(name) ? `var(${rules.starter[name]}` : m);
     v = renameValue(v, rules, d.prop, sel, notes, where);
+    if (paint) v = paintValue(v, rules, d.prop, sel);
     if (d.prop === 'z-index' && LAYER[v.trim()]) v = LAYER[v.trim()];
     if (d.prop === 'opacity') {
       if (/disabled/i.test(sel) && DISABLED_OPACITY.has(v.trim())) v = 'var(--gv-opacity-disabled)';
@@ -156,7 +202,16 @@ export function renameScript(source, rules, {file = '', local = new Set()} = {})
     (m, space, q, trailing) => m.startsWith(',') && trailing ? ',' : '');
   if (/--gv-type-\$\{[^}]*\}-(tracking|size|line|weight)/.test(text))
     notes.push(`${file}: builds --gv-type-\${…}-<part> names in a template string: rewrite by hand`);
-  text = text.split('\n').map((line, i) => {
+  const lines = text.split('\n');
+  // A style key whose value starts on a later line (`'--fill-color':` over a ternary): the nearest line above that
+  // ends in `key:`, within a few lines.
+  const keyAbove = i => {
+    for (let j = i - 1; j >= Math.max(0, i - 6); j--) {
+      const k = /(?:^|[\s{,])['"]?(-{0,2}[A-Za-z][\w-]*)['"]?\s*:\s*$/.exec(lines[j])?.[1];
+      if (k) return k;
+    }
+  };
+  text = lines.map((line, i) => {
     if (!/--gv-/.test(line)) return line;
     return line.replace(/(var\(\s*)?(--gv-[a-z0-9-]+)(?![a-z0-9-])(\s*\))?/g, (m, open, name, close, at) => {
       const r = rules.byFrom.get(name);
@@ -169,7 +224,8 @@ export function renameScript(source, rules, {file = '', local = new Set()} = {})
       }
       const before = line.slice(0, at);
       // The style key (`background: '…'`) or the SVG attribute (`stroke="…"`) the name sits under.
-      const key = /([A-Za-z-]+)\s*(?::|=\{?)\s*[`'"]?[^,`'"{}]*$/.exec(before)?.[1];
+      const key = /([A-Za-z-]+)\s*(?::|=\{?)\s*[`'"]?[^,`'"{}]*$/.exec(before)?.[1] ??
+        (/^[\s?:]*[`'"]?$/.test(before) ? keyAbove(i) : undefined);
       const to = renameName(name, rules, key ? kebab(key) : '', line, notes, where);
       return (open ?? '') + to + (close ?? '');
     });

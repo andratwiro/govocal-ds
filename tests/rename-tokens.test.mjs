@@ -1,7 +1,7 @@
 import {describe, it, expect} from 'vitest';
 import {readFileSync, readdirSync, statSync} from 'node:fs';
 import {join} from 'node:path';
-import {compile, classify, renameCss, renameScript, renameValue, retired} from '../scripts/lib/rename.mjs';
+import {compile, classify, paintValue, renameCss, renameScript, renameValue, retired} from '../scripts/lib/rename.mjs';
 
 // The codemod's rules (scripts/lib/rename.mjs), on fixtures: one entry of each kind tokens/renames.json holds.
 const map = {
@@ -17,7 +17,18 @@ const map = {
     {from: '--gv-type-ui-weight', to: '--gv-font-weight-regular', why: 'by value'},
     {from: '--gv-space-1', drop: '1px', scale: '--gv-space-2', why: 'an offset, not a space'},
     {from: '--gv-space-14', to: '--gv-space-16', merge: true, snap: true, why: 'base 4'},
+    {from: '--gv-space-3', drop: '3px', scale: '--gv-space-4', why: 'an offset, not a space'},
   ],
+  paint: {
+    primitives: [
+      {from: '--gv-color-red-500', by: {surface: '--gv-surface-danger-strong', text: '--gv-text-danger', icon: '--gv-icon-danger'}},
+      {from: '--gv-color-navy-900', when: 'hover', by: {text: '--gv-text-link-hovered'}},
+    ],
+    tints: [
+      {mix: ['--gv-color-red-500'], pct: [10, 12], to: '--gv-surface-danger'},
+      {mix: ['--gv-icon-warning'], pct: [30], to: '--gv-border-warning'},
+    ],
+  },
   starter: {'--spacing-3': '--gv-space-12', '--focus-ring-color': '--gv-border-focused',
     '--highlight-background': '--gv-action-primary', '--border-color': '--gv-border-control'},
 };
@@ -64,10 +75,15 @@ a.link { color: var(--gv-text-accent); }`).text;
   it('snaps a space step to the scale', () => {
     expect(css('a { gap: var(--gv-space-14); }').text).toBe('a { gap: var(--gv-space-16); }');
   });
-  it('turns a dropped step into the raw offset, or the scale step in padding and gap', () => {
+  it('turns a dropped step into the raw offset on a position or stroke, else the scale step', () => {
     expect(css('a { margin-top: var(--gv-space-1); padding: var(--gv-space-1) 0; }').text)
       .toBe('a { margin-top: 1px; padding: var(--gv-space-2) 0; }');
     expect(css('a { top: calc(-1 * var(--gv-space-1)); }').text).toBe('a { top: -1px; }');
+    expect(css('a { border: var(--gv-space-1) solid var(--x); inset: var(--gv-space-3); }').text)
+      .toBe('a { border: 1px solid var(--x); inset: 3px; }');
+    // A size computed from a padding moves with the padding.
+    expect(css('a { padding: var(--gv-space-3); height: calc(36px - 2 * var(--gv-space-3)); }').text)
+      .toBe('a { padding: var(--gv-space-4); height: calc(36px - 2 * var(--gv-space-4)); }');
   });
   it('deletes a tracking declaration with its line', () => {
     expect(css('a {\n  font: var(--gv-type-ui);\n  letter-spacing: var(--gv-type-ui-tracking);\n}').text)
@@ -126,6 +142,38 @@ a.link { color: var(--gv-text-accent); }`).text;
   });
 });
 
+describe('paint, in a component', () => {
+  const paint = src => renameCss(src, rules, {file: 'x.css', paint: true}).text;
+  it('makes a tint recipe its token, by the property', () => {
+    expect(paint('a { background: color-mix(in srgb, var(--gv-color-red-500) 10%, transparent); }'))
+      .toBe('a { background: var(--gv-surface-danger); }');
+    expect(paint('a { border: 1px solid color-mix(in srgb, var(--gv-icon-warning) 30%, var(--gv-surface-panel)); }'))
+      .toBe('a { border: 1px solid var(--gv-border-warning); }');
+    // Another percentage, or the tint on the wrong property, is a recipe: left as it is.
+    expect(paint('a { background: color-mix(in srgb, var(--gv-color-red-500) 20%, transparent); }')).toContain('20%');
+    expect(paint('a { color: color-mix(in srgb, var(--gv-icon-warning) 30%, transparent); }')).toContain('30%');
+  });
+  it('moves a whole primitive onto the semantic token for its property, in its state', () => {
+    expect(paint('a { background: var(--gv-color-red-500); color: var(--gv-color-red-500); & svg { color: var(--gv-color-red-500); } }'))
+      .toBe('a { background: var(--gv-surface-danger-strong); color: var(--gv-text-danger); & svg { color: var(--gv-icon-danger); } }');
+    expect(paint('a[data-hovered] { color: var(--gv-color-navy-900); } a { color: var(--gv-color-navy-900); }'))
+      .toBe('a[data-hovered] { color: var(--gv-text-link-hovered); } a { color: var(--gv-color-navy-900); }');
+  });
+  it('leaves a primitive inside another recipe, one with no token for its property, and anything outside a component', () => {
+    const recipe = 'a { color: color-mix(in srgb, var(--x) 50%, var(--gv-color-red-500)); }';
+    expect(paint(recipe)).toBe(recipe);
+    expect(paint('a { border-color: var(--gv-color-red-500); }')).toBe('a { border-color: var(--gv-color-red-500); }');
+    expect(css('a { background: var(--gv-color-red-500); }').text).toBe('a { background: var(--gv-color-red-500); }');
+  });
+  it('changes nothing the second time', () => {
+    const once = paint('a { background: color-mix(in srgb, var(--gv-color-red-500) 12%, transparent); color: var(--gv-color-red-500); }');
+    expect(paint(once)).toBe(once);
+  });
+  it('paintValue reads the selector for an icon', () => {
+    expect(paintValue('var(--gv-color-red-500)', rules, 'color', '.x__icon')).toBe('var(--gv-icon-danger)');
+  });
+});
+
 describe('renameScript', () => {
   const script = src => renameScript(src, rules, {file: 'x.tsx'});
   it('renames by the style key a name sits under', () => {
@@ -144,6 +192,10 @@ describe('renameScript', () => {
   it('moves the starter names onto gv names, an SVG attribute naming what it paints', () => {
     expect(script(`<circle stroke="var(--highlight-background)" />`).text).toBe(`<circle stroke="var(--gv-icon-brand)" />`);
     expect(script(`{padding: 'var(--spacing-3)'}`).text).toBe(`{padding: 'var(--gv-space-12)'}`);
+  });
+  it('finds the key a few lines up when the value is a ternary', () => {
+    const src = `style={{\n  '--fill-color':\n    big\n      ? 'var(--x)'\n      : 'var(--gv-action-primary)'\n}}`;
+    expect(script(src).text).toContain(`: 'var(--gv-surface-brand-strong)'`);
   });
   it('lists names built in a template string', () => {
     expect(script('const v = `var(--gv-type-${role}-size)`;').notes.join()).toMatch(/template string/);
@@ -193,6 +245,10 @@ describe('tokens/renames.json', () => {
     const defined = new Set(readFileSync('src/tokens.css', 'utf8').match(/--gv-[a-z0-9-]+(?=:)/g));
     expect(targets.filter(t => !defined.has(t))).toEqual([]);
     expect(retired(real).filter(f => defined.has(f))).toEqual([]);
+    // Paint moves a primitive that exists onto a semantic token that exists.
+    const paint = [...real.paint.primitives.flatMap(p => [p.from, ...Object.values(p.by)]),
+      ...real.paint.tints.flatMap(t => [t.to, ...t.mix])].filter(n => !retired(real).includes(n));
+    expect(paint.filter(n => !defined.has(n))).toEqual([]);
   });
 });
 
