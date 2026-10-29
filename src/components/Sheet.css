@@ -1,18 +1,20 @@
 @import './theme.css';
 
+/* The sheet is a Modal that slides: the Figma Modal shell (radius 14, panel fill, 1px subtle outline, dialog
+   shadow) and UI type; the grab handle in the control grey. */
 .react-aria-Sheet {
   background: var(--overlay-background);
-  color: var(--text-color);
-  outline: 1px solid var(--overlay-border);
-  box-shadow: var(--popover-shadow);
-  font-family: var(--gv-font-family);
-  font-size: var(--font-size);
+  color: var(--gv-text-primary);
+  outline: 1px solid var(--gv-border-subtle);
+  box-shadow: var(--gv-shadow-dialog);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   height: auto;
   max-height: calc(100% - 32px);
   width: calc(100% - var(--spacing-3));
   max-width: 800px;
   margin: var(--spacing-2);
-  border-radius: 32px;
+  border-radius: var(--gv-radius-14);
   overflow: clip;
   z-index: 1;
   /* Establish a 3D space so stacked sheets can scale backward along the z-axis. */
@@ -44,8 +46,8 @@
   }
 
   .sheet-handle {
-    border-radius: 6px;
-    background: var(--gray-300);
+    border-radius: var(--gv-radius-full);
+    background: var(--gv-border-control);
     position: absolute;
     z-index: 2;
     transition: opacity 300ms;
@@ -114,8 +116,10 @@
 
   .react-aria-Heading[slot='title'] {
     margin-top: 0;
-    margin-bottom: var(--spacing-1);
-    font-size: 1.3rem;
+    margin-bottom: var(--gv-space-12);
+    font: var(--gv-type-title);
+    letter-spacing: var(--gv-type-title-tracking);
+    color: var(--gv-text-primary);
   }
 }
 
