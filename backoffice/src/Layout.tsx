@@ -1,11 +1,11 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Outlet, useLocation, useMatch} from 'react-router';
 import {Bell, BookOpen, Languages, LogOut, MessageSquare, FileChartColumn, Flag, Inbox, LifeBuoy, ScrollText, User, UserCheck, Users, Building2} from 'lucide-react';
-import {Avatar, Menu, MenuItem, MenuTrigger, NotificationList, SideNav, SideNavButton, SideNavGroup, SideNavHome,
-  SideNavLink, SubmenuTrigger} from 'govocal-ds';
+import {Avatar, Button, Menu, MenuItem, MenuTrigger, NotificationList, Separator, SideNav, SideNavButton, SideNavGroup,
+  SideNavHome, SideNavLink, SubmenuTrigger} from 'govocal-ds';
 import {Dialog, DialogTrigger, Popover} from 'govocal-ds/base';
 import {NAV} from './nav';
-import {ME, INPUTS_NEEDING_FEEDBACK, UNREAD_NOTIFICATIONS, NOTIFICATIONS, LOCALES, SUPPORT_LINKS, type SidebarNotification} from './data-sidebar';
+import {ME, INPUTS_NEEDING_FEEDBACK, UNREAD_NOTIFICATIONS, NOTIFICATIONS, OLDER_NOTIFICATIONS, LOCALES, SUPPORT_LINKS, type SidebarNotification} from './data-sidebar';
 
 const KIND_ICON: Record<SidebarNotification['kind'], typeof Bell> = {
   comment: MessageSquare, inputs: Inbox, report: FileChartColumn, phase: Flag, assigned: UserCheck, review: ScrollText};
@@ -24,6 +24,10 @@ export function Layout() {
   const {pathname} = useLocation();
   const [notifications, setNotifications] = useState(NOTIFICATIONS);
   const [unread, setUnread] = useState(UNREAD_NOTIFICATIONS);
+  const [bellOpen, setBellOpen] = useState(false);
+  const olderShown = notifications.length > NOTIFICATIONS.length;
+  // A notification is a link: following one closes the list, as leaving any popover does.
+  useEffect(() => setBellOpen(false), [pathname]);
   const [locale, setLocale] = useState('en');
   const current = LOCALES.find(l => l.id === locale)!.label;
 
@@ -35,58 +39,71 @@ export function Layout() {
 
   return (
     <div className={folded ? 'bo-app bo-phase-shell' : 'bo-app'}>
-      <SideNav aria-label="Main" isFolded={folded}>
-        <SideNavHome href="#/platform" />
-        <SideNavGroup>{NAV.slice(0, BOTTOM_FROM).map(link)}</SideNavGroup>
-        <SideNavGroup isAtBottom>
-          {NAV.slice(BOTTOM_FROM).map(link)}
-          <DialogTrigger>
-            <SideNavButton label="Notifications" icon={<Bell aria-hidden size={18} />}
-              count={unread || undefined} countLabel={`${unread} unread`} />
-            <Popover placement="end bottom" showArrow={false}>
-              <Dialog aria-label="Notifications">
-                <NotificationList
-                  items={notifications.map(n => {
-                    const Icon = KIND_ICON[n.kind];
-                    return {...n, icon: <Icon aria-hidden size={16} />};
-                  })}
-                  onMarkAllRead={() => { setNotifications(ns => ns.map(n => ({...n, isUnread: false}))); setUnread(0); }} />
-              </Dialog>
-            </Popover>
-          </DialogTrigger>
-          <MenuTrigger>
-            <SideNavButton label={ME.name} sub={ME.role} hasMenu icon={<Avatar initials={ME.initials} size={24} />} />
-            <Menu aria-label="Account">
-              <SubmenuTrigger>
-                <MenuItem textValue="Language" icon={<Languages aria-hidden size={16} />}>
-                  Language: {current}
-                </MenuItem>
-                <Menu aria-label="Language" selectionMode="single" selectedKeys={[locale]}
-                  onSelectionChange={keys => keys !== 'all' && keys.size && setLocale(String([...keys][0]))}>
-                  {LOCALES.map(l => <MenuItem key={l.id} id={l.id}>{l.label}</MenuItem>)}
-                </Menu>
-              </SubmenuTrigger>
-              <MenuItem href="#/platform?profile" textValue="My profile" icon={<User aria-hidden size={16} />}>My profile</MenuItem>
-              <MenuItem href="#/platform?signed-out" textValue="Sign out" icon={<LogOut aria-hidden size={16} />}>Sign out</MenuItem>
-            </Menu>
-          </MenuTrigger>
-          <MenuTrigger>
-            <SideNavButton label="Support" hasMenu hasAccentIcon icon={<LifeBuoy aria-hidden size={18} />} />
-            <Menu aria-label="Support">
-              {SUPPORT_LINKS.map(s => {
-                const Icon = SUPPORT_ICON[s.id];
-                const external = s.href.startsWith('http');
-                return (
-                  <MenuItem key={s.id} href={s.href} textValue={s.label} target={external ? '_blank' : undefined} rel={external ? 'noreferrer' : undefined}
-                    icon={<Icon aria-hidden size={16} />}>
-                    {s.label}
+      {/* Sticky, so the dark nav runs the window's full height on pages taller than it. */}
+      <div className="bo-app-nav">
+        <SideNav aria-label="Main" isFolded={folded}>
+          <SideNavHome href="#/platform" />
+          <SideNavGroup>{NAV.slice(0, BOTTOM_FROM).map(link)}</SideNavGroup>
+          <SideNavGroup isAtBottom>
+            {NAV.slice(BOTTOM_FROM).map(link)}
+            <DialogTrigger isOpen={bellOpen} onOpenChange={setBellOpen}>
+              <SideNavButton label="Notifications" icon={<Bell aria-hidden size={18} />}
+                count={unread || undefined} countLabel={`${unread} unread`} />
+              <Popover placement="end bottom" showArrow={false}>
+                <Dialog aria-label="Notifications">
+                  <div className="bo-shell-notifications">
+                    <NotificationList
+                      items={notifications.map(n => {
+                        const Icon = KIND_ICON[n.kind];
+                        return {...n, icon: <Icon aria-hidden size={16} />};
+                      })}
+                      onMarkAllRead={() => { setNotifications(ns => ns.map(n => ({...n, isUnread: false}))); setUnread(0); }} />
+                    {/* The real admin's "Load more": the older, read ones under the newest. */}
+                    {!olderShown && (
+                      <Button variant="quiet" size={32} onPress={() => setNotifications(ns => [...ns, ...OLDER_NOTIFICATIONS])}>
+                        Show older notifications
+                      </Button>
+                    )}
+                  </div>
+                </Dialog>
+              </Popover>
+            </DialogTrigger>
+            <MenuTrigger>
+              <SideNavButton label={ME.name} sub={ME.role} hasMenu icon={<Avatar initials={ME.initials} size={24} />} />
+              <Menu aria-label="Account">
+                {/* Menu's "With a submenu checklist": the row names the setting, its line says the current choice. */}
+                <SubmenuTrigger>
+                  <MenuItem id="language" textValue="Language" description={current} icon={<Languages aria-hidden size={16} />}>
+                    Language
                   </MenuItem>
-                );
-              })}
-            </Menu>
-          </MenuTrigger>
-        </SideNavGroup>
-      </SideNav>
+                  <Menu aria-label="Language" selectionMode="single" selectedKeys={[locale]}
+                    onSelectionChange={keys => keys !== 'all' && keys.size && setLocale(String([...keys][0]))}>
+                    {LOCALES.map(l => <MenuItem key={l.id} id={l.id}>{l.label}</MenuItem>)}
+                  </Menu>
+                </SubmenuTrigger>
+                <MenuItem id="profile" href="#/platform?profile" icon={<User aria-hidden size={16} />}>My profile</MenuItem>
+                <Separator />
+                <MenuItem id="sign-out" href="#/platform?signed-out" icon={<LogOut aria-hidden size={16} />}>Sign out</MenuItem>
+              </Menu>
+            </MenuTrigger>
+            <MenuTrigger>
+              <SideNavButton label="Support" hasMenu hasAccentIcon icon={<LifeBuoy aria-hidden size={18} />} />
+              <Menu aria-label="Support">
+                {SUPPORT_LINKS.map(s => {
+                  const Icon = SUPPORT_ICON[s.id];
+                  const external = s.href.startsWith('http');
+                  return (
+                    <MenuItem key={s.id} href={s.href} textValue={s.label} target={external ? '_blank' : undefined} rel={external ? 'noreferrer' : undefined}
+                      icon={<Icon aria-hidden size={16} />}>
+                      {s.label}
+                    </MenuItem>
+                  );
+                })}
+              </Menu>
+            </MenuTrigger>
+          </SideNavGroup>
+        </SideNav>
+      </div>
       <main className="bo-main"><Outlet /></main>
     </div>
   );

@@ -15,6 +15,13 @@ export const NOTIFICATIONS: SidebarNotification[] = [
   {id: 'n5', kind: 'phase', text: 'Community vote has started in Green Corridors for Larkvale', time: '19 Oct', href: '#/projects/green-corridors', isUnread: false},
   {id: 'n6', kind: 'review', text: 'A project manager asked you to review Harbour Plan 2030', time: '17 Oct', href: '#/projects', isUnread: false}
 ];
+/** Older, read notifications: what "Show older notifications" adds under the list (the real admin's "Load more"). */
+export const OLDER_NOTIFICATIONS: SidebarNotification[] = [
+  {id: 'n7', kind: 'comment', text: 'A resident replied to your official update on "Quieter streets near the school"', time: '14 Oct', href: '#/inputs', isUnread: false},
+  {id: 'n8', kind: 'inputs', text: '12 new inputs in Share your ideas', time: '11 Oct', href: '#/inputs', isUnread: false},
+  {id: 'n9', kind: 'phase', text: 'Share your ideas ended in Harbour Plan 2030', time: '8 Oct', href: '#/projects', isUnread: false},
+  {id: 'n10', kind: 'report', text: 'Your report for Q3 platform progress is ready', time: '2 Oct', href: '#/reporting', isUnread: false}
+];
 
 export const LOCALES = [{id: 'en', label: 'English'}, {id: 'fr', label: 'Français'}, {id: 'nl', label: 'Nederlands'}];
 

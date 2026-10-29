@@ -61,14 +61,46 @@ test('Notifications opens a list; Mark all as read clears the badge', async ({pa
   await expect(bell).toHaveAccessibleName('Notifications');
 });
 
+test('Show older notifications adds the read ones under the list, once', async ({page}) => {
+  await page.goto('/backoffice/#/dashboard');
+  await nav(page).getByRole('button', {name: /Notifications/}).click();
+  const panel = page.getByRole('dialog', {name: 'Notifications'});
+  const items = panel.getByRole('listitem');
+  const before = await items.count();
+  await panel.getByRole('button', {name: 'Show older notifications'}).click();
+  await expect(items).toHaveCount(before + 4);
+  await expect(panel).toContainText('Your report for Q3 platform progress is ready');
+  await expect(panel.getByRole('button', {name: 'Show older notifications'})).toHaveCount(0);
+});
+
+test('following a notification closes the list', async ({page}) => {
+  await page.goto('/backoffice/#/dashboard');
+  await nav(page).getByRole('button', {name: /Notifications/}).click();
+  const panel = page.getByRole('dialog', {name: 'Notifications'});
+  await panel.getByRole('link', {name: /Your report for Green Corridors/}).click();
+  await expect(page).toHaveURL(/#\/reporting$/);
+  await expect(panel).toBeHidden();
+});
+
 test('the account menu opens with Language, My profile and Sign out', async ({page}) => {
   await page.goto('/backoffice/#/dashboard');
   const row = nav(page).getByRole('button', {name: /Alex Morgan/});
   await expect(row).toContainText('Administrator');
   await row.click();
-  const menu = page.getByRole('menu');
-  await expect(menu.getByRole('menuitem', {name: /Language/})).toBeVisible();
+  // React Aria names the menu after its trigger (the account row).
+  const menu = page.getByRole('menu').filter({has: page.getByRole('menuitem', {name: 'My profile'})});
+  // Menu's "With a submenu checklist": the row says the setting, its description line the current choice.
+  const language = menu.getByRole('menuitem', {name: /Language/});
+  await expect(language).toHaveAccessibleName('Language');
+  await expect(language).toContainText('English');
+  await language.press('ArrowRight');
+  const languages = page.getByRole('menu', {name: 'Language'});
+  await languages.getByRole('menuitemradio', {name: 'Français'}).click();
+  await row.click();
+  await expect(menu.getByRole('menuitem', {name: /Language/})).toContainText('Français');
   await expect(menu.getByRole('menuitem', {name: 'My profile'})).toBeVisible();
+  // Sign out sits apart, after a separator.
+  await expect(menu.getByRole('separator')).toHaveCount(1);
   await menu.getByRole('menuitem', {name: 'Sign out'}).click();
   await expect(page).toHaveURL(/#\/platform\?signed-out/);
   await expect(page.getByText(/signed out/i)).toBeVisible();

@@ -166,6 +166,11 @@ The token review (one grammar, the missing intents, base 4; docs/NAMING.md "Toke
 - Create a report as two stacked Cards opening under the list (template as Choice cards, contents as checkbox cards) → **a wide Modal: title, the template as Choice cards with icons in a RadioGroup, the contents under their group headings, Length; Cancel and Create report in the foot** → a start screen is a dialog, as New project; the list stays where it was.
 - Delete removed a row silently, Duplicate added one silently → **Delete confirms in an Alert dialog, then a Toast with Undo; Duplicate a Toast with Undo; the row menu's icons in Menu's icon slot, Delete after a separator** → Projects' row actions.
 - No match as an empty table row ("No reports match your search.") → **the Empty state in the Panel body; an empty tab offers Create a report** → the shape every admin list uses.
+### App shell: notifications and account menu
+
+- The account menu's "Language: English" as one label (its icon fell after the words) vs Menu's submenu checklist (Area) → **Language, the current language as its description line, a check on the chosen one in the submenu; Sign out after a separator** → Menu's own shape; the leaving item sits apart, as Users' removing items.
+- The real admin's "Load more…" under its notifications vs our six rows → **a quiet "Show older notifications" under the Notification list; following a notification closes the list** → the older ones on demand; a link that leaves the popover open hides the page it opened.
+
 ### Pages & menu
 
 - The navigation bar as a GridList of bordered rows with a "Reorder" menu (Move up / Move down) vs the Projects "Arrange projects" table with arrow buttons → **a Panel over a Data table, Position column, the grip as the drag-and-drop Gap, ↑/↓ Icon buttons; Edit and Remove from menu in the row's "…" menu** → one way to reorder a list; Home keeps a lock and only Edit homepage.
