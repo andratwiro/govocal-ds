@@ -1,0 +1,9 @@
+import {Markdown, Meta} from '@storybook/addon-docs/blocks';
+import consuming from '../docs/CONSUMING.md?raw';
+
+<Meta title="Overview/For developers" />
+
+{/* One source: docs/CONSUMING.md, shown here as it is in the repo. The steward's merge notes (HTML comments) stay in
+    the file and out of the page. */}
+
+<Markdown>{consuming.replace(/<!--[\s\S]*?-->/g, '')}</Markdown>
