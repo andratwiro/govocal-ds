@@ -1,0 +1,35 @@
+@import '../theme.css';
+
+.gv-legend-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.gv-legend-row__swatch {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--gv-radius-2);
+}
+
+.gv-legend-row__label {
+  flex: 1 1 0;
+  min-width: 0;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-body);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gv-legend-row__value {
+  flex-shrink: 0;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
