@@ -1,4 +1,4 @@
-import {CalendarDate, Time} from '@internationalized/date';
+import {useState} from 'react';
 import {DateRangeField} from './DateRangeField';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
@@ -15,16 +15,12 @@ type Story = StoryObj<typeof DateRangeField>;
 /** A phase whose end isn't set yet (Survey Spotlight: "No dates yet"). */
 export const StartOnly: Story = {
   name: 'Start only',
-  args: {label: 'Dates', defaultStart: new CalendarDate(2026, 11, 2)}
+  args: {label: 'Dates', defaultValue: {start: '2026-11-02'}}
 };
 
 export const StartAndEnd: Story = {
   name: 'Start and end',
-  args: {
-    label: 'Dates',
-    defaultStart: new CalendarDate(2026, 11, 2),
-    defaultEnd: new CalendarDate(2026, 12, 14)
-  }
+  args: {label: 'Dates', defaultValue: {start: '2026-11-02', end: '2026-12-14'}}
 };
 
 /** An event's setup: a start and end time beside each date. */
@@ -33,22 +29,13 @@ export const WithTimes: Story = {
   args: {
     label: 'Dates',
     showTime: true,
-    defaultStart: new CalendarDate(2026, 11, 2),
-    defaultStartTime: new Time(18, 30),
-    defaultEnd: new CalendarDate(2026, 11, 2),
-    defaultEndTime: new Time(20, 0)
+    defaultValue: {start: '2026-11-02', startTime: '18:30', end: '2026-11-02', endTime: '20:00'}
   }
 };
 
 export const WithTimezone: Story = {
   name: 'With timezone',
-  args: {
-    label: 'Dates',
-    showTime: true,
-    defaultStart: new CalendarDate(2026, 11, 2),
-    defaultStartTime: new Time(18, 30),
-    timeZone: 'Europe/Brussels'
-  }
+  args: {label: 'Dates', showTime: true, defaultValue: {start: '2026-11-02', startTime: '18:30'}, timeZone: 'Europe/Brussels'}
 };
 
 export const Required: Story = {
@@ -58,9 +45,22 @@ export const Required: Story = {
 /** The end can't land before the start: said in words under the row, not colour alone. */
 export const Invalid: Story = {
   name: 'Invalid (end before start)',
-  args: {
-    label: 'Dates',
-    defaultStart: new CalendarDate(2026, 11, 20),
-    defaultEnd: new CalendarDate(2026, 11, 5)
+  args: {label: 'Dates', defaultValue: {start: '2026-11-20', end: '2026-11-05'}}
+};
+
+/** Controlled, the page's own data as ISO strings: `value` takes "YYYY-MM-DD" and "HH:mm", `onChange` hands back
+ * React Aria values, which `String()` turns back into the same strings. */
+export const Controlled: Story = {
+  render: function Controlled() {
+    const [dates, setDates] = useState<{start: string | null; end: string | null}>({start: '2026-11-02', end: null});
+    return (
+      <div style={{display: 'grid', gap: 'var(--gv-space-12)'}}>
+        <DateRangeField label="Dates" value={dates}
+          onChange={r => setDates({start: r.start && String(r.start), end: r.end && String(r.end)})} />
+        <output style={{font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>
+          start: {dates.start ?? 'none'} · end: {dates.end ?? 'none'}
+        </output>
+      </div>
+    );
   }
 };
