@@ -11,13 +11,14 @@
     width: fit-content;
     min-width: 220px;
     max-width: 100%;
-    height: var(--spacing-8);
+    height: var(--spacing-9);
     box-sizing: border-box;
     overflow: clip;
     position: relative;
     padding: 0 var(--spacing-1) 0 var(--spacing-3);
     border-radius: var(--radius);
-    font-size: var(--font-size);
+    font: var(--gv-type-ui);
+    letter-spacing: var(--gv-type-ui-tracking);
     color: var(--field-text-color);
     white-space: nowrap;
     cursor: text;
