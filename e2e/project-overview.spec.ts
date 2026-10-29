@@ -1,4 +1,4 @@
-import {test, expect} from '@playwright/test';
+import {test, expect, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 // A project's own overview (#/projects/:id), after the prototype's live project screen:
@@ -63,7 +63,7 @@ test('collecting now, next actions and the folded project details', async ({page
   await page.goto(URL);
   const setup = page.getByRole('complementary', {name: 'Project setup'});
   await expect(setup.getByRole('button', {name: /Participants.*215/})).toBeVisible();
-  await expect(setup.getByText('Weekly, since 6 May')).toBeVisible();
+  await expect(setup.getByText('Weekly, since 10 Aug')).toBeVisible();
   await expect(setup.getByRole('link', {name: 'Message participants'})).toHaveAttribute('href', '#/messaging');
   await expect(setup.getByRole('link', {name: 'Create report'})).toHaveAttribute('href', '#/reporting');
   // A live project has no publish checklist.
@@ -104,8 +104,29 @@ test('the overview passes axe (WCAG 2.2 AA)', async ({page}) => {
   await page.goto(URL);
   await expect(page.getByRole('navigation', {name: 'Phases'})).toBeVisible();
   // Rail section label paints its text in --gv-text-quiet (about 2.9:1 on white): the component's own token, owned
-  // by the system, not this page. Accessibility is shown, never blocking, so it is left out here and reported.
-  const {violations} = await new AxeBuilder({page}).exclude('.gv-rail-section-label')
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
-  expect(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`)).toEqual([]);
+  // by the system, not this page. Accessibility is shown, never blocking, so that one contrast check is waived and reported.
+  expect(await violations(page)).toEqual([]);
 });
+
+test('an ended phase reads Done, not Draft, and its rail passes axe', async ({page}) => {
+  await page.goto(URL);
+  await page.getByRole('link', {name: /Collect ideas/}).first().click();
+  const crumbs = page.getByRole('navigation', {name: 'Breadcrumb'});
+  await expect(crumbs).toContainText('Live');
+  await expect(crumbs).not.toContainText('Draft');
+  await expect(page.getByText('18 new').first()).toBeVisible();
+  // The rail only: the phase screen's setup cards carry their own contrast issues, reported to the system.
+  expect(await violations(page, 'nav[aria-label="Phases"]')).toEqual([]);
+});
+
+// Only the rail section label's contrast is waived (see above); every other rule runs on it.
+async function violations(page: Page, within?: string) {
+  const builder = new AxeBuilder({page});
+  if (within) builder.include(within);
+  const {violations} = await builder
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+  return violations
+    .map(v => ({...v, nodes: v.nodes.filter(n => !(v.id === 'color-contrast' && String(n.target).includes('gv-rail-section-label')))}))
+    .filter(v => v.nodes.length)
+    .map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`);
+}

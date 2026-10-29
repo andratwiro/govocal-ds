@@ -66,3 +66,8 @@
   color: var(--gv-text-live);
   font-weight: 500;
 }
+
+/* Red text on the current row's grey falls under 4.5:1: the dot stays red, the words go primary. */
+.gv-rail-phase[data-current] .gv-phase-timeline__fresh {
+  color: var(--gv-text-primary);
+}

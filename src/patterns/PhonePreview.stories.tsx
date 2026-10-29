@@ -17,7 +17,7 @@ export const ProjectPage: Story = {
   render: () => (
     <PhoneFrame aria-label="What residents see" header={<PhoneHeader />}>
       <PhoneImage />
-      <h2>Green Corridors for Riverside</h2>
+      <h2>Green Corridors for Larkvale</h2>
       <p>More trees, safer paths and quieter streets: help decide where the next green corridor goes.</p>
       <Button>Participate · 3 ways <ChevronUp aria-hidden size={16} /></Button>
       <AvatarStack initials={['A', 'B', 'C']}>215 participants <Info aria-hidden size={14} /></AvatarStack>

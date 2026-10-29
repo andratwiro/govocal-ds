@@ -1,6 +1,9 @@
 'use client';
 import type {ReactNode} from 'react';
-import {Button, Disclosure, DisclosurePanel, Heading} from 'react-aria-components';
+import {Button} from 'react-aria-components/Button';
+import {Heading} from 'react-aria-components/Heading';
+// The starter DisclosureHeader puts its chevron first; the prototype's sits at the end, so the trigger is our own.
+import {Disclosure, DisclosurePanel} from '../components/Disclosure';
 import {ChevronDown} from 'lucide-react';
 import './PanelSection.css';
 

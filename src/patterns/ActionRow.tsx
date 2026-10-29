@@ -1,6 +1,7 @@
 'use client';
 import type {ReactNode} from 'react';
-import {Link, type LinkProps} from 'react-aria-components/Link';
+import type {LinkProps} from 'react-aria-components/Link';
+import {Link} from '../components/Link';
 import {ChevronRight} from 'lucide-react';
 import './ActionRow.css';
 

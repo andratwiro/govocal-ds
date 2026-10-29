@@ -42,7 +42,7 @@ export function ProjectPhase() {
     <div className="bo-phase" data-rail={railOpen ? 'open' : 'closed'}>
       <h1 className="bo-visually-hidden">{project.title}</h1>
       <div className="bo-phase-bar">
-        <Header level={phase.status === 'Live' ? 'phase-live' : 'phase-draft'} projectName={project.title} phaseName={phase.title}
+        <Header level={phase.status === 'Draft' ? 'phase-draft' : 'phase-live'} projectName={project.title} phaseName={phase.title}
           projectHref={`#/projects/${project.id}`} onBack={() => navigate(`/projects/${project.id}`)} onTogglePanel={() => setRailOpen(o => !o)} />
         <SegmentedControl aria-label="Phase view" disallowEmptySelection selectedKeys={[view]}
           onSelectionChange={keys => { const next = [...keys][0]; if (next) navigate(phaseUrl(project, phase, next as Tab)); }}>
@@ -125,7 +125,7 @@ function Build({phase}: {phase: Phase}) {
         </ul>
         <div className="bo-phase-section-header bo-phase-section-gap">
           <h3 className="bo-phase-flush">{phase.method} setup</h3>
-          <Status state={phase.status === 'Live' ? 'live' : 'draft'}>{phase.status}</Status>
+          <Status state={phase.status === 'Draft' ? 'draft' : 'live'}>{phase.status}</Status>
         </div>
         {phase.method === 'Ideation' ? <IdeationCards phase={phase} /> : (
           <p className="bo-note">The {phase.method.toLowerCase()} setup cards: not in Figma yet.</p>

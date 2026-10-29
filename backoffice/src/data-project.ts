@@ -31,7 +31,7 @@ export type Overview = {
 export const OVERVIEWS: Record<string, Overview> = {
   'green-corridors': {
     weeks: [6, 11, 19, 27, 34, 48, 63, 77, 96, 118, 139, 160, 181, 197, 215],
-    since: '6 May',
+    since: '10 Aug',
     spotlight: [{id: 's1', title: 'Resident satisfaction', state: 'in-progress', dates: '9 Oct to 18 Nov', method: 'Survey', count: '214 responses'}],
     drafts: 6,
     intro: 'More trees, safer paths and quieter streets. Help us decide where the next green corridor goes and what it should feel like.',
