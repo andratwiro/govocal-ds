@@ -83,6 +83,13 @@ list; change any line and the agent follows. Newest first within each section.
 - Saves said as a status line beside the button (homepage, menu item names, custom page) → **a Toast; the forms are Panels with Save in the foot; the custom page's one Save sits in the page head beside View page** → it saves both tabs; one feedback channel.
 - "Provide a title for all languages" as a grey note → **a warning Banner naming the missing languages**; the terms and policies note → **an info Banner linking to Settings**; no custom pages → **an Empty state with New custom page**; an unknown item or page → **a page Empty state with the way back**.
 
+### Settings
+
+- General's sections as Cards, each with its own Save and a "… saved" status line → **a Panel per section; Platform configuration and Project approval save from the Panel foot, said in a Toast; Content moderation, Statistics and User name display apply at once (the real admin has no Save there), each change in a Toast with Undo; the name styles as Choice cards in a RadioGroup** → forms in Panels, instant changes undoable.
+- Tags, Areas and Statuses as hand-made lists with an Edit button per row, Statuses behind an index of two Cards and a back link → **a Panel each (count, Add in the head) over a Data table, Edit and Delete in the row's "…" menu with icons; input and proposal statuses as two Panels on one tab (Add input status, Add proposal status), the colour as the row's leading swatch and the category a Badge; Delete confirms in an Alert dialog, then a Toast with Undo; an emptied list shows the Empty state** → one list shape on every admin table.
+- Policies as rows that unfold an editor inline → **a Panel over a Data table, the text opening in a wide Modal with the Rich text editor and Save in its foot** → Add and Edit open a dialog on every Settings list.
+- The chosen logo and banner as a "Selected: …" line → **the File list under the Drop zone, removable with Undo** → the system's way to show an attachment.
+
 ## Building from the prototype review (29 Oct 2026)
 
 Calls made while planning the build of the review's findings (selectors, tables, side panel, feedback, forms,

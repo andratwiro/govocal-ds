@@ -93,20 +93,11 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-phase-panel-actions .bo-phase-stack { gap: var(--gv-space-10); }
 /* ── Settings ── */
 .bo-settings-stack { display: grid; gap: var(--gv-space-16); margin-block-start: var(--gv-space-24); }
-.bo-settings-section { display: grid; gap: var(--gv-space-12); }
-.bo-settings-help { margin: 0; max-width: 64ch; }
-.bo-settings-fields { display: grid; gap: var(--gv-space-24); max-width: 540px; }
+.bo-settings-fields { display: grid; gap: var(--gv-space-24); }
 .bo-settings-field { display: grid; gap: var(--gv-space-8); }
 .bo-settings-field-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--gv-space-8); }
-.bo-settings-actions { display: flex; align-items: center; gap: var(--gv-space-12); }
-.bo-settings-list { list-style: none; margin: 0; padding: 0; display: grid; max-width: 540px; }
-.bo-settings-list-item { display: block; padding-block: var(--gv-space-8); }
 .bo-settings-switches { display: grid; gap: var(--gv-space-16); }
-.bo-settings-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-12); padding-block: var(--gv-space-8); }
-.bo-settings-row-text { display: grid; gap: var(--gv-space-2); flex: 1; min-width: min(100%, 200px); }
-.bo-settings-pills { display: flex; flex-wrap: wrap; gap: var(--gv-space-8); }
 .bo-settings-modal { display: grid; gap: var(--gv-space-16); }
-.bo-settings-policy { display: grid; gap: var(--gv-space-8); padding-block-end: var(--gv-space-8); }
 /* ── Messaging ── */
 .bo-messaging-intro { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--gv-space-16); margin-block: var(--gv-space-16); }
 .bo-messaging-intro p { margin: 0; }

@@ -1,23 +1,45 @@
 import {useState} from 'react';
-import {ArrowLeft, Pencil, Plus} from 'lucide-react';
+import {FileText, MapPin, Pencil, Plus, Tag, Trash2, CircleDot} from 'lucide-react';
 import {Button} from '../../../src/components/Button';
 import {TextField, TextArea} from '../../../src/components/TextField';
 import {ColorField} from '../../../src/components/ColorField';
 import {ColorSwatch} from '../../../src/components/ColorSwatch';
 import {Select, SelectItem} from '../../../src/components/Select';
-import {Card} from '../../../src/components/gv/Card';
-import {Divider} from '../../../src/components/gv/Divider';
-import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {Modal} from '../../../src/components/gv/Modal';
+import {MenuItem} from '../../../src/components/Menu';
+import {queue} from '../../../src/components/Toast';
+import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableOptions,
+  DataTableStack} from '../../../src/components/gv/DataTable';
+import {Panel} from '../../../src/components/gv/Panel';
 import {Badge} from '../../../src/components/gv/Badge';
+import {EmptyState} from '../../../src/components/gv/EmptyState';
+import {AlertDialog} from '../../../src/components/gv/AlertDialog';
+import {Modal} from '../../../src/components/gv/Modal';
+import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
 import {AREAS, INPUT_STATUS_CATEGORIES, INPUT_STATUSES, PLATFORM_TAGS, POLICIES, PROPOSAL_STATUS_CATEGORIES,
   PROPOSAL_STATUSES, type SettingsItem} from '../data-settings';
 
-// Settings' list tabs (Tags, Areas, Statuses) and Policies, as the real admin: a list with its Add button and an Edit
-// per row, both opening the same modal; Statuses first asks which statuses; Policies opens each text in the editor.
+// Settings' list tabs (Tags, Areas, Statuses) and Policies: each list a Panel over a Data table, Add in the Panel's
+// head, Edit and Delete in the row's "…" menu; Add and Edit open the same Modal, Delete confirms first.
+
+const icon = (Icon: typeof Plus) => <Icon aria-hidden size={16} />;
+
+/** Instant changes and saves say so in a Toast, with Undo where they can be taken back (docs/DECISIONS.md). */
+export const toast = (title: string, undo?: () => void) =>
+  queue.add({title, ...(undo && {action: 'Undo', onAction: undo})}, {timeout: 5000});
+
+// The lists as changed here outlive a switch of tab (the tab panels unmount), until a reload, so Undo still lands.
+const store: Record<string, SettingsItem[]> = {
+  tags: PLATFORM_TAGS, areas: AREAS, input: INPUT_STATUSES, proposal: PROPOSAL_STATUSES
+};
+function useStored(key: string) {
+  const [value, set] = useState(store[key]);
+  const update = (f: (v: SettingsItem[]) => SettingsItem[]) => set(store[key] = f(store[key]));
+  return [value, update] as const;
+}
 
 type ListConfig = {
+  /** The store key. */
+  id: string;
   title: string;
   help: string;
   /** "Add platform tag", and the modal's title for a new row. */
@@ -25,6 +47,9 @@ type ListConfig = {
   /** The modal's title for an existing row. */
   edit: string;
   noun: string;
+  /** The column heading of the name. */
+  column: string;
+  empty: {icon: typeof Plus; title: string; description: string};
   /** Statuses only: the category choices; also turns on the colour. */
   categories?: string[];
 };
@@ -55,130 +80,161 @@ function ItemModal({config, item, onClose, onSave}: {config: ListConfig; item: S
   );
 }
 
-function ItemList({config, start, back}: {config: ListConfig; start: SettingsItem[]; back?: () => void}) {
-  const [items, setItems] = useState(start);
+function ItemList({config}: {config: ListConfig}) {
+  const [items, setItems] = useStored(config.id);
   const [editing, setEditing] = useState<SettingsItem | 'new' | null>(null);
+  const [deleting, setDeleting] = useState<SettingsItem | null>(null);
   const save = (d: SettingsItem) => {
-    if (editing === 'new') setItems(xs => [...xs, {...d, id: `new${xs.length}-${d.name}`}]);
-    else setItems(xs => xs.map(x => x.id === d.id ? d : x));
+    if (editing === 'new') {
+      const id = `new-${config.id}-${Date.now()}`;
+      setItems(xs => [...xs, {...d, id}]);
+      toast(`${d.name} added`, () => setItems(xs => xs.filter(x => x.id !== id)));
+    } else {
+      setItems(xs => xs.map(x => x.id === d.id ? d : x));
+      toast(`${d.name} saved`);
+    }
     setEditing(null);
   };
+  const remove = (item: SettingsItem) => {
+    const at = store[config.id].findIndex(x => x.id === item.id);
+    setItems(xs => xs.filter(x => x.id !== item.id));
+    setDeleting(null);
+    toast(`${item.name} deleted`, () => setItems(xs => [...xs.slice(0, at), item, ...xs.slice(at)]));
+  };
+  const add = (variant: 'primary' | 'secondary') => (
+    <Button variant={variant} size={32} onPress={() => setEditing('new')}>{icon(Plus)}{config.add}</Button>
+  );
+  const Empty = config.empty.icon;
   return (
-    <div className="bo-settings-stack">
-      {back && <div><Button variant="quiet" size={32} onPress={back}><ArrowLeft aria-hidden size={16} />All statuses</Button></div>}
-      <Card title={config.title} layout="stacked"
-        actions={<Button variant="primary" size={32} onPress={() => setEditing('new')}><Plus aria-hidden size={16} />{config.add}</Button>}>
-        <div className="bo-settings-section">
-          <p className="bo-note bo-settings-help">{config.help}</p>
-          <ul className="bo-settings-list" aria-label={config.title}>
-            {items.map((item, i) => (
-              <li key={item.id}>
-                {i > 0 && <Divider />}
-                <div className="bo-settings-row">
-                  {item.color && <ColorSwatch color={item.color} aria-label={`Colour of ${item.name}`} />}
-                  <span className="bo-settings-row-text">
-                    <span>{item.name}</span>
-                    {item.description && <span className="bo-note">{item.description}</span>}
-                  </span>
-                  {item.category && <Badge>{item.category}</Badge>}
-                  <Button variant="secondary" size={32} aria-label={`Edit ${item.name}`} onPress={() => setEditing(item)}>
-                    <Pencil aria-hidden size={16} />Edit
-                  </Button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Card>
+    <>
+      <Panel title={config.title} headingLevel={3} count={items.length} description={config.help}
+        flush={items.length > 0} actions={add('primary')}>
+        {items.length ? (
+          <DataTable aria-label={config.title}>
+            <DataTableHeader>
+              <DataTableColumn isRowHeader>{config.column}</DataTableColumn>
+              {config.categories && <DataTableColumn>Category</DataTableColumn>}
+              <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+            </DataTableHeader>
+            <DataTableBody>
+              {items.map(item => (
+                <DataTableRow key={item.id} id={item.id} textValue={item.name}>
+                  <DataTableCell textValue={item.name}>
+                    <DataTableStack strong sub={item.description || undefined}
+                      leading={item.color && <ColorSwatch color={item.color} aria-label={`Colour of ${item.name}`} />}>
+                      {item.name}
+                    </DataTableStack>
+                  </DataTableCell>
+                  {config.categories && <DataTableCell>{item.category && <Badge>{item.category}</Badge>}</DataTableCell>}
+                  <DataTableCell align="options">
+                    <DataTableOptions aria-label={`Options for ${item.name}`}
+                      onAction={k => k === 'edit' ? setEditing(item) : setDeleting(item)}>
+                      <MenuItem id="edit" icon={icon(Pencil)}>Edit {config.noun}</MenuItem>
+                      <MenuItem id="delete" icon={icon(Trash2)}>Delete {config.noun}</MenuItem>
+                    </DataTableOptions>
+                  </DataTableCell>
+                </DataTableRow>
+              ))}
+            </DataTableBody>
+          </DataTable>
+        ) : (
+          <EmptyState size="panel" headingLevel={4} icon={<Empty size={24} />} title={config.empty.title}
+            description={config.empty.description} action={add('secondary')} />
+        )}
+      </Panel>
       {editing && <ItemModal key={editing === 'new' ? 'new' : editing.id} config={config}
         item={editing === 'new' ? null : editing} onClose={() => setEditing(null)} onSave={save} />}
-    </div>
+      <AlertDialog tone="danger" isOpen={!!deleting} onOpenChange={o => { if (!o) setDeleting(null); }}
+        title={`Delete ${config.noun}?`} confirmLabel={`Delete ${config.noun}`} onConfirm={() => { if (deleting) remove(deleting); }}>
+        <p>{deleting?.name} is taken off everything that carries it.</p>
+      </AlertDialog>
+    </>
   );
 }
 
 export function TagsTab() {
-  return <ItemList start={PLATFORM_TAGS} config={{title: 'Platform tags', add: 'Add platform tag', edit: 'Edit platform tag', noun: 'tag',
-    help: 'Platform tags are used to categorize projects, for example on the homepage. You add them to a project in its settings.'}} />;
-}
-
-export function AreasTab() {
-  return <ItemList start={AREAS} config={{title: 'Areas', add: 'Add area', edit: 'Edit area', noun: 'area',
-    help: 'Define the geographical areas (neighbourhoods, quarters…) residents can choose when they register. Areas can be linked to projects and used for smart groups.'}} />;
-}
-
-const STATUS_KINDS = {
-  input: {title: 'Input statuses', button: 'Edit input statuses', start: INPUT_STATUSES, categories: INPUT_STATUS_CATEGORIES,
-    help: 'Manage the status that can be assigned to participant input within a project. The status is publicly visible and helps in keeping participants informed.'},
-  proposal: {title: 'Proposal statuses', button: 'Edit proposal statuses', start: PROPOSAL_STATUSES, categories: PROPOSAL_STATUS_CATEGORIES,
-    help: 'Manage the status that can be assigned to proposals within a project. The status is publicly visible and helps in keeping participants informed.'}
-};
-
-export function StatusesTab() {
-  const [kind, setKind] = useState<keyof typeof STATUS_KINDS | null>(null);
-  if (kind) {
-    const k = STATUS_KINDS[kind];
-    return <ItemList key={kind} start={k.start} back={() => setKind(null)}
-      config={{title: k.title, add: 'Add status', edit: 'Edit status', noun: 'status', categories: k.categories, help: k.help}} />;
-  }
   return (
     <div className="bo-settings-stack">
-      {(Object.keys(STATUS_KINDS) as (keyof typeof STATUS_KINDS)[]).map(id => {
-        const k = STATUS_KINDS[id];
-        return (
-          <Card key={id} title={k.title} layout="stacked"
-            actions={<Button variant="secondary" size={32} onPress={() => setKind(id)}><Pencil aria-hidden size={16} />{k.button}</Button>}>
-            <div className="bo-settings-section">
-              <p className="bo-note bo-settings-help">{k.help}</p>
-              <div className="bo-settings-pills">{k.start.map(s => <Badge key={s.id}>{s.name}</Badge>)}</div>
-            </div>
-          </Card>
-        );
-      })}
+      <ItemList config={{id: 'tags', title: 'Platform tags', add: 'Add platform tag', edit: 'Edit platform tag', noun: 'tag', column: 'Tag',
+        help: 'Platform tags are used to categorize projects, for example on the homepage. You add them to a project in its settings.',
+        empty: {icon: Tag, title: 'No platform tags yet', description: 'Tags you add here can be given to projects, so residents find them by theme.'}}} />
     </div>
   );
 }
 
-function PolicyEditor({id, name, text}: {id: string; name: string; text: string}) {
-  const [open, setOpen] = useState(false);
+export function AreasTab() {
+  return (
+    <div className="bo-settings-stack">
+      <ItemList config={{id: 'areas', title: 'Areas', add: 'Add area', edit: 'Edit area', noun: 'area', column: 'Area',
+        help: 'Define the geographical areas (neighbourhoods, quarters…) residents can choose when they register. Areas can be linked to projects and used for smart groups.',
+        empty: {icon: MapPin, title: 'No areas yet', description: 'Areas you add here are offered to residents when they register.'}}} />
+    </div>
+  );
+}
+
+export function StatusesTab() {
+  const status = {noun: 'status', column: 'Status', edit: 'Edit status',
+    empty: {icon: CircleDot, title: 'No statuses yet', description: 'Every input needs a status to move through.'}};
+  return (
+    <div className="bo-settings-stack">
+      <ItemList config={{...status, id: 'input', title: 'Input statuses', add: 'Add input status', categories: INPUT_STATUS_CATEGORIES,
+        help: 'Manage the status that can be assigned to participant input within a project. The status is publicly visible and helps in keeping participants informed.'}} />
+      <ItemList config={{...status, id: 'proposal', title: 'Proposal statuses', add: 'Add proposal status', categories: PROPOSAL_STATUS_CATEGORIES,
+        help: 'Manage the status that can be assigned to proposals within a project. The status is publicly visible and helps in keeping participants informed.'}} />
+    </div>
+  );
+}
+
+type Policy = (typeof POLICIES)[number];
+
+/** One policy's text in the Rich text editor, in a wide Modal; Save in the foot. */
+function PolicyModal({policy, text, onClose, onSave}: {policy: Policy; text: string; onClose: () => void; onSave: (t: string) => void}) {
   const [value, setValue] = useState(text);
   const [bold, setBold] = useState(false);
   const [italic, setItalic] = useState(false);
   const [list, setList] = useState(false);
-  const [dirty, setDirty] = useState(false);
-  const [saved, setSaved] = useState(false);
   return (
-    <div className="bo-settings-policy" id={`policy-${id}`}>
-      <div className="bo-settings-row">
-        <span className="bo-settings-row-text">{name}</span>
-        <Button variant="secondary" size={32} aria-expanded={open} onPress={() => setOpen(o => !o)} aria-label={`Edit ${name}`}>
-          <Pencil aria-hidden size={16} />{open ? 'Close' : 'Edit'}
-        </Button>
-      </div>
-      {open && <div className="bo-settings-section">
-        <RichTextEditor aria-label={name} placeholder={`The ${name.toLowerCase()} residents read`} value={value}
-          onChange={v => { setValue(v); setDirty(true); setSaved(false); }}
-          bold={bold} onBoldChange={setBold} italic={italic} onItalicChange={setItalic} list={list} onListChange={setList} />
-        <div className="bo-settings-actions">
-          <Button variant="primary" aria-label={`Save ${name}`} isDisabled={!dirty}
-            onPress={() => { setDirty(false); setSaved(true); }}>Save</Button>
-          <span role="status" className="bo-note">{saved ? `${name} saved` : ''}</span>
-        </div>
-      </div>}
-    </div>
+    <Modal isOpen size="wide" onOpenChange={o => { if (!o) onClose(); }} title={`Edit ${policy.name.toLowerCase()}`}
+      footer={<>
+        <Button variant="secondary" onPress={onClose}>Cancel</Button>
+        <Button variant="primary" aria-label={`Save ${policy.name}`} isDisabled={value === text} onPress={() => onSave(value)}>Save</Button>
+      </>}>
+      <RichTextEditor aria-label={policy.name} placeholder={`The ${policy.name.toLowerCase()} residents read`} value={value}
+        onChange={setValue} bold={bold} onBoldChange={setBold} italic={italic} onItalicChange={setItalic} list={list} onListChange={setList} />
+    </Modal>
   );
 }
 
 export function PoliciesTab() {
+  const [texts, setTexts] = useState<Record<string, string>>(() => Object.fromEntries(POLICIES.map(p => [p.id, p.text])));
+  const [editing, setEditing] = useState<Policy | null>(null);
   return (
     <div className="bo-settings-stack">
-      <Card title="Platform policies" layout="stacked">
-        <div className="bo-settings-section">
-          <p className="bo-note bo-settings-help">Edit your platform's terms and conditions and privacy policy. Other pages, including the About and FAQ pages, are edited in Pages & menu.</p>
-          <ul className="bo-settings-list" aria-label="Platform policies">
-            {POLICIES.map((p, i) => <li key={p.id}>{i > 0 && <Divider />}<PolicyEditor {...p} /></li>)}
-          </ul>
-        </div>
-      </Card>
+      <Panel title="Platform policies" headingLevel={3} count={POLICIES.length} flush
+        description="Edit your platform's terms and conditions and privacy policy. Other pages, including the About and FAQ pages, are edited in Pages & menu.">
+        <DataTable aria-label="Platform policies">
+          <DataTableHeader>
+            <DataTableColumn isRowHeader>Policy</DataTableColumn>
+            <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+          </DataTableHeader>
+          <DataTableBody>
+            {POLICIES.map(p => (
+              <DataTableRow key={p.id} id={p.id} textValue={p.name}>
+                <DataTableCell textValue={p.name}>
+                  <DataTableStack strong leading={icon(FileText)} sub={texts[p.id]}>{p.name}</DataTableStack>
+                </DataTableCell>
+                <DataTableCell align="options">
+                  <DataTableOptions aria-label={`Options for ${p.name}`} onAction={() => setEditing(p)}>
+                    <MenuItem id="edit" icon={icon(Pencil)}>Edit {p.name.toLowerCase()}</MenuItem>
+                  </DataTableOptions>
+                </DataTableCell>
+              </DataTableRow>
+            ))}
+          </DataTableBody>
+        </DataTable>
+      </Panel>
+      {editing && <PolicyModal key={editing.id} policy={editing} text={texts[editing.id]} onClose={() => setEditing(null)}
+        onSave={t => { setTexts(x => ({...x, [editing.id]: t})); setEditing(null); toast(`${editing.name} saved`); }} />}
     </div>
   );
 }
