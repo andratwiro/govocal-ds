@@ -41,6 +41,9 @@ dev walking the back office sees one consistent system with every main component
   stay in their page, built from components.
 - **Fill the gaps.** The agent applies the system to everything Figma doesn't draw (states, RTL, focus). Nothing is
   marked as filled in: the designer browses and judges.
+- **Say what it is for.** Each component and pattern has a doc comment above its export; its first sentence says
+  what someone would ask for ("a key figure: one number with its label"), not how it is built. docs/COMPONENTS.md is
+  generated from these, and an agent finds parts by reading it.
 - **Paint only through `var(--gv-*)`.** Plain React + plain CSS on CSS variables. No styled-components, no Tailwind.
 - **Accessibility is shown, never blocking.** WCAG 2.2 AA is the front office's bar; this system serves the back office
   for now, so the design is followed as drawn. Findings show in Storybook's Accessibility panel, on
