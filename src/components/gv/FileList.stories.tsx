@@ -31,16 +31,25 @@ export const Empty: Story = {
 };
 
 export const WithAddButton: Story = {
-  name: 'With add button',
+  name: 'With footer',
   args: {
     'aria-label': 'Attachments',
     items: files.slice(0, 1),
     onDelete: () => {},
-    addButton: (
+    footer: (
       <Button variant="secondary" size={32}>
         Add a file
       </Button>
     )
+  }
+};
+
+/** Deleting one file after another, the page's handler reading its own list (`items.filter(…)`): each Delete
+ * removes its file, however many came before it. */
+export const Deleting: Story = {
+  render: function Deleting() {
+    const [items, setItems] = useState(files);
+    return <FileList aria-label="Attachments" items={items} onDelete={item => setItems(items.filter(f => f.id !== item.id))} />;
   }
 };
 
