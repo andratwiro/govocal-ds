@@ -2,7 +2,7 @@
 
 Research date: 29 Oct 2026. Sources are 2025–2026 unless marked **[background]**. Where a claim comes only from a search-engine summary (page not fetched or fetch failed), it is marked **[snippet]**: treat it as lower confidence.
 
-**Ownership tags (coordinator's addendum).** govocal-ds is a design-side *proposal* to developers. Developers make the strategic implementation calls: the component library (React Aria may be dropped), the styling technology, packaging and migration. Every practice below is tagged:
+**Ownership tags.** Developers who import the components make the strategic implementation calls: the component library (React Aria may be dropped), the styling technology, packaging and migration. Every practice below is tagged:
 - **[DESIGN-OWNED]**: valid whatever the implementation (docs, usage guidance, naming of concepts, content rules, states, anatomy, behaviour outcomes, token names and values, Figma hygiene, sign-off).
 - **[DEV-OWNED]**: depends on the code stack (library, prop spelling, build/CI, packaging, codegen, manifests generated from TypeScript, Code Connect mappings).
 - **[SPLIT]**: design owns the *what* and devs own the *how*. Each one says which half is which.
@@ -112,7 +112,7 @@ The bridge tooling is mature but scattered, and mostly DEV-OWNED to set up. The 
 - **Storybook Connect needs Chromatic.** govocal-ds publishes to GitHub Pages, so stories reach Figma only if the Storybook is also published to Chromatic, which is a DEV-OWNED call. Otherwise the DESIGN-OWNED fallback is a Storybook URL in each Figma component description, as Design System Diaries recommends.
 - **Code Connect is wholly DEV-OWNED,** and its Storybook parser is legacy and React-only. If developers drop React Aria or change stack, any Code Connect work should be left to them (templates or the Code Connect UI). The design proposal should not build on it.
 - **The Storybook MCP manifest is generated from code, so it describes the *current* implementation, not the design spec.** The design-side equivalent is a DESIGN-OWNED spec per component (concept properties, allowed values, states, content slots, behaviour). The audit can compare the manifest against it: a manifest prop with no spec concept is implementation detail or drift, and a spec concept missing from the manifest is an implementation gap.
-- For a designer working through an AI agent, the three-zone split plus mandatory developer review transfers most directly. It also answers the sceptical developers: they keep the merge gate and the whole logic and architecture zone.
+- For a designer working through an AI agent, the three-zone split plus mandatory developer review transfers most directly. It also gives developers what they need: they keep the merge gate and the whole logic and architecture zone.
 
 ### Gaps
 - I found no authoritative exemplar of an explicit "Not in Figma" / "design debt" badge on component pages. The search turned up only parity articles and GitLab's health tracking.
@@ -180,8 +180,8 @@ zeroheight's 2026 report (n=147) calls documentation "both the biggest pain poin
 - **Collaboration**: 82% say their design system improved design-dev collaboration — [zeroheight 2026](https://report.zeroheight.com/2026)
 
 ### Inferences
-- **The mandate problem fits a proposal.** "Lack of company mandate" is the top adoption barrier (73%), and govocal-ds explicitly has no mandate over code. The survey levers left to a design-led proposal are all DESIGN-OWNED: component completeness *as spec*, communication and community, and documentation completeness. That argues for investing in the spec, the guidance and the communication (release notes, the decision log) rather than in code the developers may replace.
-- The sceptical-developer stance matches the field: practitioners use AI for docs but distrust its output (28% rate it highly effective). govocal-ds earns credibility through verifiable artefacts (lint results, parity checks, a11y runs, a decisions log), not through claims.
+- **Where there is no mandate, design-owned levers remain.** "Lack of company mandate" is the top adoption barrier (73%). The survey levers that don't need one are all DESIGN-OWNED: component completeness *as spec*, communication and community, and documentation completeness. That argues for investing in the spec, the guidance and the communication (release notes, the decision log) rather than in code the developers may replace.
+- Developer caution matches the field: practitioners use AI for docs but distrust its output (28% rate it highly effective). govocal-ds earns credibility through verifiable artefacts (lint results, parity checks, a11y runs, a decisions log), not through claims.
 
 ### Gaps
 - I found no 2025–2026 Sparkbox design systems survey (searches turned up nothing).
@@ -302,7 +302,7 @@ These criteria are binary or countable, so they can be scored again at every aud
 - D10. **[DEV-OWNED option]** If developers keep their own Storybook in another stack, it is composed into the design Storybook through `refs` — [Storybook Composition](https://storybook.js.org/docs/sharing/storybook-composition)
 
 ### Inferences
-- The DESIGN-OWNED criteria (A1–A7, A9–A13, B1–B4, C1, C2, C4, C5, C7–C11, D5, D7, D9) form the proposal's own scorecard, and all stay valid if developers drop React Aria or change styling technology. Many of them (C2, C4, C5, C8–C10, D9, plus the presence checks in A) can be scripted, which is the evidence sceptical developers can rerun themselves.
+- The DESIGN-OWNED criteria (A1–A7, A9–A13, B1–B4, C1, C2, C4, C5, C7–C11, D5, D7, D9) form the proposal's own scorecard, and all stay valid if developers drop React Aria or change styling technology. Many of them (C2, C4, C5, C8–C10, D9, plus the presence checks in A) can be scripted, which is the evidence developers can rerun themselves.
 - The DEV-OWNED criteria (A8, C3, C6 usage, D1, D6, D10) should be reported to developers as observations about the current reference implementation, not as defects, so the audit matches the brief that developers make the strategic implementation calls.
 
 ### Gaps

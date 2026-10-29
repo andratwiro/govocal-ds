@@ -348,7 +348,7 @@ Most use separate named stories per state plus a Controls playground. The strong
   - Docs pages: Bitwarden Compact Mode — [doc](https://components.bitwarden.com/?path=/docs/documentation-compact-mode--docs); SAP Content Density — [doc](https://sap.github.io/fundamental-styles/?path=/docs/docs-content-density--docs); Canvas Kit Density and Alignment — [doc](https://workday.github.io/canvas-kit/?path=/docs/examples-density-and-alignment--docs)
 
 ### Inferences
-- A Primer-style **"All" toggle** would answer the RTL question at a glance: LTR and RTL side by side, or light and dark side by side. That is persuasive to a skeptical reviewer, and an "every story in LTR and Arabic RTL" claim would be visible in one screen.
+- A Primer-style **"All" toggle** would answer the RTL question at a glance: LTR and RTL side by side, or light and dark side by side. That is persuasive to a reviewer, and an "every story in LTR and Arabic RTL" claim would be visible in one screen.
 - EUI's high-contrast toggle and Grafana's colour-vision themes are a small step with a big return for a public-sector product. A forced-colours or high-contrast check is worth adding to the benchmark.
 
 ### Gaps
@@ -426,12 +426,12 @@ The visible quality signals are:
 - **Live-code playgrounds**: Vibe Playground (storybook-addon-playground) — [Playground](https://vibe.monday.com/?path=/story/playground--playground); Fluent `react-storybook-addon-playground` + export-to-sandbox — [project.json](https://react.fluentui.dev/project.json)
 
 ### Inferences
-- A skeptical developer reads a high **play-function count** and **VRT coverage** as proof, not prose. Bitwarden (102 play functions, Chromatic Kitchen Sink) and EUI (186 VRT stories) are the bars. Visible lifecycle and changelog pages (Canvas, Vibe, Circuit) are the governance proof.
+- A developer reads a high **play-function count** and **VRT coverage** as proof, not prose. Bitwarden (102 play functions, Chromatic Kitchen Sink) and EUI (186 VRT stories) are the bars. Visible lifecycle and changelog pages (Canvas, Vibe, Circuit) are the governance proof.
 
 ### Gaps
 - CI pass rates, Chromatic snapshot counts and a11y violation totals are not public, so test effectiveness could not be compared.
 
-## What would convince a skeptical senior developer, and what would teach a designer?
+## What earns a senior developer's trust, and what teaches a designer?
 
 ### Takeaway
 Developers are convinced by evidence they can inspect: a current Storybook version, play-function and VRT coverage, typed props tables, token pages rendered from real CSS, lifecycle tags with a semver promise, changelog, migration guides and MCP/agent docs that match the code. Designers learn from orientation pages, Do/Don't, Anatomy, Placement, content and voice guides, and full-page compositions.
@@ -450,7 +450,7 @@ Developers are convinced by evidence they can inspect: a current Storybook versi
   - Spark's Component Principles (Composition, Compound pattern, Design Inventory, Polymorphism) and a Component checklist — [Composition](https://sparkui.vercel.app/?path=/docs/components-principles-composition--docs), [Component checklist](https://sparkui.vercel.app/?path=/docs/contributing-component-checklist--docs)
 
 ### Inferences
-- An AI-built system can answer the "can AI-built be strong?" doubt the way Canvas Kit and Vibe already do. They publish their agent tooling (MCP, Skills) as first-class docs next to the human docs. That frames agents as a governed consumer of the same source of truth, not a shortcut. A strong precedent for govocal-ds's MCP addon is a page explaining what agents can read and how the rules are enforced.
+- An AI-built system can answer the question "can AI-built be strong?" the way Canvas Kit and Vibe already do. They publish their agent tooling (MCP, Skills) as first-class docs next to the human docs. That frames agents as a governed consumer of the same source of truth, not a shortcut. A strong precedent for govocal-ds's MCP addon is a page explaining what agents can read and how the rules are enforced.
 - For a designer who will "own the bible", Grafana's Docs Overview plus Vibe's Foundations show which orientation pages a designer-run Storybook needs before any component.
 
 ### Gaps
@@ -571,7 +571,7 @@ Consumers are kept inside the language by four layers:
 ### Inferences
 - The lead's model is "design owns the component code, developers import it to compose screens". The closest exemplar is Circuit's `owner-design-system` team, which ships components, tokens, an ESLint plugin and a Stylelint plugin, all documented in the same Storybook. Spectrum 2 is the strictest public form: a token-only build-time style macro, and a `styles` prop that allows layout properties only. Primer v38 (sx removed) and Canvas Kit (style props deprecated for "prescriptive, opinionated styling") show the trend in 2025–2026: escape hatches are closing, not widening.
 - For govocal-ds, plain CSS on `--gv-*` variables already has the right shape for Circuit-style `no-invalid-custom-properties` / `prefer-custom-properties` stylelint rules, which flag any non-`--gv-` colour or spacing in a consuming app. The design side can author and own such a rule set even if developers pick the stack. Layout primitives typed to the spacing scale (Primer/Grafana/EUI pattern, not Vibe's `| number`) are what let screens need no custom CSS.
-- An escape hatch named honestly (Spectrum's `UNSAFE_*`) is more credible to skeptical developers than "no overrides allowed". It gives them a way out and makes every exit visible and greppable. Pairing it with a public-API snapshot test (Carbon's `PublicAPI-test` owned by system admins) shows them that the component contract is guarded.
+- An escape hatch named honestly (Spectrum's `UNSAFE_*`) is more credible to developers than "no overrides allowed". It gives them a way out and makes every exit visible and greppable. Pairing it with a public-API snapshot test (Carbon's `PublicAPI-test` owned by system admins) shows them that the component contract is guarded.
 
 ### Gaps
 - Atlassian's xcss page renders client-side and could not be read, so its exact allowed and banned properties are taken only from the package and lint-rule names.
