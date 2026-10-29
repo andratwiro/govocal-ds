@@ -29,9 +29,9 @@
     border-width: 1px;
   }
 
+  /* Prototype `.pj-inasg--none`: a 1px dashed ring, no fill, whatever the size. */
   &[data-unassigned] {
     background: none;
-    border-style: dashed;
-    border-color: var(--gv-border-control);
+    border: 1px dashed var(--gv-border-control);
   }
 }
