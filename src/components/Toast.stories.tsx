@@ -50,43 +50,51 @@ const meta: Meta<ToastStoryArgs> = {
 export default meta;
 type Story = StoryObj<ToastStoryArgs>;
 
+/** The three toasts the prototype shows, open on load: confirmation, delete with Undo, and no icon. */
 export const AllStates: Story = {
-  render: () => (
-    <>
-      <MyToastRegion />
-      <div style={{display: 'flex', gap: 12}}>
-        <Button
-          onPress={() =>
-            queue.add({
-              title: 'Your project is live',
-              description: 'Public · anyone can take part.'
-            })
-          }>
-          Publish now
-        </Button>
-        <Button
-          onPress={() =>
-            queue.add({
-              title: '"Green Corridors for Riverside" deleted',
-              description: undefined
-            })
-          }>
-          Delete idea
-        </Button>
-        <Button
-          onPress={() =>
-            queue.add({
-              title: 'Idea archived',
-              body: '"Shade sails over the Lagoon playground" moved to the archive.',
-              action: 'Undo',
-              onAction: () => queue.add({title: 'Idea restored', icon: null})
-            })
-          }>
-          Archive idea
-        </Button>
-      </div>
-    </>
-  )
+  render: () => {
+    useEffect(() => {
+      queue.clear(); // the queue is global: start this story from an empty one
+      const keys = [
+        queue.add({title: 'Idea restored', icon: null}),
+        queue.add({
+          title: '"Green Corridors for Riverside" deleted',
+          action: 'Undo',
+          onAction: () => queue.add({title: 'Project restored', icon: null}, {timeout: 5000})
+        }),
+        queue.add({title: 'Your project is live', description: 'Public · anyone can take part.'})
+      ];
+      return () => keys.forEach(key => queue.close(key));
+    }, []);
+    return (
+      <>
+        <MyToastRegion />
+        <div style={{display: 'flex', gap: 12}}>
+          <Button
+            onPress={() =>
+              queue.add({
+                title: 'Your project is live',
+                description: 'Public · anyone can take part.'
+              })
+            }>
+            Publish now
+          </Button>
+          <Button
+            variant="secondary"
+            onPress={() =>
+              queue.add({
+                title: 'Idea archived',
+                body: '"Shade sails over the Lagoon playground" moved to the archive.',
+                action: 'Undo',
+                onAction: () => queue.add({title: 'Idea restored', icon: null})
+              })
+            }>
+            Archive idea
+          </Button>
+        </div>
+      </>
+    );
+  }
 };
 
 /** The prototype's undo snackbar, shown on load: check icon, title, body, Undo and ×. */

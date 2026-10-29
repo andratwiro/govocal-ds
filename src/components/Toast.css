@@ -20,16 +20,20 @@
 }
 
 .react-aria-Toast {
-  width: 360px;
-  max-width: calc(100vw - 32px);
+  position: relative;
+  width: auto;
+  max-width: min(400px, calc(100vw - 32px));
   box-sizing: border-box;
   display: flex;
   align-items: flex-start;
-  gap: var(--gv-space-12);
-  background: var(--gv-surface-live);
-  border: 1px solid var(--gv-color-green-400);
-  padding: var(--gv-space-14) var(--gv-space-16);
+  gap: var(--gv-space-11);
+  /* .pj-toast--success: the live green tint laid on white (so nothing shows through), a mint hairline
+     (green at 30 % on white), no shadow. */
+  background: linear-gradient(var(--gv-surface-live), var(--gv-surface-live)) var(--gv-surface-panel);
+  border: 1px solid color-mix(in srgb, var(--gv-color-green-400) 30%, var(--gv-surface-panel));
+  padding: 13px var(--gv-space-16);
   border-radius: var(--gv-radius-12);
+  box-shadow: none;
   outline: none;
   forced-color-adjust: none;
   view-transition-class: toast;
@@ -47,7 +51,7 @@
     justify-content: center;
     width: 18px;
     height: 18px;
-    margin-top: 1px;
+    margin-top: 3px;
     border-radius: var(--gv-radius-full);
     background: var(--gv-color-green-400);
     color: var(--gv-icon-inverse);
@@ -63,20 +67,25 @@
     flex-direction: column;
     flex: 1 1 auto;
     min-width: 0;
-    font: var(--gv-type-body) var(--gv-font-family);
+    padding-inline-end: var(--gv-space-14);
 
+    /* Title: Body strong on a 24 line, the dark green. */
     [slot='title'] {
-      font: var(--gv-type-body-strong) var(--gv-font-family);
-      color: var(--gv-text-reviewed);
+      font: var(--gv-type-body-strong);
+      line-height: var(--gv-type-title-line);
+      letter-spacing: var(--gv-type-body-strong-tracking);
+      color: var(--gv-text-live);
     }
 
+    /* Body: UI, 3 under the title, the dark green two thirds into the slate. */
     [slot='description'] {
-      margin-top: var(--gv-space-4);
-      font: var(--gv-type-ui) var(--gv-font-family);
-      color: var(--gv-text-secondary);
+      margin-top: var(--gv-space-3);
+      font: var(--gv-type-ui);
+      letter-spacing: var(--gv-type-ui-tracking);
+      color: color-mix(in srgb, var(--gv-text-live) 66%, var(--gv-color-slate-750));
     }
 
-    /* .pj-toast__action (success): a 28-tall outlined text button under the words, in the toast's green. */
+    /* .pj-toast__action (success): a 28-tall outlined text button, radius 8, the mint hairline. */
     .toast-action {
       appearance: none;
       align-self: flex-start;
@@ -85,54 +94,63 @@
       height: 28px;
       margin-top: var(--gv-space-11);
       padding: 0 var(--gv-space-12);
-      border: 1px solid var(--gv-color-green-400);
-      border-radius: var(--gv-radius-2);
+      border: 1px solid color-mix(in srgb, var(--gv-color-green-400) 30%, var(--gv-surface-panel));
+      border-radius: var(--gv-radius-8);
       background: transparent;
       font: var(--gv-type-ui-strong);
       letter-spacing: var(--gv-type-ui-strong-tracking);
-      color: var(--gv-text-reviewed);
+      color: var(--gv-text-live);
       cursor: pointer;
       outline: none;
       -webkit-tap-highlight-color: transparent;
 
       &[data-hovered],
       &[data-pressed] {
-        background: var(--gv-color-alpha-green-12);
+        border-color: var(--gv-color-green-400);
+        background: color-mix(in srgb, var(--gv-color-green-400) 8%, var(--gv-surface-panel));
       }
 
       &[data-focus-visible] {
-        outline: 2px solid var(--gv-text-reviewed);
+        outline: 2px solid var(--gv-border-selected);
         outline-offset: 2px;
       }
     }
   }
 
+  /* × : 24, radius 6, 10 from the top and 12 from the end; dark green over slate, darker on hover. */
   .react-aria-Button[slot='close'] {
     flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: -3px -4px 0 0;
     background: none;
     border: none;
+    box-shadow: none;
     appearance: none;
     border-radius: var(--gv-radius-6);
     height: var(--gv-space-24);
     width: var(--gv-space-24);
-    color: var(--gv-text-reviewed);
+    min-width: 0;
+    color: color-mix(in srgb, var(--gv-text-live) 55%, var(--gv-color-slate-500));
     padding: 0;
     outline: none;
     -webkit-tap-highlight-color: transparent;
 
-    &[data-hovered] {
-      background: var(--gv-color-alpha-green-12);
-      box-shadow: none;
+    svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    &[data-hovered],
+    &[data-pressed] {
+      background: color-mix(in srgb, var(--gv-color-green-400) 14%, var(--gv-surface-panel));
+      color: var(--gv-text-live);
     }
 
     &[data-focus-visible] {
-      outline: 2px solid var(--gv-text-reviewed);
+      outline: 2px solid var(--gv-border-selected);
       outline-offset: 2px;
-    }
-
-    &[data-pressed] {
-      background: var(--gv-color-alpha-green-12);
-      box-shadow: none;
     }
   }
 }
