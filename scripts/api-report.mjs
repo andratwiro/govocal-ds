@@ -136,7 +136,9 @@ export function report() {
     }).map(sym => sym.name));
     for (const sym of exports) out.push('', entry(sym.name, sym, components));
   }
-  return out.join('\n') + '\n';
+  // TypeScript writes inferred types with absolute paths (import("/home/…/node_modules/…")): make them relative, so
+  // the report reads the same in any checkout.
+  return (out.join('\n') + '\n').replaceAll(`import("${ROOT}/`, 'import("./');
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
