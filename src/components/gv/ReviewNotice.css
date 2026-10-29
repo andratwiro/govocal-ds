@@ -1,0 +1,34 @@
+@import '../theme.css';
+
+/* Tali's Review notice (Figma 4:224; prototype .rv): a 14 dashed circle + Small, gap 4. */
+.gv-review-notice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-4);
+  flex: none;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  font-family: var(--gv-font-family);
+  white-space: nowrap;
+  color: var(--gv-text-tertiary);
+}
+
+.gv-review-notice__icon {
+  flex: none;
+  color: var(--gv-icon-default);
+}
+
+/* Reviewed has to catch the eye (Tali, 22 Oct): green, medium, a filled check, no chip. */
+.gv-review-notice[data-state='reviewed'] {
+  font: var(--gv-type-small-strong);
+  color: var(--gv-text-reviewed);
+
+  .gv-review-notice__icon {
+    color: var(--gv-icon-inverse);
+
+    circle {
+      fill: var(--gv-icon-reviewed);
+      stroke: var(--gv-icon-reviewed);
+    }
+  }
+}

@@ -1,0 +1,55 @@
+@import '../theme.css';
+
+/* Tali's Banner (Figma 33:479; prototype .bn--info): surface-info, radius 12, gap 12. */
+.gv-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gv-space-12);
+  box-sizing: border-box;
+  padding: var(--gv-space-12) var(--gv-space-16);
+  border-radius: var(--gv-radius-12);
+  background: var(--gv-surface-info);
+  font-family: var(--gv-font-family);
+}
+
+.gv-banner__icon {
+  flex: none;
+  margin-block-start: var(--gv-space-2);
+  color: var(--gv-icon-info);
+}
+
+.gv-banner__text {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.gv-banner[data-type='info'] .gv-banner__text {
+  font: var(--gv-type-body);
+  letter-spacing: var(--gv-type-body-tracking);
+  color: var(--gv-text-body);
+}
+
+.gv-banner[data-type='info-link'] .gv-banner__text {
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-banner__link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  outline: none;
+  border-radius: var(--gv-radius-2);
+
+  &[data-hovered] {
+    text-decoration-thickness: 1.5px;
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
+  }
+}
