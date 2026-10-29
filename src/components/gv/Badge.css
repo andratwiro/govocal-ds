@@ -35,7 +35,7 @@
   }
 
   /* Value: a value someone chose, on what it belongs to ("Harbour", "2 tags" on a setup step; the prototype's
-     `.pjsum-pill--on`). Teal 75 under teal 700: no semantic token yet. */
+     `.pjsum-pill--on`). surface-info under text-info. */
   &[data-variant='value'] {
     background: var(--gv-surface-info);
     color: var(--gv-text-info);

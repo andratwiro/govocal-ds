@@ -26,8 +26,7 @@
   color: var(--gv-text-body);
 }
 
-/* Icon badge: 40, radius 10. No `--gv-surface-danger`/`--gv-icon-danger` tokens: a mix of
-   `--gv-color-red-500` on the panel, reported as a gap. */
+/* Icon badge: 40, radius 10; danger = icon-danger on the surface-danger tint. */
 .gv-alert-dialog__icon {
   display: inline-flex;
   align-items: center;

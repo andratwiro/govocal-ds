@@ -1,11 +1,11 @@
 @import '../theme.css';
 
 /*
- * Checkbox (Figma node 5:317: a 15x15 box, radius 4, panel fill + control border, the whole
+ * Checkbox (Figma node 5:317: a 15x15 box, 16 on the base-4 ladder, radius 4, panel fill + control border, the whole
  * component at 0.6 opacity). The prototype's list checkboxes (`.pj-intable .gv-checkbox`) add the
  * rest: an 11px check, a near-black border on hover, and the header select-all dimmed (.55) until
  * hovered or checked, which is `isQuiet` here. Checked fill: the prototype uses its link blue
- * (`--gv-bo-link`), which has no token; --gv-action-checked is Figma's own "checked" colour.
+ * (`--gv-bo-link`), which has no token; --gv-surface-selected-strong is Figma's own "checked" colour.
  */
 .gv-checkbox {
   --checkmark-color: var(--gv-text-inverse);

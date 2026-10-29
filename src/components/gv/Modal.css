@@ -52,7 +52,7 @@
   color: var(--gv-text-primary);
 }
 
-/* Close: 28, padding 4, radius 7, a 20 × in icon-strong (the prototype's .pj-modal__x; Figma icon-default). */
+/* Close: 28, padding 4, radius 7 (8 on the ladder), a 20 × in icon-strong (the prototype's .pj-modal__x; Figma icon-default). */
 .gv-modal__close {
   appearance: none;
   display: inline-flex;

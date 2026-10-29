@@ -80,9 +80,9 @@
   }
 
   /*
-   * Danger (the review's §C: primary confirm or quiet inline Delete, no outlined look). No
-   * `--gv-action-danger`/`--gv-text-danger` tokens yet: `--gv-color-red-500` (the notification
-   * dot's token) directly, reported as a gap.
+   * Danger (the review's §C: primary confirm or quiet inline Delete, no outlined look): the danger
+   * tokens, surface-danger-strong under the primary, text-danger on the quiet one with the
+   * surface-danger tint under the pointer.
    */
   &[data-variant='primary'][data-tone='danger'] {
     background: var(--gv-surface-danger-strong);
