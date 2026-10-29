@@ -13,7 +13,7 @@ import {IconButton} from '../../../src/components/gv/IconButton';
 import {Modal} from '../../../src/components/gv/Modal';
 import {Badge} from '../../../src/components/gv/Badge';
 import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {HelpPopover} from '../../../src/patterns/HelpPopover';
+import {HelpPopover} from '../../../src/components/gv/HelpPopover';
 import {API_TOKENS, MCP_CLIENTS, POWER_BI_TEMPLATES, WEBHOOK_EVENTS, WEBHOOK_PROJECTS, WEBHOOKS,
   type ApiToken, type WebhookItem} from '../data-tools';
 import {Gap} from '../Gap';

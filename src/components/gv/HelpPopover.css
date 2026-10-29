@@ -1,4 +1,4 @@
-@import '../components/theme.css';
+@import '../theme.css';
 
 /* A help popover: up to 320 wide, 12 padding, a strong title over small body text. */
 .gv-help-popover {

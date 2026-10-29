@@ -2,7 +2,7 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 import {HelpPopover} from './HelpPopover';
 
 const meta: Meta<typeof HelpPopover> = {
-  title: 'Patterns/App shell/Help popover',
+  title: 'Components/Overlays/Help popover',
   component: HelpPopover,
   tags: ['autodocs', 'not-in-figma'],
   parameters: {layout: 'centered'}

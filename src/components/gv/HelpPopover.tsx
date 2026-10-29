@@ -1,10 +1,10 @@
 'use client';
 import type {ReactNode} from 'react';
 import {CircleHelp} from 'lucide-react';
-import {Dialog, DialogTrigger, Heading} from '../components/Dialog';
-import {Popover} from '../components/Popover';
-import {Button} from '../components/Button';
-import {IconButton} from '../components/gv/IconButton';
+import {Dialog, DialogTrigger, Heading} from '../Dialog';
+import {Popover} from '../Popover';
+import {Button} from '../Button';
+import {IconButton} from './IconButton';
 import './HelpPopover.css';
 
 export interface HelpPopoverProps {

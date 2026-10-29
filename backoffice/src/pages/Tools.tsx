@@ -4,7 +4,7 @@ import {Button} from '../../../src/components/Button';
 import {Card} from '../../../src/components/gv/Card';
 import {Badge} from '../../../src/components/gv/Badge';
 import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {HelpPopover} from '../../../src/patterns/HelpPopover';
+import {HelpPopover} from '../../../src/components/gv/HelpPopover';
 import {TOOLS, type Tool} from '../data-tools';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
