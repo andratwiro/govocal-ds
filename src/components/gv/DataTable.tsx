@@ -33,49 +33,6 @@ import {useListFormatter} from '../format';
 import {mergeLabels, type LoadMoreLabels} from '../labels';
 import './DataTable.css';
 
-/**
- * The back office's data table (the prototype's `gv-bo-table is-list`): quiet small headers over a hairline,
- * hairline-divided rows with no zebra, an arrow on the sorted column (and on a sortable one under the pointer), a
- * soft hover, a gv Checkbox column when the table is selectable, and a trailing "…" options column. React Aria's
- * Table underneath: sorting (`sortDescriptor` / `onSortChange`), selection (`selectionMode`, `selectedKeys`), row
- * actions (`onRowAction`), keyboard grid navigation.
- *
- * **Bulk selection and an open row live together.** `selectionMode` alone decides the check column (there is no
- * `selectionBehavior` to set). With `onRowAction`, pressing a row (click, tap, Enter) always opens it, whether or not
- * rows are ticked; only the checkbox, Space, or a Shift / ⌘ / Ctrl click tick it. `openKey` marks the row shown beside
- * the table (in a Side panel): a tint, a bar at its start edge, `data-open` and `aria-current="true"`. The "With bulk
- * selection and an open row" story is the recipe.
- *
- * The phase Manage tab's input table is the same component, `density="compact"` with `showChecksOnHover` and an
- * `addColumn` control: dense rows that grow with wrapping text, checkboxes that appear on hover or once checked,
- * and a trailing "+" in the header. Cells: `DataTableText` (with a `DataTableThumbnail`), `DataTablePerson`,
- * `DataTableAssignee`, `DataTableTags`, `DataTableStack`, `DataTableOptions`. Around it: a `Panel` frames it, a
- * `TableToolbar` holds its count, search and filters, `Pagination` sits in the Panel's foot (the `InAPanel` story).
- *
- * `className` and `style` place the table (width, margin, grid area); they never paint it. The header, body,
- * columns, rows and cells take no class: the table lays them out (`width` on a column, `align` on a cell).
- *
- * **Long lists: `isVirtualized`.** Past about 200 rows, turn it on: the table draws only the rows in view (a few dozen
- * of 5,000), with the same look, keyboard, sorting, bulk selection, open row and `toKeySet`. What it needs:
- * - **A bounded height.** The table scrolls inside itself, its header pinned on top: give it a height (`style={{height:
- *   560}}`, or let it fill a parent with a height, such as a flex or grid cell with `min-height: 0`). Without one it
- *   grows to its full length and the page scrolls instead, and the header no longer stays on top (it warns in
- *   development).
- * - **One row height.** Every row is the same height, so the table can place the rows it hasn't drawn: `rowLines={2}`
- *   for a line over a sub-line (`DataTablePerson` with an email, `DataTableStack` with a `sub`), else one line. A cell
- *   keeps to its line and clips with an ellipsis.
- * - **A width from its container.** Its rows aren't laid out as a table's, so it doesn't grow to fit them: it fills
- *   the width it is given (a block, a grid or flex cell that stretches), and in a box that shrinks to fit its content
- *   it shrinks to almost nothing.
- * - **Column widths.** The table spreads the columns evenly; give a column a `width` (`200`, `"30%"`, `"2fr"`) to
- *   change its share. The check, "…" and "+" columns size themselves. Right to left follows React Aria's locale
- *   (`I18nProvider`), as every other component's keyboard does.
- * - **Rows as `items`.** `<DataTableBody items={rows}>{row => <DataTableRow id={row.id}>…</DataTableRow>}</DataTableBody>`
- *   lets React Aria reuse rows it has built; a `.map()` rebuilds all 5,000 on every change.
- * - **Loading more:** `DataTableBody`'s `onLoadMore` (and `isLoading` while it fetches) for a list that arrives in pages
- *   as it scrolls. The "Virtualized · 5,000 people" and "Virtualized · loading more" stories are the recipes.
- */
-
 /** How a column's content lines up. `number`: counts (centred, tabular figures); `options`: the trailing "…". */
 export type DataTableAlign = 'start' | 'number' | 'options';
 
@@ -261,6 +218,49 @@ interface PressOrigin {
   hasModifier: boolean;
 }
 
+/**
+ * Records in rows and columns, to sort, tick in bulk and open one at a time: every admin list (users, inputs,
+ * projects, reports). The look is the prototype's `gv-bo-table is-list`: quiet small headers over a hairline,
+ * hairline-divided rows with no zebra, an arrow on the sorted column (and on a sortable one under the pointer), a
+ * soft hover, a gv Checkbox column when the table is selectable, and a trailing "…" options column. React Aria's
+ * Table underneath: sorting (`sortDescriptor` / `onSortChange`), selection (`selectionMode`, `selectedKeys`), row
+ * actions (`onRowAction`), keyboard grid navigation.
+ *
+ * **Bulk selection and an open row live together.** `selectionMode` alone decides the check column (there is no
+ * `selectionBehavior` to set). With `onRowAction`, pressing a row (click, tap, Enter) always opens it, whether or not
+ * rows are ticked; only the checkbox, Space, or a Shift / ⌘ / Ctrl click tick it. `openKey` marks the row shown beside
+ * the table (in a Side panel): a tint, a bar at its start edge, `data-open` and `aria-current="true"`. The "With bulk
+ * selection and an open row" story is the recipe.
+ *
+ * The phase Manage tab's input table is the same component, `density="compact"` with `showChecksOnHover` and an
+ * `addColumn` control: dense rows that grow with wrapping text, checkboxes that appear on hover or once checked,
+ * and a trailing "+" in the header. Cells: `DataTableText` (with a `DataTableThumbnail`), `DataTablePerson`,
+ * `DataTableAssignee`, `DataTableTags`, `DataTableStack`, `DataTableOptions`. Around it: a `Panel` frames it, a
+ * `TableToolbar` holds its count, search and filters, `Pagination` sits in the Panel's foot (the `InAPanel` story).
+ *
+ * `className` and `style` place the table (width, margin, grid area); they never paint it. The header, body,
+ * columns, rows and cells take no class: the table lays them out (`width` on a column, `align` on a cell).
+ *
+ * **Long lists: `isVirtualized`.** Past about 200 rows, turn it on: the table draws only the rows in view (a few dozen
+ * of 5,000), with the same look, keyboard, sorting, bulk selection, open row and `toKeySet`. What it needs:
+ * - **A bounded height.** The table scrolls inside itself, its header pinned on top: give it a height (`style={{height:
+ *   560}}`, or let it fill a parent with a height, such as a flex or grid cell with `min-height: 0`). Without one it
+ *   grows to its full length and the page scrolls instead, and the header no longer stays on top (it warns in
+ *   development).
+ * - **One row height.** Every row is the same height, so the table can place the rows it hasn't drawn: `rowLines={2}`
+ *   for a line over a sub-line (`DataTablePerson` with an email, `DataTableStack` with a `sub`), else one line. A cell
+ *   keeps to its line and clips with an ellipsis.
+ * - **A width from its container.** Its rows aren't laid out as a table's, so it doesn't grow to fit them: it fills
+ *   the width it is given (a block, a grid or flex cell that stretches), and in a box that shrinks to fit its content
+ *   it shrinks to almost nothing.
+ * - **Column widths.** The table spreads the columns evenly; give a column a `width` (`200`, `"30%"`, `"2fr"`) to
+ *   change its share. The check, "…" and "+" columns size themselves. Right to left follows React Aria's locale
+ *   (`I18nProvider`), as every other component's keyboard does.
+ * - **Rows as `items`.** `<DataTableBody items={rows}>{row => <DataTableRow id={row.id}>…</DataTableRow>}</DataTableBody>`
+ *   lets React Aria reuse rows it has built; a `.map()` rebuilds all 5,000 on every change.
+ * - **Loading more:** `DataTableBody`'s `onLoadMore` (and `isLoading` while it fetches) for a list that arrives in pages
+ *   as it scrolls. The "Virtualized · 5,000 people" and "Virtualized · loading more" stories are the recipes.
+ */
 export function DataTable({
   className, style, isFramed, density, showChecksOnHover, addColumn, onRowAction, openKey, isVirtualized = false,
   rowLines = 1, selectionMode = 'none', selectedKeys, defaultSelectedKeys, onSelectionChange, ...props

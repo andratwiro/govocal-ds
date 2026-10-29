@@ -1,0 +1,12 @@
+export const SECTIONS: string[];
+export const MADE: string[];
+export const OPTIONAL: string[];
+export const WRITTEN: string[];
+export const STAGES: string[];
+export const APG: RegExp;
+export function parseGuide(text: string): {sections: Record<string, string>; order: string[]};
+export function boldNames(md: string): string[];
+export function bullets(md: string): string[];
+export function keyboardRows(md: string): string[][];
+export function titleToId(title: string): string;
+export function firstSentence(text: string | undefined): string;

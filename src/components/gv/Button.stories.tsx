@@ -1,5 +1,7 @@
 import {Button} from '../Button';
 import {Plus} from 'lucide-react';
+import {useState} from 'react';
+import {expect, userEvent, within} from 'storybook/test';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof Button> = {
@@ -162,3 +164,25 @@ export const IconPlusTextVsIconOnly: Story = () => (
   </div>
 );
 IconPlusTextVsIconOnly.storyName = 'Icon and text, icon only';
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Tab skips a disabled button and
+ * lands on the next one; Enter and Space each press it once. */
+export const Keyboard: Story = () => {
+  const [count, setCount] = useState(0);
+  return (
+    <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
+      <Button variant="secondary" isDisabled>Cancel</Button>
+      <Button onPress={() => setCount(n => n + 1)}>Save</Button>
+      <span role="status">{count === 0 ? 'Not saved yet' : `Saved ${count} ${count === 1 ? 'time' : 'times'}`}</span>
+    </div>
+  );
+};
+Keyboard.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  await userEvent.tab();
+  await expect(canvas.getByRole('button', {name: 'Save'})).toHaveFocus();
+  await userEvent.keyboard('{Enter}');
+  await expect(canvas.getByRole('status')).toHaveTextContent('Saved 1 time');
+  await userEvent.keyboard(' ');
+  await expect(canvas.getByRole('status')).toHaveTextContent('Saved 2 times');
+};

@@ -2,7 +2,7 @@ import {readFileSync} from 'node:fs';
 import {describe, expect, it} from 'vitest';
 
 // Written before this test; take a name off as its component gets a doc comment.
-const NOT_YET = ['Tooltip', 'Data table', 'List header', 'List header cell', 'Stat row', 'Button',
+const NOT_YET = ['Tooltip', 'List header', 'List header cell', 'Stat row',
   'Compact button', 'Icon button', 'Number field', 'Rich text editor', 'Rich text toolbar button', 'Switch', 'Text field',
   'Volunteering row', 'Vote progress', 'Side nav'];
 

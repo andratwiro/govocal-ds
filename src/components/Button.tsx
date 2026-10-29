@@ -87,6 +87,12 @@ function isIconOnlyChildren(children: ButtonProps['children']): boolean {
   return visible.length === 1 && isValidElement(visible[0]);
 }
 
+/**
+ * A button that does something on this page: save, create, confirm, open a menu. Three looks (`primary` for the one
+ * main action, `secondary` beside it, `quiet` for small actions in a row or a section), two heights (36, and 32 in
+ * dense places), `tone="danger"` for a destructive action, `hasMenu` when it opens a menu, `isPending` while the
+ * action runs. Going to another page is a Link; an icon alone is an Icon button.
+ */
 export function Button(props: ButtonProps) {
   const {variant, size, hasMenu, isIconOnly, tone, isFullWidth, labels, className, ...rest} = props;
   const resolvedIconOnly = isIconOnly ?? isIconOnlyChildren(props.children);

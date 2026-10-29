@@ -1,6 +1,7 @@
 import {useCallback, useMemo, useRef, useState, type ReactNode} from 'react';
 import type {Key} from 'react-aria-components';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {
   DataTable,
   DataTableAssignee,
@@ -107,6 +108,7 @@ function PeopleTable({initialSort, selectable, initialSelection = [], empty, sho
 
 const meta: Meta = {
   title: 'Components/Tables & lists/Data table',
+  component: DataTable,
   parameters: {layout: 'padded'},
   tags: ['autodocs', 'not-in-figma']
 };
@@ -814,4 +816,25 @@ export const RightToLeft: Story = {
   name: 'Right to left',
   globals: {direction: 'rtl'},
   render: () => <PeopleTable selectable initialSelection={['a']} initialSort={{column: 'joined', direction: 'descending'}} />
+};
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Tab enters the table on a row, the
+ * arrows walk the rows, Space ticks the focused row, Tab leaves for the row's "…" and the next control. */
+export const Keyboard: Story = {
+  render: () => <PeopleTable selectable initialSort={{column: 'name', direction: 'ascending'}} />,
+  play: async ({canvasElement}) => {
+    const grid = within(canvasElement).getByRole('grid', {name: 'Users'});
+    const focusedRow = () => document.activeElement?.closest('[role="row"]');
+    const row = (name: string) => within(grid).getByRole('row', {name: new RegExp(name)});
+    await userEvent.tab();
+    await waitFor(() => expect(focusedRow()).toBe(row('Admin C')));
+    await userEvent.keyboard('{ArrowDown}');
+    await waitFor(() => expect(focusedRow()).toBe(row('Manager B')));
+    await userEvent.keyboard('{ArrowUp}');
+    await waitFor(() => expect(focusedRow()).toBe(row('Admin C')));
+    await userEvent.keyboard(' ');
+    await waitFor(() => expect(row('Admin C')).toHaveAttribute('aria-selected', 'true'));
+    await userEvent.keyboard(' ');
+    await waitFor(() => expect(row('Admin C')).toHaveAttribute('aria-selected', 'false'));
+  }
 };

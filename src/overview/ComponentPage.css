@@ -1,0 +1,29 @@
+/* The component page (ComponentPage.tsx): Storybook's docs type, with the system's tokens for the few marks of its own. */
+.gv-sb-page__purpose {
+  font: var(--gv-type-body);
+  color: var(--gv-text-primary);
+}
+.gv-sb-page__stage {
+  display: inline-block;
+  padding: 0 var(--gv-space-8);
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-warning);
+  font: var(--gv-type-small-strong);
+  color: var(--gv-text-primary);
+  margin-inline-end: var(--gv-space-4);
+}
+.gv-sb-page__stage[data-stage='candidate'] { background: var(--gv-surface-info); }
+.gv-sb-page__stage[data-stage='stable'] { background: var(--gv-surface-success); }
+.gv-sb-page__note {
+  padding: var(--gv-space-12) var(--gv-space-16);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-info);
+  font: var(--gv-type-body);
+  color: var(--gv-text-primary);
+}
+.gv-sb-page__a11y {
+  color: var(--gv-text-secondary);
+}
+.gv-sb-page__tokens td:last-child {
+  color: var(--gv-text-secondary);
+}

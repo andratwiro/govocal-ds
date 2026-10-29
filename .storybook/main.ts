@@ -1,6 +1,7 @@
 import type {StorybookConfig} from '@storybook/react-vite';
-import {readFileSync} from 'node:fs';
+import {existsSync, readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
+import {parseGuide} from '../scripts/lib/guide.mjs';
 
 // 'govocal-ds', 'govocal-ds/base' and 'govocal-ds/tokens.css' resolve as in the back office: package.json's exports.
 const pkgDir = resolve(import.meta.dirname, '..');
@@ -10,7 +11,36 @@ const alias = Object.entries<string>(exports).map(([entry, file]) => ({
   replacement: resolve(pkgDir, file)
 }));
 
-const config: StorybookConfig = {
+/** A components manifest entry, as far as the guide hook below touches it. */
+type ManifestComponent = {id: string; name: string; description?: string; docs?: Record<string, unknown>};
+type Manifests = {components?: {components?: Record<string, ManifestComponent>}};
+
+/**
+ * Each part's guide (`<Name>.guide.md` beside its stories, docs/HOW-TO.md "Write a component page") into the components
+ * manifest the Storybook MCP serves agents: the whole guide as a doc of the component (`docs-show` prints it under Docs),
+ * and its "When not to use" under the description, where an agent reads which part to use instead.
+ */
+async function withGuides(existing: Manifests = {}, options: {manifestEntries?: {id: string; importPath: string}[]} = {}) {
+  const components = existing.components?.components;
+  if (!components) return existing;
+  const next = {...components};
+  for (const entry of options.manifestEntries ?? []) {
+    const id = entry.id.split('--')[0];
+    const path = entry.importPath.replace(/\.stories\.tsx$/, '.guide.md');
+    const file = resolve(pkgDir, path);
+    if (!next[id] || next[id].docs?.[`${id}--guide`] || !existsSync(file)) continue;
+    const content = readFileSync(file, 'utf8');
+    const instead = parseGuide(content).sections['When not to use'];
+    next[id] = {
+      ...next[id],
+      description: [next[id].description, instead && `When not to use:\n${instead}`].filter(Boolean).join('\n\n'),
+      docs: {...next[id].docs, [`${id}--guide`]: {id: `${id}--guide`, name: 'Guide', path, content}}
+    };
+  }
+  return {...existing, components: {...existing.components, components: next}};
+}
+
+const config: StorybookConfig & {experimental_manifests?: typeof withGuides} = {
   stories: [
     '../src/**/*.mdx',
     // The design system's components: explicit titles under Components/.
@@ -37,6 +67,7 @@ const config: StorybookConfig = {
   // dist/storybook/manifests/). react-docgen-typescript follows `extends RACButtonProps`, so a part's React Aria props
   // reach the manifest and the Controls table: its own props, plus the React Aria ones in REACT_ARIA_PROPS.
   features: {componentsManifest: true},
+  experimental_manifests: withGuides,
   typescript: {
     reactDocgen: 'react-docgen-typescript',
     reactDocgenTypescriptOptions: {

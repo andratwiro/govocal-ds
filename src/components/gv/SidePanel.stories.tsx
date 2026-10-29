@@ -1,7 +1,9 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {Check, ExternalLink, SquarePen, Trash2} from 'lucide-react';
 import {Button} from '../Button';
+import {TextField} from '../TextField';
 import {ToastRegion, queue} from '../Toast';
 import {DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableRow, DataTableText} from './DataTable';
 import {PropertyList, PropertyListItem} from './PropertyList';
@@ -321,4 +323,46 @@ export const RecordHead: Story = {
       </div>
     </div>
   )
+};
+
+/** A button opens the panel; the panel holds a field. */
+function KeyboardDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{minHeight: '100vh', boxSizing: 'border-box', padding: 24, background: 'var(--gv-surface-app)'}}>
+      <Button variant="secondary" onPress={() => setOpen(true)}>Open the idea</Button>
+      <SidePanel label="Collect ideas" isOpen={open} onOpenChange={setOpen}>
+        <SidePanelSection title="Official update"><TextField label="Update" /></SidePanelSection>
+      </SidePanel>
+    </div>
+  );
+}
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Enter on what opens it moves focus
+ * into the panel; Tab walks its controls; Esc in a field with words keeps them (the next Esc closes); Esc closes and
+ * puts focus back where it was. */
+export const Keyboard: Story = {
+  render: () => <KeyboardDemo />,
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const opener = canvas.getByRole('button', {name: 'Open the idea'});
+    await userEvent.tab();
+    await expect(opener).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    const panel = await canvas.findByRole('dialog', {name: 'Collect ideas'});
+    await waitFor(() => expect(panel).toHaveFocus());
+    await userEvent.tab();
+    await expect(within(panel).getByRole('button', {name: 'Close'})).toHaveFocus();
+    await userEvent.tab();
+    const field = within(panel).getByRole('textbox', {name: 'Update'});
+    await expect(field).toHaveFocus();
+    await userEvent.keyboard('Shade by June');
+    await userEvent.keyboard('{Escape}');
+    await expect(canvas.getByRole('dialog', {name: 'Collect ideas'})).toBeInTheDocument();
+    await expect(field).toHaveValue('Shade by June');
+    await expect(panel).toHaveFocus();
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(canvas.queryByRole('dialog')).toBeNull());
+    await waitFor(() => expect(opener).toHaveFocus());
+  }
 };

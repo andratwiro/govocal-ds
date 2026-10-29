@@ -34,7 +34,7 @@ Generic parts any admin could ship, from `govocal-ds`. Reach for one first.
 - Navigation: `Breadcrumbs`, `Link`, `Pagination`, `Tabs`
 - Actions: `Button`, `CompactButton`, `IconButton`, `Menu`, `SegmentedControl`
 - Forms: `Checkbox`, `CheckboxGroup`, `ChoiceCard`, `DateRangeField`, `DropZone`, `LocaleSwitcher`, `MultilingualRichTextEditor`, `MultilingualTextField`, `NumberField`, `OptionList`, `RadioGroup`, `RequiredMarker`, `RichTextEditor`, `RichTextToolbar`, `RichTextToolbarButton`, `SearchField`, `Select`, `Switch`, `TagPicker`, `TextField`, `TitleField`
-- Tables & lists: Data table, `TableToolbar`, `FilterChips`, `FilterMenu`, `SelectionBar`
+- Tables & lists: `DataTable`, `TableToolbar`, `FilterChips`, `FilterMenu`, `SelectionBar`
 - Text: `SectionLabel`, `Text`, `VisuallyHidden`
 
 ## Patterns
