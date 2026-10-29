@@ -20,3 +20,16 @@ Example.args = {
   defaultValue: [30, 60],
   thumbLabels: ['start', 'end']
 };
+
+export const AllStates: StoryFn<typeof Slider> = () => (
+  <div style={{display: 'flex', flexDirection: 'column', gap: 24, width: 260}}>
+    <Slider label="Maximum likes per participant" defaultValue={5} minValue={1} maxValue={10} />
+    <Slider
+      label="Maximum likes per participant"
+      defaultValue={3}
+      minValue={1}
+      maxValue={10}
+      isDisabled
+    />
+  </div>
+);

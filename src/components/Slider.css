@@ -1,6 +1,9 @@
 @import './theme.css';
 @import './utilities.css';
 
+/* No exact prototype match: "Maximum likes per participant" (inventory § B) turned out
+   to be a plain number input (.pj-numin), not a range slider. Styled to sit consistently
+   with the rest of the controls (Switch's track, Checkbox/Radio's brand fill). */
 .react-aria-Slider {
   display: grid;
   grid-template-areas:
@@ -8,8 +11,8 @@
     'track track';
   grid-template-columns: 1fr auto;
   max-width: min(calc(100% - 12px), 300px);
-  font: var(--font-size) var(--gv-font-family);
-  color: var(--text-color);
+  font: var(--gv-type-ui) var(--gv-font-family);
+  color: var(--gv-text-primary);
 
   .react-aria-Label {
     grid-area: label;
@@ -17,7 +20,7 @@
 
   .react-aria-SliderOutput {
     grid-area: output;
-    font-size: var(--font-size);
+    font-size: 13px;
   }
 
   .react-aria-SliderTrack {
@@ -27,12 +30,13 @@
     .track {
       display: block;
       position: absolute;
-      border-radius: 9999px;
+      border-radius: var(--gv-radius-full);
+      background: var(--gv-color-slate-250);
     }
 
     .react-aria-SliderFill {
       border-radius: inherit;
-      background: var(--tint-900);
+      background: var(--gv-action-primary);
 
       @media (forced-colors: active) {
         background: Highlight;
@@ -41,15 +45,20 @@
   }
 
   .react-aria-SliderThumb {
-    width: calc(var(--spacing) * 5.5);
-    height: calc(var(--spacing) * 5.5);
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
+    background: var(--gv-control-knob);
+    box-shadow: 0 0 0 1.5px var(--gv-action-primary), var(--gv-shadow-subtle);
     forced-color-adjust: none;
-    --indicator-color: var(--tint-600);
-    --indicator-drop-shadow: var(--gv-shadow-subtle);
+
+    &[data-focus-visible] {
+      outline: 2px solid var(--gv-border-selected);
+      outline-offset: 2px;
+    }
 
     &[data-dragging] {
-      background: var(--button-background-pressed);
+      box-shadow: 0 0 0 1.5px var(--gv-action-checked), var(--gv-shadow-subtle);
     }
   }
 
@@ -58,22 +67,14 @@
     width: 100%;
 
     .react-aria-SliderTrack {
-      height: var(--spacing-5);
+      height: var(--gv-space-20);
       width: 100%;
 
       .track {
-        height: var(--spacing-2);
+        height: var(--gv-space-8);
         width: 100%;
         top: 50%;
         transform: translateY(-50%);
-      }
-
-      .react-aria-SliderFill {
-        box-shadow: inset 0 0 0 1px var(--tint-900);
-
-        @media (forced-colors: active) {
-          box-shadow: none;
-        }
       }
     }
 
@@ -103,13 +104,6 @@
         transform: translateX(-50%);
       }
 
-      .react-aria-SliderFill {
-        box-shadow: inset 0 0 0 1px var(--tint-900);
-
-        @media (forced-colors: active) {
-          box-shadow: none;
-        }
-      }
     }
 
     .react-aria-SliderThumb {
@@ -118,16 +112,20 @@
   }
 
   &[data-disabled] {
+    color: var(--gv-text-quiet);
+
     .react-aria-SliderTrack {
       .track {
-        background: var(--field-background);
-        --border-color: var(--border-color-disabled);
+        background: var(--gv-border-subtle);
       }
 
       .react-aria-SliderFill {
-        background: var(--border-color-disabled);
-        box-shadow: none;
+        background: var(--gv-text-quiet);
       }
+    }
+
+    .react-aria-SliderThumb {
+      box-shadow: 0 0 0 1.5px var(--gv-text-quiet);
     }
   }
 }
