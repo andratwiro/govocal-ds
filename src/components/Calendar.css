@@ -7,8 +7,9 @@
   gap: var(--spacing-2);
   width: fit-content;
   max-width: 100%;
-  color: var(--text-color);
-  font: var(--font-size) var(--gv-font-family);
+  color: var(--gv-text-primary);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
 
   .months {
     display: flex;
@@ -31,7 +32,8 @@
       flex: 1;
       margin: 0;
       text-align: center;
-      font-size: var(--font-size-lg);
+      font: var(--gv-type-body-strong);
+      letter-spacing: var(--gv-type-body-strong-tracking);
     }
   }
 
@@ -48,13 +50,17 @@
   }
 
   [slot='errorMessage'] {
-    font: var(--font-size-sm) var(--gv-font-family);
+    font: var(--gv-type-small);
     color: var(--invalid-color);
   }
 }
 
+/* Same family as the Figma fields: weekday names Small strong in the secondary grey, day cells UI type with the
+   radius-8 corner every control here has (not round), today marked UI strong, the chosen day the selected fill. */
 .react-aria-CalendarHeaderCell {
-  font-size: var(--font-size-sm);
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-secondary);
 }
 
 .react-aria-CalendarCell {
@@ -65,9 +71,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   text-align: center;
-  border-radius: 9999px;
+  border-radius: var(--radius);
   cursor: default;
   forced-color-adjust: none;
   transition: scale 200ms;
@@ -77,6 +84,10 @@
     @container (width < 300px) {
       --gap: 0px;
     }
+  }
+
+  &[data-today] {
+    font-weight: var(--gv-type-ui-strong-weight);
   }
 
   &[data-disabled] {
