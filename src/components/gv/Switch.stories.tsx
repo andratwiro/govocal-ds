@@ -1,3 +1,4 @@
+import {expect, userEvent, within} from 'storybook/test';
 import {useState} from 'react';
 import {Switch} from '../Switch';
 import {NumberField} from '../NumberField';
@@ -79,4 +80,25 @@ export const WithBadge: Story = {
 
 export const Disabled: Story = {
   render: () => <Switch isDisabled>Maximum likes per participant</Switch>
+};
+
+/** The keyboard, proved by this story's play function: Tab skips a disabled switch and lands on the next; Space turns
+ * it on and off. */
+export const Keyboard: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+      <Switch isDisabled>Maximum likes per participant</Switch>
+      <Switch>Allow anonymous participation</Switch>
+    </div>
+  ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const toggle = canvas.getByRole('switch', {name: 'Allow anonymous participation'});
+    await userEvent.tab();
+    await expect(toggle).toHaveFocus();
+    await userEvent.keyboard(' ');
+    await expect(toggle).toBeChecked();
+    await userEvent.keyboard(' ');
+    await expect(toggle).not.toBeChecked();
+  }
 };

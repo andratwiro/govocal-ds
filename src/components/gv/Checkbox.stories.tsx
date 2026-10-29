@@ -1,3 +1,4 @@
+import {expect, userEvent, within} from 'storybook/test';
 import {Checkbox} from './Checkbox';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
@@ -61,4 +62,25 @@ export const Quiet: Story = {
 
 export const Disabled: Story = {
   render: () => <Checkbox isDisabled>Enable the voting phase</Checkbox>
+};
+
+/** The keyboard, proved by this story's play function: Tab skips a disabled box and lands on the next; Space ticks and
+ * unticks. */
+export const Keyboard: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+      <Checkbox isDisabled>Allow anonymous submissions</Checkbox>
+      <Checkbox>Subscribe to project updates</Checkbox>
+    </div>
+  ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const box = canvas.getByRole('checkbox', {name: 'Subscribe to project updates'});
+    await userEvent.tab();
+    await expect(box).toHaveFocus();
+    await userEvent.keyboard(' ');
+    await expect(box).toBeChecked();
+    await userEvent.keyboard(' ');
+    await expect(box).not.toBeChecked();
+  }
 };

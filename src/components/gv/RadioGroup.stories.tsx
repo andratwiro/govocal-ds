@@ -1,3 +1,5 @@
+import {expect, userEvent, within} from 'storybook/test';
+import {Button} from '../Button';
 import {RadioGroup, Radio} from '../RadioGroup';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
@@ -49,3 +51,30 @@ export const AllStates: StoryFn<typeof RadioGroup> = () => (
     </div>
   </div>
 );
+
+/** The keyboard, proved by this story's play function: Tab lands on the chosen option (one stop for the group), the
+ * arrow keys move and choose, and the next Tab leaves the group. */
+export const Keyboard: Story = () => (
+  <div style={{display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'flex-start'}}>
+    <RadioGroup label="Who can find it" defaultValue="private">
+      <Radio value="public">Public</Radio>
+      <Radio value="private">Private</Radio>
+      <Radio value="link">Only with the link</Radio>
+    </RadioGroup>
+    <Button variant="secondary">After the group</Button>
+  </div>
+);
+Keyboard.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  const radio = (name: string) => canvas.getByRole('radio', {name});
+  await userEvent.tab();
+  await expect(radio('Private')).toHaveFocus();
+  await userEvent.keyboard('{ArrowDown}');
+  await expect(radio('Only with the link')).toHaveFocus();
+  await expect(radio('Only with the link')).toBeChecked();
+  await userEvent.keyboard('{ArrowUp}');
+  await userEvent.keyboard('{ArrowUp}');
+  await expect(radio('Public')).toBeChecked();
+  await userEvent.tab();
+  await expect(canvas.getByRole('button', {name: 'After the group'})).toHaveFocus();
+};

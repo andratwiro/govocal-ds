@@ -3,7 +3,7 @@ import {describe, expect, it} from 'vitest';
 
 // Written before this test; take a name off as its component gets a doc comment.
 const NOT_YET = ['Tooltip', 'List header', 'List header cell', 'Stat row',
-  'Compact button', 'Icon button', 'Number field', 'Rich text editor', 'Rich text toolbar button', 'Switch', 'Text field',
+  'Compact button', 'Icon button', 'Number field', 'Rich text editor', 'Rich text toolbar button', 'Text field',
   'Volunteering row', 'Vote progress', 'Side nav'];
 
 function undescribed() {

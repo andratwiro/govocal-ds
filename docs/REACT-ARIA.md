@@ -50,8 +50,8 @@ what would survive a change of base library. It decides nothing: the base librar
 | Data display › Reaction counts | `VisuallyHidden` | – | yes | yes | 4 |
 | Data display › Stat row | `Link` | – | – | yes | 6 |
 | Data display › Stat tile | `VisuallyHidden` through `components/gv/HelpPopover` | – | – | yes | 9 |
-| Forms › Checkbox | through `components/Checkbox` | `CheckboxFieldProps` | – | yes | 7 |
-| Forms › Checkbox group | `CheckboxGroup` through `components/Form` | `CheckboxGroupProps` | – | yes | 1 |
+| Forms › Checkbox | through `components/Checkbox` | `CheckboxFieldProps` | – | yes | 8 |
+| Forms › Checkbox group | `CheckboxGroup` through `components/Form` | `CheckboxGroupProps` | – | yes | 2 |
 | Forms › Choice card | `RadioField`, `RadioButton`, `CheckboxField`, `CheckboxButton` through `components/gv/SectionLabel` | `RadioFieldProps` | – | yes | 5 |
 | Forms › Date range field | through `components/Button`, `components/DatePicker`, `components/TimeField` | – | yes | yes | 7 |
 | Forms › Drop zone | `DropZone`, `FileTrigger`, `Button` | `DropZoneProps` | – | yes | 5 |
@@ -60,14 +60,14 @@ what would survive a change of base library. It decides nothing: the base librar
 | Forms › Multilingual text field | `Input`, `TextArea`, `TextField` through `components/Form`, `components/gv/LocaleSwitcher` | `TextFieldProps` | yes | yes | 12 |
 | Forms › Number field | `Group`, `Input`, `NumberField` through `components/Button`, `components/Form` | `NumberFieldProps` | yes | yes | 3 |
 | Forms › Option list | `Autocomplete` through `components/Menu`, `components/SearchField` | – | yes | yes | 9 |
-| Forms › Radio group | `RadioGroup`, `RadioField`, `RadioButton` through `components/Form` | `RadioGroupProps` | – | yes | 1 |
+| Forms › Radio group | `RadioGroup`, `RadioField`, `RadioButton` through `components/Form` | `RadioGroupProps` | – | yes | 2 |
 | Forms › Required marker | None: plain React and CSS | – | – | yes | 3 |
 | Forms › Rich text editor | `TextField`, `TextArea` through `components/gv/RichTextToolbar` | – | – | yes | 3 |
 | Forms › Rich text toolbar | `Button`, `Toolbar` through `components/gv/RichTextToolbarButton` | – | – | yes | 2 |
 | Forms › Rich text toolbar button | `ToggleButton` | `ToggleButtonProps` | – | yes | 4 |
 | Forms › Search field | `Button`, `Input`, `SearchField` through `components/Form`, `components/Tooltip` | `SearchFieldProps` | – | yes | 8 |
 | Forms › Select | `Select`, `SelectValue`, `Autocomplete` through `components/Button`, `components/ListBox`, `components/Popover`, `components/SearchField` | – | yes | yes | 10 |
-| Forms › Switch | `SwitchField`, `SwitchButton` through `components/Form` | `SwitchFieldProps` | – | yes | 5 |
+| Forms › Switch | `SwitchField`, `SwitchButton` through `components/Form` | `SwitchFieldProps` | – | yes | 6 |
 | Forms › Tag picker | `Button`, `Dialog`, `DialogTrigger`, `Tag`, `TagGroup`, `TagList` through `components/Button`, `components/Popover`, `components/gv/OptionList` | – | yes | yes | 5 |
 | Forms › Text field | `Input`, `TextField`, `TextArea`, `Group` through `components/Form` | `TextFieldProps` | yes | yes | 5 |
 | Forms › Title field | `Input`, `TextField` through `components/Form`, `components/gv/LocaleSwitcher` | `TextFieldProps` | yes | yes | 6 |
