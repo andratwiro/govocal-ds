@@ -178,7 +178,7 @@ part's `<Name>.guide.md`) names the part to use instead.
 
 ## Patterns / App shell
 - **Notification list** `NotificationList` (not in Figma): The notifications list the admin sidebar's bell opens (the real admin's notification menu): a title with "Mark all as read", then one row per notification, n… Stories: Default, All Read, Empty.
-- **Side nav** `SideNav` (not in Figma) Stories: Open, Folded.
+- **Side nav** `SideNav` (not in Figma): The back office's main dark sidebar of links and menu buttons; folds to icons. Stories: Open, Folded.
 
 ## Patterns / Build tab
 - **Access rights** `AccessRights` (not in Figma): Who can take one participant action: following the platform's defaults (read-only, with Override) or set for this phase. Stories: All Variants, Using Defaults, Override, Security Requirements, Two Choices, In The Modal, Modal.
@@ -188,7 +188,7 @@ part's `<Name>.guide.md`) names the part to use instead.
 - **View option row** `ViewOptionRow` (not in Figma): One view in a phase's Available views card: a switch (or a check for the view that is always on), the view's name and words, and Make default. Stories: All Variants, Default, Off, With Options, In A Card.
 
 ## Patterns / Manage tab
-- **Comment thread** `CommentThread` (not in Figma): Comment thread: the conversation under a record in the Manage tab's Side panel. Stories: All Variants, Default, New, Content Warning, Empty, Internal Conversation, Comments Only, In A Side Panel.
+- **Comment thread** `CommentThread` (not in Figma): A thread of comments with replies and a composer; Stories: All Variants, Default, New, Content Warning, Empty, Internal Conversation, Comments Only, In A Side Panel.
 - **Official update** `OfficialUpdate` (not in Figma): Official update: the team's public answer to a record, in the Manage tab's Side panel. Stories: All Variants, Empty, Posted, Bulk.
 
 ## Patterns / Pages & menu
@@ -197,8 +197,8 @@ part's `<Name>.guide.md`) names the part to use instead.
 ## Patterns / Participation methods
 - **Common ground row** `CommonGroundRow`: The content of one Common Ground list row: Statement · Assignee · Likes · Agree · Reactions, between a leading 28px checkbox slot and a trailing 28px slot, a… Stories: All Variants, Assignee New, New, New Warning, Empty, Selectable.
 - **Proposals row** `ProposalsRow`: The content of one Proposals list row, built around Vote progress (Type=Threshold): Proposal · Votes 200 · Status 144 · Comments 112 · Time left 104, then a… Stories: All Variants, Closed, New, New Warning, Open.
-- **Volunteering row** `VolunteeringRow` (not in Figma) Stories: All Variants, Default, Last, One Volunteer, Build, Build In A Card.
-- **Vote progress** `VoteProgress` Stories: All Variants, Threshold, Count New, Count.
+- **Volunteering row** `VolunteeringRow` (not in Figma): One volunteering cause in a list: its progress and volunteer count, or in Build its sign-ups with Edit and Delete. Stories: All Variants, Default, Last, One Volunteer, Build, Build In A Card.
+- **Vote progress** `VoteProgress`: A vote count with a bar: against a threshold (proposals) or scaled to the leading option (voting). Stories: All Variants, Threshold, Count New, Count.
 - **Voting row** `VotingRow`: The content of one Voting-method list row, built around Vote progress (Type=Count / Count · new): Option · Votes 200 · Online 80 · Offline 80 · Comments 112,… Stories: All Variants, New, Default, New Warning.
 
 ## Patterns / Project page

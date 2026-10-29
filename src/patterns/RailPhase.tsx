@@ -59,12 +59,14 @@ export interface RailPhaseProps extends PlacementProps {
    * shows it when a phase has unread inputs. The name keeps 56 free for it.
    */
   newCount?: number;
+  /** Where the row leads (a link). */
   href?: string;
   /**
    * Marks the phase being viewed (`aria-current="page"`). It draws nothing:
    * the prototype dropped the tinted card of the open phase.
    */
   isCurrent?: boolean;
+  /** Fires when the row is pressed. */
   onPress?: () => void;
   /**
    * A delete button at the end of the row, shown while the row is hovered or has focus (it is always in the tab

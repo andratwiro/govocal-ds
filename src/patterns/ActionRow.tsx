@@ -44,6 +44,7 @@ export interface ActionRowProps extends PlacementProps {
   badge?: ReactNode;
   /** Where it leads. */
   href?: LinkProps['href'];
+  /** Fires when the row is pressed (a row with `href` or `menu` does not need it). */
   onPress?: () => void;
   /**
    * `working`: the row is its own progress (a ring, `aria-disabled`, nothing to press) while the action runs, e.g.

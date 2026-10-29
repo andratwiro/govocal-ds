@@ -9,7 +9,9 @@ import './RailHeader.css';
 
 /** The words Rail header says itself (docs/API.md rule 11): its buttons' names. */
 export interface RailHeaderLabels {
+  /** The + button's name. */
   add: string;
+  /** The hide-panel button's name. */
   togglePanel: string;
 }
 

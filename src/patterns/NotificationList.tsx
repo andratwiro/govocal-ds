@@ -12,6 +12,7 @@ import './NotificationList.css';
 export interface NotificationListLabels {
   /** The title, when no `title` is given. */
   title: string;
+  /** The button that marks every notification as read. */
   markAllRead: string;
   /** What an empty list says, when no `emptyLabel` is given. */
   empty: string;
@@ -28,11 +29,13 @@ export const notificationListLabels: NotificationListLabels = {
 };
 
 export interface NotificationItem {
+  /** Tells the notification apart (the row's key). */
   id: string;
   /** What happened ("Your report for Riverside Park is ready"). */
   text: ReactNode;
   /** When, as shown ("2 h ago"). */
   time: string;
+  /** Unread: bolder text and a dot. */
   isUnread?: boolean;
   /** Where the notification leads. */
   href?: string;
@@ -43,6 +46,7 @@ export interface NotificationItem {
 export interface NotificationListProps extends PlacementProps {
   /** @default `labels.title` ("Notifications") */
   title?: string;
+  /** The notifications, newest first. */
   items: NotificationItem[];
   /** Shows "Mark all as read". It stays enabled once all are read, so focus never drops out of the panel. */
   onMarkAllRead?: () => void;

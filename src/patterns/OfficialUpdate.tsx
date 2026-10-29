@@ -21,9 +21,11 @@ export interface OfficialUpdateLabels extends ModalLabels {
   placeholder: string;
   /** The name field's name and hint. */
   name: string;
+  /** The name field's hint. */
   namePlaceholder: string;
   /** The form's own button, and the bulk modal's. */
   publish: string;
+  /** The bulk modal's Send button. */
   send: string;
   /** The bulk modal's footer, given how many records the update goes to. */
   reach: CountLabel;
@@ -43,7 +45,9 @@ export const officialUpdateLabels: OfficialUpdateLabels = {
 };
 
 export interface PostedUpdate {
+  /** Tells this update from the others in the list. */
   id: string;
+  /** The update's words. */
   text: ReactNode;
   /** The name people see with it. @default `labels.team` ("The project team") */
   by?: string;
@@ -52,6 +56,7 @@ export interface PostedUpdate {
 }
 
 export interface OfficialUpdateDraft {
+  /** The update's words, trimmed. */
   text: string;
   /** The name people see with the update; empty = `labels.team` ("The project team"). */
   name: string;
@@ -109,6 +114,7 @@ export interface OfficialUpdateFormProps extends PlacementProps {
   id?: string;
   /** Called as the words change, e.g. to turn that outside button on. */
   onDraftChange?: (draft: OfficialUpdateDraft) => void;
+  /** Puts the cursor in the words field when the form appears. */
   autoFocus?: boolean;
   /** Its own words (the fields' names and hints, Publish), over `officialUpdateLabels`. */
   labels?: Partial<OfficialUpdateLabels>;
@@ -162,7 +168,9 @@ export function OfficialUpdateForm({onPublish, id, onDraftChange, autoFocus, lab
 export interface BulkOfficialUpdateProps extends PlacementProps {
   /** How many records the update goes to, said with `labels.reach` ("This update goes to 2 ideas"). */
   count: number;
+  /** Whether the modal is open. */
   isOpen: boolean;
+  /** Fires when the modal opens or closes (Escape, the ×, or after Send), with the new state. */
   onOpenChange: (isOpen: boolean) => void;
   /** Send was pressed with words in the field: apply it at once, with an Undo toast. The modal closes. */
   onSend: (draft: OfficialUpdateDraft) => void;

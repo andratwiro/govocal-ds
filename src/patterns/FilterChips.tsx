@@ -17,6 +17,7 @@ export interface FilterChipsLabels {
   operator: CountLabel;
   /** A chip's × name, given the facet's (or the quick view's) name. */
   remove: (name: string) => string;
+  /** The Clear button's text, which turns every filter off. */
   clear: string;
 }
 
@@ -29,8 +30,11 @@ export const filterChipsLabels: FilterChipsLabels = {
 };
 
 export interface FilterChipsProps extends PlacementProps {
+  /** The things the list can be filtered by; the same facets as `FilterMenu`. */
   facets: FilterFacet[];
+  /** The active filters: for each facet id, the ticked option ids. */
   value: FilterValue;
+  /** Fires when a chip's × (or Clear) turns filters off, with the new value. */
   onChange: (value: FilterValue) => void;
   /** Adds a "Clear" button after the chips that turns every filter off. @default true */
   showClear?: boolean;

@@ -25,28 +25,43 @@ export type AccessWho = 'anyone' | 'signin' | 'admins';
 export interface AccessRightsLabels {
   /** The three choices, each with its line. */
   anyone: string;
+  /** The line under "Anyone". */
   anyoneDescription: string;
+  /** The "Require sign-in" choice's name. */
   signin: string;
+  /** The line under "Require sign-in". */
   signinDescription: string;
+  /** The "Administrators and managers" choice's name. */
   admins: string;
+  /** The line under "Administrators and managers". */
   adminsDescription: string;
   /** The head: set for this phase, or following the defaults (given the link to them). */
   overriding: string;
+  /** The head while following the defaults, given the link to them ("Using platform defaults"). */
   using: (link: ReactNode) => ReactNode;
+  /** The link's words inside the head while following the defaults. */
   platformDefaults: string;
+  /** The button that makes the rights editable for this phase. */
   override: string;
+  /** The section label over the three choices, also the choices' accessible name. */
   whoCanParticipate: string;
   /** The line under Administrators and managers. */
   adminsOnly: string;
   /** Sign-in's settings. */
   security: string;
+  /** The switch's name under Security requirements. */
   requirePassword: string;
+  /** The line under the password switch. */
   requirePasswordDescription: string;
+  /** The Limit to groups section's heading. */
   limitToGroups: string;
+  /** The line over the groups list. */
   groupsLead: string;
   /** The groups list's name, and its first group when no `groups` are given. */
   groupPicker: string;
+  /** The first group, meaning no restriction, when no `groups` are given. */
   allParticipants: string;
+  /** The button under the groups list that customises the error message (see `onCustomizeError`). */
   customizeError: string;
 }
 
@@ -105,12 +120,15 @@ function useValue<T>(value: T | undefined, defaultValue: T, onChange?: (v: T) =>
 export interface AccessRightsProps extends PlacementProps {
   /** Set for this phase (editable), or following the platform's defaults (read-only until Override). */
   isOverriding?: boolean;
+  /** Whether it starts set for this phase, when `isOverriding` is not given. @default false */
   defaultOverriding?: boolean;
+  /** Fires when Override or Revert is pressed, with whether it is now set for this phase. */
   onOverridingChange?: (isOverriding: boolean) => void;
   /** Who can take the action. */
   who?: AccessWho;
   /** @default 'signin' */
   defaultWho?: AccessWho;
+  /** Fires when the person picks who can take the action, with the choice. */
   onWhoChange?: (who: AccessWho) => void;
   /** The choices this action offers (some offer two). @default ['anyone', 'signin', 'admins'] */
   whoItems?: AccessWho[];
@@ -283,9 +301,11 @@ export function AccessRights({
 export interface AccessRightsModalLabels extends AccessRightsLabels, ModalLabels, Pick<AlertDialogLabels, 'cancel'> {
   /** The footer's buttons; `revert` also titles the confirm. */
   revert: string;
+  /** The footer's save button. */
   save: string;
   /** The revert confirm's button and its words. */
   confirmRevert: string;
+  /** The revert confirm's message. */
   revertBody: string;
 }
 
@@ -304,9 +324,13 @@ export const accessRightsModalLabels: AccessRightsModalLabels = {
 export interface AccessRightsModalProps extends Omit<AccessRightsProps, 'labels'> {
   /** The question for this action ("Who can submit inputs?"). */
   title: string;
+  /** Whether the modal is open (controlled). */
   isOpen?: boolean;
+  /** Whether the modal starts open, when `isOpen` is not given. */
   defaultOpen?: boolean;
+  /** Fires when the modal opens or closes, with whether it is now open. */
   onOpenChange?: (isOpen: boolean) => void;
+  /** Fires when Save changes is pressed. */
   onSave?: () => void;
   /** Its own words (Save changes, the revert and its confirm, ×, and Access rights'), over `accessRightsModalLabels`. */
   labels?: Partial<AccessRightsModalLabels>;

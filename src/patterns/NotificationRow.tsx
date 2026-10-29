@@ -38,10 +38,15 @@ export interface NotificationEmailLabels extends RichTextToolbarLabels {
   send: string;
   /** The fields' labels. */
   replyTo: string;
+  /** The Subject field's label. */
   subject: string;
+  /** The Title field's label. */
   title: string;
+  /** The Introduction field's label and the editor's name. */
   introduction: string;
+  /** The Introduction editor's hint while empty. */
   introductionPlaceholder: string;
+  /** The Button text field's label. */
   buttonText: string;
 }
 
@@ -74,7 +79,9 @@ function useOnOff(isSelected: boolean | undefined, defaultSelected: boolean, onC
 interface OnOff {
   /** The email goes out (controlled). */
   isSelected?: boolean;
+  /** Whether the email starts on, when `isSelected` is not given. @default true */
   defaultSelected?: boolean;
+  /** Fires when the switch is turned on or off, with whether the email is now on. */
   onChange?: (isSelected: boolean) => void;
 }
 
@@ -157,15 +164,19 @@ export function NotificationRowList({children, 'aria-label': ariaLabel, labels, 
 export interface NotificationEmailProps extends OnOff, PlacementProps {
   /** The email's name: the page's title. */
   name: string;
+  /** Who it goes to ("User who commented"). */
   who: ReactNode;
+  /** What sends it ("User replies to comment"). */
   when: ReactNode;
   /** The ← back to the phase's setup. */
   onBack?: () => void;
   /** Where replies go. */
   replyTo?: string;
+  /** The Subject field's starting text. */
   subject?: string;
   /** Leave it out for an email that has no title. */
   title?: string;
+  /** The Introduction's starting text. @default '' */
   introduction?: string;
   /** Leave it out for an email that has no button. */
   buttonText?: string;

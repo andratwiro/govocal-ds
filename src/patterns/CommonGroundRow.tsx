@@ -10,6 +10,7 @@ import './CommonGroundRow.css';
 
 /** The words Common Ground row says itself (docs/API.md rule 11): List row's, and the New label. */
 export interface CommonGroundRowLabels extends ListRowLabels {
+  /** The accent label on a new statement. */
   new: string;
 }
 

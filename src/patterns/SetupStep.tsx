@@ -42,7 +42,9 @@ export interface SetupStepProps extends PlacementProps {
   children?: ReactNode;
   /** Expand: open on first render. */
   defaultExpanded?: boolean;
+  /** Expand: whether the card is open (controlled). */
   isExpanded?: boolean;
+  /** Expand: fires when the card opens or closes, with the new state. */
   onExpandedChange?: (isExpanded: boolean) => void;
   /** Its own words (what a done step reads), over `setupStepLabels`. */
   labels?: Partial<SetupStepLabels>;

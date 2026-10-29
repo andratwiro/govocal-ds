@@ -7,8 +7,11 @@ import './PhaseTimeline.css';
 /** The words Phase timeline says itself (docs/API.md rule 11): each status's word, with Rail phase's, which it hands
  * on. */
 export interface PhaseTimelineLabels extends RailPhaseLabels {
+  /** The status word of a phase that is over. */
   done: string;
+  /** The status word of the phase running now. */
   inProgress: string;
+  /** The status word of a phase that has not started. */
   upcoming: string;
 }
 
@@ -23,9 +26,11 @@ export const phaseTimelineLabels: PhaseTimelineLabels = {
 export type TimelineStatus = 'done' | 'in-progress' | 'upcoming';
 
 export interface TimelinePhase {
+  /** Tells this phase from the others in the list. */
   id: string;
   /** The phase name, e.g. "Collect ideas". */
   title: string;
+  /** Where the phase is: it sets the dot's colour and the status word. */
   status: TimelineStatus;
   /** "19 Oct to 16 Nov". */
   dates: string;
@@ -35,12 +40,14 @@ export interface TimelinePhase {
   count?: string;
   /** How many of those nobody has looked at yet: a red "• 18 new" at the end of the row. */
   fresh?: number;
+  /** Where the row leads (a link). A plain row when omitted. */
   href?: string;
   /** The phase being viewed. */
   isCurrent?: boolean;
 }
 
 export interface PhaseTimelineProps extends PlacementProps {
+  /** The phases, in order. */
   phases: TimelinePhase[];
   /** Its own words (each status's, "N new"), over `phaseTimelineLabels`. */
   labels?: Partial<PhaseTimelineLabels>;

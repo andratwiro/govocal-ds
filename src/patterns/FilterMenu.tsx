@@ -20,6 +20,7 @@ export interface FilterMenuLabels extends OptionListLabels {
   filter: string;
   /** The trigger's name while filters are on, given that name and how many facets are on. */
   active: (label: string, count: number, formatted: string) => string;
+  /** The menu item that turns every filter off. */
   clearAll: string;
 }
 
@@ -33,7 +34,9 @@ export const filterMenuLabels: FilterMenuLabels = {
 
 /** One thing a list can be filtered by ("Tags"), with the values it can take. */
 export interface FilterFacet {
+  /** Keys the facet in `FilterValue`. */
   id: string;
+  /** The facet's name, in the menu and on its chip ("Tags"). */
   label: string;
   /** The facet's icon, in the menu, the chip and (unless an option has its own) in front of every option. */
   icon: ReactNode;
@@ -50,8 +53,11 @@ export type FilterValue = Record<string, readonly string[]>;
 export const activeFacets = (facets: FilterFacet[], value: FilterValue) => facets.filter(f => value[f.id]?.length);
 
 export interface FilterMenuProps extends PlacementProps {
+  /** The things the list can be filtered by. */
   facets: FilterFacet[];
+  /** The active filters: for each facet id, the ticked option ids. */
   value: FilterValue;
+  /** Fires when an option is ticked or cleared, or Clear all filters is chosen, with the new value. */
   onChange: (value: FilterValue) => void;
   /** Words for an option's count in the submenus, e.g. `n => \`${n} ideas\``. */
   countLabel?: (n: number) => string;

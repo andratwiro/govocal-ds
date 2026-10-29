@@ -18,14 +18,17 @@ import './SideNav.css';
  * Not in Figma yet.
  */
 export interface SideNavProps extends PlacementProps {
+  /** The rail's navigation name ("Main"). */
   'aria-label': string;
   /** The icon-only rail (inside a project or phase). @default false */
   isFolded?: boolean;
+  /** The rail's contents: `SideNavHome`, `SideNavGroup`s. */
   children: ReactNode;
 }
 
 const Folded = createContext(false);
 
+/** The back office's main dark sidebar of links and menu buttons; folds to icons. For tabs inside a page, use `Tabs`. */
 export function SideNav({'aria-label': ariaLabel, isFolded: folded = false, children, className, style}: SideNavProps) {
   return (
     <Folded.Provider value={folded}>
@@ -35,7 +38,12 @@ export function SideNav({'aria-label': ariaLabel, isFolded: folded = false, chil
 }
 
 /** A list of items. `isAtBottom` sends the group to the bottom of the rail (the real admin's bottom items). */
-export interface SideNavGroupProps extends PlacementProps {isAtBottom?: boolean; children: ReactNode}
+export interface SideNavGroupProps extends PlacementProps {
+  /** Sends the group to the bottom of the rail. */
+  isAtBottom?: boolean;
+  /** The group's items (`SideNavLink`, `SideNavButton`), each in its own list item. */
+  children: ReactNode;
+}
 
 export function SideNavGroup({isAtBottom, children, className, style}: SideNavGroupProps) {
   return (
@@ -56,6 +64,7 @@ export const sideNavHomeLabels: SideNavHomeLabels = {home: 'To platform'};
 
 /** The band at the top that leaves the back office for the resident site. */
 export interface SideNavHomeProps extends PlacementProps {
+  /** Where the band leads: the resident site. */
   href: string;
   /** @default `labels.home` ("To platform") */
   children?: string;
@@ -118,6 +127,7 @@ function Content({icon, label, sub, count, countLabel, hasMenu, hasAccentIcon}: 
 }
 
 export interface SideNavLinkProps extends RowContent, PlacementProps {
+  /** The page the link goes to. */
   href: string;
   /** The page this link leads to is open. */
   isCurrent?: boolean;

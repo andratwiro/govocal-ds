@@ -19,13 +19,19 @@ import './CommentThread.css';
 export interface CommentComposerLabels {
   /** The line over the field while replying, given the author answered, and its cancel's name. */
   replying: (author: string) => string;
+  /** The ×'s name on the "Replying to" line. */
   cancelReply: string;
   /** The field's name and hint: public, a reply (given the author), internal. */
   field: string;
+  /** The field's hint for a public comment. */
   placeholder: string;
+  /** The field's name and hint while replying, given the author answered. */
   replyTo: (author: string) => string;
+  /** The field's name on the internal conversation. */
   internalField: string;
+  /** The field's hint on the internal conversation. */
   internalPlaceholder: string;
+  /** The Post button's name. */
   post: string;
 }
 
@@ -45,23 +51,31 @@ export const commentComposerLabels: CommentComposerLabels = {
 export interface CommentThreadLabels extends CommentComposerLabels {
   /** The heading and the tabs, given how many comments each holds. */
   comments: CountLabel;
+  /** The internal tab's name, given how many comments it holds ("Internal conversation (2)"). */
   internal: CountLabel;
   /** The tab list's name. */
   conversation: string;
   /** The lists' names, and what an empty one says. */
   commentsList: string;
+  /** The internal comments list's name. */
   internalList: string;
+  /** What the public list says when it is empty. */
   noComments: string;
+  /** What the internal list says when it is empty. */
   noInternal: string;
   /** A reply list's name, given the author answered. */
   repliesTo: (author: string) => string;
+  /** The mark on a comment the team has not seen. */
   new: string;
   /** The content warning line, given what the check found. */
   warning: (found: string) => string;
   /** A comment's actions; Reply is named with `replyTo`, Delete with `deleteComment` (given the author). */
   reply: string;
+  /** The button that dismisses a comment's content warning. */
   dismissWarning: string;
+  /** The Delete button's text. */
   delete: string;
+  /** The Delete button's accessible name, given the author whose comment it removes. */
   deleteComment: (author: string) => string;
 }
 
@@ -85,6 +99,7 @@ export const commentThreadLabels: CommentThreadLabels = {
 };
 
 export interface ThreadComment {
+  /** Tells the comment apart; `onPost`, `onDelete` and `onDismissWarning` hand it back. */
   id: string;
   /** Who wrote it, as people see it ("Resident", "Anonymous"). */
   author: string;
@@ -92,6 +107,7 @@ export interface ThreadComment {
   initials?: string;
   /** When, as shown ("Today", "2 days ago"). */
   time: string;
+  /** The comment's words. */
   text: ReactNode;
   /** Not yet seen by the team: a tinted block and a "New" mark. */
   isNew?: boolean;
@@ -120,6 +136,7 @@ export interface CommentThreadProps extends PlacementProps {
   tab?: ThreadTab;
   /** @default 'comments' */
   defaultTab?: ThreadTab;
+  /** Fires when the person switches between Comments and Internal conversation, with the tab. */
   onTabChange?: (tab: ThreadTab) => void;
   /** The team member writing: the letters on the composer's avatar. */
   me: string;
@@ -137,8 +154,10 @@ export interface CommentThreadProps extends PlacementProps {
 const count = (list: ThreadComment[]) => list.reduce((n, c) => n + 1 + (c.replies?.length ?? 0), 0);
 
 /**
- * Comment thread: the conversation under a record in the Manage tab's Side panel (the prototype's
- * `pjDiscussionHTML`). Comments oldest first, each with its avatar, name, time, a "New" mark until the team has seen
+ * A thread of comments with replies and a composer; Reply points the composer at a comment. For one comment box, use `CommentComposer`.
+ *
+ * It is the conversation under a record in the Manage tab's Side panel (the prototype's `pjDiscussionHTML`).
+ * Comments oldest first, each with its avatar, name, time, a "New" mark until the team has seen
  * it, an automatic content warning, and Reply / Dismiss warning / Delete; replies one level deep; then the team's
  * composer. With `internal`, a second tab holds the team's internal conversation, which residents never see. Every
  * action applies at once (with an Undo toast from the page). Not in Figma.
@@ -280,8 +299,11 @@ export interface CommentComposerProps extends PlacementProps {
   isInternal?: boolean;
   /** The author answered, when Reply was pressed: a "Replying to …" line with a cancel. */
   replyTo?: string;
+  /** Fires when the × on the "Replying to" line is pressed. */
   onCancelReply?: () => void;
+  /** Fires when Post is pressed (or ⌘/Ctrl + Enter), with the trimmed text. The field then clears. */
   onPost: (text: string) => void;
+  /** A ref to the text area, e.g. to move focus there when Reply is pressed. */
   fieldRef?: Ref<HTMLTextAreaElement>;
   /** Its own words (the field's name and hint, Post, the reply line), over `commentComposerLabels`. */
   labels?: Partial<CommentComposerLabels>;

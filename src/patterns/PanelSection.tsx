@@ -17,9 +17,11 @@ export interface PanelSectionProps extends PlacementProps {
   aside?: ReactNode;
   /** Folds under its header, with a chevron at the end (prototype "Project details"). */
   isCollapsible?: boolean;
+  /** Collapsible sections only: starts open. Folded when omitted. */
   defaultExpanded?: boolean;
   /** Heading level of the title. @default 3 */
   headingLevel?: 2 | 3 | 4;
+  /** The section's body, 16 below the title. */
   children: ReactNode;
 }
 

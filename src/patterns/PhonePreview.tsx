@@ -34,7 +34,9 @@ export const phonePreviewLabels: PhonePreviewLabels = {
 export interface PhonePreviewAction {
   /** "Edit project page" on the project; "Preview" on a phase. */
   label: string;
+  /** Where the action leads (a link). A button when omitted. */
   href?: string;
+  /** Fires when the action is pressed. */
   onPress?: () => void;
   /** Opens the participant's view in another tab: an ↗ after the label. */
   isExternal?: boolean;
@@ -45,6 +47,7 @@ export interface PhonePreviewProps extends PlacementProps {
   'aria-label': string;
   /** The platform's header, pinned at the top of the screen. */
   header?: ReactNode;
+  /** The screen's content, scrolling between `header` and `footer`. */
   children?: ReactNode;
   /**
    * The screen's ground. `white`: a page (the project page, a message). `grey`: the front office's phase page, white
@@ -155,7 +158,10 @@ export function PhoneImage({'aria-label': label, labels, className, style}: Phon
 }
 
 /** A white card on a `grey` screen: the phase page's blocks (description, attachments, the inputs). */
-export interface PhoneCardProps extends PlacementProps {children: ReactNode}
+export interface PhoneCardProps extends PlacementProps {
+  /** The card's content. */
+  children: ReactNode;
+}
 
 export function PhoneCard({children, className, style}: PhoneCardProps) {
   return <div className={clsx('gv-phone-card', className)} style={style}>{children}</div>;

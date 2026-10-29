@@ -24,17 +24,23 @@ export const votingRowLabels: VotingRowLabels = {
 };
 
 export interface VotingRowProps extends PlacementProps {
+  /** The option's title. */
   title: string;
+  /** The option's picture, before the title. None when omitted. */
   thumbnail?: string;
   /** Shows the warning mark next to the title. */
   hasWarning?: boolean;
+  /** Votes the option has so far. */
   voteCount: number;
   /** The bar fill, 0-100, relative to the option with the most votes. */
   fillPercent: number;
   /** Unseen votes since the admin's last visit. */
   newVoteCount?: number;
+  /** How many of its votes were cast online. */
   onlineCount: number;
+  /** How many of its votes were added from offline voting; 0 shows dimmed. */
   offlineCount: number;
+  /** How many comments the option has. */
   commentCount: number;
   /** Unseen comments since the admin's last visit. */
   newCommentCount?: number;

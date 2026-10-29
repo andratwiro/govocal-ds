@@ -31,7 +31,9 @@ export const selectionBarLabels: SelectionBarLabels = {
 /** One button of the bar: it opens its `menu`, or it is a plain button that calls its `onPress` and the bar's
  * `onAction`. */
 export interface SelectionAction {
+  /** Tells this button from the others; handed to the bar's `onAction`. */
   id: string;
+  /** The button's words. */
   label: string;
   /** A 16px Lucide icon, `aria-hidden`, before the label. */
   icon?: ReactNode;
@@ -59,6 +61,7 @@ export interface SelectionBarProps {
   labels?: Partial<SelectionBarLabels>;
   /** Places the bar while it shows (nothing is drawn around `children`); never paints it. */
   className?: string;
+  /** Places the bar, as `className` does. */
   style?: CSSProperties;
 }
 

@@ -14,6 +14,7 @@ export interface ViewOptionRowLabels {
   alwaysEnabled: string;
   /** The default view's button, and the others'. */
   default: string;
+  /** The button of a view that is not the default. */
   makeDefault: string;
 }
 
@@ -40,6 +41,7 @@ export interface ViewOptionRowProps extends PlacementProps {
   isSelected?: boolean;
   /** @default false */
   defaultSelected?: boolean;
+  /** Fires when the switch is flipped, or when Make default turns the view on, with the new state. */
   onChange?: (isSelected: boolean) => void;
   /** The view participants land on. One view is the default; its button reads "Default" (pressed). */
   isDefault?: boolean;
@@ -122,6 +124,7 @@ export function ViewOptionRow({
 
 /** The views, one row each, a hairline between them (a phase's Available views card). */
 export interface ViewOptionListProps extends PlacementProps {
+  /** The `ViewOptionRow`s. */
   children: ReactNode;
   /** @default `labels.views` ("Available views") */
   'aria-label'?: string;

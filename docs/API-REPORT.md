@@ -21,16 +21,16 @@ Component, from `src/patterns/AccessRights.tsx`.
 
 - `className?: string`
 - `defaultExpandedKeys?: Array<'security' | 'groups'>`
-- `defaultOverriding?: boolean` (no description)
+- `defaultOverriding?: boolean`
 - `defaultRequirePassword?: boolean`
 - `defaultWho?: AccessWho`
 - `groups?: string[]`
 - `isOverriding?: boolean`
 - `labels?: Partial<AccessRightsLabels>`
 - `onCustomizeError?: () => void`
-- `onOverridingChange?: (isOverriding: boolean) => void` (no description)
+- `onOverridingChange?: (isOverriding: boolean) => void`
 - `onPlatformDefaults?: () => void`
-- `onWhoChange?: (who: AccessWho) => void` (no description)
+- `onWhoChange?: (who: AccessWho) => void`
 - `style?: CSSProperties`
 - `who?: AccessWho`
 - `whoItems?: AccessWho[]`
@@ -47,26 +47,26 @@ AccessRightsLabels
 
 Interface, from `src/patterns/AccessRights.tsx`.
 
-- `admins: string` (no description)
-- `adminsDescription: string` (no description)
+- `admins: string`
+- `adminsDescription: string`
 - `adminsOnly: string`
-- `allParticipants: string` (no description)
+- `allParticipants: string`
 - `anyone: string`
-- `anyoneDescription: string` (no description)
-- `customizeError: string` (no description)
+- `anyoneDescription: string`
+- `customizeError: string`
 - `groupPicker: string`
-- `groupsLead: string` (no description)
-- `limitToGroups: string` (no description)
-- `override: string` (no description)
+- `groupsLead: string`
+- `limitToGroups: string`
+- `override: string`
 - `overriding: string`
-- `platformDefaults: string` (no description)
-- `requirePassword: string` (no description)
-- `requirePasswordDescription: string` (no description)
+- `platformDefaults: string`
+- `requirePassword: string`
+- `requirePasswordDescription: string`
 - `security: string`
-- `signin: string` (no description)
-- `signinDescription: string` (no description)
-- `using: (link: ReactNode) => ReactNode` (no description)
-- `whoCanParticipate: string` (no description)
+- `signin: string`
+- `signinDescription: string`
+- `using: (link: ReactNode) => ReactNode`
+- `whoCanParticipate: string`
 
 ### `AccessRightsModal`
 
@@ -74,20 +74,20 @@ Component, from `src/patterns/AccessRights.tsx`.
 
 - `className?: string`
 - `defaultExpandedKeys?: Array<'security' | 'groups'>`
-- `defaultOpen?: boolean` (no description)
-- `defaultOverriding?: boolean` (no description)
+- `defaultOpen?: boolean`
+- `defaultOverriding?: boolean`
 - `defaultRequirePassword?: boolean`
 - `defaultWho?: AccessWho`
 - `groups?: string[]`
-- `isOpen?: boolean` (no description)
+- `isOpen?: boolean`
 - `isOverriding?: boolean`
 - `labels?: Partial<AccessRightsModalLabels>`
 - `onCustomizeError?: () => void`
-- `onOpenChange?: (isOpen: boolean) => void` (no description)
-- `onOverridingChange?: (isOverriding: boolean) => void` (no description)
+- `onOpenChange?: (isOpen: boolean) => void`
+- `onOverridingChange?: (isOverriding: boolean) => void`
 - `onPlatformDefaults?: () => void`
-- `onSave?: () => void` (no description)
-- `onWhoChange?: (who: AccessWho) => void` (no description)
+- `onSave?: () => void`
+- `onWhoChange?: (who: AccessWho) => void`
 - `style?: CSSProperties`
 - `title: string`
 - `who?: AccessWho`
@@ -105,32 +105,32 @@ AccessRightsModalLabels
 
 Interface, from `src/patterns/AccessRights.tsx`.
 
-- `admins: string` (no description)
-- `adminsDescription: string` (no description)
+- `admins: string`
+- `adminsDescription: string`
 - `adminsOnly: string`
-- `allParticipants: string` (no description)
+- `allParticipants: string`
 - `anyone: string`
-- `anyoneDescription: string` (no description)
+- `anyoneDescription: string`
 - `cancel: string`
 - `close: string`
 - `confirmRevert: string`
-- `customizeError: string` (no description)
+- `customizeError: string`
 - `groupPicker: string`
-- `groupsLead: string` (no description)
-- `limitToGroups: string` (no description)
-- `override: string` (no description)
+- `groupsLead: string`
+- `limitToGroups: string`
+- `override: string`
 - `overriding: string`
-- `platformDefaults: string` (no description)
-- `requirePassword: string` (no description)
-- `requirePasswordDescription: string` (no description)
+- `platformDefaults: string`
+- `requirePassword: string`
+- `requirePasswordDescription: string`
 - `revert: string`
-- `revertBody: string` (no description)
-- `save: string` (no description)
+- `revertBody: string`
+- `save: string`
 - `security: string`
-- `signin: string` (no description)
-- `signinDescription: string` (no description)
-- `using: (link: ReactNode) => ReactNode` (no description)
-- `whoCanParticipate: string` (no description)
+- `signin: string`
+- `signinDescription: string`
+- `using: (link: ReactNode) => ReactNode`
+- `whoCanParticipate: string`
 
 ### `AccessRightsModalProps`
 
@@ -162,7 +162,7 @@ Component, from `src/patterns/ActionRow.tsx`.
 - `labels?: Partial<ActionRowLabels>`
 - `menu?: ReactNode`
 - `menuLabel?: string`
-- `onPress?: () => void` (no description)
+- `onPress?: () => void`
 - `progress?: number`
 - `status?: 'idle' | 'working' | 'done'`
 - `style?: CSSProperties`
@@ -578,9 +578,9 @@ Component, from `src/patterns/OfficialUpdate.tsx`.
 
 - `className?: string`
 - `count: number`
-- `isOpen: boolean` (no description)
+- `isOpen: boolean`
 - `labels?: Partial<OfficialUpdateLabels>`
-- `onOpenChange: (isOpen: boolean) => void` (no description)
+- `onOpenChange: (isOpen: boolean) => void`
 - `onSend: (draft: OfficialUpdateDraft) => void`
 - `style?: CSSProperties`
 
@@ -1054,12 +1054,12 @@ Interface, from `src/components/gv/Coachmark.tsx`. The props of `Coachmark`, lis
 Component, from `src/patterns/CommentThread.tsx`.
 
 - `className?: string`
-- `fieldRef?: Ref<HTMLTextAreaElement>` (no description)
+- `fieldRef?: Ref<HTMLTextAreaElement>`
 - `isInternal?: boolean`
 - `labels?: Partial<CommentComposerLabels>`
 - `me: string`
-- `onCancelReply?: () => void` (no description)
-- `onPost: (text: string) => void` (no description)
+- `onCancelReply?: () => void`
+- `onPost: (text: string) => void`
 - `replyTo?: string`
 - `style?: CSSProperties`
 
@@ -1075,13 +1075,13 @@ CommentComposerLabels
 
 Interface, from `src/patterns/CommentThread.tsx`.
 
-- `cancelReply: string` (no description)
+- `cancelReply: string`
 - `field: string`
-- `internalField: string` (no description)
-- `internalPlaceholder: string` (no description)
-- `placeholder: string` (no description)
-- `post: string` (no description)
-- `replyTo: (author: string) => string` (no description)
+- `internalField: string`
+- `internalPlaceholder: string`
+- `placeholder: string`
+- `post: string`
+- `replyTo: (author: string) => string`
 - `replying: (author: string) => string`
 
 ### `CommentComposerProps`
@@ -1101,7 +1101,7 @@ Component, from `src/patterns/CommentThread.tsx`.
 - `onDelete?: (id: string, tab: ThreadTab) => void`
 - `onDismissWarning?: (id: string) => void`
 - `onPost?: (text: string, target: ThreadTarget) => void`
-- `onTabChange?: (tab: ThreadTab) => void` (no description)
+- `onTabChange?: (tab: ThreadTab) => void`
 - `style?: CSSProperties`
 - `tab?: ThreadTab`
 
@@ -1117,26 +1117,26 @@ CommentThreadLabels
 
 Interface, from `src/patterns/CommentThread.tsx`.
 
-- `cancelReply: string` (no description)
+- `cancelReply: string`
 - `comments: CountLabel`
 - `commentsList: string`
 - `conversation: string`
-- `delete: string` (no description)
-- `deleteComment: (author: string) => string` (no description)
-- `dismissWarning: string` (no description)
+- `delete: string`
+- `deleteComment: (author: string) => string`
+- `dismissWarning: string`
 - `field: string`
-- `internal: CountLabel` (no description)
-- `internalField: string` (no description)
-- `internalList: string` (no description)
-- `internalPlaceholder: string` (no description)
-- `new: string` (no description)
-- `noComments: string` (no description)
-- `noInternal: string` (no description)
-- `placeholder: string` (no description)
-- `post: string` (no description)
+- `internal: CountLabel`
+- `internalField: string`
+- `internalList: string`
+- `internalPlaceholder: string`
+- `new: string`
+- `noComments: string`
+- `noInternal: string`
+- `placeholder: string`
+- `post: string`
 - `repliesTo: (author: string) => string`
 - `reply: string`
-- `replyTo: (author: string) => string` (no description)
+- `replyTo: (author: string) => string`
 - `replying: (author: string) => string`
 - `warning: (found: string) => string`
 
@@ -1173,7 +1173,7 @@ CommonGroundRowLabels
 Interface, from `src/patterns/CommonGroundRow.tsx`.
 
 - `needsAttention: string`
-- `new: string` (no description)
+- `new: string`
 - `select: string`
 
 ### `CommonGroundRowProps`
@@ -1884,14 +1884,14 @@ Component, from `src/patterns/FilterChips.tsx`.
 
 - `aria-label?: string`
 - `className?: string`
-- `facets: FilterFacet[]` (no description)
+- `facets: FilterFacet[]`
 - `labels?: Partial<FilterChipsLabels>`
 - `metric?: string`
-- `onChange: (value: FilterValue) => void` (no description)
+- `onChange: (value: FilterValue) => void`
 - `onMetricRemove?: () => void`
 - `showClear?: boolean`
 - `style?: CSSProperties`
-- `value: FilterValue` (no description)
+- `value: FilterValue`
 
 ### `filterChipsLabels`
 
@@ -1905,7 +1905,7 @@ FilterChipsLabels
 
 Interface, from `src/patterns/FilterChips.tsx`.
 
-- `clear: string` (no description)
+- `clear: string`
 - `filters: string`
 - `operator: CountLabel`
 - `remove: (name: string) => string`
@@ -1919,10 +1919,10 @@ Interface, from `src/patterns/FilterChips.tsx`. The props of `FilterChips`, list
 Interface, from `src/patterns/FilterMenu.tsx`.
 
 - `icon: ReactNode`
-- `id: string` (no description)
+- `id: string`
 - `isSearchable?: boolean`
 - `items: OptionListItem[]`
-- `label: string` (no description)
+- `label: string`
 
 ### `FilterMenu`
 
@@ -1932,11 +1932,11 @@ Component, from `src/patterns/FilterMenu.tsx`.
 - `className?: string`
 - `countLabel?: (n: number) => string`
 - `defaultOpen?: boolean`
-- `facets: FilterFacet[]` (no description)
+- `facets: FilterFacet[]`
 - `labels?: Partial<FilterMenuLabels>`
-- `onChange: (value: FilterValue) => void` (no description)
+- `onChange: (value: FilterValue) => void`
 - `style?: CSSProperties`
-- `value: FilterValue` (no description)
+- `value: FilterValue`
 
 ### `filterMenuLabels`
 
@@ -1951,7 +1951,7 @@ FilterMenuLabels
 Interface, from `src/patterns/FilterMenu.tsx`.
 
 - `active: (label: string, count: number, formatted: string) => string`
-- `clearAll: string` (no description)
+- `clearAll: string`
 - `done: string`
 - `empty: string`
 - `filter: string`
@@ -3101,19 +3101,19 @@ Component, from `src/patterns/NotificationRow.tsx`.
 
 - `buttonText?: string`
 - `className?: string`
-- `defaultSelected?: boolean` (no description)
-- `introduction?: string` (no description)
+- `defaultSelected?: boolean`
+- `introduction?: string`
 - `isSelected?: boolean`
 - `labels?: Partial<NotificationEmailLabels>`
 - `name: string`
 - `onBack?: () => void`
-- `onChange?: (isSelected: boolean) => void` (no description)
+- `onChange?: (isSelected: boolean) => void`
 - `replyTo?: string`
 - `style?: CSSProperties`
-- `subject?: string` (no description)
+- `subject?: string`
 - `title?: string`
-- `when: ReactNode` (no description)
-- `who: ReactNode` (no description)
+- `when: ReactNode`
+- `who: ReactNode`
 
 ### `notificationEmailLabels`
 
@@ -3129,17 +3129,17 @@ Interface, from `src/patterns/NotificationRow.tsx`.
 
 - `back: string`
 - `bold: string`
-- `buttonText: string` (no description)
+- `buttonText: string`
 - `image: string`
-- `introduction: string` (no description)
-- `introductionPlaceholder: string` (no description)
+- `introduction: string`
+- `introductionPlaceholder: string`
 - `italic: string`
 - `link: string`
 - `list: string`
 - `replyTo: string`
 - `send: string`
-- `subject: string` (no description)
-- `title: string` (no description)
+- `subject: string`
+- `title: string`
 - `toolbar: string`
 - `video: string`
 
@@ -3153,8 +3153,8 @@ Interface, from `src/patterns/NotificationList.tsx`.
 
 - `href?: string`
 - `icon?: ReactNode`
-- `id: string` (no description)
-- `isUnread?: boolean` (no description)
+- `id: string`
+- `isUnread?: boolean`
 - `text: ReactNode`
 - `time: string`
 
@@ -3164,7 +3164,7 @@ Component, from `src/patterns/NotificationList.tsx`.
 
 - `className?: string`
 - `emptyLabel?: string`
-- `items: NotificationItem[]` (no description)
+- `items: NotificationItem[]`
 - `labels?: Partial<NotificationListLabels>`
 - `onMarkAllRead?: () => void`
 - `style?: CSSProperties`
@@ -3183,7 +3183,7 @@ NotificationListLabels
 Interface, from `src/patterns/NotificationList.tsx`.
 
 - `empty: string`
-- `markAllRead: string` (no description)
+- `markAllRead: string`
 - `title: string`
 - `unread: string`
 
@@ -3197,10 +3197,10 @@ Component, from `src/patterns/NotificationRow.tsx`.
 
 - `children: string`
 - `className?: string`
-- `defaultSelected?: boolean` (no description)
+- `defaultSelected?: boolean`
 - `isSelected?: boolean`
 - `labels?: Partial<NotificationRowLabels>`
-- `onChange?: (isSelected: boolean) => void` (no description)
+- `onChange?: (isSelected: boolean) => void`
 - `onOpen?: () => void`
 - `style?: CSSProperties`
 - `when: ReactNode`
@@ -3288,13 +3288,13 @@ Component, from `src/patterns/OfficialUpdate.tsx`.
 Interface, from `src/patterns/OfficialUpdate.tsx`.
 
 - `name: string`
-- `text: string` (no description)
+- `text: string`
 
 ### `OfficialUpdateForm`
 
 Component, from `src/patterns/OfficialUpdate.tsx`.
 
-- `autoFocus?: boolean` (no description)
+- `autoFocus?: boolean`
 - `className?: string`
 - `id?: string`
 - `labels?: Partial<OfficialUpdateLabels>`
@@ -3320,11 +3320,11 @@ Interface, from `src/patterns/OfficialUpdate.tsx`.
 
 - `close: string`
 - `name: string`
-- `namePlaceholder: string` (no description)
+- `namePlaceholder: string`
 - `placeholder: string`
 - `publish: string`
 - `reach: CountLabel`
-- `send: string` (no description)
+- `send: string`
 - `team: string`
 - `title: string`
 
@@ -3497,9 +3497,9 @@ Interface, from `src/components/gv/Panel.tsx`. The props of `Panel`, listed ther
 Component, from `src/patterns/PanelSection.tsx`.
 
 - `aside?: ReactNode`
-- `children: ReactNode` (no description)
+- `children: ReactNode`
 - `className?: string`
-- `defaultExpanded?: boolean` (no description)
+- `defaultExpanded?: boolean`
 - `headingLevel?: 2 | 3 | 4`
 - `isCollapsible?: boolean`
 - `style?: CSSProperties`
@@ -3514,7 +3514,7 @@ Interface, from `src/patterns/PanelSection.tsx`. The props of `PanelSection`, li
 Component, from `src/patterns/ParticipantActionRow.tsx`.
 
 - `aria-label?: string`
-- `children: ReactNode` (no description)
+- `children: ReactNode`
 - `className?: string`
 - `labels?: Partial<ParticipantActionListLabels>`
 - `style?: CSSProperties`
@@ -3548,7 +3548,7 @@ Component, from `src/patterns/ParticipantActionRow.tsx`.
 - `isLocked?: boolean`
 - `isSelected?: boolean`
 - `labels?: Partial<ParticipantActionRowLabels>`
-- `onChange?: (isSelected: boolean) => void` (no description)
+- `onChange?: (isSelected: boolean) => void`
 - `onOpen?: () => void`
 - `options?: ReactNode`
 - `style?: CSSProperties`
@@ -3582,7 +3582,7 @@ Component, from `src/patterns/ParticipantActionRow.tsx`.
 - `defaultMax?: number`
 - `label?: string`
 - `labels?: Partial<ParticipantLimitLabels>`
-- `onChange?: (limit: 'unlimited' | 'limited', max: number) => void` (no description)
+- `onChange?: (limit: 'unlimited' | 'limited', max: number) => void`
 - `style?: CSSProperties`
 
 ### `participantLimitLabels`
@@ -3598,9 +3598,9 @@ ParticipantLimitLabels
 Interface, from `src/patterns/ParticipantActionRow.tsx`.
 
 - `limit: string`
-- `limited: string` (no description)
+- `limited: string`
 - `max: string`
-- `unlimited: string` (no description)
+- `unlimited: string`
 
 ### `ParticipantLimitProps`
 
@@ -3612,7 +3612,7 @@ Component, from `src/patterns/PhaseTimeline.tsx`.
 
 - `className?: string`
 - `labels?: Partial<PhaseTimelineLabels>`
-- `phases: TimelinePhase[]` (no description)
+- `phases: TimelinePhase[]`
 - `style?: CSSProperties`
 
 ### `phaseTimelineLabels`
@@ -3629,10 +3629,10 @@ Interface, from `src/patterns/PhaseTimeline.tsx`.
 
 - `delete: (title?: string) => string`
 - `deletePhase: string`
-- `done: string` (no description)
-- `inProgress: string` (no description)
+- `done: string`
+- `inProgress: string`
 - `new: CountLabel`
-- `upcoming: string` (no description)
+- `upcoming: string`
 
 ### `PhaseTimelineProps`
 
@@ -3642,7 +3642,7 @@ Interface, from `src/patterns/PhaseTimeline.tsx`. The props of `PhaseTimeline`, 
 
 Component, from `src/patterns/PhonePreview.tsx`.
 
-- `children: ReactNode` (no description)
+- `children: ReactNode`
 - `className?: string`
 - `style?: CSSProperties`
 
@@ -3695,7 +3695,7 @@ Component, from `src/patterns/PhonePreview.tsx`.
 
 - `action?: PhonePreviewAction`
 - `aria-label: string`
-- `children?: ReactNode` (no description)
+- `children?: ReactNode`
 - `className?: string`
 - `emptyLabel?: string`
 - `footer?: ReactNode`
@@ -3709,10 +3709,10 @@ Component, from `src/patterns/PhonePreview.tsx`.
 
 Interface, from `src/patterns/PhonePreview.tsx`.
 
-- `href?: string` (no description)
+- `href?: string`
 - `isExternal?: boolean`
 - `label: string`
-- `onPress?: () => void` (no description)
+- `onPress?: () => void`
 
 ### `phonePreviewLabels`
 
@@ -3766,7 +3766,7 @@ Component, from `src/patterns/OfficialUpdate.tsx`.
 - `date?: string`
 - `labels?: Partial<OfficialUpdateLabels>`
 - `style?: CSSProperties`
-- `text: ReactNode` (no description)
+- `text: ReactNode`
 
 ### `PostedOfficialUpdateProps`
 
@@ -3778,8 +3778,8 @@ Interface, from `src/patterns/OfficialUpdate.tsx`.
 
 - `by?: string`
 - `date?: string`
-- `id: string` (no description)
-- `text: ReactNode` (no description)
+- `id: string`
+- `text: ReactNode`
 
 ### `ProjectHeader`
 
@@ -3791,9 +3791,9 @@ Component, from `src/patterns/ProjectHeader.tsx`.
 - `level?: 'project' | 'phase'`
 - `mode?: string`
 - `modes?: ProjectHeaderMode[]`
-- `onBack?: () => void` (no description)
-- `onModeChange?: (id: string) => void` (no description)
-- `onParentPress?: () => void` (no description)
+- `onBack?: () => void`
+- `onModeChange?: (id: string) => void`
+- `onParentPress?: () => void`
 - `onSave?: () => void`
 - `onTogglePanel?: () => void`
 - `parentHref?: string`
@@ -3823,21 +3823,21 @@ Interface, from `src/patterns/ProjectHeader.tsx`.
 - `breadcrumb: string`
 - `draft: string`
 - `live: string`
-- `phaseView: string` (no description)
+- `phaseView: string`
 - `projects: string`
-- `publish: string` (no description)
+- `publish: string`
 - `save: string`
-- `share: string` (no description)
+- `share: string`
 - `toggleSetup: string`
-- `toggleTimeline: string` (no description)
+- `toggleTimeline: string`
 
 ### `ProjectHeaderMode`
 
 Interface, from `src/patterns/ProjectHeader.tsx`.
 
-- `id: string` (no description)
+- `id: string`
 - `isDisabled?: boolean`
-- `label: string` (no description)
+- `label: string`
 
 ### `ProjectHeaderProps`
 
@@ -3971,17 +3971,17 @@ Interface, from `src/components/gv/PropertyList.tsx`. The props of `PropertyList
 Component, from `src/patterns/ProposalsRow.tsx`.
 
 - `className?: string`
-- `commentCount: number` (no description)
+- `commentCount: number`
 - `daysLeft?: number`
 - `hasWarning?: boolean`
-- `isClosed?: boolean` (no description)
+- `isClosed?: boolean`
 - `labels?: Partial<ProposalsRowLabels>`
 - `newCommentCount?: number`
 - `statusLabel: string`
 - `style?: CSSProperties`
-- `thumbnail?: string` (no description)
-- `title: string` (no description)
-- `voteCount: number` (no description)
+- `thumbnail?: string`
+- `title: string`
+- `voteCount: number`
 - `voteThreshold: number`
 
 ### `proposalsRowLabels`
@@ -3997,7 +3997,7 @@ ProposalsRowLabels
 Interface, from `src/patterns/ProposalsRow.tsx`.
 
 - `closed: string`
-- `daysLeft: CountLabel` (no description)
+- `daysLeft: CountLabel`
 - `needsAttention: string`
 - `new: CountLabel`
 - `of: (threshold: string) => string`
@@ -4067,8 +4067,8 @@ RailHeaderLabels
 
 Interface, from `src/patterns/RailHeader.tsx`.
 
-- `add: string` (no description)
-- `togglePanel: string` (no description)
+- `add: string`
+- `togglePanel: string`
 
 ### `RailHeaderProps`
 
@@ -4080,13 +4080,13 @@ Component, from `src/patterns/RailPhase.tsx`.
 
 - `chip?: ReactNode`
 - `className?: string`
-- `href?: string` (no description)
+- `href?: string`
 - `isCurrent?: boolean`
 - `labels?: Partial<RailPhaseLabels>`
 - `meta?: ReactNode`
 - `newCount?: number`
 - `onDelete?: () => void`
-- `onPress?: () => void` (no description)
+- `onPress?: () => void`
 - `status: RailPhaseStatus`
 - `statusLabel?: ReactNode`
 - `style?: CSSProperties`
@@ -4373,9 +4373,9 @@ Component, from `src/patterns/SectionToggle.tsx`.
 - `className?: string`
 - `description?: string`
 - `isDisabled?: boolean`
-- `isSelected: boolean` (no description)
+- `isSelected: boolean`
 - `labels?: Partial<SectionToggleLabels>`
-- `onChange: (isSelected: boolean) => void` (no description)
+- `onChange: (isSelected: boolean) => void`
 - `style?: CSSProperties`
 - `title: string`
 
@@ -4391,7 +4391,7 @@ SectionToggleLabels
 
 Interface, from `src/patterns/SectionToggle.tsx`.
 
-- `hidden: string` (no description)
+- `hidden: string`
 - `show: string`
 - `showTitle: (title: string) => string`
 - `shown: string`
@@ -4469,8 +4469,8 @@ type Selection = 'all' | Set<Key>
 Interface, from `src/patterns/SelectionBar.tsx`.
 
 - `icon?: ReactNode`
-- `id: string` (no description)
-- `label: string` (no description)
+- `id: string`
+- `label: string`
 - `menu?: ReactElement`
 - `onPress?: () => void`
 
@@ -4486,7 +4486,7 @@ Component, from `src/patterns/SelectionBar.tsx`.
 - `labels?: Partial<SelectionBarLabels>`
 - `onAction?: (id: string) => void`
 - `onClear: () => void`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 
 ### `selectionBarLabels`
 
@@ -4570,10 +4570,10 @@ Component, from `src/patterns/SetupStep.tsx`.
 - `className?: string`
 - `defaultExpanded?: boolean`
 - `isDone?: boolean`
-- `isExpanded?: boolean` (no description)
+- `isExpanded?: boolean`
 - `kind?: 'open' | 'expand' | 'pick'`
 - `labels?: Partial<SetupStepLabels>`
-- `onExpandedChange?: (isExpanded: boolean) => void` (no description)
+- `onExpandedChange?: (isExpanded: boolean) => void`
 - `onPress?: () => void`
 - `picker?: ReactNode`
 - `pickerKind?: 'dialog' | 'menu'`
@@ -4603,8 +4603,8 @@ Interface, from `src/patterns/SetupStep.tsx`. The props of `SetupStep`, listed t
 
 Component, from `src/patterns/SideNav.tsx`.
 
-- `aria-label: string` (no description)
-- `children: ReactNode` (no description)
+- `aria-label: string`
+- `children: ReactNode`
 - `className?: string`
 - `isFolded?: boolean`
 - `style?: CSSProperties`
@@ -4640,9 +4640,9 @@ type SideNavButtonProps = RowContent & Omit<RACButtonProps, 'children' | 'classN
 
 Component, from `src/patterns/SideNav.tsx`.
 
-- `children: ReactNode` (no description)
+- `children: ReactNode`
 - `className?: string`
-- `isAtBottom?: boolean` (no description)
+- `isAtBottom?: boolean`
 - `style?: CSSProperties`
 
 ### `SideNavGroupProps`
@@ -4655,7 +4655,7 @@ Component, from `src/patterns/SideNav.tsx`.
 
 - `children?: string`
 - `className?: string`
-- `href: string` (no description)
+- `href: string`
 - `labels?: Partial<SideNavHomeLabels>`
 - `style?: CSSProperties`
 
@@ -4686,7 +4686,7 @@ Component, from `src/patterns/SideNav.tsx`.
 - `countLabel?: string`
 - `hasAccentIcon?: boolean`
 - `hasMenu?: boolean`
-- `href: string` (no description)
+- `href: string`
 - `icon: ReactNode`
 - `isCurrent?: boolean`
 - `label: string`
@@ -5336,11 +5336,11 @@ Interface, from `src/components/gv/Text.tsx`. The props of `Text`, listed there.
 Interface, from `src/patterns/CommentThread.tsx`.
 
 - `author: string`
-- `id: string` (no description)
+- `id: string`
 - `initials?: string`
 - `isNew?: boolean`
 - `replies?: ThreadComment[]`
-- `text: ReactNode` (no description)
+- `text: ReactNode`
 - `time: string`
 - `warning?: string`
 
@@ -5384,11 +5384,11 @@ Interface, from `src/patterns/PhaseTimeline.tsx`.
 - `count?: string`
 - `dates: string`
 - `fresh?: number`
-- `href?: string` (no description)
-- `id: string` (no description)
+- `href?: string`
+- `id: string`
 - `isCurrent?: boolean`
 - `method: string`
-- `status: TimelineStatus` (no description)
+- `status: TimelineStatus`
 - `title: string`
 
 ### `TimelineStatus`
@@ -5558,7 +5558,7 @@ Function, from `src/components/gv/MultilingualTextField.tsx`.
 Component, from `src/patterns/ViewOptionRow.tsx`.
 
 - `aria-label?: string`
-- `children: ReactNode` (no description)
+- `children: ReactNode`
 - `className?: string`
 - `labels?: Partial<ViewOptionListLabels>`
 - `style?: CSSProperties`
@@ -5593,7 +5593,7 @@ Component, from `src/patterns/ViewOptionRow.tsx`.
 - `isDefault?: boolean`
 - `isSelected?: boolean`
 - `labels?: Partial<ViewOptionRowLabels>`
-- `onChange?: (isSelected: boolean) => void` (no description)
+- `onChange?: (isSelected: boolean) => void`
 - `onMakeDefault?: () => void`
 - `options?: ReactNode`
 - `style?: CSSProperties`
@@ -5612,7 +5612,7 @@ Interface, from `src/patterns/ViewOptionRow.tsx`.
 
 - `alwaysEnabled: string`
 - `default: string`
-- `makeDefault: string` (no description)
+- `makeDefault: string`
 
 ### `ViewOptionRowProps`
 
@@ -5660,11 +5660,11 @@ VolunteeringRowLabels
 
 Interface, from `src/patterns/VolunteeringRow.tsx`.
 
-- `delete: (title: string) => string` (no description)
-- `deleteTip: string` (no description)
+- `delete: (title: string) => string`
+- `deleteTip: string`
 - `edit: (title: string) => string`
-- `editTip: string` (no description)
-- `noSignUps: string` (no description)
+- `editTip: string`
+- `noSignUps: string`
 - `signedUp: CountLabel`
 - `volunteers: CountLabel`
 
@@ -5686,7 +5686,7 @@ Interface, from `src/patterns/VoteProgress.tsx`.
 
 - `className?: string`
 - `count: number`
-- `kind: 'count'` (no description)
+- `kind: 'count'`
 - `label: string`
 - `labels?: Partial<VoteProgressLabels>`
 - `maxCount: number`
@@ -5725,7 +5725,7 @@ Interface, from `src/patterns/VoteProgress.tsx`.
 
 - `className?: string`
 - `count: number`
-- `kind: 'threshold'` (no description)
+- `kind: 'threshold'`
 - `label: string`
 - `labels?: Partial<VoteProgressLabels>`
 - `style?: CSSProperties`
@@ -5739,18 +5739,18 @@ Interface, from `src/patterns/VoteProgress.tsx`.
 Component, from `src/patterns/VotingRow.tsx`.
 
 - `className?: string`
-- `commentCount: number` (no description)
+- `commentCount: number`
 - `fillPercent: number`
 - `hasWarning?: boolean`
 - `labels?: Partial<VotingRowLabels>`
 - `newCommentCount?: number`
 - `newVoteCount?: number`
-- `offlineCount: number` (no description)
-- `onlineCount: number` (no description)
+- `offlineCount: number`
+- `onlineCount: number`
 - `style?: CSSProperties`
-- `thumbnail?: string` (no description)
-- `title: string` (no description)
-- `voteCount: number` (no description)
+- `thumbnail?: string`
+- `title: string`
+- `voteCount: number`
 
 ### `votingRowLabels`
 

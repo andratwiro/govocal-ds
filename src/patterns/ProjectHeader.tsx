@@ -20,6 +20,7 @@ export interface ProjectHeaderLabels extends Pick<BreadcrumbsLabels, 'live' | 'd
   breadcrumb: string;
   /** The panel toggle's name: project setup on the project, the timeline on a phase. */
   toggleSetup: string;
+  /** The panel toggle's name on a phase: the timeline. */
   toggleTimeline: string;
   /** A phase's ← name, given the project's name. */
   backToProject: (project: string) => string;
@@ -27,8 +28,11 @@ export interface ProjectHeaderLabels extends Pick<BreadcrumbsLabels, 'live' | 'd
   projects: string;
   /** The bar's buttons and the mode switch's name. */
   save: string;
+  /** The Share menu button (project level). */
   share: string;
+  /** The Publish menu button, while the project is a draft. */
   publish: string;
+  /** The mode switch's name (Build, Manage, Insights). */
   phaseView: string;
 }
 
@@ -48,7 +52,9 @@ export const projectHeaderLabels: ProjectHeaderLabels = {
 };
 
 export interface ProjectHeaderMode {
+  /** The mode's key, handed to `onModeChange` and matched by `mode`. */
   id: string;
+  /** The mode's name on the switch ("Build"). */
   label: string;
   /** A mode that can't open yet (Manage and Insights before a phase is published). */
   isDisabled?: boolean;
@@ -75,9 +81,11 @@ export interface ProjectHeaderProps extends PlacementProps {
   parentLabel?: string;
   /** Where the parent crumb leads (a link), or what it does (a press). */
   parentHref?: string;
+  /** Fires when the parent crumb is pressed. */
   onParentPress?: () => void;
   /** Phase levels: the project link and the ← arrow. */
   projectHref?: string;
+  /** Fires when the ← arrow or the project link on a phase is pressed. */
   onBack?: () => void;
   /** The panel toggle (the rail on a phase, project setup on the project). On the project level it shows only when given. */
   onTogglePanel?: () => void;
@@ -92,6 +100,7 @@ export interface ProjectHeaderProps extends PlacementProps {
   modes?: ProjectHeaderMode[];
   /** The selected mode's id. */
   mode?: string;
+  /** Fires when another mode is picked, with its id. */
   onModeChange?: (id: string) => void;
   /** Who is here, before the actions: an `Avatar`, or an `AvatarGroup` when others edit the same phase. */
   people?: ReactNode;

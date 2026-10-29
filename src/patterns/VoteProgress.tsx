@@ -26,6 +26,7 @@ interface VoteProgressBase
 }
 
 export interface VoteProgressThresholdProps extends VoteProgressBase {
+  /** Shows the votes against a target to reach (a proposal's threshold). */
   kind: 'threshold';
   /** Votes gathered so far. */
   count: number;
@@ -34,6 +35,7 @@ export interface VoteProgressThresholdProps extends VoteProgressBase {
 }
 
 export interface VoteProgressCountProps extends VoteProgressBase {
+  /** Shows the votes against the leading option's (a voting option's count). */
   kind: 'count';
   /** Votes gathered so far. */
   count: number;
@@ -45,6 +47,7 @@ export interface VoteProgressCountProps extends VoteProgressBase {
 
 export type VoteProgressProps = VoteProgressThresholdProps | VoteProgressCountProps;
 
+/** A vote count with a bar: against a threshold (proposals) or scaled to the leading option (voting). For other measures, use `Meter`. */
 export function VoteProgress(props: VoteProgressProps) {
   const number = useNumberFormatter();
   if (props.kind === 'threshold') {

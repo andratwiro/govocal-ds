@@ -12,11 +12,15 @@ import './VolunteeringRow.css';
 export interface VolunteeringRowLabels {
   /** Build: how many signed up, and the line while nobody has. */
   signedUp: CountLabel;
+  /** The line under the title in Build while nobody has signed up. */
   noSignUps: string;
   /** Build: the Edit and Delete buttons' names, given the cause's title, and their tooltips. */
   edit: (title: string) => string;
+  /** The Delete button's name, given the cause's title. */
   delete: (title: string) => string;
+  /** The Edit button's tooltip. */
   editTip: string;
+  /** The Delete button's tooltip. */
   deleteTip: string;
   /** Manage: the word under the count ("volunteers"); the count itself is drawn above it. */
   volunteers: CountLabel;
@@ -87,6 +91,7 @@ function Action({
   );
 }
 
+/** One volunteering cause in a list: its progress and volunteer count, or in Build its sign-ups with Edit and Delete. For ideas, use `ProposalsRow`. */
 export function VolunteeringRow({
   title,
   description,

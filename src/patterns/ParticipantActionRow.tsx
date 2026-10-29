@@ -28,7 +28,9 @@ export const participantActionRowLabels: ParticipantActionRowLabels = {
 export interface ParticipantLimitLabels {
   /** The choice's label, when no `label` is given. */
   limit: string;
+  /** The choice with no maximum. */
   unlimited: string;
+  /** The choice that reveals the maximum. */
   limited: string;
   /** The maximum's label. */
   max: string;
@@ -70,6 +72,7 @@ export interface ParticipantActionRowProps extends PlacementProps {
   isSelected?: boolean;
   /** @default true */
   defaultSelected?: boolean;
+  /** Fires when the switch turns the action on or off, with the new state. */
   onChange?: (isSelected: boolean) => void;
   /** Opens who can take it (Access rights). Without it the row is a plain switch and label (Disliking). */
   onOpen?: () => void;
@@ -145,6 +148,7 @@ export interface ParticipantLimitProps extends PlacementProps {
   defaultLimit?: 'unlimited' | 'limited';
   /** @default 5 */
   defaultMax?: number;
+  /** Fires when the choice or the maximum changes, with both. */
   onChange?: (limit: 'unlimited' | 'limited', max: number) => void;
   /** Its own words (the choices, the maximum's label), over `participantLimitLabels`. */
   labels?: Partial<ParticipantLimitLabels>;
@@ -195,6 +199,7 @@ export function ParticipantLimit({
 
 /** The actions, one row each (a phase's Participant actions card). */
 export interface ParticipantActionListProps extends PlacementProps {
+  /** The rows: one Participant action row each. */
   children: ReactNode;
   /** @default `labels.actions` ("Participant actions") */
   'aria-label'?: string;

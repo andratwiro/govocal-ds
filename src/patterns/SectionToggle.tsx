@@ -10,6 +10,7 @@ import './SectionToggle.css';
 export interface SectionToggleLabels {
   /** The status badge, on and off. */
   shown: string;
+  /** The status badge when the section is off. */
   hidden: string;
   /** The switch's visible word. */
   show: string;
@@ -30,7 +31,9 @@ export interface SectionToggleProps extends PlacementProps {
   title: string;
   /** A short line about what the section shows. */
   description?: string;
+  /** Whether the section is shown on the page (controlled). */
   isSelected: boolean;
+  /** Fires when the switch is flipped, with the new state. */
   onChange: (isSelected: boolean) => void;
   /** Sections that can't be turned off (the homepage banner) keep the switch on and off-limits. */
   isDisabled?: boolean;

@@ -15,6 +15,7 @@ export interface ProposalsRowLabels extends VoteProgressLabels {
   votesFor: (title: string) => string;
   /** The time left, once voting has ended and before. */
   closed: string;
+  /** The time-left cell while voting is open, given the days left. */
   daysLeft: CountLabel;
 }
 
@@ -28,20 +29,25 @@ export const proposalsRowLabels: ProposalsRowLabels = {
 };
 
 export interface ProposalsRowProps extends PlacementProps {
+  /** The proposal's title. */
   title: string;
+  /** The proposal's picture, before the title. None when omitted. */
   thumbnail?: string;
   /** Shows the warning mark next to the title. */
   hasWarning?: boolean;
+  /** Votes gathered so far, against `voteThreshold`. */
   voteCount: number;
   /** The threshold needed before an official response is triggered. */
   voteThreshold: number;
   /** A short status, e.g. "Gathering support", "Threshold reached", "Official response". */
   statusLabel: string;
+  /** How many comments the proposal has. */
   commentCount: number;
   /** Unseen comments since the admin's last visit. */
   newCommentCount?: number;
   /** "N days left", or omit and set `isClosed` once voting has ended. */
   daysLeft?: number;
+  /** Voting has ended: the time-left cell says "Closed" in place of the days. */
   isClosed?: boolean;
   /** Its own words (the warning's and the bar's names, "N new", the time left), over `proposalsRowLabels`. */
   labels?: Partial<ProposalsRowLabels>;
