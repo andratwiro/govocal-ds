@@ -75,7 +75,7 @@
 .gv-drop-zone-text {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: var(--gv-space-1);
   font: var(--gv-type-ui);
   letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-secondary);

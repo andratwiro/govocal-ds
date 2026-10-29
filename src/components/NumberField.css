@@ -41,7 +41,7 @@
   }
 
   .react-aria-NumberField-field[data-has-prefix] .react-aria-Input {
-    padding-inline-start: calc(var(--spacing-3) + 14px);
+    padding-inline-start: calc(var(--spacing-3) + var(--gv-space-14));
   }
 
   .react-aria-Group {
