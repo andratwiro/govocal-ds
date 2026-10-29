@@ -3,7 +3,8 @@ import AxeBuilder from '@axe-core/playwright';
 import {a11yReport} from './axe';
 
 // A project's own overview (#/projects/:id), after the prototype's live project screen:
-// Project setup | Participation rail | the resident's phone preview, under a breadcrumb bar.
+// Project setup | Participation rail | the resident's phone preview, under a breadcrumb bar. The setup column is a
+// Panel (a region named by its heading, the cog in its head), so it is found as a region, no longer a complementary.
 const URL = '/backoffice/#/projects/green-corridors';
 
 test('the overview has its own route, heading and breadcrumb', async ({page}) => {
@@ -62,7 +63,8 @@ test('clicking a phase opens the phase screen, which leads back to the overview'
 
 test('collecting now, next actions and the folded project details', async ({page}) => {
   await page.goto(URL);
-  const setup = page.getByRole('complementary', {name: 'Project setup'});
+  const setup = page.getByRole('region', {name: 'Project setup'});
+  await expect(setup.getByRole('heading', {level: 2, name: 'Project setup'})).toBeVisible();
   await expect(setup.getByRole('button', {name: /Participants.*215/})).toBeVisible();
   await expect(setup.getByText('Weekly, since 10 Aug')).toBeVisible();
   await expect(setup.getByRole('link', {name: 'Message participants'})).toHaveAttribute('href', '#/messaging');
@@ -74,6 +76,9 @@ test('collecting now, next actions and the folded project details', async ({page
   await expect(setup.getByText('Visibility', {exact: true})).toBeHidden();
   await details.click();
   await expect(details).toHaveAttribute('aria-expanded', 'true');
+  // The details are a Property list: each label with its value.
+  const list = setup.locator('dl.gv-property-list');
+  await expect(list.getByRole('term')).toHaveText(['Dates', 'Folder', 'Visibility', 'Managers']);
   await expect(setup.getByText('Visibility', {exact: true})).toBeVisible();
   await expect(setup.getByText('Folder', {exact: true})).toBeVisible();
   await setup.getByRole('link', {name: 'Message participants'}).click();
@@ -81,8 +86,11 @@ test('collecting now, next actions and the folded project details', async ({page
 });
 
 test('a draft project keeps the publish checklist', async ({page}) => {
+  // From a live project's overview straight to a draft one's: the status starts afresh.
+  await page.goto(URL);
   await page.goto('/backoffice/#/projects/harbour-plan');
   await expect(page.getByRole('heading', {name: 'Before you publish'})).toBeVisible();
+  await expect(page.getByRole('button', {name: 'Draft: change status'})).toBeVisible();
 });
 
 test('the phone preview shows what a resident sees', async ({page}) => {
@@ -138,6 +146,10 @@ test('the header menus: View hides and shows the columns, Share invites, status 
   await page.getByRole('menuitem', {name: 'Invite people'}).click();
   await expect(page.getByRole('dialog', {name: 'Invite people'}).getByRole('textbox', {name: 'Email'})).toBeVisible();
   await page.getByRole('button', {name: 'Cancel'}).click();
+  // Copy link is done at once: a Toast says so.
+  await page.getByRole('button', {name: 'Share'}).click();
+  await page.getByRole('menuitem', {name: 'Copy link'}).click();
+  await expect(page.getByText('Link copied')).toBeVisible();
 
   // A published project, one week in: the next step is to archive it, after a confirmation.
   await page.getByRole('button', {name: 'Live: change status'}).click();
@@ -145,11 +157,21 @@ test('the header menus: View hides and shows the columns, Share invites, status 
   const confirm = page.getByRole('alertdialog', {name: 'Archive project?'});
   await confirm.getByRole('button', {name: 'Archive project'}).click();
   await expect(page.getByRole('button', {name: 'Archived: change status'})).toBeVisible();
+  await expect(page.getByText('Project archived')).toBeVisible();
+});
+
+test('the rail header hides the rail; the folded rail brings it back', async ({page}) => {
+  await page.goto(URL);
+  const rail = page.getByRole('complementary', {name: 'Participation'});
+  await rail.getByRole('button', {name: 'Hide the participation rail'}).click();
+  await expect(page.getByRole('navigation', {name: 'Phases'})).toHaveCount(0);
+  await page.getByRole('button', {name: 'Show the participation rail'}).click();
+  await expect(page.getByRole('navigation', {name: 'Phases'})).toBeVisible();
 });
 
 test('the settings cog opens the project settings, tab by tab', async ({page}) => {
   await page.goto(URL);
-  await page.getByRole('complementary', {name: 'Project setup'}).getByRole('button', {name: 'Project settings'}).click();
+  await page.getByRole('region', {name: 'Project setup'}).getByRole('button', {name: 'Project settings'}).click();
   const dialog = page.getByRole('dialog', {name: 'Project settings'});
   const tabs = dialog.getByRole('tablist', {name: 'Project settings'});
   for (const t of ['General', 'Project page', 'Input tags', 'Access rights', 'Audience', 'Messaging', 'Files', 'Events'])

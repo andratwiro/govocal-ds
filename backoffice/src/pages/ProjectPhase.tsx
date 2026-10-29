@@ -23,7 +23,6 @@ import {Avatar} from '../../../src/components/gv/Avatar';
 import {Banner} from '../../../src/components/gv/Banner';
 import {Card} from '../../../src/components/gv/Card';
 import {DateRangeField} from '../../../src/components/gv/DateRangeField';
-import {Divider} from '../../../src/components/gv/Divider';
 import {DropZone} from '../../../src/components/gv/DropZone';
 import {FileList, type FileListItemData} from '../../../src/components/gv/FileList';
 import {ProjectHeader} from '../../../src/patterns/ProjectHeader';
@@ -47,6 +46,7 @@ import {SelectionBar, type SelectionAction} from '../../../src/patterns/Selectio
 import {Gap} from '../Gap';
 import {ME, METHODS, PROJECTS, type Method, type Phase, type Project} from '../data';
 import {IDEAS, IDEA_ASSIGNEES, IDEA_REPLIES, IDEA_SOURCES, IDEA_STATUSES, IDEA_TAGS, AREAS, TOPICS, PHASE_FILES, SCREENING_PHASES, TEAM, addedTimeline,
+  NO_OVERVIEW, OVERVIEWS,
   ideaComments, ideaInternal, ideaUpdates, timeline, type Idea, type IdeaStatus, type NewPhase} from '../data-project';
 
 
@@ -87,7 +87,8 @@ export function ProjectPhase() {
         </div>
       </div>
       <div className="bo-phase-body" data-view={view}>
-        {railOpen && <Rail project={project} current={phase} tab={view} added={added} onAdd={() => setAdding(true)} />}
+        {railOpen && <ProjectRail project={project} current={phase.id} added={added} onAdd={() => setAdding(true)}
+          href={p => `#${phaseUrl(project, p, p.method === 'Ideation' || view !== 'manage' ? view : 'build')}`} />}
         {view === 'build' && <Build key={`${project.id}/${phase.id}`} phase={phase} onSettings={setSettings} />}
         {view === 'manage' && phase.method === 'Ideation' && <Manage key={`${project.id}/${phase.id}`} phase={phase} project={project} onAddPhase={() => setAdding(true)} />}
         {(view === 'insights' || (view === 'manage' && phase.method !== 'Ideation')) && (
@@ -102,21 +103,27 @@ export function ProjectPhase() {
   );
 }
 
-function Rail({project, current, tab, added, onAdd}: {project: Project; current: Phase; tab: Tab; added: NewPhase[]; onAdd: () => void}) {
+/** The Participation rail, on the project overview and the phase screen alike: the Rail header (Add a phase, and on
+ * the overview the panel toggle), the timeline, then the spotlight methods running beside it. */
+export function ProjectRail({project, href, current, added, onAdd, onHide}: {project: Project; href: (p: Phase) => string;
+  current?: string; added: NewPhase[]; onAdd: () => void; onHide?: () => void}) {
+  const spotlight = (OVERVIEWS[project.id] ?? NO_OVERVIEW).spotlight;
   return (
     <aside className="bo-phase-panel bo-phase-rail" aria-label="Participation">
-      <RailHeader title="Participation" onAdd={onAdd} addLabel="Add a phase" />
+      <RailHeader title="Participation" onAdd={onAdd} addLabel="Add a phase"
+        onTogglePanel={onHide} togglePanelLabel="Hide the participation rail" />
       <nav aria-label="Phases" className="bo-phase-rail-section">
         <SectionLabel>Timeline</SectionLabel>
         <div className="bo-project-rail-list">
-          <PhaseTimeline phases={[...timeline(project, p => `#${phaseUrl(project, p, p.method === 'Ideation' || tab !== 'manage' ? tab : 'build')}`, current.id),
-            ...addedTimeline(added)]} />
+          <PhaseTimeline phases={[...timeline(project, href, current), ...addedTimeline(added)]} />
         </div>
       </nav>
-      <Divider />
-      <SectionLabel>Spotlight</SectionLabel>
-      <Divider />
-      <SectionLabel>Events</SectionLabel>
+      {spotlight.length > 0 && (
+        <div className="bo-phase-rail-section">
+          <SectionLabel>Spotlight</SectionLabel>
+          <div className="bo-project-rail-list"><PhaseTimeline phases={spotlight} /></div>
+        </div>
+      )}
     </aside>
   );
 }

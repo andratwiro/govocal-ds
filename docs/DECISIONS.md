@@ -21,6 +21,13 @@ list; change any line and the agent follows. Newest first within each section.
 - Calendar and Arrange as a hand-built month list and order list → **Panels with Data tables** (month as the Panel title, its arrows in the head; position, project, visibility and ↑↓ for the order), Empty state for an empty month → the timeline and drag-and-drop stay gaps.
 - Move, duplicate and delete changed the list silently → **a Toast with Undo for each; Delete still confirms first** → "This cannot be undone" leaves the confirm.
 
+### Project overview
+
+- Project setup as a bare column with its own head row → **a Panel, the settings cog in its head actions; its parts Panel sections** → one panel shape on every admin screen.
+- Project details as a page-made definition list → **the Property list** → the system's label · value rows, as in the Side panel.
+- The Participation rail drawn twice (the overview's own head with hide and add; the phase screen's with empty Spotlight and Events labels) → **one rail: Rail header (hide on the overview), the timeline, Spotlight only when something runs there** → one rail; an empty label tells nothing.
+- "Link copied" and "Invitation sent" as a status line in the header bar → **a Toast** → one feedback channel; the status change says itself in one too.
+
 ## Building from the prototype review (29 Oct 2026)
 
 Calls made while planning the build of the review's findings (selectors, tables, side panel, feedback, forms,

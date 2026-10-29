@@ -266,16 +266,11 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-project { position: relative; }
 .bo-project-bar { display: flex; align-items: center; gap: var(--gv-space-8); min-height: 48px; padding-inline: var(--gv-space-8); }
 .bo-project-body { min-height: 0; }
-.bo-project-setup { flex: 0 0 300px; align-self: start; display: grid; gap: var(--gv-space-24); }
-.bo-project-setup .bo-phase-panel-header { margin-block-end: 0; }
-.bo-project-rail { flex-basis: 300px; align-self: stretch; }
-.bo-project-rail-head { display: flex; align-items: center; gap: var(--gv-space-3); }
-.bo-project-rail-head > :first-child { flex: 1; min-width: 0; }
+.bo-project-setup { flex: 0 0 300px; align-self: start; }
+.bo-project-setup-body { display: grid; gap: var(--gv-space-24); }
+.bo-project-setup-body > hr { margin: 0; }
 .bo-project-rail-list { margin-inline: calc(-1 * var(--gv-space-10)); padding-block-start: var(--gv-space-4); }
 .bo-project-rail-closed { flex: 0 0 auto; align-self: stretch; padding: var(--gv-space-10); }
-.bo-project-details { display: grid; grid-template-columns: auto 1fr; gap: var(--gv-space-8) var(--gv-space-16); margin: 0; }
-.bo-project-details dt { color: var(--gv-text-secondary); }
-.bo-project-details dd { margin: 0; color: var(--gv-text-primary); }
 .bo-project-phone-box { display: grid; gap: var(--gv-space-12); justify-items: start; }
 .bo-project-phone-box > .react-aria-Button { width: 100%; justify-content: center; }
 
