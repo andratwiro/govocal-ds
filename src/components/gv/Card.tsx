@@ -1,5 +1,6 @@
 'use client';
-import {useState, type ReactNode} from 'react';
+import {useState, type CSSProperties, type ReactNode} from 'react';
+import {clsx} from 'clsx';
 import {
   Button,
   Disclosure,
@@ -52,12 +53,17 @@ export interface CardProps {
   /** The card's name, in Small type. */
   title?: ReactNode;
   /**
-   * Where the card sits: in a phase's Build panel (a border, no fill) or on Manage / Insights' grey stage
-   * (panel fill, subtle border).
+   * The card's fill: `outlined` (a border, no fill: on a white panel, e.g. a phase's Build tab) or `filled` (the panel
+   * fill and a subtle border: on the grey stage, e.g. Manage and Insights).
    *
-   * @default 'build'
+   * @default 'outlined'
    */
-  tone?: 'build' | 'manage';
+  variant?: 'outlined' | 'filled';
+  /**
+   * A picture at the top of the card: an `<img>`, an Illustration, a tile. It runs edge to edge under the card's top
+   * border, above the title; an `<img>` fills the width at 2:1 and is cropped to fit.
+   */
+  media?: ReactNode;
   /**
    * `row`: one header line, the body under it. `stacked`: the title line, then the body 24 below
    * (the choice cards: Survey placement, Survey options, Voting method).
@@ -67,8 +73,8 @@ export interface CardProps {
   layout?: 'row' | 'stacked';
   /** The "Required" marker (a dot + the word). */
   isRequired?: boolean;
-  /** The review notice at the end of the title line. */
-  review?: ReviewStatusProps['state'];
+  /** Where the card's review stands: the Review status at the end of the title line. */
+  status?: ReviewStatusProps['state'];
   /** Grey words for the current value, e.g. "Not set". */
   summary?: string;
   /**
@@ -84,10 +90,12 @@ export interface CardProps {
   control?: 'expand' | 'open' | 'placeholder' | 'menu';
   /** `control="menu"`: the values to pick from. */
   menuItems?: CardMenuItem[];
-  /** `control="menu"`: the chosen value's id (controlled), or the first one (uncontrolled). */
-  selectedKey?: string;
-  defaultSelectedKey?: string;
-  onSelectionChange?: (id: string) => void;
+  /** `control="menu"`: the chosen value's id (controlled). */
+  value?: string;
+  /** `control="menu"`: the value chosen first (uncontrolled). */
+  defaultValue?: string;
+  /** `control="menu"`: called with the id of the value picked. */
+  onChange?: (id: string) => void;
   /** What the → does (`control="open"`). */
   onOpen?: () => void;
   /** Ghost icon buttons in the header (plus, upload, download, link, sparkles…). */
@@ -99,15 +107,18 @@ export interface CardProps {
   defaultExpanded?: boolean;
   isExpanded?: boolean;
   onExpandedChange?: (isExpanded: boolean) => void;
+  /** Places the card (a grid area, a width); never paints it. */
+  className?: string;
+  style?: CSSProperties;
 }
 
-function Status({isRequired, review, summary, pills}: Pick<CardProps, 'isRequired' | 'review' | 'summary' | 'pills'>) {
+function Status({isRequired, status, summary, pills}: Pick<CardProps, 'isRequired' | 'status' | 'summary' | 'pills'>) {
   return (
     <>
       {isRequired && <RequiredMarker placement="card" />}
-      {review && (
+      {status && (
         <span className="gv-card__review">
-          <ReviewStatus state={review} />
+          <ReviewStatus state={status} />
         </span>
       )}
       {summary && <span className="gv-card__summary">{summary}</span>}
@@ -155,15 +166,17 @@ function Trailing({iconActions, actions}: Pick<CardProps, 'iconActions' | 'actio
 }
 
 /**
- * Card: a titled box with a status line (Required, review notice, summary, pills), a control
- * (chevron, icon buttons, compact buttons, a switch) and an optional body. One card covers Figma's 23 types.
+ * Card: a titled box with a status line (Required, review status, summary, pills), a control (chevron, icon buttons,
+ * compact buttons, a switch), an optional body and an optional `media` picture on top. One card covers Figma's 23
+ * types. `className` and `style` place it; they never paint it.
  */
 export function Card({
   title,
-  tone = 'build',
+  variant = 'outlined',
+  media,
   layout = 'row',
   isRequired,
-  review,
+  status: reviewStatus,
   summary,
   pills,
   control,
@@ -175,26 +188,36 @@ export function Card({
   isExpanded,
   onExpandedChange,
   menuItems = [],
-  selectedKey,
-  defaultSelectedKey,
-  onSelectionChange
+  value,
+  defaultValue,
+  onChange,
+  className,
+  style
 }: CardProps) {
-  const [innerKey, setInnerKey] = useState(defaultSelectedKey);
+  const [innerKey, setInnerKey] = useState(defaultValue);
   const roomy = Boolean(actions) && layout === 'row';
-  const status = <Status isRequired={isRequired} review={review} summary={summary} pills={pills} />;
+  const status = <Status isRequired={isRequired} status={reviewStatus} summary={summary} pills={pills} />;
+  const root = {
+    className: clsx('gv-card', className),
+    style,
+    'data-variant': variant,
+    'data-media': media != null || undefined
+  };
+  const picture = media != null && <div className="gv-card__media">{media}</div>;
 
   if (control === 'menu') {
-    const current = selectedKey ?? innerKey;
+    const current = value ?? innerKey;
     const chosen = menuItems.find(item => item.id === current);
     return (
-      <div className="gv-card" data-tone={tone}>
+      <div {...root}>
+        {picture}
         <Heading className="gv-card__heading">
           <MenuTrigger>
             <Button className="gv-card__header gv-card__header--trigger">
               <span className="gv-card__title">{title}</span>
               <Status
                 isRequired={isRequired}
-                review={review}
+                status={reviewStatus}
                 summary={summary}
                 pills={pills ?? (chosen ? [{label: chosen.label, icon: chosen.icon}] : undefined)}
               />
@@ -214,7 +237,7 @@ export function Card({
                   const [id] = keys === 'all' ? [] : [...keys];
                   if (id === undefined) return;
                   setInnerKey(String(id));
-                  onSelectionChange?.(String(id));
+                  onChange?.(String(id));
                 }}>
                 {item => (
                   <MenuItem id={item.id} textValue={item.label} className="gv-card__menu-item">
@@ -240,11 +263,11 @@ export function Card({
   if (control === 'expand') {
     return (
       <Disclosure
-        className="gv-card"
-        data-tone={tone}
+        {...root}
         defaultExpanded={defaultExpanded}
         isExpanded={isExpanded}
         onExpandedChange={onExpandedChange}>
+        {picture}
         <Heading className="gv-card__heading">
           <Button slot="trigger" className="gv-card__header gv-card__header--trigger">
             <span className="gv-card__title">{title}</span>
@@ -263,7 +286,8 @@ export function Card({
 
   if (layout === 'stacked') {
     return (
-      <section className="gv-card" data-tone={tone} data-layout="stacked">
+      <section {...root} data-layout="stacked">
+        {picture}
         <div className="gv-card__title-line">
           <Heading level={3} className="gv-card__title">
             {title}
@@ -277,7 +301,8 @@ export function Card({
   }
 
   return (
-    <section className="gv-card" data-tone={tone}>
+    <section {...root}>
+      {picture}
       <div className="gv-card__header" data-roomy={roomy || undefined}>
         <Heading level={3} className="gv-card__title">
           {title}

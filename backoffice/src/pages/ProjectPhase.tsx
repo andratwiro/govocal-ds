@@ -342,7 +342,7 @@ function DatesAndTitle({phase, onChange, help}: {phase: Phase; onChange: () => v
   return <>
     <li data-gv="setup-card"><Card title="Dates" isRequired summary={phase.dates} control="expand">
       {/* Date range field: it can't start on the phase's dates yet (it takes date objects the back office can't make). */}
-      <DateRangeField isRequired description={help} onStartChange={onChange} onEndChange={onChange} />
+      <DateRangeField isRequired description={help} onChange={onChange} />
     </Card></li>
     <li data-gv="setup-card"><Card title="Title and description" isRequired control="expand" defaultExpanded>
       <div className="bo-phase-stack">
@@ -373,8 +373,8 @@ function IdeationCards({phase, onOpen, onAttach, files, onChange, emailsOn, onEm
       <DatesAndTitle phase={phase} onChange={onChange} help={DATES_HELP} />
       <li data-gv="setup-card"><Card title="Attachments" summary={files ? `${files} ${files === 1 ? 'file' : 'files'}` : undefined}
         iconActions={[{icon: Paperclip, label: 'Add an attachment', onPress: onAttach}]} /></li>
-      <li data-gv="setup-card"><Card title="What should an input be called?" review="to-review" pills={[{label: 'Idea', icon: Lightbulb}]} control="open" onOpen={() => onOpen('What should an input be called?')} /></li>
-      <li data-gv="setup-card"><Card title="Idea form" review="to-review" pills={[{label: `${IDEA_FORM.length} questions`}]} control="expand">
+      <li data-gv="setup-card"><Card title="What should an input be called?" status="to-review" pills={[{label: 'Idea', icon: Lightbulb}]} control="open" onOpen={() => onOpen('What should an input be called?')} /></li>
+      <li data-gv="setup-card"><Card title="Idea form" status="to-review" pills={[{label: `${IDEA_FORM.length} questions`}]} control="expand">
         {/* Form field summary (a recipe): the questions at a glance, one line each, Edit form under them. */}
         <div className="gv-form-summary">
           <ol className="gv-form-summary__list" aria-label="Idea form questions">
@@ -424,8 +424,8 @@ function IdeationCards({phase, onOpen, onAttach, files, onChange, emailsOn, onEm
           ))}
         </ViewOptionList>
       </Card></li>
-      <li data-gv="setup-card"><Card title="Collect demographic data" review="to-set" control="open" onOpen={() => onOpen('Collect demographic data')} /></li>
-      <li data-gv="setup-card"><Card title="Sorting" review="to-review" pills={[{label: 'Trending'}]} control="open" onOpen={() => onOpen('Sorting')} /></li>
+      <li data-gv="setup-card"><Card title="Collect demographic data" status="to-set" control="open" onOpen={() => onOpen('Collect demographic data')} /></li>
+      <li data-gv="setup-card"><Card title="Sorting" status="to-review" pills={[{label: 'Trending'}]} control="open" onOpen={() => onOpen('Sorting')} /></li>
       <li data-gv="setup-card"><Card title="Notifications" control="expand"
         pills={[{label: emailCount ? `${emailCount} ${emailCount === 1 ? 'email' : 'emails'} on` : 'Off'}]}>
         <NotificationList>
@@ -693,9 +693,9 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
         </div>
         <div className="bo-phase-panel bo-phase-panel-actions">
           <ul className="bo-phase-stack">
-            <li><Card tone="manage" title="Add an idea" iconActions={[{icon: Plus, label: 'Add an idea'}]} /></li>
-            <li><Card tone="manage" title="Import paper ideas" summary="Not set" iconActions={[{icon: Upload, label: 'Import paper ideas'}]} /></li>
-            <li><Card tone="manage" title="Exports" iconActions={[{icon: Download, label: 'Export ideas'}]} /></li>
+            <li><Card variant="filled" title="Add an idea" iconActions={[{icon: Plus, label: 'Add an idea'}]} /></li>
+            <li><Card variant="filled" title="Import paper ideas" summary="Not set" iconActions={[{icon: Upload, label: 'Import paper ideas'}]} /></li>
+            <li><Card variant="filled" title="Exports" iconActions={[{icon: Download, label: 'Export ideas'}]} /></li>
           </ul>
         </div>
       </aside>

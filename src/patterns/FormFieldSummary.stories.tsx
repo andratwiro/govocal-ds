@@ -110,13 +110,13 @@ export const InACard: Story = {
     <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--gv-space-16)'}}>
       <Card
         title="What should an input be called?"
-        review="reviewed"
+        status="reviewed"
         pills={[{label: 'Idea', icon: Lightbulb}]}
         control="expand"
       />
       <Card
         title="Idea form"
-        review="reviewed"
+        status="reviewed"
         pills={[{label: `${IDEA_FORM.length} questions`}]}
         control="expand"
         defaultExpanded>

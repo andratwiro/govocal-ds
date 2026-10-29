@@ -1,7 +1,7 @@
 @import '../theme.css';
 
-/* Card (Figma 14:879, 23 types). Build cards: 1px border-card, no fill, radius 8.
-   Manage / Insights cards: panel fill, 1px border-subtle. */
+/* Card (Figma 14:879, 23 types). Outlined (Build): 1px border-card, no fill, radius 8.
+   Filled (Manage / Insights): panel fill, 1px border-subtle. */
 .gv-card {
   box-sizing: border-box;
   width: 100%;
@@ -11,7 +11,7 @@
   font-family: var(--gv-font-family);
   color: var(--gv-text-primary);
 
-  &[data-tone='manage'] {
+  &[data-variant='filled'] {
     border-color: var(--gv-border-subtle);
     background: var(--gv-surface-panel);
   }
@@ -311,4 +311,23 @@
     background: none;
     color: var(--gv-icon-default);
   }
+}
+
+/* Media: a picture on top, edge to edge under the card's border, its top corners rounded with the card's; an <img>
+   fills the width at 2:1, cropped. In a stacked card it reaches out over the card's padding, 12 above the title. */
+.gv-card__media {
+  overflow: hidden;
+  border-start-start-radius: var(--gv-radius-8);
+  border-start-end-radius: var(--gv-radius-8);
+
+  > img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    object-fit: cover;
+  }
+}
+
+.gv-card[data-layout='stacked'] > .gv-card__media {
+  margin: calc(-1 * var(--gv-space-14)) calc(-1 * var(--gv-space-12)) calc(var(--gv-space-12) - var(--gv-space-24));
 }

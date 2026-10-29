@@ -19,6 +19,8 @@ import {
 import {CompactButton} from './CompactButton';
 import {TextField} from '../TextField';
 import {Card, CardRadio, CardRadioGroup, CardSwitch, type CardProps} from './Card';
+import {Badge} from './Badge';
+import {PICTURES} from './story-images';
 
 const figma = (id: string) => ({
   design: {type: 'figma', url: `https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=${id}`}
@@ -43,28 +45,28 @@ const required: CardProps = {
   children: 'Collect ideas runs from 12 January to 28 February 2027.'
 };
 const reviewIconPill: CardProps = {
-  title: 'What should an input be called?', review: 'to-review', pills: [{label: 'Idea', icon: Lightbulb}],
+  title: 'What should an input be called?', status: 'to-review', pills: [{label: 'Idea', icon: Lightbulb}],
   control: 'expand', children: 'Participants see "Idea" on buttons, cards and emails in Green Corridors for Riverside.'
 };
 const reviewPill: CardProps = {
-  title: 'Idea form', review: 'to-review', pills: [{label: '6 questions'}], control: 'expand',
+  title: 'Idea form', status: 'to-review', pills: [{label: '6 questions'}], control: 'expand',
   children: 'Title, description, location, images, attachments and one custom question.'
 };
-const toSet: CardProps = {title: 'Collect demographic data', review: 'to-set', control: 'open'};
+const toSet: CardProps = {title: 'Collect demographic data', status: 'to-set', control: 'open'};
 const reviewPillSection: CardProps = {
-  title: 'Available views', review: 'to-review', pills: [{label: 'List'}], control: 'expand',
+  title: 'Available views', status: 'to-review', pills: [{label: 'List'}], control: 'expand',
   children: 'Participants can browse ideas as a list. Add a map to show where they are.'
 };
 const reviewPillDropdown: CardProps = {
-  title: 'Sorting', review: 'to-review', control: 'menu', defaultSelectedKey: 'trending',
+  title: 'Sorting', status: 'to-review', control: 'menu', defaultValue: 'trending',
   menuItems: [
     {id: 'trending', label: 'Trending'}, {id: 'discussed', label: 'Most discussed'}, {id: 'random', label: 'Random'},
     {id: 'reactions', label: 'Most reactions'}, {id: 'recent', label: 'Most recent'}, {id: 'oldest', label: 'Oldest'}
   ]
 };
-const manageAdd: CardProps = {tone: 'manage', title: 'Add an idea', iconActions: [{icon: Plus, label: 'Add an idea'}]};
+const manageAdd: CardProps = {variant: 'filled', title: 'Add an idea', iconActions: [{icon: Plus, label: 'Add an idea'}]};
 const manageNotSet: CardProps = {
-  tone: 'manage', title: 'Import paper ideas', summary: 'Not set',
+  variant: 'filled', title: 'Import paper ideas', summary: 'Not set',
   iconActions: [{icon: Upload, label: 'Import paper ideas'}]
 };
 const statements: CardProps = {
@@ -77,16 +79,16 @@ const statements: CardProps = {
   )
 };
 const insightsAddReport: CardProps = {
-  tone: 'manage', title: 'Add a report', iconActions: [{icon: FileChartColumn, label: 'Add a report'}]
+  variant: 'filled', title: 'Add a report', iconActions: [{icon: FileChartColumn, label: 'Add a report'}]
 };
 const insightsShareResults: CardProps = {
-  tone: 'manage', title: 'Share results with participants', iconActions: [{icon: Link, label: 'Share results'}]
+  variant: 'filled', title: 'Share results with participants', iconActions: [{icon: Link, label: 'Share results'}]
 };
 const insightsAiSummary: CardProps = {
-  tone: 'manage', title: 'Get an AI Sensemaking summary', iconActions: [{icon: Sparkles, label: 'Get an AI summary'}]
+  variant: 'filled', title: 'Get an AI Sensemaking summary', iconActions: [{icon: Sparkles, label: 'Get an AI summary'}]
 };
 const manageExports: CardProps = {
-  tone: 'manage', title: 'Exports', summary: 'Not set', iconActions: [{icon: Download, label: 'Download the ideas'}]
+  variant: 'filled', title: 'Exports', summary: 'Not set', iconActions: [{icon: Download, label: 'Download the ideas'}]
 };
 const embedUrl: CardProps = {
   title: 'Embed Konveio URL', isRequired: true,
@@ -102,16 +104,16 @@ const report: CardProps = {
   )
 };
 const namingProposals: CardProps = {
-  title: 'What should an input be called?', review: 'to-review', pills: [{label: 'Proposal', icon: FileText}],
+  title: 'What should an input be called?', status: 'to-review', pills: [{label: 'Proposal', icon: FileText}],
   control: 'expand', children: 'Participants see "Proposal" on buttons, cards and emails.'
 };
 const manageToggle: CardProps = {
-  tone: 'manage', title: 'Publish responses automatically', summary: 'Not set',
+  variant: 'filled', title: 'Publish responses automatically', summary: 'Not set',
   actions: <CardSwitch aria-label="Publish responses automatically" />,
   children: 'Official replies are posted and emailed to the proposer when you approve them.'
 };
 const surveyPlacement: CardProps = {
-  layout: 'stacked', title: 'Survey placement', review: 'to-review',
+  layout: 'stacked', title: 'Survey placement', status: 'to-review',
   children: (
     <CardRadioGroup aria-label="Survey placement" orientation="horizontal" defaultValue="timeline">
       <CardRadio value="timeline" description="Appears on the timeline">Timeline</CardRadio>
@@ -120,7 +122,7 @@ const surveyPlacement: CardProps = {
   )
 };
 const surveyOptions: CardProps = {
-  layout: 'stacked', title: 'Survey options', review: 'to-review',
+  layout: 'stacked', title: 'Survey options', status: 'to-review',
   children: (
     <CardRadioGroup aria-label="Survey options" defaultValue="survey">
       <CardRadio value="survey" description="AI-powered insights and a wide range of question types">Survey</CardRadio>
@@ -136,7 +138,7 @@ const optionsToVoteOn: CardProps = {
   actions: <CompactButton variant="primary">Create form</CompactButton>
 };
 const votingMethod: CardProps = {
-  layout: 'stacked', title: 'Voting method', review: 'to-set',
+  layout: 'stacked', title: 'Voting method', status: 'to-set',
   children: (
     <CardRadioGroup aria-label="Voting method">
       <CardRadio value="single" description="Participants can approve any of the options">One vote per option</CardRadio>
@@ -154,7 +156,7 @@ const votingMethod: CardProps = {
 
 /* The input term menu: each term with its icon; the chosen one's pill carries it too. */
 const menuIcons: CardProps = {
-  title: 'What should an input be called?', review: 'reviewed', control: 'menu', defaultSelectedKey: 'idea',
+  title: 'What should an input be called?', status: 'reviewed', control: 'menu', defaultValue: 'idea',
   menuItems: [
     {id: 'idea', label: 'Idea', icon: Lightbulb}, {id: 'option', label: 'Option', icon: ListChecks},
     {id: 'project', label: 'Project', icon: Folder}, {id: 'question', label: 'Question', icon: CircleHelp},
@@ -192,8 +194,8 @@ export const AllVariants: Story = {
         <div key={name} style={{display: 'flex', flexDirection: 'column', gap: 8}}>
           <span style={{font: 'var(--gv-type-small)', color: 'var(--gv-text-tertiary)'}}>{name}</span>
           <div
-            style={{width: w, padding: props.tone === 'manage' ? 8 : 0,
-              background: props.tone === 'manage' ? 'var(--gv-surface-stage)' : undefined}}>
+            style={{width: w, padding: props.variant === 'filled' ? 8 : 0,
+              background: props.variant === 'filled' ? 'var(--gv-surface-stage)' : undefined}}>
             <Card {...props} />
           </div>
         </div>
@@ -236,7 +238,7 @@ export const OptionsToVoteOn: Story = {name: 'Options to vote on', args: options
 export const VotingMethod: Story = {name: 'Voting method', args: votingMethod, decorators: width(444), parameters: figma('26-478')};
 
 /** Not in Figma (the prototype, 22 Oct): once the admin has looked, the notice turns green. */
-export const Reviewed: Story = {args: {...reviewPillDropdown, review: 'reviewed'}, decorators: width(444)};
+export const Reviewed: Story = {args: {...reviewPillDropdown, status: 'reviewed'}, decorators: width(444)};
 
 /** Not in Figma (the prototype's input term menu): each value with its icon; the chosen one's pill carries it too. */
 export const MenuIcons: Story = {name: 'Menu · icons', args: menuIcons, decorators: width(444), tags: ['not-in-figma']};
@@ -250,4 +252,38 @@ export const DisabledAction: Story = {
   args: disabledAction,
   decorators: width(444),
   tags: ['not-in-figma']
+};
+
+/**
+ * Not in Figma (the prototype's project card, the Inspiration hub and the template gallery): a picture on top, edge to
+ * edge under the border, then the title. An `<img>` fills the width at 2:1.
+ */
+export const WithMedia: Story = {
+  name: 'With media',
+  tags: ['not-in-figma'],
+  decorators: width(320),
+  args: {
+    layout: 'stacked',
+    title: 'Green corridors for the riverside',
+    media: <img src={PICTURES.park} alt="" />,
+    children: (
+      <span style={{display: 'flex', gap: 'var(--gv-space-6)'}}>
+        <Badge>Ideation</Badge><Badge>Voting</Badge>
+      </span>
+    )
+  }
+};
+
+/** Not in Figma: a row card on the grey stage (`variant="filled"`) with a picture on top. */
+export const WithMediaFilled: Story = {
+  name: 'With media · filled',
+  tags: ['not-in-figma'],
+  decorators: stage(320),
+  args: {
+    variant: 'filled',
+    title: 'Library opening hours',
+    summary: 'Survey',
+    media: <img src={PICTURES.library} alt="" />,
+    control: 'open'
+  }
 };
