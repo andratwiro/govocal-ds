@@ -1,24 +1,32 @@
 @import '../theme.css';
 
-/* Loading placeholder. Not in Figma: from the prototype (augur-design.html .pj-skel): flat grey block, a calm
-   opacity pulse (never a shimmer sweep), respects reduced motion. */
+/* Loading placeholder. Not in Figma: from the prototype (augur-design.html .pj-skel and the phone's skeleton rows,
+   19 Oct): the light grey (the prototype's grey-100, the hover surface here), radius 4; text lines 12 tall, a chip
+   24 tall and fully round, a block radius 8. The prototype's placeholder is still; a calm opacity pulse (never a
+   shimmer sweep) says it is loading, and stops for reduced motion. */
 .gv-skeleton {
   display: block;
-  background: var(--gv-surface-hover-strong);
+  flex: none;
+  background: var(--gv-surface-hover);
   border-radius: var(--gv-radius-4);
   animation: gv-skeleton-pulse 1.6s ease-in-out infinite;
 }
 
 .gv-skeleton--line {
   width: 100%;
-  height: var(--gv-space-16);
-  border-radius: var(--gv-radius-4);
+  height: var(--gv-space-12);
 }
 
 .gv-skeleton--block {
   width: 100%;
   height: var(--gv-space-56);
   border-radius: var(--gv-radius-8);
+}
+
+.gv-skeleton--pill {
+  width: 72px;
+  height: var(--gv-space-24);
+  border-radius: var(--gv-radius-full);
 }
 
 .gv-skeleton--circle {
@@ -33,13 +41,12 @@
     opacity: 1;
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.55;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .gv-skeleton {
     animation: none;
-    opacity: 0.75;
   }
 }

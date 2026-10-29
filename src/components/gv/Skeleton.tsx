@@ -6,8 +6,8 @@ export interface SkeletonProps {
   width?: number | string;
   /** Height of the placeholder (css length, e.g. 16). */
   height?: number | string;
-  /** Shape of the placeholder — a text line, a solid block, or a circle (avatar). */
-  shape?: 'line' | 'block' | 'circle';
+  /** Shape of the placeholder: a text line, a solid block, a chip (pill) or a circle (avatar). */
+  shape?: 'line' | 'block' | 'pill' | 'circle';
   className?: string;
   style?: CSSProperties;
 }
