@@ -83,7 +83,7 @@
   color: var(--gv-icon-default);
 
   svg {
-    transition: rotate 200ms;
+    transition: rotate var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
   }
 }
 

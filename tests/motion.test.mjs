@@ -1,18 +1,9 @@
 import {describe, it, expect} from 'vitest';
 import {readFileSync, readdirSync} from 'node:fs';
-import {basename} from 'node:path';
 
 // Every stylesheet under src/ except the generated tokens.css, which is where the motion values live.
 const css = readdirSync('src', {recursive: true}).filter(f => f.endsWith('.css') && f !== 'tokens.css')
   .map(f => [`src/${f}`, readFileSync(`src/${f}`, 'utf8')]);
-
-// Moves in the rename; tokenise after. Temporary: the gv/ components and patterns another change is renaming and
-// moving tonight (matched by name, wherever they land). Of these, SetupCard, PanelSection and FilterOptions still
-// carry raw values today.
-const RENAMING = ['Kpi', 'Required', 'Editor', 'EditorToolbar', 'EditorTool', 'Breadcrumb', 'Pill', 'ReviewNotice', 'Status',
-  'Header', 'SetupCard', 'ListRow', 'ListRowCommonGround', 'ListRowProposals', 'ListRowVoting', 'CauseRow', 'VoteProgress',
-  'RailHeader', 'RailPhase', 'RailSectionLabel'];
-const renaming = f => f.startsWith('src/patterns/') || (f.includes('/gv/') && RENAMING.includes(basename(f, '.css')));
 
 const TIME = /(?<![\w.-])-?\d*\.?\d+m?s\b/g; // 120ms, .15s, 1.6s, -1s
 const ZERO = /^-?0*\.?0+m?s$/; // 0s and 0ms are allowed
@@ -46,17 +37,12 @@ describe('motion comes only from tokens', () => {
   });
 
   it('src CSS uses durations and easings only via var(--gv-motion-*)', () => {
-    const offenders = css.filter(([f]) => !renaming(f))
-      .flatMap(([f, s]) => rawMotion(s).map(hit => `${f}:${hit}`));
+    const offenders = css.flatMap(([f, s]) => rawMotion(s).map(hit => `${f}:${hit}`));
     expect(offenders).toEqual([]);
   });
 
-  it('the rename allowlist still covers a raw value (when this fails, delete the allowlist)', () => {
-    expect(css.filter(([f, s]) => renaming(f) && rawMotion(s).length).length).toBeGreaterThan(0);
-  });
-
   it('every loop stops under reduced motion (the loop token is not shortened: a 1ms loop would flicker)', () => {
-    const loops = css.filter(([f, s]) => !renaming(f) && /\binfinite\b/.test(s.replace(/\/\*[\s\S]*?\*\//g, '')));
+    const loops = css.filter(([, s]) => /\binfinite\b/.test(s.replace(/\/\*[\s\S]*?\*\//g, '')));
     const unstopped = loops.filter(([, s]) => !/prefers-reduced-motion:\s*reduce\)[^]*?animation:\s*none/.test(s)).map(([f]) => f);
     expect(loops.length).toBeGreaterThan(0);
     expect(unstopped).toEqual([]);

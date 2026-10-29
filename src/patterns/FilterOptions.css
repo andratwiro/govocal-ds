@@ -42,7 +42,7 @@
     background: var(--gv-surface-panel);
     color: var(--gv-text-inverse);
     opacity: 0;
-    transition: opacity 0.1s;
+    transition: opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 
     /* The system Menu paints a selected item's check in the checked colour; on the filled box it is white. */
     .lucide-check {
