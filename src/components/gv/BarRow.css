@@ -1,5 +1,8 @@
 @import '../theme.css';
 
+/* Figma "Bar row" (33:482) + prototype .pj-barrow: label, thin track, value. The track takes 1.1 shares to the label's 1,
+   as the prototype (Figma draws 333 / 333 / 40 at 730). */
+
 .gv-bar-row {
   display: flex;
   align-items: center;
@@ -21,7 +24,7 @@
 }
 
 .gv-bar-row__track {
-  flex: 1 1 0;
+  flex: 1.1 1 0;
   min-width: 0;
   height: 6px;
   border-radius: var(--gv-radius-3);
@@ -37,7 +40,7 @@
 .gv-bar-row__value {
   flex-shrink: 0;
   min-width: 40px;
-  text-align: right;
+  text-align: end;
   font: var(--gv-type-small);
   letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-body);
