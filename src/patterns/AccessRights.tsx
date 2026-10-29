@@ -200,7 +200,7 @@ export function AccessRights({
               <DisclosurePanel className="gv-access-rights__section-panel">
 <div className="gv-access-rights__panel-body">
                 <p className="gv-access-rights__lead">Participant must be in any one of the selected groups.</p>
-                <Select aria-label="Groups" defaultSelectedKey="0" isDisabled={readOnly}>
+                <Select aria-label="Groups" defaultValue="0" isDisabled={readOnly}>
                   {groups.map((g, i) => (
                     <SelectItem key={g} id={String(i)}>
                       {g}

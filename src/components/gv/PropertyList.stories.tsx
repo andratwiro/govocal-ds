@@ -22,7 +22,7 @@ type Change = (value: string) => void;
 export function DemoStatus({value, onChange}: {value: string; onChange: Change}) {
   const options = STATUSES.includes(value) ? STATUSES : [value, ...STATUSES];
   return (
-    <Select aria-label="Status" variant="pill" size={22} selectedKey={value} onSelectionChange={k => onChange(String(k))}
+    <Select aria-label="Status" variant="pill" size={22} value={value} onChange={k => onChange(String(k))}
       disabledKeys={STATUSES.includes(value) ? [] : [value]}>
       {options.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
     </Select>
@@ -33,7 +33,7 @@ export function DemoStatus({value, onChange}: {value: string; onChange: Change})
 export function DemoAssignee({value, onChange}: {value: string; onChange: Change}) {
   return (
     <Select aria-label="Assignee" variant="pill" size={22} isSearchable searchPlaceholder="Search people..."
-      selectedKey={value} onSelectionChange={k => onChange(String(k))}>
+      value={value} onChange={k => onChange(String(k))}>
       {ASSIGNEES.map(a => <SelectItem key={a} id={a}>{a}</SelectItem>)}
     </Select>
   );
