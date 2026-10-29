@@ -1,7 +1,10 @@
 @import '../theme.css';
 
-/* Banner (Figma 33:479; prototype .bn--info): surface-info, radius 12, padding 16, gap 12. */
+/* Banner (Figma 33:479; prototype .bn--info): surface-info, radius 12, padding 16, gap 12.
+   The review adds neutral/warning/success/AI tones (no surface tokens for warning, success or
+   neutral: color-mix of the nearest state token on the panel fill; see the report). */
 .gv-banner {
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: var(--gv-space-12);
@@ -12,28 +15,86 @@
   font-family: var(--gv-font-family);
 }
 
+.gv-banner[data-tone='neutral'] {
+  background: var(--gv-surface-hover);
+}
+
+.gv-banner[data-tone='warning'] {
+  background: color-mix(in srgb, var(--gv-color-amber-600) 14%, var(--gv-surface-panel));
+}
+
+.gv-banner[data-tone='success'] {
+  background: var(--gv-surface-live);
+}
+
+.gv-banner[data-tone='ai'] {
+  background: var(--gv-surface-ai);
+}
+
 .gv-banner__icon {
   flex: none;
+  display: inline-flex;
   margin-block-start: var(--gv-space-2);
+}
+
+.gv-banner[data-tone='info'] .gv-banner__icon,
+.gv-banner[data-tone='info'] .gv-banner__title {
   color: var(--gv-icon-info);
+}
+
+.gv-banner[data-tone='neutral'] .gv-banner__icon,
+.gv-banner[data-tone='neutral'] .gv-banner__title {
+  color: var(--gv-text-secondary);
+}
+
+.gv-banner[data-tone='warning'] .gv-banner__icon,
+.gv-banner[data-tone='warning'] .gv-banner__title {
+  color: var(--gv-icon-warning);
+}
+
+.gv-banner[data-tone='success'] .gv-banner__icon,
+.gv-banner[data-tone='success'] .gv-banner__title {
+  color: var(--gv-text-live);
+}
+
+.gv-banner[data-tone='ai'] .gv-banner__icon,
+.gv-banner[data-tone='ai'] .gv-banner__title {
+  color: var(--gv-icon-info);
+}
+
+.gv-banner__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.gv-banner__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gv-space-12);
 }
 
 .gv-banner__text {
   flex: 1;
   min-width: 0;
   margin: 0;
-}
-
-.gv-banner[data-type='info'] .gv-banner__text {
   font: var(--gv-type-body);
   letter-spacing: var(--gv-type-body-tracking);
   color: var(--gv-text-body);
 }
 
-.gv-banner[data-type='info-link'] .gv-banner__text {
+.gv-banner[data-tone='ai'] .gv-banner__text,
+.gv-banner:has(.gv-banner__link--trailing) .gv-banner__text {
   font: var(--gv-type-ui);
   letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
+}
+
+.gv-banner__title {
+  display: block;
+  margin-block-end: var(--gv-space-4);
+  font: var(--gv-type-body-strong);
+  letter-spacing: var(--gv-type-body-strong-tracking);
 }
 
 .gv-banner__link {
@@ -52,4 +113,60 @@
     outline: 2px solid var(--gv-border-selected);
     outline-offset: 2px;
   }
+}
+
+.gv-banner__link--trailing {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-accent);
+  text-decoration: none;
+
+  &[data-hovered] {
+    text-decoration: underline;
+  }
+}
+
+.gv-banner__action {
+  margin-block-start: var(--gv-space-12);
+}
+
+.gv-banner__dismiss {
+  flex: none;
+  margin: calc(-1 * var(--gv-space-4)) calc(-1 * var(--gv-space-4)) 0 0;
+}
+
+/* Phase status strip (Build tab's Dates card): one row, icon + bold title + lighter meta, a
+   lighter pill than the message card (padding 12, radius 8, no title/body split). */
+.gv-banner--compact {
+  align-items: center;
+  gap: var(--gv-space-8);
+  padding: var(--gv-space-10) var(--gv-space-12);
+  border-radius: var(--gv-radius-8);
+}
+
+.gv-banner--compact .gv-banner__icon {
+  margin-block-start: 0;
+}
+
+.gv-banner__strip-title {
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+}
+
+.gv-banner--compact[data-tone='neutral'] .gv-banner__strip-title {
+  color: var(--gv-text-primary);
+}
+
+.gv-banner--compact[data-tone='success'] .gv-banner__strip-title {
+  color: var(--gv-text-live);
+}
+
+.gv-banner__strip-meta {
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-secondary);
 }
