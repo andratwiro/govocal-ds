@@ -1,5 +1,6 @@
 import {describe, it, expect} from 'vitest';
-import {readFileSync, readdirSync} from 'node:fs';
+import {readFileSync, readdirSync, existsSync} from 'node:fs';
+import {declarations} from '../scripts/lib/cssdecl.mjs';
 
 // Every stylesheet under src/ except the generated tokens.css, which is where the values live.
 const css = readdirSync('src', {recursive: true}).filter(f => f.endsWith('.css') && f !== 'tokens.css')
@@ -116,6 +117,77 @@ export function rawTokens(source) {
   }
   return hits;
 }
+
+// Weight, focus rings, opacity and layers (tokens.md "Guard tests"): each declaration that reaches past its token, as
+// `line: prop: value (what to write)`. A `raw:` note after the declaration lets it through, as above.
+const FOCUS = /focus/i;
+const ON_DARK = /^var\(--gv-border-width-2\)\s+solid\s+var\(--gv-(border-inverse|side-nav-[\w-]+)\)$/;
+export function rawState(source) {
+  const hits = [];
+  for (const d of declarations(source)) {
+    if (RAW_NOTE.test(source.slice(d.end))) continue;
+    const v = d.value.replace(/\s+/g, ' ').trim();
+    const why = (() => {
+      if (/^(--font-weight(-|$)|font-weight$)/.test(d.prop))
+        return !GLOBAL.test(v) && !/^var\(--gv-font-weight-(regular|medium)\)$/.test(v) && 'var(--gv-font-weight-regular|medium)';
+      if (/^outline(-width)?$/.test(d.prop)) {
+        const wide = [...v.matchAll(/(?<![\w.-])(\d*\.?\d+)px/g)].some(m => Number(m[1]) > 1);
+        if (wide) return 'var(--gv-focus-ring) for focus, var(--gv-border-width-2) for another 2px ring';
+        if (d.prop === 'outline' && FOCUS.test(d.selectors.join(' ')) && !/^(none|0|unset|inherit|initial)$/.test(v) &&
+          v !== 'var(--gv-focus-ring)' && !ON_DARK.test(v))
+          return 'var(--gv-focus-ring); on a dark fill var(--gv-border-width-2) solid var(--gv-border-inverse)';
+        return false;
+      }
+      if (d.prop === 'opacity') return !/^(0|1|0%|100%|var\(--gv-opacity-[\w-]+\))$/.test(v) && !GLOBAL.test(v) && 'var(--gv-opacity-*)';
+      if (d.prop === 'z-index') return /^-?\d+$/.test(v) && Number(v) > 5 && 'var(--gv-layer-sticky|panel|overlay)';
+      return false;
+    })();
+    if (why) hits.push(`${d.line}: ${d.prop}: ${v} (${why})`);
+  }
+  return hits;
+}
+
+describe('weight, focus rings, opacity and layers come only from tokens', () => {
+  it('catches a raw weight, a hand-drawn ring, a raw opacity and a high z-index', () => {
+    const fails = [
+      'a { font-weight: 500; }',
+      'a { font-weight: var(--gv-type-ui-weight); }',
+      ':root { --font-weight: 600; }',
+      'a { outline: 2px solid var(--gv-border-focused); }',
+      'a { outline-width: 3px; }',
+      'a[data-focus-visible] { outline: 1px solid var(--gv-border-focused); }',
+      'a { &:focus-visible { outline: var(--gv-border-width-2) solid var(--gv-border-selected); } }',
+      'a { opacity: 0.5; }',
+      'a { opacity: 45%; }',
+      'a { z-index: 10; }',
+      'a { z-index: 100; }'
+    ];
+    for (const source of fails) expect(rawState(source), source).toHaveLength(1);
+  });
+  it('lets tokens, keywords, rings on dark fills, low layers and raw notes through', () => {
+    const passes = [
+      'a { font-weight: var(--gv-font-weight-medium); font-weight: inherit; }',
+      'a[data-focus-visible] { outline: var(--gv-focus-ring); outline-offset: var(--gv-focus-ring-offset-inset); }',
+      'a:focus-visible { outline: var(--gv-border-width-2) solid var(--gv-border-inverse); }',
+      'a[data-focus-visible] { outline: var(--gv-border-width-2) solid var(--gv-side-nav-border-focused); }',
+      'a { outline: none; } a:focus-visible { outline: none; } a { outline: 1px solid var(--gv-border-subtle); }',
+      'a[data-drop-target] { outline: var(--gv-border-width-2) solid var(--gv-border-selected); }',
+      'a { opacity: 0; opacity: 1; opacity: var(--gv-opacity-disabled); }',
+      'a { opacity: 0.25; /* raw: a thin line steps back further */ }',
+      'a { z-index: 5; z-index: -1; z-index: var(--gv-layer-overlay); z-index: calc(sibling-count() - sibling-index()); }'
+    ];
+    for (const source of passes) expect(rawState(source), source).toEqual([]);
+  });
+  it('src CSS takes weight, focus rings, opacity and layers only from tokens', () => {
+    expect(css.flatMap(([f, s]) => rawState(s).map(hit => `${f}:${hit}`))).toEqual([]);
+  });
+  it('no --gv-type-*-tracking remains: one --gv-font-tracking, set on :root', () => {
+    const roots = ['src', 'backoffice/src', '.storybook', 'e2e'].filter(existsSync);
+    const files = roots.flatMap(r => readdirSync(r, {recursive: true}).filter(f => /\.(css|tsx?|mdx|mjs|js)$/.test(f))
+      .map(f => `${r}/${f}`));
+    expect(files.filter(f => /--gv-type-[\w${}<>-]*-tracking/.test(readFileSync(f, 'utf8')))).toEqual([]);
+  });
+});
 
 describe('spacing, radius, type and shadow come only from tokens', () => {
   it('catches raw lengths, weights, sizes, families and shadows', () => {
