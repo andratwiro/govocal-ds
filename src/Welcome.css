@@ -37,6 +37,22 @@
   color: var(--gv-text-secondary);
 }
 
+.gv-welcome__links {
+  display: grid;
+  gap: var(--gv-space-8);
+  margin: 0 0 var(--gv-space-32);
+  padding: 0;
+  list-style: none;
+}
+
+.gv-welcome__link {
+  font: var(--gv-type-body-strong);
+  color: var(--gv-text-link);
+  text-decoration: none;
+
+  &:hover { color: var(--gv-text-link-hovered); text-decoration: underline; }
+}
+
 .gv-welcome__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

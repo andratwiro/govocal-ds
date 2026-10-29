@@ -4,6 +4,40 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Developers' side and orientation (30 Oct 2026)
+
+Calls made while building Overview's developer and orientation pages, the seam stories, Voice and tone, the Word list
+and the copy check (benchmark-gaps plan, Tasks 4 and 5).
+
+- Circuit's six lifecycle stages vs the plan's three → **draft · candidate · stable, plus deprecated as a mark**
+  (Overview › Lifecycle) → three stages are enough for about 120 parts and one reviewer; nothing is stable until a
+  developer has reviewed its API, and Not in Figma doesn't hold a part back.
+- Where the seam stories live: an Overview page, or a recipe → **Patterns › Recipes › Integration seams, one story per
+  seam with a play function, plus `e2e/seams.spec.ts`** → the story smoke test skips Overview entries, and Form
+  validation already set the recipe shape; e2e waits for the state only a finished play function reaches.
+- The seams' stand-ins (router, form library, translate function, server) vs real libraries → **a few lines each, in
+  the story file** → no new dependency (AGENTS.md rule 8); react-hook-form's own recipe stays on For developers.
+- The React Aria table written by hand vs read from the code → **generated into `docs/REACT-ARIA.md` by
+  `scripts/react-aria-table.mjs`, run by `npm run components:index`, kept fresh by a test, shown as Overview › What
+  comes from React Aria** → it follows every new part without anyone remembering to; a component page's "Behaviour from
+  React Aria's …" line reads its row.
+- CSS size per part from a build report vs from the files → **measured from the shipped source CSS when Questions for
+  developers opens (size and gzip, per stylesheet and in all)** → the package ships source, so that is what a host
+  bundles; a number written into a page would go stale with the next stylesheet change.
+- "Citizen" vs "resident" → **resident, and "citizen" goes in the Word list's Avoid column** → the back office never
+  says citizen (0 uses in `backoffice/src`) and calls the people of the place residents; not everyone who takes part
+  is a citizen.
+- Delete vs Remove → **Delete for gone for good, Remove for out of a group or role** → the Users page already uses them
+  that way ("Delete user", "Remove from group").
+- Title Case in headings: a list of allowed headings vs a rule → **a rule: every word after the first capitalised
+  (small words aside) and one of them not a name fails** → part names and product names keep their capitals without a
+  list per page.
+- Test-only entries in the sidebar: none today → **a `test-only` tag hidden from the sidebar, and a guard on story names
+  that say test, e2e, fixture, harness or debug** → the public tree stays clean when the first one lands; a Controls
+  playground is for readers and stays.
+- Spacing's "which token" table: semantic tokens only, but spacing has one tier → **the space scale itself, by job**
+  → the space tokens are not primitives in the colour sense; there is no named spacing tier to point at.
+
 ## Compose without CSS (30 Oct 2026, benchmark gaps)
 
 Calls made while adding Stack, Inline and Grid (Components/Layout & containers) and the guards around them: the
@@ -43,6 +77,8 @@ Calls made while emptying the words guard's `TO_CONVERT` list, adding the Locale
 - The multilingual fields' words → **one `MultilingualFieldLabels` (extending Locale switcher's and Required marker's; the switcher's marks are `mark…` keys so they never meet Required marker's `required`) for Multilingual text field and the hook every multilingual field shares; Multilingual rich text editor's extends it with the editor's** → a field hands the switcher and the Required marker its words, as rule 11's "a part that draws another's words hands them on". The joins ("EN, English, filled") and the "1/3" count are labels too, so a host can reorder them.
 - Locale switcher's `new Intl.DisplayNames([inLocale])` read as a fixed locale → **the guard flags an Intl formatter only when its locale argument holds a literal** → the names follow the locale the part is handed (React Aria's), which is what rule 11 asks.
 - Overview › Accessibility's scan date in `toLocaleString('en-GB')` → **kept** → it is a docs page, not a part: nothing imports it, its prose is English, and a host never renders it. The guard reads parts (`src/components`, `src/patterns`) only.
+
+
 
 ## Back office: the project lead's asks (30 Oct 2026)
 

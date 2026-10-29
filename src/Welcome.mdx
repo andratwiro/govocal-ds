@@ -39,6 +39,11 @@ export const Card = ({to, href, name, desc, specimen, wide}) => {
   </li>;
 };
 
+export const PageLink = ({to, name, desc}) => <li>
+  <a className="gv-welcome__link" href={`./?path=/docs/${to}`} target="_top" onClick={open(to)}>{name}</a>
+  <span className="gv-welcome__desc"> {desc}</span>
+</li>;
+
 export const Swatches = () => <>
   <span className="gv-sp-swatches">
     {['primary', 'teal', 'green', 'orange', 'coral'].map(c => <i key={c} className={`gv-sp-swatch gv-sp-swatch--${c}`} />)}
@@ -72,6 +77,18 @@ export const BackOffice = () => <span className="gv-sp-window">
       <h1 className="gv-welcome__title">Go Vocal design system</h1>
       <p className="gv-welcome__lede">{lede}</p>
     </header>
+    <h2 className="gv-welcome__label">Start here</h2>
+    <ul className="gv-welcome__links">
+      <PageLink to="overview-start-here--docs" name="Start here" desc="Two ways in: for designers and for developers." />
+      <PageLink to="overview-principles--docs" name="Principles" desc="Six rules the whole system follows." />
+      <PageLink to="overview-lifecycle--docs" name="Lifecycle" desc="Draft, candidate, stable: what each stage promises." />
+      <PageLink to="foundations-voice-and-tone--docs" name="Voice and tone" desc="How the words on a screen are written." />
+      <PageLink to="foundations-word-list--docs" name="Word list" desc="The platform's words as the back office uses them, and the words to avoid." />
+      <PageLink to="overview-who-owns-what--docs" name="Who owns what" desc="What design owns, what developers own, what both decide." />
+      <PageLink to="overview-for-developers--docs" name="For developers" desc="What the system is and isn't, and how to adopt it." />
+      <PageLink to="overview-questions-for-developers--docs" name="Questions for developers" desc="The calls that are the developers' to make." />
+      <PageLink to="overview-what-comes-from-react-aria--docs" name="What comes from React Aria" desc="Per part, what React Aria gives and what survives a swap." />
+    </ul>
     <h2 className="gv-welcome__label">The system</h2>
     <ul className="gv-welcome__grid">
       <Card to="foundations-colour--docs" name="Foundations" specimen={<Swatches />}
