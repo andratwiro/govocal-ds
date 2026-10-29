@@ -119,11 +119,12 @@ export function AlertDialog({
               value={typed}
               onChange={setTyped}
               placeholder={confirmText.placeholder}
+              autoFocus
             />
           </div>
         )}
         <div className="gv-alert-dialog__footer">
-          <Button variant="quiet" slot="close" autoFocus={tone === 'danger'} onPress={onCancel}>
+          <Button variant="quiet" slot="close" autoFocus={tone === 'danger' && !confirmText} onPress={onCancel}>
             {cancelLabel}
           </Button>
           <Button

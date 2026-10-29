@@ -49,7 +49,8 @@
 
 .gv-banner[data-tone='warning'] .gv-banner__icon,
 .gv-banner[data-tone='warning'] .gv-banner__title {
-  color: var(--gv-icon-warning);
+  /* amber-600 alone is 2.8:1 on the amber surface; 60% of it with the primary text is 5.5:1 */
+  color: color-mix(in srgb, var(--gv-icon-warning) 60%, var(--gv-text-primary));
 }
 
 .gv-banner[data-tone='success'] .gv-banner__icon,

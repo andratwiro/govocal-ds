@@ -6,6 +6,7 @@ test('type to confirm: the confirm button stays disabled until the exact text is
   const dialog = page.getByRole('alertdialog');
   const confirm = dialog.getByRole('button', {name: 'Reset data'});
   const field = dialog.getByRole('textbox');
+  await expect(field).toBeFocused(); // the field is what to do next, so it takes focus, not Cancel
   await expect(confirm).toBeDisabled();
   await field.fill('Res');
   await expect(confirm).toBeDisabled();
