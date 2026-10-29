@@ -22,7 +22,7 @@ const long =
 export const AllVariants: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 16, width: 500}}>
-      <Banner type="info-link" linkLabel="Go to project" linkHref="#">
+      <Banner linkPlacement="inline" linkLabel="Go to project" linkHref="#">
         Goes live when you publish the project.
       </Banner>
       <Banner tone="info">{long}</Banner>
@@ -38,10 +38,10 @@ export const AllVariants: Story = {
   )
 };
 
-/** Tone=Info · link (type="info-link", kept for the calls that still pass it) */
+/** Tone=Info · link: the link right after the words (`linkPlacement="inline"`). */
 export const InfoLink: Story = {
   name: 'Info · link',
-  args: {type: 'info-link', children: 'Goes live when you publish the project.', linkLabel: 'Go to project', linkHref: '#'},
+  args: {linkPlacement: 'inline', children: 'Goes live when you publish the project.', linkLabel: 'Go to project', linkHref: '#'},
   decorators: [Story => <div style={{width: 444}}><Story /></div>],
   parameters: {design: {type: 'figma', url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=24-207'}}
 };
@@ -96,7 +96,7 @@ export const WithAction: Story = {
     tone: 'warning',
     title: 'Screening is on',
     children: 'There are 5 ideas. Participants cannot see them until you approve them.',
-    action: <Button variant="secondary" size={32} onPress={() => {}}>Review</Button>
+    actions: <Button variant="secondary" size={32} onPress={() => {}}>Review</Button>
   },
   decorators: [Story => <div style={{width: 400}}><Story /></div>]
 };
@@ -133,9 +133,9 @@ export const PhaseStatus: Story = {
   name: 'Phase status',
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 8, width: 320}}>
-      <Banner compact tone="neutral" title="Not started">Starts in 4 days</Banner>
-      <Banner compact tone="success" title="Live">Ends in 3 days</Banner>
-      <Banner compact tone="neutral" title="Ended">Closed on 12 Dec</Banner>
+      <Banner density="compact" tone="neutral" title="Not started">Starts in 4 days</Banner>
+      <Banner density="compact" tone="success" title="Live">Ends in 3 days</Banner>
+      <Banner density="compact" tone="neutral" title="Ended">Closed on 12 Dec</Banner>
     </div>
   )
 };

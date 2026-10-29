@@ -6,6 +6,7 @@ import {
 } from 'react-aria-components/CheckboxGroup';
 import {Label, FieldError, Description} from './Form';
 import './CheckboxGroup.css';
+import {keepClass} from './className';
 
 export interface CheckboxGroupProps extends Omit<AriaCheckboxGroupProps, 'children'> {
   children?: React.ReactNode;
@@ -24,7 +25,7 @@ export function CheckboxGroup({
   ...props
 }: CheckboxGroupProps) {
   return (
-    <AriaCheckboxGroup {...props} data-orientation={orientation}>
+    <AriaCheckboxGroup {...props} className={keepClass(props.className)} data-orientation={orientation}>
       {label && <Label>{label}</Label>}
       <div className="checkbox-items">{children}</div>
       {description && <Description>{description}</Description>}

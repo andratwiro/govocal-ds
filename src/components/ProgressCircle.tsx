@@ -2,6 +2,7 @@
 import {composeRenderProps} from 'react-aria-components/composeRenderProps';
 import {ProgressBar} from 'react-aria-components/ProgressBar';
 import type {ProgressBarProps} from 'react-aria-components/ProgressBar';
+import {keepClass} from './className';
 
 export interface ProgressCircleProps extends ProgressBarProps {
   size?: number;
@@ -15,6 +16,7 @@ export function ProgressCircle(props: ProgressCircleProps) {
   return (
     <ProgressBar
       {...props}
+      className={keepClass(props.className)}
       style={composeRenderProps(props.style, style => ({
         ...style,
         width: props.size || 16,

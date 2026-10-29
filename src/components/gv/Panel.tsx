@@ -2,9 +2,11 @@
 import {useId, useMemo, type ReactNode} from 'react';
 import {useLocale} from 'react-aria-components/I18nProvider';
 import {Badge} from './Badge';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './Panel.css';
 
-export interface PanelProps {
+export interface PanelProps extends PlacementProps {
   /** The panel's heading, e.g. "All participants". */
   title: ReactNode;
   /**
@@ -31,9 +33,8 @@ export interface PanelProps {
    *
    * @default false
    */
-  flush?: boolean;
+  isFlush?: boolean;
   children?: ReactNode;
-  className?: string;
 }
 
 /**
@@ -43,14 +44,14 @@ export interface PanelProps {
  * enough. Not in Figma yet.
  */
 export function Panel({
-  title, headingLevel = 2, count, description, actions, toolbar, footer, flush, children, className
+  title, headingLevel = 2, count, description, actions, toolbar, footer, isFlush, children, className, style
 }: PanelProps) {
   const id = useId();
   const {locale} = useLocale();
   const shown = useMemo(() => typeof count === 'number' ? new Intl.NumberFormat(locale).format(count) : count, [count, locale]);
   const Heading = `h${headingLevel}` as const;
   return (
-    <section className={className ? `gv-panel ${className}` : 'gv-panel'} aria-labelledby={id}>
+    <section className={clsx('gv-panel', className)} style={style} aria-labelledby={id}>
       <header className="gv-panel__head">
         <div className="gv-panel__titles">
           <Heading id={id} className="gv-panel__title">
@@ -62,7 +63,7 @@ export function Panel({
         {actions && <div className="gv-panel__actions">{actions}</div>}
       </header>
       {toolbar && <div className="gv-panel__toolbar">{toolbar}</div>}
-      <div className="gv-panel__body" data-flush={flush || undefined}>{children}</div>
+      <div className="gv-panel__body" data-flush={isFlush || undefined}>{children}</div>
       {footer && <footer className="gv-panel__foot">{footer}</footer>}
     </section>
   );

@@ -1,30 +1,12 @@
 import {useMemo, useState} from 'react';
 import {useNavigate} from 'react-router';
 import {BarChart3, CircleCheck, Clock, Copy, Mail, MessageSquare, Pencil, Plus, Send, Trash2} from 'lucide-react';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableStack,
-  DataTableOptions, DataTableEmpty} from '../../../src/components/gv/DataTable';
-import {MenuItem} from '../../../src/components/Menu';
-import {Button} from '../../../src/components/Button';
-import {TextField} from '../../../src/components/TextField';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {SearchField} from '../../../src/components/SearchField';
-import {Label} from '../../../src/components/Form';
-import {Panel} from '../../../src/components/gv/Panel';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {TableToolbar} from '../../../src/components/gv/TableToolbar';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
-import {StatTile} from '../../../src/components/gv/StatTile';
-import {Banner} from '../../../src/components/gv/Banner';
-import {Divider} from '../../../src/components/gv/Divider';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {SectionLabel} from '../../../src/components/gv/SectionLabel';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
-import {FilterChips} from '../../../src/patterns/FilterChips';
-import {NotificationEmail, NotificationList, NotificationRow} from '../../../src/patterns/NotificationRow';
+import {AlertDialog, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty,
+  DataTableHeader, DataTableOptions, DataTableRow, DataTableStack, Divider, EmptyState, FilterChips, type FilterFacet,
+  FilterMenu, type FilterValue, MenuItem, NotificationEmail, NotificationRow, NotificationRowList, Pagination, Panel,
+  queue, RichTextEditor, SearchField, SectionLabel, Select, SelectItem, StatTile, StatusBadge, Tab, TableToolbar,
+  TabList, TabPanel, TabPanels, Tabs, TextField, ToastRegion} from 'govocal-ds';
+import {Label} from 'govocal-ds/base';
 import {AUTOMATED, GROUP_SIZES, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
@@ -57,9 +39,9 @@ const STATUSES: CustomEmail['status'][] = ['Sent', 'Scheduled', 'Draft'];
 
 const emailFacets = (emails: CustomEmail[]): FilterFacet[] => [
   {id: 'status', label: 'Status', icon: <CircleCheck aria-hidden size={16} />,
-    options: STATUSES.map(s => ({id: s, label: s, count: emails.filter(e => e.status === s).length}))},
+    items: STATUSES.map(s => ({id: s, label: s, count: emails.filter(e => e.status === s).length}))},
   {id: 'to', label: 'Recipients', icon: <Mail aria-hidden size={16} />,
-    options: GROUPS.map(g => ({id: g, label: g, count: emails.filter(e => e.to === g).length}))}
+    items: GROUPS.map(g => ({id: g, label: g, count: emails.filter(e => e.to === g).length}))}
 ];
 
 /**
@@ -86,12 +68,12 @@ function CustomEmailTable({emails, onAction, onCreate}: {
       <Panel title="Custom emails" headingLevel={3} description="Send out custom emails and check statistics.">
         <EmptyState icon={<Mail aria-hidden size={24} />} title="Send your first email" headingLevel={4}
           description="Easily connect with your participants by sending them emails. Choose who to contact and track your engagement."
-          action={create} />
+          actions={create} />
       </Panel>
     );
   }
   return (
-    <Panel title="Custom emails" headingLevel={3} description="Send out custom emails and check statistics." flush
+    <Panel title="Custom emails" headingLevel={3} description="Send out custom emails and check statistics." isFlush
       actions={create}
       toolbar={<>
         <TableToolbar aria-label="Email tools" headingLevel={4} heading={emailsWord(rows.length)}>
@@ -116,7 +98,7 @@ function CustomEmailTable({emails, onAction, onCreate}: {
           <DataTableCell>
             <DataTableStack isStrong sub={<>To: {e.to}{e.project && <> · Project: {e.project}</>}</>}>{e.subject}</DataTableStack>
           </DataTableCell>
-          <DataTableCell><StatusBadge state={e.status === 'Sent' ? 'live' : 'draft'}>{e.status}</StatusBadge></DataTableCell>
+          <DataTableCell><StatusBadge status={e.status === 'Sent' ? 'live' : 'draft'}>{e.status}</StatusBadge></DataTableCell>
           <DataTableCell><span className="bo-messaging-nowrap">{e.date}</span></DataTableCell>
           <DataTableCell align="number">{pct(e.opened)}</DataTableCell>
           <DataTableCell align="number">{pct(e.clicked)}</DataTableCell>
@@ -180,7 +162,7 @@ function DraftComposer({email, onSave, onSend, onCancel}: {
           <div className="bo-messaging-field">
             <Label aria-hidden>Email message</Label>
             <RichTextEditor aria-label="Email message" placeholder="Write your message" value={body} onChange={setBody}
-              bold={bold} onBoldChange={setBold} italic={italic} onItalicChange={setItalic} list={list} onListChange={setList} />
+              isBold={bold} onBoldChange={setBold} isItalic={italic} onItalicChange={setItalic} isList={list} onListChange={setList} />
           </div>
         </div>
     </Panel>
@@ -240,7 +222,7 @@ function CustomEmails() {
         {draft
           ? <DraftComposer key={draft.id} email={draft} onSave={save} onSend={send} onCancel={() => setDraftId(undefined)} />
           : emails.some(e => e.status !== 'Sent') && (
-            <EmptyState size="panel" framed headingLevel="none" icon={<Pencil aria-hidden size={24} />}
+            <EmptyState layout="panel" isFramed headingLevel="none" icon={<Pencil aria-hidden size={24} />}
               title="No draft open" description="Choose Edit on a draft to open it here." />
           )}
       </div>
@@ -271,15 +253,15 @@ function AutomatedList({on, setOn, onEdit}: {on: Record<string, boolean>; setOn:
             <div className="bo-messaging-groups">
               {g.types.map(t => (
                 <div key={t.type} className="bo-messaging-group">
-                  <SectionLabel level={4}>{t.type}</SectionLabel>
-                  <NotificationList aria-label={`${g.role}: ${t.type}`}>
+                  <SectionLabel headingLevel={4}>{t.type}</SectionLabel>
+                  <NotificationRowList aria-label={`${g.role}: ${t.type}`}>
                     {t.emails.map(e => (
                       <NotificationRow key={e.id} who={e.who} when={e.trigger} isSelected={on[e.id]}
                         onChange={v => setOn(e, v)} onOpen={() => onEdit(e.id)}>
                         {e.name}
                       </NotificationRow>
                     ))}
-                  </NotificationList>
+                  </NotificationRowList>
                 </div>
               ))}
             </div>
@@ -347,7 +329,7 @@ function AutomatedEmails() {
           )}>
           {current
             ? <EmailPreview email={current} />
-            : <EmptyState size="panel" headingLevel="none" icon={<Mail aria-hidden size={24} />} title="No email open"
+            : <EmptyState layout="panel" headingLevel="none" icon={<Mail aria-hidden size={24} />} title="No email open"
               description="Open an email that is on to edit it and see it here." />}
         </Panel>
       </div>
@@ -366,12 +348,12 @@ function Sms() {
     <div className="bo-messaging-stack bo-messaging-lists">
       <div className="bo-messaging-kpis">
         <StatTile label="SMS credits remaining" value={n(SMS_BALANCE.purchased - used)} note={`of ${n(SMS_BALANCE.purchased)} credits purchased`} />
-        <StatTile label="SMS campaigns" value={n(SMS_BALANCE.usedCampaigns)} type="tall" />
-        <StatTile label="Test messages" value={n(SMS_BALANCE.usedTests)} type="tall" />
-        <StatTile label="Total used" value={n(used)} type="tall" />
+        <StatTile label="SMS campaigns" value={n(SMS_BALANCE.usedCampaigns)} layout="tall" />
+        <StatTile label="Test messages" value={n(SMS_BALANCE.usedTests)} layout="tall" />
+        <StatTile label="Total used" value={n(used)} layout="tall" />
       </div>
       <Banner>A message too long for one SMS is sent in several parts, and each part costs a credit for every recipient.</Banner>
-      <Panel title="SMS campaigns" headingLevel={3} description="Send text messages to your participants." flush
+      <Panel title="SMS campaigns" headingLevel={3} description="Send text messages to your participants." isFlush
         actions={<Button variant="primary" size={32} onPress={() => navigate('/messaging/texting/new')}><Plus aria-hidden size={16} />Create SMS</Button>}
         toolbar={<TableToolbar aria-label="SMS tools" headingLevel={4} heading={smsWord(SMS.length)} />}
         footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="SMS pages" />}>
@@ -385,7 +367,7 @@ function Sms() {
             <DataTableBody>{shown.map(s => (
               <DataTableRow key={s.id} id={s.id} textValue={s.label}>
                 <DataTableCell><DataTableStack isStrong sub={s.body}>{s.label}</DataTableStack></DataTableCell>
-                <DataTableCell><StatusBadge state={s.status === 'Sent' ? 'live' : 'draft'}>{s.status}</StatusBadge></DataTableCell>
+                <DataTableCell><StatusBadge status={s.status === 'Sent' ? 'live' : 'draft'}>{s.status}</StatusBadge></DataTableCell>
                 <DataTableCell><span className="bo-messaging-nowrap">{s.date}</span></DataTableCell>
                 <DataTableCell align="number">{s.delivered == null ? '—' : n(s.delivered)}</DataTableCell>
                 <DataTableCell align="number">{s.failed == null ? '—' : n(s.failed)}</DataTableCell>

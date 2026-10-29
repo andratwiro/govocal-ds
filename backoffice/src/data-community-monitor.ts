@@ -1,5 +1,5 @@
 // Community monitor: a recurring survey of how residents feel, read per quarter. Invented data only.
-import type {ChartColor} from '../../src/components/gv/Chart';
+import type {ChartColor} from 'govocal-ds';
 
 export const QUARTERS = ['Q1 2025', 'Q2 2025', 'Q3 2025', 'Q4 2025', 'Q1 2026', 'Q2 2026', 'Q3 2026', 'Q4 2026'];
 /** The last quarter is the current one: still collecting answers. */

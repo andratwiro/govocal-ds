@@ -2,11 +2,14 @@
 import type {ReactNode} from 'react';
 import {Button, Heading} from 'react-aria-components';
 import {X} from 'lucide-react';
-import {Dialog} from '../Dialog';
+import {Dialog} from 'react-aria-components/Dialog';
 import {Modal as StarterModal} from '../Modal';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './Modal.css';
 
-export interface ModalProps {
+/** `className` and `style` place the dialog box (a width, a margin); they never paint it. */
+export interface ModalProps extends PlacementProps {
   /** The title in the head, e.g. "Attachments". */
   title: string;
   /** The body. */
@@ -18,7 +21,7 @@ export interface ModalProps {
    *
    * @default 'default'
    */
-  size?: 'default' | 'wide';
+  width?: 'default' | 'wide';
   /**
    * `fixed` holds the dialog at 640 (capped by the viewport) so a tabbed body always fills it and
    * scrolls on its own, rather than the shell growing and shrinking with the active tab.
@@ -27,12 +30,12 @@ export interface ModalProps {
    */
   height?: 'auto' | 'fixed';
   /**
-   * Off for a body that lays out its own regions and scrolling (the side-tabs dialog's own list +
-   * panel), rather than the default single padded, scrolling block.
+   * No padding and no scrolling of its own around the body, for a body that lays out its own regions and scrolling
+   * (the side-tabs dialog's own list + panel), rather than the default single padded, scrolling block.
    *
-   * @default true
+   * @default false
    */
-  padBody?: boolean;
+  isFlush?: boolean;
   /** Controlled open state; inside a `DialogTrigger` the trigger handles it. */
   isOpen?: boolean;
   defaultOpen?: boolean;
@@ -48,18 +51,20 @@ export function Modal({
   title,
   children,
   footer,
-  size = 'default',
+  width = 'default',
   height = 'auto',
-  padBody = true,
+  isFlush = false,
   isOpen,
   defaultOpen,
   onOpenChange,
   isDismissable = true,
-  closeLabel = 'Close'
+  closeLabel = 'Close',
+  className,
+  style
 }: ModalProps) {
   return (
     <StarterModal isOpen={isOpen} defaultOpen={defaultOpen} onOpenChange={onOpenChange} isDismissable={isDismissable}>
-      <Dialog className="gv-modal" data-size={size} data-height={height}>
+      <Dialog className={clsx('gv-modal', className)} style={style} data-width={width} data-height={height}>
         <div className="gv-modal__head">
           <Heading slot="title" className="gv-modal__title">
             {title}
@@ -68,7 +73,7 @@ export function Modal({
             <X aria-hidden size={20} strokeWidth={1.75} />
           </Button>
         </div>
-        <div className="gv-modal__body" data-unpadded={!padBody || undefined}>{children}</div>
+        <div className="gv-modal__body" data-unpadded={isFlush || undefined}>{children}</div>
         {footer && <div className="gv-modal__footer">{footer}</div>}
       </Dialog>
     </StarterModal>

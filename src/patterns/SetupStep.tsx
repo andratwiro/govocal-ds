@@ -4,22 +4,24 @@ import {Button, Dialog, DialogTrigger, Disclosure, DisclosurePanel, Heading, Men
 import {ChevronDown, ChevronRight} from 'lucide-react';
 import {Popover} from '../components/Popover';
 import {Badge} from '../components/gv/Badge';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './SetupStep.css';
 
-export interface SetupStepProps {
+export interface SetupStepProps extends PlacementProps {
   /**
    * Figma "Action": Open leads somewhere else (chevron →); Expand opens the card in place (chevron ⌄). Not in Figma:
    * Pick opens a picker in a popover under the card (chevron ⌄), the prototype's Set area and Set topic tags.
    *
    * @default 'open'
    */
-  action?: 'open' | 'expand' | 'pick';
+  kind?: 'open' | 'expand' | 'pick';
   /** What the step is set to, short ("Harbour", "2 tags"): a teal value badge before the chevron. */
   value?: ReactNode;
-  /** Pick: what the popover holds. An Option list (`pickerType="dialog"`) or a Menu (`"menu"`, e.g. with a submenu). */
+  /** Pick: what the popover holds. An Option list (`pickerKind="dialog"`) or a Menu (`"menu"`, e.g. with a submenu). */
   picker?: ReactNode;
-  /** Pick: the picker's kind. @default 'dialog' */
-  pickerType?: 'dialog' | 'menu';
+  /** Pick: what kind of picker. @default 'dialog' */
+  pickerKind?: 'dialog' | 'menu';
   /** The step's name, e.g. "Settings" or "Set project card". */
   title: string;
   /** The step is done: the dashed circle becomes a filled check. */
@@ -58,7 +60,7 @@ function Check({isDone}: {isDone?: boolean}) {
 
 /** A setup checklist step: a dashed circle until it's done, then a check; what it is set to in a value badge. */
 export function SetupStep({
-  action = 'open',
+  kind = 'open',
   title,
   isDone,
   onPress,
@@ -68,7 +70,9 @@ export function SetupStep({
   onExpandedChange,
   value,
   picker,
-  pickerType = 'dialog'
+  pickerKind = 'dialog',
+  className,
+  style
 }: SetupStepProps) {
   const label = (
     <>
@@ -80,9 +84,9 @@ export function SetupStep({
       </span>
     </>
   );
-  if (action === 'open') {
+  if (kind === 'open') {
     return (
-      <div className="gv-setup-card" data-action="open" data-done={isDone || undefined}>
+      <div className={clsx('gv-setup-card', className)} style={style} data-kind="open" data-done={isDone || undefined}>
         <Button className="gv-setup-card__header" onPress={onPress}>
           {label}
           <span className="gv-setup-card__chevron" aria-hidden>
@@ -92,7 +96,7 @@ export function SetupStep({
       </div>
     );
   }
-  if (action === 'pick') {
+  if (kind === 'pick') {
     const header = (
       <Button className="gv-setup-card__header">
         {label}
@@ -103,11 +107,11 @@ export function SetupStep({
     );
     // The popover hangs under the card, as wide as it.
     const popover = (content: ReactNode) => (
-      <Popover placement="bottom start" hideArrow className="react-aria-Popover gv-setup-card__popover">{content}</Popover>
+      <Popover placement="bottom start" showArrow={false} className="gv-setup-card__popover">{content}</Popover>
     );
     return (
-      <div className="gv-setup-card" data-action="pick" data-done={isDone || undefined}>
-        {pickerType === 'menu' ? (
+      <div className={clsx('gv-setup-card', className)} style={style} data-kind="pick" data-done={isDone || undefined}>
+        {pickerKind === 'menu' ? (
           <MenuTrigger>{header}{popover(picker)}</MenuTrigger>
         ) : (
           <DialogTrigger>{header}{popover(<Dialog aria-label={title} className="gv-setup-card__dialog">{picker}</Dialog>)}</DialogTrigger>
@@ -117,8 +121,8 @@ export function SetupStep({
   }
   return (
     <Disclosure
-      className="gv-setup-card"
-      data-action="expand"
+      className={clsx('gv-setup-card', className)} style={style}
+      data-kind="expand"
       data-done={isDone || undefined}
       defaultExpanded={defaultExpanded}
       isExpanded={isExpanded}

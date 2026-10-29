@@ -3,9 +3,11 @@ import {useId, useState, type ReactNode} from 'react';
 import {ToggleButton} from 'react-aria-components/ToggleButton';
 import {Check} from 'lucide-react';
 import {Switch} from '../components/Switch';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './ViewOptionRow.css';
 
-export interface ViewOptionRowProps {
+export interface ViewOptionRowProps extends PlacementProps {
   /** The view ("List view", "Map view", "Perspectives view"). */
   children: string;
   /** What it shows and what it is best for; may hold links ("Make sure you add a location field to the Idea form"). */
@@ -38,7 +40,9 @@ export function ViewOptionRow({
   onChange,
   isDefault = false,
   onMakeDefault,
-  options
+  options,
+  className,
+  style
 }: ViewOptionRowProps) {
   const id = useId();
   const [inner, setInner] = useState(defaultSelected);
@@ -48,7 +52,7 @@ export function ViewOptionRow({
     onChange?.(next);
   };
   return (
-    <div className="gv-view-option" data-off={!on || undefined}>
+    <div className={clsx('gv-view-option', className)} style={style} data-off={!on || undefined}>
       {isAlwaysOn ? (
         <span className="gv-view-option__always" role="img" aria-label="Always enabled">
           <Check aria-hidden size={16} />
@@ -91,15 +95,19 @@ export function ViewOptionRow({
 }
 
 /** The views, one row each, a hairline between them (a phase's Available views card). */
-export function ViewOptionList({
-  children,
-  'aria-label': ariaLabel = 'Available views'
-}: {
+export interface ViewOptionListProps extends PlacementProps {
   children: ReactNode;
   'aria-label'?: string;
-}) {
+}
+
+export function ViewOptionList({
+  children,
+  'aria-label': ariaLabel = 'Available views',
+  className,
+  style
+}: ViewOptionListProps) {
   return (
-    <div className="gv-view-option-list" role="group" aria-label={ariaLabel}>
+    <div className={clsx('gv-view-option-list', className)} style={style} role="group" aria-label={ariaLabel}>
       {children}
     </div>
   );

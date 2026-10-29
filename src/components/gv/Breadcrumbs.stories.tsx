@@ -20,15 +20,15 @@ type Story = StoryObj<typeof Breadcrumbs>;
 export const AllVariants: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 24}}>
-      <Breadcrumbs level="project" items={[{key: 'root', label: 'Projects', href: '#'}, {key: 'cur', label: 'Green Corridors for Riverside'}]} />
+      <Breadcrumbs variant="default" items={[{key: 'root', label: 'Projects', href: '#'}, {key: 'cur', label: 'Green Corridors for Riverside'}]} />
       <Breadcrumbs
-        level="phase"
-        phaseState="draft"
+        variant="editor"
+        status="draft"
         items={[{key: 'root', label: 'Green Corridors for Riverside', href: '#'}, {key: 'cur', label: 'Collect ideas'}]}
       />
       <Breadcrumbs
-        level="phase"
-        phaseState="live"
+        variant="editor"
+        status="live"
         items={[{key: 'root', label: 'Green Corridors for Riverside', href: '#'}, {key: 'cur', label: 'Collect ideas'}]}
       />
     </div>
@@ -37,7 +37,7 @@ export const AllVariants: Story = {
 
 export const Project: Story = {
   args: {
-    level: 'project',
+    variant: 'default',
     items: [
       {key: 'root', label: 'Projects', href: '#'},
       {key: 'cur', label: 'Green Corridors for Riverside'}
@@ -48,8 +48,8 @@ export const Project: Story = {
 export const PhaseDraft: Story = {
   name: 'Phase · Draft',
   args: {
-    level: 'phase',
-    phaseState: 'draft',
+    variant: 'editor',
+    status: 'draft',
     items: [
       {key: 'root', label: 'Green Corridors for Riverside', href: '#'},
       {key: 'cur', label: 'Collect ideas'}
@@ -60,8 +60,8 @@ export const PhaseDraft: Story = {
 export const PhaseLive: Story = {
   name: 'Phase · Live',
   args: {
-    level: 'phase',
-    phaseState: 'live',
+    variant: 'editor',
+    status: 'live',
     items: [
       {key: 'root', label: 'Green Corridors for Riverside', href: '#'},
       {key: 'cur', label: 'Collect ideas'}

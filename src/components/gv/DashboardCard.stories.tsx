@@ -43,11 +43,11 @@ const STATUSES = [
   {label: 'Implemented', percent: 3, count: 1, color: 'green'}
 ] as const;
 const OPTIONS = [
-  {title: 'Green Corridors for Riverside', votes: 214},
-  {title: 'Shade sails over the Lagoon playground', votes: 168},
-  {title: 'A covered bike park at Market Square', votes: 121},
-  {title: 'Night lighting on the canal towpath', votes: 77},
-  {title: 'Community fridge at the library', votes: 42}
+  {title: 'Green Corridors for Riverside', count: 214},
+  {title: 'Shade sails over the Lagoon playground', count: 168},
+  {title: 'A covered bike park at Market Square', count: 121},
+  {title: 'Night lighting on the canal towpath', count: 77},
+  {title: 'Community fridge at the library', count: 42}
 ];
 const VOTES = [12, 18, 24, 28, 35, 48, 62, 71, 78, 89, 94, 108, 124, 142, 168, 198, 228, 258, 291, 318, 342];
 const DAYS = VOTES.map((_, i) => `${i + 1} May`);
@@ -79,26 +79,26 @@ const SUMMARY =
 const cards = {
   statements: (
     <DashboardCard
-      type="statements"
+      kind="statements"
       title="Statements"
       subtitle="Where the community aligns and where it splits."
-      legend={<ChartLegend shape="square" align="start" items={[{label: 'Agree', color: 'agree'}, {label: 'Disagree', color: 'disagree'}, {label: 'Pass', color: 'pass'}]} />}>
+      legend={<ChartLegend variant="square" align="start" items={[{label: 'Agree', color: 'agree'}, {label: 'Disagree', color: 'disagree'}, {label: 'Pass', color: 'pass'}]} />}>
       <DashboardStatements items={STATEMENTS} />
     </DashboardCard>
   ),
   visitors: (
-    <DashboardCard type="visitors-over-time" title="Visitors over time">
+    <DashboardCard kind="visitors-over-time" title="Visitors over time">
       <LineChart labels={WEEKS} series={[{label: 'Visitors', values: [2, 5, 9, 14, 11, 7]}]} />
     </DashboardCard>
   ),
   participation: (
-    <DashboardCard type="participation-over-time" title="Participation over time">
-      <LineChart legend labels={WEEKS} series={[{label: 'Participants', values: [1, 0, 1, 10, 0, 1]}, {label: 'Visitors', values: [0, 3, 9, 9, 6, 6]}]} />
+    <DashboardCard kind="participation-over-time" title="Participation over time">
+      <LineChart showLegend labels={WEEKS} series={[{label: 'Participants', values: [1, 0, 1, 10, 0, 1]}, {label: 'Visitors', values: [0, 3, 9, 9, 6, 6]}]} />
     </DashboardCard>
   ),
   ai: (
     <DashboardCard
-      type="ai-summary"
+      kind="ai-summary"
       icon={<Sparkles />}
       title="What are people saying?"
       footer={<>1 / 34<CompactButton>Explore</CompactButton></>}>
@@ -106,7 +106,7 @@ const cards = {
     </DashboardCard>
   ),
   topics: (
-    <DashboardCard type="topic-breakdown" title="Topic breakdown">
+    <DashboardCard kind="topic-breakdown" title="Topic breakdown">
       <DashboardTopics
         items={[
           {id: 'ai', label: 'AI topic distribution', meta: '34 inputs · 0 topics'},
@@ -117,17 +117,17 @@ const cards = {
     </DashboardCard>
   ),
   status: (
-    <DashboardCard type="status-breakdown" title="Status breakdown">
+    <DashboardCard kind="status-breakdown" title="Status breakdown">
       <DashboardBars items={[...STATUSES]} />
     </DashboardCard>
   ),
   votes: (
     <DashboardCard
-      type="votes-over-time"
+      kind="votes-over-time"
       title="Participation over time"
       subtitle="Votes cast · cumulative"
-      action={
-        <SegmentedControl size="small" aria-label="Range" disallowEmptySelection defaultSelectedKeys={['daily']}>
+      actions={
+        <SegmentedControl size={30} aria-label="Range" disallowEmptySelection defaultSelectedKeys={['daily']}>
           <SegmentedControlItem id="daily">Daily</SegmentedControlItem>
           <SegmentedControlItem id="weekly">Weekly</SegmentedControlItem>
         </SegmentedControl>
@@ -136,7 +136,7 @@ const cards = {
     </DashboardCard>
   ),
   ranking: (
-    <DashboardCard type="live-ranking" title="Live ranking" subtitle="By votes · updating live">
+    <DashboardCard kind="live-ranking" title="Live ranking" subtitle="By votes · updating live">
       <DashboardRanking items={OPTIONS} />
     </DashboardCard>
   ),
@@ -146,12 +146,12 @@ const cards = {
     </DashboardCard>
   ),
   age: (
-    <DashboardCard type="demographic-age">
+    <DashboardCard kind="demographic-age">
       <DashboardDemographic label="Age group" items={[...AGES]} />
     </DashboardCard>
   ),
   commute: (
-    <DashboardCard type="demographic-commute">
+    <DashboardCard kind="demographic-commute">
       <DashboardDemographic label="Primary commute" items={[...COMMUTES]} />
     </DashboardCard>
   )
@@ -217,17 +217,17 @@ export const DemographicCommute: Story = {name: 'Demographic · commute', render
 
 /**
  * Not in Figma. A card with no data yet, as the prototype's freshly published phase and its "Demographics and audience"
- * card: an EmptyState (`size="panel"`, no heading: the card has one) right under the title. The prototype draws one
+ * card: an EmptyState (`layout="panel"`, no heading: the card has one) right under the title. The prototype draws one
  * muted line; the EmptyState's strong title is a step louder, kept so every empty place reads the same.
  */
 export const Empty: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 14}}>
-      <DashboardCard type="participation-over-time" title="Participation over time">
-        <EmptyState size="panel" headingLevel="none" title="No participation yet" description="The trend will appear here." />
+      <DashboardCard kind="participation-over-time" title="Participation over time">
+        <EmptyState layout="panel" headingLevel="none" title="No participation yet" description="The trend will appear here." />
       </DashboardCard>
       <DashboardCard title="Demographics and audience">
-        <EmptyState size="panel" headingLevel="none" title="No demographic data yet" description="It appears once participants fill in their profile." />
+        <EmptyState layout="panel" headingLevel="none" title="No demographic data yet" description="It appears once participants fill in their profile." />
       </DashboardCard>
     </div>
   ),

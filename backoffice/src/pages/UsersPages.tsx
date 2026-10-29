@@ -1,25 +1,11 @@
 import {useState} from 'react';
 import {useParams} from 'react-router';
 import {Download, MailX, RotateCw, SearchX, Send, ShieldCheck, ShieldOff, Trash2, UserX, Users as UsersIcon} from 'lucide-react';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell,
-  DataTablePerson, DataTableOptions} from '../../../src/components/gv/DataTable';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {TextArea} from '../../../src/components/TextField';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {Button} from '../../../src/components/Button';
-import {Meter} from '../../../src/components/Meter';
-import {MenuItem, Separator} from '../../../src/components/Menu';
-import {ToastRegion} from '../../../src/components/Toast';
-import {Panel} from '../../../src/components/gv/Panel';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {TableToolbar} from '../../../src/components/gv/TableToolbar';
-import {SearchField} from '../../../src/components/SearchField';
-import {StatTile} from '../../../src/components/gv/StatTile';
-import {Avatar} from '../../../src/components/gv/Avatar';
-import {Badge} from '../../../src/components/gv/Badge';
-import {Banner} from '../../../src/components/gv/Banner';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {PropertyList, PropertyListItem} from '../../../src/components/gv/PropertyList';
+import {Avatar, Badge, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
+  DataTableOptions, DataTablePerson, DataTableRow, EmptyState, MenuItem, Pagination, Panel, PropertyList,
+  PropertyListItem, SearchField, Select, SelectItem, Separator, StatTile, Tab, TableToolbar, TabList, TabPanel,
+  TabPanels, Tabs, TextArea, ToastRegion} from 'govocal-ds';
+import {Meter} from 'govocal-ds/base';
 import {INVITATIONS, PARTICIPATION, SEATS, SEATS_A_MONTH_AGO, type Invitation, type Person, type Role} from '../data-users';
 import {ago, date, groupStore, initials, PAGE_SIZE, peopleStore, toast} from './Users';
 import {Page} from './Page';
@@ -88,7 +74,7 @@ function InvitationTable({invitations, onResend, onDelete}: {
   const {page, pageCount, setPage, shown} = usePage(found);
   // One count, in the toolbar, following the search (docs/DECISIONS.md).
   return (
-    <Panel title="All invitations" flush
+    <Panel title="All invitations" isFlush
       actions={<Button variant="quiet" size={32} onPress={() => toast('Export started', 'invitations.xlsx')}>
         {icon(Download)}Export all invitations</Button>}
       toolbar={(
@@ -101,8 +87,8 @@ function InvitationTable({invitations, onResend, onDelete}: {
       footer={found.length > 0 && <Pagination page={page} pageCount={pageCount} onPageChange={setPage} aria-label="Invitation pages" />}>
       {found.length === 0 ? (
         query
-          ? <EmptyState size="panel" headingLevel={3} icon={<SearchX size={24} />} title="No invitations match" description="Try another email address." />
-          : <EmptyState size="panel" headingLevel={3} icon={<MailX size={24} />} title="No invitations yet"
+          ? <EmptyState layout="panel" headingLevel={3} icon={<SearchX size={24} />} title="No invitations match" description="Try another email address." />
+          : <EmptyState layout="panel" headingLevel={3} icon={<MailX size={24} />} title="No invitations yet"
               description="Invitations you send show here, with whether they were accepted." />
       ) : (
       <div className="bo-users-scroll">
@@ -180,9 +166,9 @@ export function UserInvitations() {
 function PeopleTable({label, people, empty}: {label: string; people: Person[]; empty: string}) {
   const {page, pageCount, setPage, shown} = usePage(people);
   return (
-    <Panel title={label} count={people.length} flush
+    <Panel title={label} count={people.length} isFlush
       footer={people.length > 0 && <Pagination page={page} pageCount={pageCount} onPageChange={setPage} aria-label={`${label} pages`} />}>
-      {people.length === 0 ? <EmptyState size="panel" headingLevel={3} icon={<UsersIcon size={24} />} title={empty} /> : (
+      {people.length === 0 ? <EmptyState layout="panel" headingLevel={3} icon={<UsersIcon size={24} />} title={empty} /> : (
       <div className="bo-users-scroll">
         <DataTable aria-label={label}>
           <DataTableHeader>
@@ -224,12 +210,12 @@ export function SeatsOverview() {
         <div className="bo-users-kpis">
           <StatTile label="Admin seats used" value={admins.length} note={`of ${SEATS.admins} in your plan`}
             trend={trend(admins.length, SEATS_A_MONTH_AGO.admins)} info="Every platform admin takes one admin seat." />
-          <StatTile label="Admin seats available" value={SEATS.admins - admins.length} type="tall"
+          <StatTile label="Admin seats available" value={SEATS.admins - admins.length} layout="tall"
             info="Admin seats left in your plan before it needs more." />
           <StatTile label="Manager seats used" value={managers.length} note={`of ${SEATS.managers} in your plan`}
             trend={trend(managers.length, SEATS_A_MONTH_AGO.managers)}
             info="Every project, folder or space manager takes one manager seat." />
-          <StatTile label="Manager seats available" value={SEATS.managers - managers.length} type="tall"
+          <StatTile label="Manager seats available" value={SEATS.managers - managers.length} layout="tall"
             info="Manager seats left in your plan before it needs more." />
         </div>
         <div className="bo-users-pair">

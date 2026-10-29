@@ -13,6 +13,7 @@ import {Button} from './Button';
 import {ChevronLeft, ChevronRight} from 'lucide-react';
 import {CalendarGrid} from './Calendar';
 import './RangeCalendar.css';
+import {keepClass} from './className';
 
 export interface RangeCalendarProps<T extends DateValue> extends AriaRangeCalendarProps<T> {
   errorMessage?: string;
@@ -24,7 +25,7 @@ export function RangeCalendar<T extends DateValue>({
 }: RangeCalendarProps<T>) {
   let months = props.visibleDuration?.months || 1;
   return (
-    <AriaRangeCalendar {...props}>
+    <AriaRangeCalendar {...props} className={keepClass(props.className)}>
       <div className="months">
         {Array.from({length: months}, (_, i) => (
           <div key={i} className="month">
@@ -41,7 +42,7 @@ export function RangeCalendar<T extends DateValue>({
                 </Button>
               )}
             </header>
-            <CalendarGrid offset={{months: i}}>{date => <CalendarCell date={date} />}</CalendarGrid>
+            <CalendarGrid offset={{months: i}}>{date => <RangeCalendarCell date={date} />}</CalendarGrid>
           </div>
         ))}
       </div>
@@ -50,10 +51,10 @@ export function RangeCalendar<T extends DateValue>({
   );
 }
 
-export {CalendarGrid};
-export function CalendarCell(props: CalendarCellProps) {
+/** A day in the range calendar: the range's two ends are filled. */
+export function RangeCalendarCell(props: CalendarCellProps) {
   return (
-    <AriaCalendarCell {...props}>
+    <AriaCalendarCell {...props} className={keepClass(props.className)}>
       {composeRenderProps(
         props.children,
         (

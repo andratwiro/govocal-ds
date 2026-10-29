@@ -11,12 +11,12 @@
   letter-spacing: var(--gv-type-small-strong-tracking);
   white-space: nowrap;
 
-  &[data-state='draft'] {
+  &[data-status='draft'] {
     background: var(--gv-surface-stage);
     color: var(--gv-text-pill);
   }
 
-  &[data-state='live'] {
+  &[data-status='live'] {
     background: var(--gv-surface-live);
     color: var(--gv-text-live);
   }

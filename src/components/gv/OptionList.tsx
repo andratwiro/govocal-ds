@@ -2,9 +2,13 @@
 import {useContext, useState, type KeyboardEvent, type ReactNode} from 'react';
 import {Autocomplete, useFilter} from 'react-aria-components/Autocomplete';
 import {OverlayTriggerStateContext} from 'react-aria-components/Dialog';
-import {Menu, MenuItem, Text} from '../Menu';
+import {Menu, MenuItem} from '../Menu';
+import {Text} from '../Content';
 import {SearchField} from '../SearchField';
 import {Button} from '../Button';
+import {useControlledState} from '../useControlledState';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './OptionList.css';
 
 export interface OptionListItem {
@@ -16,13 +20,16 @@ export interface OptionListItem {
   count?: number;
 }
 
-export interface OptionListProps {
+export interface OptionListProps extends PlacementProps {
   /** Names the list, e.g. "Tags". */
   'aria-label': string;
-  options: OptionListItem[];
-  /** The ids that are chosen. */
-  selected: readonly string[];
-  onChange: (selected: string[]) => void;
+  /** The options. */
+  items: OptionListItem[];
+  /** The ids that are chosen (controlled). */
+  value?: readonly string[];
+  /** The ids chosen at first, when the list keeps its own value. @default [] */
+  defaultValue?: readonly string[];
+  onChange?: (value: string[]) => void;
   /**
    * Several (a box at the start of each row; the list stays open) or one (a check at the end of the chosen row; the
    * popover closes on a choice).
@@ -35,7 +42,7 @@ export interface OptionListProps {
   /** Words for an option's count. @default n => String(n) */
   countLabel?: (n: number) => string;
   /** A search over the list, the magnifier first. @default more than five options */
-  searchable?: boolean;
+  isSearchable?: boolean;
   /** @default 'Filter...' */
   placeholder?: string;
   /** Names the search for screen readers. @default "Filter <aria-label, lower case>" */
@@ -57,9 +64,9 @@ export interface OptionListProps {
  * keeps the list open) or one (a check at the end). A React Aria Menu with selection inside an Autocomplete with the
  * system's SearchField, so typing narrows the list and the arrows still move through it. Not in Figma yet.
  */
-export function OptionList({'aria-label': label, options, selected, onChange, selectionMode = 'multiple', icon,
-  countLabel = String, searchable = options.length > 5, placeholder = 'Filter...', searchLabel,
-  emptyLabel = 'No results', selectionLabel, onDone}: OptionListProps) {
+export function OptionList({'aria-label': label, items, value, defaultValue = [], onChange, selectionMode = 'multiple',
+  icon, countLabel = String, isSearchable: searchable = items.length > 5, placeholder = 'Filter...', searchLabel,
+  emptyLabel = 'No results', selectionLabel, onDone, className, style}: OptionListProps) {
   const {contains} = useFilter({sensitivity: 'base'});
   const [query, setQuery] = useState('');
   const overlay = useContext(OverlayTriggerStateContext);
@@ -76,21 +83,23 @@ export function OptionList({'aria-label': label, options, selected, onChange, se
     overlay?.close();
     trigger?.focus();
   };
+  const [selected, setSelected] = useControlledState<readonly string[]>(value, defaultValue);
   const choose = (ids: string[]) => {
-    onChange(ids);
+    setSelected(ids);
+    onChange?.(ids);
     if (selectionMode === 'single') overlay?.close();
   };
   const list = (
-    <Menu aria-label={label} className="react-aria-Menu gv-option-list__list" items={options}
+    <Menu aria-label={label} className="gv-option-list__list" items={items}
       selectionMode={selectionMode} selectedKeys={selected} escapeKeyBehavior="none"
       disallowEmptySelection={selectionMode === 'single'}
       // React Aria closes a menu on Enter even when picking several; in a search Space types, so Enter must tick
       // and leave the list open. Esc or Done closes it.
       shouldCloseOnSelect={selectionMode === 'single' ? undefined : false}
-      onSelectionChange={keys => choose(keys === 'all' ? options.map(o => o.id) : [...keys].map(String))}
+      onSelectionChange={keys => choose(keys === 'all' ? items.map(o => o.id) : [...keys].map(String))}
       renderEmptyState={() => emptyLabel}>
       {o => (
-        <MenuItem id={o.id} textValue={o.label} icon={o.icon ?? icon} className="react-aria-MenuItem gv-option-list__item">
+        <MenuItem id={o.id} textValue={o.label} icon={o.icon ?? icon} className="gv-option-list__item">
           <Text slot="label" className="gv-option-list__label">
             <span className="gv-option-list__name">{o.label}</span>
             {o.count != null && <span className="gv-option-list__count">{countLabel(o.count)}</span>}
@@ -100,11 +109,11 @@ export function OptionList({'aria-label': label, options, selected, onChange, se
     </Menu>
   );
   return (
-    <div className="gv-option-list" onKeyDownCapture={searchable ? onEscape : undefined}>
+    <div className={clsx('gv-option-list', className)} style={style} onKeyDownCapture={searchable ? onEscape : undefined}>
       {searchable ? (
         <Autocomplete filter={contains} inputValue={query} onInputChange={setQuery}>
           <SearchField aria-label={searchLabel ?? `Filter ${label.toLowerCase()}`} placeholder={placeholder} autoFocus
-            className="react-aria-SearchField gv-option-list__search" />
+            className="gv-option-list__search" />
           {list}
         </Autocomplete>
       ) : list}

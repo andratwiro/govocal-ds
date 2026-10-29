@@ -3,34 +3,12 @@ import {useNavigate} from 'react-router';
 import {ArrowDown, ArrowUp, Calendar, Asterisk, ChartColumn, ChevronDown, ChevronLeft, ChevronRight, ClipboardList, Eye,
   FileText, Folder, FolderPlus, GripVertical, Info, LayoutGrid, Lightbulb, MapPin, Orbit, Plus, UserRound, Users, Vote}
   from 'lucide-react';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableOptions,
-  DataTableEmpty, DataTableAssignee, DataTableStack, DataTableThumbnail}
-  from '../../../src/components/gv/DataTable';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {Panel} from '../../../src/components/gv/Panel';
-import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {ChoiceCard} from '../../../src/components/gv/ChoiceCard';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {SearchField} from '../../../src/components/SearchField';
-import {RadioGroup} from '../../../src/components/RadioGroup';
-import {ToggleButton} from '../../../src/components/ToggleButton';
-import {DateRangePicker} from '../../../src/components/DateRangePicker';
-import {DatePicker} from '../../../src/components/DatePicker';
-import {TextField, TextArea} from '../../../src/components/TextField';
-import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Button} from '../../../src/components/Button';
-import {Link} from '../../../src/components/Link';
-import {Avatar} from '../../../src/components/gv/Avatar';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {Badge} from '../../../src/components/gv/Badge';
-import {Modal} from '../../../src/components/gv/Modal';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {FilterChips} from '../../../src/patterns/FilterChips';
-import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
+import {AlertDialog, Avatar, Badge, Button, ChoiceCard, DataTable, DataTableAssignee, DataTableBody, DataTableCell,
+  DataTableColumn, DataTableEmpty, DataTableHeader, DataTableOptions, DataTableRow, DataTableStack, DataTableThumbnail,
+  EmptyState, FilterChips, type FilterFacet, FilterMenu, type FilterValue, IconButton, Menu, MenuItem, MenuTrigger,
+  Modal, Pagination, Panel, queue, SearchField, Select, SelectItem, StatusBadge, Tab, TableToolbar, TableToolbarHeading,
+  TabList, TabPanel, TabPanels, Tabs, TextArea, TextField, ToastRegion} from 'govocal-ds';
+import {DatePicker, DateRangePicker, Link, RadioGroup, ToggleButton} from 'govocal-ds/base';
 import {PROJECTS, type Project} from '../data';
 import {CALENDAR_START, FOLDERS, PENDING, SPACES, TEMPLATES, type Folder as FolderRow} from '../data-projects';
 import {Gap, GapLegend} from '../Gap';
@@ -80,11 +58,11 @@ function projectFacets(projects: Project[], folders: FolderRow[]): FilterFacet[]
   const option = (facet: string) => (id: string) => ({id, label: id, count: countOf(projects, facet, id)});
   const managers = [...new Set(projects.flatMap(p => p.managers ?? []))].sort();
   return [
-    {id: 'visibility', label: 'Visibility', icon: <Eye aria-hidden size={16} />, options: ['Published', 'Draft'].map(option('visibility'))},
+    {id: 'visibility', label: 'Visibility', icon: <Eye aria-hidden size={16} />, items: ['Published', 'Draft'].map(option('visibility'))},
     {id: 'folder', label: 'Folder', icon: <Folder aria-hidden size={16} />,
-      options: [NO_FOLDER, ...folders.map(f => f.name)].map(option('folder'))},
-    {id: 'manager', label: 'Manager', icon: <UserRound aria-hidden size={16} />, options: [
-      {...option('manager')(NO_MANAGER), icon: <Avatar size={16} unassigned />},
+      items: [NO_FOLDER, ...folders.map(f => f.name)].map(option('folder'))},
+    {id: 'manager', label: 'Manager', icon: <UserRound aria-hidden size={16} />, items: [
+      {...option('manager')(NO_MANAGER), icon: <Avatar size={16} isUnassigned />},
       ...managers.map(m => ({...option('manager')(m), icon: <Avatar size={16} initials={initial(m)} />}))
     ]}
   ];
@@ -127,7 +105,7 @@ function Managers({names}: {names?: string[]}) {
 
 const Visibility = ({p}: {p: Project}) => (
   <DataTableStack sub={p.access}>
-    <StatusBadge state={p.status === 'Live' ? 'live' : 'draft'}>{visibilityOf(p)}</StatusBadge>
+    <StatusBadge status={p.status === 'Live' ? 'live' : 'draft'}>{visibilityOf(p)}</StatusBadge>
   </DataTableStack>
 );
 
@@ -200,13 +178,13 @@ function ScratchModal({folders, spaces, onClose, onCreate}: {folders: FolderRow[
       {/* The prototype's two pills under the title (Select's "With search" and "With icons" stories). */}
       <div className="bo-projects-form">
         <div className="bo-projects-pills">
-          <Select variant="pill" aria-label="Space" prefix="Space:" searchable searchPlaceholder="Search spaces"
+          <Select variant="pill" aria-label="Space" prefix="Space:" isSearchable searchPlaceholder="Search spaces"
             selectedKey={space} onSelectionChange={k => setSpace(String(k))}>
             {[{id: 'none', name: 'No space'}, ...spaces.map(s => ({id: s.name, name: s.name}))].map(s => (
               <SelectItem key={s.id} id={s.id} icon={<Asterisk aria-hidden size={16} />}>{s.name}</SelectItem>
             ))}
           </Select>
-          <Select variant="pill" aria-label="Folder" prefix="Folder:" searchable searchPlaceholder="Search folders"
+          <Select variant="pill" aria-label="Folder" prefix="Folder:" isSearchable searchPlaceholder="Search folders"
             selectedKey={folder} onSelectionChange={k => setFolder(String(k))}>{folderItems(folders, true)}</Select>
         </div>
         <p className="bo-note">Both are optional. The project opens as an untitled draft: name it from its overview.</p>
@@ -224,7 +202,7 @@ function TemplateGallery({onClose, onUse}: {onClose: () => void; onUse: (templat
   const [chosen, setChosen] = useState<string | null>(null);
   const list = TEMPLATES.filter(t => matches(t.title, query));
   return (
-    <Modal title="Start from a template" size="wide" isOpen onOpenChange={closing(onClose)}
+    <Modal title="Start from a template" width="wide" isOpen onOpenChange={closing(onClose)}
       footer={footer('Use template', () => chosen && onUse(chosen), !chosen || !list.some(t => t.title === chosen))}>
       <div className="bo-projects-gallery">
         <div className="bo-projects-gallery-head">
@@ -232,13 +210,13 @@ function TemplateGallery({onClose, onUse}: {onClose: () => void; onUse: (templat
           <SearchField aria-label="Search the templates" placeholder="Search the templates" value={query} onChange={setQuery} />
         </div>
         {list.length ? (
-          <RadioGroup aria-label="Templates" className="react-aria-RadioGroup bo-projects-templates" value={chosen}
+          <RadioGroup aria-label="Templates" className="bo-projects-templates" value={chosen}
             onChange={setChosen}>
             {list.map(t => (
               <ChoiceCard key={t.title} value={t.title} media={methodTile(t.method)} description={t.summary}>{t.title}</ChoiceCard>
             ))}
           </RadioGroup>
-        ) : <EmptyState size="panel" headingLevel="none" title="No templates match" description="Try another word." />}
+        ) : <EmptyState layout="panel" headingLevel="none" title="No templates match" description="Try another word." />}
       </div>
     </Modal>
   );
@@ -281,7 +259,7 @@ function MoveModal({project, folders, onClose, onMove}: {project: Project; folde
   const [folder, setFolder] = useState(project.folder ?? NO_FOLDER);
   return (
     <Modal title="Move to folder" isOpen onOpenChange={closing(onClose)} footer={footer('Move', () => onMove(orNone(folder)))}>
-      <Select label="Folder" description={`Where ${project.title} is listed, here and on the platform.`} searchable
+      <Select label="Folder" description={`Where ${project.title} is listed, here and on the platform.`} isSearchable
         searchPlaceholder="Search folders" selectedKey={folder} onSelectionChange={k => setFolder(String(k))}>
         {folderItems(folders, true)}
       </Select>
@@ -308,7 +286,7 @@ function GroupPanel<T extends {name: string; managers: string[]}>({title, descri
   const {current, pageCount, setPage, shown} = usePages(found, SHORT_PAGE);
   const singular = title === 'Folders' ? 'folder' : 'space';
   return (
-    <Panel title={title} description={description} flush
+    <Panel title={title} description={description} isFlush
       toolbar={(
         <TableToolbar aria-label={`${singular[0].toUpperCase()}${singular.slice(1)} tools`} heading={word(found.length)}>
           <SearchField aria-label={`Search ${title.toLowerCase()}`} placeholder="Search" value={query}
@@ -332,7 +310,7 @@ function GroupPanel<T extends {name: string; managers: string[]}>({title, descri
               <DataTableCell textValue={projectsWord(inside(r).length)}><Inside projects={inside(r)} /></DataTableCell>
               <DataTableCell><Managers names={r.managers} /></DataTableCell>
               {status && <DataTableCell>
-                <StatusBadge state={status(r) === 'Published' ? 'live' : 'draft'}>{status(r)}</StatusBadge>
+                <StatusBadge status={status(r) === 'Published' ? 'live' : 'draft'}>{status(r)}</StatusBadge>
               </DataTableCell>}
             </DataTableRow>
           ))}
@@ -356,7 +334,7 @@ function CalendarView({projects}: {projects: Project[]}) {
     return start < to && (Number.isNaN(end) || end >= from);
   });
   return (
-    <Panel title={label} count={running.length} description="Projects running at some point in the month." flush
+    <Panel title={label} count={running.length} description="Projects running at some point in the month." isFlush
       actions={<>
         <IconButton variant="bordered" aria-label="Previous month" onPress={() => move(-1)}><ChevronLeft aria-hidden size={16} /></IconButton>
         <IconButton variant="bordered" aria-label="Next month" onPress={() => move(1)}><ChevronRight aria-hidden size={16} /></IconButton>
@@ -379,7 +357,7 @@ function CalendarView({projects}: {projects: Project[]}) {
             </DataTableBody>
           </DataTable>
         </Gap>
-      ) : <EmptyState size="panel" headingLevel="none" icon={<Calendar aria-hidden />} title={`No projects run in ${label}`}
+      ) : <EmptyState layout="panel" headingLevel="none" icon={<Calendar aria-hidden />} title={`No projects run in ${label}`}
         description="Pick another month with the arrows." />}
     </Panel>
   );
@@ -395,7 +373,7 @@ function ArrangeView({projects}: {projects: Project[]}) {
     setOrder(next);
   };
   return (
-    <Panel title="Homepage order" count={ids.length} description="The order projects appear in on the platform's homepage." flush
+    <Panel title="Homepage order" count={ids.length} description="The order projects appear in on the platform's homepage." isFlush
       footer={<GapLegend names={['Drag-and-drop reordering']} />}>
       <DataTable aria-label="Project order">
         <DataTableHeader>
@@ -567,7 +545,7 @@ export function Projects() {
           <TabPanel id="Projects" className="react-aria-TabPanel bo-projects-view">
             {/* Numbered pages in place of "Scroll down to load more" (docs/DECISIONS.md). */}
             <Panel title="All projects" description="Open a project to set it up, or use its menu to copy, move or delete it."
-              flush toolbar={toolbar}
+              isFlush toolbar={toolbar}
               footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Project pages" />}>
               <ProjectTable rows={shown} onRowAction={onRowAction} />
             </Panel>

@@ -2,7 +2,9 @@ import {useState, type ReactNode} from 'react';
 import type {Selection} from 'react-aria-components/Menu';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 import {Download, FileText, LayoutGrid, MapPin, Plus} from 'lucide-react';
-import {Menu, MenuItem, MenuSection, MenuTrigger, Header, Separator, SubmenuTrigger} from '../Menu';
+import {Menu, MenuItem, MenuSection, MenuTrigger, SubmenuTrigger} from '../Menu';
+import {Header} from '../Content';
+import {Separator} from '../Separator';
 import {Button} from '../Button';
 import {Badge} from './Badge';
 

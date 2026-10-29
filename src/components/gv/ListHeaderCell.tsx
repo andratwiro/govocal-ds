@@ -1,29 +1,32 @@
 'use client';
 import {Button} from 'react-aria-components/Button';
 import {Plus, ArrowDown} from 'lucide-react';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './ListHeaderCell.css';
 
-export interface ListHeaderCellProps {
+export interface ListHeaderCellProps extends PlacementProps {
   /**
-   * Label cells align their text left; Number cells align right (Figma's `Type`).
+   * What the cell heads: a label column (text left), a number column (text right), or the trailing "Add column"
+   * button (Figma's `Type`).
    *
    * @default 'label'
    */
-  variant?: 'label' | 'number' | 'add-column';
+  kind?: 'label' | 'number' | 'add-column';
   /**
-   * A square cell is a static, non-sortable column label (Figma `Label · square`):
-   * plain text, no hover affordance. Ignored for `add-column`.
+   * A static, non-sortable column label (Figma `Label · square`): plain text, no hover affordance. Ignored for
+   * `add-column`.
    *
    * @default false
    */
-  square?: boolean;
+  isStatic?: boolean;
   /**
-   * The column this cell heads is the one the list is currently sorted by
-   * (Figma `· sorted`): bold text + a down arrow. Implies the cell is not square.
+   * The column this cell heads is the one the list is currently sorted by (Figma `· sorted`): bold text + a down
+   * arrow. Implies the cell is not static.
    *
    * @default false
    */
-  sorted?: boolean;
+  isSorted?: boolean;
   /** The column label. Ignored for `add-column`. */
   children?: React.ReactNode;
   /** Sort / add-column press handler. */
@@ -32,18 +35,20 @@ export interface ListHeaderCellProps {
 }
 
 export function ListHeaderCell({
-  variant = 'label',
-  square = false,
-  sorted = false,
+  kind = 'label',
+  isStatic = false,
+  isSorted: sorted = false,
   children,
   onPress,
-  'aria-label': ariaLabel
+  'aria-label': ariaLabel,
+  className,
+  style
 }: ListHeaderCellProps) {
-  if (variant === 'add-column') {
+  if (kind === 'add-column') {
     return (
       <Button
-        className="gv-list-header-cell"
-        data-variant="add-column"
+        className={clsx('gv-list-header-cell', className)} style={style}
+        data-kind="add-column"
         onPress={onPress}
         aria-label={ariaLabel ?? 'Add column'}>
         <Plus aria-hidden size={16} strokeWidth={1.75} />
@@ -51,11 +56,9 @@ export function ListHeaderCell({
     );
   }
 
-  const isSquare = square && !sorted;
-
-  if (isSquare) {
+  if (isStatic && !sorted) {
     return (
-      <span className="gv-list-header-cell" data-variant={variant} data-square>
+      <span className={clsx('gv-list-header-cell', className)} style={style} data-kind={kind} data-static>
         {children}
       </span>
     );
@@ -63,8 +66,8 @@ export function ListHeaderCell({
 
   return (
     <Button
-      className="gv-list-header-cell"
-      data-variant={variant}
+      className={clsx('gv-list-header-cell', className)} style={style}
+      data-kind={kind}
       data-sorted={sorted || undefined}
       onPress={onPress}
       aria-pressed={sorted}>

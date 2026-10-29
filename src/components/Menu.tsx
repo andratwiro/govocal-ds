@@ -7,14 +7,11 @@ import {
   MenuSection as AriaMenuSection,
   MenuTrigger as AriaMenuTrigger,
   SubmenuTrigger as AriaSubmenuTrigger,
-  Header,
-  Separator,
-  Keyboard,
   type MenuItemProps as AriaMenuItemProps,
   type MenuLoadMoreItemProps,
   type MenuProps,
   type MenuSectionProps,
-  type MenuTriggerProps,
+  type MenuTriggerProps as AriaMenuTriggerProps,
   type SubmenuTriggerProps
 } from 'react-aria-components/Menu';
 import {Popover, type PopoverProps} from './Popover';
@@ -22,13 +19,15 @@ import {ProgressCircle} from './ProgressCircle';
 import {Text} from './Content';
 import React, {type ReactNode} from 'react';
 import './Menu.css';
+import {keepClass} from './className';
+import clsx from 'clsx';
 
-export interface MenuTriggerOwnProps extends MenuTriggerProps {
+export interface MenuTriggerProps extends AriaMenuTriggerProps {
   /** Where the menu opens against its trigger. @default 'bottom start' */
   placement?: PopoverProps['placement'];
 }
 
-export function MenuTrigger({placement, ...props}: MenuTriggerOwnProps) {
+export function MenuTrigger({placement, ...props}: MenuTriggerProps) {
   let [trigger, menu] = React.Children.toArray(props.children) as [
     React.ReactElement,
     React.ReactElement
@@ -48,12 +47,12 @@ export function MenuTrigger({placement, ...props}: MenuTriggerOwnProps) {
  * draws it. Not in Figma yet.
  */
 export function Menu<T>(props: MenuProps<T>) {
-  return <AriaMenu {...props}>{props.children}</AriaMenu>;
+  return <AriaMenu {...props} className={keepClass(props.className)}>{props.children}</AriaMenu>;
 }
 
 export function MenuLoadMoreItem(props: MenuLoadMoreItemProps) {
   return (
-    <AriaMenuLoadMoreItem {...props}>
+    <AriaMenuLoadMoreItem {...props} className={clsx('react-aria-MenuLoadingIndicator', props.className)}>
       <ProgressCircle isIndeterminate aria-label="Loading more..." />
     </AriaMenuLoadMoreItem>
   );
@@ -73,7 +72,7 @@ export function MenuItem({icon, description, badge, ...props}: MenuItemProps) {
   let textValue =
     props.textValue || (typeof props.children === 'string' ? props.children : undefined);
   return (
-    <AriaMenuItem {...props} textValue={textValue}>
+    <AriaMenuItem {...props} className={keepClass(props.className)} textValue={textValue}>
       {({hasSubmenu, isSelected, selectionMode}) => (
         <>
           {selectionMode === 'multiple' && (
@@ -101,7 +100,7 @@ export function MenuItem({icon, description, badge, ...props}: MenuItemProps) {
 }
 
 export function MenuSection<T>(props: MenuSectionProps<T>) {
-  return <AriaMenuSection {...props} />;
+  return <AriaMenuSection {...props} className={clsx('react-aria-MenuSection', props.className)} />;
 }
 
 export function SubmenuTrigger(props: SubmenuTriggerProps) {
@@ -113,11 +112,11 @@ export function SubmenuTrigger(props: SubmenuTriggerProps) {
     <AriaSubmenuTrigger {...props}>
       {trigger}
       {/* 4 from the menu (its 6 padding + 1 border + 4), the first row on the line of the row that opens it. */}
-      <Popover hideArrow offset={11} crossOffset={-7}>
+      <Popover showArrow={false} offset={11} crossOffset={-7}>
         {menu}
       </Popover>
     </AriaSubmenuTrigger>
   );
 }
 
-export {Text, Header, Separator, Keyboard};
+export type {MenuProps, MenuSectionProps, MenuLoadMoreItemProps, SubmenuTriggerProps};

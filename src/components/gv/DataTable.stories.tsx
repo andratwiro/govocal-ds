@@ -355,7 +355,7 @@ export const ProjectsListCells: Story = {
               <DataTableCell><DataTableAssignee name={p.manager} size={28} emptyLabel="Not assigned" /></DataTableCell>
               <DataTableCell>
                 <DataTableStack sub={p.who}>
-                  <StatusBadge state={p.published ? 'live' : 'draft'}>{p.published ? 'Published' : 'Draft'}</StatusBadge>
+                  <StatusBadge status={p.published ? 'live' : 'draft'}>{p.published ? 'Published' : 'Draft'}</StatusBadge>
                 </DataTableStack>
               </DataTableCell>
               <DataTableCell align="options">
@@ -508,7 +508,7 @@ function ManagePanel() {
             onPress={() => fresh(setMetric)(metric === m ? undefined : m)} />
         ))}
       </div>
-      <Panel title="Collect ideas" description="Everything posted in this phase. Select ideas for batch actions; click one to open it." flush
+      <Panel title="Collect ideas" description="Everything posted in this phase. Select ideas for batch actions; click one to open it." isFlush
         actions={<Button variant="secondary" size={32}><Plus aria-hidden size={16} />Add input</Button>}
         toolbar={(
           <>
@@ -597,7 +597,7 @@ function BulkAndOpen() {
   return (
     <div style={{minHeight: '100vh', boxSizing: 'border-box', padding: 24, background: 'var(--gv-surface-app)'}}>
       <div style={{display: 'grid', gap: 8, width: 720}}>
-        <Panel title="Collect ideas" flush
+        <Panel title="Collect ideas" isFlush
           toolbar={(
             <TableToolbar start={(
               <SelectionBar count={selected.size} items={IDEA_ACTIONS} onClear={() => setSelected(new Set())}

@@ -1,34 +1,14 @@
 import {useEffect, useMemo, useState} from 'react';
 type Key = string | number;
 type Selection = 'all' | Set<Key>;
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
-  DataTableStack}
-  from '../../../src/components/gv/DataTable';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {SearchField} from '../../../src/components/SearchField';
-import {Switch} from '../../../src/components/Switch';
-import {ListBox, ListBoxItem} from '../../../src/components/ListBox';
-import {MenuTrigger, Menu, MenuItem, Separator} from '../../../src/components/Menu';
-import {Tooltip, TooltipTrigger} from '../../../src/components/Tooltip';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Link} from '../../../src/components/Link';
-import {Badge} from '../../../src/components/gv/Badge';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {NewDot} from '../../../src/components/gv/NewDot';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {Avatar} from '../../../src/components/gv/Avatar';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {TagPicker} from '../../../src/components/gv/TagPicker';
-import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
-import {SidePanel, SidePanelActions, SidePanelSection, type SidePanelAction} from '../../../src/components/gv/SidePanel';
-import {PropertyList, PropertyListItem} from '../../../src/components/gv/PropertyList';
-import {ReactionCounts} from '../../../src/components/gv/ReactionCounts';
-import {OfficialUpdate} from '../../../src/patterns/OfficialUpdate';
-import {CommentThread, type ThreadTab, type ThreadTarget} from '../../../src/patterns/CommentThread';
-import {SelectionBar, type SelectionAction} from '../../../src/patterns/SelectionBar';
+import {AlertDialog, Avatar, Badge, CommentThread, DataTable, DataTableBody, DataTableCell, DataTableColumn,
+  DataTableEmpty, DataTableHeader, DataTableRow, DataTableStack, IconButton, Menu, MenuItem, MenuTrigger, NewDot,
+  OfficialUpdate, Pagination, PropertyList, PropertyListItem, queue, ReactionCounts, SearchField, Select,
+  type SelectionAction, SelectionBar, SelectItem, Separator, SidePanel, type SidePanelAction, SidePanelActions,
+  SidePanelSection, StatusBadge, Switch, Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs,
+  TagPicker, type ThreadTab, type ThreadTarget, ToastRegion, Tooltip, TooltipTrigger} from 'govocal-ds';
+import {Link, ListBox, ListBoxItem} from 'govocal-ds/base';
 import {CircleCheck, Download, ExternalLink, SquarePen, Trash2, TriangleAlert, User} from 'lucide-react';
-import {Pagination} from '../../../src/components/gv/Pagination';
 import {ASSIGNEES, ME, PROJECTS, STATUSES} from '../data';
 import {MANAGED_INPUTS, PAGE_SIZE, TOPICS, type ManagedInput} from '../data-inputs';
 import {Page} from './Page';
@@ -44,7 +24,7 @@ type Change = (id: string, patch: Partial<ManagedInput>) => void;
 /** The Select's "With avatars" options: a 16 Avatar before each manager, Unassigned the dashed one. */
 const people = () => ASSIGNEES.map(a => (
   <SelectItem key={a} id={a} textValue={a}
-    icon={a === 'Unassigned' ? <Avatar size={16} unassigned /> : <Avatar size={16} initials={a.slice(-1)} />}>{a}</SelectItem>
+    icon={a === 'Unassigned' ? <Avatar size={16} isUnassigned /> : <Avatar size={16} initials={a.slice(-1)} />}>{a}</SelectItem>
 ));
 
 /** The real admin's per-row "Unassigned ▾": assign an input without opening it, on the side panel's pill. */
@@ -119,7 +99,7 @@ function InputPanel({input, patch, onDelete}: {input: ManagedInput; patch: Patch
             </Select>
           </PropertyListItem>
           <PropertyListItem label="Tags">
-            <TagPicker aria-label="Tags" options={TAG_OPTIONS} selected={input.tags} selectionLabel={n => `${n} selected`}
+            <TagPicker aria-label="Tags" items={TAG_OPTIONS} value={input.tags} selectionLabel={n => `${n} selected`}
               onChange={tags => patch(input.id, {tags}, 'Tags changed')} />
           </PropertyListItem>
           <PropertyListItem label="Project">
@@ -282,7 +262,7 @@ export function Inputs() {
             )}>
               <MenuTrigger placement="bottom end">
                 <TooltipTrigger>
-                  <IconButton variant="bordered" tone="strong" aria-label="Export"><Download aria-hidden size={16} /></IconButton>
+                  <IconButton variant="bordered" emphasis="strong" aria-label="Export"><Download aria-hidden size={16} /></IconButton>
                   <Tooltip>Export</Tooltip>
                 </TooltipTrigger>
                 <Menu aria-label="Export" onAction={exportFile} disabledKeys={selected.size ? [] : ['selected']}>
@@ -317,7 +297,7 @@ export function Inputs() {
                         </span>
                       </DataTableStack>
                     </DataTableCell>
-                    <DataTableCell textValue={i.status}><StatusBadge state={statusState(i.status)}>{i.status}</StatusBadge></DataTableCell>
+                    <DataTableCell textValue={i.status}><StatusBadge status={statusState(i.status)}>{i.status}</StatusBadge></DataTableCell>
                     <DataTableCell textValue={i.assignee}>
                       <AssigneeSelect input={i} label={`Assignee for ${i.title}`}
                         onChange={(id, p) => patch(id, p, p.assignee === 'Unassigned' ? 'Input unassigned' : `Assigned to ${p.assignee}`)} />

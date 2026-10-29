@@ -58,7 +58,7 @@ function AttachmentsModal() {
   const [items, setItems] = useState<FileListItemData[]>(files.slice(0, 2));
   return (
     <Modal title="Attachments" footer={<Button variant="secondary" slot="close">Done</Button>}>
-      <DropZone size="compact" acceptedFileTypes={['*']}>
+      <DropZone density="compact" acceptedFileTypes={['*']}>
         Drop a file here or browse
       </DropZone>
       <div style={{marginTop: 16}}>

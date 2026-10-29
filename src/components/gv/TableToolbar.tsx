@@ -1,25 +1,27 @@
 'use client';
 import type {KeyboardEvent, ReactNode} from 'react';
 import {Toolbar} from 'react-aria-components/Toolbar';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './TableToolbar.css';
 
-export interface TableToolbarHeadingProps {
+export interface TableToolbarHeadingProps extends PlacementProps {
   /** The count, in words: "124 ideas". */
   children: ReactNode;
   /** @default 3 */
-  level?: 2 | 3 | 4;
+  headingLevel?: 2 | 3 | 4;
 }
 
 /**
  * The count heading at a table's start ("124 ideas"). It follows what the table shows, search and filters
  * included, and says so politely to screen readers as it changes.
  */
-export function TableToolbarHeading({children, level = 3}: TableToolbarHeadingProps) {
+export function TableToolbarHeading({children, headingLevel: level = 3, className, style}: TableToolbarHeadingProps) {
   const Heading = `h${level}` as const;
-  return <Heading className="gv-table-toolbar__heading" aria-live="polite" aria-atomic>{children}</Heading>;
+  return <Heading className={clsx('gv-table-toolbar__heading', className)} style={style} aria-live="polite" aria-atomic>{children}</Heading>;
 }
 
-export interface TableToolbarProps {
+export interface TableToolbarProps extends PlacementProps {
   /** The count heading at the start, e.g. "124 ideas" (a `TableToolbarHeading`). */
   heading?: ReactNode;
   /** The heading's level. @default 3 */
@@ -53,11 +55,11 @@ function keepCaret(e: KeyboardEvent) {
  * dot, an export menu), which never move. The tools are a React Aria Toolbar: Tab enters it once, ← → move between
  * tools, and inside the search field they move the caret until it reaches the edge. Not in Figma yet.
  */
-export function TableToolbar({heading, headingLevel, start, children, 'aria-label': label = 'Table tools'}: TableToolbarProps) {
+export function TableToolbar({heading, headingLevel, start, children, 'aria-label': label = 'Table tools', className, style}: TableToolbarProps) {
   return (
-    <div className="gv-table-toolbar">
+    <div className={clsx('gv-table-toolbar', className)} style={style}>
       <div className="gv-table-toolbar__start">
-        {start ?? (heading != null && <TableToolbarHeading level={headingLevel}>{heading}</TableToolbarHeading>)}
+        {start ?? (heading != null && <TableToolbarHeading headingLevel={headingLevel}>{heading}</TableToolbarHeading>)}
       </div>
       {children && (
         <div className="gv-table-toolbar__end" onKeyDownCapture={keepCaret}>

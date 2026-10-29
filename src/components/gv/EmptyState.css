@@ -48,16 +48,16 @@
   margin-block-start: var(--gv-space-12);
 }
 
-.gv-empty-state[data-size='panel'] {
+.gv-empty-state[data-layout='panel'] {
   padding: var(--gv-space-24) var(--gv-space-20);
 }
 
-.gv-empty-state[data-size='panel'] .gv-empty-state__title {
+.gv-empty-state[data-layout='panel'] .gv-empty-state__title {
   font: var(--gv-type-ui-strong);
   letter-spacing: var(--gv-type-ui-strong-tracking);
 }
 
-.gv-empty-state[data-size='panel'] .gv-empty-state__text {
+.gv-empty-state[data-layout='panel'] .gv-empty-state__text {
   max-width: 240px;
 }
 

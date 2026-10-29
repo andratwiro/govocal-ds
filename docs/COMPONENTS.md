@@ -35,7 +35,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **ProgressBar** `ProgressBar` Stories: Example.
 - **RadioGroup** `RadioGroup` Stories: Example.
 - **RangeCalendar** `RangeCalendar` Stories: Example.
-- **Sheet** `Sheet` Stories: Example, Snap Points.
+- **Sheet** `Sheet`: `className` and `style` place the sheet itself (not its overlay); they never paint it. Stories: Example, Snap Points.
 - **Slider** `Slider` Stories: Example.
 - **Table** `Table` Stories: Example.
 - **TagGroup** `TagGroup` Stories: Example.
@@ -79,7 +79,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 
 ## Components / Status & feedback
 - **Badge** `Badge`: A small rounded label, e.g. a content type, a status, a chosen value or a count. Stories: All Variants, Icon Yes, Icon No, Outlined, Value, Count, Removable.
-- **Banner** `Banner` (not in Figma): A message box: icon + text, on a tone's tint (+ title, link, action, dismiss). Stories: All Variants, Info Link, Info, Neutral, Warning, Success, AI, With Title, With Action, Dismissible, Custom Icon, Phase Status.
+- **Banner** `Banner` (not in Figma): A message box: icon + text, on a tone's tint (+ title, link, actions, dismiss). Stories: All Variants, Info Link, Info, Neutral, Warning, Success, AI, With Title, With Action, Dismissible, Custom Icon, Phase Status.
 - **Empty state** `EmptyState` (not in Figma): What a place shows before it has anything: a drawing or an icon, a title, a line on when it fills up, and at most one action. Stories: All Variants, Default, Manage Tab, Insights Tab, Side Panel, Input List, Front Office Draft, Platform Pages, Text Only, With Action.
 - **New dot** `NewDot`: A small unread/new indicator dot, next to a row or sidebar item. Stories: All Variants, Example.
 - **Review status** `ReviewStatus`: The small word at the end of a card's header that says whether the admin has looked at it. Stories: All Variants, To Review, To Set, Reviewed.
@@ -104,7 +104,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Compact button** `CompactButton` Stories: All Variants, Secondary, Primary, Primary Icon, Disabled.
 - **Icon button** `IconButton` Stories: All Variants, Ghost Default, Ghost Strong, Bordered Strong, Small, Disabled.
 - **Menu** `Menu` (not in Figma): A list of actions or options in a popover (React Aria's Menu), in the prototype's one dropdown rhythm: rows 32 tall, a leading icon, a description line, sect… Stories: All Variants, With Icons, With Badges, With Sections, Multiple With A Footer Action, With A Submenu Checklist.
-- **Segmented control** `SegmentedControl`: Segmented control. Stories: All Variants, Build, Two Tabs, Insights Manage Unread, Small Range Switch, Icon And Label Small, Unread With Tooltip.
+- **Segmented control** `SegmentedControl`: Segmented control: React Aria's ToggleButtonGroup, ToggleButton and SelectionIndicator, painted with gv- classes. Stories: All Variants, Build, Two Tabs, Insights Manage Unread, Small Range Switch, Icon And Label Small, Unread With Tooltip.
 
 ## Components / Forms
 - **Checkbox** `Checkbox`: Checkbox: a 15x15 rounded box, token-fill when checked/indeterminate. Stories: All Variants, Default, Selected, Indeterminate, With Description, Quiet, Disabled.

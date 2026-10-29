@@ -17,7 +17,7 @@ const spaces = () => SPACES.map(s => <SelectItem key={s} id={s} icon={ic(Asteris
 const folders = () => FOLDERS.map(f => <SelectItem key={f} id={f} icon={ic(Folder)}>{f}</SelectItem>);
 const statuses = () => STATUSES.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>);
 const people = () => [
-  <SelectItem key="none" id="none" textValue="Unassigned" icon={<Avatar size={16} unassigned />}>Unassigned</SelectItem>,
+  <SelectItem key="none" id="none" textValue="Unassigned" icon={<Avatar size={16} isUnassigned />}>Unassigned</SelectItem>,
   ...MANAGERS.map(m => <SelectItem key={m} id={m} icon={<Avatar size={16} initials={m.slice(-1)} />}>{m}</SelectItem>)
 ];
 const visibility = () => [
@@ -48,25 +48,25 @@ export const AllVariants: Story = {
   render: () => (
     <div style={{display: 'grid', gap: 20}}>
       <Row label="Field">
-        <Select label="Status" defaultSelectedKey="Viewed">{statuses()}</Select>
+        <Select label="Status" defaultValue="Viewed">{statuses()}</Select>
         <Select label="Assignee" placeholder="Choose a person">{people()}</Select>
       </Row>
       <Row label="Pill · 28">
-        <Select variant="pill" aria-label="Space" prefix="Space:" defaultSelectedKey="City parks" searchable>{spaces()}</Select>
-        <Select variant="pill" aria-label="Folder" defaultSelectedKey="Riverside redevelopment">{folders()}</Select>
+        <Select variant="pill" aria-label="Space" prefix="Space:" defaultValue="City parks" isSearchable>{spaces()}</Select>
+        <Select variant="pill" aria-label="Folder" defaultValue="Riverside redevelopment">{folders()}</Select>
       </Row>
       <Row label="Pill · 22">
-        <Select variant="pill" size={22} aria-label="Status" defaultSelectedKey="Viewed">{statuses()}</Select>
-        <Select variant="pill" size={22} aria-label="Assignee" defaultSelectedKey="none">{people()}</Select>
+        <Select variant="pill" size={22} aria-label="Status" defaultValue="Viewed">{statuses()}</Select>
+        <Select variant="pill" size={22} aria-label="Assignee" defaultValue="none">{people()}</Select>
       </Row>
       <Row label="Quiet">
-        <Select variant="quiet" aria-label="Sort" prefix="Sort:" icon={ic(ArrowUpDown)} defaultSelectedKey="Newest">
+        <Select variant="quiet" aria-label="Sort" prefix="Sort:" icon={ic(ArrowUpDown)} defaultValue="Newest">
           {SORTS.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
         </Select>
       </Row>
       <Row label="Disabled">
-        <Select label="Status" defaultSelectedKey="Viewed" isDisabled>{statuses()}</Select>
-        <Select variant="pill" aria-label="Space" prefix="Space:" defaultSelectedKey="City parks" isDisabled>{spaces()}</Select>
+        <Select label="Status" defaultValue="Viewed" isDisabled>{statuses()}</Select>
+        <Select variant="pill" aria-label="Space" prefix="Space:" defaultValue="City parks" isDisabled>{spaces()}</Select>
       </Row>
     </div>
   )
@@ -76,7 +76,7 @@ export const AllVariants: Story = {
  * field. A description and an error line go under it. */
 export const Field: Story = {
   render: () => (
-    <Select label="Status" description="People see the status on the idea." defaultSelectedKey="Viewed">{statuses()}</Select>
+    <Select label="Status" description="People see the status on the idea." defaultValue="Viewed">{statuses()}</Select>
   )
 };
 
@@ -85,8 +85,8 @@ export const Field: Story = {
 export const Pill: Story = {
   render: () => (
     <div style={{display: 'grid', gap: 16, justifyItems: 'start'}}>
-      <Select variant="pill" aria-label="Space" prefix="Space:" defaultSelectedKey="City parks">{spaces()}</Select>
-      <Select variant="pill" size={22} aria-label="Status" defaultSelectedKey="Viewed">{statuses()}</Select>
+      <Select variant="pill" aria-label="Space" prefix="Space:" defaultValue="City parks">{spaces()}</Select>
+      <Select variant="pill" size={22} aria-label="Status" defaultValue="Viewed">{statuses()}</Select>
     </div>
   )
 };
@@ -94,7 +94,7 @@ export const Pill: Story = {
 /** A toolbar's sort: no fill until hovered, a secondary prefix before the value. */
 export const Quiet: Story = {
   render: () => (
-    <Select variant="quiet" aria-label="Sort" prefix="Sort:" icon={ic(ArrowUpDown)} defaultSelectedKey="Newest">
+    <Select variant="quiet" aria-label="Sort" prefix="Sort:" icon={ic(ArrowUpDown)} defaultValue="Newest">
       {SORTS.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
     </Select>
   )
@@ -105,7 +105,7 @@ export const Quiet: Story = {
 export const WithSearch: Story = {
   name: 'With search',
   render: () => (
-    <Select variant="pill" aria-label="Space" prefix="Space:" defaultSelectedKey="City parks" searchable
+    <Select variant="pill" aria-label="Space" prefix="Space:" defaultValue="City parks" isSearchable
       searchPlaceholder="Search spaces">
       {spaces()}
     </Select>
@@ -115,20 +115,20 @@ export const WithSearch: Story = {
 /** A 16 icon before each option; the chosen one's shows in the trigger. */
 export const WithIcons: Story = {
   name: 'With icons',
-  render: () => <Select variant="pill" aria-label="Folder" prefix="Folder:" defaultSelectedKey="Green corridors">{folders()}</Select>
+  render: () => <Select variant="pill" aria-label="Folder" prefix="Folder:" defaultValue="Green corridors">{folders()}</Select>
 };
 
 /** People: a 16 Avatar before each, Unassigned the dashed one. */
 export const WithAvatars: Story = {
   name: 'With avatars',
-  render: () => <Select label="Assignee" defaultSelectedKey="none">{people()}</Select>
+  render: () => <Select label="Assignee" defaultValue="none">{people()}</Select>
 };
 
 /** A line under each option says what it does; the trigger shows the name only. */
 export const WithDescriptions: Story = {
   name: 'With descriptions',
   render: () => (
-    <Select label="Visibility" defaultSelectedKey="public" style={{width: 280}}>
+    <Select label="Visibility" defaultValue="public" style={{width: 280}}>
       {visibility()}
     </Select>
   )
@@ -136,7 +136,7 @@ export const WithDescriptions: Story = {
 
 /** Can't be opened or focused; the value stays readable. */
 export const Disabled: Story = {
-  render: () => <Select label="Status" defaultSelectedKey="Viewed" isDisabled>{statuses()}</Select>
+  render: () => <Select label="Status" defaultValue="Viewed" isDisabled>{statuses()}</Select>
 };
 
 /** A search that matches nothing: the list says "No results". */
@@ -144,7 +144,7 @@ export const EmptySearch: Story = {
   name: 'Empty search',
   render: () => (
     <div style={{minHeight: 200}}>
-      <Select variant="pill" aria-label="Space" prefix="Space:" defaultSelectedKey="City parks" searchable
+      <Select variant="pill" aria-label="Space" prefix="Space:" defaultValue="City parks" isSearchable
         searchPlaceholder="Search spaces">
         {spaces()}
       </Select>

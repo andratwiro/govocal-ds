@@ -2,25 +2,11 @@ import {useMemo, useState, type ComponentProps, type ReactNode} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {Ban, ChartColumn, Download, Mail, Pencil, Plus, SearchX, ShieldCheck, ShieldOff, Trash2, UserMinus, UserPlus,
   Users as UsersIcon, Zap} from 'lucide-react';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell,
-  DataTablePerson, DataTableStack, DataTableOptions} from '../../../src/components/gv/DataTable';
-import {RadioGroup} from '../../../src/components/RadioGroup';
-import {ChoiceCard} from '../../../src/components/gv/ChoiceCard';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {Banner} from '../../../src/components/gv/Banner';
-import {ListBox, ListBoxItem} from '../../../src/components/ListBox';
-import {SearchField} from '../../../src/components/SearchField';
-import {Menu, MenuItem, Separator} from '../../../src/components/Menu';
-import {Button} from '../../../src/components/Button';
-import {Modal} from '../../../src/components/gv/Modal';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {Panel} from '../../../src/components/gv/Panel';
-import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
-import {TextField} from '../../../src/components/TextField';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {SelectionBar, type SelectionAction} from '../../../src/patterns/SelectionBar';
+import {AlertDialog, Banner, Button, ChoiceCard, DataTable, DataTableBody, DataTableCell, DataTableColumn,
+  DataTableHeader, DataTableOptions, DataTablePerson, DataTableRow, DataTableStack, EmptyState, Menu, MenuItem, Modal,
+  Pagination, Panel, queue, SearchField, Select, type SelectionAction, SelectionBar, SelectItem, Separator,
+  TableToolbar, TableToolbarHeading, TextField, ToastRegion} from 'govocal-ds';
+import {ListBox, ListBoxItem, RadioGroup} from 'govocal-ds/base';
 import {GROUPS, PEOPLE, SEGMENTS, SMART_RULES, type Person} from '../data-users';
 import {Gap} from '../Gap';
 import {Page} from './Page';
@@ -236,7 +222,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
   );
 
   return (
-    <Panel title={title} description={view === 'all' ? DESCRIPTION : undefined} flush toolbar={toolbar}
+    <Panel title={title} description={view === 'all' ? DESCRIPTION : undefined} isFlush toolbar={toolbar}
       actions={group && (
         <>
           <Button variant="quiet" size={32} onPress={onEditGroup}><Pencil aria-hidden size={16} />Edit Group</Button>
@@ -253,10 +239,10 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
       {/* Nothing in the list, or nothing found: the Empty state, as every admin list (docs/DECISIONS.md). */}
       {rows.length === 0 ? (
         query ? (
-          <EmptyState size="panel" headingLevel={3} icon={<SearchX size={24} />} title="No users match"
+          <EmptyState layout="panel" headingLevel={3} icon={<SearchX size={24} />} title="No users match"
             description="Try another name or email address." />
         ) : (
-          <EmptyState size="panel" headingLevel={3} icon={<UsersIcon size={24} />} title={emptyTitle} description={emptyText} />
+          <EmptyState layout="panel" headingLevel={3} icon={<UsersIcon size={24} />} title={emptyTitle} description={emptyText} />
         )
       ) : (
         <div className="bo-users-scroll">

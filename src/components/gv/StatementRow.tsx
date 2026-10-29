@@ -1,6 +1,8 @@
 'use client';
 import type {ReactNode} from 'react';
 import type {ChartColor} from './Chart';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './Chart.css';
 import './StatementRow.css';
 
@@ -12,7 +14,7 @@ export interface StatementCounts {
   unseen?: number;
 }
 
-export interface StatementRowProps {
+export interface StatementRowProps extends PlacementProps {
   /** The Common Ground statement text. Omitted, the row is the bar alone (the Manage panel's "Where people stand"). */
   statement?: ReactNode;
   /** Percent who agree, disagree and pass. Should sum to roughly 100 (with `unseenPercent`, all four do). */
@@ -51,7 +53,9 @@ export function StatementRow({
   unseenPercent,
   summary,
   counts,
-  passLabel = 'Pass'
+  passLabel = 'Pass',
+  className,
+  style
 }: StatementRowProps) {
   const shares: {kind: 'agree' | 'disagree' | 'pass' | 'unseen'; label: string; percent: number; count?: number; color?: ChartColor}[] = [
     {kind: 'agree', label: 'Agree', percent: agreePercent, count: counts?.agree, color: 'agree'},
@@ -65,7 +69,7 @@ export function StatementRow({
     .join(', ');
 
   return (
-    <div className="gv-statement-row" data-shares={four ? 4 : undefined} data-bar-only={statement == null || undefined}>
+    <div className={clsx('gv-statement-row', className)} style={style} data-shares={four ? 4 : undefined} data-bar-only={statement == null || undefined}>
       <div className="gv-statement-row__in">
         {statement != null && <span className="gv-statement-row__statement">{statement}</span>}
         <span className="gv-statement-row__bar-wrap">

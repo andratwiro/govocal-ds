@@ -8,6 +8,8 @@ import {Popover} from '../components/Popover';
 import {Breadcrumbs} from '../components/gv/Breadcrumbs';
 import {IconButton} from '../components/gv/IconButton';
 import {SegmentedControl, SegmentedControlItem} from '../components/gv/SegmentedControl';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './ProjectHeader.css';
 
 export interface ProjectHeaderMode {
@@ -17,13 +19,19 @@ export interface ProjectHeaderMode {
   isDisabled?: boolean;
 }
 
-export interface ProjectHeaderProps {
+/** `className` and `style` place the header (the bar, or the crumb frame without one); they never paint it. */
+export interface ProjectHeaderProps extends PlacementProps {
   /**
-   * Figma "Level": the project page, or a phase inside it (draft or live).
+   * Figma "Level": the project page, or a phase inside it.
    *
    * @default 'project'
    */
-  level?: 'project' | 'phase-draft' | 'phase-live';
+  level?: 'project' | 'phase';
+  /**
+   * Draft or live. On a phase: the Status badge after the crumbs (default `draft`). On the project: the bar's
+   * Publish ▾ (`draft`, primary) or ● Live ▾ (`live`) menu button; given, the header becomes the bar.
+   */
+  status?: 'draft' | 'live';
   /** The project's name: the current crumb on the project level, the parent link on a phase. */
   projectName: string;
   /** The phase's name (phase levels only). */
@@ -59,8 +67,6 @@ export interface ProjectHeaderProps {
   hasChanges?: boolean;
   /** Shows Save (always on a phase, while there are changes on the project). */
   onSave?: () => void;
-  /** Project level: the project's state as a menu button. `draft`: Publish ▾ (primary). `live`: ● Live ▾. */
-  publishState?: 'draft' | 'live';
   /** The Publish / Live menu's items (`MenuItem`s). */
   publishMenu?: ReactNode;
   /** Project level: Share ▾ and its items (`MenuItem`s). */
@@ -74,7 +80,7 @@ function MenuButton({label, variant, children, menu}: {label: string; variant: '
       <Button variant={variant} size={32} hasMenu>
         {children}
       </Button>
-      <Popover hideArrow placement="bottom end" offset={6}>
+      <Popover showArrow={false} placement="bottom end" offset={6}>
         <Menu aria-label={label}>{menu}</Menu>
       </Popover>
     </MenuTrigger>
@@ -83,7 +89,7 @@ function MenuButton({label, variant, children, menu}: {label: string; variant: '
 
 /**
  * The project page's header (Figma "Project header", 14:876): a 48-tall frame around the Breadcrumbs, as in Figma,
- * where each Level holds a Breadcrumbs instance of the same level. With a mode switch, people or actions it becomes
+ * where each Level holds a Breadcrumbs instance (the project the default trail, a phase the editor). With a mode switch, people or actions it becomes
  * the prototype's full bar (`.pj-hdr`): crumbs · Build | Manage | Insights · avatar, Share ▾, Publish ▾ or Save.
  */
 export function ProjectHeader({
@@ -102,13 +108,16 @@ export function ProjectHeader({
   people,
   hasChanges = false,
   onSave,
-  publishState,
+  status,
   publishMenu,
-  shareMenu
+  shareMenu,
+  className,
+  style
 }: ProjectHeaderProps) {
   const isProject = level === 'project';
+  const isBar = modes != null || people != null || onSave != null || (level === 'project' && status != null) || shareMenu != null;
   const crumbs = (
-    <nav className="gv-header" data-level={level} aria-label="Breadcrumb">
+    <nav className={clsx('gv-header', !isBar && className)} style={isBar ? undefined : style} data-level={level} aria-label="Breadcrumb">
       {isProject && onTogglePanel && (
         <>
           <IconButton onPress={onTogglePanel} aria-label="Show or hide project setup">
@@ -119,7 +128,6 @@ export function ProjectHeader({
       )}
       {isProject ? (
         <Breadcrumbs
-          level="project"
           items={[
             {key: 'parent', label: parentLabel, href: parentHref, onPress: onParentPress},
             {key: 'project', label: projectName}
@@ -127,8 +135,8 @@ export function ProjectHeader({
         />
       ) : (
         <Breadcrumbs
-          level="phase"
-          phaseState={level === 'phase-live' ? 'live' : 'draft'}
+          variant="editor"
+          status={status ?? 'draft'}
           items={[
             {key: 'project', label: projectName, href: projectHref, onPress: onBack},
             {key: 'phase', label: phaseName}
@@ -142,7 +150,6 @@ export function ProjectHeader({
     </nav>
   );
 
-  const isBar = modes != null || people != null || onSave != null || publishState != null || shareMenu != null;
   if (!isBar) return crumbs;
 
   const save = (
@@ -162,12 +169,12 @@ export function ProjectHeader({
             Share
           </MenuButton>
         )}
-        {publishState === 'draft' && (
+        {status === 'draft' && (
           <MenuButton label="Publish" variant="primary" menu={publishMenu}>
             Publish
           </MenuButton>
         )}
-        {publishState === 'live' && (
+        {status === 'live' && (
           <MenuButton label="Live" variant="secondary" menu={publishMenu}>
             <span className="gv-project-header__live" aria-hidden="true" />
             Live
@@ -177,7 +184,7 @@ export function ProjectHeader({
     );
 
   return (
-    <div className="gv-project-header" data-level={level}>
+    <div className={clsx('gv-project-header', className)} style={style} data-level={level}>
       {crumbs}
       {!isProject && modes != null ? (
         <SegmentedControl

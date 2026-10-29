@@ -1,13 +1,15 @@
 'use client';
 import {TriangleAlert} from 'lucide-react';
 import {VoteProgress} from './VoteProgress';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './ProposalsRow.css';
 
-export interface ProposalsRowProps {
+export interface ProposalsRowProps extends PlacementProps {
   title: string;
   thumbnail?: string;
   /** Shows the warning mark next to the title. */
-  warning?: boolean;
+  hasWarning?: boolean;
   voteCount: number;
   /** The threshold needed before an official response is triggered. */
   voteThreshold: number;
@@ -16,9 +18,9 @@ export interface ProposalsRowProps {
   commentCount: number;
   /** Unseen comments since the admin's last visit. */
   newCommentCount?: number;
-  /** "N days left", or omit and set `closed` once voting has ended. */
+  /** "N days left", or omit and set `isClosed` once voting has ended. */
   daysLeft?: number;
-  closed?: boolean;
+  isClosed?: boolean;
 }
 
 /**
@@ -29,24 +31,26 @@ export interface ProposalsRowProps {
 export function ProposalsRow({
   title,
   thumbnail,
-  warning,
+  hasWarning,
   voteCount,
   voteThreshold,
   statusLabel,
   commentCount,
   newCommentCount,
   daysLeft,
-  closed
+  isClosed,
+  className,
+  style
 }: ProposalsRowProps) {
   return (
-    <div className="gv-list-row-proposals">
+    <div className={clsx('gv-list-row-proposals', className)} style={style}>
       <div className="gv-list-row-proposals__cells">
         <div className="gv-list-row-proposals__title-cell">
           {thumbnail && (
             <img className="gv-list-row-proposals__thumbnail" src={thumbnail} alt="" aria-hidden />
           )}
           <span className="gv-list-row-proposals__title">{title}</span>
-          {warning && (
+          {hasWarning && (
             <span className="gv-list-row-proposals__marks">
               <TriangleAlert
                 role="img"
@@ -60,7 +64,7 @@ export function ProposalsRow({
         </div>
         <div className="gv-list-row-proposals__cell gv-list-row-proposals__votes-cell">
           <VoteProgress
-            variant="threshold"
+            kind="threshold"
             label={`Votes for ${title}`}
             count={voteCount}
             threshold={voteThreshold}
@@ -74,7 +78,7 @@ export function ProposalsRow({
           )}
         </div>
         <div className="gv-list-row-proposals__cell gv-list-row-proposals__time-cell">
-          {closed ? <span className="gv-list-row-proposals__closed">Closed</span> : `${daysLeft} days left`}
+          {isClosed ? <span className="gv-list-row-proposals__closed">Closed</span> : `${daysLeft} days left`}
         </div>
       </div>
     </div>

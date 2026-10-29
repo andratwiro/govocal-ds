@@ -2,9 +2,11 @@
 import {Link as RACLink, type LinkProps as RACLinkProps} from 'react-aria-components/Link';
 import {ChevronRight} from 'lucide-react';
 import {NewDot} from './NewDot';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './StatRow.css';
 
-export interface StatRowProps {
+export interface StatRowProps extends PlacementProps {
   /** The row's label, above the value. */
   label: string;
   /** The stat itself (a number or short string). */
@@ -36,7 +38,7 @@ export interface StatRowProps {
   onPress?: RACLinkProps['onPress'];
 }
 
-export function StatRow({label, value, isNew = false, isStatic = false, isSelected = false, href, onPress}: StatRowProps) {
+export function StatRow({label, value, isNew = false, isStatic = false, isSelected = false, href, onPress, className, style}: StatRowProps) {
   const content = (
     <>
       <div className="gv-stat-row__label">
@@ -51,7 +53,7 @@ export function StatRow({label, value, isNew = false, isStatic = false, isSelect
   );
 
   if (isStatic) {
-    return <div className="gv-stat-row gv-stat-row--static">{content}</div>;
+    return <div className={clsx('gv-stat-row gv-stat-row--static', className)} style={style}>{content}</div>;
   }
 
   return (
@@ -59,7 +61,7 @@ export function StatRow({label, value, isNew = false, isStatic = false, isSelect
       href={href}
       onPress={onPress}
       aria-current={isSelected ? 'true' : undefined}
-      className="gv-stat-row gv-stat-row--interactive">
+      className={clsx('gv-stat-row gv-stat-row--interactive', className)} style={style}>
       {content}
     </RACLink>
   );

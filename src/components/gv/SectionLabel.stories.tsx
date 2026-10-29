@@ -37,14 +37,14 @@ export const Default: Story = {
   args: {children: 'Timeline'}
 };
 
-/** `level` makes it a heading (here an h3) a screen reader can jump to; the look doesn't change. */
+/** `headingLevel` makes it a heading (here an h3) a screen reader can jump to; the look doesn't change. */
 export const AsAHeading: Story = {
   name: 'As a heading',
-  args: {children: 'Phases', level: 3}
+  args: {children: 'Phases', headingLevel: 3}
 };
 
 /** A 16 icon before the words, as Access rights opens its choices. */
 export const WithIcon: Story = {
   name: 'With icon',
-  args: {children: 'Who can participate', icon: <User aria-hidden />, level: 3}
+  args: {children: 'Who can participate', icon: <User aria-hidden />, headingLevel: 3}
 };

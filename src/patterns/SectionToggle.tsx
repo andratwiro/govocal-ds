@@ -1,9 +1,11 @@
 'use client';
 import {Switch} from '../components/Switch';
 import {StatusBadge} from '../components/gv/StatusBadge';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './SectionToggle.css';
 
-export interface SectionToggleProps {
+export interface SectionToggleProps extends PlacementProps {
   /** The section's name ("Homepage banner"). */
   title: string;
   /** A short line about what the section shows. */
@@ -19,14 +21,14 @@ export interface SectionToggleProps {
  * and the switch that shows or hides it. The real admin's section toggle on the homepage and custom pages.
  * Not in Figma yet.
  */
-export function SectionToggle({title, description, isSelected, onChange, isDisabled}: SectionToggleProps) {
+export function SectionToggle({title, description, isSelected, onChange, isDisabled, className, style}: SectionToggleProps) {
   return (
-    <div className="gv-section-toggle">
+    <div className={clsx('gv-section-toggle', className)} style={style}>
       <span className="gv-section-toggle__text">
         <span className="gv-section-toggle__title">{title}</span>
         {description && <span className="gv-section-toggle__description">{description}</span>}
       </span>
-      <StatusBadge state={isSelected ? 'live' : 'draft'}>{isSelected ? 'Shown on page' : 'Not shown on page'}</StatusBadge>
+      <StatusBadge status={isSelected ? 'live' : 'draft'}>{isSelected ? 'Shown on page' : 'Not shown on page'}</StatusBadge>
       <Switch aria-label={`Show ${title}`} isSelected={isSelected} onChange={onChange} isDisabled={isDisabled}>
         <span className="gv-section-toggle__switch-label">Show</span>
       </Switch>

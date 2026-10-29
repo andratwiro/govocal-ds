@@ -30,8 +30,8 @@ export const AllVariants: Story = {
       <ActionRow href="#review" badge="18 new">Review new ideas</ActionRow>
       <ActionRow href="#report" icon={<FileChartColumn />}>Add a report</ActionRow>
       <ActionRow href="#import" description="Paper forms or a spreadsheet">Import inputs</ActionRow>
-      <ActionRow state="working" progress={40} description="Reading the results of this phase">Creating report</ActionRow>
-      <ActionRow state="done" href="#builder">Report ready</ActionRow>
+      <ActionRow status="working" progress={40} description="Reading the results of this phase">Creating report</ActionRow>
+      <ActionRow status="done" href="#builder">Report ready</ActionRow>
       <ActionRow icon={<Link2 />} menu={shareMenu}>Share results with participants</ActionRow>
       <ActionRow isDisabled icon={<Download />}>Download insights</ActionRow>
     </ActionRowList>
@@ -55,11 +55,11 @@ export const WithDescription: Story = {
  * `progress` out for a ring that turns.
  */
 export const Working: Story = {
-  args: {children: 'Creating report', description: 'Reading the results of this phase', state: 'working', progress: 40}
+  args: {children: 'Creating report', description: 'Reading the results of this phase', status: 'working', progress: 40}
 };
 
 /** It finished: a check on the primary tint; the row opens the result. */
-export const Done: Story = {args: {children: 'Report ready', state: 'done', href: '#'}};
+export const Done: Story = {args: {children: 'Report ready', status: 'done', href: '#'}};
 
 /** The row drops a menu as wide as itself (Share results with participants). */
 export const WithMenu: Story = {
@@ -96,8 +96,8 @@ function CreateReport() {
     const t = setTimeout(() => setSecs(s => (s ?? 1) - 1), 1000);
     return () => clearTimeout(t);
   }, [secs, ready]);
-  if (ready) return <ActionRow state="done" onPress={() => { setReady(false); setSecs(null); }}>Report ready</ActionRow>;
-  if (secs != null) return <ActionRow state="working" progress={((10 - secs) / 10) * 100} badge={`${secs}s`}>Creating report…</ActionRow>;
+  if (ready) return <ActionRow status="done" onPress={() => { setReady(false); setSecs(null); }}>Report ready</ActionRow>;
+  if (secs != null) return <ActionRow status="working" progress={((10 - secs) / 10) * 100} badge={`${secs}s`}>Creating report…</ActionRow>;
   return <ActionRow icon={<FileChartColumn />} onPress={() => setSecs(10)}>Create report</ActionRow>;
 }
 

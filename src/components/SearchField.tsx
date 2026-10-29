@@ -12,6 +12,7 @@ import {IconButton} from './gv/IconButton';
 import {Tooltip, TooltipTrigger} from './Tooltip';
 import {Search, X} from 'lucide-react';
 import './SearchField.css';
+import {keepClass} from './className';
 
 export interface SearchFieldProps extends AriaSearchFieldProps {
   label?: string;
@@ -71,7 +72,8 @@ export function SearchField({
     const name = props['aria-label'] ?? label ?? 'Search';
     return (
       <TooltipTrigger>
-        <IconButton id={buttonId} variant="bordered" tone="strong" aria-label={name} isDisabled={props.isDisabled}
+        <IconButton id={buttonId} variant="bordered" emphasis="strong" aria-label={name} isDisabled={props.isDisabled}
+          className={typeof props.className === 'string' ? props.className : undefined} style={typeof props.style === 'object' ? props.style : undefined}
           onPress={() => { opened.current = true; setExpanded(true, 'field'); }}>
           <Search aria-hidden size={16} />
         </IconButton>
@@ -91,7 +93,7 @@ export function SearchField({
   };
 
   return (
-    <AriaSearchField {...props} onKeyDown={onKeyDown}
+    <AriaSearchField {...props} className={keepClass(props.className)} onKeyDown={onKeyDown}
       onBlur={e => {
         props.onBlur?.(e);
         // Leaving an empty field folds it (not while an Esc fold is already on its way back to the button).

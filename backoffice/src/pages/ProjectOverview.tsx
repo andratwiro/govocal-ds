@@ -1,23 +1,9 @@
 import {useEffect, useState} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router';
 import {Archive, ChevronUp, Info, Link, PanelLeft, Rocket, RotateCcw, Settings, UserPlus} from 'lucide-react';
-import {Button} from '../../../src/components/Button';
-import {MenuItem} from '../../../src/components/Menu';
-import {TextField} from '../../../src/components/TextField';
-import {Modal} from '../../../src/components/gv/Modal';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {Avatar, AvatarGroup} from '../../../src/components/gv/Avatar';
-import {Banner} from '../../../src/components/gv/Banner';
-import {Divider} from '../../../src/components/gv/Divider';
-import {Panel} from '../../../src/components/gv/Panel';
-import {PropertyList, PropertyListItem} from '../../../src/components/gv/PropertyList';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {ProjectHeader} from '../../../src/patterns/ProjectHeader';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {ActionRow, ActionRowList} from '../../../src/patterns/ActionRow';
-import {PanelSection} from '../../../src/patterns/PanelSection';
-import {PhonePreview, PhoneHeader, PhoneImage, PhoneStage} from '../../../src/patterns/PhonePreview';
-import {StatCard} from '../../../src/patterns/StatCard';
+import {ActionRow, ActionRowList, AlertDialog, Avatar, AvatarGroup, Banner, Button, Divider, IconButton, MenuItem,
+  Modal, Panel, PanelSection, PhoneHeader, PhoneImage, PhonePreview, PhoneStage, ProjectHeader, PropertyList,
+  PropertyListItem, queue, StatCard, TextField, ToastRegion} from 'govocal-ds';
 import {ME, PROJECTS, type Project} from '../data';
 import {NO_OVERVIEW, OVERVIEWS, type NewPhase, type Overview} from '../data-project';
 import {AddPhase, CHECKLIST, CHECKLIST_TAB, CardStub, ChecklistStep, ProjectRail, ProjectSettings, useDeletedPhases,
@@ -73,7 +59,7 @@ function Overview({projectId}: {projectId?: string}) {
           <MenuItem id="invite" textValue="Invite people" icon={<UserPlus aria-hidden size={16} />} onAction={() => setInviting(true)}>Invite people</MenuItem>
           <MenuItem id="copy" textValue="Copy link" isDisabled={!live} icon={<Link aria-hidden size={16} />} onAction={() => toast('Link copied')}>Copy link</MenuItem>
         </>}
-        publishState={live ? 'live' : 'draft'}
+        status={live ? 'live' : 'draft'}
         publishMenu={(
           <MenuItem id={next.to} textValue={next.label} icon={<NextIcon aria-hidden size={16} />} onAction={() => setConfirm(next.to)}>
             {next.label}
@@ -130,7 +116,7 @@ function Setup({project, o, live, archived, onSettings, onChange}: {project: Pro
       actions={<IconButton aria-label="Project settings" onPress={() => onSettings('General')}><Settings aria-hidden size={16} /></IconButton>}>
       <div className="bo-project-setup-body">
         {archived && (
-          <Banner compact tone="neutral" title="Archived">Residents can read the project but no longer take part.</Banner>
+          <Banner density="compact" tone="neutral" title="Archived">Residents can read the project but no longer take part.</Banner>
         )}
         {live ? (
           <>
@@ -160,7 +146,7 @@ function Setup({project, o, live, archived, onSettings, onChange}: {project: Pro
           </PanelSection>
         )}
         <Divider />
-        <PanelSection title="Project details" collapsible>
+        <PanelSection title="Project details" isCollapsible>
           <PropertyList>
             <PropertyListItem label="Dates">{project.start && `${project.start}${project.end ? ` to ${project.end}` : ''}`}</PropertyListItem>
             <PropertyListItem label="Folder">{project.folder ?? 'No folder'}</PropertyListItem>
@@ -183,10 +169,10 @@ function CreateReport() {
     const t = setTimeout(() => setLeft(s => (s ?? 1) - 1), 1000);
     return () => clearTimeout(t);
   }, [left]);
-  if (left === 0) return <ActionRow state="done" href="#/reporting">Report ready</ActionRow>;
+  if (left === 0) return <ActionRow status="done" href="#/reporting">Report ready</ActionRow>;
   if (left != null) {
     return (
-      <ActionRow state="working" progress={(REPORT_SECONDS - left) / REPORT_SECONDS * 100} badge={`${left}s`}
+      <ActionRow status="working" progress={(REPORT_SECONDS - left) / REPORT_SECONDS * 100} badge={`${left}s`}
         description="Reading the results so far">Creating report</ActionRow>
     );
   }

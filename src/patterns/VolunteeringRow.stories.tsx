@@ -35,8 +35,8 @@ export const AllVariants: Story = () => (
       isLast
     />
     <div style={{height: 'var(--gv-space-24)'}} />
-    <VolunteeringRow variant="build" title="Tree-planting weekends" volunteerCount={0} />
-    <VolunteeringRow variant="build" title="Photograph the park" volunteerCount={4} />
+    <VolunteeringRow layout="build" title="Tree-planting weekends" volunteerCount={0} />
+    <VolunteeringRow layout="build" title="Photograph the park" volunteerCount={4} />
   </div>
 );
 
@@ -84,7 +84,7 @@ OneVolunteer.storyName = 'One volunteer';
 export const Build: Story = () => (
   <div style={{width: 412}}>
     <VolunteeringRow
-      variant="build"
+      layout="build"
       title="Tree-planting weekends"
       volunteerCount={0}
       onEdit={() => {}}
@@ -110,14 +110,14 @@ export const BuildInACard: Story = () => (
       ]}>
       <div>
         <VolunteeringRow
-          variant="build"
+          layout="build"
           title="Tree-planting weekends"
           volunteerCount={0}
           onEdit={() => {}}
           onDelete={() => {}}
         />
         <VolunteeringRow
-          variant="build"
+          layout="build"
           title="Photograph the park"
           volunteerCount={0}
           onEdit={() => {}}

@@ -8,6 +8,7 @@ import {
 import './Checkbox.css';
 import {Description, FieldError} from './Form';
 import type {ReactNode} from 'react';
+import {keepClass} from './className';
 
 interface CheckboxProps extends CheckboxFieldProps {
   children?: ReactNode;
@@ -17,7 +18,7 @@ interface CheckboxProps extends CheckboxFieldProps {
 
 export function Checkbox({children, description, errorMessage, ...props}: CheckboxProps) {
   return (
-    <CheckboxField {...props}>
+    <CheckboxField {...props} className={keepClass(props.className)}>
       <CheckboxButton>
         {({isIndeterminate}) => (
           <>

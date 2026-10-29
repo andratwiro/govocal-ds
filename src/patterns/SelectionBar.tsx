@@ -58,7 +58,7 @@ export function SelectionBar({
       {items.map(a => a.menu ? (
         <MenuTrigger key={a.id}>
           <Button variant="secondary" size={32}>{a.icon}{a.label}</Button>
-          <Popover placement="bottom start" hideArrow>{a.menu}</Popover>
+          <Popover placement="bottom start" showArrow={false}>{a.menu}</Popover>
         </MenuTrigger>
       ) : (
         <Button key={a.id} variant="secondary" size={32} onPress={() => { a.onPress?.(); onAction?.(a.id); }}>

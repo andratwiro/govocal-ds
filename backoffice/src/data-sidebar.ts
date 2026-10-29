@@ -6,14 +6,14 @@ export const INPUTS_NEEDING_FEEDBACK = 46;
 export const UNREAD_NOTIFICATIONS = 28;
 
 export type SidebarNotification = {id: string; kind: 'comment' | 'inputs' | 'report' | 'phase' | 'assigned' | 'review';
-  text: string; time: string; href: string; unread: boolean};
+  text: string; time: string; href: string; isUnread: boolean};
 export const NOTIFICATIONS: SidebarNotification[] = [
-  {id: 'n1', kind: 'comment', text: 'A resident commented on your input "More shade on Elm Walk"', time: '12 min ago', href: '#/inputs', unread: true},
-  {id: 'n2', kind: 'inputs', text: '3 new inputs in Collect ideas', time: '1 h ago', href: '#/projects/green-corridors/phases/p2/manage', unread: true},
-  {id: 'n3', kind: 'report', text: 'Your report for Green Corridors for Larkvale is ready', time: '3 h ago', href: '#/reporting', unread: true},
-  {id: 'n4', kind: 'assigned', text: '"Benches by the bus stop" was assigned to you', time: 'Yesterday', href: '#/inputs', unread: true},
-  {id: 'n5', kind: 'phase', text: 'Community vote has started in Green Corridors for Larkvale', time: '19 Oct', href: '#/projects/green-corridors', unread: false},
-  {id: 'n6', kind: 'review', text: 'A project manager asked you to review Harbour Plan 2030', time: '17 Oct', href: '#/projects', unread: false}
+  {id: 'n1', kind: 'comment', text: 'A resident commented on your input "More shade on Elm Walk"', time: '12 min ago', href: '#/inputs', isUnread: true},
+  {id: 'n2', kind: 'inputs', text: '3 new inputs in Collect ideas', time: '1 h ago', href: '#/projects/green-corridors/phases/p2/manage', isUnread: true},
+  {id: 'n3', kind: 'report', text: 'Your report for Green Corridors for Larkvale is ready', time: '3 h ago', href: '#/reporting', isUnread: true},
+  {id: 'n4', kind: 'assigned', text: '"Benches by the bus stop" was assigned to you', time: 'Yesterday', href: '#/inputs', isUnread: true},
+  {id: 'n5', kind: 'phase', text: 'Community vote has started in Green Corridors for Larkvale', time: '19 Oct', href: '#/projects/green-corridors', isUnread: false},
+  {id: 'n6', kind: 'review', text: 'A project manager asked you to review Harbour Plan 2030', time: '17 Oct', href: '#/projects', isUnread: false}
 ];
 
 export const LOCALES = [{id: 'en', label: 'English'}, {id: 'fr', label: 'Français'}, {id: 'nl', label: 'Nederlands'}];

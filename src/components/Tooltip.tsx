@@ -4,11 +4,11 @@ import {
   Tooltip as AriaTooltip,
   type TooltipProps as AriaTooltipProps,
   TooltipTrigger as AriaTooltipTrigger,
-  type TooltipTriggerComponentProps
+  type TooltipTriggerComponentProps as TooltipTriggerProps
 } from 'react-aria-components/Tooltip';
-import clsx from 'clsx';
 import {useCallback} from 'react';
 import './Tooltip.css';
+import {keepClass} from './className';
 
 export interface TooltipProps extends Omit<AriaTooltipProps, 'children'> {
   children: React.ReactNode;
@@ -45,11 +45,7 @@ export function Tooltip({children, showArrow, className, ...props}: TooltipProps
     <AriaTooltip
       {...props}
       ref={ref}
-      className={
-        typeof className === 'function'
-          ? className
-          : clsx('react-aria-Tooltip', showArrow && 'react-aria-Tooltip--arrow', className)
-      }>
+      className={keepClass(className, showArrow && 'react-aria-Tooltip--arrow')}>
       {showArrow && (
         <OverlayArrow>
           <svg width={12} height={6} viewBox="0 0 12 6">
@@ -63,6 +59,7 @@ export function Tooltip({children, showArrow, className, ...props}: TooltipProps
 }
 
 /** The prototype shows a tooltip 120 ms after the pointer arrives and hides it as soon as it leaves. */
-export function TooltipTrigger({delay = 120, closeDelay = 0, ...props}: TooltipTriggerComponentProps) {
+export function TooltipTrigger({delay = 120, closeDelay = 0, ...props}: TooltipTriggerProps) {
   return <AriaTooltipTrigger delay={delay} closeDelay={closeDelay} {...props} />;
 }
+export type {TooltipTriggerProps};

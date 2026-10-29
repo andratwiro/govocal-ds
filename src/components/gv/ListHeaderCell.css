@@ -23,13 +23,13 @@
   outline: none;
   -webkit-tap-highlight-color: transparent;
 
-  &[data-variant='number'] {
+  &[data-kind='number'] {
     justify-content: flex-end;
     text-align: right;
   }
 
   /* 28 × 28 plus, Icon strong (Figma "Add column"; prototype .pj-th--add). */
-  &[data-variant='add-column'] {
+  &[data-kind='add-column'] {
     flex: none;
     width: var(--gv-size-control-28);
     height: var(--gv-size-control-28);
@@ -48,13 +48,13 @@
     }
   }
 
-  &[data-square] {
+  &[data-static] {
     border-radius: 0;
     cursor: default;
   }
 
   /* A sortable column darkens on hover (prototype .pj-th--sort:hover). */
-  &:not([data-square]):not([data-variant='add-column']) {
+  &:not([data-static]):not([data-kind='add-column']) {
     cursor: pointer;
 
     &[data-hovered] {

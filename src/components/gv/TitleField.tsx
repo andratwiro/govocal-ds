@@ -7,9 +7,11 @@ import {
 } from 'react-aria-components/TextField';
 import {FieldError} from '../Form';
 import {RequiredMarker} from './RequiredMarker';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './TitleField.css';
 
-export interface TitleFieldProps extends AriaTextFieldProps {
+export interface TitleFieldProps extends Omit<AriaTextFieldProps, 'className' | 'style'>, PlacementProps {
   placeholder?: string;
   /** Shows the Required dot + label inside the field, on its right (Figma: Title field always carries one). */
   isRequired?: boolean;
@@ -22,9 +24,9 @@ export interface TitleFieldProps extends AriaTextFieldProps {
  * marker sits inside the input's right end, as in Figma and the prototype (`.pj-titlereq`); it is
  * hidden from screen readers, which hear the input's own aria-required.
  */
-export function TitleField({placeholder = 'Add a title', isRequired, errorMessage, ...props}: TitleFieldProps) {
+export function TitleField({placeholder = 'Add a title', isRequired, errorMessage, className, style, ...props}: TitleFieldProps) {
   return (
-    <div className="gv-title-field-wrap" data-required={isRequired || undefined}>
+    <div className={clsx('gv-title-field-wrap', className)} style={style} data-required={isRequired || undefined}>
       <AriaTextField {...props} isRequired={isRequired} className="gv-title-field">
         <Input placeholder={placeholder} />
         <FieldError>{errorMessage}</FieldError>

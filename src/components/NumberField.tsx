@@ -9,10 +9,14 @@ import {
 import {Button} from './Button';
 import {Plus, Minus} from 'lucide-react';
 import {Label, FieldError, Description} from './Form';
-import type {ReactNode} from 'react';
+import type {CSSProperties, ReactNode} from 'react';
+import clsx from 'clsx';
 import './NumberField.css';
 
-export interface NumberFieldProps extends AriaNumberFieldProps {
+/** `className` and `style` place the field's outer box (grid area, width, margin); they never paint it. */
+export interface NumberFieldProps extends Omit<AriaNumberFieldProps, 'className' | 'style'> {
+  className?: string;
+  style?: CSSProperties;
   label?: string;
   description?: string;
   errorMessage?: string | ((validation: ValidationResult) => string);
@@ -29,10 +33,12 @@ export function NumberField({
   errorMessage,
   labelPosition = 'top',
   prefix,
+  className,
+  style,
   ...props
 }: NumberFieldProps) {
   return (
-    <div className="gv-number-field-wrap" data-label-position={labelPosition}>
+    <div className={clsx('gv-number-field-wrap', className)} style={style} data-label-position={labelPosition}>
       <AriaNumberField {...props}>
         <Label>{label}</Label>
         <Group>

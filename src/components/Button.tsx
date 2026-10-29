@@ -8,8 +8,13 @@ import {composeRenderProps} from 'react-aria-components/composeRenderProps';
 import {ChevronDown} from 'lucide-react';
 import {ProgressCircle} from './ProgressCircle';
 import './Button.css';
+import {keepClass} from './className';
 
-interface ButtonProps extends RACButtonProps {
+/**
+ * `className` and `style` place the button (grid area, margin, alignment); they never paint it. React Aria's
+ * `react-aria-Button` class always stays.
+ */
+export interface ButtonProps extends RACButtonProps {
   /**
    * The visual style of the button (Vanilla CSS implementation specific).
    *
@@ -26,9 +31,9 @@ interface ButtonProps extends RACButtonProps {
    * Danger: `tone="danger"` on the `primary` variant (a destructive confirm) or `quiet` (an inline
    * Delete). No outlined danger look (§C): the two cover every case.
    *
-   * @default 'default'
+   * @default 'neutral'
    */
-  tone?: 'default' | 'danger';
+  tone?: 'neutral' | 'danger';
   /**
    * Appends a menu chevron, for buttons that open a menu.
    *
@@ -47,7 +52,14 @@ interface ButtonProps extends RACButtonProps {
    * accessible name from React Aria's slot context, which this component never
    * sees as a prop, so checking for `aria-label` here would miss them.
    */
-  iconOnly?: boolean;
+  isIconOnly?: boolean;
+  /**
+   * Fills the width of its container, its content centred: a form's submit, a card's call to action. Placement, like
+   * `className`.
+   *
+   * @default false
+   */
+  isFullWidth?: boolean;
 }
 
 /** True when `children` is exactly one non-empty, non-text node (an icon). */
@@ -64,15 +76,16 @@ function isIconOnlyChildren(children: ButtonProps['children']): boolean {
 }
 
 export function Button(props: ButtonProps) {
-  const {variant, size, hasMenu, iconOnly, tone, ...rest} = props;
-  const resolvedIconOnly = iconOnly ?? isIconOnlyChildren(props.children);
+  const {variant, size, hasMenu, isIconOnly, tone, isFullWidth, className, ...rest} = props;
+  const resolvedIconOnly = isIconOnly ?? isIconOnlyChildren(props.children);
   return (
     <RACButton
       {...rest}
-      className="react-aria-Button"
+      className={keepClass(className)}
+      data-full-width={isFullWidth || undefined}
       data-variant={variant || 'primary'}
       data-size={size || 36}
-      data-tone={tone || 'default'}
+      data-tone={tone || 'neutral'}
       data-icon-only={resolvedIconOnly || undefined}>
       {composeRenderProps(props.children, (children, {isPending}) => (
         <>

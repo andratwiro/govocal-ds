@@ -1,9 +1,11 @@
 'use client';
 import type {ReactNode} from 'react';
 import {Heading} from 'react-aria-components/Heading';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './SectionLabel.css';
 
-export interface SectionLabelProps {
+export interface SectionLabelProps extends PlacementProps {
   /** The label, in sentence case ("Timeline", "Who is voting", "Project context"). */
   children: ReactNode;
   /**
@@ -11,7 +13,7 @@ export interface SectionLabelProps {
    * jump to ("Who can participate" in Access rights). Without it the label is plain text: the rail's "Timeline" names
    * a list that already has its own name.
    */
-  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  headingLevel?: 2 | 3 | 4 | 5 | 6;
   /** A 16 icon before the words (Access rights' "Who can participate"). */
   icon?: ReactNode;
 }
@@ -21,7 +23,7 @@ export interface SectionLabelProps {
  * report checklist's "Project context" (Figma "Rail section label", 4:442: a 32 row in Small, quiet grey). Sentence
  * case everywhere, never uppercase tracked (docs/DECISIONS.md).
  */
-export function SectionLabel({children, level, icon}: SectionLabelProps) {
+export function SectionLabel({children, headingLevel: level, icon, className, style}: SectionLabelProps) {
   const body = (
     <>
       {icon != null && (
@@ -33,10 +35,10 @@ export function SectionLabel({children, level, icon}: SectionLabelProps) {
     </>
   );
   return level ? (
-    <Heading level={level} className="gv-section-label">
+    <Heading level={level} className={clsx('gv-section-label', className)} style={style}>
       {body}
     </Heading>
   ) : (
-    <div className="gv-section-label">{body}</div>
+    <div className={clsx('gv-section-label', className)} style={style}>{body}</div>
   );
 }

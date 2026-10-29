@@ -46,12 +46,12 @@
   cursor: default;
 }
 
-.gv-action-row[data-state='working'] {
+.gv-action-row[data-status='working'] {
   cursor: default;
 }
 
 /* Done: the prototype's primary accent, a hairline in the brand colour and a tinted tile. */
-.gv-action-row[data-state='done'] {
+.gv-action-row[data-status='done'] {
   border-color: color-mix(in srgb, var(--gv-action-primary) 30%, transparent);
 }
 
@@ -68,7 +68,7 @@
   letter-spacing: var(--gv-type-small-tracking);
 }
 
-.gv-action-row[data-state='done'] .gv-action-row__label {
+.gv-action-row[data-status='done'] .gv-action-row__label {
   font-weight: var(--gv-type-small-strong-weight);
 }
 

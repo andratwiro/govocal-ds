@@ -27,9 +27,11 @@ import {Checkbox} from './Checkbox';
 import {ProgressCircle} from './ProgressCircle';
 import {ChevronUp, ChevronDown, GripVertical, ChevronRight} from 'lucide-react';
 import './Table.css';
+import {keepClass} from './className';
+import clsx from 'clsx';
 
 export function Table(props: TableProps) {
-  return <AriaTable {...props} />;
+  return <AriaTable {...props} className={keepClass(props.className)} />;
 }
 
 interface ColumnProps extends AriaColumnProps {
@@ -38,7 +40,7 @@ interface ColumnProps extends AriaColumnProps {
 
 export function Column(props: Omit<ColumnProps, 'children'> & {children?: React.ReactNode}) {
   return (
-    <AriaColumn {...props} className="react-aria-Column button-base">
+    <AriaColumn {...props} className={keepClass(props.className, 'button-base')}>
       {({allowsSorting, sortDirection}) => (
         <div className="column-header">
           <Group role="presentation" tabIndex={-1} className="column-name">
@@ -60,7 +62,7 @@ export function TableHeader<T>({columns, children, ...otherProps}: TableHeaderPr
   let {selectionBehavior, selectionMode, allowsDragging} = useTableOptions();
 
   return (
-    <AriaTableHeader {...otherProps}>
+    <AriaTableHeader {...otherProps} className={keepClass(otherProps.className)}>
       {/* Add extra columns for drag and drop and selection. */}
       {allowsDragging && (
         <AriaColumn
@@ -92,7 +94,7 @@ export function Row<T>({id, columns, children, ...otherProps}: RowProps<T>) {
   let {selectionBehavior, allowsDragging} = useTableOptions();
 
   return (
-    <AriaRow id={id} {...otherProps}>
+    <AriaRow id={id} {...otherProps} className={keepClass(otherProps.className)}>
       {allowsDragging && (
         <Cell>
           <Button slot="drag" className="drag-button">
@@ -116,16 +118,16 @@ export function Row<T>({id, columns, children, ...otherProps}: RowProps<T>) {
 }
 
 export function TableBody<T>(props: TableBodyProps<T>) {
-  return <AriaTableBody {...props} />;
+  return <AriaTableBody {...props} className={keepClass(props.className)} />;
 }
 
 export function TableFooter<T>(props: TableFooterProps<T>) {
-  return <AriaTableFooter {...props} />;
+  return <AriaTableFooter {...props} className={clsx('react-aria-TableFooter', props.className)} />;
 }
 
 export function Cell(props: CellProps) {
   return (
-    <AriaCell {...props}>
+    <AriaCell {...props} className={keepClass(props.className)}>
       {composeRenderProps(props.children, (children, {hasChildItems, isTreeColumn}) => (
         <>
           {isTreeColumn && hasChildItems && (
@@ -142,10 +144,11 @@ export function Cell(props: CellProps) {
 
 export function TableLoadMoreItem(props: TableLoadMoreItemProps) {
   return (
-    <AriaTableLoadMoreItem {...props}>
+    <AriaTableLoadMoreItem {...props} className={clsx('react-aria-TableLoadingIndicator', props.className)}>
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <ProgressCircle isIndeterminate aria-label="Loading more..." />
       </div>
     </AriaTableLoadMoreItem>
   );
 }
+export type {TableProps, TableHeaderProps, RowProps, TableBodyProps, CellProps};

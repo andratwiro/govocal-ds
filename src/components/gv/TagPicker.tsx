@@ -7,17 +7,22 @@ import {Plus, X} from 'lucide-react';
 import {Button} from '../Button';
 import {Popover} from '../Popover';
 import {OptionList, type OptionListItem} from './OptionList';
+import {useControlledState} from '../useControlledState';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './Badge.css';
 import './TagPicker.css';
 
-export interface TagPickerProps {
+export interface TagPickerProps extends PlacementProps {
   /** Names the tags and the list that adds them, e.g. "Tags". The page shows its own label beside the picker. */
   'aria-label': string;
   /** Every tag that can be chosen. */
-  options: OptionListItem[];
-  /** The ids of the chosen tags, in the order they show. */
-  selected: readonly string[];
-  onChange: (selected: string[]) => void;
+  items: OptionListItem[];
+  /** The ids of the chosen tags, in the order they show (controlled). */
+  value?: readonly string[];
+  /** The tags chosen at first, when the picker keeps its own value. @default [] */
+  defaultValue?: readonly string[];
+  onChange?: (value: string[]) => void;
   /** @default 'Add tag' */
   addLabel?: string;
   /** The search's placeholder in the list (shown past five tags). @default 'Search tags...' */
@@ -33,13 +38,18 @@ export interface TagPickerProps {
  * popover. ←→ move between the tags, Delete or Backspace removes the focused one, Tab goes on to Add tag. The tags
  * are React Aria's TagGroup drawn as the removable Badge. Not in Figma yet.
  */
-export function TagPicker({'aria-label': label, options, selected, onChange, addLabel = 'Add tag',
-  placeholder = 'Search tags...', selectionLabel, isDisabled}: TagPickerProps) {
-  const chosen = selected.map(id => options.find(o => o.id === id)).filter((o): o is OptionListItem => !!o);
+export function TagPicker({'aria-label': label, items, value, defaultValue = [], onChange, addLabel = 'Add tag',
+  placeholder = 'Search tags...', selectionLabel, isDisabled, className, style}: TagPickerProps) {
+  const [selected, setChosen] = useControlledState<readonly string[]>(value, defaultValue);
+  const setSelected = (ids: string[]) => {
+    setChosen(ids);
+    onChange?.(ids);
+  };
+  const chosen = selected.map(id => items.find(o => o.id === id)).filter((o): o is OptionListItem => !!o);
   const root = useRef<HTMLDivElement>(null);
   const remove = (keys: Set<unknown>) => {
     const at = Math.max(selected.findIndex(id => keys.has(id)), 0);
-    onChange(selected.filter(id => !keys.has(id)));
+    setSelected(selected.filter(id => !keys.has(id)));
     // Once React Aria has settled, focus goes to the tag that took the removed one's place (or the one before it), or
     // to Add tag when none are left; never to the page.
     requestAnimationFrame(() => {
@@ -50,7 +60,7 @@ export function TagPicker({'aria-label': label, options, selected, onChange, add
     });
   };
   return (
-    <div className="gv-tag-picker" ref={root}>
+    <div className={clsx('gv-tag-picker', className)} style={style} ref={root}>
       {chosen.length > 0 && (
         <TagGroup aria-label={label} className="gv-tag-picker__group" onRemove={isDisabled ? undefined : remove}>
           <TagList items={chosen} className="gv-tag-picker__list">
@@ -76,9 +86,9 @@ export function TagPicker({'aria-label': label, options, selected, onChange, add
         <Button variant="quiet" size={32} isDisabled={isDisabled}>
           <Plus aria-hidden />{addLabel}
         </Button>
-        <Popover placement="bottom start" hideArrow className="react-aria-Popover gv-tag-picker__popover">
+        <Popover placement="bottom start" showArrow={false} className="gv-tag-picker__popover">
           <Dialog aria-label={label} className="gv-tag-picker__dialog">
-            <OptionList aria-label={label} options={options} selected={selected} onChange={onChange}
+            <OptionList aria-label={label} items={items} value={selected} onChange={setSelected}
               placeholder={placeholder} searchLabel={placeholder.replace(/(\.\.\.|…)$/, '')} selectionLabel={selectionLabel} />
           </Dialog>
         </Popover>

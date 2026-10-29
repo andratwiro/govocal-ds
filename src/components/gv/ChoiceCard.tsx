@@ -3,6 +3,8 @@ import type {ReactNode} from 'react';
 import {RadioField, RadioButton, type RadioFieldProps} from 'react-aria-components/RadioGroup';
 import {CheckboxField, CheckboxButton, type CheckboxFieldProps} from 'react-aria-components/Checkbox';
 import {SectionLabel} from './SectionLabel';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './ChoiceCard.css';
 
 interface ChoiceCardBody {
@@ -29,7 +31,7 @@ const checkmark = (
   </svg>
 );
 
-export interface ChoiceCardProps extends Omit<RadioFieldProps, 'className' | 'children'>, ChoiceCardBody {}
+export interface ChoiceCardProps extends Omit<RadioFieldProps, 'className' | 'style' | 'children'>, ChoiceCardBody, PlacementProps {}
 
 /**
  * Choice card (Figma not yet drawn; the prototype's `.pj-repopt`): a bordered, selectable tile —
@@ -37,9 +39,9 @@ export interface ChoiceCardProps extends Omit<RadioFieldProps, 'className' | 'ch
  * inside a CheckboxGroup). Selected = a 2px primary border, drawn as an inset ring so the tile
  * never shifts. `revealed` opens under the tile only while it's chosen (Budget allocation → Min/Max).
  */
-export function ChoiceCard({media, children, description, revealed, ...props}: ChoiceCardProps) {
+export function ChoiceCard({media, children, description, revealed, className, style, ...props}: ChoiceCardProps) {
   return (
-    <RadioField {...props} className="gv-choice-card">
+    <RadioField {...props} className={clsx('gv-choice-card', className)} style={style}>
       {({isSelected}) => (
         <>
           <RadioButton className="gv-choice-card__button gv-choice-card__button--radio">
@@ -58,13 +60,13 @@ export function ChoiceCard({media, children, description, revealed, ...props}: C
 }
 
 export interface ChoiceCardCheckboxProps
-  extends Omit<CheckboxFieldProps, 'className' | 'children'>,
-    ChoiceCardBody {}
+  extends Omit<CheckboxFieldProps, 'className' | 'style' | 'children'>,
+    ChoiceCardBody, PlacementProps {}
 
 /** The checkbox tile (the prototype's `.pj-pick`): a Choice card built on Checkbox, for a CheckboxGroup. */
-export function ChoiceCardCheckbox({media, children, description, revealed, ...props}: ChoiceCardCheckboxProps) {
+export function ChoiceCardCheckbox({media, children, description, revealed, className, style, ...props}: ChoiceCardCheckboxProps) {
   return (
-    <CheckboxField {...props} className="gv-choice-card">
+    <CheckboxField {...props} className={clsx('gv-choice-card', className)} style={style}>
       {({isSelected}) => (
         <>
           <CheckboxButton className="gv-choice-card__button gv-choice-card__button--checkbox">
@@ -86,6 +88,8 @@ export function ChoiceCardCheckbox({media, children, description, revealed, ...p
  * The label above a group of choice cards ("Project context", "Phases" in the Create report checklist): a Section label,
  * sentence case.
  */
-export function ChoiceCardGroupHeading({children}: {children: ReactNode}) {
-  return <SectionLabel>{children}</SectionLabel>;
+export interface ChoiceCardGroupHeadingProps extends PlacementProps {children: ReactNode}
+
+export function ChoiceCardGroupHeading({children, className, style}: ChoiceCardGroupHeadingProps) {
+  return <SectionLabel className={className} style={style}>{children}</SectionLabel>;
 }

@@ -1,20 +1,9 @@
 import {useState} from 'react';
 import {FileText, MapPin, Pencil, Plus, Tag, Trash2, CircleDot} from 'lucide-react';
-import {Button} from '../../../src/components/Button';
-import {TextField, TextArea} from '../../../src/components/TextField';
-import {ColorField} from '../../../src/components/ColorField';
-import {ColorSwatch} from '../../../src/components/ColorSwatch';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {MenuItem} from '../../../src/components/Menu';
-import {queue} from '../../../src/components/Toast';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableOptions,
-  DataTableStack} from '../../../src/components/gv/DataTable';
-import {Panel} from '../../../src/components/gv/Panel';
-import {Badge} from '../../../src/components/gv/Badge';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {Modal} from '../../../src/components/gv/Modal';
-import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
+import {AlertDialog, Badge, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
+  DataTableOptions, DataTableRow, DataTableStack, EmptyState, MenuItem, Modal, Panel, queue, RichTextEditor, Select,
+  SelectItem, TextArea, TextField} from 'govocal-ds';
+import {ColorField, ColorSwatch} from 'govocal-ds/base';
 import {AREAS, INPUT_STATUS_CATEGORIES, INPUT_STATUSES, PLATFORM_TAGS, POLICIES, PROPOSAL_STATUS_CATEGORIES,
   PROPOSAL_STATUSES, type SettingsItem} from '../data-settings';
 
@@ -108,7 +97,7 @@ function ItemList({config}: {config: ListConfig}) {
   return (
     <>
       <Panel title={config.title} headingLevel={3} count={items.length} description={config.help}
-        flush={items.length > 0} actions={add('primary')}>
+        isFlush={items.length > 0} actions={add('primary')}>
         {items.length ? (
           <DataTable aria-label={config.title}>
             <DataTableHeader>
@@ -138,8 +127,8 @@ function ItemList({config}: {config: ListConfig}) {
             </DataTableBody>
           </DataTable>
         ) : (
-          <EmptyState size="panel" headingLevel={4} icon={<Empty size={24} />} title={config.empty.title}
-            description={config.empty.description} action={add('secondary')} />
+          <EmptyState layout="panel" headingLevel={4} icon={<Empty size={24} />} title={config.empty.title}
+            description={config.empty.description} actions={add('secondary')} />
         )}
       </Panel>
       {editing && <ItemModal key={editing === 'new' ? 'new' : editing.id} config={config}
@@ -194,13 +183,13 @@ function PolicyModal({policy, text, onClose, onSave}: {policy: Policy; text: str
   const [italic, setItalic] = useState(false);
   const [list, setList] = useState(false);
   return (
-    <Modal isOpen size="wide" onOpenChange={o => { if (!o) onClose(); }} title={`Edit ${policy.name.toLowerCase()}`}
+    <Modal isOpen width="wide" onOpenChange={o => { if (!o) onClose(); }} title={`Edit ${policy.name.toLowerCase()}`}
       footer={<>
         <Button variant="secondary" onPress={onClose}>Cancel</Button>
         <Button variant="primary" aria-label={`Save ${policy.name}`} isDisabled={value === text} onPress={() => onSave(value)}>Save</Button>
       </>}>
       <RichTextEditor aria-label={policy.name} placeholder={`The ${policy.name.toLowerCase()} residents read`} value={value}
-        onChange={setValue} bold={bold} onBoldChange={setBold} italic={italic} onItalicChange={setItalic} list={list} onListChange={setList} />
+        onChange={setValue} isBold={bold} onBoldChange={setBold} isItalic={italic} onItalicChange={setItalic} isList={list} onListChange={setList} />
     </Modal>
   );
 }
@@ -210,7 +199,7 @@ export function PoliciesTab() {
   const [editing, setEditing] = useState<Policy | null>(null);
   return (
     <div className="bo-settings-stack">
-      <Panel title="Platform policies" headingLevel={3} count={POLICIES.length} flush
+      <Panel title="Platform policies" headingLevel={3} count={POLICIES.length} isFlush
         description="Edit your platform's terms and conditions and privacy policy. Other pages, including the About and FAQ pages, are edited in Pages & menu.">
         <DataTable aria-label="Platform policies">
           <DataTableHeader>

@@ -17,7 +17,7 @@ describe('Card', () => {
     }
   });
   it('status shows the review status', () => {
-    expect(renderToStaticMarkup(h(Card, {title: 'Sorting', status: 'to-set'}))).toContain('data-state="to-set"');
+    expect(renderToStaticMarkup(h(Card, {title: 'Sorting', status: 'to-set'}))).toContain('data-status="to-set"');
   });
   it('a menu card shows its value as the pill', () => {
     const html = renderToStaticMarkup(h(Card, {title: 'Sorting', control: 'menu', defaultValue: 'recent',

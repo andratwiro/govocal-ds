@@ -15,7 +15,7 @@ const meta: Meta<typeof EmptyState> = {
   argTypes: {
     illustration: {control: 'select', options: [undefined, ...illustrationNames]},
     icon: {control: false},
-    action: {control: false}
+    actions: {control: false}
   }
 };
 
@@ -49,15 +49,15 @@ export const AllVariants: Story = {
           illustration="empty-notebook"
           title="Ideas will appear here"
           description="Once the project is live, you can review and manage ideas here"
-          action={<Button variant="secondary">Go to project</Button>}
+          actions={<Button variant="secondary">Go to project</Button>}
         />
       </Panel>
       <Panel width={280} height={260}>
-        <EmptyState size="panel" illustration="empty-notebook" title="No inputs yet" headingLevel="none" />
+        <EmptyState layout="panel" illustration="empty-notebook" title="No inputs yet" headingLevel="none" />
       </Panel>
       <Panel width={520} style={{padding: 16}}>
         <EmptyState
-          framed
+          isFramed
           icon={icon(Lightbulb)}
           title="No inputs yet"
           description="The first one appears here as soon as someone submits."
@@ -65,7 +65,7 @@ export const AllVariants: Story = {
         />
       </Panel>
       <Panel width={280}>
-        <EmptyState size="panel" icon={icon(MapIcon)} title="Map" description="Show inputs on a map by location." />
+        <EmptyState layout="panel" icon={icon(MapIcon)} title="Map" description="Show inputs on a map by location." />
       </Panel>
     </div>
   )
@@ -112,10 +112,10 @@ export const SidePanel: Story = {
   render: () => (
     <div style={{display: 'flex', gap: 24}}>
       <Panel width={280} height={280}>
-        <EmptyState size="panel" illustration="empty-notebook" title="No inputs yet" headingLevel="none" />
+        <EmptyState layout="panel" illustration="empty-notebook" title="No inputs yet" headingLevel="none" />
       </Panel>
       <Panel width={280} height={280}>
-        <EmptyState size="panel" illustration="empty-notebook" title="No insights yet" headingLevel="none" />
+        <EmptyState layout="panel" illustration="empty-notebook" title="No insights yet" headingLevel="none" />
       </Panel>
     </div>
   )
@@ -127,7 +127,7 @@ export const InputList: Story = {
   render: () => (
     <Panel width={420} style={{padding: 16}}>
       <EmptyState
-        framed
+        isFramed
         icon={icon(Lightbulb)}
         title="No inputs yet"
         description="The first one appears here as soon as someone submits."
@@ -143,7 +143,7 @@ export const FrontOfficeDraft: Story = {
   render: () => (
     <Panel width={360}>
       <EmptyState
-        size="panel"
+        layout="panel"
         title="No inputs yet"
         description="Your project isn't published. Once it goes live, participants' inputs will appear here."
       />
@@ -165,7 +165,7 @@ export const PlatformPages: Story = {
         [Bell, 'Notifications', 'Automated emails sent during this phase.']
       ].map(([Icon, title, text]) => (
         <Panel key={title as string} width={280}>
-          <EmptyState size="panel" icon={icon(Icon as typeof List)} title={title as string} description={text as string} />
+          <EmptyState layout="panel" icon={icon(Icon as typeof List)} title={title as string} description={text as string} />
         </Panel>
       ))}
     </div>
@@ -186,7 +186,7 @@ export const TextOnly: Story = {
         'No demographic data available for this phase.'
       ].map(t => (
         <Panel key={t} width={360}>
-          <EmptyState size="panel" title={t} headingLevel="none" />
+          <EmptyState layout="panel" title={t} headingLevel="none" />
         </Panel>
       ))}
     </div>
@@ -205,7 +205,7 @@ export const WithAction: Story = {
         illustration="empty-notebook"
         title="Ideas will appear here"
         description="Once the project is live, you can review and manage ideas here"
-        action={<Button variant="secondary">Go to project</Button>}
+        actions={<Button variant="secondary">Go to project</Button>}
       />
     </Panel>
   )

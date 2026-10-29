@@ -1,8 +1,10 @@
 'use client';
 import type {ReactNode} from 'react';
 import {Button} from '../components/Button';
-import {Link} from '../components/Link';
+import {Link} from 'react-aria-components/Link';
 import {NewDot} from '../components/gv/NewDot';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './NotificationList.css';
 
 export interface NotificationItem {
@@ -11,21 +13,21 @@ export interface NotificationItem {
   text: ReactNode;
   /** When, as shown ("2 h ago"). */
   time: string;
-  unread?: boolean;
+  isUnread?: boolean;
   /** Where the notification leads. */
   href?: string;
   /** A small leading icon, e.g. `<MessageSquare aria-hidden size={16} />`. */
   icon?: ReactNode;
 }
 
-export interface NotificationListProps {
+export interface NotificationListProps extends PlacementProps {
   /** @default 'Notifications' */
   title?: string;
   items: NotificationItem[];
   /** Shows "Mark all as read". It stays enabled once all are read, so focus never drops out of the panel. */
   onMarkAllRead?: () => void;
   /** @default "You don't have any notifications yet" */
-  emptyText?: string;
+  emptyLabel?: string;
 }
 
 /**
@@ -33,19 +35,19 @@ export interface NotificationListProps {
  * a title with "Mark all as read", then one row per notification, newest first, unread ones
  * bolder and with a red dot. Put it in a Popover + Dialog. Not in Figma yet.
  */
-export function NotificationList({title = 'Notifications', items, onMarkAllRead, emptyText = "You don't have any notifications yet"}: NotificationListProps) {
+export function NotificationList({title = 'Notifications', items, onMarkAllRead, emptyLabel = "You don't have any notifications yet", className, style}: NotificationListProps) {
   return (
-    <div className="gv-notification-list">
+    <div className={clsx('gv-notification-list', className)} style={style}>
       <div className="gv-notification-list__head">
         <h2 className="gv-notification-list__title">{title}</h2>
         {onMarkAllRead && <Button variant="quiet" size={32} onPress={onMarkAllRead}>Mark all as read</Button>}
       </div>
       {items.length === 0
-        ? <p className="gv-notification-list__empty">{emptyText}</p>
+        ? <p className="gv-notification-list__empty">{emptyLabel}</p>
         : (
           <ul className="gv-notification-list__items">
             {items.map(item => (
-              <li key={item.id} className="gv-notification-list__item" data-unread={item.unread || undefined}>
+              <li key={item.id} className="gv-notification-list__item" data-unread={item.isUnread || undefined}>
                 {item.icon && <span className="gv-notification-list__icon" aria-hidden>{item.icon}</span>}
                 <span className="gv-notification-list__body">
                   {item.href
@@ -53,7 +55,7 @@ export function NotificationList({title = 'Notifications', items, onMarkAllRead,
                     : <span className="gv-notification-list__text">{item.text}</span>}
                   <span className="gv-notification-list__time">{item.time}</span>
                 </span>
-                {item.unread && <NewDot aria-label="Unread" />}
+                {item.isUnread && <NewDot aria-label="Unread" />}
               </li>
             ))}
           </ul>

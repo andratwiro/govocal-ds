@@ -3,14 +3,15 @@ import {Children, type ReactNode} from 'react';
 import {Button} from 'react-aria-components/Button';
 import {MenuTrigger} from 'react-aria-components/Menu';
 import {ProgressBar} from 'react-aria-components/ProgressBar';
-import type {LinkProps} from 'react-aria-components/Link';
-import {Link} from '../components/Link';
+import {Link, type LinkProps} from 'react-aria-components/Link';
 import {Menu} from '../components/Menu';
 import {Popover} from '../components/Popover';
 import {Check, ChevronRight} from 'lucide-react';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './ActionRow.css';
 
-export interface ActionRowProps {
+export interface ActionRowProps extends PlacementProps {
   /** What the row does ("Message participants", "Add a report"). */
   children: ReactNode;
   /** A grey line under the label ("Reading the results of this phase"). */
@@ -31,7 +32,7 @@ export interface ActionRowProps {
    *
    * @default 'idle'
    */
-  state?: 'idle' | 'working' | 'done';
+  status?: 'idle' | 'working' | 'done';
   /** `working`: how far along, 0–100; leave it out for a ring that turns. */
   progress?: number;
   /** Greyed and inert: an action that can't run yet. */
@@ -57,14 +58,16 @@ export function ActionRow({
   badge,
   href,
   onPress,
-  state = 'idle',
+  status = 'idle',
   progress,
   isDisabled,
   menu,
-  menuLabel
+  menuLabel,
+  className,
+  style
 }: ActionRowProps) {
-  const working = state === 'working';
-  const done = state === 'done';
+  const working = status === 'working';
+  const done = status === 'done';
   const label = typeof children === 'string' ? children : undefined;
 
   const body = (
@@ -115,7 +118,7 @@ export function ActionRow({
   if (working) {
     // Nothing to press while it runs: a plain group that says it's busy, the ring reporting its progress.
     return (
-      <div className="gv-action-row" data-state="working" role="group" aria-disabled="true" aria-busy="true">
+      <div className={clsx('gv-action-row', className)} style={style} data-status="working" role="group" aria-disabled="true" aria-busy="true">
         {body}
       </div>
     );
@@ -124,10 +127,10 @@ export function ActionRow({
   if (menu != null) {
     return (
       <MenuTrigger>
-        <Button className="gv-action-row" data-state={state} isDisabled={isDisabled}>
+        <Button className={clsx('gv-action-row', className)} style={style} data-status={status} isDisabled={isDisabled}>
           {body}
         </Button>
-        <Popover hideArrow placement="bottom start" offset={6} className="gv-action-row__popover">
+        <Popover showArrow={false} placement="bottom start" offset={6} className="gv-action-row__popover">
           <Menu aria-label={menuLabel ?? label}>{menu}</Menu>
         </Popover>
       </MenuTrigger>
@@ -135,13 +138,13 @@ export function ActionRow({
   }
 
   return (
-    <Link className="gv-action-row" data-state={state} href={href} onPress={onPress} isDisabled={isDisabled}>
+    <Link className={clsx('gv-action-row', className)} style={style} data-status={status} href={href} onPress={onPress} isDisabled={isDisabled}>
       {body}
     </Link>
   );
 }
 
-export interface ActionRowListProps {
+export interface ActionRowListProps extends PlacementProps {
   /** The rows (`ActionRow`s). */
   children?: ReactNode;
   /** What an empty list says. @default 'All caught up. Nothing left to suggest.' */
@@ -151,11 +154,11 @@ export interface ActionRowListProps {
 }
 
 /** Action rows stacked 8 apart, as a list; with no rows it says so (the Insights panel's "All caught up."). */
-export function ActionRowList({children, emptyLabel = 'All caught up. Nothing left to suggest.', 'aria-label': ariaLabel}: ActionRowListProps) {
+export function ActionRowList({children, emptyLabel = 'All caught up. Nothing left to suggest.', 'aria-label': ariaLabel, className, style}: ActionRowListProps) {
   const rows = Children.toArray(children);
-  if (!rows.length) return <p className="gv-action-row-empty">{emptyLabel}</p>;
+  if (!rows.length) return <p className={clsx('gv-action-row-empty', className)} style={style}>{emptyLabel}</p>;
   return (
-    <ul className="gv-action-row-list" aria-label={ariaLabel}>
+    <ul className={clsx('gv-action-row-list', className)} style={style} aria-label={ariaLabel}>
       {rows.map((row, i) => (
         <li key={i}>{row}</li>
       ))}

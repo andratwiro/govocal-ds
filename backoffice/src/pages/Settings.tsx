@@ -1,21 +1,8 @@
 import {useId, useState} from 'react';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {TextField, TextArea} from '../../../src/components/TextField';
-import {NumberField} from '../../../src/components/NumberField';
-import {ColorField} from '../../../src/components/ColorField';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {Switch} from '../../../src/components/Switch';
-import {RadioGroup} from '../../../src/components/RadioGroup';
-import {CheckboxGroup} from '../../../src/components/CheckboxGroup';
-import {Button} from '../../../src/components/Button';
-import {ToastRegion} from '../../../src/components/Toast';
-import {Panel} from '../../../src/components/gv/Panel';
-import {Checkbox} from '../../../src/components/gv/Checkbox';
-import {ChoiceCard} from '../../../src/components/gv/ChoiceCard';
-import {DropZone} from '../../../src/components/gv/DropZone';
-import {FileList, type FileListItemData} from '../../../src/components/gv/FileList';
-import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
-import {TitleField} from '../../../src/components/gv/TitleField';
+import {Button, Checkbox, ChoiceCard, DropZone, FileList, type FileListItemData, NumberField, Panel, SegmentedControl,
+  SegmentedControlItem, Select, SelectItem, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, TextArea, TextField,
+  TitleField, ToastRegion} from 'govocal-ds';
+import {CheckboxGroup, ColorField, RadioGroup} from 'govocal-ds/base';
 import {APPROVERS, LOCALES, PLATFORM_NAME} from '../data-settings';
 import {AreasTab, PoliciesTab, StatusesTab, TagsTab, toast} from './SettingsLists';
 import {Page} from './Page';

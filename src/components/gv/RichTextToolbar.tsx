@@ -2,14 +2,16 @@
 import {Button, Toolbar} from 'react-aria-components';
 import {Bold, Italic, List, Link as LinkIcon, Image, SquarePlay} from 'lucide-react';
 import {RichTextToolbarButton} from './RichTextToolbarButton';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './RichTextToolbar.css';
 
-export interface RichTextToolbarProps {
-  bold?: boolean;
+export interface RichTextToolbarProps extends PlacementProps {
+  isBold?: boolean;
   onBoldChange?: (v: boolean) => void;
-  italic?: boolean;
+  isItalic?: boolean;
   onItalicChange?: (v: boolean) => void;
-  list?: boolean;
+  isList?: boolean;
   onListChange?: (v: boolean) => void;
   onLink?: () => void;
   onImage?: () => void;
@@ -23,25 +25,27 @@ export interface RichTextToolbarProps {
  * line; icons at 14 with a 1.75 stroke, as Figma's 14 icons and the prototype.
  */
 export function RichTextToolbar({
-  bold,
+  isBold,
   onBoldChange,
-  italic,
+  isItalic,
   onItalicChange,
-  list,
+  isList,
   onListChange,
   onLink,
   onImage,
-  onVideo
+  onVideo,
+  className,
+  style
 }: RichTextToolbarProps) {
   return (
-    <Toolbar aria-label="Formatting" className="gv-editor-toolbar">
-      <RichTextToolbarButton aria-label="Bold" isSelected={bold} onChange={onBoldChange}>
+    <Toolbar aria-label="Formatting" className={clsx('gv-editor-toolbar', className)} style={style}>
+      <RichTextToolbarButton aria-label="Bold" isSelected={isBold} onChange={onBoldChange}>
         <Bold aria-hidden size={14} strokeWidth={1.75} />
       </RichTextToolbarButton>
-      <RichTextToolbarButton aria-label="Italic" isSelected={italic} onChange={onItalicChange}>
+      <RichTextToolbarButton aria-label="Italic" isSelected={isItalic} onChange={onItalicChange}>
         <Italic aria-hidden size={14} strokeWidth={1.75} />
       </RichTextToolbarButton>
-      <RichTextToolbarButton aria-label="List" isSelected={list} onChange={onListChange}>
+      <RichTextToolbarButton aria-label="List" isSelected={isList} onChange={onListChange}>
         <List aria-hidden size={14} strokeWidth={1.75} />
       </RichTextToolbarButton>
       <Button aria-label="Add link" onPress={onLink} className="gv-editor-tool">

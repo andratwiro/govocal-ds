@@ -3,26 +3,28 @@ import {Form as RACForm, type FormProps} from 'react-aria-components/Form';
 import {type LabelProps, Label as RACLabel} from 'react-aria-components/Label';
 import {type FieldErrorProps, FieldError as RACFieldError} from 'react-aria-components/FieldError';
 import {type ButtonProps, Button} from 'react-aria-components/Button';
-import {type TextProps} from 'react-aria-components/Text';
+import {type TextProps, Text as AriaText} from 'react-aria-components/Text';
 import './Form.css';
-import {Text} from './Content';
+import clsx from 'clsx';
+import {keepClass, ownClass} from './className';
 
 export function Form(props: FormProps) {
-  return <RACForm {...props} />;
+  return <RACForm {...props} className={clsx('react-aria-Form', props.className)} />;
 }
 
 export function Label(props: LabelProps) {
-  return <RACLabel {...props} />;
+  return <RACLabel {...props} className={clsx('react-aria-Label', props.className)} />;
 }
 
 export function FieldError(props: FieldErrorProps) {
-  return <RACFieldError {...props} />;
+  return <RACFieldError {...props} className={keepClass(props.className)} />;
 }
 
 export function Description(props: TextProps) {
-  return <Text slot="description" className="field-description" {...props} />;
+  return <AriaText slot="description" {...props} className={clsx('field-description', props.className)} />;
 }
 
 export function FieldButton(props: ButtonProps) {
-  return <Button {...props} className="field-Button" />;
+  return <Button {...props} className={ownClass('field-Button', props.className)} />;
 }
+export type {FormProps, LabelProps, FieldErrorProps};

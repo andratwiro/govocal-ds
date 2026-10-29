@@ -14,6 +14,8 @@ import {AlertDialog} from '../components/gv/AlertDialog';
 import {ChoiceCard} from '../components/gv/ChoiceCard';
 import {Modal} from '../components/gv/Modal';
 import {SectionLabel} from '../components/gv/SectionLabel';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './AccessRights.css';
 
 export type AccessWho = 'anyone' | 'signin' | 'admins';
@@ -54,7 +56,7 @@ function useValue<T>(value: T | undefined, defaultValue: T, onChange?: (v: T) =>
   ] as const;
 }
 
-export interface AccessRightsProps {
+export interface AccessRightsProps extends PlacementProps {
   /** Set for this phase (editable), or following the platform's defaults (read-only until Override). */
   isOverriding?: boolean;
   defaultOverriding?: boolean;
@@ -65,7 +67,7 @@ export interface AccessRightsProps {
   defaultWho?: AccessWho;
   onWhoChange?: (who: AccessWho) => void;
   /** The choices this action offers (some offer two). @default ['anyone', 'signin', 'admins'] */
-  options?: AccessWho[];
+  whoItems?: AccessWho[];
   /** Sign-in's security requirement: participants set a password. @default true */
   defaultRequirePassword?: boolean;
   /** The groups an action can be limited to; the first is "no restriction". */
@@ -91,12 +93,14 @@ export function AccessRights({
   who: whoProp,
   defaultWho = 'signin',
   onWhoChange,
-  options = ['anyone', 'signin', 'admins'],
+  whoItems = ['anyone', 'signin', 'admins'],
   defaultRequirePassword = true,
   groups = ['All participants (no group restriction)'],
   onPlatformDefaults,
   onCustomizeError,
-  defaultExpandedKeys = ['security', 'groups']
+  defaultExpandedKeys = ['security', 'groups'],
+  className,
+  style
 }: AccessRightsProps) {
   const [overriding, setOverriding] = useValue(isOverriding, defaultOverriding, onOverridingChange);
   const [who, setWho] = useValue(whoProp, defaultWho, onWhoChange);
@@ -120,7 +124,7 @@ export function AccessRights({
     return () => cancelAnimationFrame(frame);
   }, [overriding]);
   return (
-    <div ref={root} className="gv-access-rights" data-overriding={overriding || undefined}>
+    <div ref={root} className={clsx('gv-access-rights', className)} style={style} data-overriding={overriding || undefined}>
       <div className="gv-access-rights__head">
         {overriding ? (
           <span className="gv-access-rights__status">Overriding platform defaults</span>
@@ -147,8 +151,8 @@ export function AccessRights({
           value={who}
           onChange={v => setWho(v as AccessWho)}
           isReadOnly={readOnly}
-          className="react-aria-RadioGroup gv-access-rights__who">
-          {options.map(key => (
+          className="gv-access-rights__who">
+          {whoItems.map(key => (
             <ChoiceCard key={key} value={key} media={WHO[key].icon} description={WHO[key].description}>
               {WHO[key].label}
             </ChoiceCard>
@@ -196,7 +200,7 @@ export function AccessRights({
               <DisclosurePanel className="gv-access-rights__section-panel">
 <div className="gv-access-rights__panel-body">
                 <p className="gv-access-rights__lead">Participant must be in any one of the selected groups.</p>
-                <Select aria-label="Groups" defaultSelectedKey="0" isDisabled={readOnly}>
+                <Select aria-label="Groups" defaultValue="0" isDisabled={readOnly}>
                   {groups.map((g, i) => (
                     <SelectItem key={g} id={String(i)}>
                       {g}
@@ -247,7 +251,7 @@ export function AccessRightsModal({
     <>
       <Modal
         title={title}
-        size="wide"
+        width="wide"
         isOpen={isOpen}
         defaultOpen={defaultOpen}
         onOpenChange={onOpenChange}

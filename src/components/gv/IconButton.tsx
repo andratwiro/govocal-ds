@@ -1,8 +1,10 @@
 'use client';
 import {Button as RACButton, type ButtonProps as RACButtonProps} from 'react-aria-components/Button';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './IconButton.css';
 
-export interface IconButtonProps extends Omit<RACButtonProps, 'children'> {
+export interface IconButtonProps extends Omit<RACButtonProps, 'children' | 'className' | 'style'>, PlacementProps {
   /**
    * The button's chrome (Figma "Style").
    *
@@ -10,13 +12,13 @@ export interface IconButtonProps extends Omit<RACButtonProps, 'children'> {
    */
   variant?: 'ghost' | 'bordered';
   /**
-   * The icon colour weight (Figma "Tone"). `bordered` only has a Figma
-   * variant for `strong`; `default` is supported anyway since nothing in the
+   * The icon's colour weight: secondary grey or near-black (Figma's "Tone"; here `tone` is only ever a colour
+   * intent). `bordered` only has a Figma variant for `strong`; `default` is supported anyway since nothing in the
    * token set stops it.
    *
    * @default 'default'
    */
-  tone?: 'default' | 'strong';
+  emphasis?: 'default' | 'strong';
   /**
    * The button's size. Figma only specs 28; 24 is the prototype's
    * `.btn-icon--sm` (used in dense toolbars), carried over for parity.
@@ -31,13 +33,14 @@ export interface IconButtonProps extends Omit<RACButtonProps, 'children'> {
 }
 
 export function IconButton(props: IconButtonProps) {
-  const {variant, tone, size, children, ...rest} = props;
+  const {variant, emphasis, size, children, className, style, ...rest} = props;
   return (
     <RACButton
       {...rest}
-      className="gv-icon-button"
+      className={clsx('gv-icon-button', className)}
+      style={style}
       data-variant={variant || 'ghost'}
-      data-tone={tone || 'default'}
+      data-emphasis={emphasis || 'default'}
       data-size={size || 28}>
       {children}
     </RACButton>

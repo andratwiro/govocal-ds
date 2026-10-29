@@ -1,19 +1,9 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router';
 import {ArrowDown, ArrowUp, Eye, FileText, GripVertical, Lock, Pencil, Plus, Trash2, X} from 'lucide-react';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {Button} from '../../../src/components/Button';
-import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
-import {Switch} from '../../../src/components/Switch';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableOptions,
-  DataTableStack} from '../../../src/components/gv/DataTable';
-import {Panel} from '../../../src/components/gv/Panel';
-import {Badge} from '../../../src/components/gv/Badge';
-import {Banner} from '../../../src/components/gv/Banner';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {IconButton} from '../../../src/components/gv/IconButton';
+import {AlertDialog, Badge, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
+  DataTableOptions, DataTableRow, DataTableStack, EmptyState, IconButton, Menu, MenuItem, MenuTrigger, Panel, queue,
+  Switch, Tab, TabList, TabPanel, TabPanels, Tabs, ToastRegion} from 'govocal-ds';
 import {MENU_ENTRIES, MENU_START, PAGE_META, PAGES_START, type MenuEntry} from '../data-pages-menu';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
@@ -59,7 +49,7 @@ function MenuTab({menu, setMenu, pages}: {menu: string[]; setMenu: Update; pages
   const edit = (item: MenuEntry) =>
     navigate(item.kind === 'home' ? '/pages-menu/homepage-builder' : `/pages-menu/navbar-items/edit/${item.id}`);
   return (
-    <Panel title="Navigation bar" count={items.length} flush
+    <Panel title="Navigation bar" count={items.length} isFlush
       description="Organise the menu that appears across your site. Add new items and drag to reorder."
       actions={
         <MenuTrigger>
@@ -135,7 +125,7 @@ function PagesTab({menu, setMenu, pages, setPages}: {menu: string[]; setMenu: Up
   );
   return (
     <div className="bo-pages-menu-stack">
-      <Panel title="Custom pages" count={pages.length} flush={pages.length > 0} actions={create('primary')}
+      <Panel title="Custom pages" count={pages.length} isFlush={pages.length > 0} actions={create('primary')}
         description="Every custom page you’ve built. Edit content, view, or delete a page.">
         {pages.length ? (
           <DataTable aria-label="Custom pages">
@@ -174,9 +164,9 @@ function PagesTab({menu, setMenu, pages, setPages}: {menu: string[]; setMenu: Up
             </DataTableBody>
           </DataTable>
         ) : (
-          <EmptyState size="panel" headingLevel={3} icon={<FileText size={24} />} title="You haven’t created any custom pages yet"
+          <EmptyState layout="panel" headingLevel={3} icon={<FileText size={24} />} title="You haven’t created any custom pages yet"
             description="A custom page holds text, projects and events on one topic, and can be linked from the menu."
-            action={create('secondary')} />
+            actions={create('secondary')} />
         )}
       </Panel>
       <Banner tone="info" linkLabel="Go to Settings" linkHref="#/settings">

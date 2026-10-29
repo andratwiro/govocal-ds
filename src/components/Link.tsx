@@ -1,6 +1,7 @@
 'use client';
 import {Link as RACLink, type LinkProps as RACLinkProps} from 'react-aria-components/Link';
 import './Link.css';
+import {keepClass} from './className';
 
 export interface LinkProps extends RACLinkProps {
   /**
@@ -11,5 +12,5 @@ export interface LinkProps extends RACLinkProps {
 }
 
 export function Link({size, ...props}: LinkProps) {
-  return <RACLink {...props} data-size={size} />;
+  return <RACLink {...props} className={keepClass(props.className)} data-size={size} />;
 }

@@ -1,34 +1,13 @@
 import {useMemo, useState, type ReactNode} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {ArrowRight, CalendarDays, Download, Eye, FolderOpen, Zap} from 'lucide-react';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {SearchField} from '../../../src/components/SearchField';
-import {Meter} from '../../../src/components/Meter';
-import {Button} from '../../../src/components/Button';
-import {Link} from '../../../src/components/Link';
-import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
-  DataTableStack, DataTableText} from '../../../src/components/gv/DataTable';
-import {Panel} from '../../../src/components/gv/Panel';
-import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {DateRangeField} from '../../../src/components/gv/DateRangeField';
-import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
-import {DashboardCard, DashboardBars, DashboardDemographic, type DashboardCardType} from '../../../src/components/gv/DashboardCard';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {StatTile} from '../../../src/components/gv/StatTile';
-import {ChartLegend, LineChart, Sparkline} from '../../../src/components/gv/Chart';
-import {BarRow} from '../../../src/components/gv/BarRow';
-import {StatRow} from '../../../src/components/gv/StatRow';
-import {Badge} from '../../../src/components/gv/Badge';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {Banner} from '../../../src/components/gv/Banner';
-import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
-import {FilterChips} from '../../../src/patterns/FilterChips';
-import {SelectionBar} from '../../../src/patterns/SelectionBar';
+import {Badge, Banner, BarRow, Button, ChartLegend, DashboardBars, DashboardCard, type DashboardCardKind,
+  DashboardDemographic, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader,
+  DataTableRow, DataTableStack, DataTableText, DateRangeField, EmptyState, FilterChips, type FilterFacet, FilterMenu,
+  type FilterValue, IconButton, LineChart, Menu, MenuItem, MenuTrigger, Pagination, Panel, queue, SearchField,
+  SegmentedControl, SegmentedControlItem, Select, SelectionBar, SelectItem, Sparkline, StatRow, StatTile, StatusBadge,
+  Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, ToastRegion} from 'govocal-ds';
+import {Link, Meter} from 'govocal-ds/base';
 import {DASHBOARD, PROJECTS} from '../data';
 import {MONTHS, PER_TAG, STATUS_BREAKDOWN, EMAILS, INVITATIONS, EVENTS, ADOPTION, DATE_PRESETS, METRICS, PROJECT_METRICS,
   TAG_METRICS, USERS, VISITORS, REPRESENTATION, PARTICIPATION_FEED, MANAGEMENT_FEED, FEED_ACTIONS,
@@ -59,7 +38,7 @@ type Headline = {label: string; value: number; last30: number; series: number[]}
 function HeadlineTile({label, value, last30, series, note}: Headline & {note?: string}) {
   return (
     <StatTile label={label} value={n(value)} note={note ?? `Last 30 days: +${n(last30)}`}>
-      <Sparkline label={`${label} per month`} labels={MONTHS} values={series} height={34} grid={false} />
+      <Sparkline label={`${label} per month`} labels={MONTHS} values={series} height={34} showGrid={false} />
     </StatTile>
   );
 }
@@ -83,11 +62,11 @@ function DownloadMenu({title}: {title: string}) {
 
 /** The real admin's dashboard card (title, download, body) as the gv Dashboard card: its legend and foot slots too. */
 function DashCard({title, type, control, legend, footer, children}: {
-  title: string; type?: DashboardCardType; control?: ReactNode; legend?: ReactNode; footer?: ReactNode; children: ReactNode;
+  title: string; type?: DashboardCardKind; control?: ReactNode; legend?: ReactNode; footer?: ReactNode; children: ReactNode;
 }) {
   const action = <span className="bo-dashboard-card-actions">{control}<DownloadMenu title={title} /></span>;
   return (
-    <DashboardCard type={type} title={title} action={action} legend={legend} footer={footer}>
+    <DashboardCard kind={type} title={title} actions={action} legend={legend} footer={footer}>
       <div className="bo-dashboard-body">{children}</div>
     </DashboardCard>
   );
@@ -109,7 +88,7 @@ type FilterState = {project: string; setProject: (p: string) => void; preset: st
 function Filters({project, setProject, preset, setPreset}: FilterState) {
   return (
     <div className="bo-dashboard-filters">
-      <Select variant="pill" aria-label="Project" prefix="Project:" searchable selectedKey={project}
+      <Select variant="pill" aria-label="Project" prefix="Project:" isSearchable selectedKey={project}
         onSelectionChange={k => k != null && setProject(String(k))}>
         <SelectItem id={ALL} icon={<FolderOpen aria-hidden size={16} />}>All projects</SelectItem>
         {PROJECTS.map(p => <SelectItem key={p.id} id={p.id} icon={<FolderOpen aria-hidden size={16} />}>{p.title}</SelectItem>)}
@@ -157,7 +136,7 @@ function People({project}: {project: string}) {
         <HeadlineTile {...part} />
       </div>
       <DashCard title="Registrations and participants" type="participation-over-time">
-        <LineChart labels={MONTHS} legend series={[{label: part.label, values: part.series}, {label: reg.label, values: reg.series}]} />
+        <LineChart labels={MONTHS} showLegend series={[{label: part.label, values: part.series}, {label: reg.label, values: reg.series}]} />
       </DashCard>
     </Section>
   );
@@ -187,7 +166,7 @@ function Participation({project}: {project: string}) {
       <div className="bo-dashboard-kpis">{headlines.map(d => <HeadlineTile key={d.label} {...d} />)}</div>
       <div className="bo-dashboard-cards">
         <DashCard title="Participation over time" type="participation-over-time">
-          <LineChart labels={MONTHS} legend series={[{label: inputs.label, values: inputs.series}, {label: comments.label, values: comments.series}]} />
+          <LineChart labels={MONTHS} showLegend series={[{label: inputs.label, values: inputs.series}, {label: comments.label, values: comments.series}]} />
         </DashCard>
         <div className="bo-dashboard-stack">
           <DashCard title="Participation per project" control={<MetricSelect value={projectMetric} onChange={setProjectMetric} />}>
@@ -211,7 +190,7 @@ function Management() {
       <div className="bo-dashboard-cards">
         <div className="bo-dashboard-stack">
           <DashCard title="Input status" type="status-breakdown" footer={(
-            <Link href="#/inputs" className="react-aria-Link bo-dashboard-more">Go to Input Manager <ArrowRight aria-hidden size={16} /></Link>
+            <Link href="#/inputs" className="bo-dashboard-more">Go to Input Manager <ArrowRight aria-hidden size={16} /></Link>
           )}>
             <Meter label="Feedback given" value={s.feedbackGiven} />
             <DashboardBars items={STATUS_BREAKDOWN.map(b => ({label: b.label, percent: (b.count / total) * 100, count: b.count, color: b.color}))} />
@@ -227,7 +206,7 @@ function Management() {
           <DashCard title="Emails">
             <StatTrio items={[['Total emails sent', n(EMAILS.automated.total + EMAILS.custom.total)],
               ['Automated emails', n(EMAILS.automated.total)], ['Custom emails', n(EMAILS.custom.total)]]} />
-            <LineChart labels={MONTHS} legend series={[{label: 'Automated emails', values: EMAILS.automated.series}, {label: 'Custom emails', values: EMAILS.custom.series}]} />
+            <LineChart labels={MONTHS} showLegend series={[{label: 'Automated emails', values: EMAILS.automated.series}, {label: 'Custom emails', values: EMAILS.custom.series}]} />
           </DashCard>
           <DashCard title="Invitations">
             <StatTrio items={[['Total invites sent', n(INVITATIONS.sent)], ['Pending', n(INVITATIONS.pending)], ['Accepted', n(INVITATIONS.accepted)]]} />
@@ -238,7 +217,7 @@ function Management() {
               ['Project managers', `${ADOPTION.managers.active30} of ${ADOPTION.managers.total}`],
               ['Total', `${ADOPTION.admins.active30 + ADOPTION.managers.active30} of ${adoptionTotal}`]]} />
             <p className="bo-note">Active in the last 30 days</p>
-            <LineChart labels={MONTHS} legend series={[{label: 'Active admins', values: ADOPTION.admins.series}, {label: 'Active project managers', values: ADOPTION.managers.series}]} />
+            <LineChart labels={MONTHS} showLegend series={[{label: 'Active admins', values: ADOPTION.admins.series}, {label: 'Active project managers', values: ADOPTION.managers.series}]} />
           </DashCard>
         </div>
       </div>
@@ -260,7 +239,7 @@ function UsersTab({project}: {project: string}) {
       </div>
       <DashCard title="Participants timeline" type="participation-over-time">
         <Banner tone="info">Participation numbers may not be fully accurate, as some data is captured in an external survey that is not tracked.</Banner>
-        <LineChart labels={MONTHS} legend series={[{label: part.label, values: part.series}, {label: reg.label, values: reg.series}]} />
+        <LineChart labels={MONTHS} showLegend series={[{label: part.label, values: part.series}, {label: reg.label, values: reg.series}]} />
       </DashCard>
       <div className="bo-dashboard-cards">
         <DashCard title="Gender" type="demographic-age"><DashboardDemographic label="Share of participants" items={USERS.gender} /></DashCard>
@@ -283,7 +262,7 @@ function VisitorsTab() {
         {VISITORS.kpis.map(k => <StatTile key={k.label} label={k.label} value={k.value} note={k.note} />)}
       </div>
       <DashCard title="Visitors over time" type="visitors-over-time">
-        <LineChart labels={MONTHS} legend series={[{label: 'Visitors', values: VISITORS.visitors}, {label: 'Visits', values: VISITORS.visits}]} />
+        <LineChart labels={MONTHS} showLegend series={[{label: 'Visitors', values: VISITORS.visitors}, {label: 'Visits', values: VISITORS.visits}]} />
       </DashCard>
       <div className="bo-dashboard-cards">
         <DashCard title="Traffic sources">
@@ -299,7 +278,7 @@ function VisitorsTab() {
 /** Representativeness: participants against the reference population, one card per registration field. The two
  * series are named once, in the card's legend slot (the Chart legend, as every chart), not as Legend rows. */
 function RepresentativenessTab() {
-  const legend = <ChartLegend shape="square" align="start" items={[{label: 'Participants', color: 'bar'}, {label: 'Reference population', color: 'pass'}]} />;
+  const legend = <ChartLegend variant="square" align="start" items={[{label: 'Participants', color: 'bar'}, {label: 'Reference population', color: 'pass'}]} />;
   return (
     <div className="bo-dashboard-tab">
       <div className="bo-dashboard-kpis">
@@ -367,7 +346,7 @@ function ParticipationFeed() {
   );
 
   return (
-    <Panel title="Participation feed" description="New ideas, comments and proposals from every project." flush
+    <Panel title="Participation feed" description="New ideas, comments and proposals from every project." isFlush
       actions={(
         <SegmentedControl aria-label="Show" selectionMode="single" disallowEmptySelection selectedKeys={[show]}
           onSelectionChange={k => { const [v] = [...k]; if (v) switchTo(v as 'new' | 'viewed'); }}>
@@ -378,7 +357,7 @@ function ParticipationFeed() {
       toolbar={toolbar}
       footer={rows.length > 0 && <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Feed pages" />}>
       {rows.length === 0 && !q ? (
-        <EmptyState size="panel" illustration="empty-notebook" headingLevel={3}
+        <EmptyState layout="panel" illustration="empty-notebook" headingLevel={3}
           title={show === 'new' ? 'You are all caught up' : 'Nothing viewed yet'}
           description={show === 'new' ? 'New ideas, comments and proposals will appear here.' : 'Items you mark as viewed move here.'} />
       ) : (
@@ -402,7 +381,7 @@ function ParticipationFeed() {
                   {show === 'new'
                     ? <Button variant="quiet" size={32} aria-label={`Mark as viewed: ${f.content}`}
                       onPress={() => markViewed([f.id])}><Eye aria-hidden size={16} /> Mark as viewed</Button>
-                    : <StatusBadge state="live">Viewed</StatusBadge>}
+                    : <StatusBadge status="live">Viewed</StatusBadge>}
                 </DataTableCell>
               </DataTableRow>
             ))}
@@ -415,7 +394,7 @@ function ParticipationFeed() {
 
 const ACTION_FACET: FilterFacet = {
   id: 'action', label: 'Action', icon: <Zap aria-hidden size={16} />,
-  options: FEED_ACTIONS.map(a => ({id: a, label: a, count: MANAGEMENT_FEED.filter(m => m.action === a).length}))
+  items: FEED_ACTIONS.map(a => ({id: a, label: a, count: MANAGEMENT_FEED.filter(m => m.action === a).length}))
 };
 
 /** Management feed: who changed what (the real admin's Date / User / Item / Action table), as a list page: Panel,
@@ -435,7 +414,7 @@ function ManagementFeed() {
   const current = Math.min(page, pageCount);
   const shown = rows.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
   return (
-    <Panel title="Management feed" description="What admins and managers created, changed and deleted." flush
+    <Panel title="Management feed" description="What admins and managers created, changed and deleted." isFlush
       toolbar={(
         <>
           <TableToolbar aria-label="Feed tools" start={<TableToolbarHeading>{changesWord(rows.length)}</TableToolbarHeading>}>

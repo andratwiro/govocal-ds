@@ -5,9 +5,12 @@ import {Check, ChevronRight} from 'lucide-react';
 import {NumberField} from '../components/NumberField';
 import {Radio, RadioGroup} from '../components/RadioGroup';
 import {Switch} from '../components/Switch';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './ParticipantActionRow.css';
 
-export interface ParticipantActionRowProps {
+/** `className` and `style` place the row (not its options under it); they never paint it. */
+export interface ParticipantActionRowProps extends PlacementProps {
   /** The action ("Submitting inputs", "Reacting to inputs", "Attending an event"). */
   children: string;
   /** Who can take it, shown at the end while it is on ("Sign-in required", "Anyone can participate"). */
@@ -46,13 +49,15 @@ export function ParticipantActionRow({
   defaultSelected = true,
   onChange,
   onOpen,
-  options
+  options,
+  className,
+  style
 }: ParticipantActionRowProps) {
   const [inner, setInner] = useState(defaultSelected);
   const on = isLocked || (isSelected ?? inner);
   return (
     <>
-      <div className="gv-participant-action" data-off={!on || undefined}>
+      <div className={clsx('gv-participant-action', className)} style={style} data-off={!on || undefined}>
         {isLocked ? (
           <span className="gv-participant-action__lock" role="img" aria-label="Always on">
             <Check aria-hidden size={16} />
@@ -87,7 +92,7 @@ export function ParticipantActionRow({
   );
 }
 
-export interface ParticipantLimitProps {
+export interface ParticipantLimitProps extends PlacementProps {
   /** @default 'Number of likes per participant' */
   label?: string;
   /** @default 'Maximum likes' */
@@ -105,12 +110,14 @@ export function ParticipantLimit({
   maxLabel = 'Maximum likes',
   defaultLimit = 'unlimited',
   defaultMax = 5,
-  onChange
+  onChange,
+  className,
+  style
 }: ParticipantLimitProps) {
   const [limit, setLimit] = useState(defaultLimit);
   const [max, setMax] = useState(defaultMax);
   return (
-    <div className="gv-participant-limit">
+    <div className={clsx('gv-participant-limit', className)} style={style}>
       <RadioGroup
         label={label}
         orientation="horizontal"
@@ -140,9 +147,11 @@ export function ParticipantLimit({
 }
 
 /** The actions, one row each (a phase's Participant actions card). */
-export function ParticipantActionList({children, 'aria-label': ariaLabel = 'Participant actions'}: {children: ReactNode; 'aria-label'?: string}) {
+export interface ParticipantActionListProps extends PlacementProps {children: ReactNode; 'aria-label'?: string}
+
+export function ParticipantActionList({children, 'aria-label': ariaLabel = 'Participant actions', className, style}: ParticipantActionListProps) {
   return (
-    <div className="gv-participant-action-list" role="group" aria-label={ariaLabel}>
+    <div className={clsx('gv-participant-action-list', className)} style={style} role="group" aria-label={ariaLabel}>
       {children}
     </div>
   );

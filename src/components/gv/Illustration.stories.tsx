@@ -53,7 +53,7 @@ export const Loop: Story = {
     const [paused, setPaused] = useState(false);
     return (
       <div style={{display: 'grid', justifyItems: 'start', gap: 12}}>
-        <Illustration {...args} motion="loop" paused={paused} />
+        <Illustration {...args} motion="loop" isPaused={paused} />
         <Button variant="secondary" onPress={() => setPaused(p => !p)}>
           {paused ? <Play size={16} aria-hidden /> : <Pause size={16} aria-hidden />}
           {paused ? 'Play' : 'Pause'}

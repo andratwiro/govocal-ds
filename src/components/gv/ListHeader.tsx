@@ -1,6 +1,8 @@
 'use client';
 import {Checkbox} from './Checkbox';
 import {ListHeaderCell} from './ListHeaderCell';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './ListHeader.css';
 
 export interface ListHeaderColumn {
@@ -8,11 +10,11 @@ export interface ListHeaderColumn {
   key: string;
   label: string;
   /** @default 'label' */
-  variant?: 'label' | 'number';
+  kind?: 'label' | 'number';
   /** A static column (no sort affordance), e.g. Status. */
-  square?: boolean;
+  isStatic?: boolean;
   /** This column is the one the list is currently sorted by. */
-  sorted?: boolean;
+  isSorted?: boolean;
   /**
    * Fixed column width in px, matching Figma's spec per method. The first column always
    * takes the room the others leave (at least 160), as in Figma and the prototype.
@@ -29,9 +31,7 @@ export interface ListHeaderSelectAll {
   'aria-label'?: string;
 }
 
-export interface ListHeaderProps {
-  /** The input method this header belongs to (Figma `Method`), for the `AllVariants` story only. */
-  method?: 'ideation' | 'common-ground' | 'proposals' | 'voting';
+export interface ListHeaderProps extends PlacementProps {
   columns: ListHeaderColumn[];
   onSort?: (key: string) => void;
   /** Shows the trailing "Add column" cell, e.g. for the Ideation method. */
@@ -47,8 +47,7 @@ export interface ListHeaderProps {
    *
    * @default false
    */
-  leadSlot?: boolean;
-  className?: string;
+  hasLeadSlot?: boolean;
 }
 
 /** The CSS grid track list for a column set: the first column fills, the rest are fixed. */
@@ -58,10 +57,10 @@ export function listColumnsTemplate(columns: ListHeaderColumn[]) {
     .join(' ');
 }
 
-export function ListHeader({columns, onSort, onAddColumn, selectAll, leadSlot, className}: ListHeaderProps) {
+export function ListHeader({columns, onSort, onAddColumn, selectAll, hasLeadSlot, className, style}: ListHeaderProps) {
   return (
-    <div className={`gv-list-header${className ? ` ${className}` : ''}`}>
-      {(selectAll || leadSlot) && (
+    <div className={clsx('gv-list-header', className)} style={style}>
+      {(selectAll || hasLeadSlot) && (
         <span className="gv-list-header__lead">
           {selectAll && (
             <Checkbox
@@ -77,16 +76,16 @@ export function ListHeader({columns, onSort, onAddColumn, selectAll, leadSlot, c
         {columns.map(column => (
           <ListHeaderCell
             key={column.key}
-            variant={column.variant}
-            square={column.square}
-            sorted={column.sorted}
+            kind={column.kind}
+            isStatic={column.isStatic}
+            isSorted={column.isSorted}
             onPress={onSort ? () => onSort(column.key) : undefined}>
             {column.label}
           </ListHeaderCell>
         ))}
       </div>
       <span className="gv-list-header__trail">
-        {onAddColumn && <ListHeaderCell variant="add-column" onPress={onAddColumn} />}
+        {onAddColumn && <ListHeaderCell kind="add-column" onPress={onAddColumn} />}
       </span>
     </div>
   );

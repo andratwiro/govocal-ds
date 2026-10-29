@@ -74,7 +74,7 @@ export interface CardProps {
   /** The "Required" marker (a dot + the word). */
   isRequired?: boolean;
   /** Where the card's review stands: the Review status at the end of the title line. */
-  status?: ReviewStatusProps['state'];
+  status?: ReviewStatusProps['status'];
   /** Grey words for the current value, e.g. "Not set". */
   summary?: string;
   /**
@@ -118,7 +118,7 @@ function Status({isRequired, status, summary, pills}: Pick<CardProps, 'isRequire
       {isRequired && <RequiredMarker placement="card" />}
       {status && (
         <span className="gv-card__review">
-          <ReviewStatus state={status} />
+          <ReviewStatus status={status} />
         </span>
       )}
       {summary && <span className="gv-card__summary">{summary}</span>}

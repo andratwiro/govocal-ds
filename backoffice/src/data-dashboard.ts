@@ -1,4 +1,4 @@
-import type {ChartColor} from '../../src/components/gv/Chart';
+import type {ChartColor} from 'govocal-ds';
 
 // Invented figures for the Dashboard page only. The headline numbers live in data.ts (DASHBOARD).
 

@@ -2,6 +2,7 @@
 import {Meter as AriaMeter, type MeterProps as AriaMeterProps} from 'react-aria-components/Meter';
 import {Label} from './Form';
 import './Meter.css';
+import {keepClass} from './className';
 
 export interface MeterProps extends AriaMeterProps {
   label?: string;
@@ -9,7 +10,7 @@ export interface MeterProps extends AriaMeterProps {
 
 export function Meter({label, ...props}: MeterProps) {
   return (
-    <AriaMeter {...props}>
+    <AriaMeter {...props} className={keepClass(props.className)}>
       {({percentage, valueText}) => (
         <>
           <Label>{label}</Label>

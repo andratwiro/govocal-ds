@@ -39,7 +39,7 @@ export const SecurityRequirements: Story = {
 };
 
 /** Two choices: an action that can't be open to anyone (Attending an event). */
-export const TwoChoices: Story = {name: 'Two choices', args: {defaultOverriding: true, options: ['signin', 'admins']}};
+export const TwoChoices: Story = {name: 'Two choices', args: {defaultOverriding: true, whoItems: ['signin', 'admins']}};
 
 const QUESTION: Record<string, string> = {
   submit: 'Who can submit inputs?',
@@ -76,7 +76,7 @@ function OpenersRender() {
           title={QUESTION[open]}
           isOpen
           onOpenChange={o => !o && setOpen(null)}
-          options={open === 'event' ? ['signin', 'admins'] : undefined}
+          whoItems={open === 'event' ? ['signin', 'admins'] : undefined}
           defaultOverriding={!!set[open]}
           onOverridingChange={v => setSet(s => ({...s, [open]: v}))}
           defaultWho={who[open]}

@@ -12,8 +12,8 @@ export default meta;
 type Story = StoryObj<typeof NotificationList>;
 
 const ITEMS: NotificationItem[] = [
-  {id: '1', text: 'A resident commented on your input', time: '12 min ago', unread: true, href: '#', icon: <MessageSquare aria-hidden size={16} />},
-  {id: '2', text: '3 new inputs in Collect ideas', time: '1 h ago', unread: true, href: '#', icon: <Inbox aria-hidden size={16} />},
+  {id: '1', text: 'A resident commented on your input', time: '12 min ago', isUnread: true, href: '#', icon: <MessageSquare aria-hidden size={16} />},
+  {id: '2', text: '3 new inputs in Collect ideas', time: '1 h ago', isUnread: true, href: '#', icon: <Inbox aria-hidden size={16} />},
   {id: '3', text: 'Your report for Riverside Park is ready', time: 'Yesterday', href: '#', icon: <FileChartColumn aria-hidden size={16} />}
 ];
 
@@ -21,10 +21,10 @@ const ITEMS: NotificationItem[] = [
 export const Default: Story = {
   render: () => {
     const [items, setItems] = useState(ITEMS);
-    return <NotificationList items={items} onMarkAllRead={() => setItems(is => is.map(i => ({...i, unread: false})))} />;
+    return <NotificationList items={items} onMarkAllRead={() => setItems(is => is.map(i => ({...i, isUnread: false})))} />;
   }
 };
 
-export const AllRead: Story = {name: 'All read', args: {items: ITEMS.map(i => ({...i, unread: false})), onMarkAllRead: () => {}}};
+export const AllRead: Story = {name: 'All read', args: {items: ITEMS.map(i => ({...i, isUnread: false})), onMarkAllRead: () => {}}};
 
 export const Empty: Story = {args: {items: []}};

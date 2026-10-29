@@ -10,7 +10,7 @@ const meta: Meta<typeof Skeleton> = {
   },
   tags: ['autodocs', 'not-in-figma'],
   argTypes: {
-    shape: {
+    variant: {
       control: 'radio',
       options: ['line', 'block', 'pill', 'circle']
     }
@@ -44,28 +44,28 @@ export const AllVariants: Story = () => (
           background: 'var(--gv-surface-panel)'
         }}>
         <div style={{display: 'flex', alignItems: 'center', gap: 10}}>
-          <Skeleton shape="circle" width={24} height={24} />
-          <Skeleton shape="line" width="58%" height={14} />
+          <Skeleton variant="circle" width={24} height={24} />
+          <Skeleton variant="line" width="58%" height={14} />
         </div>
-        <Skeleton shape="line" />
-        <Skeleton shape="line" width="72%" />
-        <Skeleton shape="pill" />
+        <Skeleton variant="line" />
+        <Skeleton variant="line" width="72%" />
+        <Skeleton variant="pill" />
       </div>
     ))}
     <div style={{padding: 14, borderRadius: 'var(--gv-radius-8)', background: 'var(--gv-surface-panel)'}}>
-      <Skeleton shape="block" height={96} />
+      <Skeleton variant="block" height={96} />
     </div>
   </div>
 );
 
 export const Line: Story = args => <Skeleton {...args} width={220} />;
-Line.args = {shape: 'line'};
+Line.args = {variant: 'line'};
 
 export const Block: Story = args => <Skeleton {...args} width={260} height={120} />;
-Block.args = {shape: 'block'};
+Block.args = {variant: 'block'};
 
 export const Pill: Story = args => <Skeleton {...args} />;
-Pill.args = {shape: 'pill'};
+Pill.args = {variant: 'pill'};
 
 export const Circle: Story = args => <Skeleton {...args} />;
-Circle.args = {shape: 'circle'};
+Circle.args = {variant: 'circle'};

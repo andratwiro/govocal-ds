@@ -4,11 +4,13 @@ import type {ReactNode} from 'react';
 import {Trash2} from 'lucide-react';
 import {IconButton} from '../components/gv/IconButton';
 import {Tooltip, TooltipTrigger} from '../components/Tooltip';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './RailPhase.css';
 
 export type RailPhaseStatus = 'upcoming' | 'live' | 'completed';
 
-export interface RailPhaseProps {
+export interface RailPhaseProps extends PlacementProps {
   /** The phase name, e.g. "Collect ideas". */
   title: ReactNode;
   /**
@@ -18,13 +20,13 @@ export interface RailPhaseProps {
    */
   status: RailPhaseStatus;
   /**
-   * The state word that opens the meta line (Figma's "State"), e.g. "Upcoming",
+   * The status word that opens the meta line (Figma's "State"), e.g. "Upcoming",
    * "In progress", "Done". Green when the phase is completed or live.
    */
-  state?: ReactNode;
+  statusLabel?: ReactNode;
   /**
    * The rest of the meta line, e.g. "29 Jul to 30 Sep · Ideation". After a
-   * `state` it is joined with " · "; without one it is the whole line
+   * `statusLabel` it is joined with " · "; without one it is the whole line
    * ("Upcoming · Ideation").
    */
   meta?: ReactNode;
@@ -43,7 +45,7 @@ export interface RailPhaseProps {
    * Marks the phase being viewed (`aria-current="page"`). It draws nothing:
    * the prototype dropped the tinted card of the open phase.
    */
-  current?: boolean;
+  isCurrent?: boolean;
   onPress?: () => void;
   /**
    * A delete button at the end of the row, shown while the row is hovered or has focus (it is always in the tab
@@ -62,19 +64,21 @@ export interface RailPhaseProps {
 export function RailPhase({
   title,
   status,
-  state,
+  statusLabel: state,
   meta,
   chip,
   newCount,
   href,
-  current,
+  isCurrent: current,
   onPress,
   onDelete,
-  deleteLabel = typeof title === 'string' ? `Delete ${title}` : 'Delete phase'
+  deleteLabel = typeof title === 'string' ? `Delete ${title}` : 'Delete phase',
+  className,
+  style
 }: RailPhaseProps) {
   return (
     <div
-      className="gv-rail-phase"
+      className={clsx('gv-rail-phase', className)} style={style}
       data-status={status}
       data-current={current || undefined}
       data-deletable={onDelete ? true : undefined}>

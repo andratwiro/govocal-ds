@@ -8,6 +8,7 @@ import {
 import './Switch.css';
 import {Description, FieldError} from './Form';
 import type {ReactNode} from 'react';
+import {keepClass} from './className';
 
 export interface SwitchProps extends Omit<SwitchFieldProps, 'children'> {
   children: ReactNode;
@@ -17,7 +18,7 @@ export interface SwitchProps extends Omit<SwitchFieldProps, 'children'> {
 
 export function Switch({children, description, errorMessage, ...props}: SwitchProps) {
   return (
-    <SwitchField {...props}>
+    <SwitchField {...props} className={keepClass(props.className)}>
       <SwitchButton>
         {({isSelected, isDisabled}) => (
           <>

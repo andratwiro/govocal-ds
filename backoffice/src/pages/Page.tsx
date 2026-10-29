@@ -1,5 +1,5 @@
 import type {ReactNode} from 'react';
-import {Breadcrumbs, type BreadcrumbItem} from '../../../src/components/gv/Breadcrumbs';
+import {type BreadcrumbItem, Breadcrumbs} from 'govocal-ds';
 
 /** A back-office page, as the prototype draws it: a white bar with the title (a sub-page's trail ends in it) and the
  * actions, then the page's modules on the grey canvas. */

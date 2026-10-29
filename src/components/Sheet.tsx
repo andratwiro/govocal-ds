@@ -1,5 +1,5 @@
 'use client';
-import {type DialogProps, Heading} from 'react-aria-components/Dialog';
+import {type DialogProps} from 'react-aria-components/Dialog';
 import {
   Sheet as RACSheet,
   SheetBackdrop,
@@ -8,12 +8,15 @@ import {
   type SheetOverlayProps,
   type SheetProps as AriaSheetProps
 } from 'react-aria-components/Sheet';
+import clsx from 'clsx';
+import type {PlacementProps} from './className';
 import './Sheet.css';
 
 export interface SheetProps
   extends
-    Omit<SheetOverlayProps, 'children'>,
-    Pick<AriaSheetProps, 'swipeAnimation' | 'swipeAnimationRange'> {
+    Omit<SheetOverlayProps, 'children' | 'className' | 'style'>,
+    Pick<AriaSheetProps, 'swipeAnimation' | 'swipeAnimationRange'>,
+    PlacementProps {
   /** The contents of the sheet. Rendered inside a Dialog. */
   children?: DialogProps['children'];
   /**
@@ -24,10 +27,11 @@ export interface SheetProps
   overscrollPadding?: boolean;
 }
 
-export function Sheet({children, ...props}: SheetProps) {
+/** `className` and `style` place the sheet itself (not its overlay); they never paint it. */
+export function Sheet({children, className, style, ...props}: SheetProps) {
   let {snapPoints, preventDismissal} = props;
   return (
-    <SheetOverlay {...props} style={undefined}>
+    <SheetOverlay {...props}>
       {/* The backdrop fades in as the sheet slides up. When snap points are used, it stays hidden
         until the sheet is dragged past the last snap point. */}
       <SheetBackdrop
@@ -41,7 +45,8 @@ export function Sheet({children, ...props}: SheetProps) {
         swipeAnimation={props.swipeAnimation}
         swipeAnimationRange={props.swipeAnimationRange}
         stackAnimation="sheet-scale-back"
-        style={props.style}>
+        className={clsx('react-aria-Sheet', className)}
+        style={style}>
         {!preventDismissal && <div className="sheet-handle" />}
         <SheetContent>{children}</SheetContent>
       </RACSheet>
@@ -49,4 +54,3 @@ export function Sheet({children, ...props}: SheetProps) {
   );
 }
 
-export {Heading};

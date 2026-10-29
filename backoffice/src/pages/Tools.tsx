@@ -1,11 +1,6 @@
 import {ArrowRight, Lock} from 'lucide-react';
 import {useNavigate} from 'react-router';
-import {Button} from '../../../src/components/Button';
-import {Card} from '../../../src/components/gv/Card';
-import {Badge} from '../../../src/components/gv/Badge';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {HelpPopover} from '../../../src/components/gv/HelpPopover';
-import {Panel} from '../../../src/components/gv/Panel';
+import {Badge, Button, Card, HelpPopover, Panel, StatusBadge} from 'govocal-ds';
 import {TOOLS, type Tool} from '../data-tools';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
@@ -25,7 +20,7 @@ function ToolCard({tool}: {tool: Tool}) {
         </Gap>
         <div className="bo-tools-tags">
           <Badge>{tool.category}</Badge>
-          {tool.status && <StatusBadge state={tool.status.state}>{tool.status.label}</StatusBadge>}
+          {tool.status && <StatusBadge status={tool.status.state}>{tool.status.label}</StatusBadge>}
           {tool.locked && <Badge icon={<Lock aria-hidden size={14} />}>Not in your plan</Badge>}
         </div>
         <p className="bo-tools-text">{tool.description}</p>

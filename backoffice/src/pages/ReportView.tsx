@@ -3,38 +3,14 @@ import {useLocation, useParams} from 'react-router';
 import {ArrowDown, ArrowUp, Bold, CalendarDays, ChartBar, ChartColumn, ChartLine, Clock, Copy, Download, FileText,
   Hash, Heading, Italic, Languages, Lightbulb, List, ListOrdered, Map as MapIcon, Minus, MoveVertical, Plus, Quote,
   SeparatorHorizontal, Send, Sparkles, Trash2, Type, X, ZoomIn, ZoomOut, Folder, LayoutGrid, FileType} from 'lucide-react';
-import {Button} from '../../../src/components/Button';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {Switch} from '../../../src/components/Switch';
-import {TextField, TextArea} from '../../../src/components/TextField';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {Tree, TreeItem, TreeItemContent} from '../../../src/components/Tree';
-import {Toolbar} from '../../../src/components/Toolbar';
-import {Tooltip, TooltipTrigger} from '../../../src/components/Tooltip';
-import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
-import {GridList, GridListItem, GridListSection, GridListHeader, Text} from '../../../src/components/GridList';
-import {DisclosureGroup} from '../../../src/components/DisclosureGroup';
-import {Disclosure, DisclosureHeader, DisclosurePanel} from '../../../src/components/Disclosure';
-import {RadioGroup} from '../../../src/components/RadioGroup';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Panel} from '../../../src/components/gv/Panel';
-import {SidePanel, SidePanelSection} from '../../../src/components/gv/SidePanel';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {StatTile} from '../../../src/components/gv/StatTile';
-import {BarRow} from '../../../src/components/gv/BarRow';
-import {LineChart, ChartLegend, type ChartColor, type ChartLegendItem} from '../../../src/components/gv/Chart';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell} from '../../../src/components/gv/DataTable';
-import {PropertyList, PropertyListItem} from '../../../src/components/gv/PropertyList';
-import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
-import {ChoiceCard} from '../../../src/components/gv/ChoiceCard';
-import {Banner} from '../../../src/components/gv/Banner';
-import {Badge} from '../../../src/components/gv/Badge';
-import {Avatar} from '../../../src/components/gv/Avatar';
-import {Divider} from '../../../src/components/gv/Divider';
-import {Modal} from '../../../src/components/gv/Modal';
-import {Skeleton} from '../../../src/components/gv/Skeleton';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {RichTextToolbarButton} from '../../../src/components/gv/RichTextToolbarButton';
+import {Avatar, Badge, Banner, BarRow, Button, type ChartColor, ChartLegend, type ChartLegendItem, ChoiceCard,
+  DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableRow, Divider, EmptyState,
+  IconButton, LineChart, Menu, MenuItem, MenuTrigger, Modal, Panel, PropertyList, PropertyListItem, queue,
+  RichTextToolbarButton, SegmentedControl, SegmentedControlItem, Select, SelectItem, SidePanel, SidePanelSection,
+  Skeleton, StatTile, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Text, TextArea, TextField, ToastRegion, Tooltip,
+  TooltipTrigger} from 'govocal-ds';
+import {Disclosure, DisclosureGroup, DisclosureHeader, DisclosurePanel, GridList, GridListHeader, GridListItem,
+  GridListSection, RadioGroup, Toolbar, Tree, TreeItem, TreeItemContent} from 'govocal-ds/base';
 import {REPORTS} from '../data-reporting';
 import {HISTORY, INSIGHTS, LANGUAGES, LIBRARY, REPORT, SNAPSHOT, SOURCES, SUGGESTIONS, TEMPLATE, type Block,
   type BlockKind, type Figure, type FigureWords, type HistoryEntry, type Lang, type SourceNode} from '../data-report';
@@ -237,7 +213,7 @@ function MapBlock({block, lang}: {block: Extract<Block, {kind: 'map'}>; lang: La
       <div className="bo-report-legends">
         {block.shade !== 'none' && (
           <div className="bo-report-legend"><span className="bo-note">Districts: {SHADES[block.shade]}</span>
-            <ChartLegend align="start" shape="square" items={steps.map((s, i) => ({label: s, color: `blue-${i + 1}` as ChartColor}))} /></div>
+            <ChartLegend align="start" variant="square" items={steps.map((s, i) => ({label: s, color: `blue-${i + 1}` as ChartColor}))} /></div>
         )}
         {layers.length > 0 && (
           <div className="bo-report-legend"><span className="bo-note">On top</span><ChartLegend align="start" items={layers} /></div>
@@ -354,9 +330,9 @@ function BlockBody({block, lang, nums, pageOf, blocks, reportTitle}: {
     case 'line':
       return (
         <FigureStandIn figure={block.figure} lang={lang}>
-          <LineChart labels={block.labels} legend height={160}
-            series={[{label: 'Observed', values: block.observed, tone: 'primary'},
-              ...(block.showEstimate ? [{label: 'Estimated at close', values: block.estimate, tone: 'secondary' as const}] : [])]} />
+          <LineChart labels={block.labels} showLegend height={160}
+            series={[{label: 'Observed', values: block.observed, color: 'line-primary'},
+              ...(block.showEstimate ? [{label: 'Estimated at close', values: block.estimate, color: 'line-secondary' as const}] : [])]} />
         </FigureStandIn>
       );
     case 'insight': {
@@ -549,7 +525,7 @@ function Library({onAdd, onClose}: {onAdd: (kind: BlockKind) => void; onClose: (
             <Tooltip placement="bottom">Back to the report outline</Tooltip>
           </TooltipTrigger>
         )}>
-        <GridList aria-label="Widgets" layout="grid" className="react-aria-GridList bo-report-library"
+        <GridList aria-label="Widgets" layout="grid" className="bo-report-library"
           onAction={k => onAdd(String(k).split(':')[1] as BlockKind)}>
           {LIBRARY.map(g => (
             <GridListSection key={g.group}>
@@ -600,7 +576,7 @@ function Assistant({messages, suggestions, onAsk}: {messages: Message[]; suggest
         </SidePanelSection>
         <form className="bo-report-composer" onSubmit={e => { e.preventDefault(); send(); }}>
           <TextArea aria-label="Ask the assistant" placeholder="Ask the assistant…" value={draft} onChange={setDraft} />
-          <IconButton aria-label="Send" variant="bordered" tone="strong" type="submit" isDisabled={!draft.trim()}><Send aria-hidden size={16} /></IconButton>
+          <IconButton aria-label="Send" variant="bordered" emphasis="strong" type="submit" isDisabled={!draft.trim()}><Send aria-hidden size={16} /></IconButton>
         </form>
       </div>
     </Gap>
@@ -1133,7 +1109,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
                     <Skeleton width="70%" height={32} />
                     <Skeleton width="100%" />
                     <Skeleton width="90%" />
-                    <Skeleton width="100%" height={160} shape="block" />
+                    <Skeleton width="100%" height={160} variant="block" />
                     <Skeleton width="60%" />
                   </article>
                 ) : pages.length ? pages.map((p, i) => (
@@ -1152,7 +1128,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
                   <article className="bo-report-sheet" aria-label="Page 1">
                     <EmptyState title="No widgets in this report yet" icon={<Plus size={24} />} headingLevel={2}
                       description="Choose a widget from the library, or ask the assistant to generate a first version."
-                      action={<Button variant="primary" size={32} onPress={() => setLibrary(true)}><Plus aria-hidden size={16} />Add widget</Button>} />
+                      actions={<Button variant="primary" size={32} onPress={() => setLibrary(true)}><Plus aria-hidden size={16} />Add widget</Button>} />
                   </article>
                 )}
               </div>

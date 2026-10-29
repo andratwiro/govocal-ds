@@ -22,7 +22,7 @@ type Change = (value: string) => void;
 export function DemoStatus({value, onChange}: {value: string; onChange: Change}) {
   const options = STATUSES.includes(value) ? STATUSES : [value, ...STATUSES];
   return (
-    <Select aria-label="Status" variant="pill" size={22} selectedKey={value} onSelectionChange={k => onChange(String(k))}
+    <Select aria-label="Status" variant="pill" size={22} value={value} onChange={k => onChange(String(k))}
       disabledKeys={STATUSES.includes(value) ? [] : [value]}>
       {options.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
     </Select>
@@ -32,8 +32,8 @@ export function DemoStatus({value, onChange}: {value: string; onChange: Change})
 /** Assignee: a single choice, applied at once. */
 export function DemoAssignee({value, onChange}: {value: string; onChange: Change}) {
   return (
-    <Select aria-label="Assignee" variant="pill" size={22} searchable searchPlaceholder="Search people..."
-      selectedKey={value} onSelectionChange={k => onChange(String(k))}>
+    <Select aria-label="Assignee" variant="pill" size={22} isSearchable searchPlaceholder="Search people..."
+      value={value} onChange={k => onChange(String(k))}>
       {ASSIGNEES.map(a => <SelectItem key={a} id={a}>{a}</SelectItem>)}
     </Select>
   );
@@ -41,7 +41,7 @@ export function DemoAssignee({value, onChange}: {value: string; onChange: Change
 
 /** Tags: removable tags, then "Add tag" opening the project's tags (searchable past five). */
 export function DemoTags({value, onChange}: {value: string[]; onChange: (tags: string[]) => void}) {
-  return <TagPicker aria-label="Tags" options={TAGS.map(t => ({id: t, label: t}))} selected={value} onChange={onChange} />;
+  return <TagPicker aria-label="Tags" items={TAGS.map(t => ({id: t, label: t}))} value={value} onChange={onChange} />;
 }
 
 /** Phase: the phase's name, then "Copy to phase" opening the phases it can go to. */

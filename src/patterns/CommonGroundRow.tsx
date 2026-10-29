@@ -2,15 +2,17 @@
 import {TriangleAlert} from 'lucide-react';
 import {Checkbox} from '../components/gv/Checkbox';
 import type {ListRowSelect} from '../components/gv/ListRow';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './CommonGroundRow.css';
 
-export interface CommonGroundRowProps {
+export interface CommonGroundRowProps extends PlacementProps {
   /** The Common Ground statement text. */
   statement: string;
   /** Shows the "New" accent label at the end of the statement cell. */
   isNew?: boolean;
   /** Shows the warning mark (a flagged statement). */
-  warning?: boolean;
+  hasWarning?: boolean;
   /**
    * The assigned reviewer. Omit for a row with no assignee cell content at all (Figma `Empty`,
    * a statement the project team wrote); `null` for an unassigned one (an empty dashed ring);
@@ -23,10 +25,6 @@ export interface CommonGroundRowProps {
   agreePercent: number;
   /** The Reactions column: agree + disagree + pass so far. */
   reactions?: number;
-  /** @deprecated The Likes column; use `likes`. */
-  reactionCount?: number | null;
-  /** @deprecated The Reactions column; use `reactions`. */
-  visibleCount?: number;
   /** A checkbox in the leading slot, as on `ListRow`. Not in Figma. */
   select?: ListRowSelect;
 }
@@ -39,20 +37,18 @@ export interface CommonGroundRowProps {
 export function CommonGroundRow({
   statement,
   isNew,
-  warning,
+  hasWarning,
   assignee,
   likes,
   agreePercent,
   reactions,
-  reactionCount,
-  visibleCount,
-  select
+  select,
+  className,
+  style
 }: CommonGroundRowProps) {
-  const likeCount = likes !== undefined ? likes : reactionCount;
-  const reactionTotal = reactions ?? visibleCount;
   return (
     <div
-      className="gv-list-row-cg"
+      className={clsx('gv-list-row-cg', className)} style={style}
       data-selectable={select ? true : undefined}
       data-selected={select?.isSelected || undefined}>
       <span className="gv-list-row-cg__lead">
@@ -67,7 +63,7 @@ export function CommonGroundRow({
       <div className="gv-list-row-cg__cells">
         <div className="gv-list-row-cg__statement-cell">
           <span className="gv-list-row-cg__statement">{statement}</span>
-          {warning && (
+          {hasWarning && (
             <span className="gv-list-row-cg__marks">
               <TriangleAlert
                 role="img"
@@ -88,13 +84,13 @@ export function CommonGroundRow({
           )}
         </div>
         <div className="gv-list-row-cg__cell" data-num data-tone="secondary">
-          {likeCount == null ? <span className="gv-list-row-cg__none">–</span> : likeCount}
+          {likes == null ? <span className="gv-list-row-cg__none">–</span> : likes}
         </div>
         <div className="gv-list-row-cg__cell" data-num>
           {agreePercent}%
         </div>
         <div className="gv-list-row-cg__cell" data-num data-tone="secondary">
-          {reactionTotal}
+          {reactions}
         </div>
       </div>
     </div>

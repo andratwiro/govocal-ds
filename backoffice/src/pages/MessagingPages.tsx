@@ -1,25 +1,11 @@
 import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {CircleCheck, Mail, Send, Smartphone} from 'lucide-react';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell,
-  DataTablePerson, DataTableEmpty} from '../../../src/components/gv/DataTable';
-import {Button} from '../../../src/components/Button';
-import {TextField, TextArea} from '../../../src/components/TextField';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {Label} from '../../../src/components/Form';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {SearchField} from '../../../src/components/SearchField';
-import {TableToolbar} from '../../../src/components/gv/TableToolbar';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
-import {FilterChips} from '../../../src/patterns/FilterChips';
-import {Panel} from '../../../src/components/gv/Panel';
-import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
-import {Divider} from '../../../src/components/gv/Divider';
-import {StatTile} from '../../../src/components/gv/StatTile';
-import {Badge} from '../../../src/components/gv/Badge';
-import {Banner} from '../../../src/components/gv/Banner';
-import {PhonePreview} from '../../../src/patterns/PhonePreview';
+import {Badge, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty,
+  DataTableHeader, DataTablePerson, DataTableRow, Divider, FilterChips, type FilterFacet, FilterMenu, type FilterValue,
+  Pagination, Panel, PhonePreview, queue, RichTextEditor, SearchField, Select, SelectItem, StatTile, TableToolbar,
+  TextArea, TextField, ToastRegion} from 'govocal-ds';
+import {Label} from 'govocal-ds/base';
 import {CUSTOM_EMAILS, GROUP_SIZES, GROUPS, RECIPIENTS, SENDER, type CustomEmail} from '../data-messaging';
 import {Gap} from '../Gap';
 import {Page} from './Page';
@@ -92,7 +78,7 @@ export function EmailComposer() {
           <div className="bo-messaging-field">
             <Label aria-hidden>Email message</Label>
             <RichTextEditor aria-label="Email message" placeholder="Write your message" value={body} onChange={setBody}
-              bold={bold} onBoldChange={setBold} italic={italic} onItalicChange={setItalic} list={list} onListChange={setList} />
+              isBold={bold} onBoldChange={setBold} isItalic={italic} onItalicChange={setItalic} isList={list} onListChange={setList} />
           </div>
         </div>
       </Panel>
@@ -105,7 +91,7 @@ export function EmailComposer() {
 
 const RECIPIENT_STATUSES = ['Clicked', 'Opened', 'Delivered', 'Bounced'] as const;
 const RECIPIENT_FACETS: FilterFacet[] = [{id: 'status', label: 'Status', icon: <CircleCheck aria-hidden size={16} />,
-  options: RECIPIENT_STATUSES.map(st => ({id: st, label: st, count: RECIPIENTS.filter(r => r.status === st).length}))}];
+  items: RECIPIENT_STATUSES.map(st => ({id: st, label: st, count: RECIPIENTS.filter(r => r.status === st).length}))}];
 const recipientsWord = (v: number) => `${n(v)} ${v === 1 ? 'recipient' : 'recipients'}`;
 
 /** Who got it, in the list shape every admin table shares: count, filter and search over the table, pages below. */
@@ -118,7 +104,7 @@ function RecipientList({sent}: {sent: number}) {
   const {current, pageCount, setPage, shown} = usePages(rows, 10);
   const fresh = <T,>(set: (v: T) => void) => (v: T) => { set(v); setPage(1); };
   return (
-    <Panel title="Recipients" headingLevel={3} description={`A sample of the ${n(sent)} people it went to.`} flush
+    <Panel title="Recipients" headingLevel={3} description={`A sample of the ${n(sent)} people it went to.`} isFlush
       toolbar={<>
         <TableToolbar aria-label="Recipient tools" headingLevel={4} heading={recipientsWord(rows.length)}>
           <FilterMenu aria-label="Filter recipients" facets={RECIPIENT_FACETS} value={filters} onChange={fresh(setFilters)} countLabel={recipientsWord} />
@@ -160,7 +146,7 @@ export function EmailStats() {
       <div className="bo-messaging-stack">
         <SectionHeading>How it did</SectionHeading>
         <div className="bo-messaging-kpis">
-          <StatTile label="Recipients" value={n(sent)} type="tall" />
+          <StatTile label="Recipients" value={n(sent)} layout="tall" />
           <StatTile label="Delivered" value={n(delivered)} note={`${n(sent - delivered)} bounced`} />
           <StatTile label="Opened" value={`${email.opened ?? 0}%`} note={`${n(pctOf(email.opened))} people`} />
           <StatTile label="Clicked" value={`${email.clicked ?? 0}%`} note={`${n(pctOf(email.clicked))} people`} />

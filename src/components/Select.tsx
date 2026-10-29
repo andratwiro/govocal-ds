@@ -16,8 +16,9 @@ import {SearchField} from './SearchField';
 import {Label, FieldError, Description} from './Form';
 import clsx from 'clsx';
 import './Select.css';
+import {keepClass} from './className';
 
-export interface SelectProps<T, M extends 'single' | 'multiple'> extends Omit<
+interface SelectBaseProps<T, M extends 'single' | 'multiple'> extends Omit<
   AriaSelectProps<T, M>,
   'children'
 > {
@@ -26,25 +27,12 @@ export interface SelectProps<T, M extends 'single' | 'multiple'> extends Omit<
   errorMessage?: string | ((validation: ValidationResult) => string);
   items?: Iterable<T>;
   children: React.ReactNode | ((item: T) => React.ReactNode);
-  /**
-   * The trigger's look. `field`: a form field, as wide as the Select. `pill`: a round grey chip sized to its value,
-   * for a value shown among others (New project's "Space", a side panel's Status). `quiet`: no fill until hovered,
-   * for a toolbar ("Sort: Newest").
-   *
-   * @default 'field'
-   */
-  variant?: 'field' | 'pill' | 'quiet';
-  /**
-   * The trigger's height. A field or a quiet trigger is 32 or 36 (@default 36, quiet 32); a pill is 28 (New
-   * project) or 22 (a side panel's property row, Small strong).
-   */
-  size?: 22 | 28 | 32 | 36;
   /** A 16 icon at the start of the trigger, when the options carry none of their own (theirs show there too). */
   icon?: ReactNode;
   /** Words before the value, seen but not read ("Space:"): the label or `aria-label` names the field. */
   prefix?: string;
   /** A search at the top of the list, the magnifier first: typing narrows it, ↑↓ still move through it. */
-  searchable?: boolean;
+  isSearchable?: boolean;
   /** @default 'Search...' */
   searchPlaceholder?: string;
   /** Names the search for screen readers. @default the placeholder without its dots, else "Search <label>" */
@@ -54,8 +42,21 @@ export interface SelectProps<T, M extends 'single' | 'multiple'> extends Omit<
 }
 
 /**
+ * The trigger's look and its height, which the look decides.
+ * - `field` (default): a form field, as wide as the Select; 36 (default) or 32.
+ * - `quiet`: no fill until hovered, for a toolbar ("Sort: Newest"); 32 (default) or 36.
+ * - `pill`: a round grey chip sized to its value, for a value shown among others (New project's "Space", a side
+ *   panel's Status); 28 (default, New project) or 22 (a side panel's property row, Small strong).
+ */
+export type SelectLook =
+  | {variant?: 'field' | 'quiet'; size?: 32 | 36}
+  | {variant: 'pill'; size?: 22 | 28};
+
+export type SelectProps<T, M extends 'single' | 'multiple' = 'single'> = SelectBaseProps<T, M> & SelectLook;
+
+/**
  * Pick one value (or several) from a list in a popover: React Aria's Select, its options the dropdown rows (a 16
- * icon or avatar, a description line, a check at the end of the chosen one). With `searchable`, an Autocomplete and
+ * icon or avatar, a description line, a check at the end of the chosen one). With `isSearchable`, an Autocomplete and
  * the system's SearchField sit over the list. Not in Figma yet.
  */
 export function Select<T, M extends 'single' | 'multiple' = 'single'>({
@@ -68,7 +69,7 @@ export function Select<T, M extends 'single' | 'multiple' = 'single'>({
   size,
   icon,
   prefix,
-  searchable,
+  isSearchable,
   searchPlaceholder = 'Search...',
   searchLabel,
   emptyLabel = 'No results',
@@ -79,12 +80,12 @@ export function Select<T, M extends 'single' | 'multiple' = 'single'>({
   const name = label ?? props['aria-label'] ?? 'options';
   const list = (
     // Inside a search, React Aria would call the list "Suggestions"; it keeps the field's name.
-    <SelectListBox items={items} aria-label={searchable ? name : undefined} renderEmptyState={() => emptyLabel}>
+    <SelectListBox items={items} aria-label={isSearchable ? name : undefined} renderEmptyState={() => emptyLabel}>
       {children}
     </SelectListBox>
   );
   return (
-    <AriaSelect {...props} data-variant={variant} data-size={height}>
+    <AriaSelect {...props} className={keepClass(props.className)} data-variant={variant} data-size={height}>
       {label && <Label>{label}</Label>}
       <Button variant={variant === 'field' ? 'secondary' : 'quiet'} size={height === 36 ? 36 : 32}>
         {icon && <span className="gv-select-icon" aria-hidden>{icon}</span>}
@@ -94,14 +95,14 @@ export function Select<T, M extends 'single' | 'multiple' = 'single'>({
       </Button>
       {description && <Description>{description}</Description>}
       <FieldError>{errorMessage}</FieldError>
-      <Popover hideArrow className={clsx('select-popover', variant !== 'field' && 'select-popover--fit',
-        searchable && 'select-popover--search')}>
-        {searchable ? (
+      <Popover showArrow={false} className={clsx('select-popover', variant !== 'field' && 'select-popover--fit',
+        isSearchable && 'select-popover--search')}>
+        {isSearchable ? (
           <Autocomplete filter={contains}>
             <div className="select-search">
               <SearchField aria-label={searchLabel ?? (searchPlaceholder === 'Search...' ? `Search ${name.toLowerCase()}`
                 : searchPlaceholder.replace(/(\.\.\.|…)$/, ''))} placeholder={searchPlaceholder}
-                autoFocus className="react-aria-SearchField select-search__field" />
+                autoFocus className="select-search__field" />
               {list}
             </div>
           </Autocomplete>

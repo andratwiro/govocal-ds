@@ -22,7 +22,7 @@ export const Example: Story = args => (
     <Button aria-label="Help">
       <HelpCircle size={18} />
     </Button>
-    <Popover {...args} className="react-aria-Popover popover-padding">
+    <Popover {...args} className="popover-padding">
       <Heading slot="title">Help</Heading>
       <p>For help accessing your account, please contact support.</p>
     </Popover>

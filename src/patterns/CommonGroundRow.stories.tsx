@@ -44,7 +44,7 @@ export const AllVariants: Story = () => (
     <CommonGroundRow
       statement="People who complain about noise should just move away."
       isNew
-      warning
+      hasWarning
       assignee={null}
       likes={2}
       agreePercent={17}
@@ -91,7 +91,7 @@ export const NewWarning: Story = () => (
     <CommonGroundRow
       statement="People who complain about noise should just move away."
       isNew
-      warning
+      hasWarning
       assignee={null}
       likes={2}
       agreePercent={17}

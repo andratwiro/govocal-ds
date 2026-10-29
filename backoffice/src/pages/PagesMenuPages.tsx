@@ -1,16 +1,9 @@
 import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {Eye, FileQuestion} from 'lucide-react';
-import {Button} from '../../../src/components/Button';
-import {TextField} from '../../../src/components/TextField';
-import {RadioGroup, Radio} from '../../../src/components/RadioGroup';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Panel} from '../../../src/components/gv/Panel';
-import {Banner} from '../../../src/components/gv/Banner';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {Divider} from '../../../src/components/gv/Divider';
-import {SectionToggle} from '../../../src/patterns/SectionToggle';
+import {Banner, Button, Divider, EmptyState, Panel, queue, SectionToggle, Tab, TabList, TabPanel, TabPanels, Tabs,
+  TextField, ToastRegion} from 'govocal-ds';
+import {Radio, RadioGroup} from 'govocal-ds/base';
 import {CUSTOM_PAGE_SECTIONS, HOME_SECTIONS, MENU_ENTRIES, NAV_NAMES, PAGE_INTRO, PAGE_META, type PageSection} from '../data-pages-menu';
 import {LOCALES} from '../data-settings';
 import {Gap} from '../Gap';
@@ -75,9 +68,9 @@ function NotFound({title, what}: {title: string; what: string}) {
   const navigate = useNavigate();
   return (
     <Page title={title} crumbs={CRUMB}>
-      <EmptyState size="page" icon={<FileQuestion size={24} />} title={`This ${what} does not exist`}
+      <EmptyState layout="page" icon={<FileQuestion size={24} />} title={`This ${what} does not exist`}
         description="It may have been deleted. Pages & menu lists everything there is."
-        action={<Button variant="secondary" size={32} onPress={() => navigate('/pages-menu')}>Back to Pages & menu</Button>} />
+        actions={<Button variant="secondary" size={32} onPress={() => navigate('/pages-menu')}>Back to Pages & menu</Button>} />
     </Page>
   );
 }

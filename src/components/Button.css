@@ -129,6 +129,11 @@
     }
   }
 
+  /* isFullWidth: it fills its container, the content centred. Placement, like className. */
+  &[data-full-width] {
+    width: 100%;
+  }
+
   &[data-disabled] {
     opacity: 0.45;
     cursor: not-allowed;

@@ -1,26 +1,11 @@
 import {useMemo, useState} from 'react';
 import {useNavigate} from 'react-router';
 import {Copy, FileText, LayoutGrid, Pencil, Plus, SearchX, Sparkles, Trash2} from 'lucide-react';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell,
-  DataTableOptions} from '../../../src/components/gv/DataTable';
-import {MenuItem, Separator} from '../../../src/components/Menu';
-import {SearchField} from '../../../src/components/SearchField';
-import {Button} from '../../../src/components/Button';
-import {TextField} from '../../../src/components/TextField';
-import {ChoiceCard, ChoiceCardCheckbox, ChoiceCardGroupHeading} from '../../../src/components/gv/ChoiceCard';
-import {RadioGroup} from '../../../src/components/RadioGroup';
-import {CheckboxGroup} from '../../../src/components/CheckboxGroup';
-import {Badge} from '../../../src/components/gv/Badge';
-import {Banner} from '../../../src/components/gv/Banner';
-import {Panel} from '../../../src/components/gv/Panel';
-import {TableToolbar} from '../../../src/components/gv/TableToolbar';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {Modal} from '../../../src/components/gv/Modal';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
-import {ToastRegion, queue} from '../../../src/components/Toast';
+import {AlertDialog, Badge, Banner, Button, ChoiceCard, ChoiceCardCheckbox, ChoiceCardGroupHeading, DataTable,
+  DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableOptions, DataTableRow, EmptyState, MenuItem,
+  Modal, Pagination, Panel, queue, SearchField, SegmentedControl, SegmentedControlItem, Separator, Tab, TableToolbar,
+  TabList, TabPanel, TabPanels, Tabs, TextField, ToastRegion} from 'govocal-ds';
+import {CheckboxGroup, RadioGroup} from 'govocal-ds/base';
 import {CONTENTS, CONTENT_GROUPS, REPORTS, type Report} from '../data-reporting';
 import {Page} from './Page';
 
@@ -102,7 +87,7 @@ function ReportPanel({tab, reports, onAction, onCreate}: {
     </TableToolbar>
   );
   return (
-    <Panel title={tab.label} description={tab.description} flush toolbar={toolbar}
+    <Panel title={tab.label} description={tab.description} isFlush toolbar={toolbar}
       footer={found.length > 0 && <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Report pages" />}>
       {tab.id === 'progress' && (
         <div className="bo-reporting-note">
@@ -112,12 +97,12 @@ function ReportPanel({tab, reports, onAction, onCreate}: {
       {/* Nothing found, or nothing yet: the Empty state in the Panel body, as every admin list (docs/DECISIONS.md). */}
       {found.length === 0 ? (
         query.trim() ? (
-          <EmptyState size="panel" headingLevel={3} icon={<SearchX size={24} />} title="No reports match"
+          <EmptyState layout="panel" headingLevel={3} icon={<SearchX size={24} />} title="No reports match"
             description="Try another word, or clear the search." />
         ) : (
-          <EmptyState size="panel" headingLevel={3} illustration="empty-notebook" title="No reports yet"
+          <EmptyState layout="panel" headingLevel={3} illustration="empty-notebook" title="No reports yet"
             description="Turn a project's results into a report you can share."
-            action={<Button variant="secondary" size={32} onPress={onCreate}>{icon(Plus)}Create a report</Button>} />
+            actions={<Button variant="secondary" size={32} onPress={onCreate}>{icon(Plus)}Create a report</Button>} />
         )
       ) : <ReportTable label={tab.label} reports={shown} onAction={onAction} />}
     </Panel>
@@ -143,7 +128,7 @@ function CreateReportModal({onClose, onCreate}: {onClose: () => void; onCreate: 
     </>
   );
   return (
-    <Modal title="Create a report" size="wide" isOpen onOpenChange={open => !open && onClose()} footer={footer}>
+    <Modal title="Create a report" width="wide" isOpen onOpenChange={open => !open && onClose()} footer={footer}>
       <div className="bo-reporting-create">
         <div className="bo-reporting-form">
           <p className="bo-note">Turn a project's results into a report you can share. Start from scratch, pick a template, or let the assistant draft it from your data.</p>

@@ -2,7 +2,8 @@
 // and its export menu. Nobody and nowhere real; the facets are the Filter menu's own (`IDEA_FACETS`).
 import {CircleCheck, Copy, Download, MessageSquareText, Tag, TriangleAlert, User} from 'lucide-react';
 import {MenuTrigger} from 'react-aria-components/Menu';
-import {Menu, MenuItem, Separator} from '../../Menu';
+import {Menu, MenuItem} from '../../Menu';
+import {Separator} from '../../Separator';
 import {Popover} from '../../Popover';
 import {Tooltip, TooltipTrigger} from '../../Tooltip';
 import {IconButton} from '../IconButton';
@@ -125,10 +126,10 @@ export function ExportMenu({selected = 0, onExport}: {selected?: number; onExpor
   return (
     <MenuTrigger>
       <TooltipTrigger>
-        <IconButton variant="bordered" tone="strong" aria-label="Export"><Download aria-hidden size={16} /></IconButton>
+        <IconButton variant="bordered" emphasis="strong" aria-label="Export"><Download aria-hidden size={16} /></IconButton>
         <Tooltip>Export</Tooltip>
       </TooltipTrigger>
-      <Popover placement="bottom end" hideArrow>
+      <Popover placement="bottom end" showArrow={false}>
         <Menu aria-label="Export" onAction={key => onExport?.(String(key))} disabledKeys={selected ? [] : ['selected']}>
           <MenuItem id="ideas">All ideas (.xlsx)</MenuItem>
           <MenuItem id="comments">All comments (.xlsx)</MenuItem>

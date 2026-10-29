@@ -1,23 +1,9 @@
 import {useMemo, useState} from 'react';
 import {BadgeCheck, Check, Copy, ExternalLink, Globe, Lightbulb, SearchX, Sparkles, Tag, Users} from 'lucide-react';
-import {Button} from '../../../src/components/Button';
-import {Link} from '../../../src/components/Link';
-import {SearchField} from '../../../src/components/SearchField';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Modal} from '../../../src/components/gv/Modal';
-import {Avatar} from '../../../src/components/gv/Avatar';
-import {Banner} from '../../../src/components/gv/Banner';
-import {Card} from '../../../src/components/gv/Card';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {Badge} from '../../../src/components/gv/Badge';
-import {Panel} from '../../../src/components/gv/Panel';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {TableToolbar} from '../../../src/components/gv/TableToolbar';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {PropertyList, PropertyListItem} from '../../../src/components/gv/PropertyList';
-import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
-import {FilterChips} from '../../../src/patterns/FilterChips';
+import {Avatar, Badge, Banner, Button, Card, EmptyState, FilterChips, type FilterFacet, FilterMenu, type FilterValue,
+  IconButton, Modal, Pagination, Panel, PropertyList, PropertyListItem, queue, SearchField, Select, SelectItem,
+  TableToolbar, ToastRegion} from 'govocal-ds';
+import {Link} from 'govocal-ds/base';
 import {COUNTRIES, LIBRARY, METHODS, PHASE_TITLES, POPULATIONS, SORTS, TOPICS, type Country, type LibraryProject} from '../data-inspiration-hub';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
@@ -34,10 +20,10 @@ const facetValues: Record<FacetId, (p: LibraryProject) => readonly string[]> = {
 const option = (facet: FacetId) => (id: string) =>
   ({id, label: id, count: LIBRARY.filter(p => facetValues[facet](p).includes(id)).length});
 const FACETS: FilterFacet[] = [
-  {id: 'method', label: 'Method', icon: <Lightbulb aria-hidden size={16} />, options: METHODS.map(option('method'))},
-  {id: 'country', label: 'Country', icon: <Globe aria-hidden size={16} />, options: COUNTRIES.map(option('country'))},
-  {id: 'population', label: 'Population', icon: <Users aria-hidden size={16} />, options: POPULATIONS.map(option('population'))},
-  {id: 'topic', label: 'Topic', icon: <Tag aria-hidden size={16} />, options: TOPICS.map(option('topic'))}
+  {id: 'method', label: 'Method', icon: <Lightbulb aria-hidden size={16} />, items: METHODS.map(option('method'))},
+  {id: 'country', label: 'Country', icon: <Globe aria-hidden size={16} />, items: COUNTRIES.map(option('country'))},
+  {id: 'population', label: 'Population', icon: <Users aria-hidden size={16} />, items: POPULATIONS.map(option('population'))},
+  {id: 'topic', label: 'Topic', icon: <Tag aria-hidden size={16} />, items: TOPICS.map(option('topic'))}
 ];
 const projectsWord = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
 // Every list pages (docs/DECISIONS.md): two rows of three cards.
@@ -71,7 +57,7 @@ function ProjectCard({project, highlighted, copied, onCopy, onOpen}: {project: L
   return (
     <Card
       layout="stacked"
-      title={<Link onPress={onOpen} className="react-aria-Link bo-inspiration-hub-title">{project.title}</Link>}
+      title={<Link onPress={onOpen} className="bo-inspiration-hub-title">{project.title}</Link>}
       actions={<IconButton aria-label={`Preview: ${project.title}`} onPress={onOpen}><ExternalLink aria-hidden size={16} /></IconButton>}>
       <div className="bo-inspiration-hub-body">
         <Gap name="Project image" inline>
@@ -111,7 +97,7 @@ const longDate = (iso: string) => new Date(`${iso}T12:00:00`).toLocaleDateString
 /** The project's preview: what it asked, its facts as a Property list, how (its phases, one per method). */
 function ProjectPreview({project, copied, onCopy, onClose}: {project: LibraryProject | null; copied: boolean; onCopy: () => void; onClose: () => void}) {
   return (
-    <Modal title={project?.title ?? 'Project'} size="wide" isOpen={project !== null} onOpenChange={o => { if (!o) onClose(); }}
+    <Modal title={project?.title ?? 'Project'} width="wide" isOpen={project !== null} onOpenChange={o => { if (!o) onClose(); }}
       footer={<>
         <Button variant="secondary" slot="close">Close</Button>
         <Button variant="primary" isDisabled={copied} onPress={() => { onCopy(); onClose(); }}>
@@ -205,7 +191,7 @@ export function InspirationHub() {
               {pinned.map(p => card(p, true))}
             </ul>
           ) : (
-            <EmptyState size="panel" icon={<Sparkles size={24} />} headingLevel={3} title="Nothing highlighted here yet"
+            <EmptyState layout="panel" icon={<Sparkles size={24} />} headingLevel={3} title="Nothing highlighted here yet"
               description="Highlights for this country appear here as the Go Vocal team picks them." />
           )}
         </Panel>
@@ -222,9 +208,9 @@ export function InspirationHub() {
               {shown.map(p => card(p))}
             </ul>
           ) : (
-            <EmptyState size="panel" icon={<SearchX size={24} />} headingLevel={3} title="No projects match"
+            <EmptyState layout="panel" icon={<SearchX size={24} />} headingLevel={3} title="No projects match"
               description="Try another search, or fewer filters."
-              action={<Button variant="secondary" size={32} onPress={clear}>Clear search and filters</Button>} />
+              actions={<Button variant="secondary" size={32} onPress={clear}>Clear search and filters</Button>} />
           )}
         </Panel>
         <GapLegend names={['project images', 'the highlight quote']} />

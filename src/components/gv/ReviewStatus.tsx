@@ -1,13 +1,15 @@
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './ReviewStatus.css';
 
-export interface ReviewStatusProps {
+export interface ReviewStatusProps extends PlacementProps {
   /**
    * Where a card's review stands. Figma draws "To review"; the prototype adds "To set" (a decision with no value
    * yet) and "Reviewed" (green, once the admin has visited the card).
    *
    * @default 'to-review'
    */
-  state?: 'to-review' | 'to-set' | 'reviewed';
+  status?: 'to-review' | 'to-set' | 'reviewed';
 }
 
 const LABEL = {'to-review': 'To review', 'to-set': 'To set', reviewed: 'Reviewed'} as const;
@@ -40,11 +42,11 @@ function Done() {
 }
 
 /** The small word at the end of a card's header that says whether the admin has looked at it. */
-export function ReviewStatus({state = 'to-review'}: ReviewStatusProps) {
+export function ReviewStatus({status = 'to-review', className, style}: ReviewStatusProps) {
   return (
-    <span className="gv-review-notice" data-state={state}>
-      {state === 'reviewed' ? <Done /> : <Todo />}
-      <span>{LABEL[state]}</span>
+    <span className={clsx('gv-review-notice', className)} style={style} data-status={status}>
+      {status === 'reviewed' ? <Done /> : <Todo />}
+      <span>{LABEL[status]}</span>
     </span>
   );
 }

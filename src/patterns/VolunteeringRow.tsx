@@ -2,9 +2,11 @@
 import {SquarePen, Trash2} from 'lucide-react';
 import {IconButton} from '../components/gv/IconButton';
 import {Tooltip, TooltipTrigger} from '../components/Tooltip';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './VolunteeringRow.css';
 
-export interface VolunteeringRowProps {
+export interface VolunteeringRowProps extends PlacementProps {
   /** The cause's title. */
   title: string;
   /** A short description of the cause (Manage). */
@@ -22,7 +24,7 @@ export interface VolunteeringRowProps {
    *
    * @default 'manage'
    */
-  variant?: 'manage' | 'build';
+  layout?: 'manage' | 'build';
   /** Build: the Edit button (named "Edit <title>"). */
   onEdit?: () => void;
   /** Build: the Delete button (named "Delete <title>"). */
@@ -62,14 +64,16 @@ export function VolunteeringRow({
   image,
   volunteerCount,
   percent = 0,
-  variant = 'manage',
+  layout = 'manage',
   onEdit,
   onDelete,
-  isLast = false
+  isLast = false,
+  className,
+  style
 }: VolunteeringRowProps) {
-  if (variant === 'build') {
+  if (layout === 'build') {
     return (
-      <div className="gv-cause-row" data-variant="build" data-last={isLast || undefined}>
+      <div className={clsx('gv-cause-row', className)} style={style} data-layout="build" data-last={isLast || undefined}>
         <div className="gv-cause-row__thumb" aria-hidden="true">
           {image && <img src={image} alt="" />}
         </div>
@@ -91,7 +95,7 @@ export function VolunteeringRow({
     );
   }
   return (
-    <div className="gv-cause-row" data-last={isLast || undefined}>
+    <div className={clsx('gv-cause-row', className)} style={style} data-last={isLast || undefined}>
       <div className="gv-cause-row__thumb" aria-hidden="true">
         {image && <img src={image} alt="" />}
       </div>

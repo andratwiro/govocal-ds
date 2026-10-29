@@ -1,13 +1,15 @@
 'use client';
 import {TriangleAlert} from 'lucide-react';
 import {VoteProgress} from './VoteProgress';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './VotingRow.css';
 
-export interface VotingRowProps {
+export interface VotingRowProps extends PlacementProps {
   title: string;
   thumbnail?: string;
   /** Shows the warning mark next to the title. */
-  warning?: boolean;
+  hasWarning?: boolean;
   voteCount: number;
   /** The bar fill, 0-100, relative to the option with the most votes. */
   fillPercent: number;
@@ -28,24 +30,26 @@ export interface VotingRowProps {
 export function VotingRow({
   title,
   thumbnail,
-  warning,
+  hasWarning,
   voteCount,
   fillPercent,
   newVoteCount,
   onlineCount,
   offlineCount,
   commentCount,
-  newCommentCount
+  newCommentCount,
+  className,
+  style
 }: VotingRowProps) {
   // Vote progress scales the bar by the leading option's count: recover it from this row's relative fill.
   const maxCount = fillPercent > 0 ? Math.round((voteCount * 100) / fillPercent) : Math.max(voteCount, 1);
   return (
-    <div className="gv-list-row-voting">
+    <div className={clsx('gv-list-row-voting', className)} style={style}>
       <div className="gv-list-row-voting__cells">
         <div className="gv-list-row-voting__title-cell">
           {thumbnail && <img className="gv-list-row-voting__thumbnail" src={thumbnail} alt="" aria-hidden />}
           <span className="gv-list-row-voting__title">{title}</span>
-          {warning && (
+          {hasWarning && (
             <span className="gv-list-row-voting__marks">
               <TriangleAlert
                 role="img"
@@ -59,7 +63,7 @@ export function VotingRow({
         </div>
         <div className="gv-list-row-voting__cell gv-list-row-voting__votes-cell">
           <VoteProgress
-            variant="count"
+            kind="count"
             label={`Votes for ${title}`}
             count={voteCount}
             maxCount={maxCount}

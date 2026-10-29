@@ -1,25 +1,11 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router';
 import {Bot, Copy, Download, KeyRound, Pencil, Plus, Trash2, Webhook} from 'lucide-react';
-import {Button} from '../../../src/components/Button';
-import {TextField, TextArea} from '../../../src/components/TextField';
-import {NumberField} from '../../../src/components/NumberField';
-import {Switch} from '../../../src/components/Switch';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {CheckboxGroup} from '../../../src/components/CheckboxGroup';
-import {MenuItem} from '../../../src/components/Menu';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableOptions,
-  DataTableTags} from '../../../src/components/gv/DataTable';
-import {Panel} from '../../../src/components/gv/Panel';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {Banner} from '../../../src/components/gv/Banner';
-import {Checkbox} from '../../../src/components/gv/Checkbox';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {Modal} from '../../../src/components/gv/Modal';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {HelpPopover} from '../../../src/components/gv/HelpPopover';
+import {AlertDialog, Banner, Button, Checkbox, DataTable, DataTableBody, DataTableCell, DataTableColumn,
+  DataTableHeader, DataTableOptions, DataTableRow, DataTableTags, EmptyState, HelpPopover, IconButton, MenuItem, Modal,
+  NumberField, Panel, queue, Select, SelectItem, StatusBadge, Switch, TextArea, TextField,
+  ToastRegion} from 'govocal-ds';
+import {CheckboxGroup} from 'govocal-ds/base';
 import {API_TOKENS, MCP_CLIENTS, POWER_BI_TEMPLATES, WEBHOOK_EVENTS, WEBHOOK_PROJECTS, WEBHOOKS,
   type ApiToken, type WebhookItem} from '../data-tools';
 import {Gap} from '../Gap';
@@ -63,7 +49,7 @@ export function PublicApiTokens() {
     <Page title="Public API tokens" crumbs={TOOLS_CRUMB}
       description={<DocsNote lead="Manage your API tokens for the public API." docs="API documentation"
         about="The API documentation lists every endpoint, how to sign a request with a token, and the rate limits." />}>
-      <Panel title="Tokens" count={tokens.length} flush={tokens.length > 0} actions={createButton('primary')}
+      <Panel title="Tokens" count={tokens.length} isFlush={tokens.length > 0} actions={createButton('primary')}
         description="Each token lets one custom integration read the platform's data. Delete a token to cut that integration off.">
         {tokens.length ? (
           <DataTable aria-label="Public API tokens">
@@ -89,8 +75,8 @@ export function PublicApiTokens() {
             </DataTableBody>
           </DataTable>
         ) : (
-          <EmptyState size="panel" icon={<KeyRound size={24} />} title="You do not have any tokens yet"
-            description="Create a token for each integration that reads the platform's data." action={createButton('secondary')} />
+          <EmptyState layout="panel" icon={<KeyRound size={24} />} title="You do not have any tokens yet"
+            description="Create a token for each integration that reads the platform's data." actions={createButton('secondary')} />
         )}
       </Panel>
       <Modal isOpen={open} onOpenChange={o => { if (!o) close(); }}
@@ -137,7 +123,7 @@ function WebhookModal({draft, isNew, onClose, onSave}: {draft: Draft; isNew: boo
   const valid = d.name.trim() && /^https?:\/\/\S+$/.test(d.url) && d.events.length > 0;
   const label = isNew ? 'Create webhook' : 'Update webhook';
   return (
-    <Modal isOpen onOpenChange={o => { if (!o) onClose(); }} size="wide"
+    <Modal isOpen onOpenChange={o => { if (!o) onClose(); }} width="wide"
       title={isNew ? 'Create a new webhook' : 'Edit webhook'}
       footer={<>
         <Button variant="secondary" onPress={onClose}>Cancel</Button>
@@ -185,7 +171,7 @@ export function Webhooks() {
     <Page title="Webhooks" crumbs={TOOLS_CRUMB}
       description={<DocsNote lead="Configure webhooks to receive real-time notifications when events occur on your platform."
         docs="webhook documentation" about="The webhook documentation shows the payload of each event and how to check a request's signature with the secret token." />}>
-      <Panel title="All webhooks" count={hooks.length} flush={hooks.length > 0} actions={createButton('primary')}
+      <Panel title="All webhooks" count={hooks.length} isFlush={hooks.length > 0} actions={createButton('primary')}
         description="Each webhook calls a URL of yours when one of its events happens.">
         {hooks.length ? (
           <div className="bo-tools-scroll">
@@ -205,7 +191,7 @@ export function Webhooks() {
                     <DataTableCell isMuted>{h.url}</DataTableCell>
                     <DataTableCell><DataTableTags items={h.events} /></DataTableCell>
                     <DataTableCell>{h.project}</DataTableCell>
-                    <DataTableCell><StatusBadge state={h.enabled ? 'live' : 'draft'}>{h.enabled ? 'Enabled' : 'Off'}</StatusBadge></DataTableCell>
+                    <DataTableCell><StatusBadge status={h.enabled ? 'live' : 'draft'}>{h.enabled ? 'Enabled' : 'Off'}</StatusBadge></DataTableCell>
                     <DataTableCell align="options">
                       <DataTableOptions aria-label={`Options for webhook: ${h.name}`}
                         onAction={k => k === 'edit' ? setEditing(h) : setDeleting(h)}>
@@ -219,8 +205,8 @@ export function Webhooks() {
             </DataTable>
           </div>
         ) : (
-          <EmptyState size="panel" icon={<Webhook size={24} />} title="You do not have any webhooks yet"
-            description="Create a webhook to tell another service when something happens here." action={createButton('secondary')} />
+          <EmptyState layout="panel" icon={<Webhook size={24} />} title="You do not have any webhooks yet"
+            description="Create a webhook to tell another service when something happens here." actions={createButton('secondary')} />
         )}
       </Panel>
       {editing && <WebhookModal key={editing === 'new' ? 'new' : editing.id} isNew={editing === 'new'}
@@ -245,7 +231,7 @@ export function EsriIntegration() {
     <Page title="Esri Maps" crumbs={TOOLS_CRUMB}
       description="Add your Esri API key to allow importing your map layers from ArcGIS Online in the map tabs in projects.">
       <Panel title="Esri API key" description="You find the key in your ArcGIS developer dashboard."
-        actions={<StatusBadge state={connected ? 'live' : 'draft'}>{connected ? 'Connected' : 'Not connected'}</StatusBadge>}
+        actions={<StatusBadge status={connected ? 'live' : 'draft'}>{connected ? 'Connected' : 'Not connected'}</StatusBadge>}
         footer={<Button variant="primary" isDisabled={!key.trim()} onPress={save}>Save key</Button>}>
         <div className="bo-tools-form">
           <TextField label="Esri API key" placeholder="Paste API key here" value={key} onChange={setKey} />
@@ -296,7 +282,7 @@ export function McpAuthorizations() {
   return (
     <Page title="MCP authorizations" crumbs={TOOLS_CRUMB}
       description="View and manage client authorizations for your MCP (Model Context Protocol) integrations.">
-      <Panel title="Authorized clients" count={clients.length} flush={clients.length > 0}
+      <Panel title="Authorized clients" count={clients.length} isFlush={clients.length > 0}
         description="AI agents that may act on the platform for you.">
         {clients.length ? (
           <DataTable aria-label="MCP authorizations">
@@ -319,7 +305,7 @@ export function McpAuthorizations() {
             </DataTableBody>
           </DataTable>
         ) : (
-          <EmptyState size="panel" icon={<Bot size={24} />} title="You have no MCP authorizations yet"
+          <EmptyState layout="panel" icon={<Bot size={24} />} title="You have no MCP authorizations yet"
             description="An AI agent shows up here once you allow it to connect." />
         )}
       </Panel>

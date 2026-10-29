@@ -10,14 +10,16 @@ import {
 import {Heading} from './Content';
 import {ChevronRight} from 'lucide-react';
 import './Disclosure.css';
+import {keepClass} from './className';
+import clsx from 'clsx';
 
 export function Disclosure(props: DisclosureProps) {
-  return <AriaDisclosure {...props} />;
+  return <AriaDisclosure {...props} className={keepClass(props.className)} />;
 }
 
 export function DisclosureHeader({children, ...props}: HeadingProps) {
   return (
-    <Heading {...props}>
+    <Heading {...props} className={clsx('react-aria-Heading', props.className)}>
       <Button slot="trigger" className="disclosure-button">
         <ChevronRight size={16} />
         <span>{children}</span>
@@ -28,8 +30,9 @@ export function DisclosureHeader({children, ...props}: HeadingProps) {
 
 export function DisclosurePanel(props: DisclosurePanelProps) {
   return (
-    <AriaDisclosurePanel {...props}>
+    <AriaDisclosurePanel {...props} className={keepClass(props.className)}>
       <div>{props.children}</div>
     </AriaDisclosurePanel>
   );
 }
+export type {DisclosureProps, DisclosurePanelProps};

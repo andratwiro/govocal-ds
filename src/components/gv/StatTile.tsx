@@ -5,7 +5,7 @@ import {HelpPopover} from './HelpPopover';
 import './StatTile.css';
 
 /** Figma "Stat tile" · Type. */
-export type StatTileType = 'default' | 'tall' | 'with-note';
+export type StatTileLayout = 'default' | 'tall' | 'with-note';
 
 export interface StatTileTrend {
   /** Which way the number moved. Said in words too, never by colour alone. */
@@ -39,7 +39,7 @@ export interface StatTileProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
    * Figma's Type. `tall` keeps the default content in a taller tile (so it lines up with
    * With note tiles in one band). Defaults to `with-note` when a note is given, else `default`.
    */
-  type?: StatTileType;
+  layout?: StatTileLayout;
   /** Optional slot under the value and note, e.g. a `Sparkline`. */
   children?: ReactNode;
 }
@@ -51,12 +51,12 @@ const TREND = {
 } as const;
 
 /** A labelled number tile (Figma "Stat tile"; prototype `.pj-kpi`). Display only, but for its help icon. */
-export function StatTile({label, value, note, trend, info, infoTitle, type, children, className, ...rest}: StatTileProps) {
-  const kind: StatTileType = type ?? (note != null ? 'with-note' : 'default');
+export function StatTile({label, value, note, trend, info, infoTitle, layout, children, className, ...rest}: StatTileProps) {
+  const shape: StatTileLayout = layout ?? (note != null ? 'with-note' : 'default');
   const Arrow = trend ? TREND[trend.direction].icon : null;
   const title = infoTitle ?? (typeof label === 'string' ? label : 'About this number');
   return (
-    <div {...rest} className={['gv-kpi', `gv-kpi--${kind}`, className].filter(Boolean).join(' ')}>
+    <div {...rest} className={['gv-kpi', `gv-kpi--${shape}`, className].filter(Boolean).join(' ')}>
       <div className="gv-kpi__label">
         {label}
         {info != null && (
@@ -78,7 +78,7 @@ export function StatTile({label, value, note, trend, info, infoTitle, type, chil
           )}
         </div>
       )}
-      {kind === 'with-note' && note != null && <div className="gv-kpi__note">{note}</div>}
+      {shape === 'with-note' && note != null && <div className="gv-kpi__note">{note}</div>}
       {children != null && <div className="gv-kpi__slot">{children}</div>}
     </div>
   );

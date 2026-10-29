@@ -60,14 +60,14 @@ export const AllVariants: Story = {
     <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--gv-space-16)'}}>
       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 'var(--gv-space-16)'}}>
         <ProjectHeader {...args} level="project" />
-        <ProjectHeader {...args} level="phase-draft" />
-        <ProjectHeader {...args} level="phase-live" />
+        <ProjectHeader {...args} level="phase" />
+        <ProjectHeader {...args} level="phase" status="live" />
       </div>
       <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--gv-space-16)', padding: 'var(--gv-space-16)', background: 'var(--gv-surface-app)'}}>
-        <ProjectHeader {...args} level="phase-draft" modes={modes(false)} mode="build" people={me} onSave={() => {}} onTogglePanel={() => {}} />
-        <ProjectHeader {...args} level="phase-live" phaseName="Vote on proposals" modes={modes(true)} mode="manage" people={<AvatarGroup initials={['S', 'M']} />} hasChanges onSave={() => {}} onTogglePanel={() => {}} />
-        <ProjectHeader {...args} people={me} shareMenu={shareMenu} publishState="draft" publishMenu={publishMenu} onSave={() => {}} onTogglePanel={() => {}} />
-        <ProjectHeader {...args} people={me} shareMenu={shareMenu} publishState="draft" publishMenu={publishMenu} hasChanges onSave={() => {}} onTogglePanel={() => {}} />
+        <ProjectHeader {...args} level="phase" modes={modes(false)} mode="build" people={me} onSave={() => {}} onTogglePanel={() => {}} />
+        <ProjectHeader {...args} level="phase" status="live" phaseName="Vote on proposals" modes={modes(true)} mode="manage" people={<AvatarGroup initials={['S', 'M']} />} hasChanges onSave={() => {}} onTogglePanel={() => {}} />
+        <ProjectHeader {...args} people={me} shareMenu={shareMenu} status="draft" publishMenu={publishMenu} onSave={() => {}} onTogglePanel={() => {}} />
+        <ProjectHeader {...args} people={me} shareMenu={shareMenu} status="draft" publishMenu={publishMenu} hasChanges onSave={() => {}} onTogglePanel={() => {}} />
       </div>
     </div>
   )
@@ -82,14 +82,14 @@ export const Project: Story = {
 /** Level=Phase · Draft */
 export const PhaseDraft: Story = {
   name: 'Phase · Draft',
-  args: {level: 'phase-draft'},
+  args: {level: 'phase'},
   parameters: {design: {type: 'figma', url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=4-392'}}
 };
 
 /** Level=Phase · Live */
 export const PhaseLive: Story = {
   name: 'Phase · Live',
-  args: {level: 'phase-live', phaseName: 'Vote on proposals'},
+  args: {level: 'phase', status: 'live', phaseName: 'Vote on proposals'},
   parameters: {design: {type: 'figma', url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=5-473'}}
 };
 
@@ -100,7 +100,7 @@ export const PhaseLive: Story = {
 export const Draft: Story = {
   decorators: [onApp],
   parameters: {layout: 'padded'},
-  args: {level: 'phase-draft', modes: modes(false), mode: 'build', people: me, onSave: () => {}, onTogglePanel: () => {}}
+  args: {level: 'phase', modes: modes(false), mode: 'build', people: me, onSave: () => {}, onTogglePanel: () => {}}
 };
 
 function ModeSwitch(args: React.ComponentProps<typeof ProjectHeader>) {
@@ -114,7 +114,7 @@ export const WithModeSwitch: Story = {
   decorators: [onApp],
   parameters: {layout: 'padded'},
   args: {
-    level: 'phase-live',
+    level: 'phase', status: 'live',
     phaseName: 'Vote on proposals',
     modes: modes(true),
     people: <AvatarGroup initials={['S', 'M']} />,
@@ -129,7 +129,7 @@ export const WithChanges: Story = {
   name: 'With changes (Save)',
   decorators: [onApp],
   parameters: {layout: 'padded'},
-  args: {people: me, shareMenu, publishState: 'draft', publishMenu, hasChanges: true, onSave: () => {}, onTogglePanel: () => {}}
+  args: {people: me, shareMenu, status: 'draft', publishMenu, hasChanges: true, onSave: () => {}, onTogglePanel: () => {}}
 };
 
 /** The project: Share ▾ and its state as a menu button: Publish ▾ while it is a draft, ● Live ▾ once published. */
@@ -137,11 +137,11 @@ export const ShareAndPublish: Story = {
   name: 'Share and Publish',
   decorators: [onApp],
   parameters: {layout: 'padded'},
-  args: {people: me, shareMenu, publishState: 'draft', publishMenu, onSave: () => {}, onTogglePanel: () => {}},
+  args: {people: me, shareMenu, status: 'draft', publishMenu, onSave: () => {}, onTogglePanel: () => {}},
   render: args => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--gv-space-16)'}}>
       <ProjectHeader {...args} />
-      <ProjectHeader {...args} publishState="live" publishMenu={liveMenu} />
+      <ProjectHeader {...args} status="live" publishMenu={liveMenu} />
     </div>
   )
 };

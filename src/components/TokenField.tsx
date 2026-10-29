@@ -11,6 +11,7 @@ import {
 import {Label, Description} from './Form';
 import './TokenField.css';
 import type React from 'react';
+import {keepClass} from './className';
 
 export interface TokenFieldProps<T extends TokenFieldValue = TokenFieldValue> extends Omit<
   AriaTokenFieldProps<T>,
@@ -33,7 +34,7 @@ export function TokenField<T extends TokenFieldValue = TokenFieldValue>({
   ...props
 }: TokenFieldProps<T>) {
   return (
-    <AriaTokenField {...props}>
+    <AriaTokenField {...props} className={keepClass(props.className)}>
       {label && <Label>{label}</Label>}
       <AriaTokenInput
         ref={inputRef}
@@ -48,5 +49,5 @@ export function TokenField<T extends TokenFieldValue = TokenFieldValue>({
 }
 
 export function Token(props: TokenProps) {
-  return <AriaToken {...props} />;
+  return <AriaToken {...props} className={keepClass(props.className)} />;
 }

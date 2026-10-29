@@ -20,7 +20,7 @@
 }
 
 /* Reviewed has to catch the eye (the prototype, 22 Oct): green, medium, a filled 16 check, no chip. */
-.gv-review-notice[data-state='reviewed'] {
+.gv-review-notice[data-status='reviewed'] {
   font: var(--gv-type-small-strong);
   letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-reviewed);

@@ -2,67 +2,24 @@ import {useState, type Dispatch, type ReactNode, type SetStateAction} from 'reac
 import {Navigate, useNavigate, useParams} from 'react-router';
 import {CalendarDays, CircleCheck, Copy, Download, ExternalLink, FileChartColumn, FileText, Inbox, Lightbulb, Link2, Lock, Mail,
   MessageSquareText, Paperclip, MapPin, Plus, Settings, Sparkles, SquarePen, Tag, Trash2, TriangleAlert, Upload, User, Users} from 'lucide-react';
-import {Button} from '../../../src/components/Button';
-import {Form} from '../../../src/components/Form';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {GroupedTab, GroupedTabList, GroupedTabPanel, GroupedTabs, TabSection} from '../../../src/components/Tabs';
-import {Tag as TagItem, TagGroup} from '../../../src/components/TagGroup';
-import {Menu, MenuItem, MenuSection, MenuTrigger, Separator, SubmenuTrigger} from '../../../src/components/Menu';
-import {Dialog} from '../../../src/components/Dialog';
-import {SearchField} from '../../../src/components/SearchField';
-import {TextField} from '../../../src/components/TextField';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
-  DataTableText, DataTableAddColumn, DataTableAssignee, DataTableTags, DataTableThumbnail} from '../../../src/components/gv/DataTable';
-import {OptionList} from '../../../src/components/gv/OptionList';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {Panel} from '../../../src/components/gv/Panel';
-import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
+import {ACCESS_WHO_VALUE, AccessRightsModal, type AccessWho, ActionRow, ActionRowList, Avatar, Badge, Banner,
+  BulkOfficialUpdate, Button, Card, type ChartColor, CommentThread, CompactButton, DashboardBars, DashboardCard,
+  DashboardDemographic, DashboardList, DashboardRanking, DashboardTopics, DataTable, DataTableAddColumn,
+  DataTableAssignee, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader, DataTableRow,
+  DataTableTags, DataTableText, DataTableThumbnail, DateRangeField, DropZone, EmptyState, FileList,
+  type FileListItemData, FilterChips, type FilterFacet, FilterMenu, type FilterValue, GroupedTab, GroupedTabList,
+  GroupedTabPanel, GroupedTabs, IconButton, LineChart, ListHeader, type ListHeaderColumn, Menu, MenuItem, MenuSection,
+  MenuTrigger, Modal, NotificationEmail, NotificationRow, NotificationRowList, OfficialUpdate, OptionList, Pagination,
+  Panel, PanelSection, ParticipantActionList, ParticipantActionRow, ParticipantLimit, PhaseTimeline, PhoneHeader,
+  PhoneImage, PhonePreview, PhoneStage, type PostedUpdate, ProjectHeader, PropertyList, PropertyListItem, ProposalsRow,
+  queue, RailHeader, RailPhase, ReactionCounts, SearchField, SectionLabel, SegmentedControl, SegmentedControlItem,
+  Select, type SelectionAction, SelectionBar, SelectItem, Separator, SetupStep, SidePanel, SidePanelActions,
+  SidePanelDecision, SidePanelSection, Sparkline, StatRow, StatTile, SubmenuTrigger, TableToolbar, TableToolbarHeading,
+  TabSection, TextField, type ThreadComment, type ThreadTab, type ThreadTarget, type TimelinePhase, TitleField,
+  ToastRegion, ViewOptionList, ViewOptionRow, VolunteeringRow, VotingRow} from 'govocal-ds';
+import {Dialog, Form, Tag as TagItem, TagGroup} from 'govocal-ds/base';
 import {PICTURES} from '../../../src/components/gv/story-images';
-import {Avatar} from '../../../src/components/gv/Avatar';
-import {Banner} from '../../../src/components/gv/Banner';
-import {Card} from '../../../src/components/gv/Card';
-import {DateRangeField} from '../../../src/components/gv/DateRangeField';
-import {DropZone} from '../../../src/components/gv/DropZone';
-import {CompactButton} from '../../../src/components/gv/CompactButton';
-import {LineChart, Sparkline, type ChartColor} from '../../../src/components/gv/Chart';
-import {DashboardBars, DashboardCard, DashboardDemographic, DashboardList, DashboardRanking, DashboardTopics} from '../../../src/components/gv/DashboardCard';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {Badge} from '../../../src/components/gv/Badge';
-import {ListHeader, type ListHeaderColumn} from '../../../src/components/gv/ListHeader';
-import {StatTile} from '../../../src/components/gv/StatTile';
-import {PanelSection} from '../../../src/patterns/PanelSection';
-import {PhonePreview, PhoneHeader, PhoneImage, PhoneStage} from '../../../src/patterns/PhonePreview';
-import {NotificationEmail, NotificationList, NotificationRow} from '../../../src/patterns/NotificationRow';
-import {ParticipantActionList, ParticipantActionRow, ParticipantLimit} from '../../../src/patterns/ParticipantActionRow';
-import {AccessRightsModal, ACCESS_WHO_VALUE, type AccessWho} from '../../../src/patterns/AccessRights';
-import {ViewOptionList, ViewOptionRow} from '../../../src/patterns/ViewOptionRow';
-import {VolunteeringRow} from '../../../src/patterns/VolunteeringRow';
-import {RailPhase} from '../../../src/patterns/RailPhase';
-import {ActionRow, ActionRowList} from '../../../src/patterns/ActionRow';
 // Form field summary is a recipe (a story and its CSS): the page keeps its markup and uses the recipe's stylesheet.
-import '../../../src/patterns/FormFieldSummary.css';
-import {ProposalsRow} from '../../../src/patterns/ProposalsRow';
-import {VotingRow} from '../../../src/patterns/VotingRow';
-import {FileList, type FileListItemData} from '../../../src/components/gv/FileList';
-import {ProjectHeader} from '../../../src/patterns/ProjectHeader';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {Modal} from '../../../src/components/gv/Modal';
-import {PropertyList, PropertyListItem} from '../../../src/components/gv/PropertyList';
-import {ReactionCounts} from '../../../src/components/gv/ReactionCounts';
-import {SidePanel, SidePanelActions, SidePanelDecision, SidePanelSection} from '../../../src/components/gv/SidePanel';
-import {RailHeader} from '../../../src/patterns/RailHeader';
-import {SectionLabel} from '../../../src/components/gv/SectionLabel';
-import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
-import {SetupStep} from '../../../src/patterns/SetupStep';
-import {StatRow} from '../../../src/components/gv/StatRow';
-import {TitleField} from '../../../src/components/gv/TitleField';
-import {FilterChips} from '../../../src/patterns/FilterChips';
-import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
-import {CommentThread, type ThreadComment, type ThreadTab, type ThreadTarget} from '../../../src/patterns/CommentThread';
-import {BulkOfficialUpdate, OfficialUpdate, type PostedUpdate} from '../../../src/patterns/OfficialUpdate';
-import {PhaseTimeline, type TimelinePhase} from '../../../src/patterns/PhaseTimeline';
-import {SelectionBar, type SelectionAction} from '../../../src/patterns/SelectionBar';
 import {ME, METHODS, PROJECTS, type Method, type Phase, type Project} from '../data';
 import {IDEAS, IDEA_ASSIGNEES, IDEA_REPLIES, IDEA_SOURCES, IDEA_STATUSES, IDEA_TAGS, AREAS, TOPICS, PHASE_FILES, SCREENING_PHASES, TEAM, addedTimeline,
   NO_OVERVIEW, OVERVIEWS, PHONE_CALL, INSIGHT_WEEKS, PARTICIPATION_WEEKS, AI_SUMMARY, VOTE_OPTIONS, VOTES_BY_DAY, VOTER_AGES,
@@ -103,7 +60,7 @@ function PhaseScreen() {
       {/* Project header's bar (its "With mode switch" story): crumbs, Build · Manage · Insights, who is here, Save. Save
           turns on once something in the setup changes. A phase that hasn't started keeps Manage and Insights open: they
           show the Empty state. */}
-      <ProjectHeader level={phase.status === 'Draft' ? 'phase-draft' : 'phase-live'} projectName={project.title} phaseName={phase.title}
+      <ProjectHeader level="phase" status={phase.status === 'Draft' ? 'draft' : 'live'} projectName={project.title} phaseName={phase.title}
         projectHref={`#/projects/${project.id}`} onBack={() => navigate(`/projects/${project.id}`)} onTogglePanel={() => setRailOpen(o => !o)}
         modes={TABS.map(t => ({id: t, label: label(t)}))} mode={view} onModeChange={t => navigate(phaseUrl(project, phase, t as Tab))}
         people={<Avatar initials={ME.slice(-1)} aria-label={`${ME} is here`} />}
@@ -158,9 +115,9 @@ export function ProjectRail({project, href, current, added, onAdd, onHide, remov
         <ul className="bo-project-rail-list bo-phase-timeline">
           {phases.map(p => (
             <li key={p.id}>
-              <RailPhase status={RAIL_DOT[p.state]} current={p.current} href={p.href} title={p.title} chip={p.count}
-                newCount={p.fresh} state={RAIL_WORD[p.state]} meta={`${p.dates} · ${p.method}`}
-                onDelete={p.current ? undefined : () => onDelete(p)} />
+              <RailPhase status={RAIL_DOT[p.status]} isCurrent={p.isCurrent} href={p.href} title={p.title} chip={p.count}
+                newCount={p.fresh} statusLabel={RAIL_WORD[p.status]} meta={`${p.dates} · ${p.method}`}
+                onDelete={p.isCurrent ? undefined : () => onDelete(p)} />
             </li>
           ))}
         </ul>
@@ -196,7 +153,7 @@ function SetArea({onChange}: {onChange?: () => void}) {
   const value = mode === 'none' ? 'No specific area' : mode === 'all' ? 'All areas'
     : mode === 'selected' && names.length ? (names.length === 1 ? names[0] : counted(names.length, 'area', 'areas')) : undefined;
   return (
-    <SetupStep action="pick" pickerType="menu" title="Set area" value={value} isDone={value != null} picker={
+    <SetupStep kind="pick" pickerKind="menu" title="Set area" value={value} isDone={value != null} picker={
       <Menu aria-label="Area" selectionMode="single" selectedKeys={mode ? [mode] : []}
         onSelectionChange={keys => { setMode(keys === 'all' ? null : [...keys].map(String)[0] ?? null); onChange?.(); }}>
         <MenuItem id="none" icon={pin} description="The project will not show when filtering by area.">No specific area</MenuItem>
@@ -218,9 +175,9 @@ function SetArea({onChange}: {onChange?: () => void}) {
 function SetTopicTags({onChange}: {onChange?: () => void}) {
   const [tags, setTags] = useState<string[]>([]);
   return (
-    <SetupStep action="pick" title="Set topic tags" value={tags.length ? counted(tags.length, 'tag', 'tags') : undefined}
+    <SetupStep kind="pick" title="Set topic tags" value={tags.length ? counted(tags.length, 'tag', 'tags') : undefined}
       isDone={tags.length > 0} picker={
-        <OptionList aria-label="Topic tags" options={TOPICS.map(t => ({id: t, label: t}))} selected={tags} onChange={t => { setTags(t); onChange?.(); }}
+        <OptionList aria-label="Topic tags" items={TOPICS.map(t => ({id: t, label: t}))} value={tags} onChange={t => { setTags(t); onChange?.(); }}
           placeholder="Search tags..." searchLabel="Search tags"
           selectionLabel={k => (k ? `${counted(k, 'tag', 'tags')} selected` : 'No tags selected')} />
       } />
@@ -232,7 +189,7 @@ export function ChecklistStep({step, onOpen, onChange}: {step: typeof CHECKLIST[
   onChange?: () => void}): ReactNode {
   if (step.title === 'Set area') return <SetArea onChange={onChange} />;
   if (step.title === 'Set topic tags') return <SetTopicTags onChange={onChange} />;
-  if (step.action === 'expand') return <SetupStep action="expand" title={step.title}><p className="bo-note bo-phase-flush">{step.body}</p></SetupStep>;
+  if (step.action === 'expand') return <SetupStep kind="expand" title={step.title}><p className="bo-note bo-phase-flush">{step.body}</p></SetupStep>;
   return <SetupStep title={step.title} onPress={() => onOpen(step.title)} />;
 }
 
@@ -327,9 +284,9 @@ function phaseDates(dates: string): [string, string] | null {
 
 function PhaseStatus({phase}: {phase: Phase}) {
   const range = phaseDates(phase.dates);
-  if (phase.status === 'Live') return <Banner compact tone="success" title="Live">{range ? `Ends on ${range[1]}` : phase.dates}</Banner>;
-  if (phase.status === 'Done') return <Banner compact tone="neutral" title="Ended">{range ? `Closed on ${range[1]}` : phase.dates}</Banner>;
-  return <Banner compact tone="neutral" title="Not started">{range ? `Starts on ${range[0]}` : phase.dates}</Banner>;
+  if (phase.status === 'Live') return <Banner density="compact" tone="success" title="Live">{range ? `Ends on ${range[1]}` : phase.dates}</Banner>;
+  if (phase.status === 'Done') return <Banner density="compact" tone="neutral" title="Ended">{range ? `Closed on ${range[1]}` : phase.dates}</Banner>;
+  return <Banner density="compact" tone="neutral" title="Not started">{range ? `Starts on ${range[0]}` : phase.dates}</Banner>;
 }
 
 // The phase's own cards, after the "Ideation · Build" Figma frame (Card types Required, Add, Review, To set) and the
@@ -428,18 +385,18 @@ function IdeationCards({phase, onOpen, onAttach, files, onChange, emailsOn, onEm
       <li data-gv="setup-card"><Card title="Sorting" status="to-review" pills={[{label: 'Trending'}]} control="open" onOpen={() => onOpen('Sorting')} /></li>
       <li data-gv="setup-card"><Card title="Notifications" control="expand"
         pills={[{label: emailCount ? `${emailCount} ${emailCount === 1 ? 'email' : 'emails'} on` : 'Off'}]}>
-        <NotificationList>
+        <NotificationRowList>
           {PHASE_EMAILS.map(e => (
             <NotificationRow key={e.id} who={e.who} when={e.when} isSelected={emailsOn.has(e.id)}
               onChange={on => onEmailChange(e.id, on)} onOpen={() => onEmailOpen(e.id)}>
               {e.name}
             </NotificationRow>
           ))}
-        </NotificationList>
+        </NotificationRowList>
       </Card></li>
       {accessFor && (
         <AccessRightsModal key={accessFor.id} title={accessFor.question} isOpen onOpenChange={o => !o && setAccess(null)}
-          options={accessFor.id === 'event' ? ['signin', 'admins'] : undefined}
+          whoItems={accessFor.id === 'event' ? ['signin', 'admins'] : undefined}
           defaultOverriding={!!own[accessFor.id]} onOverridingChange={changed((v: boolean) => setOwn(s => ({...s, [accessFor.id]: v})))}
           defaultWho={who[accessFor.id]} onWhoChange={changed((v: AccessWho) => setWho(s => ({...s, [accessFor.id]: v})))}
           onSave={() => setAccess(null)} />
@@ -469,7 +426,7 @@ function VolunteeringCards({phase, onOpen, onChange}: {phase: Phase; onOpen: (ti
         ]}>
         <div>
           {causes.map((c, i) => (
-            <VolunteeringRow key={c.id} variant="build" title={c.title} volunteerCount={c.volunteers} isLast={i === causes.length - 1}
+            <VolunteeringRow key={c.id} layout="build" title={c.title} volunteerCount={c.volunteers} isLast={i === causes.length - 1}
               onEdit={() => onOpen(c.title)} onDelete={() => remove(c.id)} />
           ))}
         </div>
@@ -498,14 +455,14 @@ const sameFilters = (a: FilterValue, b: FilterValue) => {
 function facetsFor(ideas: Idea[]): FilterFacet[] {
   const options = (id: string, values: readonly string[], person?: boolean) => values.map(v => ({
     id: v, label: v, count: ideas.filter(i => FIELDS[id](i).includes(v)).length,
-    icon: person ? <Avatar size={16} unassigned={v === 'Unassigned'} initials={v.slice(-1)} /> : undefined
+    icon: person ? <Avatar size={16} isUnassigned={v === 'Unassigned'} initials={v.slice(-1)} /> : undefined
   }));
   return [
-    {id: 'source', label: 'Source', icon: icon(Inbox), options: options('source', IDEA_SOURCES)},
-    {id: 'status', label: 'Status', icon: icon(CircleCheck), options: options('status', IDEA_STATUSES)},
-    {id: 'assignee', label: 'Assignee', icon: icon(User), options: options('assignee', IDEA_ASSIGNEES, true)},
-    {id: 'tags', label: 'Tags', icon: icon(Tag), options: options('tags', IDEA_TAGS)},
-    {id: 'reply', label: 'Reply', icon: icon(MessageSquareText), options: options('reply', IDEA_REPLIES)}
+    {id: 'source', label: 'Source', icon: icon(Inbox), items: options('source', IDEA_SOURCES)},
+    {id: 'status', label: 'Status', icon: icon(CircleCheck), items: options('status', IDEA_STATUSES)},
+    {id: 'assignee', label: 'Assignee', icon: icon(User), items: options('assignee', IDEA_ASSIGNEES, true)},
+    {id: 'tags', label: 'Tags', icon: icon(Tag), items: options('tags', IDEA_TAGS)},
+    {id: 'reply', label: 'Reply', icon: icon(MessageSquareText), items: options('reply', IDEA_REPLIES)}
   ];
 }
 
@@ -627,14 +584,14 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
   // searchable Option list, in a dialog popover; Copy to phase ticks several phases, then "Add phase".
   const actions: SelectionAction[] = [
     {id: 'status', label: 'Status', icon: icon(CircleCheck), menu: (
-      <OptionList aria-label="Status" selectionMode="single" searchable={false} selected={sharedStatus}
-        options={IDEA_STATUSES.map(st => ({id: st, label: st}))}
+      <OptionList aria-label="Status" selectionMode="single" isSearchable={false} value={sharedStatus}
+        items={IDEA_STATUSES.map(st => ({id: st, label: st}))}
         onChange={([st]) => st && edit(i => ({...i, status: st as IdeaStatus}))} />
     )},
     {id: 'assign', label: 'Assign', icon: icon(User), menu: (
       <Menu aria-label="Assign to" onAction={k => edit(i => ({...i, assignee: k as Idea['assignee']}))}>
         {IDEA_ASSIGNEES.map(a => (
-          <MenuItem key={a} id={a} icon={<Avatar size={16} unassigned={a === 'Unassigned'} initials={a.slice(-1)} />}>{a}</MenuItem>
+          <MenuItem key={a} id={a} icon={<Avatar size={16} isUnassigned={a === 'Unassigned'} initials={a.slice(-1)} />}>{a}</MenuItem>
         ))}
       </Menu>
     )},
@@ -642,8 +599,8 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
       // A dialog popover holds the search (as the Filter menu's long submenus do); its own class keeps the starter
       // Dialog's padding off the Option list.
       <Dialog aria-label="Tags" className="bo-phase-picker">
-        <OptionList aria-label="Tags" searchable icon={icon(Tag)} selected={sharedTags} countLabel={ideasWord}
-          options={IDEA_TAGS.map(t => ({id: t, label: t, count: pickedIdeas.filter(i => i.tags.includes(t)).length}))}
+        <OptionList aria-label="Tags" isSearchable icon={icon(Tag)} value={sharedTags} countLabel={ideasWord}
+          items={IDEA_TAGS.map(t => ({id: t, label: t, count: pickedIdeas.filter(i => i.tags.includes(t)).length}))}
           selectionLabel={k => `${k} ${k === 1 ? 'tag' : 'tags'} on every selected idea`}
           onChange={next => {
             const on = new Set(next);
@@ -701,7 +658,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
       </aside>
       {/* The Data table's "In a panel" story: the Panel's toolbar holds the count (or the Selection bar), the collapsible
           search and the Filter menu, then the chips (the quick view first); the table; the Pagination in its foot. */}
-      <Panel title={phase.title} className="bo-phase-grow" flush
+      <Panel title={phase.title} className="bo-phase-grow" isFlush
         description="Everything posted in this phase. Select ideas for batch actions; click one to open it."
         toolbar={(
           <>
@@ -902,7 +859,7 @@ function EmptyTab({phase, tab}: {phase: Phase; tab: 'manage' | 'insights'}) {
   );
   const side = (
     <aside className="bo-phase-panel bo-phase-side bo-phase-empty-side" aria-label={tab === 'manage' ? `${capital(noun)} overview` : 'Recommended actions'}>
-      <EmptyState size="panel" illustration="empty-notebook" headingLevel="none" title={tab === 'manage' ? `No ${noun} yet` : 'No insights yet'} />
+      <EmptyState layout="panel" illustration="empty-notebook" headingLevel="none" title={tab === 'manage' ? `No ${noun} yet` : 'No insights yet'} />
     </aside>
   );
   // The side panel keeps its place: before the list on Manage, after the dashboard on Insights.
@@ -912,14 +869,14 @@ function EmptyTab({phase, tab}: {phase: Phase; tab: 'manage' | 'insights'}) {
 // Manage for Voting and Proposals: the Panel over the method's List header and rows (Voting row, Proposals row).
 // The other methods' Manage tabs are not drawn yet; an Information phase collects nothing to manage.
 const VOTING_COLUMNS: ListHeaderColumn[] = [
-  {key: 'option', label: 'Option', width: 264, square: true}, {key: 'votes', label: 'Votes', width: 200, sorted: true},
-  {key: 'online', label: 'Online', width: 80, variant: 'number'}, {key: 'offline', label: 'Offline', width: 80, variant: 'number'},
-  {key: 'comments', label: 'Comments', width: 112, variant: 'number'}
+  {key: 'option', label: 'Option', width: 264, isStatic: true}, {key: 'votes', label: 'Votes', width: 200, isSorted: true},
+  {key: 'online', label: 'Online', width: 80, kind: 'number'}, {key: 'offline', label: 'Offline', width: 80, kind: 'number'},
+  {key: 'comments', label: 'Comments', width: 112, kind: 'number'}
 ];
 const PROPOSAL_COLUMNS: ListHeaderColumn[] = [
-  {key: 'proposal', label: 'Proposal', width: 176, square: true}, {key: 'votes', label: 'Votes', width: 200, sorted: true},
-  {key: 'status', label: 'Status', width: 144, square: true}, {key: 'comments', label: 'Comments', width: 112, variant: 'number'},
-  {key: 'timeLeft', label: 'Time left', width: 104, square: true}
+  {key: 'proposal', label: 'Proposal', width: 176, isStatic: true}, {key: 'votes', label: 'Votes', width: 200, isSorted: true},
+  {key: 'status', label: 'Status', width: 144, isStatic: true}, {key: 'comments', label: 'Comments', width: 112, kind: 'number'},
+  {key: 'timeLeft', label: 'Time left', width: 104, isStatic: true}
 ];
 
 function MethodManage({phase}: {phase: Phase}) {
@@ -935,7 +892,7 @@ function MethodManage({phase}: {phase: Phase}) {
   const voting = phase.method === 'Voting';
   const top = Math.max(...VOTE_OPTIONS.map(o => o.votes));
   return (
-    <Panel title={phase.title} className="bo-phase-grow" flush count={voting ? VOTE_OPTIONS.length : PROPOSALS.length}
+    <Panel title={phase.title} className="bo-phase-grow" isFlush count={voting ? VOTE_OPTIONS.length : PROPOSALS.length}
       description={voting ? 'The options residents vote on, most votes first. Votes counted on paper are added as offline votes.'
         : 'Every proposal, most supported first. 300 votes bring an official response.'}>
       <div className="bo-phase-method-list" role="list" aria-label={voting ? 'Options' : 'Proposals'}>
@@ -948,7 +905,7 @@ function MethodManage({phase}: {phase: Phase}) {
         )) : PROPOSALS.map(o => (
           <div role="listitem" key={o.title}>
             <ProposalsRow title={o.title} voteCount={o.votes} voteThreshold={300} statusLabel={o.status} commentCount={o.comments}
-              closed={phase.status === 'Done'} daysLeft={phase.status === 'Done' ? undefined : 12} />
+              isClosed={phase.status === 'Done'} daysLeft={phase.status === 'Done' ? undefined : 12} />
           </div>
         ))}
       </div>
@@ -972,13 +929,13 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
     const weekly = votes.filter((_, k) => k % 7 === 6 || k === votes.length - 1);
     body = <>
       <div className="bo-phase-tiles" data-tiles="4">
-        <StatTile type="with-note" label="Voters" value="517" note="updating live" />
-        <StatTile type="with-note" label="Votes" value="1,240" note="updating live" />
-        <StatTile type="with-note" label="Avg per voter" value="2.4" note="multiple picks" />
-        <StatTile type="with-note" label="Participation" value="18%" note="of visitors" />
+        <StatTile layout="with-note" label="Voters" value="517" note="updating live" />
+        <StatTile layout="with-note" label="Votes" value="1,240" note="updating live" />
+        <StatTile layout="with-note" label="Avg per voter" value="2.4" note="multiple picks" />
+        <StatTile layout="with-note" label="Participation" value="18%" note="of visitors" />
       </div>
-      <DashboardCard type="votes-over-time" title="Participation over time" subtitle="Votes cast · cumulative" action={(
-        <SegmentedControl size="small" aria-label="Range" disallowEmptySelection selectedKeys={[range]}
+      <DashboardCard kind="votes-over-time" title="Participation over time" subtitle="Votes cast · cumulative" actions={(
+        <SegmentedControl size={30} aria-label="Range" disallowEmptySelection selectedKeys={[range]}
           onSelectionChange={k => { const next = [...k][0]; if (next) setRange(next as 'daily' | 'weekly'); }}>
           <SegmentedControlItem id="daily">Daily</SegmentedControlItem>
           <SegmentedControlItem id="weekly">Weekly</SegmentedControlItem>
@@ -986,12 +943,12 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
       )}>
         <Sparkline label="Votes cast" values={range === 'daily' ? votes : weekly} />
       </DashboardCard>
-      <DashboardCard type="live-ranking" title="Live ranking" subtitle={`By votes · ${phase.status === 'Done' ? 'final' : 'updating live'}`}>
-        <DashboardRanking items={VOTE_OPTIONS.map(o => ({title: o.title, votes: o.votes}))} />
+      <DashboardCard kind="live-ranking" title="Live ranking" subtitle={`By votes · ${phase.status === 'Done' ? 'final' : 'updating live'}`}>
+        <DashboardRanking items={VOTE_OPTIONS.map(o => ({title: o.title, count: o.votes}))} />
       </DashboardCard>
       <div className="bo-phase-insights-pair">
-        <DashboardCard type="demographic-age"><DashboardDemographic label="Age group" items={[...VOTER_AGES]} /></DashboardCard>
-        <DashboardCard type="demographic-commute"><DashboardDemographic label="Primary commute" items={[...VOTER_COMMUTES]} /></DashboardCard>
+        <DashboardCard kind="demographic-age"><DashboardDemographic label="Age group" items={[...VOTER_AGES]} /></DashboardCard>
+        <DashboardCard kind="demographic-commute"><DashboardDemographic label="Primary commute" items={[...VOTER_COMMUTES]} /></DashboardCard>
       </div>
       <Banner tone="ai" linkLabel="Open AI analysis" onLinkPress={() => navigate(phaseUrl(project, phase, 'manage'))}>
         Explore AI-powered summaries and view individual votes.
@@ -1010,24 +967,24 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
         <StatTile label="Reactions" value={IDEAS.reduce((k, i) => k + i.likes + i.dislikes, 0).toLocaleString('en-GB')} />
         <StatTile label="Participation rate" value="30.1%" />
       </div>
-      <DashboardCard type="participation-over-time" title="Participation over time">
-        <LineChart legend labels={INSIGHT_WEEKS} series={[
+      <DashboardCard kind="participation-over-time" title="Participation over time">
+        <LineChart showLegend labels={INSIGHT_WEEKS} series={[
           {label: 'Participants', values: PARTICIPATION_WEEKS.participants}, {label: 'Visitors', values: PARTICIPATION_WEEKS.visitors}
         ]} />
       </DashboardCard>
       <div className="bo-phase-insights-pair" data-wide>
-        <DashboardCard type="ai-summary" icon={<Sparkles />} title="What are people saying?"
+        <DashboardCard kind="ai-summary" icon={<Sparkles />} title="What are people saying?"
           footer={<>1 / {total}<CompactButton onPress={() => navigate(phaseUrl(project, phase, 'manage'))}>Explore</CompactButton></>}>
           <p>{AI_SUMMARY}</p>
         </DashboardCard>
-        <DashboardCard type="topic-breakdown" title="Topic breakdown">
+        <DashboardCard kind="topic-breakdown" title="Topic breakdown">
           <DashboardTopics onAction={() => navigate(phaseUrl(project, phase, 'manage'))} items={[
             {id: 'ai', label: 'AI topic distribution', meta: `${total} ${noun} · 0 topics`},
             {id: 'manual', label: 'Manual tags', meta: `${IDEAS.filter(i => i.tags.length).length} ${noun} · ${IDEA_TAGS.length} topics`}
           ]} />
         </DashboardCard>
       </div>
-      <DashboardCard type="status-breakdown" title="Status breakdown">
+      <DashboardCard kind="status-breakdown" title="Status breakdown">
         <DashboardBars items={IDEA_STATUSES.map(st => {
           const count = IDEAS.filter(i => i.status === st).length;
           return {label: st, count, percent: Math.round(count / total * 100), color: statusColor[st]};
@@ -1038,13 +995,13 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
           reactions: {likes: i.likes, dislikes: i.dislikes, comments: i.comments}, status: <Badge>{i.status}</Badge>}))} />
       </DashboardCard>
       <DashboardCard title="Demographics and audience">
-        <EmptyState size="panel" headingLevel="none" title="No demographic data yet" description="It appears once participants fill in their profile." />
+        <EmptyState layout="panel" headingLevel="none" title="No demographic data yet" description="It appears once participants fill in their profile." />
       </DashboardCard>
     </>;
   } else {
     body = <>
       <div className="bo-phase-tiles"><StatTile label="Visitors" value={phase.count?.split(' ')[0] ?? '0'} /></div>
-      <DashboardCard type="visitors-over-time" title="Visitors over time">
+      <DashboardCard kind="visitors-over-time" title="Visitors over time">
         <LineChart labels={INSIGHT_WEEKS} series={[{label: 'Visitors', values: PARTICIPATION_WEEKS.visitors}]} />
       </DashboardCard>
     </>;
@@ -1096,7 +1053,7 @@ export function ProjectSettings({project, tab, onTabChange, onClose}: {project: 
   onTabChange: (tab: SettingsTab) => void; onClose: () => void}) {
   return (
     // Modal's "With side tabs": a fixed height, an unpadded body, the grouped side list beside the panel.
-    <Modal title="Project settings" size="wide" height="fixed" padBody={false} isOpen={tab !== null}
+    <Modal title="Project settings" width="wide" height="fixed" isFlush isOpen={tab !== null}
       onOpenChange={o => { if (!o) onClose(); }} footer={<Button size={32} slot="close">Save</Button>}>
       <GroupedTabs selectedKey={tab ?? 'General'} onSelectionChange={k => onTabChange(k as SettingsTab)} className="bo-phase-settings">
         <GroupedTabList aria-label="Project settings" className="bo-phase-settings-list">
@@ -1174,7 +1131,7 @@ function Attachments({isOpen, onOpenChange, files, onChange}: {isOpen: boolean; 
     <Modal title="Attachments" isOpen={isOpen} onOpenChange={onOpenChange}
       footer={<Button variant="secondary" slot="close">Done</Button>}>
       <div className="bo-phase-attach">
-        <DropZone size="compact" acceptedFileTypes={['*']} allowsMultiple onSelect={list => list && add([...list])}
+        <DropZone density="compact" acceptedFileTypes={['*']} allowsMultiple onSelect={list => list && add([...list])}
           onDrop={async e => add(await Promise.all(e.items.flatMap(i => (i.kind === 'file' ? [i.getFile()] : []))))}>
           Drop a file here or browse
         </DropZone>
