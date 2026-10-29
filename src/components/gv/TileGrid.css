@@ -1,0 +1,34 @@
+@import '../theme.css';
+
+/* Tile grid: as many equal columns as fit at `--gv-tile-grid-min` (one on a narrow screen), 16 apart (12 compact).
+   `row` lets the tiles stretch across the row (auto-fit); `gallery` keeps the columns (auto-fill). A list loses its
+   bullets and indent. The four widths wait for layout size tokens. */
+.gv-tile-grid {
+  --gv-tile-grid-min: 280px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--gv-tile-grid-min)), 1fr));
+  gap: var(--gv-space-16);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &[data-min='160'] {
+    --gv-tile-grid-min: 160px;
+  }
+
+  &[data-min='220'] {
+    --gv-tile-grid-min: 220px;
+  }
+
+  &[data-min='360'] {
+    --gv-tile-grid-min: 360px;
+  }
+
+  &[data-layout='gallery'] {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--gv-tile-grid-min)), 1fr));
+  }
+
+  &[data-density='compact'] {
+    gap: var(--gv-space-12);
+  }
+}

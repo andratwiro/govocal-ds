@@ -1,0 +1,63 @@
+@import '../theme.css';
+
+/* Text: a type style (`kind`) and a colour (`color`) from the tokens, no margins. A Text with neither keeps the look
+   around it (it is a slot's text). */
+.gv-text {
+  margin: 0;
+
+  &[data-kind='title'] {
+    font: var(--gv-type-title);
+    letter-spacing: var(--gv-type-title-tracking);
+  }
+
+  &[data-kind='body'] {
+    font: var(--gv-type-body);
+    letter-spacing: var(--gv-type-body-tracking);
+  }
+
+  &[data-kind='body'][data-strong] {
+    font: var(--gv-type-body-strong);
+    letter-spacing: var(--gv-type-body-strong-tracking);
+  }
+
+  &[data-kind='ui'] {
+    font: var(--gv-type-ui);
+    letter-spacing: var(--gv-type-ui-tracking);
+  }
+
+  &[data-kind='ui'][data-strong] {
+    font: var(--gv-type-ui-strong);
+    letter-spacing: var(--gv-type-ui-strong-tracking);
+  }
+
+  &[data-kind='small'] {
+    font: var(--gv-type-small);
+    letter-spacing: var(--gv-type-small-tracking);
+  }
+
+  &[data-kind='small'][data-strong] {
+    font: var(--gv-type-small-strong);
+    letter-spacing: var(--gv-type-small-strong-tracking);
+  }
+
+  &[data-kind='stat'] {
+    font: var(--gv-type-stat);
+    letter-spacing: var(--gv-type-stat-tracking);
+  }
+
+  &[data-color='primary'] {
+    color: var(--gv-text-primary);
+  }
+
+  &[data-color='secondary'] {
+    color: var(--gv-text-secondary);
+  }
+
+  &[data-color='meta'] {
+    color: var(--gv-text-meta);
+  }
+
+  &[data-color='tertiary'] {
+    color: var(--gv-text-tertiary);
+  }
+}

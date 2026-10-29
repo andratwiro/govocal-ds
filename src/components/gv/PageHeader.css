@@ -1,0 +1,44 @@
+@import '../theme.css';
+
+/* Page header (the back office's page head): breadcrumbs 12 above the title; the title in Title type, primary, with
+   the actions 16 after it at the row's end, 8 apart, centred on it; the description Small meta, 8 under the row. */
+.gv-page-header {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--gv-font-family);
+}
+
+.gv-page-header__breadcrumbs {
+  margin-block-end: var(--gv-space-12);
+}
+
+.gv-page-header__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-16);
+}
+
+.gv-page-header__title {
+  min-width: 0;
+  margin: 0;
+  font: var(--gv-type-title);
+  letter-spacing: var(--gv-type-title-tracking);
+  color: var(--gv-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.gv-page-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gv-space-8);
+}
+
+.gv-page-header__description {
+  margin: var(--gv-space-8) 0 0;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-meta);
+}
