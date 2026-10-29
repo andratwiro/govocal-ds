@@ -1,6 +1,6 @@
 # How to
 
-Five recipes for the designer, who works through an agent (Claude Code in this folder, with the Figma MCP). Each says
+Six recipes for the designer, who works through an agent (Claude Code in this folder, with the Figma MCP). Each says
 what to ask, what the agent will touch, and how to check. The rules behind them are in docs/DESIGN.md and
 docs/NAMING.md; the Figma side is in docs/FIGMA.md.
 
@@ -127,3 +127,70 @@ http://127.0.0.1:4173/backoffice/ (Storybook is at `/storybook/`).
 **After a push to `main`:** GitHub runs the typecheck, `npm test`, the build, the accessibility scan and the
 end-to-end tests (a failing one is retried twice). Green puts the live site up. Red deploys nothing, and the last good
 version stays live (docs/DESIGN.md, "Live, and when it breaks").
+
+## 6. Write a component page
+
+Every Components and Patterns entry's docs page is the component page: thirteen sections in one order, the same on
+every part. The page makes four of them from the code; you write the rest in one Markdown file beside the part.
+Button, Data table and Side panel are the finished examples: copy their shape.
+
+**Ask:** *"Write the component page for <part>."* (or a whole sidebar group).
+
+**The file:** `<Name>.guide.md`, in the same folder and with the same name as the part's stories file:
+`src/components/gv/StatTile.stories.tsx` → `src/components/gv/StatTile.guide.md`;
+`src/patterns/RailPhase.stories.tsx` → `src/patterns/RailPhase.guide.md`. One file per part, so writers working on
+different parts never touch the same file.
+
+**What the page makes itself (never write these):**
+1. **Purpose**: the first sentence of the doc comment above the part's export. If the page says "No doc comment yet",
+   write one that says what someone would ask for, run `npm run components:index`, and take the part off `NOT_YET` in
+   `tests/components-described.test.mjs`.
+2. **Status**: the part's `status:<stage>` tag in its stories (draft · candidate · stable); no tag reads "Draft".
+3. **Variants and states**: the part's stories.
+4. **Tokens**: the tokens its stylesheet (`<Name>.css`) uses, from `npm run tokens:usage`.
+
+**What you write**, as `## ` headings, exactly these, in this order (a `# <Name>` line on top is fine):
+
+| Section | What goes in it |
+|---|---|
+| `## When to use` | Bullets: the jobs it does, with real examples from the back office ("an idea in the Manage tab"). |
+| `## When not to use` | Bullets. **Every bullet names the part to use instead, in bold, by its sidebar name**: `use **Link**`. The guard fails on a bullet with no bold name, or a bold name that isn't a Components or Patterns entry. |
+| `## Anatomy` | A numbered list of its named parts (Head, Label, Leading icon…), and its sizes in a line. |
+| `## Behaviour` | Interactive parts: one sentence linking the WAI-ARIA APG pattern (`https://www.w3.org/WAI/ARIA/apg/patterns/<name>/`), then a keyboard table, `\| Key \| What it does \| Checked by \|`, in plain words (no React Aria terms). Each row's "Checked by" names what proves it: `` `e2e/<spec>.spec.ts` `` or `` `play: <StoryExport>` ``. A part that takes no focus or keys: one line starting "Not interactive". |
+| `## Content` | Label rules, sentence case, how long, the exact words for common cases, which words come in through `labels`. |
+| `## Accessibility` | "The part gives you:" and "You still own:" (the page adds its axe results and the link to Overview › Accessibility). |
+| `## Related` | Bullets, each with a bold part name and why you'd look at it. |
+| `## Changes` | Dated bullets, newest first, from `docs/DECISIONS.md` and the git log; the first is the day you wrote the page. |
+
+Leave out `## Provenance`: the page says "Not yet recorded" until it is filled in (who built it, from what, who
+reviewed it). If you add it, it goes between Related and Changes.
+
+**Keyboard tables say only what a test proves.** Look in `e2e/` for the part's spec (`grep -l "<Part name>" e2e/`)
+and use what it presses. For a key nothing tests, add a `Keyboard` story with a play function to the part's stories
+file: find elements by role and name (`within(canvasElement).getByRole('button', {name: 'Save'})`), never by test id
+or class; `import {expect, userEvent, waitFor, within} from 'storybook/test'`. Button, Data table and Side panel have
+one each. `e2e/play.spec.ts` runs every play function. If you can't prove a key, leave its row out.
+
+**Sources** (never invent a product fact):
+- The part's doc comment and props (its `.tsx`) and its stories.
+- `docs/DECISIONS.md`: search for the part's name; most "When not to use" and "Changes" lines come from here.
+- The back-office pages that use it: `grep -rn "<PartExport" backoffice/src`. Real use is the best "When to use".
+- Its e2e spec, for the keyboard.
+- Figma through its MCP, when it's connected (docs/FIGMA.md).
+
+**The "not written yet" list is the parts with no guide.** There is nothing to edit: creating the file takes the part
+off. `WRITTEN_LATER` in `tests/component-pages.test.mjs` only lists who could still be missing on 30 Oct 2026, so a
+part added later must arrive with its page; never add to it, and delete it once every guide is written. A guide that
+exists must be complete, or `npm test` fails.
+
+**Where it goes besides the page:** `npm run components:index` adds a "Not for" line from your "When not to use" under
+the part in docs/COMPONENTS.md, and the Storybook build puts the whole guide into the components manifest the MCP serves
+agents (`.storybook/main.ts`, `withGuides`). So "use X instead" reaches agents from the same file.
+
+**Check:**
+- `npm test`: `tests/component-pages.test.mjs` names every gap ("When not to use names "Linky", which is not a part").
+- `npm run components:index`, then `npm run typecheck`.
+- The page itself: `npm run storybook`, open the part's Docs.
+- If you added a play function: `npm run build`, then `npx playwright test e2e/play.spec.ts e2e/stories.spec.ts`.
+- Writing a group in parallel with others: commit only your group's guides, stories and doc comments; after a rebase,
+  re-run `npm run components:index` rather than merging docs/COMPONENTS.md by hand.

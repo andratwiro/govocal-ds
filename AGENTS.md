@@ -134,5 +134,6 @@ Follow `docs/HOW-TO.md` §2–3 and `docs/API.md`, "Adding a part". In short:
 2. Stories first, named the NAMING way; tag the file `not-in-figma` if Figma doesn't draw it.
 3. Build on a React Aria part; props by the ten rules in `docs/API.md`; CSS on tokens only, logical properties (RTL).
 4. Export it and its props type from `src/index.ts`.
-5. `npm run components:index`, `npm run typecheck`, `npm test`, then build and e2e.
-6. A branch and a pull request to `main`, never a push to it (`CONTRIBUTING.md`).
+5. Write its page: `<Name>.guide.md` beside the stories (`docs/HOW-TO.md` §6); `npm test` fails on a new part without one.
+6. `npm run components:index`, `npm run typecheck`, `npm test`, then build and e2e.
+7. A branch and a pull request to `main`, never a push to it (`CONTRIBUTING.md`).
