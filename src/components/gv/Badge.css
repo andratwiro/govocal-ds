@@ -1,11 +1,13 @@
 @import '../theme.css';
 @import '../utilities.css';
 
+/* Figma's Pill: 22 tall, 10 to the sides, radius full, the pill grey, Small strong. */
 .gv-pill {
   display: inline-flex;
   align-items: center;
   gap: var(--gv-space-4);
   height: 22px;
+  box-sizing: border-box;
   padding: 0 var(--gv-space-10);
   border-radius: var(--gv-radius-full);
   background: var(--gv-surface-pill);
@@ -19,10 +21,87 @@
     color: var(--gv-icon-pill);
     stroke-width: 1.75;
   }
+
+  /* Not in Figma. Outlined: the prototype's "Viewed" on Most liked rows, "Beta" in a menu, "you", a tag on an input
+     (`.pj-mlrow__badge`, `.badge-new`, `.pj-bdg--rm`): white, the control border, secondary text. */
+  &[data-variant='outlined'] {
+    background: var(--gv-surface-panel);
+    border: 1px solid var(--gv-border-control);
+    color: var(--gv-text-secondary);
+
+    > svg {
+      color: var(--gv-icon-strong);
+    }
+  }
+
+  /* Value: a value someone chose, on what it belongs to ("Harbour", "2 tags" on a setup step; the prototype's
+     `.pjsum-pill--on`). Teal 75 under teal 700: no semantic token yet. */
+  &[data-variant='value'] {
+    background: var(--gv-color-teal-75);
+    color: var(--gv-color-teal-700);
+
+    > svg {
+      color: var(--gv-color-teal-700);
+    }
+  }
+
+  /* Count: a number beside a title or a group ("2,184", "2"; the prototype's `.tag-count`): 20 tall, 8 to the sides,
+     Small regular in figures of one width, never narrower than round. */
+  &[data-variant='count'] {
+    height: var(--gv-space-20);
+    min-width: var(--gv-space-20);
+    padding: 0 var(--gv-space-8);
+    justify-content: center;
+    color: var(--gv-text-secondary);
+
+    .gv-pill__label {
+      font: var(--gv-type-small);
+      letter-spacing: var(--gv-type-small-tracking);
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  /* Removable: the × sits 4 from the end, its 16 hit area round. */
+  &[data-removable] {
+    padding-inline-end: var(--gv-space-4);
+  }
 }
 
 .gv-pill__label {
   font: var(--gv-type-small-strong);
   letter-spacing: var(--gv-type-small-strong-tracking);
   white-space: nowrap;
+}
+
+.gv-pill__remove {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--gv-space-16);
+  height: var(--gv-space-16);
+  box-sizing: border-box;
+  border-radius: var(--gv-radius-full);
+  color: var(--gv-icon-default);
+  cursor: pointer;
+  transition:
+    background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+    color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  > svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  &[data-hovered],
+  &[data-pressed] {
+    background: var(--gv-surface-hover-strong);
+    color: var(--gv-icon-primary);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 0;
+  }
 }
