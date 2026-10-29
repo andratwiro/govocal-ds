@@ -1,0 +1,193 @@
+@import '../components/theme.css';
+
+/* Prototype .pj-ap: a bordered box, radius 14. Its head (16 20, a hairline under it) says whose rules apply: "Using
+   platform defaults" with Override, or "Overriding platform defaults". Its body (20) is read-only, faded, until
+   Override. */
+.gv-access-rights {
+  overflow: hidden;
+  border: 1px solid var(--gv-border-card);
+  border-radius: var(--gv-radius-14);
+  background: var(--gv-surface-panel);
+  font-family: var(--gv-font-family);
+}
+
+.gv-access-rights__head {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gv-space-14);
+  min-height: 32px;
+  padding: var(--gv-space-16) var(--gv-space-20);
+  border-block-end: 1px solid var(--gv-border-card);
+}
+
+.gv-access-rights__status {
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+  white-space: nowrap;
+}
+
+.gv-access-rights__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-12);
+  padding: var(--gv-space-20);
+  transition: opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  &[data-read-only] {
+    opacity: 0.62;
+  }
+
+  > .gv-section-label {
+    padding-block: 0;
+  }
+}
+
+/* Who can participate: equal columns, 12 apart (prototype .pj-ocs). */
+.gv-access-rights__who .radio-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--gv-space-12);
+
+  > * {
+    min-width: 0;
+  }
+
+  /* A card's words wrap inside it at three columns. */
+  .gv-choice-card__button {
+    box-sizing: border-box;
+    min-width: 0;
+  }
+}
+
+/* Administrators and managers: nothing else applies (prototype .pj-istrip). */
+.gv-access-rights__strip {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gv-space-8);
+  margin: var(--gv-space-4) 0 0;
+  padding: var(--gv-space-12) var(--gv-space-14);
+  border-radius: var(--gv-radius-10);
+  background: var(--gv-surface-stage);
+  color: var(--gv-text-secondary);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+
+  > svg {
+    flex: none;
+    margin-block-start: var(--gv-space-2);
+  }
+}
+
+/* Require sign-in's settings (prototype .pj-cc): a bordered box, radius 12, sections split by a hairline. */
+.gv-access-rights__config {
+  padding-inline: var(--gv-space-16);
+  border: 1px solid var(--gv-border-card);
+  border-radius: var(--gv-radius-12);
+}
+
+.gv-access-rights__section + .gv-access-rights__section {
+  margin-inline: calc(-1 * var(--gv-space-16));
+  padding-inline: var(--gv-space-16);
+  border-block-start: 1px solid var(--gv-border-card);
+}
+
+.gv-access-rights__section-heading {
+  margin: 0;
+}
+
+/* Chevron + icon + the name in the accent, UI strong (prototype .pj-ss__h). */
+.gv-access-rights__section-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  width: 100%;
+  padding: var(--gv-space-14) 0;
+  border: 0;
+  background: none;
+  color: var(--gv-text-accent);
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  text-align: start;
+  cursor: pointer;
+  outline: none;
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
+    border-radius: var(--gv-radius-4);
+  }
+
+  > svg {
+    flex: none;
+  }
+}
+
+.gv-access-rights__chevron {
+  transition: rotate var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+}
+
+.gv-access-rights__section[data-expanded] .gv-access-rights__chevron {
+  rotate: 90deg;
+}
+
+[dir='rtl'] .gv-access-rights__section:not([data-expanded]) .gv-access-rights__chevron {
+  rotate: 180deg;
+}
+
+/* The panel's content sits on the name's x (chevron 16 + 8). */
+.gv-access-rights__section-panel > * {
+  padding: 0 0 var(--gv-space-16) var(--gv-space-24);
+}
+
+/* Limit to groups: the lead, the groups at full width, the error message button at its own width. */
+.gv-access-rights__panel-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gv-space-10);
+
+  > .react-aria-Select {
+    align-self: stretch;
+    width: auto;
+  }
+}
+
+.gv-access-rights__toggle {
+  .react-aria-SwitchButton {
+    font: var(--gv-type-ui-strong);
+    letter-spacing: var(--gv-type-ui-strong-tracking);
+  }
+
+  [slot='description'] {
+    max-width: 62ch;
+    margin-inline-start: calc(36px + var(--gv-space-8));
+    font: var(--gv-type-small);
+    letter-spacing: var(--gv-type-small-tracking);
+    color: var(--gv-text-secondary);
+  }
+}
+
+.gv-access-rights__toggle-icon {
+  color: var(--gv-icon-default);
+}
+
+.gv-access-rights__lead {
+  margin: 0;
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-access-rights__footer {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-12);
+
+  > :only-child {
+    margin-inline-start: auto;
+  }
+}
