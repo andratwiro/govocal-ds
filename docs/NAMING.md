@@ -46,12 +46,12 @@ Components              src/components/gv/
   Actions               Button · Compact button · Icon button · Menu · Segmented control (with Segmented control item)
   Charts                Bar row · Chart · Dashboard card · Legend row · Statement row
   Data display          Avatar (with Avatar group) · Data table · File list · List header · List header cell · List row
-                        · Property list · Reaction counts · Stat row · Stat tile
+                        · Property list · Reaction counts · Stat row · Stat tile · Table toolbar
   Forms                 Checkbox · Choice card · Date range field · Drop zone · Number field · Option list · Required marker
-                        · Rich text editor · Rich text toolbar · Rich text toolbar button · Select · Switch · Tag picker
-                        · Text field · Title field
-  Layout & containers   Card · Divider
-  Navigation            Breadcrumbs
+                        · Rich text editor · Rich text toolbar · Rich text toolbar button · Search field · Select · Switch
+                        · Tag picker · Text field · Title field
+  Layout & containers   Card · Divider · Panel
+  Navigation            Breadcrumbs · Pagination
   Overlays              Alert dialog · Coachmark · Help popover · Modal · Side panel · Tooltip
   Status & feedback     Badge · Banner · New dot · Review status · Skeleton · Status badge · Toast
 Patterns                src/patterns/

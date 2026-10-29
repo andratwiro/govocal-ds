@@ -1,15 +1,8 @@
 import {test, expect, type Page} from '@playwright/test';
-import {axeViolations} from './axe';
+import {axeViolations, a11yReport} from './axe';
 
 const story = (id: string) => `/storybook/iframe.html?id=${id}&viewMode=story`;
 
-// Accessibility is reported, never blocking (29 Oct 2026): the same as main's a11yReport, until this branch has it.
-function report(violations: string[]) {
-  for (const v of violations) {
-    test.info().annotations.push({type: 'a11y', description: v});
-    console.log(`a11y (reported, not blocking): ${v}`);
-  }
-}
 
 const rows = (page: Page) => page.locator('.gv-data-table tbody tr');
 
@@ -40,7 +33,7 @@ test('pagination: the current page is aria-current, the ends are disabled, focus
   await page.getByRole('button', {name: 'Next page'}).click();
   // Arriving on the last page disables Next: focus moves to the current page, not to the body.
   await expect(page.getByRole('button', {name: 'Page 12'})).toBeFocused();
-  report(await axeViolations(page, '.gv-pagination'));
+  a11yReport(await axeViolations(page, '.gv-pagination'));
 });
 
 test('table toolbar: ← → move the search caret, and leave the field only at its edge', async ({page}) => {
@@ -83,5 +76,5 @@ test('in a panel: search, quick view and pages drive the count; the metric chip 
   // Clear turns every filter off.
   await page.getByRole('button', {name: 'Clear', exact: true}).click();
   await expect(heading).toHaveText('40 ideas');
-  report(await axeViolations(page, '.gv-panel'));
+  a11yReport(await axeViolations(page, '.gv-panel'));
 });

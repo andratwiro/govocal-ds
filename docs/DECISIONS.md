@@ -92,6 +92,24 @@ dashboards, Build tab).
   submenu; Select keeps the list box. Both draw the same rows.
 - Candidates for new Figma tokens: a value badge surface/text pair (teal), a pill hover surface (slate-200).
 
+**Built in the tables package**
+- Pager buttons at radius about 4 → **28 squares at radius 8** → like every other button. Long lists → **seven fixed
+  slots with ellipses**, so the pager keeps its width; one page → **the pager shows with both arrows off**.
+- Collapsible search 28 tall (the prototype) vs fields at 36 → **28 × 180** → it opens in place of a 28 icon button
+  without the row jumping.
+- Assignee as tooltip-only initials → **Avatar and name; "Unassigned" with a dashed ring** → readable without hovering.
+- Header select-all dimmed to .55 → **hidden until the table is hovered or focused, or something is ticked**.
+- Sort mark 12px arrow → **quiet on hover, strong when sorted**.
+- Projects list visibility as a colour bar and a word → **a Status badge over who can see it** → no bespoke colour bar.
+- Toolbar count in Title weight vs regular in the prototype → **Title size, body weight**, as drawn.
+- Export: an icon with no items → **an Export menu: all ideas, all comments, selected ideas (off until something is
+  ticked)**, the real admin's three exports.
+- A Panel head count and a toolbar count saying different numbers → **one count, in the toolbar**, following search,
+  filters and quick views (also fixes "the count ignores the search").
+- Key-only metric chip labelled "Remove this filter" → **"Remove the X filter"** → every chip says what it removes.
+- Token snaps: the 16 avatar's initials 11 → 12px; compact table rows' 18px line → 20 (UI line).
+- Candidates for new Figma tokens: project tile fills by method (teal, blue).
+
 **Prototype bugs found on the way** (not copied into the system):
 - Space and Folder search: an empty popover with no "No results" text, arrow keys don't move, no search icon.
 - Ideation Manage: with every column on, columns run into the "+" column; the count heading ignores the search.

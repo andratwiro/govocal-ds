@@ -316,10 +316,10 @@ export function DataTableTags({tags, max = 2}: DataTableTagsProps) {
   const rest = tags.slice(max);
   return (
     <span className="gv-data-table__tags">
-      {shown.map(t => <Badge key={t}>{t}</Badge>)}
+      {shown.map(t => <Badge key={t} variant="outlined">{t}</Badge>)}
       {rest.length > 0 && (
         <span className="gv-data-table__more" title={rest.join(', ')}>
-          <span aria-hidden><Badge>+{rest.length}</Badge></span>
+          <span aria-hidden><Badge variant="outlined">+{rest.length}</Badge></span>
           <span className="gv-data-table__hidden">and {rest.join(', ')}</span>
         </span>
       )}
