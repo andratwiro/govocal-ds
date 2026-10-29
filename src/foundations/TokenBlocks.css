@@ -1,0 +1,117 @@
+/* The Foundations pages' own blocks (TokenBlocks.tsx). Paint only through var(--gv-*), like the components. */
+
+/* Presenters inside the token tables (a 32px preview cell). */
+.gv-tokens-radius {
+  inline-size: var(--gv-space-56);
+  block-size: var(--gv-space-32);
+  background: var(--gv-surface-info);
+  border: var(--gv-space-1) solid var(--gv-border-selected);
+}
+
+.gv-tokens-type {
+  font-family: var(--gv-font-family);
+  font-size: var(--gv-type-title-size);
+  line-height: var(--gv-type-title-line);
+  color: var(--gv-text-primary);
+  white-space: nowrap;
+}
+
+/* The line box itself, so 16 / 20 / 24 / 32 read as heights. */
+.gv-tokens-type--band {
+  inline-size: fit-content;
+  padding-inline: var(--gv-space-8);
+  background: var(--gv-surface-info);
+}
+
+/* Type roles: each drawn in itself, its numbers and token on the inline end. */
+.gv-tokens-roles {
+  margin: var(--gv-space-16) 0 var(--gv-space-32);
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--gv-space-1) solid var(--gv-divider-strong);
+}
+
+.gv-tokens-role {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--gv-space-24);
+  row-gap: var(--gv-space-4);
+  padding-block: var(--gv-space-16);
+  border-block-end: var(--gv-space-1) solid var(--gv-divider-default);
+}
+
+.gv-tokens-role__sample {
+  color: var(--gv-text-primary);
+}
+
+.gv-tokens-role__spec {
+  grid-row: span 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--gv-space-4);
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-primary);
+}
+
+/* Token names keep the browser's monospace face; size and colour come from the tokens. */
+.gv-tokens-role__spec code,
+.gv-tokens-shadow code {
+  font-size: var(--gv-type-small-size);
+  line-height: var(--gv-type-small-line);
+  font-weight: var(--gv-type-small-weight);
+  color: var(--gv-text-secondary);
+}
+
+.gv-tokens-role__use {
+  margin: 0;
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-tokens-role__users,
+.gv-tokens-role__users p {
+  margin: 0;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-meta);
+}
+
+.gv-tokens-role__users summary {
+  inline-size: fit-content;
+  cursor: pointer;
+}
+
+.gv-tokens-role__users summary:focus-visible {
+  outline: var(--gv-space-2) solid var(--gv-border-selected);
+  outline-offset: var(--gv-space-2);
+  border-radius: var(--gv-radius-2);
+}
+
+.gv-tokens-role__users p {
+  margin-block-start: var(--gv-space-4);
+  max-inline-size: 48rem;
+}
+
+/* Shadows: panels on the stage, with room for the deepest blur. */
+.gv-tokens-shadows {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--gv-space-48);
+  margin: var(--gv-space-16) 0 var(--gv-space-32);
+  padding: var(--gv-space-48) var(--gv-space-48) var(--gv-space-104);
+  list-style: none;
+  background: var(--gv-surface-stage);
+  border-radius: var(--gv-radius-12);
+}
+
+.gv-tokens-shadow {
+  display: flex;
+  align-items: flex-end;
+  block-size: var(--gv-space-104);
+  padding: var(--gv-space-12);
+  background: var(--gv-surface-panel);
+  border-radius: var(--gv-radius-8);
+}

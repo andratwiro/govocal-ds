@@ -33,7 +33,9 @@ const preview: Preview = {
     options: {
       storySort: {
         method: 'alphabetical',
-        order: ['Overview', ['Welcome', 'Foundations', 'Icons'], 'Components', 'Patterns', 'Back office', 'Base']
+        order: ['Overview', ['Welcome', 'Accessibility'], 'Foundations',
+          ['Colour', 'Typography', 'Spacing', 'Radius', 'Shadows', 'Motion', 'Icons', 'Illustrations'],
+          'Components', 'Patterns', 'Back office', 'Base']
       }
     }
   }

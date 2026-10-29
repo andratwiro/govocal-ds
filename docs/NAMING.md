@@ -40,7 +40,8 @@ to drop after a month).
 entry, stories keep their file order.
 
 ```
-Overview                Foundations · Icons
+Overview                Welcome · Accessibility
+Foundations             Colour · Typography · Spacing · Radius · Shadows · Motion · Icons · Illustrations (a page each)
 Components              src/components/gv/
   Actions               Button · Compact button · Icon button · Segmented control (with Segmented control item)
   Charts                Bar row · Chart · Dashboard card · Legend row · Statement row

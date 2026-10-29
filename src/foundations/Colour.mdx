@@ -1,0 +1,54 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import {Tokens} from './TokenBlocks';
+
+<Meta title="Foundations/Colour" />
+
+# Colour
+
+The colour variables from the Figma Foundations page, pulled with `npm run tokens:pull`. Primitives hold the raw
+values; the semantic tokens name a role and point at a primitive, and components paint only with those. Right-click a
+row to see which components use it.
+
+## Primitives
+
+<Tokens category="Colour primitives @presenter Color" view="card" />
+
+## Semantic
+
+### Surface
+<Tokens category="surface @presenter Color" />
+
+### Text
+<Tokens category="text @presenter Color" />
+
+### Border
+<Tokens category="border @presenter Color" />
+
+### Icon
+<Tokens category="icon @presenter Color" />
+
+### Action
+<Tokens category="action @presenter Color" />
+
+### Control
+<Tokens category="control @presenter Color" />
+
+### State
+<Tokens category="state @presenter Color" />
+
+### Avatar
+<Tokens category="avatar @presenter Color" />
+
+### Divider
+<Tokens category="divider @presenter Color" />
+
+### Chart
+
+The data-viz palette Insights uses.
+
+<Tokens category="chart @presenter Color" />
+
+## Not in Figma
+
+**Focus ring**: the code draws `outline: 2px solid var(--gv-border-selected)` at offset `2px`. Figma has no focus
+token yet.

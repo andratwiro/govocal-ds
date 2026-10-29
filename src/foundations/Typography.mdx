@@ -1,0 +1,26 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import {Tokens, TypeRoles} from './TokenBlocks';
+
+<Meta title="Foundations/Typography" />
+
+# Typography
+
+Nine type roles from the Figma Foundations page, on the 12 · 13 · 14 · 16 · 20 · 28 scale, Regular and Medium only:
+hierarchy comes from size steps and grey versus black, not from extra weights. A component sets a role with
+`font: var(--gv-type-<role>)` and `letter-spacing: var(--gv-type-<role>-tracking)`.
+
+## Roles
+
+<TypeRoles />
+
+## Family
+<Tokens category="Font family @presenter FontFamily" />
+
+## Size
+<Tokens category="Font size @presenter FontSize" />
+
+## Line height
+<Tokens category="Line height @presenter LineHeight" />
+
+## Weight
+<Tokens category="Font weight @presenter FontWeight" />
