@@ -1,4 +1,5 @@
 import {test, expect} from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 test('projects follows the real admin: views, filters, a full project table', async ({page}) => {
   await page.goto('/backoffice/#/projects');
@@ -40,6 +41,136 @@ test('rows use the gv Status, Avatar and icon button; New project opens its menu
 test('projects names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/projects');
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
-  // Avatar, Status, Icon button and Pill now exist in src/components/gv; only the project thumbnail is missing.
+  // Avatar, Status, Icon button and Pill now exist in src/components/gv; the project thumbnail is missing.
+  // Arrange projects reorders with buttons until the system has drag and drop.
   expect(gaps).toEqual(['Project thumbnail']);
+  await page.getByRole('tab', {name: 'Arrange projects'}).click();
+  await expect(page.locator('[data-gap="Drag-and-drop reordering"]').first()).toBeVisible();
+  // The Calendar lists the month's projects where the real admin draws a timeline; templates have no image yet.
+  await page.getByRole('tab', {name: 'Calendar'}).click();
+  await expect(page.locator('[data-gap="Project timeline"]')).toBeVisible();
+  await page.getByRole('button', {name: 'New project'}).click();
+  await page.getByRole('menuitem', {name: 'Use a template'}).click();
+  await expect(page.locator('[data-gap="Template image"]').first()).toBeVisible();
+});
+
+// ── First clicks: the list's own controls (the overview and phase screens are their own specs) ──
+const bodyRows = (page: import('@playwright/test').Page) =>
+  page.getByRole('grid', {name: 'Projects'}).getByRole('rowgroup').nth(1).getByRole('row');
+const axe = async (page: import('@playwright/test').Page, selector: string) => {
+  // The Gap marker's own label is scaffolding of the demo, not the page: it is left out of the check.
+  const {violations} = await new AxeBuilder({page}).include(selector).exclude('.bo-gap-label')
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+  expect(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`)).toEqual([]);
+};
+
+// The prototype's From scratch: a Space and a Folder, neither required; the project starts as an untitled draft.
+test('New project → From scratch asks for a space and folder, then adds an untitled draft', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  await page.getByRole('button', {name: 'New project'}).click();
+  await page.getByRole('menuitem', {name: 'From scratch'}).click();
+  const modal = page.getByRole('dialog', {name: 'New project'});
+  await expect(modal.getByRole('button', {name: /Space/})).toBeVisible();
+  await axe(page, '.gv-modal');
+  await modal.getByRole('button', {name: /Folder/}).click();
+  await page.getByRole('option', {name: 'Neighbourhood services'}).click();
+  await modal.getByRole('button', {name: 'Create project'}).click();
+  await expect(modal).toHaveCount(0);
+  const row = page.getByRole('row', {name: /Untitled project/});
+  await expect(row.locator('.gv-status')).toHaveText('Draft');
+  await expect(row).toContainText('Neighbourhood services');
+  await expect(page.getByText('Project created')).toBeVisible();
+  await expect(bodyRows(page)).toHaveCount(9);
+});
+
+test('Use a template opens the gallery; Use template asks for a title, then adds the draft', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  await page.getByRole('button', {name: 'New project'}).click();
+  await page.getByRole('menuitem', {name: 'Use a template'}).click();
+  const gallery = page.getByRole('dialog', {name: 'Start from a template'});
+  await expect(gallery.getByText('9 templates available')).toBeVisible();
+  await axe(page, '.gv-modal');
+  await gallery.getByRole('searchbox', {name: 'Search the templates'}).fill('budget');
+  await expect(gallery.getByText('1 templates available')).toBeVisible();
+  await gallery.getByRole('button', {name: 'Use template: Participatory budget'}).click();
+  const create = page.getByRole('dialog', {name: "Create a project based on the template 'Participatory budget'"});
+  await create.getByRole('textbox', {name: 'The title of your project'}).fill('Budget for the parks');
+  await create.getByRole('button', {name: 'Create project'}).click();
+  await expect(page.getByRole('row', {name: /Budget for the parks/}).locator('.gv-status')).toHaveText('Draft');
+});
+
+test('New folder opens a folder form; Create adds the folder to the Folders view', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  await page.getByRole('button', {name: 'New folder'}).click();
+  const modal = page.getByRole('dialog', {name: 'New folder'});
+  await expect(modal.getByRole('button', {name: 'Create folder'})).toBeDisabled();
+  await modal.getByRole('textbox', {name: 'Folder name'}).fill('Parks and play');
+  await modal.getByRole('button', {name: 'Create folder'}).click();
+  await expect(page.getByText('Folder created')).toBeVisible();
+  await page.getByRole('tab', {name: 'Folders'}).click();
+  await expect(page.getByRole('grid', {name: 'Folders'}).getByRole('row', {name: /Parks and play/})).toBeVisible();
+});
+
+test('a row click opens the project overview', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  await page.getByRole('row', {name: /Harbour Plan 2030/}).getByText('Selected groups').click();
+  await expect(page).toHaveURL(/#\/projects\/harbour-plan$/);
+});
+
+test('row actions duplicate, move to a folder and delete on the list', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  await page.getByRole('button', {name: 'Actions for Harbour Plan 2030'}).click();
+  await page.getByRole('menuitem', {name: 'Duplicate'}).click();
+  await expect(page.getByRole('row', {name: /Copy of Harbour Plan 2030/})).toBeVisible();
+  await expect(bodyRows(page)).toHaveCount(9);
+  await expect(page.getByText('Project duplicated')).toBeVisible();
+
+  await page.getByRole('button', {name: 'Actions for Harbour Plan 2030', exact: true}).click();
+  await page.getByRole('menuitem', {name: 'Move to folder'}).click();
+  const move = page.getByRole('dialog', {name: 'Move to folder'});
+  await move.getByRole('button', {name: /Folder/}).click();
+  await page.getByRole('option', {name: 'Neighbourhood services'}).click();
+  await move.getByRole('button', {name: 'Move', exact: true}).click();
+  await expect(page.getByRole('row', {name: /^Harbour Plan 2030/})).toContainText('Neighbourhood services');
+
+  await page.getByRole('button', {name: 'Actions for Clean air week'}).click();
+  await page.getByRole('menuitem', {name: 'Delete'}).click();
+  const confirm = page.getByRole('dialog', {name: 'Delete this project?'});
+  await confirm.getByRole('button', {name: 'Delete project'}).click();
+  await expect(page.getByRole('row', {name: /Clean air week/})).toHaveCount(0);
+  await expect(bodyRows(page)).toHaveCount(8);
+});
+
+test('search, sort and pending approval change the list', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  await page.getByRole('searchbox', {name: 'Search projects'}).fill('harbour');
+  await expect(bodyRows(page)).toHaveCount(1);
+  await page.getByRole('searchbox', {name: 'Search projects'}).fill('');
+  await page.getByRole('button', {name: /Sort/}).click();
+  await page.getByRole('option', {name: 'Alphabetically (a-z)'}).click();
+  await expect(bodyRows(page).first()).toContainText('Clean air week');
+  await page.getByRole('button', {name: 'Pending approval'}).click();
+  await expect(page.getByRole('button', {name: 'Pending approval'})).toHaveAttribute('aria-pressed', 'true');
+  await expect(bodyRows(page)).toHaveCount(2);
+});
+
+test('Folders, Spaces, Calendar and Arrange projects tabs show their views', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  await page.getByRole('tab', {name: 'Folders'}).click();
+  const folders = page.getByRole('grid', {name: 'Folders'});
+  await expect(folders.getByRole('row', {name: /Neighbourhood services/})).toContainText('2 projects');
+  await page.getByRole('tab', {name: 'Spaces'}).click();
+  await expect(page.getByRole('grid', {name: 'Spaces'}).getByRole('row', {name: /City centre/})).toBeVisible();
+  await page.getByRole('tab', {name: 'Calendar'}).click();
+  await expect(page.getByRole('heading', {name: 'October 2026'})).toBeVisible();
+  await expect(page.getByRole('list', {name: 'October 2026'}).getByRole('listitem').first()).toContainText('Green Corridors for Larkvale');
+  await page.getByRole('button', {name: 'Next month'}).click();
+  await expect(page.getByRole('heading', {name: 'November 2026'})).toBeVisible();
+  await axe(page, '.bo-page');
+  await page.getByRole('tab', {name: 'Arrange projects'}).click();
+  const order = page.getByRole('list', {name: 'Project order'});
+  await expect(order.getByRole('listitem').first()).toContainText('Green Corridors for Larkvale');
+  await page.getByRole('button', {name: 'Move Green Corridors for Larkvale down'}).click();
+  await expect(order.getByRole('listitem').first()).toContainText('Harbour Plan 2030');
+  await expect(order.getByRole('listitem').nth(1)).toContainText('Green Corridors for Larkvale');
 });
