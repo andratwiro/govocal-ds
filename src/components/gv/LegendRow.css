@@ -6,6 +6,21 @@
   gap: var(--gv-space-8);
   width: 100%;
   box-sizing: border-box;
+  border-radius: var(--gv-radius-4);
+  outline: none;
+  transition: opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+}
+
+/* Linked to a chart (Not in Figma): hover or focus picks its series out, the other rows dim with their series. */
+.gv-legend-row[tabindex]:focus-visible {
+  outline: 2px solid var(--gv-border-selected);
+  outline-offset: 2px;
+}
+.gv-legend-row[data-highlighted] .gv-legend-row__label {
+  color: var(--gv-text-primary);
+}
+.gv-legend-row[data-dimmed] {
+  opacity: 0.4;
 }
 
 .gv-legend-row__swatch {
@@ -26,8 +41,21 @@
   white-space: nowrap;
 }
 
+/* The count column (the Common Ground panel): primary, right-aligned, so stacked rows line their counts up. */
+.gv-legend-row__count {
+  flex-shrink: 0;
+  min-width: 40px;
+  text-align: end;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
 .gv-legend-row__value {
   flex-shrink: 0;
+  min-width: 40px;
+  text-align: end;
   font: var(--gv-type-small);
   letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);

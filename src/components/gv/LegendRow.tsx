@@ -8,13 +8,39 @@ export interface LegendRowProps {
   label: ReactNode;
   /** The value shown at the end of the row (e.g. a percentage). */
   value: string;
+  /**
+   * A count before the value, in its own column ("88" then "14%"): the Common Ground panel's "Where people stand".
+   * A number is grouped for reading (1,284).
+   */
+  count?: number | string;
+  /** Its series is picked out (in the chart beside it): the label goes primary. */
+  highlighted?: boolean;
+  /** Another series is picked out: the row dims with its series. */
+  dimmed?: boolean;
+  /**
+   * Hovering or focusing the row picks its series out (`true`), leaving gives `false`. When set, the row takes a tab
+   * stop so the keyboard reaches it too. Wire it to a chart's `highlightedSeries` (Not in Figma).
+   */
+  onHighlightChange?: (on: boolean) => void;
 }
 
-export function LegendRow({color, label, value}: LegendRowProps) {
+/** A swatch, a label and its value: the key under a stacked bar or beside a chart (Figma "Legend row"). */
+export function LegendRow({color, label, value, count, highlighted, dimmed, onHighlightChange: on}: LegendRowProps) {
   return (
-    <div className="gv-legend-row">
+    <div
+      className="gv-legend-row"
+      data-highlighted={highlighted || undefined}
+      data-dimmed={dimmed || undefined}
+      tabIndex={on ? 0 : undefined}
+      onPointerEnter={on && (() => on(true))}
+      onPointerLeave={on && (() => on(false))}
+      onFocus={on && (() => on(true))}
+      onBlur={on && (() => on(false))}>
       <span className="gv-legend-row__swatch" aria-hidden="true" style={{background: `var(${color})`}} />
       <span className="gv-legend-row__label">{label}</span>
+      {count != null && (
+        <span className="gv-legend-row__count">{typeof count === 'number' ? count.toLocaleString('en-GB') : count}</span>
+      )}
       <span className="gv-legend-row__value">{value}</span>
     </div>
   );
