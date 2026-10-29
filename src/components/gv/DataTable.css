@@ -8,6 +8,8 @@
  * prototype's Manage `.pj-th`). Rows hover with the soft hover surface.
  */
 .gv-data-table {
+  /* The two edges' padding: 20 here, 16 framed, 8 compact. */
+  --gv-data-table-edge: var(--gv-space-20);
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
@@ -23,6 +25,7 @@
 
   /* Standing alone (the prototype's Projects list): card border, radius 10, a tinted header, 16px edges. */
   &[data-framed] {
+    --gv-data-table-edge: var(--gv-space-16);
     border: 1px solid var(--gv-border-card);
     border-radius: var(--gv-radius-10);
     overflow: hidden;
@@ -35,16 +38,6 @@
 
     .gv-data-table__cell {
       padding-inline: var(--gv-space-12);
-    }
-
-    .gv-data-table__column:first-child,
-    .gv-data-table__cell:first-child {
-      padding-inline-start: var(--gv-space-16);
-    }
-
-    .gv-data-table__column:last-child,
-    .gv-data-table__cell:last-child {
-      padding-inline-end: var(--gv-space-16);
     }
   }
 }
@@ -157,7 +150,8 @@
     outline-offset: -2px;
   }
 
-  &:last-child .gv-data-table__cell {
+  .gv-data-table:not([data-virtualized]) &:last-child .gv-data-table__cell,
+  &[data-last] .gv-data-table__cell {
     border-bottom: 0;
   }
 }
@@ -187,15 +181,17 @@
   }
 }
 
-/* The two edges: 20px in, as the prototype's full-bleed list. */
-.gv-data-table__column:first-child,
-.gv-data-table__cell:first-child {
-  padding-inline-start: var(--gv-space-20);
+/* The two edges: 20px in, as the prototype's full-bleed list (16 framed, 8 compact: --gv-data-table-edge). A plain
+   table's first and last cells; virtualised, each cell sits alone in its own box, so the table marks the edge cells
+   (`data-edge`, DataTable.tsx). */
+.gv-data-table:not([data-virtualized]) :is(.gv-data-table__column, .gv-data-table__cell):first-child,
+.gv-data-table[data-virtualized] :is(.gv-data-table__column, .gv-data-table__cell)[data-edge~='start'] {
+  padding-inline-start: var(--gv-data-table-edge);
 }
 
-.gv-data-table__column:last-child,
-.gv-data-table__cell:last-child {
-  padding-inline-end: var(--gv-space-20);
+.gv-data-table:not([data-virtualized]) :is(.gv-data-table__column, .gv-data-table__cell):last-child,
+.gv-data-table[data-virtualized] :is(.gv-data-table__column, .gv-data-table__cell)[data-edge~='end'] {
+  padding-inline-end: var(--gv-data-table-edge);
 }
 
 /* The check column: as narrow as its gv Checkbox. */
@@ -259,15 +255,25 @@
   border: 0;
 }
 
-/* Rounded ends of a run of checked rows. */
-.gv-data-table__row[data-selected]:not(.gv-data-table__row[data-selected] + .gv-data-table__row[data-selected]) {
+/* Rounded ends of a run of checked rows (virtualised: the runs and edges the table marks). */
+.gv-data-table:not([data-virtualized]) .gv-data-table__row[data-selected]:not(.gv-data-table__row[data-selected] + .gv-data-table__row[data-selected]) {
   .gv-data-table__cell:first-child { border-start-start-radius: var(--gv-radius-8); }
   .gv-data-table__cell:last-child { border-start-end-radius: var(--gv-radius-8); }
 }
 
-.gv-data-table__row[data-selected]:not(:has(+ .gv-data-table__row[data-selected])) {
+.gv-data-table:not([data-virtualized]) .gv-data-table__row[data-selected]:not(:has(+ .gv-data-table__row[data-selected])) {
   .gv-data-table__cell:first-child { border-end-start-radius: var(--gv-radius-8); }
   .gv-data-table__cell:last-child { border-end-end-radius: var(--gv-radius-8); }
+}
+
+.gv-data-table__row[data-run~='start'] {
+  .gv-data-table__cell[data-edge~='start'] { border-start-start-radius: var(--gv-radius-8); }
+  .gv-data-table__cell[data-edge~='end'] { border-start-end-radius: var(--gv-radius-8); }
+}
+
+.gv-data-table__row[data-run~='end'] {
+  .gv-data-table__cell[data-edge~='start'] { border-end-start-radius: var(--gv-radius-8); }
+  .gv-data-table__cell[data-edge~='end'] { border-end-end-radius: var(--gv-radius-8); }
 }
 
 /* The open row (`openKey`: the record a Side panel shows): the strong hover tint, and a 2px bar in the selected
@@ -277,7 +283,8 @@
     background: var(--gv-surface-hover-strong);
   }
 
-  .gv-data-table__cell:first-child {
+  .gv-data-table:not([data-virtualized]) & .gv-data-table__cell:first-child,
+  .gv-data-table__cell[data-edge~='start'] {
     box-shadow: inset 2px 0 0 var(--gv-border-selected);
 
     &:dir(rtl) {
@@ -406,6 +413,8 @@
 
 /* Compact (the prototype's Manage input table). */
 .gv-data-table[data-density='compact'] {
+  --gv-data-table-edge: var(--gv-space-8);
+
   .gv-data-table__column {
     height: 32px;
     padding-block: 0;
@@ -415,16 +424,6 @@
     padding-block: var(--gv-space-9);
     line-height: var(--gv-type-ui-line);
     vertical-align: top;
-  }
-
-  .gv-data-table__column:first-child,
-  .gv-data-table__cell:first-child {
-    padding-inline-start: var(--gv-space-8);
-  }
-
-  .gv-data-table__column:last-child,
-  .gv-data-table__cell:last-child {
-    padding-inline-end: var(--gv-space-8);
   }
 
   .gv-data-table__check .gv-checkbox {
@@ -450,4 +449,164 @@
   .gv-data-table__header .gv-data-table__check .gv-checkbox:has([data-selected], [data-indeterminate]) {
     opacity: 1;
   }
+}
+
+/*
+ * Virtualised (`isVirtualized`): React Aria's TableLayout places every header, row and cell in a box of its own
+ * (absolutely positioned divs), and the table scrolls inside itself. The look stays the plain table's; what the
+ * boxes change is fixed here. The layout needs the row and header heights and the self-sized columns' widths as
+ * numbers: they are registered lengths (so the browser computes them to px), drawn from the tokens below and read by
+ * DataTable.tsx before the first paint.
+ */
+@property --gv-data-table-row-height {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+@property --gv-data-table-head-height {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+@property --gv-data-table-check-width {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+@property --gv-data-table-end-width {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+.gv-data-table[data-virtualized] {
+  /* A row: its padding, one line (or a line over a sub-line), the 1px hairline. */
+  --gv-data-table-row-height: calc(2 * var(--gv-space-12) + var(--gv-type-ui-line) + 1px);
+  /* The header: its padding, a sortable label's block, the 1px rule. */
+  --gv-data-table-head-height: calc(2 * var(--gv-space-8) + 2 * var(--gv-space-2) + var(--gv-type-small-strong-line) + 1px);
+  /* The check column: the edge, the 15px box, 4 after it. The "…" and "+" columns: 8, a 28 icon button, the edge. */
+  --gv-data-table-check-width: calc(var(--gv-data-table-edge) + var(--gv-space-15) + var(--gv-space-4));
+  --gv-data-table-end-width: calc(var(--gv-space-8) + var(--gv-size-control-28) + var(--gv-data-table-edge));
+
+  &[data-row-lines='2'] {
+    --gv-data-table-row-height: calc(2 * var(--gv-space-12) + var(--gv-type-ui-line) + var(--gv-space-2) + var(--gv-type-small-line) + 1px);
+  }
+
+  &[data-framed] {
+    --gv-data-table-end-width: calc(var(--gv-space-12) + var(--gv-size-control-28) + var(--gv-data-table-edge));
+  }
+
+  &[data-density='compact'] {
+    --gv-data-table-row-height: calc(2 * var(--gv-space-9) + var(--gv-type-ui-line) + 1px);
+    --gv-data-table-head-height: var(--gv-size-control-32);
+
+    &[data-row-lines='2'] {
+      --gv-data-table-row-height: calc(2 * var(--gv-space-9) + 2 * var(--gv-type-ui-line) + 1px);
+    }
+  }
+
+  /* It scrolls inside itself: it fills a parent with a height, or takes its own (`style`). A row brought into view by
+     the keyboard stops below the pinned header, not under it. Its width and height include a framed table's border, as
+     a plain table's do (a content-box block 2px wider than its box made the layout measure itself without end). */
+  display: block;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: auto;
+  scroll-padding-block-start: var(--gv-data-table-head-height);
+
+  /* Each part fills the box the layout gives it (the check, "…" and "+" columns too: the layout sizes them). */
+  .gv-data-table__header,
+  .gv-data-table__header > div > [role='row'],
+  .gv-data-table__row,
+  .gv-data-table__column,
+  .gv-data-table__cell {
+    box-sizing: border-box;
+    width: auto;
+    height: 100%;
+  }
+
+  /* The header stays on top as rows scroll under it, so it has a fill. */
+  .gv-data-table__column {
+    display: flex;
+    align-items: center;
+    background: var(--gv-surface-panel);
+
+    &[data-align='number'] { justify-content: center; }
+    &[data-align='options'],
+    &.gv-data-table__add { justify-content: flex-end; }
+  }
+
+  &[data-framed] .gv-data-table__column {
+    background: var(--gv-surface-stage);
+  }
+
+  /* A cell centres its one line on the row (compact: on the row's first line, as the plain table) and clips it with
+     an ellipsis. The fit holds 4px of room around its content, so a focus ring inside isn't cut. */
+  .gv-data-table__cell {
+    display: flex;
+    align-items: center;
+  }
+
+  &[data-density='compact'] .gv-data-table__cell {
+    align-items: flex-start;
+  }
+
+  .gv-data-table__fit {
+    flex: 1;
+    min-width: 0;
+    padding: var(--gv-space-4);
+    margin: calc(-1 * var(--gv-space-4));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .gv-data-table__stack > *,
+  .gv-data-table__assignee-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* A row's focus ring above its cells (each cell is a box of its own that would cover it). */
+  .gv-data-table__row {
+    position: relative;
+
+    &[data-focus-visible] {
+      outline: none;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        outline: 2px solid var(--gv-border-selected);
+        outline-offset: -2px;
+        pointer-events: none;
+      }
+    }
+  }
+
+}
+
+/* The "Loading more…" row (`DataTableBody`'s `onLoadMore` / `isLoading`): quiet words centred under the last row. */
+.gv-data-table__loading {
+  > td {
+    padding: var(--gv-space-12) var(--gv-space-8);
+    text-align: center;
+  }
+
+  .gv-data-table[data-virtualized] & {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+}
+
+.gv-data-table__loading-label {
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
 }

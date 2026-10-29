@@ -65,7 +65,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 
 ## Components / Data display
 - **Avatar** `Avatar`: A small round avatar: initials on a filled circle, a photo over them, or an empty/unassigned ring. Stories: All Variants, Filled, Unassigned, Image, Image Fails, Stack.
-- **Data table** (not in Figma) Stories: All Variants, Default, Sorted Ascending, Sorted Descending, Selectable Some Selected, Selectable Without Select All, Person Cell, Numeric Columns, Row Options, Empty, With Thumbnails, Assignee Column, Tags Column, Projects List Cells, Manage Inputs, In A Panel, With Bulk Selection And An Open Row, Right To Left.
+- **Data table** (not in Figma) Stories: All Variants, Default, Sorted Ascending, Sorted Descending, Selectable Some Selected, Selectable Without Select All, Person Cell, Numeric Columns, Row Options, Empty, With Thumbnails, Assignee Column, Tags Column, Projects List Cells, Manage Inputs, In A Panel, With Bulk Selection And An Open Row, Virtualized5000 People, Virtualized Loading More, Right To Left.
 - **File list** `FileList` (not in Figma): File list: one row per attachment — a file icon, its name and "PDF · 0 KB", then View / Delete. Stories: Default, Empty, With Add Button, Deleting, In A Dialog.
 - **Illustration** `Illustration` (not in Figma): An illustration: one self-contained SVG file drawn inline, so it paints with the page's `--gv-*` tokens. Stories: All Variants, Auto, Once, Loop, Hover, Still, Sizes, Cover, With Alt, Timings.
 - **List header** `ListHeader` Stories: All Variants, Ideation, Common Ground, Proposals, Voting, Manage Table, In A Table.
