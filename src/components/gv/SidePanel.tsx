@@ -94,8 +94,14 @@ export function SidePanel({
       cancelAnimationFrame(frame);
       const lost = !document.activeElement || document.activeElement === document.body;
       if (focusInside.current || lost) {
-        const target = returnRef.current?.() ?? opener.current;
-        if (target?.isConnected) target.focus();
+        // After the commit, not in it: React drops the events a focus fires during a commit, so a list getting focus
+        // back (a Data table's row) wouldn't hear it, and its arrow keys would stop moving focus.
+        queueMicrotask(() => {
+          const now = document.activeElement;
+          if (now && now !== document.body) return;
+          const target = returnRef.current?.() ?? opener.current;
+          if (target?.isConnected) target.focus();
+        });
       }
       focusInside.current = false;
     };
