@@ -2,7 +2,7 @@
 
 Method note (applies to every section). Each Storybook was checked live on 29 Oct 2026. I fetched its `index.json` (the full sidebar tree: entry count, docs pages vs stories, tags) and its `project.json` (the Storybook version, build date from `generatedAt`, framework and addons). Toolbars (theme, brand, locale, RTL) come from each repo's `.storybook/preview.*`, read through the GitHub API. Repo activity and stars come from the GitHub API, and package versions and weekly downloads from registry.npmjs.org and api.npmjs.org. Wherever a finding says "index.json" or "project.json", the URL is that Storybook's root plus `index.json` or `project.json`.
 
-Ownership tags, added at the coordinator's request:
+Ownership tags:
 - **[DESIGN-OWNED]**: the practice doesn't depend on the implementation. It stays useful whatever component library, styling technology or packaging the developers choose (token definitions, naming, states, behaviour specs, content rules, acceptance criteria, Figma hygiene, docs).
 - **[DEV-OWNED]**: the practice is an implementation decision.
 - **[DESIGN-OWNED spec + DEV-OWNED mechanism]**: the "what" is a design artefact and the "how" is code.
@@ -83,7 +83,7 @@ Sources for the table: each Storybook's `index.json` and `project.json` (e.g. [t
 - *Steal this: page-level docs* (Public / Internal page types, "Choosing a page type", "Composing your own page", "Reading the anatomy"). — [Reading the anatomy](https://amsterdam.github.io/design-system/?path=/docs/pages-guidelines-reading-the-anatomy--docs), [Form Flow](https://amsterdam.github.io/design-system/?path=/docs/pages-public-form-flow--docs) **[DESIGN-OWNED]**
 - *Steal this: a component docs anatomy that includes writing rules and the component's own tokens.* Button docs = Title → Description → Primary → Controls → Usage guidelines (When to use / When not to use / How to use / **How to write**) → Examples. A `DesignTokensTable` is fed from `button.tokens.json`. — [Button docs](https://amsterdam.github.io/design-system/?path=/docs/components-buttons-button--docs), [Button.docs.mdx](https://github.com/Amsterdam/design-system/blob/main/storybook/src/components/Button/Button.docs.mdx) **[DESIGN-OWNED]**
 - *Steal this: a public MCP endpoint and an "AI assistance" page.* It exposes `list-all-documentation`, `get-documentation` and `get-documentation-for-story` at `https://main--68db9df886b46f139748c074.chromatic.com/mcp`, tracking `main`. — [AI assistance](https://amsterdam.github.io/design-system/?path=/docs/docs-guidelines-ai-assistance--docs), [source](https://github.com/Amsterdam/design-system/blob/main/storybook/src/docs/guidelines/ai-assistance.docs.mdx) **[DEV-OWNED infrastructure; serves DESIGN-OWNED content]**
-- *Steal this: a definition of done a skeptic can audit.* It covers manual screen-reader checks (NVDA+Chrome, VoiceOver+Safari), 200% zoom, maximum text size, WCAG 1.4.12 text spacing, forced colours, RTL, no-CSS and no-JS degradation, and token hygiene ("All tokens used are defined. No unused tokens are defined."). — [definition-of-done.md](https://github.com/Amsterdam/design-system/blob/main/documentation/definition-of-done.md) **[DESIGN-OWNED criteria + DEV-OWNED checks]**
+- *Steal this: a definition of done anyone can audit.* It covers manual screen-reader checks (NVDA+Chrome, VoiceOver+Safari), 200% zoom, maximum text size, WCAG 1.4.12 text spacing, forced colours, RTL, no-CSS and no-JS degradation, and token hygiene ("All tokens used are defined. No unused tokens are defined."). — [definition-of-done.md](https://github.com/Amsterdam/design-system/blob/main/documentation/definition-of-done.md) **[DESIGN-OWNED criteria + DEV-OWNED checks]**
 - *Weak*: one brand only (no theme switcher); RTL is a manual "additional" check, with no RTL stories (only "Translated" stories, e.g. [Form Field Status :: Translated](https://amsterdam.github.io/design-system/?path=/story/components-forms-form-field-status--translated)); usage examples are Dutch-centric (e.g. "Use the verb's infinitive form in Dutch").
 
 **4. B.C. Government Design System, React components: the public-sector system built on React Aria**
@@ -136,7 +136,7 @@ Sources for the table: each Storybook's `index.json` and `project.json` (e.g. [t
 - **Guidance reference: GOV.UK Design System (not Storybook).** The Button page runs: When to use this component → How it works → one section per variant (Default, Start, Secondary, Warning, on dark backgrounds, Disabled) → Grouping buttons → "Stop users from accidentally sending information more than once" → **Research on this component** → **Recent changes** → **Help improve this component** → Need help?. Each example has HTML and Nunjucks; claims cite evidence ("using green as the colour of start buttons improved click-through rates"). — [GOV.UK Button](https://design-system.service.gov.uk/components/button/) **[DESIGN-OWNED]**
 
 ### Inferences
-- For a cities SaaS that must win designers *and* skeptical developers, the ranking puts NL Design System and Designsystemet first for the theming model and spec/code separation. Amsterdam and B.C. Gov follow for Storybook craft: SB 10.6, MCP, accessibility checks that fail CI, changelog and templates. B.C. Gov is also the only civic peer on React Aria.
+- For a cities SaaS that must serve designers *and* developers, the ranking puts NL Design System and Designsystemet first for the theming model and spec/code separation. Amsterdam and B.C. Gov follow for Storybook craft: SB 10.6, MCP, accessibility checks that fail CI, changelog and templates. B.C. Gov is also the only civic peer on React Aria.
 - govocal-ds's stated "every story in LTR and Arabic RTL" goes beyond every public-sector Storybook checked. Only Kaizen (React Aria, 79 RTL sticker sheets plus a toolbar) and Adobe S2 (a 35-locale picker) are comparable, so this is a differentiator worth showing off in the audit.
 - The civic systems that publish many organisation themes put them on a toolbar or as sibling stories (CMS, SGDS, AgDS, Hopper, NLDS themes). None found let a viewer type in a brand colour live inside Storybook; Designsystemet keeps that in a separate Theme Builder app.
 
@@ -163,7 +163,7 @@ Every top-8 entry is in production and was rebuilt or released in the last three
 - Versioning maturity varies: B.C. Gov 0.9.1 (pre-1.0), Italia 1.0.0-beta.5, Designsystemet 1.23.0, Amsterdam 4.5.0, CMS 18.1.0, VA 56.24.0, S2 1.8.2. — npm pages ([B.C.](https://www.npmjs.com/package/@bcgov/design-system-react-components), [VA](https://www.npmjs.com/package/@department-of-veterans-affairs/component-library))
 
 ### Inferences
-- With Storybook 10.6 plus docs/a11y/MCP addons, govocal-ds sits in the same cohort as Amsterdam and B.C. Gov, which are its most current public-sector peers. A skeptical developer comparing `project.json` files would see parity, not a toy.
+- With Storybook 10.6 plus docs/a11y/MCP addons, govocal-ds sits in the same cohort as Amsterdam and B.C. Gov, which are its most current public-sector peers. A developer comparing `project.json` files would see parity, not a toy.
 - Download volume doesn't measure quality for civic systems: government DSs have small audiences (B.C. about 5k a week) but very high documentation standards.
 
 ### Gaps
@@ -224,7 +224,7 @@ The best civic practice splits accessibility into **what the component guarantee
 - GOV.UK weaves accessibility into the guidance (warning buttons mustn't rely on colour alone; inverse buttons need 4.5:1; disabled buttons "have poor contrast and can confuse some users, so avoid them if possible"). — [GOV.UK Button](https://design-system.service.gov.uk/components/button/)
 
 ### Inferences
-- The most teachable pattern for a designer is the NLDS/Designsystemet consumer checklist: it tells her what she still owns when she composes a page. It is **DESIGN-OWNED** and needs no code. The most convincing evidence for a skeptical developer is a CI gate plus a definition of done they can read. A tagged sidebar (Designsystemet's `a11y-test` on 377/377) makes the coverage visible without opening CI.
+- The most teachable pattern for a designer is the NLDS/Designsystemet consumer checklist: it tells the person composing a page what they still own. It is **DESIGN-OWNED** and needs no code. The most convincing evidence for a developer is a CI gate plus a definition of done they can read. A tagged sidebar (Designsystemet's `a11y-test` on 377/377) makes the coverage visible without opening CI.
 - Citing WCAG 2.2 rather than 2.1 is now standard among current civic peers (Amsterdam, Designsystemet). HDS still links 2.1.
 
 ### Gaps
@@ -277,7 +277,7 @@ The best React Aria systems **name the dependency and link out for behaviour** (
 - HeroUI v3 is "built on React Aria Components for accessibility and Tailwind CSS v4 for styling" and tracks React Aria releases (v3.2.7 bumps react-aria-components to 1.22.1). — [HeroUI v3.2.7](https://heroui.com/en/docs/react/releases/v3-2-7), [InfoQ](https://www.infoq.com/news/2026/07/heroui-v3-rewrite/)
 - Hopper wraps React Aria Components in a styled-system package (`@hopper-ui/styled-system`) with brand theme CSS; behaviour comes from React Aria, while look and brand belong to Hopper. — [Hopper preview.tsx](https://github.com/workleap/wl-hopper/blob/main/.storybook/preview.tsx), [wl-hopper repo](https://github.com/workleap/wl-hopper)
 
-What would survive a switch to another headless library (coordinator addendum):
+What would survive a switch to another headless library:
 
 | System | Survives (implementation-agnostic) | Lost (tied to React Aria) |
 |---|---|---|
@@ -330,7 +330,7 @@ The strongest docs anatomy combines GOV.UK's evidence sections (Research, Recent
 
 ---
 
-## Q7. What would convince a skeptical senior developer, and what would teach a designer
+## Q7. What earns a senior developer's trust, and what teaches a designer
 
 ### Takeaway
 Developers are convinced by **machine-checkable evidence they can open**: a current Storybook (10.x), accessibility tests that fail CI, tagged on every story, story tests (vitest), visual snapshots (Chromatic), a changelog or release notes inside Storybook, a public definition of done including token hygiene, and an MCP endpoint that serves the same docs to their AI tools. Designers learn from **usage pages with when / when not / how to write**, **page templates by audience**, **tokens drawn as visual stories**, **consumer accessibility checklists**, and a visible multi-brand demo that shows what a city can and can't change.
@@ -345,15 +345,15 @@ Developers are convinced by **machine-checkable evidence they can open**: a curr
 - Showing what is allowed to change: NLDS sibling theme stories; Designsystemet's "behave the same, look different" principle. — [themes Storybook](https://nl-design-system.github.io/themes/?path=/story/utrecht-button--voorbeeld-theme), [About Designsystemet](https://designsystemet.no/en/fundamentals/introduction/about-the-design-system/)
 
 ### Inferences
-- For the "can an AI-built system be strong?" doubt, the two strongest moves visible in peers are: (1) the sidebar itself shows test coverage (Designsystemet-style tags, a Chromatic snapshot group, a changelog page); (2) a published definition of done with token-hygiene rules that a lint step enforces. Amsterdam and SGDS show that public-sector teams now *advertise* MCP and agent tooling openly. Being AI-assisted can be presented as current practice in the field rather than a liability, provided the gates are visible.
-- A designer is best served by one page per component that she can read without code (Kaizen's Usage page, Amsterdam's guideline sections), kept apart from the developer API page.
+- For the question "can an AI-built system be strong?", the two strongest moves visible in peers are: (1) the sidebar itself shows test coverage (Designsystemet-style tags, a Chromatic snapshot group, a changelog page); (2) a published definition of done with token-hygiene rules that a lint step enforces. Amsterdam and SGDS show that public-sector teams now *advertise* MCP and agent tooling openly. Being AI-assisted can be presented as current practice in the field rather than a liability, provided the gates are visible.
+- A designer is best served by one page per component they can read without code (Kaizen's Usage page, Amsterdam's guideline sections), kept apart from the developer API page.
 
 ### Gaps
 - No user research was found on how designers vs developers actually use these Storybooks. These are expert judgements from the documentation structure, not measured outcomes.
 
 ---
 
-## Q8 (coordinator addendum). How do shared-spec systems separate the shared spec from the code, and which practices are design-owned vs dev-owned?
+## Q8. How do shared-spec systems separate the shared spec from the code, and which practices are design-owned vs dev-owned?
 
 ### Takeaway
 NL Design System and Designsystemet both treat the **specification** (component definition, acceptance criteria, token conventions, themes) as a shared public good, separate from any one **implementation**.

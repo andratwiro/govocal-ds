@@ -39,8 +39,8 @@ steward; don't build them twice, build on them once merged:
     including doc comments for the 19 undocumented components.
 
 **Goal:** by morning, close the gaps between this Storybook and the benchmark panel
-([report](../research/storybook-benchmark/report.md)) that matter most to its two readers: the designer who will run
-it as the design bible, and the developers who will import its components and compose screens. Only work the design
+([report](../research/storybook-benchmark/report.md)) that matter most to its two kinds of reader: the designers who run
+it as the design bible, and the developers who import its components and compose screens. Only work the design
 side owns.
 
 **Where it stands (29 Oct evening, `main` at 8bd57e5).** Strong where the panel is often weak:
@@ -117,7 +117,7 @@ Put all of these in every subagent brief.
 
 ### Task 1: the component page (≈1 h)
 
-Rubric D5, D2, D4 and D9. The benchmark pieces are in the report's section "A bible a designer with taste can run":
+Rubric D5, D2, D4 and D9. The benchmark pieces are in the report's section "A design bible the designers can run":
 - Circuit: status, when to use, content guidelines.
 - Grafana: do and don't, anatomy, placement.
 - Vibe: use cases.
@@ -300,11 +300,11 @@ Stop any task cleanly at a green commit rather than start the next half-done.
 
 ## Not tonight, and why
 
-- **Visual regression baselines:** the tool is a hosting and cost call for the project lead: Chromatic, or Playwright
+- **Visual regression baselines:** the tool is a hosting and cost call outside this plan: Chromatic, or Playwright
   screenshots in the repo. Rushed baselines are flaky across machines. Prepare only: list the stories that would become
   baselines.
 - **The city theming boundary and a second-city swap test:** the front office needs them first, and the back office has
-  one palette. Next, after the project lead's review.
+  one palette. Next, after a review of this plan's results.
 - **Contrast pairs as token data, a hosted MCP endpoint, a published package, CI gates:** later calls. They appear as
   questions on Task 4's page.
 - **Scoring the panel and this Storybook:** that's the re-audit after the review, not the builder's job.

@@ -1,6 +1,6 @@
 # Design teams owning component-library CODE, built with AI agents, composed by developers (2025–2026)
 
-Scope note for the report writer: sources are 2025–2026 unless marked **(background/origin)**. Vendor posts (Builder.io, Chromatic, Figma, Vercel, Anthropic) are marked **(vendor)**; treat their claims as the vendor's own. No individual at Go Vocal is named. Sibling notes in this folder already cover tokens (`tokens.md`), docs/language (`designer_bible_and_language.md`), developer trust/semver/QA (`developer_trust_and_ai.md`) and audit rubrics (`audit_rubrics.md`); this file covers designer ownership of component code with agents, the composition boundary, the agent interface, code-first Figma sync, the developer contract, and review of component changes in Storybook, and ends with a practice list. **Out of scope (project lead's instruction):** how any separate prototype tool consumes the library (bundles, CDN builds, import maps, web-component wrappers) and the prototype → product path. This file does not cover them.
+Scope note for the report writer: sources are 2025–2026 unless marked **(background/origin)**. Vendor posts (Builder.io, Chromatic, Figma, Vercel, Anthropic) are marked **(vendor)**; treat their claims as the vendor's own. No individual at Go Vocal is named. Sibling notes in this folder already cover tokens (`tokens.md`), docs/language (`designer_bible_and_language.md`), developer trust/semver/QA (`developer_trust_and_ai.md`) and audit rubrics (`audit_rubrics.md`); this file covers designer ownership of component code with agents, the composition boundary, the agent interface, code-first Figma sync, the developer contract, and review of component changes in Storybook, and ends with a practice list. **Out of scope:** how other tools consume the library (bundles, CDN builds, import maps, web-component wrappers) and the prototype → product path. This file does not cover them.
 
 ## 1. Ownership models: who owns production component code, who composes, how reviews split
 
@@ -44,7 +44,7 @@ Designers now commonly build in code with agents. The guardrails that hold up ar
 
 ### Inferences
 - The guardrails that have evidence behind them sit before generation (context, templates, MCP) and at merge (small PRs, labelled AI review, required checks). Faros's data says downstream review alone does not scale.
-- For an agent-built library, the strongest proof for a skeptical developer is a CI that would catch the Atlassian failure list. That means failing on unknown imports, unknown token names and unknown icons, and diffing the public API on every PR.
+- For an agent-built library, the strongest proof for a developer is a CI that would catch the Atlassian failure list. That means failing on unknown imports, unknown token names and unknown icons, and diffing the public API on every PR.
 
 ### Gaps
 - No public 2025–2026 case study was found of a design-system team that built its whole component library with agents and published defect or quality data on it. The public cases are prototyping, product UI, or system docs/context.
@@ -197,7 +197,7 @@ The practices below come from the findings above. Each one names what to do, who
 | 23 | Access-controlled per-PR Storybook previews for unreleased component work | D+E | [GitHub Pages private = Enterprise Cloud only](https://docs.github.com/en/enterprise-cloud@latest/pages/getting-started-with-github-pages/changing-the-visibility-of-your-github-pages-site); [Chromatic permissions mirror the git host](https://www.chromatic.com/docs/review/) | A logged-out visitor cannot open a PR preview |
 
 ### Inferences
-- Practices 1–5 answer the developers' "is it cemented in tokens?" doubt with things they can run. Practices 6–10 make the system enforceable for their agents. Practices 11–14 keep their approval where it matters without making them review CSS. Practices 16–20 are the contract that lets them keep the strategic calls on adoption, base library and integration.
+- Practices 1–5 answer "is it cemented in tokens?" with things they can run. Practices 6–10 make the system enforceable for their agents. Practices 11–14 keep their approval where it matters without making them review CSS. Practices 16–20 are the contract that lets them keep the strategic calls on adoption, base library and integration.
 - Several of these practices are cheap for a ~55-component plain-CSS system: CODEOWNERS, a manifest CI check, a token-existence check, and the DOM-share metric on the demo back office. The costly ones are hosted per-PR review with comments (Chromatic or similar) and a published agent eval.
 
 ### Gaps

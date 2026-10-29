@@ -1,6 +1,6 @@
 # Design-system audit frameworks, maturity models and checklists → a 0–100 rubric for one Storybook
 
-Scope note: the frameworks are inventoried first (Q1–Q5), then a proposed rubric (Q6). Per the coordinator's addendum, the rubric is split in two. (A) is DESIGN-OWNED, scored now, and stays valuable whatever stack developers pick. (B) is DEV-OWNED (packaging, test infrastructure, API mechanics, distribution), scored lightly as "ready for their decision", because govocal-ds is a design-side proposal to developers, not a mandate. Sources from 2025–2026 come first. Older canonical work is marked **[background/origin]**.
+Scope note: the frameworks are inventoried first (Q1–Q5), then a proposed rubric (Q6). The rubric is split in two. (A) is DESIGN-OWNED, scored now, and stays valuable whatever stack developers pick. (B) is DEV-OWNED (packaging, test infrastructure, API mechanics, distribution), scored lightly as "ready for their decision", because those are the developers' decisions. Sources from 2025–2026 come first. Older canonical work is marked **[background/origin]**.
 
 ---
 
@@ -187,7 +187,7 @@ Content and language guidance, testing and automation, and machine-readability f
 
 ### Inferences
 - The differentiators for a top score are where the field is weak in 2026: documented tokens (66%), accessibility guidelines (59%), UX patterns (56%), UX copy guidelines (38%), automation (37%) and machine-readable signals (≤ 12 of 37). govocal-ds has 27 patterns, which already puts it in a less common group. Copy/language guidance and token documentation are the cheapest places to stand out.
-- For the skeptical developers, the recurring criteria that answer "cemented in tokens, consistent variables and language" are token coverage in component CSS, a semantic token layer, naming consistency, and Figma↔code parity. All four are measurable from the repo.
+- For developers, the recurring criteria that answer "cemented in tokens, consistent variables and language" are token coverage in component CSS, a semantic token layer, naming consistency, and Figma↔code parity. All four are measurable from the repo.
 
 ### Gaps
 - No source gives cross-framework frequency counts. The "recurs in almost every source" claim is my own tally of the sources listed above.
@@ -229,7 +229,7 @@ A 0–100 score is therefore defensible only with published weights and a cap ti
   - Publish explicit weights, as Open Design System Bench does.
   - Add a cap or gate: no dimension below level 2 for a total above about 60, following "lowest dimension caps the system" and the worst-dimension gate.
   - Show the radar chart alongside the total, so the 0–100 doesn't hide an uneven profile, as NN/G and zeroheight do.
-- Practitioners do not publish a consensus weighting. Weights in Q6 are my proposal, tilted toward what the two stakeholders said they doubt or need.
+- Practitioners do not publish a consensus weighting. Weights in Q6 are my proposal, tilted toward what designers and developers each need from the Storybook.
 
 ### Gaps
 - No source gives empirically validated weights (e.g. dimension scores correlated with adoption outcomes).
@@ -314,7 +314,7 @@ Only a few public, numeric scorecards exist, and all of them measure AI or agent
 
 ---
 
-## Q6. Proposed rubric: dimensions, criteria, level anchors, measurement, weights, stakeholders (split A design-owned / B dev-owned)
+## Q6. Proposed rubric: dimensions, criteria, level anchors, measurement, weights, readers (split A design-owned / B dev-owned)
 
 ### Takeaway
 The proposal is a 100-point rubric:
@@ -348,7 +348,7 @@ Each criterion is scored 1–5 on evidence (anchors at 1/3/5), and dimension sco
 
 #### (A) DESIGN-OWNED, 90 points (scored now, survives any stack choice)
 
-**A1. Foundations & tokens as the source of truth (20)**: the developers' first doubt, "cemented in tokens".
+**A1. Foundations & tokens as the source of truth (20)**: the first test, "cemented in tokens".
 - Criteria:
   1. A tiered token architecture (primitive → semantic → component) is written down, with a naming grammar.
   2. Component styles reference semantic tokens, not primitives or raw values.
@@ -360,7 +360,7 @@ Each criterion is scored 1–5 on evidence (anchors at 1/3/5), and dimension sco
 - L3: a semantic layer exists; ≥ 80% of colour, spacing, radius and type declarations in component CSS use `var(--gv-*)`; foundations pages cover the main categories.
 - L5: ≥ 98% tokenised and enforced by a lint in CI; zero undefined or unused tokens; a DTCG export generated from Figma variables; token docs generated from source with usage do/don'ts; light/dark plus a tenant theme demonstrated by swapping tokens only.
 - How to measure: grep or stylelint over the repo CSS (literal colours, px/rem, `var(--` not defined); cross-reference token definitions against uses; check the token source for DTCG `$value`/`$type`; open the Foundations stories in `index.json`; swap a theme in the Storybook toolbar.
-- Stakeholders: devs (primary), designer (owns the decisions).
+- Readers: devs (primary), designer (owns the decisions).
 
 **A2. Naming & language consistency (10)**: "consistent variables and language".
 - Criteria:
@@ -373,7 +373,7 @@ Each criterion is scored 1–5 on evidence (anchors at 1/3/5), and dimension sco
 - L3: names match consensus or carry aliases; one prop vocabulary with few exceptions; a voice-and-tone page and a glossary exist.
 - L5: one shared vocabulary enforced (a prop-name lint over the components manifest; a docs linter such as Vale for terms); every exception has a logged rationale; microcopy patterns per component (error, empty, confirm).
 - How to measure: compare `index.json` titles with Component Gallery; take the set of prop names per concept from `/manifests/components.json` or react-docgen and count synonyms; grep docs for competing terms.
-- Stakeholders: designer (owns the language), devs (consistency test).
+- Readers: designer (owns the language), devs (consistency test).
 
 **A3. Coverage, states & behaviour specs (15)**: stack-agnostic, so the specs survive if React Aria is dropped.
 - Criteria:
@@ -386,7 +386,7 @@ Each criterion is scored 1–5 on evidence (anchors at 1/3/5), and dimension sco
 - L3: all checklist states present for most components; keyboard behaviour stated for the interactive ones.
 - L5: each component carries a spec page (anatomy, properties, layout, behaviour, a11y, component tokens, version history) that a developer could reimplement in another library without reading the React code; patterns cover the product's key flows.
 - How to measure: count stories per component and state names in `index.json`; tick the designsystemchecklist items per component; read the docs MDX for keyboard and behaviour tables; check whether behaviour text names React Aria-specific APIs (a portability smell).
-- Stakeholders: designer (bible), devs (implementation contract).
+- Readers: designer (bible), devs (implementation contract).
 
 **A4. Documentation & guidance, the "design bible" (15)**: the designer's core.
 - Criteria:
@@ -403,7 +403,7 @@ Each criterion is scored 1–5 on evidence (anchors at 1/3/5), and dimension sco
 - L3: usage guidance on most components; principles and getting started exist.
 - L5: every component and pattern page has the full guideline set, written to Curtis's rules; status on every page; guidance argues from the product's own users (residents, city admins); the docs manifest is complete; an AGENTS.md or llms.txt points to it.
 - How to measure: the share of components with a docs entry (`index.json` `type: docs`) and with hand-written MDX (`/manifests/docs.json`); a sample of 10 pages scored against the guideline checklist; status tags in `index.json`.
-- Stakeholders: designer (primary), devs (onboarding).
+- Readers: designer (primary), devs (onboarding).
 
 **A5. Accessibility as a design specification (10)**.
 - Criteria:
@@ -415,7 +415,7 @@ Each criterion is scored 1–5 on evidence (anchors at 1/3/5), and dimension sco
 - L3: axe clean on most stories; a11y section on interactive components.
 - L5: zero axe violations on all stories in CI; incomplete axe items reviewed; manual screen-reader notes per complex component; contrast proofs generated from tokens; consumer checklist.
 - How to measure: run test-runner or Playwright + axe over every story ID from `index.json` against the public URL; read the a11y parameters in stories; read the docs.
-- Stakeholders: both. Measured on the reference build, but the specs are design-owned.
+- Readers: both. Measured on the reference build, but the specs are design-owned.
 
 **A6. Figma ↔ Storybook parity (8)**.
 - Criteria:
@@ -428,7 +428,7 @@ Each criterion is scored 1–5 on evidence (anchors at 1/3/5), and dimension sco
 - L3: a manual parity table, mostly matching; variables exported to code by a script.
 - L5: a parity report generated from both sides at every change, with zero unexplained diffs; Code Connect or an equivalent mapping.
 - How to measure: diff a committed Figma variables export against the CSS custom properties; compare Figma component property names with manifest props. This needs the Figma export in the repo or access to the Figma file.
-- Stakeholders: designer (owns Figma), devs (trust).
+- Readers: designer (owns Figma), devs (trust).
 
 **A7. Governance of design decisions (5)**.
 - Criteria:
@@ -441,7 +441,7 @@ Each criterion is scored 1–5 on evidence (anchors at 1/3/5), and dimension sco
 - L3: DECISIONS.md and a changelog kept; statuses used.
 - L5: every token or component change traceable to a decision; deprecations dated with migration notes; a proposal template; CHAOSS-style responsiveness visible (time to first response on issues).
 - How to measure: repo files (DECISIONS.md, CHANGELOG), git history cadence, status tags, issue response times.
-- Stakeholders: designer (owner of decisions), devs (predictability).
+- Readers: designer (owner of decisions), devs (predictability).
 
 **A8. Awareness of developer constraints (7)**: proof the design side thought like an implementer.
 - Criteria:
@@ -455,7 +455,7 @@ Each criterion is scored 1–5 on evidence (anchors at 1/3/5), and dimension sco
 - L3: stories for long text and empty states on key components; one tenant theme demo; a browser support note.
 - L5: extreme-data stories on every data-bearing component; RTL and long-language toggles in the Storybook toolbar; tenant theme switcher with per-tenant contrast checks; a migration map with effort sizing left to developers.
 - How to measure: story names and args in `index.json` (e.g. "Long text", "Empty", "RTL"); Storybook globals/toolbar; repo docs.
-- Stakeholders: devs (primary skeptic test), designer.
+- Readers: devs (primary test), designer.
 
 #### (B) DEV-OWNED, 10 points (scored as "ready for their decision", not as maturity)
 
@@ -471,18 +471,18 @@ Scale for every B criterion:
 
 Weights sum: A = 20 + 10 + 15 + 15 + 10 + 8 + 5 + 7 = **90**; B = 2 + 3 + 3 + 2 = **10**; total **100**.
 
-**Stakeholder map (who reads which dimension as "their" proof)**
+**Reader map (who reads which dimension as "their" proof)**
 
-| Dimension | Designer (owner of the bible) | Skeptical developers |
+| Dimension | Designers (owners of the bible) | Developers |
 |---|---|---|
 | A1 Tokens | owns the decisions, foundations pages | main test: "cemented in tokens" |
 | A2 Naming & language | owns voice, terms, names | test: "consistent variables and language" |
-| A3 States & behaviour specs | specs she defends in review | the implementation contract, portable off React Aria |
-| A4 Docs & guidance | her primary tool | onboarding |
+| A3 States & behaviour specs | specs designers defend in review | the implementation contract, portable off React Aria |
+| A4 Docs & guidance | their primary tool | onboarding |
 | A5 A11y specs | writes the requirements | evidence (axe, manual notes) |
 | A6 Figma↔Storybook parity | Figma side | trust that design = code |
 | A7 Decision governance | logs the why | predictability |
-| A8 Dev-constraint awareness | proves she designed for reality | strongest signal that "AI-built" ≠ naive |
+| A8 Dev-constraint awareness | proves the design accounts for real constraints | strongest signal that "AI-built" ≠ naive |
 | B1–B4 | illustrate only | theirs to decide |
 
 **Mapping to the source frameworks (for the report's credibility table)**
@@ -500,5 +500,5 @@ Weights sum: A = 20 + 10 + 15 + 15 + 10 + 8 + 5 + 7 = **90**; B = 2 + 3 + 3 + 2 
 
 ### Gaps
 - The weights, the gate at 60, and the B "readiness" scale are my proposals. No source validates them empirically, so they should be tuned after scoring the calibration set (Q5).
-- The A3 portability check (behaviour specs that don't depend on React Aria) has no published precedent. It follows from the coordinator's note that React Aria may be dropped.
+- The A3 portability check (behaviour specs that don't depend on React Aria) has no published precedent. It follows from the premise that React Aria may be dropped.
 - A6 depends on access to Figma or a committed variables export; I don't know whether govocal-ds has one.

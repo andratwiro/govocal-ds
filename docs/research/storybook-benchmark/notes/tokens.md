@@ -6,8 +6,7 @@ findings to govocal-ds (Figma variables → `tokens/` JSON → build → `src/to
 in plain CSS with only `var(--gv-*)`; motion/size tokens hand-written "Not in Figma"; some `color-mix()`
 stand-ins; no per-city theming yet) are kept in the Inferences subsections.
 
-Framing (from the brief's addendum): govocal-ds is a design-side PROPOSAL to developers, not a mandate.
-Developers decide the stack (component library, CSS variables vs their current styled-components theme,
+Framing: developers decide the stack (component library, CSS variables vs their current styled-components theme,
 packaging, migration). So the notes weight what the design side can own and deliver regardless of stack:
 tool-neutral token definitions (DTCG), the naming grammar and tiers, theme/tenant rules, Figma variable hygiene
 and code syntax, deprecation/rename discipline. Section 9 tags every criterion DESIGN-OWNED or DEV-OWNED.
@@ -142,7 +141,7 @@ now has a concrete, testable meaning: `$value`/`$type` JSON in `.tokens.json`, v
   and px dimensions can now round-trip through Figma's native import; easing curves (`cubicBezier`), rem sizes,
   OKLCH colours and composites cannot. The audit should ask, token by token: could this live in Figma? If not,
   is the reason one of Figma's documented limits?
-- A skeptical reviewer will accept "DTCG-conformant" only if a validator says so: run `tz check`/`tz lint`
+- A reviewer will accept "DTCG-conformant" only if a validator says so: run `tz check`/`tz lint`
   (Terrazzo) or an equivalent schema check over `tokens/` in CI, independent of the build script that agents wrote.
 - Figma variable code syntax is the cheapest traceability lever: if every variable's WEB syntax is
   `var(--gv-…)` and matches `tokens.css`, Dev Mode and the Figma MCP server hand developers and AI agents the
@@ -288,7 +287,7 @@ vendor study (40.4% average across 375 sites).
   exceptions — [Mironsoft (secondary)](https://www.mironsoft.de/en/blog/design-system-adoption-audit-metrics)
 
 ### Inferences
-- govocal-ds's "a test refuses raw values" matches the exemplars' intent, but a skeptic will ask for the same
+- govocal-ds's "a test refuses raw values" matches the exemplars' intent, but a reviewer will ask for the same
   breadth: per-domain coverage (colour, space, radius, type, shadow, motion, z-index, breakpoints), an
   unknown-token check (core Stylelint rule with `referenceFiles: ['src/tokens.css']`), a deprecated-token check,
   and a published escape-hatch count. A custom test written by the same agents that wrote the CSS is weaker
@@ -381,7 +380,7 @@ toolbar switcher (`@storybook/addon-themes`).
   [@storybook/addon-themes](https://storybook.js.org/addons/@storybook/addon-themes)
 
 ### Inferences
-- govocal-ds has no per-city theming. A cheap, checkable readiness test that a skeptic will accept: create a
+- govocal-ds has no per-city theming. A cheap, checkable readiness test that a reviewer will accept: create a
   throwaway second theme that changes only brand/primitive values (one file), build, and run visual regression across
   all stories — every component should change colour, none should break, and no component CSS should need editing.
   Count component CSS selectors that branch on theme/mode (`[data-…="dark"] .x`); the target is 0 (themes live only in
@@ -504,7 +503,7 @@ alias which (Spectrum S2 visualizer). In Storybook, the common path is the `stor
   [Figma blog: Schema 2025](https://www.figma.com/blog/schema-2025-design-systems-recap/)
 
 ### Inferences
-- A docs page a skeptical developer trusts is generated from the same JSON that builds `tokens.css` (so docs can't
+- A docs page a developer trusts is generated from the same JSON that builds `tokens.css` (so docs can't
   drift), shows every token with: CSS name (copyable), value in each mode, description, its alias target, and
   "used by" (which components reference it, from a grep of component CSS). Usage maps also expose dead tokens.
 - For a designer as owner, the docs must also answer "which token do I use for X" (a role table), which no
@@ -576,7 +575,7 @@ the deliverable, and the note says where the check runs.
 8. **DESIGN-OWNED · Tier direction in use (rule defined by design, checked in dev CI).** Components consume semantic
    or component tokens, never primitives (SLDS rule). · Grep component styles for primitive names. · 0, or a listed
    allowlist.
-9. **DESIGN-OWNED · Owner-readable naming.** A one-page grammar plus a "which token for which job" table a junior
+9. **DESIGN-OWNED · Owner-readable naming.** A one-page grammar plus a "which token for which job" table a
    designer can apply. · Ask someone new to name three new tokens; check they parse (criterion 6) and land in the
    right tier. · 3/3.
 

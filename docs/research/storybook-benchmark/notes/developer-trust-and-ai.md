@@ -2,9 +2,8 @@
 
 Researcher notes for the govocal-ds audit benchmark. Collected 29 Oct 2026. Every claim has its source next to it. Some pages were read through a summarising fetch tool. Numbers that matter for a decision (marked "re-check") should be confirmed on the page before the audit quotes them. Sources from before 2025 are marked **[background]**.
 
-**Framing (latest, from the project lead via the coordinator; replaces the two earlier framings).**
-- Developers will not use Figma or Dev Mode.
-- The design side (designers working as junior front-end developers and design-system architects) **owns the Storybook component code** and builds it with AI agents (Claude Code).
+**Framing.**
+- The design side (designers working as front-end developers and design-system architects) **owns the Storybook component code** and builds it with AI agents.
 - Product developers **import** those components and compose screens.
 - Design controls the visual language.
 - The aim is an interface layer that lets more roles build product with AI.
@@ -232,7 +231,7 @@ The documented failure modes are fabricated tokens, invented props and component
 - **Controlled study (arXiv, submitted 14 Jul 2026):** at a large Brazilian enterprise (Angular, iOS, Android), design-system-aware AI cut time-to-delivery by 46.7%–69.4% vs manual and DS-only, with lower variability and better design fidelity (abstract only). — [arXiv 2607.13156](https://arxiv.org/abs/2607.13156)
 - **Brad Frost (16 Dec 2025):** "the AI is deliberately constrained to using the high-quality design system materials… This is what distinguishes DS+AI from vibe coding". — [Agentic Design Systems in 2026](https://bradfrost.com/blog/post/agentic-design-systems-in-2026/)
 - shadcn added MCP in Apr 2025. CLI 3.0 in Aug 2025 brought namespaced registries (`@shadcn`, `@v0`, private `@acme`) and MCP for any registry, an alternative distribution model where agents install source, not packages. — [shadcn Apr 2025](https://ui.shadcn.com/docs/changelog/2025-04-mcp); [shadcn CLI 3.0](https://ui.shadcn.com/docs/changelog/2025-08-cli-3-mcp)
-- Figma's MCP (beta June 2025, remote plus Make in Sept 2025) is listed for completeness only. Developers here will not use Figma. — [alternativeto](https://alternativeto.net/news/2025/9/figma-mcp-server-adds-remote-access-and-figma-make-connection)
+- Figma's MCP (beta June 2025, remote plus Make in Sept 2025) is listed for completeness only. — [alternativeto](https://alternativeto.net/news/2025/9/figma-mcp-server-adds-remote-access-and-figma-make-connection)
 
 **Failure modes and guardrails** (vendor or practitioner blogs: illustrative)
 - Invented token names, spacing drift within a session, forgotten decisions, renamed props still used. — [Superdesign](https://superdesign.dev/blog/ai-design-system-drift). Hard-coded hex instead of tokens. — [UX Magic](https://uxmagic.ai/blog/ai-ui-quality-production-workflow); [Overlay QA](https://overlayqa.com/blog/ai-design-system-drift/). Guardrails: allow-lists, type-checking against `.d.ts`, lint and type checks that "reject everything else". — [Mode Inspect](https://modeinspect.com/blog/ai-design-system)
@@ -357,7 +356,7 @@ Developers will import a library that proves, with checks they can rerun, that i
   - P13 and P14: provenance and owners.
 - Each shortfall can be closed by the design side without touching A1–A8. That is the alignment message: "we prove the library; you keep the app".
 - The strongest single pre-import demonstration is a canary package plus one real back-office screen built by a *developer's* agent from the published manifest. Use the consuming stack (React 18, styled-components around it, react-intl strings, react-hook-form refs, the real router), then rerun the library's gates live: break a token, a label, a prop and a visual, and watch each fail. It exercises P1–P12 and A1–A7 at once.
-- The tagging is my synthesis of the sources and the project lead's framing. No exemplar publishes this exact design/dev split.
+- The tagging is my synthesis of the sources and the framing above. No exemplar publishes this exact design/dev split.
 
 ### Gaps
 - No source measured which proof most moves developer willingness to import. That needs interviews or a survey of the consuming developers.
