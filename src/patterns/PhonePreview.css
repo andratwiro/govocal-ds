@@ -8,7 +8,7 @@
   block-size: 720px;
   max-block-size: 100%;
   padding: var(--gv-space-10);
-  border-radius: 44px;
+  border-radius: 44px; /* raw: a drawing of a phone, not UI */
   background: var(--gv-text-primary);
   box-shadow: var(--gv-shadow-dialog);
 }
@@ -18,7 +18,7 @@
   flex-direction: column;
   block-size: 100%;
   overflow: hidden;
-  border-radius: 34px;
+  border-radius: 34px; /* raw: the phone's 44, less its 10 bezel */
   background: var(--gv-surface-panel);
   color: var(--gv-text-body);
   font-family: var(--gv-font-family);

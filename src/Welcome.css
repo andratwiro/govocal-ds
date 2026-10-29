@@ -254,7 +254,7 @@
   &:not(:last-child)::after {
     content: '';
     position: absolute;
-    inset-block-start: 4.5px;
+    inset-block-start: calc(var(--gv-space-5) - var(--gv-space-1) / 2); /* the dot's centre, less half the line */
     inset-inline: var(--gv-space-14) calc(-1 * var(--gv-space-2));
     block-size: 1px;
     background: var(--gv-border-control-hover);

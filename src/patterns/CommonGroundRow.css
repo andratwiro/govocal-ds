@@ -70,14 +70,14 @@
 .gv-list-row-cg__marks {
   flex: none;
   display: inline-flex;
-  width: 14px;
-  height: 14px;
+  width: var(--gv-size-icon-14);
+  height: var(--gv-size-icon-14);
   margin-top: var(--gv-space-3);
 }
 
 .gv-list-row-cg__warning {
   flex: none;
-  margin: -1px;
+  margin: calc(-1 * var(--gv-space-1));
   color: var(--gv-icon-warning);
 }
 
@@ -120,8 +120,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: var(--gv-size-avatar-16);
+  height: var(--gv-size-avatar-16);
   border-radius: var(--gv-radius-full);
   border: 1px dashed var(--gv-border-control);
   font: var(--gv-type-small-strong);

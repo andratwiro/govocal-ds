@@ -62,7 +62,7 @@
 }
 
 .gv-side-nav__row {
-  min-block-size: 36px;
+  min-block-size: var(--gv-size-control-36);
   padding: var(--gv-space-6) var(--gv-space-8);
   border: 0;
   border-radius: var(--gv-radius-6);
@@ -85,7 +85,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  inline-size: var(--gv-space-24);
+  inline-size: var(--gv-size-icon-24);
   color: var(--gv-icon-nav);
 
   &[data-accent] {
@@ -164,7 +164,7 @@
 
   .gv-side-nav__row {
     justify-content: center;
-    inline-size: 40px;
+    inline-size: var(--gv-size-control-40);
     margin-inline: auto;
     padding-inline: 0;
   }
@@ -185,15 +185,12 @@
     display: none;
   }
 
-  /* The count sits on the icon's corner. */
+  /* The count sits on the icon's corner, the same badge as unfolded (Small strong; the prototype's 10/14 has no
+     type role). */
   .gv-side-nav__count[data-on-icon] {
     display: block;
     position: absolute;
     inset-block-start: calc(-1 * var(--gv-space-6));
     inset-inline-end: calc(-1 * var(--gv-space-8));
-    min-inline-size: var(--gv-space-14);
-    padding: 0 var(--gv-space-3);
-    font-size: 10px;
-    line-height: var(--gv-space-14);
   }
 }

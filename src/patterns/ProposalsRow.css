@@ -58,14 +58,14 @@
 .gv-list-row-proposals__marks {
   flex: none;
   display: inline-flex;
-  width: 14px;
-  height: 14px;
+  width: var(--gv-size-icon-14);
+  height: var(--gv-size-icon-14);
   margin-top: var(--gv-space-3);
 }
 
 .gv-list-row-proposals__warning {
   flex: none;
-  margin: -1px;
+  margin: calc(-1 * var(--gv-space-1));
   color: var(--gv-icon-warning);
 }
 

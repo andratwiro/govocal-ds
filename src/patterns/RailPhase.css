@@ -53,8 +53,8 @@ li:has(+ li) > .gv-rail-phase::after {
   content: '';
   position: absolute;
   z-index: 0;
-  inset-inline-start: 15.5px;
-  inset-block: 18px -18px;
+  inset-inline-start: calc(var(--gv-space-16) - var(--gv-space-1) / 2); /* the dot's centre (12 + 4), less half the line */
+  inset-block: var(--gv-space-18) calc(-1 * var(--gv-space-18)); /* 8 + 6 + 4: the dot's centre */
   inline-size: 1px;
   background: var(--gv-border-subtle);
 }
@@ -113,7 +113,7 @@ li:has(+ li) > .gv-rail-phase[data-status='completed']::after {
 }
 
 .gv-rail-phase[data-status='live'] .gv-rail-phase__state {
-  font-weight: 500;
+  font-weight: var(--gv-type-small-strong-weight);
 }
 
 /* Not in Figma: the prototype's "N new", top right in the 56 the name leaves free. */
