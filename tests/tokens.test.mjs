@@ -5,6 +5,7 @@ import {toCss} from '../scripts/lib/css.mjs';
 import {mergeTokens, describe as describeTokens} from '../scripts/lib/merge.mjs';
 import {loadTokens} from '../scripts/lib/build.mjs';
 import {cssOf} from '../scripts/lib/names.mjs';
+import {toJson} from '../scripts/lib/json.mjs';
 import {parseIcons} from '../scripts/lib/icons.mjs';
 
 const text = (name, chars, style = {}) => ({type: 'TEXT', name, characters: chars, style});
@@ -356,5 +357,37 @@ describe('src/tokens.css', () => {
     for (const f of ['tokens/semantic.tokens.json', 'tokens/size.tokens.json']) walk(JSON.parse(readFileSync(f, 'utf8')), []);
     expect(marked.length).toBeGreaterThan(10);
     for (const [id, name] of marked) expect(ids[id], id).toBe(name);
+  });
+});
+
+describe('public/tokens.json (the set as DTCG, published beside Storybook)', () => {
+  const read = path => JSON.parse(readFileSync(path, 'utf8'));
+  it('keeps each token whole and adds its CSS name and its Figma id, the unmerged one first', () => {
+    const tokens = {color: {slate: {100: {$type: 'color', $value: '#eee', $description: 'Slate.'}}},
+      surface: {app: {$type: 'color', $value: '{color.slate.100}', $description: 'The page.'},
+        panel: {$type: 'color', $value: '{color.slate.100}', $description: 'A panel.', $extensions: {'com.figma.variableId': 'VariableID:9:9'}}},
+      motion: {duration: {fast: {$type: 'duration', $value: {value: 120, unit: 'ms'}, $description: 'Fast.',
+        $extensions: {'com.govocal.reducedMotion': {value: 1, unit: 'ms'}}}}}};
+    const out = toJson(tokens, {'VariableID:1:84': '--gv-surface-app', 'VariableID:1:38': '--gv-surface-app', 'VariableID:1:89': null},
+      {renames: [{from: '--gv-control-knob', to: '--gv-surface-app', merge: true, figmaId: 'VariableID:1:84'}]});
+    expect(out.surface.app).toEqual({$type: 'color', $value: '{color.slate.100}', $description: 'The page.',
+      $extensions: {'com.govocal.css': '--gv-surface-app', 'com.figma.variableId': 'VariableID:1:38'}});
+    expect(out.surface.panel.$extensions['com.figma.variableId']).toBe('VariableID:9:9');
+    expect(out.color.slate[100].$extensions).toEqual({'com.govocal.css': '--gv-color-slate-100'});
+    expect(out.motion.duration.fast.$extensions['com.govocal.reducedMotion']).toEqual({value: 1, unit: 'ms'});
+    expect(out.$description).toMatch(/DTCG/);
+  });
+  it('is the build of tokens/ (run npm run tokens:build)', () => {
+    expect(read('public/tokens.json')).toEqual(toJson(loadTokens(), read('tokens/variable-ids.json'), read('tokens/renames.json')));
+  });
+  it('holds every token tokens.css defines, each described', () => {
+    const css = new Set([...readFileSync('src/tokens.css', 'utf8').matchAll(/^\s*(--gv-[\w-]+):/gm)].map(m => m[1]));
+    const found = [];
+    const walk = node => Object.entries(node).forEach(([k, v]) => {
+      if (k.startsWith('$') || typeof v !== 'object') return;
+      if ('$value' in v) { found.push(v.$extensions['com.govocal.css']); expect(v.$description, k).toBeTruthy(); } else walk(v);
+    });
+    walk(read('public/tokens.json'));
+    expect(new Set(found)).toEqual(css);
   });
 });
