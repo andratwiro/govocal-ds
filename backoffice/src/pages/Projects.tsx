@@ -62,7 +62,7 @@ export function Projects() {
       <Tabs defaultSelectedKey="Projects">
         <div className="bo-tabs-row">
           <TabList aria-label="Project views">
-            {VIEWS.map(v => <Tab key={v} id={v}>{v}{v === 'Spaces' && <> <Gap name="Pill" inline>New</Gap></>}</Tab>)}
+            {VIEWS.map(v => <Tab key={v} id={v}>{v}{v === 'Spaces' && <> <Gap name="Pill" inline><span aria-hidden>New</span></Gap></>}</Tab>)}
           </TabList>
           <SearchField aria-label="Search projects" placeholder="Search projects" />
         </div>
@@ -76,6 +76,7 @@ export function Projects() {
             <Button variant="secondary" size={32}>Add filter</Button>
           </div>
           <GapLegend names={['Avatar', 'Status', 'Icon button', 'Pill']} />
+          <p className="bo-note">Sorting and filters are for show on this page.</p>
           <ProjectTable />
         </TabPanel>
         {VIEWS.slice(1).map(v => (

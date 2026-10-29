@@ -5,14 +5,14 @@ test('projects follows the real admin: views, filters, a full project table', as
   await expect(page.getByRole('heading', {level: 1, name: 'Projects'})).toBeVisible();
   const views = page.getByRole('tablist', {name: 'Project views'});
   for (const t of ['Projects', 'Folders', 'Spaces', 'Calendar', 'Arrange projects']) {
-    await expect(views.getByRole('tab', {name: new RegExp(t)})).toBeVisible();
+    await expect(views.getByRole('tab', {name: t, exact: true})).toBeVisible();
   }
   await expect(page.getByRole('searchbox', {name: 'Search projects'})).toBeVisible();
   const table = page.getByRole('grid', {name: 'Projects'});
   for (const c of ['Project', 'Participants', 'Phase', 'Managers', 'Visibility', 'Start', 'End']) {
     await expect(table.getByRole('columnheader', {name: c})).toBeVisible();
   }
-  expect(await table.getByRole('row').count()).toBeGreaterThan(6);
+  await expect(table.getByRole('row')).toHaveCount(9); // header + eight projects
 });
 
 test('a row has its actions menu', async ({page}) => {
@@ -24,5 +24,5 @@ test('a row has its actions menu', async ({page}) => {
 test('projects names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/projects');
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
-  expect(gaps).toEqual(expect.arrayContaining(['Status', 'Avatar', 'Icon button']));
+  expect(gaps).toEqual(expect.arrayContaining(['Status', 'Avatar', 'Icon button', 'Pill']));
 });

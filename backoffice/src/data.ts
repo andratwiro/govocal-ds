@@ -27,21 +27,22 @@ export const PROJECTS: Project[] = [
 
 // Projects list columns, as in the real admin (invented values).
 const LIST: Record<string, Partial<Project>> = {
-  'green-corridors': {participants: 214, current: 'Ideation', timeLeft: '3 weeks left', managers: ['Ana P.', 'Sam K.'], access: 'Anyone', start: '01 Mar 2027', end: '18 Mar 2027'},
+  'green-corridors': {participants: 214, current: 'Ideation', timeLeft: '3 weeks left', managers: ['Manager A', 'Manager B'], access: 'Anyone', start: '01 Mar 2027', end: '18 Mar 2027'},
   'harbour-plan': {participants: 0, current: 'Not started', managers: [], access: 'Selected groups', start: '01 Apr 2027', end: '30 Apr 2027'},
-  'school-streets': {participants: 131, current: 'Voting', timeLeft: '5 days left', managers: ['Lee M.'], access: 'Anyone', start: '10 Feb 2027', end: '10 Mar 2027'},
-  'library-hours': {participants: 88, current: 'Survey', timeLeft: '2 weeks left', managers: ['Ana P.'], access: 'Anyone', start: '01 May 2027', end: '31 May 2027'},
-  'market-square': {participants: 23, current: 'Document annotation', timeLeft: '4 weeks left', managers: ['Sam K.', 'Lee M.', 'Jo R.'], access: 'Anyone', start: '01 May 2027', end: '31 May 2027'},
-  'youth-budget': {participants: 302, current: 'Ended', managers: ['Jo R.'], access: 'Selected groups', start: '01 Jan 2027', end: '15 Feb 2027'},
+  'school-streets': {participants: 131, current: 'Voting', timeLeft: '5 days left', managers: ['Manager C'], access: 'Anyone', start: '10 Feb 2027', end: '10 Mar 2027'},
+  'library-hours': {participants: 88, current: 'Survey', timeLeft: '2 weeks left', managers: ['Manager A'], access: 'Anyone', start: '01 May 2027', end: '31 May 2027'},
+  'market-square': {participants: 23, current: 'Document annotation', timeLeft: '4 weeks left', managers: ['Manager B', 'Manager C', 'Manager D'], access: 'Anyone', start: '01 May 2027', end: '31 May 2027'},
+  'youth-budget': {participants: 302, current: 'Ended', managers: ['Manager D'], access: 'Selected groups', start: '01 Jan 2027', end: '15 Feb 2027'},
   'clean-air': {participants: 0, current: 'Information', managers: [], access: 'Admins only', start: '01 Jun 2027'},
-  'playgrounds': {participants: 57, current: 'Poll', timeLeft: 'Less than a day left', managers: ['Ana P.'], access: 'Anyone', start: '20 Apr 2027', end: '30 Apr 2027'}
+  'playgrounds': {participants: 57, current: 'Poll', timeLeft: 'Less than a day left', managers: ['Manager A'], access: 'Anyone', start: '20 Apr 2027', end: '30 Apr 2027'}
 };
 for (const p of PROJECTS) Object.assign(p, LIST[p.id]);
 const TITLES = ['More trees on Elm Lane', 'Bike lane by the school', 'Benches in Park Row', 'Night buses on weekends',
   'A water fountain at the station', 'Wider pavements on Mill Road', 'Shade over the market stalls', 'Quiet hours in the library',
   'A crossing near the clinic', 'Compost bins per block', 'Murals on the underpass', 'Longer green light for walkers'];
 const INPUT_PROJECTS = ['green-corridors', 'school-streets', 'harbour-plan', 'library-hours'];
-export const ASSIGNEES = ['Unassigned', 'Ana P.', 'Sam K.', 'Lee M.'];
+export const ASSIGNEES = ['Unassigned', 'Manager A', 'Manager B', 'Manager C'];
+export const ME = 'Manager A'; // the signed-in admin of this invented platform
 export const STATUSES = ['Proposed', 'Under consideration', 'Accepted', 'Implemented', 'Not selected'];
 export const INPUTS = TITLES.map((title, i) => ({
   id: `i${i + 1}`, title, project: INPUT_PROJECTS[i % 4],

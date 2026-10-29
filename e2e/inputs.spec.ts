@@ -21,7 +21,21 @@ test('choosing a project narrows the inputs', async ({page}) => {
   const grid = page.getByRole('grid', {name: 'Inputs'});
   const all = await grid.getByRole('row').count();
   await page.getByRole('listbox', {name: 'Projects'}).getByRole('option', {name: 'Harbour Plan 2030'}).click();
-  await expect.poll(() => grid.getByRole('row').count()).toBeLessThan(all);
+  await expect(grid.getByRole('row')).toHaveCount(4); // header + three Harbour Plan inputs
+  for (const link of await grid.getByRole('row').getByRole('link').all()) await expect(link).toHaveText('Harbour Plan 2030');
+  expect(all).toBe(13);
+});
+
+test('assignee, feedback switch and search narrow the inputs', async ({page}) => {
+  await page.goto('/backoffice/#/inputs');
+  const grid = page.getByRole('grid', {name: 'Inputs'});
+  await page.getByRole('button', {name: /Assignee/}).first().click();
+  await page.getByRole('option', {name: 'Unassigned'}).click();
+  await expect(grid.getByRole('row')).toHaveCount(4);
+  await page.getByText('Only show inputs that need feedback').click();
+  await expect(grid.getByRole('row')).toHaveCount(3);
+  await page.getByRole('searchbox', {name: 'Search inputs'}).fill('nothing like this');
+  await expect(grid.getByText('No inputs match these filters.')).toBeVisible();
 });
 
 test('input manager names what the system still lacks', async ({page}) => {

@@ -37,6 +37,7 @@ function Overview() {
         </SegmentedControl>
       </div>
 
+      <h2 className="bo-section-title">People</h2>
       <div className="bo-grid">{DASHBOARD.people.map(d => <Stat key={d.label} {...d} />)}</div>
 
       <h2 className="bo-section-title">Projects and participation</h2>
