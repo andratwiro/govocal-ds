@@ -2,6 +2,7 @@
   "used": [
     "activity",
     "app-window",
+    "archive",
     "arrow-down",
     "arrow-left",
     "arrow-right",
@@ -88,6 +89,8 @@
     "pencil",
     "plus",
     "quote",
+    "rocket",
+    "rotate-ccw",
     "rotate-cw",
     "school",
     "scroll-text",

@@ -27,6 +27,9 @@ list; change any line and the agent follows. Newest first within each section.
 - Project details as a page-made definition list → **the Property list** → the system's label · value rows, as in the Side panel.
 - The Participation rail drawn twice (the overview's own head with hide and add; the phase screen's with empty Spotlight and Events labels) → **one rail: Rail header (hide on the overview), the timeline, Spotlight only when something runs there** → one rail; an empty label tells nothing.
 - "Link copied" and "Invitation sent" as a status line in the header bar → **a Toast** → one feedback channel; the status change says itself in one too.
+- The bar's own View menu and status pill → **Project header's bar: its panel toggle, Share ▾, Publish ▾ / ● Live ▾, one Save while the setup has changes; the View menu went** → the prototype's bar has no View menu (the rail hides itself, the preview is the stage); an archived project, which the header can't show, says so in a Banner and Publish ▾ restores it.
+- Next actions as plain rows → **an Action row list; Create report runs in its row (working, then Report ready)** → Action row's story.
+- The phone on a bare grey stage → **Phone stage (caption) and the phone's own action, Edit project page** → Phone preview's stories.
 
 ### Phase
 
@@ -36,6 +39,11 @@ list; change any line and the agent follows. Newest first within each section.
 - Insights as a note → **the prototype's phase dashboard on Stat tiles and Dashboard cards: a vote shows its results (tiles with notes, live ranking, who is voting, the AI Banner), ideas and proposals the ideation dashboard, other methods their visitors; Recommended actions as the Manage tab's cards in a Panel** → each piece is a story already; six tiles sit 3 + 3, not 4 + 2.
 - Voting and Proposals Manage as a note → **a Panel over the method's List header and rows (Voting row, Proposals row)** → the Figma rows for those methods; other methods keep a note until drawn.
 - The rail sent a non-ideation Manage to Build → **the rail keeps the tab it is on** → every method has a Manage tab now.
+- The page-made bar (mode switch, Share, Save) → **Project header's bar with modes, people and Save on hasChanges** → one header on the phase and the project; a phase has no Share (the header gives it none).
+- Project settings' flat side tabs → **Grouped tabs under Project, Participation, Inputs** → Tabs' "Vertical with group headings".
+- Idea form, participation and emails as stub cards → **Form field summary (recipe), Participant actions with Access rights modal, Available views, Notifications with the email in the setup's place; a volunteering phase's Causes card** → each pattern's "In a card" story.
+- Insights' Recommended actions as Manage cards → **an Action row list, each action's icon at the end** → Action row's "Recommended actions" story.
+- Phases could not leave the rail → **Rail phase's delete on every phase but the one on screen, undone from a Toast** → drawn as Rail phases since Phase timeline takes no delete.
 
 ### Messaging
 

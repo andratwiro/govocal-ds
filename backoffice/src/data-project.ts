@@ -227,3 +227,49 @@ export const PROPOSALS = [
   {title: 'Shade sails over the Tamsel Park playground', votes: 156, status: 'Gathering support', comments: 9},
   {title: 'A tool library at the Quillmoor community centre', votes: 74, status: 'Gathering support', comments: 4}
 ];
+
+// ── Phase screen · Build: an ideation phase's cards (the product's own wording; invented names) ──────────────────
+/** The idea form a new ideation phase starts with (the Form field summary recipe's rows). */
+export const IDEA_FORM = [
+  {name: 'Title', type: 'Short answer', isRequired: true},
+  {name: 'Description', type: 'Long answer', isRequired: true},
+  {name: 'Images', type: 'Image upload'},
+  {name: 'Attachments', type: 'File upload'},
+  {name: 'Tags', type: 'Tags'},
+  {name: 'Location', type: 'Location'}
+];
+
+/** What participants can do in an ideation phase; Attending an event can't be turned off. */
+export const PARTICIPANT_ACTIONS = [
+  {id: 'submit', label: 'Submitting inputs', short: 'Submit', question: 'Who can submit inputs?'},
+  {id: 'comment', label: 'Commenting on inputs', short: 'Comment', question: 'Who can comment on inputs?'},
+  {id: 'react', label: 'Reacting to inputs', short: 'React', question: 'Who can react to inputs?'},
+  {id: 'event', label: 'Attending an event', short: 'Attend', question: 'Who can attend an event?', isLocked: true}
+] as const;
+
+/** The views residents can switch between; List is always on. */
+export const IDEA_VIEWS = [
+  {id: 'list', label: 'List view', description: 'Inputs as a scrollable feed, sorted by trending, reactions, comments, date or activity. Best for smaller consultations.'},
+  {id: 'map', label: 'Map view', description: 'Inputs as pins on a map. Best for location-based consultations: add a location question to the idea form.'},
+  {id: 'perspectives', label: 'Perspectives view', description: 'Participants explore the discussion through emerging topics. Best for large consultations.'}
+] as const;
+
+/** The emails an ideation phase sends; three are off to begin with. */
+export const PHASE_EMAILS = [
+  {id: 'delc', name: 'Deletion of my comment', who: 'User who commented', when: 'Comment is deleted', on: false},
+  {id: 'cf', name: 'A comment on an idea that you follow', who: 'Users who follow the input', when: 'User comments', on: true},
+  {id: 'rc', name: 'A reply on my comment', who: 'User who commented', when: 'User replies to comment', on: true},
+  {id: 'pub', name: 'Publication of my input', who: 'User who published the input', when: 'Input is published', on: true},
+  {id: 'ment', name: 'Mention in an update', who: 'User who is mentioned', when: 'User is mentioned', on: false},
+  {id: 'uf', name: 'Update on an input that you follow', who: 'Users who follow the input', when: 'Input receives official feedback', on: true},
+  {id: 'phst', name: 'Phase started', who: 'Users who follow the project or have participated', when: 'A phase starts', on: true},
+  {id: 'stch', name: 'Status change of an input that you follow', who: 'Users who follow the input', when: 'Input status changes', on: true},
+  {id: 'scrn', name: 'My input awaits screening', who: 'User who submitted the input', when: 'New input awaits screening', on: false}
+];
+
+/** A volunteering phase's causes (Build), nobody signed up yet: the phase hasn't started. */
+export const CAUSES = [
+  {id: 'c1', title: 'Plant the first corridor', volunteers: 0},
+  {id: 'c2', title: 'Water the young trees in summer', volunteers: 0},
+  {id: 'c3', title: 'Photograph the route before and after', volunteers: 0}
+];

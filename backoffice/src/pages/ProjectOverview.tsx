@@ -1,40 +1,41 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router';
-import {ChevronUp, Eye, Info, Link, PanelLeft, Settings, UserPlus} from 'lucide-react';
+import {Archive, ChevronUp, Info, Link, PanelLeft, Rocket, RotateCcw, Settings, UserPlus} from 'lucide-react';
 import {Button} from '../../../src/components/Button';
-import {Menu, MenuItem, MenuTrigger} from '../../../src/components/Menu';
+import {MenuItem} from '../../../src/components/Menu';
 import {TextField} from '../../../src/components/TextField';
 import {Modal} from '../../../src/components/gv/Modal';
 import {AlertDialog} from '../../../src/components/gv/AlertDialog';
 import {Avatar, AvatarGroup} from '../../../src/components/gv/Avatar';
+import {Banner} from '../../../src/components/gv/Banner';
 import {Divider} from '../../../src/components/gv/Divider';
 import {Panel} from '../../../src/components/gv/Panel';
 import {PropertyList, PropertyListItem} from '../../../src/components/gv/PropertyList';
 import {ToastRegion, queue} from '../../../src/components/Toast';
 import {ProjectHeader} from '../../../src/patterns/ProjectHeader';
 import {IconButton} from '../../../src/components/gv/IconButton';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {ActionRow} from '../../../src/patterns/ActionRow';
+import {ActionRow, ActionRowList} from '../../../src/patterns/ActionRow';
 import {PanelSection} from '../../../src/patterns/PanelSection';
-import {PhonePreview, PhoneHeader, PhoneImage} from '../../../src/patterns/PhonePreview';
+import {PhonePreview, PhoneHeader, PhoneImage, PhoneStage} from '../../../src/patterns/PhonePreview';
 import {StatCard} from '../../../src/patterns/StatCard';
 import {ME, PROJECTS, type Project} from '../data';
 import {NO_OVERVIEW, OVERVIEWS, type NewPhase, type Overview} from '../data-project';
-import {AddPhase, CHECKLIST, CHECKLIST_TAB, CardStub, ChecklistStep, ProjectRail, ProjectSettings, type SettingsTab} from './ProjectPhase';
+import {AddPhase, CHECKLIST, CHECKLIST_TAB, CardStub, ChecklistStep, ProjectRail, ProjectSettings, useDeletedPhases,
+  type SettingsTab} from './ProjectPhase';
 
-// The project's publication status, as the prototype's status pill: one next step from each state.
+// The project's publication status: one next step from each state, asked first (an Alert dialog).
 type PubStatus = 'Draft' | 'Published' | 'Archived';
 const NEXT: Record<PubStatus, {to: PubStatus; label: string}> = {
   Draft: {to: 'Published', label: 'Publish project'},
   Published: {to: 'Archived', label: 'Archive project'},
   Archived: {to: 'Draft', label: 'Restore to draft'}
 };
+const NEXT_ICON = {Draft: Rocket, Published: Archive, Archived: RotateCcw};
 const DONE: Record<PubStatus, string> = {Draft: 'Project back in draft', Published: 'Project published', Archived: 'Project archived'};
-const PANELS = ['setup', 'rail', 'preview'] as const;
 // Copying a link or sending an invitation is done at once: a Toast says so.
 const toast = (title: string) => queue.add({title}, {timeout: 5000});
 
-// A project's own page, after the prototype's live project screen: a breadcrumb bar over three columns,
+// A project's own page, after the prototype's live project screen: the Project header's bar over three columns,
 // Project setup | the Participation rail | what a resident sees on a phone.
 export function ProjectOverview() {
   const {projectId} = useParams();
@@ -45,73 +46,56 @@ export function ProjectOverview() {
 function Overview({projectId}: {projectId?: string}) {
   const [setupOpen, setSetupOpen] = useState(true);
   const [railOpen, setRailOpen] = useState(true);
-  const [previewOpen, setPreviewOpen] = useState(true);
   const [settings, setSettings] = useState<SettingsTab | null>(null);
   const [adding, setAdding] = useState(false);
   const [added, setAdded] = useState<NewPhase[]>([]);
+  const [removed, deletePhase] = useDeletedPhases();
   const [inviting, setInviting] = useState(false);
   const [confirm, setConfirm] = useState<PubStatus | null>(null);
+  const [dirty, setDirty] = useState(false);
   const project = PROJECTS.find(p => p.id === projectId);
   const [status, setStatus] = useState<PubStatus>(project?.status === 'Live' ? 'Published' : 'Draft');
   if (!project) return <Navigate to="/projects" replace />;
   const o = OVERVIEWS[project.id] ?? NO_OVERVIEW;
   const live = status === 'Published';
-  const shown = new Set(PANELS.filter((_, i) => [setupOpen, railOpen, previewOpen][i]));
   const next = NEXT[status];
+  const NextIcon = NEXT_ICON[status];
 
   return (
     <div className="bo-phase bo-project">
       <h1 className="bo-visually-hidden">{project.title}</h1>
-      <div className="bo-project-bar">
-        <IconButton aria-label={setupOpen ? 'Hide project setup' : 'Show project setup'} onPress={() => setSetupOpen(v => !v)}>
-          <PanelLeft aria-hidden size={16} />
-        </IconButton>
-        <ProjectHeader projectName={project.title} parentHref="#/projects" />
-        <span className="bo-push" />
-        <Avatar initials={ME.slice(-1)} aria-label={`${ME} is here`} />
-        <MenuTrigger>
-          <Button variant="secondary" size={32} hasMenu><Eye aria-hidden size={16} />View</Button>
-          <Menu aria-label="View" selectionMode="multiple" selectedKeys={shown}
-            onSelectionChange={k => {
-              const on = k === 'all' ? new Set<string>(PANELS) : new Set([...k].map(String));
-              setSetupOpen(on.has('setup')); setRailOpen(on.has('rail')); setPreviewOpen(on.has('preview'));
-            }}>
-            <MenuItem id="setup">Project setup</MenuItem>
-            <MenuItem id="rail">Participation</MenuItem>
-            <MenuItem id="preview">Resident preview</MenuItem>
-          </Menu>
-        </MenuTrigger>
-        <MenuTrigger>
-          <Button variant="secondary" size={32} hasMenu>Share</Button>
-          <Menu aria-label="Share" onAction={k => (k === 'invite' ? setInviting(true) : toast('Link copied'))}>
-            <MenuItem id="invite" textValue="Invite people" icon={<UserPlus aria-hidden size={16} />}>Invite people</MenuItem>
-            <MenuItem id="copy" textValue="Copy link" isDisabled={!live} icon={<Link aria-hidden size={16} />}>Copy link</MenuItem>
-          </Menu>
-        </MenuTrigger>
-        <MenuTrigger>
-          <Button variant="quiet" size={32} hasMenu iconOnly={false} aria-label={`${live ? 'Live' : status}: change status`}>
-            <StatusBadge state={live ? 'live' : 'draft'}>{live ? '● Live' : status}</StatusBadge>
-          </Button>
-          <Menu aria-label="Project status" onAction={() => setConfirm(next.to)}>
-            <MenuItem id={next.to}>{next.label}</MenuItem>
-          </Menu>
-        </MenuTrigger>
-      </div>
+      {/* Project header's "Share and Publish" story: the setup toggle and crumbs, who is here, Share ▾, then Publish ▾
+          (a draft; an archived project too, whose menu restores it) or ● Live ▾. Unsaved setup: one Save instead. */}
+      <ProjectHeader projectName={project.title} parentHref="#/projects" onTogglePanel={() => setSetupOpen(v => !v)}
+        people={<Avatar initials={ME.slice(-1)} aria-label={`${ME} is here`} />}
+        hasChanges={dirty} onSave={() => { setDirty(false); toast('Changes saved'); }}
+        shareMenu={<>
+          <MenuItem id="invite" textValue="Invite people" icon={<UserPlus aria-hidden size={16} />} onAction={() => setInviting(true)}>Invite people</MenuItem>
+          <MenuItem id="copy" textValue="Copy link" isDisabled={!live} icon={<Link aria-hidden size={16} />} onAction={() => toast('Link copied')}>Copy link</MenuItem>
+        </>}
+        publishState={live ? 'live' : 'draft'}
+        publishMenu={(
+          <MenuItem id={next.to} textValue={next.label} icon={<NextIcon aria-hidden size={16} />} onAction={() => setConfirm(next.to)}>
+            {next.label}
+          </MenuItem>
+        )} />
       <div className="bo-phase-body bo-project-body">
-        {setupOpen && <Setup project={project} o={o} live={live} onSettings={setSettings} />}
+        {setupOpen && <Setup project={project} o={o} live={live} archived={status === 'Archived'} onSettings={setSettings}
+          onChange={() => setDirty(true)} />}
         {railOpen ? (
           <ProjectRail project={project} added={added} onAdd={() => setAdding(true)} onHide={() => setRailOpen(false)}
-            href={p => `#/projects/${project.id}/phases/${p.id}/build`} />
+            removed={removed} onDelete={deletePhase} href={p => `#/projects/${project.id}/phases/${p.id}/build`} />
         ) : (
           <aside className="bo-phase-panel bo-project-rail-closed" aria-label="Participation">
             <IconButton aria-label="Show the participation rail" onPress={() => setRailOpen(true)}><PanelLeft aria-hidden size={16} /></IconButton>
           </aside>
         )}
-        {previewOpen && (
-          <section className="bo-phase-stage bo-phase-grow" aria-label="Preview">
-            <Phone project={project} o={o} />
-          </section>
-        )}
+        <section className="bo-phase-grow bo-phase-stage-box" aria-label="Preview">
+          {/* Phone preview's "On the stage": the phone's own action edits the project page. */}
+          <PhoneStage caption="What residents see on the project page">
+            <Phone project={project} o={o} onEdit={() => setSettings('Project page')} />
+          </PhoneStage>
+        </section>
       </div>
       <ProjectSettings project={project} tab={settings} onTabChange={setSettings} onClose={() => setSettings(null)} />
       <AddPhase isOpen={adding} onOpenChange={setAdding} onAdd={p => setAdded(a => [...a, p])} />
@@ -137,13 +121,17 @@ function Overview({projectId}: {projectId?: string}) {
 
 // The setup column is a Panel (the cog in its head), its parts Panel sections: what is collecting now and the next
 // actions once live, the publish checklist before; the project's details fold away in a Property list.
-function Setup({project, o, live, onSettings}: {project: Project; o: Overview; live: boolean; onSettings: (tab: SettingsTab) => void}) {
+function Setup({project, o, live, archived, onSettings, onChange}: {project: Project; o: Overview; live: boolean; archived: boolean;
+  onSettings: (tab: SettingsTab) => void; onChange: () => void}) {
   const navigate = useNavigate();
   const [stub, setStub] = useState<string | null>(null);
   return (
     <Panel title="Project setup" className="bo-project-setup"
       actions={<IconButton aria-label="Project settings" onPress={() => onSettings('General')}><Settings aria-hidden size={16} /></IconButton>}>
       <div className="bo-project-setup-body">
+        {archived && (
+          <Banner compact tone="neutral" title="Archived">Residents can read the project but no longer take part.</Banner>
+        )}
         {live ? (
           <>
             <PanelSection title="Collecting now">
@@ -153,16 +141,19 @@ function Setup({project, o, live, onSettings}: {project: Project; o: Overview; l
             </PanelSection>
             <Divider />
             <PanelSection title="Next actions">
-              <ActionRow href="#/messaging">Message participants</ActionRow>
-              <ActionRow href="#/reporting">Create report</ActionRow>
+              <ActionRowList aria-label="Next actions">
+                <ActionRow href="#/messaging">Message participants</ActionRow>
+                <CreateReport />
+              </ActionRowList>
             </PanelSection>
           </>
-        ) : (
+        ) : !archived && (
           <PanelSection title="Before you publish" aside={`0 of ${CHECKLIST.length} ready`}>
             <ul className="bo-phase-stack">
               {CHECKLIST.map(c => (
                 <li key={c.title} data-gv="setup-card">
-                  <ChecklistStep step={c} onOpen={title => { const t = CHECKLIST_TAB[title]; if (t) onSettings(t); else setStub(title); }} />
+                  <ChecklistStep step={c} onChange={onChange}
+                    onOpen={title => { const t = CHECKLIST_TAB[title]; if (t) onSettings(t); else setStub(title); }} />
                 </li>
               ))}
             </ul>
@@ -183,11 +174,31 @@ function Setup({project, o, live, onSettings}: {project: Project; o: Overview; l
   );
 }
 
-// What a resident sees: the platform header, the project's picture, title and intro, the participation box.
-function Phone({project, o}: {project: Project; o: Overview}) {
+// Create report runs in its own row (Action row's working state, its ring filling), then opens the report.
+const REPORT_SECONDS = 4;
+function CreateReport() {
+  const [left, setLeft] = useState<number | null>(null);
+  useEffect(() => {
+    if (left == null || left === 0) return;
+    const t = setTimeout(() => setLeft(s => (s ?? 1) - 1), 1000);
+    return () => clearTimeout(t);
+  }, [left]);
+  if (left === 0) return <ActionRow state="done" href="#/reporting">Report ready</ActionRow>;
+  if (left != null) {
+    return (
+      <ActionRow state="working" progress={(REPORT_SECONDS - left) / REPORT_SECONDS * 100} badge={`${left}s`}
+        description="Reading the results so far">Creating report</ActionRow>
+    );
+  }
+  return <ActionRow onPress={() => setLeft(REPORT_SECONDS)}>Create report</ActionRow>;
+}
+
+// What a resident sees: the platform header, the project's picture, title and intro, the participation box. The
+// phone's action (on hover or focus) opens the project page's settings.
+function Phone({project, o, onEdit}: {project: Project; o: Overview; onEdit: () => void}) {
   const people = project.participants ?? 0;
   return (
-    <PhonePreview aria-label="What residents see" header={<PhoneHeader />}>
+    <PhonePreview aria-label="What residents see" header={<PhoneHeader />} action={{label: 'Edit project page', onPress: onEdit}}>
       <PhoneImage aria-label="Project image" />
       <h2>{project.title}</h2>
       <p>{o.intro}</p>

@@ -152,9 +152,12 @@ test('Build: the checklist and phase cards open', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
   const setup = page.getByRole('region', {name: 'Setup'});
   await setup.getByRole('button', {name: 'Edit project page'}).click();
-  await expect(page.getByRole('dialog', {name: 'Project settings'}).getByRole('tab', {name: 'Project page'})).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('dialog', {name: 'Project settings'}).getByRole('option', {name: 'Project page'})).toHaveAttribute('aria-selected', 'true');
   await page.keyboard.press('Escape');
+  // Idea form folds out to its questions (the Form field summary recipe); Edit form opens the form.
   await setup.getByRole('button', {name: /Idea form/}).click();
+  await expect(setup.getByRole('list', {name: 'Idea form questions'}).getByRole('listitem')).toHaveCount(6);
+  await setup.getByRole('button', {name: 'Edit form'}).click();
   await expect(page.getByRole('dialog', {name: 'Idea form'})).toBeVisible();
 });
 
@@ -172,20 +175,24 @@ test('Build: the phase status is a compact Banner, neutral before and after, suc
   }
 });
 
-test('Project settings: a fixed-height Modal with a vertical side list of tabs', async ({page}) => {
+// Grouped tabs (Tabs' "Vertical with group headings"): a list box of tabs under group headings, each panel a group
+// named by its tab; arrows walk the tabs across groups.
+test('Project settings: a fixed-height Modal with a grouped side list of tabs', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
   await page.getByRole('region', {name: 'Setup'}).getByRole('button', {name: 'Project settings'}).click();
   const dialog = page.getByRole('dialog', {name: 'Project settings'});
   await expect(dialog).toHaveAttribute('data-height', 'fixed');
-  const tabs = dialog.getByRole('tablist', {name: 'Project settings'});
-  await expect(tabs).toHaveAttribute('aria-orientation', 'vertical');
-  await expect(tabs.getByRole('tab')).toHaveCount(8);
+  const tabs = dialog.getByRole('listbox', {name: 'Project settings'});
+  await expect(tabs.getByRole('option')).toHaveCount(8);
   // The side list sits beside the panel, not above it.
   const list = await tabs.boundingBox();
-  const panel = await dialog.getByRole('tabpanel').boundingBox();
+  const panel = await dialog.getByRole('group', {name: 'General'}).boundingBox();
   expect(panel!.x).toBeGreaterThanOrEqual(list!.x + list!.width - 1);
-  await tabs.getByRole('tab', {name: 'Access rights'}).click();
-  await expect(dialog.getByRole('tabpanel', {name: 'Access rights'})).toBeVisible();
+  await tabs.getByRole('option', {name: 'Access rights'}).click();
+  await expect(dialog.getByRole('group', {name: 'Access rights'})).toBeVisible();
+  // Arrow down from the last tab of a group moves into the next group.
+  await page.keyboard.press('ArrowDown');
+  await expect(tabs.getByRole('option', {name: 'Audience'})).toHaveAttribute('aria-selected', 'true');
   await dialog.getByRole('button', {name: 'Save'}).click();
   await expect(dialog).toHaveCount(0);
 });
@@ -309,8 +316,8 @@ test('Build: the Dates card holds a Date range field; Events has one with times'
 
   await setup.getByRole('button', {name: 'Project settings'}).click();
   const dialog = page.getByRole('dialog', {name: 'Project settings'});
-  await dialog.getByRole('tab', {name: 'Events'}).click();
-  const events = dialog.getByRole('tabpanel', {name: 'Events'});
+  await dialog.getByRole('option', {name: 'Events'}).click();
+  const events = dialog.getByRole('group', {name: 'Events'});
   await expect(events.getByRole('group', {name: 'Event dates, start date'})).toBeVisible();
   // The time fields come with a date: type a start date and its time field appears.
   await events.getByRole('group', {name: 'Event dates, start date'}).getByRole('spinbutton').first().click();
@@ -321,7 +328,7 @@ test('Build: the Dates card holds a Date range field; Events has one with times'
 test('Build: the Attachments card opens its dialog: a drop zone, the files, Done', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
   const setup = page.getByRole('region', {name: 'Setup'});
-  await expect(setup.locator('[data-gv="setup-card"]', {hasText: 'Attachments'})).toContainText('2 files');
+  await expect(setup.locator('[data-gv="setup-card"]', {hasText: /^Attachments/})).toContainText('2 files');
   await setup.getByRole('button', {name: 'Add an attachment'}).click();
   const dialog = page.getByRole('dialog', {name: 'Attachments'});
   await expect(dialog.getByRole('button', {name: 'Drop a file here or browse'})).toBeVisible();
@@ -334,7 +341,7 @@ test('Build: the Attachments card opens its dialog: a drop zone, the files, Done
   await expect(files).toHaveCount(2);
   await dialog.getByRole('button', {name: 'Done'}).click();
   await expect(dialog).toHaveCount(0);
-  await expect(setup.locator('[data-gv="setup-card"]', {hasText: 'Attachments'})).toContainText('2 files');
+  await expect(setup.locator('[data-gv="setup-card"]', {hasText: /^Attachments/})).toContainText('2 files');
 });
 
 // ── The table in its Panel (Data table's "In a panel" story) and the batch pickers ──
@@ -479,7 +486,8 @@ test('Insights for ideas: the stat tiles, the dashboard cards and the recommende
   for (const h of ['Participation over time', 'What are people saying?', 'Topic breakdown', 'Status breakdown', 'Most liked', 'Demographics and audience'])
     await expect(dash.getByRole('heading', {name: h})).toBeVisible();
   const actions = page.getByRole('region', {name: 'Recommended actions'});
-  await actions.getByRole('button', {name: 'Add a report'}).click();
+  await expect(actions.getByRole('list', {name: 'Recommended actions'}).getByRole('listitem')).toHaveCount(3);
+  await actions.getByRole('link', {name: 'Add a report'}).click();
   await expect(page).toHaveURL(/#\/reporting$/);
 });
 
@@ -499,4 +507,83 @@ test('the Insights tab passes axe (WCAG 2.2 AA), reported', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/insights');
   await expect(page.getByRole('heading', {name: 'Status breakdown'})).toBeVisible();
   a11yReport(await violations(page, '.bo-phase-insights'));
+});
+
+// ── Build's cards on the system's Build-tab patterns, the header's Save, the rail's delete ──
+const BUILD = '/backoffice/#/projects/green-corridors/phases/p2/build';
+const setup = (page: Page) => page.getByRole('region', {name: 'Setup'});
+
+test('Build: Participant actions, each opening its Access rights modal; the row says when it is set for this phase', async ({page}) => {
+  await page.goto(BUILD);
+  const card = setup(page).locator('[data-gv="setup-card"]', {hasText: /^Participant actions/});
+  await expect(card).toContainText('Submit +2');
+  await card.getByRole('button', {name: /Participant actions/}).click();
+  const actions = card.getByRole('group', {name: 'Participant actions'});
+  await expect(actions.getByRole('switch', {name: 'Disliking'})).toBeVisible();
+  await expect(actions.getByRole('img', {name: 'Always on'})).toBeVisible();
+  // Reacting carries its limit while it is on.
+  await expect(actions.getByRole('radiogroup', {name: 'Number of likes per participant'})).toBeVisible();
+  await actions.getByRole('switch', {name: 'Commenting on inputs'}).click({force: true});
+  await expect(card).toContainText('Submit +1');
+  await expect(page.getByRole('button', {name: 'Save'})).toBeEnabled();
+
+  await actions.getByRole('button', {name: 'Edit access for Submitting inputs'}).click();
+  const modal = page.getByRole('dialog', {name: 'Who can submit inputs?'});
+  await expect(modal).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(modal).toHaveCount(0);
+});
+
+test('Build: Available views and Notifications; an email opens in the setup\'s place, the email on the phone', async ({page}) => {
+  await page.goto(BUILD);
+  const views = setup(page).locator('[data-gv="setup-card"]', {hasText: /^Available views/});
+  await views.getByRole('button', {name: /Available views/}).click();
+  await views.getByRole('switch', {name: 'Map view'}).click({force: true});
+  await expect(views).toContainText('Map view');
+
+  const card = setup(page).locator('[data-gv="setup-card"]', {hasText: /^Notifications/});
+  await expect(card).toContainText('6 emails on');
+  await card.getByRole('button', {name: /Notifications/}).click();
+  const emails = card.getByRole('group', {name: 'Emails'});
+  await emails.getByRole('switch', {name: 'Deletion of my comment'}).click({force: true});
+  await expect(card).toContainText('7 emails on');
+  await emails.getByRole('button', {name: 'Edit A reply on my comment'}).click();
+  const email = setup(page).getByRole('region', {name: 'A reply on my comment'});
+  await expect(email.getByRole('switch', {name: 'Send this email'})).toBeChecked();
+  await expect(email.getByRole('textbox', {name: 'Subject'})).toHaveValue('A reply on my comment');
+  await expect(page.getByRole('region', {name: 'Preview'}).getByRole('group', {name: 'The email: A reply on my comment'})).toBeVisible();
+  await email.getByRole('button', {name: 'Back to Ideation setup'}).click();
+  await expect(setup(page).getByRole('heading', {name: 'Before you publish'})).toBeVisible();
+});
+
+test('Build: the header\'s Save turns on with a change and off once saved', async ({page}) => {
+  await page.goto(BUILD);
+  const save = page.getByRole('button', {name: 'Save'});
+  await expect(save).toBeDisabled();
+  await setup(page).getByRole('textbox', {name: 'Phase description'}).fill('Where should the corridor go?');
+  await expect(save).toBeEnabled();
+  await save.click();
+  await expect(page.getByText('Changes saved')).toBeVisible();
+  await expect(save).toBeDisabled();
+});
+
+test('Build of a volunteering phase: the Causes card; a cause deletes with an Undo toast', async ({page}) => {
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p7/build');
+  const card = setup(page).locator('[data-gv="setup-card"]', {hasText: /^Causes/});
+  await expect(card).toContainText('3 causes');
+  await expect(card.getByRole('button', {name: 'Download volunteers'})).toBeDisabled();
+  await card.getByRole('button', {name: 'Delete Plant the first corridor'}).click();
+  await expect(card).toContainText('2 causes');
+  await page.getByRole('button', {name: 'Undo'}).click();
+  await expect(card).toContainText('3 causes');
+});
+
+test('the rail deletes any phase but the one on screen', async ({page}) => {
+  await page.goto(BUILD);
+  const rail = page.getByRole('navigation', {name: 'Phases'});
+  await expect(rail.getByRole('button', {name: 'Delete Collect ideas'})).toHaveCount(0);
+  await rail.getByRole('link', {name: /Recruit volunteers/}).hover();
+  await rail.getByRole('button', {name: 'Delete Recruit volunteers'}).click();
+  await expect(rail.getByRole('link')).toHaveCount(6);
+  await expect(page.getByText('Recruit volunteers deleted')).toBeVisible();
 });
