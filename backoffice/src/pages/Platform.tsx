@@ -12,7 +12,7 @@ export function Platform() {
   return (
     <main className="bo-platform">
       <div className="bo-page">
-        <header className="bo-page-header"><h1>Resident site (placeholder)</h1></header>
+        <header className="bo-page-bar"><h1>Resident site (placeholder)</h1></header>
         {note && <Banner>{note}</Banner>}
         <p className="bo-note">The back office demo has no resident site: this page stands in for it.</p>
         <Link href="#/dashboard">Back to the back office</Link>

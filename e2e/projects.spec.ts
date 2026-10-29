@@ -34,7 +34,7 @@ test('projects follows the real admin: views, filters, a full project table', as
 // The head's action follows the tab, as in the real admin: New project, New folder, New space.
 test('the page head offers the open tab\'s action', async ({page}) => {
   await page.goto('/backoffice/#/projects');
-  const head = page.locator('.bo-page-header');
+  const head = page.locator('.bo-page-bar');
   await expect(head.getByRole('button', {name: 'New project'})).toBeVisible();
   await page.getByRole('tab', {name: 'Folders'}).click();
   await expect(head.getByRole('button', {name: 'New folder'})).toBeVisible();
