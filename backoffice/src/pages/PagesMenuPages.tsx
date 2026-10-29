@@ -1,9 +1,8 @@
 import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {Eye, FileQuestion} from 'lucide-react';
-import {Banner, Button, Divider, EmptyState, Panel, queue, SectionToggle, Tab, TabList, TabPanel, TabPanels, Tabs,
-  TextField, ToastRegion} from 'govocal-ds';
-import {Radio, RadioGroup} from 'govocal-ds/base';
+import {Banner, Button, Divider, EmptyState, Panel, queue, Radio, RadioGroup, SectionToggle, Tab, TabList, TabPanel,
+  TabPanels, Tabs, TextField, ToastRegion} from 'govocal-ds';
 import {CUSTOM_PAGE_SECTIONS, HOME_SECTIONS, MENU_ENTRIES, NAV_NAMES, PAGE_INTRO, PAGE_META, type PageSection} from '../data-pages-menu';
 import {LOCALES} from '../data-settings';
 import {Gap} from '../Gap';

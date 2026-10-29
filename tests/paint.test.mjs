@@ -43,10 +43,8 @@ describe('paint comes only from tokens', () => {
 export const RESIDUAL = [
   ['src/components/Tooltip.css', 'neutral-800', "the tooltip's dark fill and its arrow: no surface token for a dark tip"],
   ['src/components/Tabs.css', 'slate-750', 'a tab label one step stronger than text-secondary: text-neutral or text-secondary when the designer picks'],
-  ['src/components/NavigationTree.css', 'slate-750', 'as Tabs'],
   ['src/components/RadioGroup.css', 'slate-750', 'as Tabs'],
-  ['src/components/Slider.css', 'slate-250', "the slider's empty track: no track token"],
-  ['src/components/utilities.css', 'slate-250', 'the inset track fill shared by Slider and Switch: as Slider'],
+  ['src/components/utilities.css', 'slate-250', "the inset track fill (Meter's empty track): no track token"],
   ['src/components/utilities.css', 'slate-400', "the inset track's hairline: no track token"],
   ['src/components/TagGroup.css', 'slate-500', "the prototype's 0.5px cool-grey tag edge: border-control is a step lighter"],
   ['src/components/Button.css', 'teal-500', "the kbd hint's hairline: no token for it"],

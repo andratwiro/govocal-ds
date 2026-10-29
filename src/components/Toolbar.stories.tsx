@@ -20,7 +20,7 @@ type Story = StoryFn<typeof Toolbar>;
 
 export const Example: Story = args => (
   <Toolbar aria-label="Text formatting" {...args}>
-    <Group aria-label="Style">
+    <Group className="react-aria-Group gv-base-group" aria-label="Style">
       <ToggleButton aria-label="Bold">
         <b>B</b>
       </ToggleButton>
@@ -32,7 +32,7 @@ export const Example: Story = args => (
       </ToggleButton>
     </Group>
     <Separator />
-    <Group aria-label="Clipboard">
+    <Group className="react-aria-Group gv-base-group" aria-label="Clipboard">
       <Button>Copy</Button>
       <Button>Paste</Button>
       <Button>Cut</Button>

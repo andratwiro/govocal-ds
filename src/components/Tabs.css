@@ -1,6 +1,6 @@
 @import './theme.css';
 
-.react-aria-Tabs {
+.gv-base-tabs {
   display: flex;
   gap: var(--gv-space-8);
   color: var(--gv-text-primary);
@@ -13,7 +13,7 @@
   &[data-orientation='vertical'] {
     flex-direction: row;
     width: 100%;
-    .react-aria-TabPanels {
+    .gv-base-tab-panels {
       flex: 1;
     }
   }
@@ -23,10 +23,10 @@
    UI strong primary on a 2px selected-blue line; 4 apart, padding 12 10, a 1px divider under the list. Side tabs
    (the Settings dialog, #pj-psethost l.38418): rows of 8 12 (36 high), 4 apart, radius 8, slate text, a 16 icon 10
    before the label; hover the strong hover grey, the chosen one the light grey and strong, no line. */
-.react-aria-TabList {
+.gv-base-tab-list {
   display: flex;
 
-  .react-aria-SelectionIndicator {
+  .gv-base-selection-indicator {
     background: var(--border-color);
   }
 
@@ -38,7 +38,7 @@
     overflow-y: clip;
     scrollbar-width: none;
 
-    .react-aria-SelectionIndicator {
+    .gv-base-selection-indicator {
       left: 0;
       bottom: 0;
       width: 100%;
@@ -53,14 +53,14 @@
     padding-inline-end: var(--gv-space-12);
     border-inline-end: 1px solid var(--gv-border-default);
 
-    .react-aria-SelectionIndicator {
+    .gv-base-selection-indicator {
       display: none;
     }
   }
 }
 
 /* An icon passed before the label sits 7 from it (the Projects list's .pl-subnav, its 17 icon at 16). */
-.react-aria-Tab {
+.gv-base-tab {
   display: flex;
   align-items: center;
   gap: var(--gv-space-8);
@@ -82,7 +82,7 @@
     color: var(--gv-text-primary);
   }
 
-  .react-aria-SelectionIndicator {
+  .gv-base-selection-indicator {
     position: absolute;
     transition-duration: var(--gv-motion-duration-medium);
     transition-timing-function: var(--gv-motion-easing-move);
@@ -121,7 +121,7 @@
 }
 
 /* Side tabs: the vertical TabList's tabs and the grouped list's (a ListBox: its tabs sit inside sections). */
-:is([data-orientation='vertical'] > .react-aria-Tab, .gv-grouped-tab) {
+:is([data-orientation='vertical'] > .gv-base-tab, .gv-grouped-tab) {
   gap: var(--gv-space-10);
   padding: var(--gv-space-8) var(--gv-space-12);
   border-radius: var(--gv-radius-8);
@@ -224,7 +224,7 @@
   box-sizing: border-box;
 }
 
-.react-aria-TabPanels {
+.gv-base-tab-panels {
   position: relative;
   height: var(--tab-panel-height);
   width: var(--tab-panel-width);
@@ -232,7 +232,7 @@
   overflow: clip;
 }
 
-.react-aria-TabPanel {
+.gv-base-tab-panel {
   padding: var(--gv-space-12);
   border-radius: var(--gv-radius-8);
   outline: none;

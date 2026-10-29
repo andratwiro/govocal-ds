@@ -11,7 +11,7 @@
      means several, a check means one).
    · Divider 1px, margin 6 4. Section label Small secondary, padding 8 8 4.
    · Submenu: the same container, 4 from the menu, its first row on the line of the row that opens it. */
-.react-aria-Menu {
+.gv-base-menu {
   margin: 0;
   padding: var(--gv-space-6);
   list-style: none;
@@ -38,7 +38,7 @@
   }
 }
 
-.react-aria-MenuLoadingIndicator {
+.gv-base-menu-loading-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -46,7 +46,7 @@
   grid-column: 1 / -1;
 }
 
-.react-aria-MenuItem {
+.gv-base-menu-item {
   margin: 0;
   min-height: 32px;
   padding: 0 var(--gv-space-8);
@@ -169,7 +169,7 @@
     }
   }
 
-  .react-aria-Text:not([slot]),
+  .gv-base-text:not([slot]),
   [slot='label'] {
     grid-area: label;
   }
@@ -209,16 +209,16 @@
 
 /* In a menu with boxes, an action that isn't a choice ("+ Add phase") puts its icon in the box column, so every name
    starts on one line. */
-.react-aria-Menu:has(.gv-menu-box) .react-aria-MenuItem:not([data-selection-mode]) > .gv-menu-icon {
+.gv-base-menu:has(.gv-menu-box) .gv-base-menu-item:not([data-selection-mode]) > .gv-menu-icon {
   grid-area: check;
 }
 
-.react-aria-MenuSection {
+.gv-base-menu-section {
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: subgrid;
 
-  .react-aria-Header {
+  .gv-base-header {
     grid-column: 1 / -1;
     padding: var(--gv-space-8) var(--gv-space-8) var(--gv-space-4);
     font: var(--gv-type-small);
@@ -228,7 +228,7 @@
   }
 }
 
-.react-aria-Menu .react-aria-Separator {
+.gv-base-menu .gv-base-separator {
   grid-column: 1 / -1;
   margin: var(--gv-space-6) var(--gv-space-4);
   border: 0;

@@ -1,16 +1,16 @@
 @import './theme.css';
 
-.react-aria-Form {
+.gv-base-form {
   display: flex;
   flex-direction: column;
   gap: var(--gv-space-24);
 
-  > .react-aria-Button {
+  > .gv-base-button {
     align-self: start;
   }
 }
 
-.react-aria-Form [role='alert'] {
+.gv-base-form [role='alert'] {
   border: 2px solid var(--gv-border-danger);
   background: var(--gv-surface-panel);
   border-radius: var(--gv-radius-6);
@@ -33,7 +33,7 @@
 }
 
 /* Field label: UI strong, primary, 8 above the field. */
-.react-aria-Label {
+.gv-base-label {
   display: block;
   font: var(--gv-type-ui-strong);
   color: var(--gv-text-primary);
@@ -42,7 +42,7 @@
 }
 
 /* Help and error under a field: Small, 4 below it (help in the secondary grey, as the prototype's .pjp-help). */
-.react-aria-FieldError {
+.gv-base-field-error {
   display: block;
   font: var(--gv-type-small);
   color: var(--gv-text-danger);

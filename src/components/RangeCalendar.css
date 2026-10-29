@@ -1,6 +1,6 @@
 @import './theme.css';
 
-.react-aria-RangeCalendar {
+.gv-base-range-calendar {
   display: flex;
   flex-direction: column;
   gap: var(--gv-space-8);
@@ -27,7 +27,7 @@
     margin: 0 var(--gv-space-4) var(--gv-space-16) var(--gv-space-4);
     min-height: var(--gv-space-32);
 
-    .react-aria-CalendarHeading {
+    .gv-base-calendar-heading {
       flex: 1;
       margin: 0;
       text-align: center;
@@ -35,7 +35,7 @@
     }
   }
 
-  .react-aria-CalendarGrid {
+  .gv-base-calendar-grid {
     border-collapse: collapse;
     border-spacing: 0;
   }
@@ -45,7 +45,7 @@
     color: var(--gv-text-danger);
   }
 
-  .react-aria-CalendarCell {
+  .gv-base-calendar-cell {
     margin: var(--gv-space-2) 0;
     padding: 0 calc(var(--gap) / 2);
     position: relative;

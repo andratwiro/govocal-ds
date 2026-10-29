@@ -35,22 +35,22 @@ const me = <Avatar initials="S" aria-label="You are here" />;
 
 const shareMenu = (
   <>
-    <MenuItem id="invite" textValue="Invite collaborators"><UserPlus aria-hidden /><Text slot="label">Invite collaborators</Text></MenuItem>
-    <MenuItem id="link" textValue="Copy preview link"><Link2 aria-hidden /><Text slot="label">Copy preview link</Text></MenuItem>
+    <MenuItem id="invite" textValue="Invite collaborators"><UserPlus aria-hidden /><Text className="react-aria-Text gv-base-text" slot="label">Invite collaborators</Text></MenuItem>
+    <MenuItem id="link" textValue="Copy preview link"><Link2 aria-hidden /><Text className="react-aria-Text gv-base-text" slot="label">Copy preview link</Text></MenuItem>
   </>
 );
 
 const publishMenu = (
   <>
-    <MenuItem id="now" textValue="Publish now"><Rocket aria-hidden /><Text slot="label">Publish now</Text></MenuItem>
-    <MenuItem id="schedule" textValue="Schedule publish"><CalendarClock aria-hidden /><Text slot="label">Schedule publish</Text></MenuItem>
+    <MenuItem id="now" textValue="Publish now"><Rocket aria-hidden /><Text className="react-aria-Text gv-base-text" slot="label">Publish now</Text></MenuItem>
+    <MenuItem id="schedule" textValue="Schedule publish"><CalendarClock aria-hidden /><Text className="react-aria-Text gv-base-text" slot="label">Schedule publish</Text></MenuItem>
   </>
 );
 
 const liveMenu = (
   <>
-    <MenuItem id="access" textValue="Who can find and open it"><Link2 aria-hidden /><Text slot="label">Who can find and open it</Text></MenuItem>
-    <MenuItem id="archive" textValue="Archive project"><Archive aria-hidden /><Text slot="label">Archive project</Text></MenuItem>
+    <MenuItem id="access" textValue="Who can find and open it"><Link2 aria-hidden /><Text className="react-aria-Text gv-base-text" slot="label">Who can find and open it</Text></MenuItem>
+    <MenuItem id="archive" textValue="Archive project"><Archive aria-hidden /><Text className="react-aria-Text gv-base-text" slot="label">Archive project</Text></MenuItem>
   </>
 );
 

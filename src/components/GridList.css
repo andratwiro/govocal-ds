@@ -1,6 +1,6 @@
 @import './theme.css';
 
-.react-aria-GridList {
+.gv-base-grid-list {
   justify-content: center;
   gap: var(--gv-space-16);
   padding: var(--gv-space-8);
@@ -16,11 +16,11 @@
   box-sizing: border-box;
   --grid-item-size: 200px;
 
-  &:has(.react-aria-GridListSection) {
+  &:has(.gv-base-grid-list-section) {
     scroll-padding: var(--gv-space-48);
   }
 
-  &[data-layout='grid']:not(:has(.react-aria-GridListSection)):not([data-empty]) {
+  &[data-layout='grid']:not(:has(.gv-base-grid-list-section)):not([data-empty]) {
     display: grid;
     grid-auto-rows: min-content;
 
@@ -29,16 +29,16 @@
     }
   }
 
-  &[data-layout='grid'] > .react-aria-GridListSection {
+  &[data-layout='grid'] > .gv-base-grid-list-section {
     grid-template-columns: repeat(auto-fit, minmax(100px, var(--grid-item-size)));
     grid-auto-rows: min-content;
   }
 
-  .react-aria-GridListSection:not(:first-child) {
+  .gv-base-grid-list-section:not(:first-child) {
     margin-top: var(--gv-space-16);
   }
 
-  &[data-layout='stack'] > .react-aria-GridListSection {
+  &[data-layout='stack'] > .gv-base-grid-list-section {
     grid-template-columns: auto;
     align-items: center;
   }
@@ -52,7 +52,7 @@
       --grid-item-size: 150px;
     }
 
-    &[data-layout='grid']:not(:has(.react-aria-GridListSection)) {
+    &[data-layout='grid']:not(:has(.gv-base-grid-list-section)) {
       grid-template-columns: 1fr 1fr;
     }
   }
@@ -67,7 +67,7 @@
       flex-direction: row;
       justify-content: normal;
 
-      .react-aria-GridListItem {
+      .gv-base-grid-list-item {
         flex-shrink: 0;
         width: var(--grid-item-size);
       }
@@ -114,7 +114,7 @@
 
 /* A grid item is a Figma Card (gv/Card, 14:879): 1px card-grey border, radius 8, panel fill, no shadow. Chosen =
    the 2px selected-blue ring inside the edge. Title UI strong, description Small secondary. */
-.react-aria-GridListItem {
+.gv-base-grid-list-item {
   display: flex;
   flex-direction: column;
   gap: var(--gv-space-8);
@@ -175,12 +175,12 @@
     color: var(--gv-text-disabled);
   }
 
-  .react-aria-CheckboxField {
+  .gv-base-checkbox-field {
     position: absolute;
     top: var(--gv-space-16);
     inset-inline-start: var(--gv-space-16);
 
-    .react-aria-CheckboxButton {
+    .gv-base-checkbox-button {
       &::before {
         content: '';
         position: absolute;
@@ -206,7 +206,7 @@
     flex-shrink: 0;
   }
 
-  > .react-aria-Text {
+  > .gv-base-text {
     padding: 0 var(--gv-space-12);
     display: -webkit-box;
     overflow: hidden;
@@ -223,7 +223,7 @@
     }
   }
 
-  .react-aria-Button[slot='drag'] {
+  .gv-base-button[slot='drag'] {
     all: unset;
     display: inline-flex;
     align-items: center;
@@ -258,7 +258,7 @@
   }
 }
 
-.react-aria-GridListLoadingIndicator {
+.gv-base-grid-list-loading-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -266,19 +266,19 @@
   width: 100%;
 }
 
-.react-aria-GridListSection {
+.gv-base-grid-list-section {
   display: grid;
   justify-content: center;
   gap: var(--gv-space-16);
   color: var(--gv-text-primary);
   width: 100%;
 
-  > .react-aria-GridListHeader {
+  > .gv-base-grid-list-header {
     grid-column: 1 / -1;
   }
 }
 
-.react-aria-GridListHeader {
+.gv-base-grid-list-header {
   position: sticky;
   z-index: 2;
   top: calc(var(--gv-space-8) * -1);

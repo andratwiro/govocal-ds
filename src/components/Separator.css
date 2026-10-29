@@ -1,7 +1,7 @@
 @import './theme.css';
 
 /* The prototype's rule between groups (1px grey-200, .pj-acc / .pj-toggle-row): one hairline in the strong divider. */
-.react-aria-Separator {
+.gv-base-separator {
   background-color: var(--gv-border-default);
   border-style: none;
   border-radius: 0;

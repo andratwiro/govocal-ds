@@ -1,6 +1,6 @@
 @import './theme.css';
 
-.react-aria-TimeField {
+.gv-base-time-field {
   display: flex;
   flex-direction: column;
 }

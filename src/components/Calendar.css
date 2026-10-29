@@ -1,7 +1,7 @@
 @import './theme.css';
 @import './utilities.css';
 
-.react-aria-Calendar {
+.gv-base-calendar {
   display: flex;
   flex-direction: column;
   gap: var(--gv-space-8);
@@ -27,7 +27,7 @@
     margin: 0 var(--gv-space-4) var(--gv-space-16) var(--gv-space-4);
     min-height: var(--gv-space-32);
 
-    .react-aria-CalendarHeading {
+    .gv-base-calendar-heading {
       flex: 1;
       margin: 0;
       text-align: center;
@@ -35,7 +35,7 @@
     }
   }
 
-  .react-aria-CalendarGrid {
+  .gv-base-calendar-grid {
     border-collapse: collapse;
     border-spacing: 0;
     width: 100%;
@@ -55,12 +55,12 @@
 
 /* Same family as the Figma fields: weekday names Small strong in the secondary grey, day cells UI type with the
    radius-8 corner every control here has (not round), today marked UI strong, the chosen day the selected fill. */
-.react-aria-CalendarHeaderCell {
+:where(.gv-base-calendar-grid) .react-aria-CalendarHeaderCell {
   font: var(--gv-type-small-strong);
   color: var(--gv-text-secondary);
 }
 
-.react-aria-CalendarCell {
+.gv-base-calendar-cell {
   --gap: var(--gv-space-4);
   width: calc((100cqw / 7) - var(--gap));
   aspect-ratio: 1;

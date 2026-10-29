@@ -2,7 +2,7 @@
 
 /* Same frame and rows as the ListBox and NavigationTree: a 1px control-grey frame, radius 12, padding 6; rows 32
    tall, radius 8, UI type primary, no rules between them; hover the light wash, chosen the stronger wash. */
-.react-aria-Tree {
+.gv-base-tree {
   display: flex;
   flex-direction: column;
   gap: var(--gv-space-2);
@@ -19,11 +19,11 @@
   --drag-button-width: 0px;
   --checkbox-width: 0px;
 
-  .react-aria-TreeSection:not(:first-child) {
+  .gv-base-tree-section:not(:first-child) {
     margin-top: var(--gv-space-12);
   }
 
-  .react-aria-TreeHeader {
+  .gv-base-tree-header {
     font: var(--gv-type-small-strong);
     padding: var(--gv-space-8) var(--gv-space-8) var(--gv-space-4);
     color: var(--gv-text-secondary);
@@ -66,7 +66,7 @@
   }
 }
 
-.react-aria-TreeItem {
+.gv-base-tree-item {
   display: flex;
   align-items: center;
   gap: var(--gv-space-8);
@@ -113,7 +113,7 @@
     color: var(--gv-text-disabled);
   }
 
-  .react-aria-Button:not([slot]) {
+  .gv-base-button:not([slot]) {
     margin-left: auto;
   }
 
@@ -130,7 +130,7 @@
     background: var(--gv-surface-info);
   }
 
-  .react-aria-Button[slot='chevron'] {
+  .gv-base-button[slot='chevron'] {
     all: unset;
     display: flex;
     visibility: hidden;
@@ -150,15 +150,15 @@
     }
   }
 
-  &[data-has-child-items] .react-aria-Button[slot='chevron'] {
+  &[data-has-child-items] .gv-base-button[slot='chevron'] {
     visibility: visible;
   }
 
-  &[data-expanded] .react-aria-Button[slot='chevron'] svg {
+  &[data-expanded] .gv-base-button[slot='chevron'] svg {
     rotate: 90deg;
   }
 
-  .react-aria-Button[slot='drag'] {
+  .gv-base-button[slot='drag'] {
     all: unset;
     display: inline-flex;
     align-items: center;
@@ -173,7 +173,7 @@
   }
 }
 
-.react-aria-TreeLoader {
+:where(.gv-base-tree) .react-aria-TreeLoader {
   display: flex;
   align-items: center;
   justify-content: center;

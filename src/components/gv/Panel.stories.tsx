@@ -9,7 +9,7 @@ import {DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeade
 import {StatusBadge} from './StatusBadge';
 import {Button} from '../Button';
 import {TextArea, TextField} from '../TextField';
-import {PORTRAITS} from './story-images';
+import {PORTRAITS} from '../../stories/images';
 
 const meta: Meta<typeof Panel> = {
   title: 'Components/Layout & containers/Panel',

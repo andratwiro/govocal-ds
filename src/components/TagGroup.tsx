@@ -34,9 +34,9 @@ export function TagGroup<T>({
   ...props
 }: TagGroupProps<T>) {
   return (
-    <AriaTagGroup {...props} className={clsx('react-aria-TagGroup', props.className)}>
+    <AriaTagGroup {...props} className={clsx('react-aria-TagGroup gv-base-tag-group', props.className)}>
       {label && <Label>{label}</Label>}
-      <TagList items={items} renderEmptyState={renderEmptyState}>
+      <TagList className="react-aria-TagList gv-base-tag-list" items={items} renderEmptyState={renderEmptyState}>
         {children}
       </TagList>
       {description && <Description>{description}</Description>}
@@ -53,7 +53,7 @@ export function Tag({
 }) {
   let textValue = typeof children === 'string' ? children : undefined;
   return (
-    <AriaTag textValue={textValue} {...props} className={keepClass(props.className, 'button-base')}>
+    <AriaTag textValue={textValue} {...props} className={keepClass(props.className, 'gv-base-tag', 'button-base')}>
       {({allowsRemoving}) => (
         <>
           {children}

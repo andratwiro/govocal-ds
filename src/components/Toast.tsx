@@ -87,7 +87,7 @@ export interface ToastRegionProps {
 export function ToastRegion({className, style}: ToastRegionProps = {}) {
   if (useContext(ToastRegionContext)) return null;
   return (
-    <RACToastRegion queue={queue} className={clsx('react-aria-ToastRegion', className)} style={style}>
+    <RACToastRegion queue={queue} className={clsx('react-aria-ToastRegion gv-base-toast-region', className)} style={style}>
       {({toast}) => {
         const {title, description, icon, action, onAction} = toast.content;
         return (
@@ -97,9 +97,9 @@ export function ToastRegion({className, style}: ToastRegionProps = {}) {
                 {icon ?? <Check strokeWidth={2.6} />}
               </span>
             )}
-            <RACToastContent>
-              <Text slot="title">{title}</Text>
-              {description && <Text slot="description">{description}</Text>}
+            <RACToastContent className="react-aria-ToastContent gv-base-toast-content">
+              <Text className="react-aria-Text gv-base-text" slot="title">{title}</Text>
+              {description && <Text className="react-aria-Text gv-base-text" slot="description">{description}</Text>}
               {action && (
                 <RACButton
                   className="toast-action"
@@ -123,5 +123,5 @@ export function ToastRegion({className, style}: ToastRegionProps = {}) {
 
 /** One toast, as `ToastRegion` draws it. Pages don't render it: they call `toast()`. */
 export function Toast({className, ...props}: ToastProps<ToastMessage>) {
-  return <RACToast {...props} className={composeRenderProps(className, c => clsx('react-aria-Toast', c))} />;
+  return <RACToast {...props} className={composeRenderProps(className, c => clsx('react-aria-Toast gv-base-toast', c))} />;
 }

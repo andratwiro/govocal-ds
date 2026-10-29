@@ -3,7 +3,7 @@
 
 /* Same bar as the ProgressBar (the prototype's 6px round .gv-progress: pill-grey track, no frame). The fill is the
    tenant teal, then the warning amber from 70 % and the notification red from 90 % (Meter.tsx sets --fill-color). */
-.react-aria-Meter {
+.gv-base-meter {
   display: grid;
   grid-template-areas:
     'label value'
@@ -14,7 +14,7 @@
   color: var(--gv-text-primary);
   font: var(--gv-type-ui);
 
-  .react-aria-Label {
+  .gv-base-label {
     margin-bottom: 0;
   }
 

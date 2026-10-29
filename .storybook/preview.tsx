@@ -3,6 +3,7 @@ import {useEffect} from 'react';
 import {I18nProvider} from 'react-aria-components';
 import {LucideProvider} from 'lucide-react';
 import {theme} from './theme';
+import {DocsPage} from './DocsPage';
 
 const preview: Preview = {
   globalTypes: {
@@ -24,7 +25,8 @@ const preview: Preview = {
   ],
   parameters: {
     layout: 'centered',
-    docs: {theme},
+    // Storybook's docs page, plus Base's one line on a Base entry's page (DocsPage.tsx).
+    docs: {theme, page: DocsPage},
     a11y: {
       test: 'todo',
       options: {runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']},
@@ -35,7 +37,7 @@ const preview: Preview = {
         method: 'alphabetical',
         order: ['Overview', ['Welcome', 'Accessibility'], 'Foundations',
           ['Colour', 'Typography', 'Spacing', 'Radius', 'Shadows', 'Motion', 'Icons', 'Illustrations'],
-          'Components', 'Patterns', 'Back office', 'Base']
+          'Components', 'Patterns', 'Back office', 'Base', ['Introduction']]
       }
     }
   }

@@ -1,0 +1,13 @@
+/* A note, not a warning: the info tint the system's Banner uses, on the docs page's own type. */
+.gv-sb-base-note {
+  margin: 0 0 var(--gv-space-24);
+  padding: var(--gv-space-12) var(--gv-space-16);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-info);
+  font: var(--gv-type-body);
+  color: var(--gv-text-primary);
+}
+.gv-sb-base-note strong {
+  font: var(--gv-type-body-strong);
+  margin-inline-end: var(--gv-space-4);
+}

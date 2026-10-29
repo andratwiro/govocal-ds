@@ -1,13 +1,14 @@
+import {CheckboxGroup} from '../CheckboxGroup';
 import {Checkbox} from './Checkbox';
-import {CheckboxGroup} from './CheckboxGroup';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof CheckboxGroup> = {
+  title: 'Components/Forms/Checkbox group',
   component: CheckboxGroup,
   parameters: {
     layout: 'centered'
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'not-in-figma']
 };
 
 export default meta;

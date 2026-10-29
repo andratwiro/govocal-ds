@@ -3,7 +3,7 @@ import {SectionLabel} from './SectionLabel';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
 const meta: Meta<typeof SectionLabel> = {
-  title: 'Components/Layout & containers/Section label',
+  title: 'Components/Text/Section label',
   component: SectionLabel,
   tags: ['autodocs'],
   parameters: {

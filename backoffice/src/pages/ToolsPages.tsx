@@ -1,11 +1,10 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router';
 import {Bot, Copy, Download, KeyRound, Pencil, Plus, Trash2, Webhook} from 'lucide-react';
-import {AlertDialog, Banner, Button, Checkbox, DataTable, DataTableBody, DataTableCell, DataTableColumn,
+import {AlertDialog, Banner, Button, Checkbox, CheckboxGroup, DataTable, DataTableBody, DataTableCell, DataTableColumn,
   DataTableHeader, DataTableOptions, DataTableRow, DataTableTags, EmptyState, HelpPopover, IconButton, MenuItem, Modal,
   NumberField, Panel, queue, Select, SelectItem, StatusBadge, Switch, TextArea, TextField,
   ToastRegion} from 'govocal-ds';
-import {CheckboxGroup} from 'govocal-ds/base';
 import {API_TOKENS, MCP_CLIENTS, POWER_BI_TEMPLATES, WEBHOOK_EVENTS, WEBHOOK_PROJECTS, WEBHOOKS,
   type ApiToken, type WebhookItem} from '../data-tools';
 import {Gap} from '../Gap';

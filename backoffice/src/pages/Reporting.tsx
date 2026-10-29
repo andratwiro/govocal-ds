@@ -1,11 +1,10 @@
 import {useMemo, useState} from 'react';
 import {useNavigate} from 'react-router';
 import {Copy, FileText, LayoutGrid, Pencil, Plus, SearchX, Sparkles, Trash2} from 'lucide-react';
-import {AlertDialog, Badge, Banner, Button, ChoiceCard, ChoiceCardCheckbox, ChoiceCardGroupHeading, DataTable,
-  DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableOptions, DataTableRow, EmptyState, MenuItem,
-  Modal, Pagination, Panel, queue, SearchField, SegmentedControl, SegmentedControlItem, Separator, Tab, TableToolbar,
-  TabList, TabPanel, TabPanels, Tabs, TextField, ToastRegion} from 'govocal-ds';
-import {CheckboxGroup, RadioGroup} from 'govocal-ds/base';
+import {AlertDialog, Badge, Banner, Button, CheckboxGroup, ChoiceCard, ChoiceCardCheckbox, ChoiceCardGroupHeading,
+  DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableOptions, DataTableRow, EmptyState,
+  MenuItem, Modal, Pagination, Panel, queue, RadioGroup, SearchField, SegmentedControl, SegmentedControlItem, Separator,
+  Tab, TableToolbar, TabList, TabPanel, TabPanels, Tabs, TextField, ToastRegion} from 'govocal-ds';
 import {CONTENTS, CONTENT_GROUPS, REPORTS, type Report} from '../data-reporting';
 import {Page} from './Page';
 

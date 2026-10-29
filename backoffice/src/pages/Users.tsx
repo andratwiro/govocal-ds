@@ -4,9 +4,9 @@ import {Ban, ChartColumn, Download, Mail, Pencil, Plus, SearchX, ShieldCheck, Sh
   Users as UsersIcon, Zap} from 'lucide-react';
 import {AlertDialog, Banner, Button, ChoiceCard, DataTable, DataTableBody, DataTableCell, DataTableColumn,
   DataTableHeader, DataTableOptions, DataTablePerson, DataTableRow, DataTableStack, EmptyState, Menu, MenuItem, Modal,
-  Pagination, Panel, queue, SearchField, Select, type SelectionAction, SelectionBar, SelectItem, Separator,
+  Pagination, Panel, queue, RadioGroup, SearchField, Select, type SelectionAction, SelectionBar, SelectItem, Separator,
   TableToolbar, TableToolbarHeading, TextField, ToastRegion} from 'govocal-ds';
-import {ListBox, ListBoxItem, RadioGroup} from 'govocal-ds/base';
+import {ListBox, ListBoxItem} from 'govocal-ds/base';
 import {GROUPS, PEOPLE, SEGMENTS, SMART_RULES, type Person} from '../data-users';
 import {Gap} from '../Gap';
 import {Page} from './Page';

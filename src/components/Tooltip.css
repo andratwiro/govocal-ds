@@ -3,7 +3,7 @@
 /* The prototype's one tooltip (augur-design.html #gv-tooltip): hug the text on one line up to 320, then wrap in
    even lines; Small 12/16, 4×8 padding, radius 4, the dark neutral, no shadow, no tail, 4 from the trigger,
    fades in 120 ms (no slide). */
-.react-aria-Tooltip {
+.gv-base-tooltip {
   box-sizing: border-box;
   width: max-content;
   max-width: 320px;
@@ -60,20 +60,20 @@
     }
   }
 
-  .react-aria-OverlayArrow svg {
+  .gv-base-overlay-arrow svg {
     display: block;
     fill: var(--gv-color-neutral-800);
   }
 
-  &[data-placement='bottom'] .react-aria-OverlayArrow svg {
+  &[data-placement='bottom'] .gv-base-overlay-arrow svg {
     transform: rotate(180deg);
   }
 
-  &[data-placement='right'] .react-aria-OverlayArrow svg {
+  &[data-placement='right'] .gv-base-overlay-arrow svg {
     transform: rotate(90deg);
   }
 
-  &[data-placement='left'] .react-aria-OverlayArrow svg {
+  &[data-placement='left'] .gv-base-overlay-arrow svg {
     transform: rotate(-90deg);
   }
 }

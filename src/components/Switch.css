@@ -1,7 +1,7 @@
 @import './theme.css';
 @import './utilities.css';
 
-.react-aria-SwitchField {
+.gv-base-switch-field {
   display: flex;
   flex-direction: column;
   gap: var(--gv-space-4);
@@ -11,7 +11,7 @@
   }
 }
 
-.react-aria-SwitchButton {
+.gv-base-switch-button {
   display: flex;
   /* This is needed so the HiddenInput is positioned correctly */
   position: relative;

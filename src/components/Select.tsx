@@ -85,12 +85,12 @@ export function Select<T, M extends 'single' | 'multiple' = 'single'>({
     </SelectListBox>
   );
   return (
-    <AriaSelect {...props} className={keepClass(props.className)} data-variant={variant} data-size={height}>
+    <AriaSelect {...props} className={keepClass(props.className, 'gv-base-select')} data-variant={variant} data-size={height}>
       {label && <Label>{label}</Label>}
       <Button variant={variant === 'field' ? 'secondary' : 'quiet'} size={height === 36 ? 36 : 32}>
         {icon && <span className="gv-select-icon" aria-hidden>{icon}</span>}
         {prefix && <span className="gv-select-prefix" aria-hidden>{prefix}</span>}
-        <SelectValue />
+        <SelectValue className="react-aria-SelectValue gv-base-select-value" />
         <ChevronDown />
       </Button>
       {description && <Description>{description}</Description>}

@@ -3,7 +3,7 @@
 /* The prototype's one tertiary (augur-design.html "Terciario unificado", 29 Sep): text (and icon) in the DS blue,
    a near-black blue on hover, never a fill or an underline; weight 500. Two sizes, small 12/16 and medium 14/20;
    without a size the link takes the size of its sentence. */
-.react-aria-Link {
+.gv-base-link {
   display: inline;
   color: var(--gv-text-link);
   font-family: var(--gv-font-family);

@@ -9,15 +9,15 @@ import clsx from 'clsx';
 import {keepClass, ownClass} from './className';
 
 export function Form(props: FormProps) {
-  return <RACForm {...props} className={clsx('react-aria-Form', props.className)} />;
+  return <RACForm {...props} className={clsx('react-aria-Form gv-base-form', props.className)} />;
 }
 
 export function Label(props: LabelProps) {
-  return <RACLabel {...props} className={clsx('react-aria-Label', props.className)} />;
+  return <RACLabel {...props} className={clsx('react-aria-Label gv-base-label', props.className)} />;
 }
 
 export function FieldError(props: FieldErrorProps) {
-  return <RACFieldError {...props} className={keepClass(props.className)} />;
+  return <RACFieldError {...props} className={keepClass(props.className, 'gv-base-field-error')} />;
 }
 
 export function Description(props: TextProps) {

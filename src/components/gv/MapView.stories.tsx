@@ -10,7 +10,7 @@ import {Panel} from './Panel';
 import {SegmentedControl, SegmentedControlItem} from './SegmentedControl';
 import {TableToolbar} from './TableToolbar';
 import {DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableRow, DataTableStack} from './DataTable';
-import {CENTRE_PIN, MAP_CENTRE, MAP_IDEAS, MAP_PINS, NEAR_CENTRE, STATUS_LEGEND, ideaCounts, toPins, type IdeaPin, type MapIdea} from './story-data/places';
+import {CENTRE_PIN, MAP_CENTRE, MAP_IDEAS, MAP_PINS, NEAR_CENTRE, STATUS_LEGEND, ideaCounts, toPins, type IdeaPin, type MapIdea} from '../../stories/data/places';
 
 const meta: Meta<typeof MapView> = {
   title: 'Components/Data display/Map view',

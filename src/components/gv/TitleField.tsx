@@ -44,7 +44,7 @@ export function TitleField({placeholder = 'Add a title', isRequired, errorMessag
   return (
     <div className={clsx('gv-title-field-wrap', className)} style={style} data-required={isRequired || undefined} data-locale-switcher={localeSwitcher ? true : undefined}>
       <AriaTextField {...props} isRequired={isRequired} className="gv-title-field">
-        <Input placeholder={placeholder} lang={lang} dir={lang ? localeDirection(lang) : undefined} />
+        <Input className="react-aria-Input gv-base-input" placeholder={placeholder} lang={lang} dir={lang ? localeDirection(lang) : undefined} />
         <FieldError>{errorMessage}</FieldError>
       </AriaTextField>
       {localeSwitcher ? (

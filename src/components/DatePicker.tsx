@@ -28,9 +28,9 @@ export function DatePicker<T extends DateValue>({
   ...props
 }: DatePickerProps<T>) {
   return (
-    <AriaDatePicker {...props} className={keepClass(props.className)}>
+    <AriaDatePicker {...props} className={keepClass(props.className, 'gv-base-date-picker')}>
       <Label>{label}</Label>
-      <Group className="react-aria-Group inset">
+      <Group className="react-aria-Group gv-base-group inset">
         <DateInput>{segment => <DateSegment segment={segment} />}</DateInput>
         <FieldButton>
           <CalendarIcon />

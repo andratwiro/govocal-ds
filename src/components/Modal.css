@@ -2,7 +2,7 @@
 
 /* The overlay covers the visible window and centres the dialog in it. (The starter's sticky dialog, shifted up by
    half its height, couldn't move past the overlay's bottom, so a dialog taller than half the window rose off the top.) */
-.react-aria-ModalOverlay {
+.react-aria-ModalOverlay:where(:has(> .gv-base-modal)) {
   position: fixed;
   inset-block-start: 0;
   inset-inline-start: 0;
@@ -26,7 +26,7 @@
 }
 
 /* The shell is the Figma Modal's (5:513): radius 14, panel fill, a 1px subtle outline, the dialog shadow. */
-.react-aria-Modal {
+.gv-base-modal {
   max-height: calc(var(--visual-viewport-height) * 0.9);
   box-shadow: var(--gv-shadow-overlay);
   border-radius: var(--gv-radius-14);
@@ -40,7 +40,7 @@
     animation: modal-zoom var(--gv-motion-duration-medium) var(--gv-motion-easing-enter);
   }
 
-  .react-aria-TextField {
+  .gv-base-text-field {
     margin-bottom: var(--gv-space-8);
   }
 }

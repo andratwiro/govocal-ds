@@ -38,7 +38,7 @@ export function Text({kind, isStrong, color, className, ...props}: TextProps) {
   return (
     <RACText
       {...props}
-      className={clsx('react-aria-Text', painted && 'gv-text', className)}
+      className={clsx('react-aria-Text gv-base-text', painted && 'gv-text', className)}
       data-kind={kind}
       data-strong={(kind && isStrong) || undefined}
       data-color={color}

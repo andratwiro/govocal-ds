@@ -3,7 +3,7 @@
 /* A list box reads as one of the prototype's dropdowns (augur-design.html #pj-dd-canon): white, 1px control
    border, radius 12, padding 6; rows 32 tall, padding 0 8, radius 8, UI regular primary, no lines between them;
    hover the hover surface, the chosen row the stronger hover grey (the prototype's .ph-lrow.is-cur). */
-.react-aria-ListBox {
+.gv-base-list-box {
   max-height: inherit;
   overflow: auto;
   border: 1px solid var(--gv-border-control);
@@ -15,7 +15,7 @@
   font: var(--gv-type-ui);
   color: var(--gv-text-primary);
 
-  &:has(.react-aria-ListBoxSection) {
+  &:has(.gv-base-list-box-section) {
     scroll-padding: var(--gv-space-24);
   }
 
@@ -43,8 +43,8 @@
 }
 
 /* Section label: Small secondary, padding 8 8 4. */
-.react-aria-ListBoxSection {
-  .react-aria-Header {
+.gv-base-list-box-section {
+  .gv-base-header {
     position: sticky;
     top: 0;
     z-index: 2;
@@ -57,7 +57,7 @@
   }
 }
 
-.react-aria-ListBoxItem {
+.gv-base-list-box-item {
   padding: 0 var(--gv-space-8);
   border-radius: var(--gv-radius-8);
   outline: none;
@@ -124,7 +124,7 @@
   }
 }
 
-.react-aria-ListBox {
+.gv-base-list-box {
   &[data-layout='stack'] {
     display: flex;
     gap: 0;
@@ -142,7 +142,7 @@
       gap: var(--gv-space-2);
       width: 100%;
 
-      .react-aria-ListBoxItem {
+      .gv-base-list-box-item {
         min-width: max-content;
       }
     }
@@ -168,7 +168,7 @@
   }
 }
 
-.react-aria-ListBoxLoadingIndicator {
+.gv-base-list-box-loading-indicator {
   display: flex;
   align-items: center;
   justify-content: center;

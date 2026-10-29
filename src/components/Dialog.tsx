@@ -19,7 +19,7 @@ export interface DialogProps extends RACDialogProps {
 }
 
 export function Dialog({isFlush, ...props}: DialogProps) {
-  return <RACDialog {...props} className={clsx('react-aria-Dialog', props.className)} data-flush={isFlush || undefined} />;
+  return <RACDialog {...props} className={clsx('react-aria-Dialog gv-base-dialog', props.className)} data-flush={isFlush || undefined} />;
 }
 
 /** Opens a Dialog (in a Popover or a Modal) from the button inside it. Renders no element of its own. */

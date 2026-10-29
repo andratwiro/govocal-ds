@@ -47,7 +47,7 @@ export function TextField({
   const input = (
     <Input
       ref={inputRef}
-      className={hasDecoration ? 'react-aria-Input' : 'react-aria-Input inset'}
+      className={hasDecoration ? 'react-aria-Input gv-base-input' : 'react-aria-Input gv-base-input inset'}
       placeholder={placeholder}
       maxLength={maxLength}
     />
@@ -55,7 +55,7 @@ export function TextField({
   return (
     <AriaTextField
       {...props}
-      className={keepClass(props.className)}
+      className={keepClass(props.className, 'gv-base-text-field')}
       value={value}
       defaultValue={defaultValue}
       maxLength={maxLength}
@@ -65,7 +65,7 @@ export function TextField({
       }}>
       {label && <Label>{label}</Label>}
       {hasDecoration ? (
-        <Group className="react-aria-Group inset gv-text-field-group">
+        <Group className="react-aria-Group gv-base-group inset gv-text-field-group">
           {prefix && <span className="gv-text-field-affix">{prefix}</span>}
           {input}
           {suffix && <span className="gv-text-field-affix">{suffix}</span>}
@@ -95,11 +95,11 @@ export function TextArea({
   ...props
 }: TextFieldProps<HTMLTextAreaElement>) {
   return (
-    <AriaTextField {...props} className={keepClass(props.className)}>
+    <AriaTextField {...props} className={keepClass(props.className, 'gv-base-text-field')}>
       <Label>{label}</Label>
       <AriaTextArea
         ref={inputRef}
-        className="react-aria-TextArea inset"
+        className="react-aria-TextArea gv-base-text-area inset"
         placeholder={placeholder}
       />
       {description && <Description>{description}</Description>}

@@ -4,9 +4,10 @@
  *   import {Button, Modal, DataTable, SideNav} from 'govocal-ds';
  *   import 'govocal-ds/tokens.css'; // once, at the app's root
  *
- * React Aria's starter parts that stay public (Link, RadioGroup, ListBox, Popover, DialogTrigger, …) come from
- * 'govocal-ds/base'. Each component imports its own CSS, so importing a part is enough to paint it.
- * Grouped as Storybook's tree: Components by group, then Patterns by place. docs/API.md is the prop convention.
+ * React Aria's starter parts that stay public (ListBox, Popover, DialogTrigger, DatePicker, …) come from
+ * 'govocal-ds/base': primitives, for what no Component covers yet. Each component imports its own CSS, so importing
+ * a part is enough to paint it. Grouped as Storybook's tree: Components by group, then Patterns by place.
+ * docs/API.md is the prop convention.
  */
 
 // Components / Actions
@@ -40,15 +41,6 @@ export {StatementRow, type StatementCounts, type StatementRowProps} from './comp
 
 // Components / Data display
 export {Avatar, AvatarGroup, type AvatarProps, type AvatarGroupProps} from './components/gv/Avatar';
-export {
-  DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableEmpty, DataTableRow, DataTableCell,
-  DataTableText, DataTablePerson, DataTableStack, DataTableThumbnail, DataTableAssignee, DataTableTags,
-  DataTableOptions, DataTableAddColumn, type DataTableAlign, type DataTableProps, type DataTableHeaderProps,
-  type DataTableColumnProps, type DataTableBodyProps, type DataTableRowProps, type DataTableCellProps,
-  type DataTableTextProps, type DataTablePersonProps, type DataTableStackProps, type DataTableThumbnailProps,
-  type DataTableAssigneeProps, type DataTableTagsProps, type DataTableOptionsProps, type DataTableAddColumnProps,
-  type DataTableEmptyProps, toKeySet
-} from './components/gv/DataTable';
 export {FileList, type FileListItemData, type FileListProps} from './components/gv/FileList';
 export {
   Illustration, type IllustrationName, type IllustrationMotion, type IllustrationGroup, type IllustrationInfo,
@@ -71,12 +63,10 @@ export {
 export {ReactionCounts, type ReactionCountsProps} from './components/gv/ReactionCounts';
 export {StatRow, type StatRowProps} from './components/gv/StatRow';
 export {StatTile, type StatTileLayout, type StatTileTrend, type StatTileProps} from './components/gv/StatTile';
-export {
-  TableToolbarHeading, TableToolbar, type TableToolbarHeadingProps, type TableToolbarProps
-} from './components/gv/TableToolbar';
 
 // Components / Forms
 export {Checkbox, type CheckboxProps} from './components/gv/Checkbox';
+export {CheckboxGroup, type CheckboxGroupProps} from './components/CheckboxGroup';
 export {
   ChoiceCard, ChoiceCardCheckbox, ChoiceCardGroupHeading, type ChoiceCardProps, type ChoiceCardCheckboxProps,
   type ChoiceCardGroupHeadingProps
@@ -97,6 +87,7 @@ export {
 } from './components/gv/MultilingualTextField';
 export {NumberField, type NumberFieldProps} from './components/NumberField';
 export {OptionList, type OptionListItem, type OptionListProps} from './components/gv/OptionList';
+export {RadioGroup, Radio, type RadioGroupProps, type RadioProps} from './components/RadioGroup';
 export {RequiredMarker, type RequiredMarkerProps} from './components/gv/RequiredMarker';
 export {RichTextEditor, type RichTextEditorProps} from './components/gv/RichTextEditor';
 export {RichTextToolbar, type RichTextToolbarProps} from './components/gv/RichTextToolbar';
@@ -116,11 +107,11 @@ export {
 export {Divider, type DividerProps} from './components/gv/Divider';
 export {PageHeader, type PageHeaderProps} from './components/gv/PageHeader';
 export {Panel, type PanelProps} from './components/gv/Panel';
-export {SectionLabel, type SectionLabelProps} from './components/gv/SectionLabel';
 export {TileGrid, type TileGridProps} from './components/gv/TileGrid';
 
 // Components / Navigation
 export {Breadcrumbs, type BreadcrumbItem, type BreadcrumbsProps} from './components/gv/Breadcrumbs';
+export {Link, type LinkProps} from './components/Link';
 export {Pagination, type PageItem, type PaginationProps} from './components/gv/Pagination';
 export {
   Tabs, TabList, Tab, TabPanels, TabPanel, GroupedTabs, GroupedTabList, TabSection, GroupedTab, GroupedTabPanel,
@@ -152,8 +143,27 @@ export {
   toast, ToastRegion, ToastRegionContext, queue, type ToastMessage, type ToastOptions, type ToastRegionProps
 } from './components/Toast';
 
+// Components / Tables & lists: the list page's kit. Filter chips, Filter menu and Selection bar still live in
+// src/patterns/ until the folder codemod; their title and import are Components'.
+export {
+  DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableEmpty, DataTableRow, DataTableCell,
+  DataTableText, DataTablePerson, DataTableStack, DataTableThumbnail, DataTableAssignee, DataTableTags,
+  DataTableOptions, DataTableAddColumn, type DataTableAlign, type DataTableProps, type DataTableHeaderProps,
+  type DataTableColumnProps, type DataTableBodyProps, type DataTableRowProps, type DataTableCellProps,
+  type DataTableTextProps, type DataTablePersonProps, type DataTableStackProps, type DataTableThumbnailProps,
+  type DataTableAssigneeProps, type DataTableTagsProps, type DataTableOptionsProps, type DataTableAddColumnProps,
+  type DataTableEmptyProps, toKeySet
+} from './components/gv/DataTable';
+export {FilterChips, type FilterChipsProps} from './patterns/FilterChips';
+export {FilterMenu, type FilterFacet, type FilterValue, type FilterMenuProps} from './patterns/FilterMenu';
+export {SelectionBar, type SelectionAction, type SelectionBarProps} from './patterns/SelectionBar';
+export {
+  TableToolbarHeading, TableToolbar, type TableToolbarHeadingProps, type TableToolbarProps
+} from './components/gv/TableToolbar';
+
 // Components / Text. Text is the system's (React Aria's Text underneath, so it still fills a slot such as
 // slot="description"); Content.tsx's own Text stays the starter files' internal one.
+export {SectionLabel, type SectionLabelProps} from './components/gv/SectionLabel';
 export {Text, type TextProps, type TextKind, type TextColor} from './components/gv/Text';
 export {VisuallyHidden, type VisuallyHiddenProps} from './components/gv/VisuallyHidden';
 
@@ -185,11 +195,6 @@ export {
 export {
   ViewOptionRow, ViewOptionList, type ViewOptionRowProps, type ViewOptionListProps
 } from './patterns/ViewOptionRow';
-
-// Patterns / Lists
-export {FilterChips, type FilterChipsProps} from './patterns/FilterChips';
-export {FilterMenu, type FilterFacet, type FilterValue, type FilterMenuProps} from './patterns/FilterMenu';
-export {SelectionBar, type SelectionAction, type SelectionBarProps} from './patterns/SelectionBar';
 
 // Patterns / Manage tab
 export {

@@ -20,7 +20,7 @@ import {CompactButton} from './CompactButton';
 import {TextField} from '../TextField';
 import {Card, CardRadio, CardRadioGroup, CardSwitch, type CardProps} from './Card';
 import {Badge} from './Badge';
-import {PICTURES} from './story-images';
+import {PICTURES} from '../../stories/images';
 
 const figma = (id: string) => ({
   design: {type: 'figma', url: `https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=${id}`}

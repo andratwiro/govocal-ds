@@ -37,7 +37,7 @@ test('pagination: the current page is aria-current, the ends are disabled, focus
 });
 
 test('table toolbar: ← → move the search caret, and leave the field only at its edge', async ({page}) => {
-  await page.goto(story('components-data-display-table-toolbar--searching'));
+  await page.goto(story('components-tables-lists-table-toolbar--searching'));
   const field = page.getByRole('searchbox', {name: 'Search ideas'});
   await field.focus();
   await page.keyboard.press('End');
@@ -51,7 +51,7 @@ test('table toolbar: ← → move the search caret, and leave the field only at 
 });
 
 test('in a panel: search, quick view and pages drive the count; the metric chip clears; rows select', async ({page}) => {
-  await page.goto(story('components-data-display-data-table--in-a-panel'));
+  await page.goto(story('components-tables-lists-data-table--in-a-panel'));
   const heading = page.getByRole('heading', {level: 3});
   await expect(heading).toHaveText('19 ideas');
   await expect(rows(page)).toHaveCount(8);

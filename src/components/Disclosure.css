@@ -3,10 +3,10 @@
 /* The prototype's accordion (.pj-acc): the header Body strong primary at 12 15, 10 apart from a 14px chevron in the
    strong icon grey that turns a quarter when open; hover the stronger wash, an open header the light wash; the body
    UI type at 6 15 16. In a DisclosureGroup the items are split by 1px dividers (DisclosureGroup.css). */
-.react-aria-Disclosure {
+.gv-base-disclosure {
   width: calc(var(--gv-space-4) * 50);
 
-  .react-aria-Heading {
+  .gv-base-heading {
     margin: 0;
   }
 
@@ -71,7 +71,7 @@
   }
 }
 
-.react-aria-DisclosurePanel {
+.gv-base-disclosure-panel {
   color: var(--gv-text-primary);
   font: var(--gv-type-ui);
   height: var(--disclosure-panel-height);

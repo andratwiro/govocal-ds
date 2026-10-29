@@ -43,7 +43,7 @@ function Demo({initial, actions = ACTIONS}: {initial: number; actions?: Selectio
 }
 
 const meta: Meta<typeof SelectionBar> = {
-  title: 'Patterns/Lists/Selection bar',
+  title: 'Components/Tables & lists/Selection bar',
   component: SelectionBar,
   tags: ['autodocs', 'not-in-figma'],
   parameters: {layout: 'padded'}

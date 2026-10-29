@@ -28,9 +28,9 @@ export function DateRangePicker<T extends DateValue>({
   ...props
 }: DateRangePickerProps<T>) {
   return (
-    <AriaDateRangePicker {...props} className={keepClass(props.className)}>
+    <AriaDateRangePicker {...props} className={keepClass(props.className, 'gv-base-date-range-picker')}>
       <Label>{label}</Label>
-      <Group className="react-aria-Group inset">
+      <Group className="react-aria-Group gv-base-group inset">
         <div className="date-fields">
           <DateInput slot="start">{segment => <DateSegment segment={segment} />}</DateInput>
           <span aria-hidden="true">–</span>

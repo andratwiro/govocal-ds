@@ -18,8 +18,8 @@ export interface SwitchProps extends Omit<SwitchFieldProps, 'children'> {
 
 export function Switch({children, description, errorMessage, ...props}: SwitchProps) {
   return (
-    <SwitchField {...props} className={keepClass(props.className)}>
-      <SwitchButton>
+    <SwitchField {...props} className={keepClass(props.className, 'gv-base-switch-field')}>
+      <SwitchButton className="react-aria-SwitchButton gv-base-switch-button">
         {({isSelected, isDisabled}) => (
           <>
             <div className="track indicator">

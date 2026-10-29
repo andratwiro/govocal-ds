@@ -26,7 +26,7 @@ export function DateField<T extends DateValue>({
   ...props
 }: DateFieldProps<T>) {
   return (
-    <AriaDateField {...props} className={keepClass(props.className)}>
+    <AriaDateField {...props} className={keepClass(props.className, 'gv-base-date-field')}>
       <Label>{label}</Label>
       <DateInput>{segment => <DateSegment segment={segment} />}</DateInput>
       {description && <Description>{description}</Description>}
@@ -36,11 +36,11 @@ export function DateField<T extends DateValue>({
 }
 
 export function DateSegment(props: DateSegmentProps) {
-  return <AriaDateSegment {...props} className={keepClass(props.className)} />;
+  return <AriaDateSegment {...props} className={keepClass(props.className, 'gv-base-date-segment')} />;
 }
 
 export function DateInput(props: DateInputProps) {
   // React Aria draws DateInput through its Group, which would hand a function className Group's default
   // (react-aria-Group): the input's own class is named here.
-  return <AriaDateInput {...props} className={ownClass(['react-aria-DateInput', 'inset'], props.className)} />;
+  return <AriaDateInput {...props} className={ownClass(['react-aria-DateInput gv-base-date-input', 'inset'], props.className)} />;
 }

@@ -327,7 +327,7 @@ export function Card({
  */
 export function CardSwitch(props: Omit<SwitchProps, 'children' | 'className' | 'description' | 'errorMessage'>) {
   return (
-    <Switch {...props} className="react-aria-SwitchField gv-card-switch">
+    <Switch {...props} className="react-aria-SwitchField gv-base-switch-field gv-card-switch">
       {null}
     </Switch>
   );

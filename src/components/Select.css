@@ -1,13 +1,13 @@
 @import './theme.css';
 
-.react-aria-Select {
+.gv-base-select {
   --select-gap: var(--gv-space-8);
 
   color: var(--gv-text-primary);
   position: relative;
   width: 200px;
 
-  .react-aria-Button {
+  .gv-base-button {
     padding: 0 var(--gv-space-8) 0 var(--gv-space-12);
     gap: var(--select-gap);
     width: 100%;
@@ -20,7 +20,7 @@
 
   /* The value reads as a field's text (UI regular primary), not a button label; an option's icon or avatar comes
      with it. */
-  .react-aria-SelectValue {
+  .gv-base-select-value {
     flex: 1;
     display: flex;
     align-items: center;
@@ -93,25 +93,25 @@
 
 /* Pill (the prototype's `.pjm-chip--pjc`, New project's Space and Folder): 28 tall, 12 to the sides, radius full, the
    pill grey, the value in UI primary, a 12 chevron; hovered or open, a step darker. It is as wide as what it says. */
-.react-aria-Select[data-variant='pill'],
-.react-aria-Select[data-variant='quiet'] {
+.gv-base-select[data-variant='pill'],
+.gv-base-select[data-variant='quiet'] {
   width: fit-content;
   max-width: 100%;
 
   /* The value's parts join the trigger's row, so icons lead and a prefix sits between them and the value
      ("✱ Space: City parks"). */
-  .react-aria-SelectValue {
+  .gv-base-select-value {
     display: contents;
   }
 
-  .react-aria-SelectValue .dropdown-item__icon,
+  .gv-base-select-value .dropdown-item__icon,
   .gv-select-icon {
     order: -1;
   }
 }
 
-.react-aria-Select[data-variant='pill'] {
-  .react-aria-Button {
+.gv-base-select[data-variant='pill'] {
+  .gv-base-button {
     height: 28px;
     padding: 0 var(--gv-space-12);
     border-radius: var(--gv-radius-full);
@@ -125,11 +125,11 @@
     }
   }
 
-  &[data-open] .react-aria-Button {
+  &[data-open] .gv-base-button {
     background: var(--gv-surface-neutral-hovered);
   }
 
-  .react-aria-SelectValue {
+  .gv-base-select-value {
     color: var(--gv-text-primary);
   }
 
@@ -141,34 +141,34 @@
 
 /* The small pill (`.spill`, a side panel's property row: "Status  Viewed ▾"): 22 tall, 10 to the sides, gap 6,
    Small strong secondary, 14 icons. */
-.react-aria-Select[data-variant='pill'][data-size='22'] {
+.gv-base-select[data-variant='pill'][data-size='22'] {
   --select-gap: var(--gv-space-6);
 
-  .react-aria-Button {
+  .gv-base-button {
     height: 22px;
     padding: 0 var(--gv-space-10);
   }
 
-  .react-aria-SelectValue,
+  .gv-base-select-value,
   .gv-select-prefix {
     font: var(--gv-type-small-strong);
     color: var(--gv-text-secondary);
   }
 
-  .react-aria-SelectValue {
+  .gv-base-select-value {
     gap: var(--gv-space-6);
   }
 
   .gv-select-icon > svg,
-  .react-aria-SelectValue .dropdown-item__icon > svg {
+  .gv-base-select-value .dropdown-item__icon > svg {
     width: 14px;
     height: 14px;
   }
 }
 
 /* Quiet (a toolbar's "Sort: Newest ▾"): no fill until hovered, the value in UI primary after a secondary prefix. */
-.react-aria-Select[data-variant='quiet'] {
-  .react-aria-Button {
+.gv-base-select[data-variant='quiet'] {
+  .gv-base-button {
     padding: 0 var(--gv-space-8);
 
     &[data-hovered] {
@@ -176,11 +176,11 @@
     }
   }
 
-  &[data-open] .react-aria-Button {
+  &[data-open] .gv-base-button {
     background: var(--gv-surface-pressed);
   }
 
-  .react-aria-SelectValue {
+  .gv-base-select-value {
     color: var(--gv-text-primary);
   }
 }
@@ -215,7 +215,7 @@
   .select-search__field {
     width: 100%;
 
-    .react-aria-Input {
+    .gv-base-input {
       height: 32px;
       background: var(--gv-surface-secondary);
     }

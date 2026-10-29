@@ -13,7 +13,7 @@ built → why) and deletes the line here.
 ## Waiting on Figma
 
 - Rename in Figma: code took the new names on 29 Oct, Figma still has the old ones? — `figma:spec` finds a component under either name, but one renamed only in code (Status badge) isn't found until Figma follows — see the checklist in docs/NAMING.md, "Figma mirror".
-- Which Storybook-only parts should Figma draw? — 42 entries are built from the prototype alone: Menu, Data table, File list, Illustration, Property list, Reaction counts, Table toolbar, Choice card, Date range field, Option list, Search field, Select, Tag picker, Panel, Pagination, Tabs, Alert dialog, Coachmark, Help popover, Side panel, Tooltip, Empty state, Skeleton, Toast, and every pattern of App shell, Build tab, Lists, Manage tab and Pages & menu, plus Action row, Panel section, Phone preview, Stat card and Phase timeline; parts of Card, Banner, Volunteering row and Rail phase too — see the sidebar's `not-in-figma` tag filter.
+- Which Storybook-only parts should Figma draw? — 45 entries are built from the prototype alone: Menu, Link, Radio group, Checkbox group, Data table, File list, Illustration, Property list, Reaction counts, Table toolbar, Choice card, Date range field, Option list, Search field, Select, Tag picker, Panel, Pagination, Tabs, Alert dialog, Coachmark, Help popover, Side panel, Tooltip, Empty state, Skeleton, Toast, Filter chips, Filter menu, Selection bar, and every pattern of App shell, Build tab, Manage tab and Pages & menu, plus Action row, Panel section, Phone preview, Stat card and Phase timeline; parts of Card, Banner, Volunteering row and Rail phase too — see the sidebar's `not-in-figma` tag filter.
 - States the code added that Figma could draw? — Stat row selected, Dashboard card empty, select-all and row checkboxes on list rows, Checkbox quiet (the dimmed select-all), Tooltip with a tail (step cards only) — see `components-data-display-stat-row--selected`, `components-charts-dashboard-card--empty`, `components-data-display-list-row--selectable`, `components-forms-checkbox--quiet`, `components-overlays-tooltip--all-variants`.
 - Rich text toolbar button: what do its selected and disabled states look like? — drawn nowhere, so the builder's own look — see `components-forms-rich-text-toolbar-button--selected`, `components-forms-rich-text-toolbar-button--disabled`.
 - Segmented control: a disabled look? — Figma has none; Project header paints its locked modes locally, with no tooltip (a disabled segment can't show one) — see `patterns-project-page-project-header--with-mode-switch`.
@@ -32,7 +32,7 @@ question for each: add a Figma variable (code then names it), or keep the stand-
 - Phase states in the rail (the done dot, the live dot, the guide line after a done phase, the state word, the upcoming name's green-grey)? — the nearest chart greens, a mix for the light live dot, and the primary text colour for upcoming names — see `patterns-project-rail-rail-phase--all-variants`.
 - A value badge's surface and text (the prototype's pale blue)? — the teal 75 and teal 700 primitives — see `components-status-feedback-badge--value`.
 - A pill's hover surface? — the slate 200 primitive — see `components-forms-select--pill`.
-- Project tile fills by method (teal, blue), perhaps in the chart palette? — the teal 400 and blue 400 primitives, through a `tone` prop — see `components-data-display-data-table--projects-list-cells`.
+- Project tile fills by method (teal, blue), perhaps in the chart palette? — the teal 400 and blue 400 primitives, through a `tone` prop — see `components-tables-lists-data-table--projects-list-cells`.
 - Teal text (View option row's "Default")? — the accent text colour, plus the check and the word — see `patterns-build-tab-view-option-row--default`.
 - The Coachmark's translucent white? — a mix — see `components-overlays-coachmark--example`.
 - The prototype's grey 200 (#EBEDEF) and grey 50 block? — the pill surface for bar tracks, the strong divider for rules, the stage surface for the new-comment block — see `components-charts-bar-row--all-variants`, `components-overlays-side-panel--default`.
@@ -52,7 +52,7 @@ question for each: add a Figma variable (code then names it), or keep the stand-
 - Card: pills before or after the header's icon actions? — before (the prototype's Causes card puts the pill last) — see `components-layout-containers-card--all-variants`.
 - Card: keep one variant per Figma "Type" value, or regroup them after the rename? — one per value — see `components-layout-containers-card--all-variants`.
 - Compact button: a size of Button rather than its own entry? — its own entry — see `components-actions-compact-button--all-variants`.
-- List header, List header cell, List row: keep them beside Data table, or deprecate them? — kept, not deprecated — see `components-data-display-list-row--all-variants`, `components-data-display-data-table--default`.
+- List header, List header cell, List row: keep them beside Data table, or deprecate them? — kept, not deprecated — see `components-data-display-list-row--all-variants`, `components-tables-lists-data-table--default`.
 - Select: how does it look when it picks several? — the earlier look, unstyled beyond it; no story yet — see the back office's Settings page ("Select approvers", `backoffice/src/pages/Settings.tsx`).
 - Stat card and Stat tile: one entry or two? — two (Stat card is a pattern) — see `patterns-project-page-stat-card--pressable`, `components-data-display-stat-tile--all-variants`.
 - Status badge: only draft and live (its `state`), or more? — two states — see `components-status-feedback-status-badge--all-variants`.
@@ -80,7 +80,7 @@ Reported, never fixed on their own: the back office follows the design as drawn 
 designer's call.
 
 - Chart axis labels, and the date in a chart's value card? — as drawn — see the Accessibility panel on `components-charts-chart--interactive`.
-- Section label's text? — as drawn — see `components-layout-containers-section-label--default`.
+- Section label's text? — as drawn — see `components-text-section-label--default`.
 - Participant action row's default grey and its "off" label? — as drawn — see `patterns-build-tab-participant-action-row--all-variants`.
 
 ## The token review: the designer's calls
@@ -91,11 +91,11 @@ project lead (base 4).
 - When do Figma's variables take the new token names? — nothing in code waits on it; one script, run by the agent through the Figma MCP, renames each variable by its id and sets its code syntax and description — see `tokens/variable-ids.json` (the bridge by id).
 - Merge colour primitives nobody can tell apart (slate 150 into 200, 650 into 600, 750 into 700 or 800; brand blue 650 into 700; neutral 25 into 0; teal 75 into 50)? — all kept — see `foundations-colour--docs`.
 - Merge the segment text colour (slate 800) into the pill text colour (slate 700), ΔE 2.4? — two tokens — see `foundations-colour--docs`.
-- Fold the slate 750 text in Tabs, Navigation tree and Radio group into that same neutral text colour (ΔE 1.6)? — the slate 750 primitive — see `components-navigation-tabs--all-variants`, `base-navigationtree--example`, `base-radiogroup--all-states`.
-- Border and track greys in Tag group and Slider: which token? — primitives — see `base-taggroup--example`, `base-slider--all-states`.
+- Fold the slate 750 text in Tabs and Radio group into that same neutral text colour (ΔE 1.6)? — the slate 750 primitive — see `components-navigation-tabs--all-variants`, `components-forms-radio-group--all-states`.
+- Border and track greys in Tag group and Meter's empty track: which token? — primitives — see `base-taggroup--example`, `base-meter--example`.
 - Card's switch from slate 750 to near-black, matching Switch? — slate 750 — see `components-layout-containers-card--manage-toggle`.
 - Tooltip on the inverse surface (it would darken one step)? — neutral 800 — see `components-overlays-tooltip--all-variants`.
 - One success green for text, or two? — two (the live green and the reviewed green) — see `foundations-colour--docs`.
 - One success look for Toast, with tokens for its light green and mint? — several greens in its stylesheet (green 400 and mixes) — see `components-status-feedback-toast--all-variants`.
-- Link hover and pressed: the darkest brand blue (900) or the 700? — 900 for both — see `base-link--all-states`.
+- Link hover and pressed: the darkest brand blue (900) or the 700? — 900 for both — see `components-navigation-link--all-states`.
 - Two small shadows (the subtle one and the selected segment's): fold them into one? — two — see `foundations-shadows--docs`.

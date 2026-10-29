@@ -30,7 +30,8 @@
     "test:e2e": "playwright test",
     "pretypecheck": "node scripts/token-usage.mjs",
     "typecheck": "tsc --noEmit",
-    "api:imports": "node scripts/use-public-api.mjs backoffice/src"
+    "api:imports": "node scripts/use-public-api.mjs backoffice/src",
+    "css:scope": "node scripts/scope-base-css.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

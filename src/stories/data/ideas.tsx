@@ -2,14 +2,14 @@
 // and its export menu. Nobody and nowhere real; the facets are the Filter menu's own (`IDEA_FACETS`).
 import {CircleCheck, Copy, Download, MessageSquareText, Tag, TriangleAlert, User} from 'lucide-react';
 import {MenuTrigger} from 'react-aria-components/Menu';
-import {Menu, MenuItem} from '../../Menu';
-import {Separator} from '../../Separator';
-import {Popover} from '../../Popover';
-import {Tooltip, TooltipTrigger} from '../../Tooltip';
-import {IconButton} from '../IconButton';
-import {PICTURES} from '../story-images';
-import type {FilterValue} from '../../../patterns/FilterMenu';
-import type {SelectionAction} from '../../../patterns/SelectionBar';
+import {Menu, MenuItem} from '../../components/Menu';
+import {Separator} from '../../components/Separator';
+import {Popover} from '../../components/Popover';
+import {Tooltip, TooltipTrigger} from '../../components/Tooltip';
+import {IconButton} from '../../components/gv/IconButton';
+import {PICTURES} from '../images';
+import type {FilterValue} from '../../patterns/FilterMenu';
+import type {SelectionAction} from '../../patterns/SelectionBar';
 
 export interface Idea {
   id: string;

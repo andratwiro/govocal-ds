@@ -75,7 +75,7 @@
 </style>
 <script>
   // Old links after the naming revamp (29 Oct 2026, docs/NAMING.md): a moved entry's ?path= is rewritten before
-  // Storybook reads it. One line per moved title (old id prefix: new one); drop this block after a month.
+  // Storybook reads it. One line per moved title (old id prefix: new one); drop this block on 29 Nov 2026.
   (function () {
     var MOVED = {
       'base-button': 'components-actions-button',
@@ -88,7 +88,7 @@
       'components-legend-row': 'components-charts-legend-row',
       'components-statement-row': 'components-charts-statement-row',
       'components-avatar': 'components-data-display-avatar',
-      'components-data-table': 'components-data-display-data-table',
+      'components-data-table': 'components-tables-lists-data-table',
       'components-list-header': 'components-data-display-list-header',
       'components-list-header-cell': 'components-data-display-list-header-cell',
       'components-list-row': 'components-data-display-list-row',
@@ -116,8 +116,8 @@
       'components-setup-card': 'patterns-project-page-setup-step',
       'components-rail-header': 'patterns-project-rail-rail-header',
       'components-rail-phase': 'patterns-project-rail-rail-phase',
-      'components-rail-section-label': 'components-layout-containers-section-label',
-      'patterns-project-rail-rail-section-label': 'components-layout-containers-section-label',
+      'components-rail-section-label': 'components-text-section-label',
+      'patterns-project-rail-rail-section-label': 'components-text-section-label',
       'components-list-row-\u00b7-common-ground': 'patterns-participation-methods-common-ground-row',
       'components-list-row-\u00b7-proposals': 'patterns-participation-methods-proposals-row',
       'components-list-row-\u00b7-voting': 'patterns-participation-methods-voting-row',
@@ -132,14 +132,14 @@
       'patterns-stat-card': 'patterns-project-page-stat-card',
       'patterns-phone-preview': 'patterns-project-page-phone-preview',
       'patterns-phase-timeline': 'patterns-project-rail-phase-timeline',
-      'patterns-filter-chips': 'patterns-lists-filter-chips',
-      'patterns-filter-menu': 'patterns-lists-filter-menu',
+      'patterns-filter-chips': 'components-tables-lists-filter-chips',
+      'patterns-filter-menu': 'components-tables-lists-filter-menu',
       'patterns-filter-options': 'components-forms-option-list',
-      'patterns-selection-bar': 'patterns-lists-selection-bar',
-      'patterns-manage-tab-filter-chips': 'patterns-lists-filter-chips',
-      'patterns-manage-tab-filter-menu': 'patterns-lists-filter-menu',
+      'patterns-selection-bar': 'components-tables-lists-selection-bar',
+      'patterns-manage-tab-filter-chips': 'components-tables-lists-filter-chips',
+      'patterns-manage-tab-filter-menu': 'components-tables-lists-filter-menu',
       'patterns-manage-tab-filter-options': 'components-forms-option-list',
-      'patterns-manage-tab-selection-bar': 'patterns-lists-selection-bar',
+      'patterns-manage-tab-selection-bar': 'components-tables-lists-selection-bar',
       'overview-foundations': 'foundations-colour',
       'overview-icons': 'foundations-icons',
       'base-toast': 'components-status-feedback-toast',
@@ -152,11 +152,41 @@
       'base-select': 'components-forms-select',
       'base-menu': 'components-actions-menu',
       'base-searchfield': 'components-forms-search-field',
-      'base-tabs': 'components-navigation-tabs'
+      'base-tabs': 'components-navigation-tabs',
+      'base-link': 'components-navigation-link',
+      'base-radiogroup': 'components-forms-radio-group',
+      'base-checkboxgroup': 'components-forms-checkbox-group',
+      'components-data-display-data-table': 'components-tables-lists-data-table',
+      'components-data-display-table-toolbar': 'components-tables-lists-table-toolbar',
+      'patterns-lists-filter-chips': 'components-tables-lists-filter-chips',
+      'patterns-lists-filter-menu': 'components-tables-lists-filter-menu',
+      'patterns-lists-selection-bar': 'components-tables-lists-selection-bar',
+      'components-layout-containers-section-label': 'components-text-section-label'
+    };
+    // Removed entries (the dead starter parts, 29 Oct 2026): their stories are gone, so the link opens the docs page
+    // of the entry that replaces them, or the page that says what Base is.
+    var GONE = {
+      'base-breadcrumbs': 'components-navigation-breadcrumbs',
+      'base-togglebuttongroup': 'components-actions-segmented-control',
+      'base-sheet': 'components-overlays-side-panel',
+      'base-colorarea': 'base-introduction',
+      'base-colorpicker': 'base-introduction',
+      'base-colorslider': 'base-introduction',
+      'base-colorswatchpicker': 'base-introduction',
+      'base-colorwheel': 'base-introduction',
+      'base-combobox': 'base-introduction',
+      'base-commandpalette': 'base-introduction',
+      'base-navigationtree': 'base-introduction',
+      'base-progressbar': 'base-introduction',
+      'base-slider': 'base-introduction',
+      'base-tokenfield': 'base-introduction'
     };
     var u = new URL(location.href), m = (u.searchParams.get('path') || '').match(/^\/(story|docs)\/(.+?)--(.+)$/);
     if (m && MOVED[m[2]]) {
       u.searchParams.set('path', '/' + m[1] + '/' + MOVED[m[2]] + '--' + m[3]);
+      history.replaceState(null, '', u);
+    } else if (m && GONE[m[2]]) {
+      u.searchParams.set('path', '/docs/' + GONE[m[2]] + '--docs');
       history.replaceState(null, '', u);
     }
   })();

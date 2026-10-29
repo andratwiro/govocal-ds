@@ -1,5 +1,5 @@
 import {Avatar} from './Avatar';
-import {PORTRAITS} from './story-images';
+import {PORTRAITS} from '../../stories/images';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof Avatar> = {

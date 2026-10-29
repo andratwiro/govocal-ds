@@ -45,9 +45,9 @@ export function Tooltip({children, showArrow, className, ...props}: TooltipProps
     <AriaTooltip
       {...props}
       ref={ref}
-      className={keepClass(className, showArrow && 'react-aria-Tooltip--arrow')}>
+      className={keepClass(className, 'gv-base-tooltip', showArrow && 'react-aria-Tooltip--arrow')}>
       {showArrow && (
-        <OverlayArrow>
+        <OverlayArrow className="react-aria-OverlayArrow gv-base-overlay-arrow">
           <svg width={12} height={6} viewBox="0 0 12 6">
             <path d="M0 0 L6 6 L12 0" />
           </svg>

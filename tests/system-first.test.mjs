@@ -10,8 +10,9 @@ const src = files('backoffice/src');
 const ALLOWED_PACKAGES = new Set(['react', 'react-dom/client', 'react-router', 'lucide-react']);
 // The system's public entry points (package.json exports). `npm run api:imports` moves deep imports onto them.
 const ENTRY_POINTS = new Set(['govocal-ds', 'govocal-ds/base', 'govocal-ds/tokens.css']);
-// Story fixtures a page still borrows; a follow-up gives the back office its own pictures, then this goes.
-const BORROWED = new Set(['src/components/gv/story-images']);
+// Story fixtures (src/stories/) a page still borrows; a follow-up gives the back office its own pictures, then this
+// goes.
+const BORROWED = new Set(['src/stories/images']);
 
 describe('back office uses only the system', () => {
   it('imports the system only through govocal-ds, govocal-ds/base and govocal-ds/tokens.css', () => {
@@ -26,6 +27,10 @@ describe('back office uses only the system', () => {
       }
     }
     expect(bad, 'run `npm run api:imports`').toEqual([]);
+  });
+  it('borrows no story data: only the pictures BORROWED names, until it has its own', () => {
+    const data = src.filter(f => /\.(ts|tsx)$/.test(f) && /from\s+['"][^'"]*src\/stories\/data/.test(readFileSync(f, 'utf8')));
+    expect(data).toEqual([]);
   });
   it('has one CSS file, layout only, tokens only', () => {
     const css = src.filter(f => f.endsWith('.css'));
@@ -43,22 +48,22 @@ const barrel = file => [...readFileSync(file, 'utf8').matchAll(/export\s+(?:type
 const index = barrel('src/index.ts');
 const base = barrel('src/base.ts');
 const sources = files('src/components').concat(files('src/patterns'))
-  .filter(f => /\.tsx?$/.test(f) && !/\.stories\.tsx$/.test(f) && !f.includes('/story-'));
+  .filter(f => /\.tsx?$/.test(f) && !/\.stories\.tsx$/.test(f));
 const exportedValues = f => [...readFileSync(f, 'utf8').matchAll(/^export\s+(?:function|const)\s+([A-Za-z_]\w*)/gm)]
   .map(m => m[1]);
 const fromModule = f => './' + relative('src', f).replace(/\.tsx?$/, '');
 
 // The starter files painted as Components (Storybook's Components tree), and the content parts they compose.
-const STARTER_COMPONENTS = ['Button', 'Menu', 'NumberField', 'SearchField', 'Select', 'Switch', 'Tabs', 'TextField',
-  'Toast', 'Tooltip', 'Content', 'Separator'];
+const STARTER_COMPONENTS = ['Button', 'CheckboxGroup', 'Link', 'Menu', 'NumberField', 'RadioGroup', 'SearchField',
+  'Select', 'Switch', 'Tabs', 'TextField', 'Toast', 'Tooltip', 'Content', 'Separator'];
 // Starter files a Component replaces under the same name, kept out of both entry points.
-const REPLACED = ['Breadcrumbs', 'Checkbox', 'DropZone', 'Modal', 'ToggleButtonGroup'];
+const REPLACED = ['Checkbox', 'Modal'];
 // Exported for the file's own tests, stories or siblings, never for a page.
 const INTERNAL = new Set([
   'niceScale', 'describeSeries', 'describeChart', 'describePoint', 'nearestIndex', // Chart's maths, unit-tested
   'illustrations', 'loopSeconds', 'motionPlan', 'AUTO_LIMIT_S', 'cycleSeconds', // the Illustrations gallery's
   'listColumnsTemplate', 'pageItems', 'activeFacets',
-  'SelectListBox', 'ComboBoxListBox', 'DropdownListBox', 'DropdownItem', // the list boxes inside Select and ComboBox
+  'SelectListBox', 'DropdownListBox', 'DropdownItem', // the list boxes inside Select
   'Toast', // ToastRegion draws it
   'keepClass', 'ownClass', // the className contract's helpers
   'boundsOf', 'initialView', 'worldPoint', 'clusterPoints', 'nextInDirection', 'parseCredits', 'placeCard', // the map's maths, unit-tested
@@ -67,6 +72,13 @@ const INTERNAL = new Set([
   'useShownLocale', // the multilingual fields' shown-language state; pages use the fields' `locale` props
   'Text' // Content.tsx's slot Text stays the starter files' own; the barrel's Text is gv/Text (React Aria's underneath)
 ]);
+
+describe('story fixtures (src/stories/)', () => {
+  it('are reached only from stories and from each other, never from a Component or Pattern', () => {
+    const bad = sources.filter(f => /from\s+['"][^'"]*\/stories\//.test(readFileSync(f, 'utf8')));
+    expect(bad).toEqual([]);
+  });
+});
 
 describe('public entry points', () => {
   it('export each name once, across govocal-ds and govocal-ds/base', () => {

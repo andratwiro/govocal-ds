@@ -19,8 +19,9 @@ const resolve = <T>(className: RenderClassName<T>, values: T & {defaultClassName
   typeof className === 'function' ? className(values) : className;
 
 /**
- * The className contract for a wrapper over a React Aria part: React Aria's own class (`react-aria-X`, which the
- * starter's CSS keys off) always stays, then `extra`, then the caller's. A caller's function form keeps working.
+ * The className contract for a wrapper over a React Aria part: React Aria's own class (`react-aria-X`) always stays,
+ * then `extra` (a Base part's own `gv-base-x`, which its stylesheet keys off: `npm run css:scope`), then the caller's.
+ * A caller's function form keeps working.
  */
 export function keepClass<T>(className: RenderClassName<T>, ...extra: ClassValue[]) {
   return (values: T & {defaultClassName: string | undefined}) =>

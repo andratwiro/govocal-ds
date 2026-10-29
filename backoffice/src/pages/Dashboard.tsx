@@ -4,10 +4,10 @@ import {ArrowRight, CalendarDays, Download, Eye, FolderOpen, Zap} from 'lucide-r
 import {Badge, Banner, BarRow, Button, ChartLegend, DashboardBars, DashboardCard, type DashboardCardKind,
   DashboardDemographic, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader,
   DataTableRow, DataTableStack, DataTableText, DateRangeField, EmptyState, FilterChips, type FilterFacet, FilterMenu,
-  type FilterValue, IconButton, LineChart, Menu, MenuItem, MenuTrigger, Pagination, Panel, queue, SearchField,
+  type FilterValue, IconButton, LineChart, Link, Menu, MenuItem, MenuTrigger, Pagination, Panel, queue, SearchField,
   SegmentedControl, SegmentedControlItem, Select, SelectionBar, SelectItem, Sparkline, StatRow, StatTile, StatusBadge,
   Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, ToastRegion} from 'govocal-ds';
-import {Link, Meter} from 'govocal-ds/base';
+import {Meter} from 'govocal-ds/base';
 import {DASHBOARD, PROJECTS} from '../data';
 import {MONTHS, PER_TAG, STATUS_BREAKDOWN, EMAILS, INVITATIONS, EVENTS, ADOPTION, DATE_PRESETS, METRICS, PROJECT_METRICS,
   TAG_METRICS, USERS, VISITORS, REPRESENTATION, PARTICIPATION_FEED, MANAGEMENT_FEED, FEED_ACTIONS,

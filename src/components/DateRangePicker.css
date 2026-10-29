@@ -1,11 +1,11 @@
 @import './theme.css';
 @import './utilities.css';
 
-.react-aria-DateRangePicker {
+.gv-base-date-range-picker {
   color: var(--gv-text-primary);
   max-width: 100%;
 
-  .react-aria-Group {
+  .gv-base-group {
     display: flex;
     align-items: center;
     width: fit-content;
@@ -55,7 +55,7 @@
     flex: 1;
   }
 
-  .react-aria-DateInput {
+  .gv-base-date-input {
     width: unset;
     min-width: unset;
     padding: unset;

@@ -21,7 +21,7 @@ import {keepClass} from './className';
 
 export function GridList<T>({children, layout = 'grid', ...props}: GridListProps<T>) {
   return (
-    <AriaGridList {...props} className={keepClass(props.className)} layout={layout}>
+    <AriaGridList {...props} className={keepClass(props.className, 'gv-base-grid-list')} layout={layout}>
       {children}
     </AriaGridList>
   );
@@ -35,12 +35,12 @@ export function GridListItem({
 }) {
   let textValue = typeof children === 'string' ? children : undefined;
   return (
-    <AriaGridListItem textValue={textValue} {...props} className={keepClass(props.className)}>
+    <AriaGridListItem textValue={textValue} {...props} className={keepClass(props.className, 'gv-base-grid-list-item')}>
       {({selectionMode, selectionBehavior, allowsDragging}) => (
         <>
           {/* Add elements for drag and drop and selection. */}
           {allowsDragging && (
-            <Button slot="drag">
+            <Button className="react-aria-Button gv-base-button" slot="drag">
               <GripVertical size={16} />
             </Button>
           )}
@@ -56,18 +56,18 @@ export function GridListItem({
 
 export function GridListLoadMoreItem(props: GridListLoadMoreItemProps) {
   return (
-    <AriaGridListLoadMoreItem {...props} className={clsx('react-aria-GridListLoadingIndicator', props.className)}>
+    <AriaGridListLoadMoreItem {...props} className={clsx('react-aria-GridListLoadingIndicator gv-base-grid-list-loading-indicator', props.className)}>
       <ProgressCircle isIndeterminate aria-label="Loading more..." />
     </AriaGridListLoadMoreItem>
   );
 }
 
 export function GridListSection<T extends object>(props: GridListSectionProps<T>) {
-  return <AriaGridListSection {...props} className={clsx('react-aria-GridListSection', props.className)} />;
+  return <AriaGridListSection {...props} className={clsx('react-aria-GridListSection gv-base-grid-list-section', props.className)} />;
 }
 
 export function GridListHeader(props: GridListHeaderProps) {
-  return <AriaGridListHeader {...props} className={clsx('react-aria-GridListHeader', props.className)} />;
+  return <AriaGridListHeader {...props} className={clsx('react-aria-GridListHeader gv-base-grid-list-header', props.className)} />;
 }
 
 export type {GridListProps, GridListSectionProps, GridListHeaderProps};

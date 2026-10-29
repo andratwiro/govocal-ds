@@ -2,7 +2,7 @@
 
 /* The prototype's "undo snackbar" (augur-design.html .pj-toast--success): a light success-tinted
    card, bottom-right: a check in a green circle, title + body, a text action ("Undo"), and ×. */
-.react-aria-ToastRegion {
+.gv-base-toast-region {
   position: fixed;
   bottom: var(--gv-space-16);
   right: var(--gv-space-16);
@@ -19,7 +19,7 @@
   }
 }
 
-.react-aria-Toast {
+.gv-base-toast {
   position: relative;
   width: auto;
   max-width: min(400px, calc(100vw - var(--gv-space-32)));
@@ -62,7 +62,7 @@
     }
   }
 
-  .react-aria-ToastContent {
+  .gv-base-toast-content {
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
@@ -116,7 +116,7 @@
 
   /* × : 24 with a 16 icon (the prototype's 15), radius 6, 9 from the top and 12 from the end; dark green over
      slate, darker on hover. */
-  .react-aria-Button[slot='close'] {
+  .gv-base-button[slot='close'] {
     flex: 0 0 auto;
     display: inline-flex;
     align-items: center;

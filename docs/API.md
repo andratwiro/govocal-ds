@@ -12,18 +12,18 @@ and Storybook's alias all read it):
 | Import | What it carries |
 | --- | --- |
 | `govocal-ds` | Every Component and Pattern with its props types; the content parts (`Heading`, `Text`, `Header`, `Keyboard`, `Separator`); `PlacementProps`; React Aria's value types (`Key`, `Selection`, `SortDescriptor`, `DateValue`, `TimeValue`, `RangeValue`). |
-| `govocal-ds/base` | Starter React Aria parts no Component covers yet (`Calendar`, `ComboBox`, `Table`, `Tree`, `Dialog`, `Popover`, `Link`, `Toolbar`, …). Use one only when `govocal-ds` has nothing for the job. |
+| `govocal-ds/base` | Primitives: starter React Aria parts no Component covers yet (`Calendar`, `DatePicker`, `Table`, `Tree`, `Dialog`, `Popover`, `ListBox`, `Toolbar`, …). Use one only when `govocal-ds` has nothing for the job. |
 | `govocal-ds/tokens.css` | The `--gv-*` tokens. Import once, at the app's root. Each part imports its own CSS. |
 
 ```tsx
 import 'govocal-ds/tokens.css';
 import {Button, EmptyState, Panel, type PanelProps} from 'govocal-ds';
-import {ComboBox, ComboBoxItem} from 'govocal-ds/base';
+import {DatePicker, Popover} from 'govocal-ds/base';
 ```
 
 - Never import a file path (`../../src/components/gv/Panel`). The guard fails on it.
 - Each name is exported once, across both entry points. Where a Component replaces a starter part under the same name
-  (`Breadcrumbs`, `Checkbox`, `DropZone`, `Modal`), only the Component is exported.
+  (`Checkbox`, `Modal`), only the Component is exported.
 - A page that still has deep imports: `npm run api:imports` (or `node scripts/use-public-api.mjs <dir>`) rewrites them
   in place, one import per entry point, names sorted, local names and `type` marks kept. It is re-runnable;
   `--check` exits 1 when a file would change. It leaves (and lists) anything no entry point exports.
@@ -44,8 +44,17 @@ radius and borders come from the part's props and the tokens.
 - A part over React Aria keeps `react-aria-X` and adds the caller's class, and the function form still works:
   `className={({isFocused}) => …}`. Inside the system, `keepClass` (starter parts) and `ownClass` (parts painted with
   their own `gv-…` class) in `src/components/className.ts` do this.
+- Base's stylesheets paint only the system's own elements. Each Base part also carries `gv-base-<x>`
+  (`react-aria-TextField` → `gv-base-text-field`), and `src/components/*.css` selects that, never React Aria's global
+  `react-aria-X`, so a host app's own React Aria elements are left as the app paints them. `npm run css:scope` writes
+  both halves (the TSX class, the CSS selector) and is safe to re-run after a merge; `tests/css-scope.test.mjs` runs
+  its `--check`. `react-aria-X` stays on every element for tests and queries.
 - A part that must not be restyled (`Coachmark`), or that renders no element of its own (triggers, an item's content),
   takes no `className`: TypeScript refuses it rather than dropping it.
+- Inside the system the same holds between parts: a stylesheet selects only its own block (`tests/own-block.test.mjs`).
+  A part that needs to place a child passes it a class of its own (List header gives each cell
+  `gv-list-header__cell`); one that needs a child to look different asks for a prop or a documented custom property.
+  Today's reach-ins are listed in the test, and the list only shrinks.
 
 ## The convention
 

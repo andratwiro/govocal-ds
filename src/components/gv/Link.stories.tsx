@@ -1,13 +1,14 @@
-import {Link} from './Link';
+import {Link} from '../Link';
 import {Plus} from 'lucide-react';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof Link> = {
+  title: 'Components/Navigation/Link',
   component: Link,
   parameters: {
     layout: 'centered'
   },
-  tags: ['autodocs'],
+  tags: ['autodocs', 'not-in-figma'],
   argTypes: {
     size: {control: 'radio', options: [undefined, 'small', 'medium']}
   }

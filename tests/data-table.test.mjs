@@ -1,7 +1,7 @@
 import {describe, it, expect} from 'vitest';
 import {readFileSync} from 'node:fs';
 import {toKeySet, virtualMetrics} from '../src/components/gv/DataTable.tsx';
-import {inventPeople, sortPeople} from '../src/components/gv/story-data/people.ts';
+import {inventPeople, sortPeople} from '../src/stories/data/people.ts';
 
 describe('toKeySet (Data table)', () => {
   it("turns React Aria's 'all' into every key given", () => {

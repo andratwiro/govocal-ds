@@ -45,7 +45,7 @@ export function MultilingualRichTextEditor({
       <RichTextEditor {...editor} aria-label={field.inputLabel} value={field.text} onChange={field.setText} />
       {description && !field.isInvalid && <Description>{description}</Description>}
       {field.isInvalid && field.error && (
-        <span className="react-aria-FieldError gv-multilingual-field__error" role="alert">
+        <span className="react-aria-FieldError gv-base-field-error gv-multilingual-field__error" role="alert">
           {field.error}
         </span>
       )}

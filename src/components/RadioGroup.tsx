@@ -20,6 +20,12 @@ export interface RadioGroupProps extends Omit<AriaRadioGroupProps, 'children'> {
   errorMessage?: string | ((validation: ValidationResult) => string);
 }
 
+/**
+ * Pick exactly one of a few options, all in view. A label, the options in a column (`orientation="horizontal"` for a
+ * row), an optional description and an error; each option is a `Radio`, or a `ChoiceCard` for options drawn as
+ * bordered tiles. React Aria's RadioGroup (`value` / `defaultValue` / `onChange`). `className` and
+ * `style` place it; they never paint it.
+ */
 export function RadioGroup({
   label,
   description,
@@ -28,7 +34,7 @@ export function RadioGroup({
   ...props
 }: RadioGroupProps) {
   return (
-    <AriaRadioGroup {...props} className={keepClass(props.className)}>
+    <AriaRadioGroup {...props} className={keepClass(props.className, 'gv-base-radio-group')}>
       <Label>{label}</Label>
       <div className="radio-items">{children}</div>
       {description && <Description>{description}</Description>}
@@ -41,10 +47,11 @@ export interface RadioProps extends RadioFieldProps {
   description?: string;
 }
 
+/** One option of a Radio group: its dot and words, with an optional `description` line below. */
 export function Radio(props: RadioProps) {
   return (
-    <RadioField {...props} className={keepClass(props.className)}>
-      <RadioButton>
+    <RadioField {...props} className={keepClass(props.className, 'gv-base-radio-field')}>
+      <RadioButton className="react-aria-RadioButton gv-base-radio-button">
         {composeRenderProps(props.children, children => (
           <>
             <div className="indicator" />

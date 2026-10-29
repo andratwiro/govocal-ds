@@ -45,31 +45,35 @@ Foundations             Colour · Typography · Spacing · Radius · Shadows · 
 Components              src/components/gv/
   Actions               Button · Compact button · Icon button · Menu · Segmented control (with Segmented control item)
   Charts                Bar row · Chart · Dashboard card · Legend row · Statement row
-  Data display          Avatar (with Avatar group) · Data table · File list · Illustration · List header · List header cell · List row
+  Data display          Avatar (with Avatar group) · File list · Illustration · List header · List header cell · List row
                         · Map view (with Map pin, Map card, Map overlay, Map chip, Map legend; recipe: In the Manage tab)
-                        · Property list · Reaction counts · Stat row · Stat tile · Table toolbar
-  Forms                 Checkbox · Choice card · Date range field · Drop zone · Locale switcher · Multilingual rich text editor
-                        · Multilingual text field · Number field · Option list · Required marker · Rich text editor
-                        · Rich text toolbar · Rich text toolbar button · Search field · Select · Switch · Tag picker
-                        · Text field · Title field
-  Layout & containers   Card · Divider · Panel · Section label
-  Navigation            Breadcrumbs · Pagination · Tabs
+                        · Property list · Reaction counts · Stat row · Stat tile
+  Forms                 Checkbox · Checkbox group · Choice card · Date range field · Drop zone · Locale switcher
+                        · Multilingual rich text editor · Multilingual text field · Number field · Option list
+                        · Radio group · Required marker · Rich text editor · Rich text toolbar · Rich text toolbar button
+                        · Search field · Select · Switch · Tag picker · Text field · Title field
+  Layout & containers   App provider · Card · Divider · Page header · Panel · Tile grid
+  Navigation            Breadcrumbs · Link · Pagination · Tabs
   Overlays              Alert dialog · Coachmark · Help popover · Modal · Side panel · Tooltip
   Status & feedback     Badge · Banner · Empty state · New dot · Review status · Skeleton · Status badge · Toast
+  Tables & lists        Data table · Filter chips · Filter menu · Selection bar · Table toolbar (the list page's kit;
+                        Filter chips, Filter menu and Selection bar still live in src/patterns/)
+  Text                  Section label · Text · Visually hidden
 Patterns                src/patterns/
   App shell             Notification list · Side nav
   Build tab             Access rights · Form field summary (recipe) · Notification row · Participant action row
                         · View option row
-  Lists                 Filter chips · Filter menu · Selection bar (used by every list page)
   Manage tab            Comment thread · Official update
   Pages & menu          Section toggle
   Participation methods Common ground row · Proposals row · Vote progress · Volunteering row · Voting row
   Project page          Action row · Panel section · Phone preview · Project header · Setup step · Stat card
   Project rail          Phase timeline · Rail header · Rail phase
 Back office             (empty: the whole-page stories DESIGN.md plans land here)
-Base                    src/components/: the React Aria starter, A–Z, React Aria's names (Calendar · CheckboxGroup ·
-                        ColorArea · … · Tooltip · Tree). Off the sidebar, tagged `covered`: Breadcrumbs · Checkbox ·
-                        Dialog · Modal · Table · ToggleButtonGroup (a Components entry wraps each; URLs still open)
+Base                    Introduction first (what Base is), then src/components/: the React Aria starter, primitives the
+                        Components build on (not for pages), A–Z, React Aria's names (Calendar · CheckboxGroup ·
+                        ColorField · … · Toolbar · Tree). Off the sidebar, tagged `covered`: Checkbox · Dialog · Modal
+                        · Table (a Components entry wraps each; URLs still open). A starter part nothing uses but its
+                        own story is deleted, not kept (29 Oct 2026: 17 went)
 ```
 
 ## Status marks
@@ -79,7 +83,9 @@ them, and `.storybook/manager.ts` writes the mark after the entry's name):
 
 - `not-in-figma`: Figma doesn't draw it yet (Coachmark, Skeleton, Data table and every Storybook-only pattern). Shows
   "no Figma".
-- `deprecated`: on its way out; the export carries JSDoc `@deprecated` too, and both leave with the code. None today.
+- `deprecated`: on its way out; the export carries JSDoc `@deprecated` too, and both leave with the code. No whole
+  entry today. Inside the Card entry, `CardRadioGroup` and `CardRadio` carry `@deprecated` (→ Choice card); the entry
+  stays untagged because Card itself stays.
 - `covered`: a Base entry a Components entry wraps or replaces, hidden from the sidebar. A Components entry that wraps
   a Base entry tags it `covered` in the same commit.
 
@@ -144,7 +150,7 @@ below). Rows without a rename say "same".
 | Setup card | Project page/Setup step | Components/Setup card | Patterns/Project page/Setup step | SetupCard → SetupStep | SetupStep.* |
 | Rail header | Project rail/Rail header | Components/Rail header | Patterns/Project rail/Rail header | RailHeader (same) | RailHeader.* |
 | Rail phase | Project rail/Rail phase | Components/Rail phase | Patterns/Project rail/Rail phase | RailPhase (same) | RailPhase.* |
-| Section label | Layout & containers/Section label | Components/Rail section label | Components/Layout & containers/Section label | RailSectionLabel → SectionLabel | src/patterns/RailSectionLabel.* → src/components/gv/SectionLabel.* |
+| Section label | Text/Section label | Components/Rail section label | Components/Text/Section label | RailSectionLabel → SectionLabel | src/patterns/RailSectionLabel.* → src/components/gv/SectionLabel.* |
 | List row · Common ground | Participation methods/Common ground row | Components/List row · Common ground | Patterns/Participation methods/Common ground row | ListRowCommonGround → CommonGroundRow | CommonGroundRow.* |
 | List row · Proposals | Participation methods/Proposals row | Components/List row · Proposals | Patterns/Participation methods/Proposals row | ListRowProposals → ProposalsRow | ProposalsRow.* |
 | List row · Voting | Participation methods/Voting row | Components/List row · Voting | Patterns/Participation methods/Voting row | ListRowVoting → VotingRow | VotingRow.* |
@@ -157,11 +163,13 @@ below). Rows without a rename say "same".
 |---|---|---|
 | Components/Coachmark · Skeleton · Data table | Components/Overlays/Coachmark · Components/Status & feedback/Skeleton · Components/Data display/Data table | none |
 | Patterns/Help popover · Notification list · Side nav | Patterns/App shell/… (same names) | none |
-| Patterns/Filter chips · Filter menu · Filter options · Selection bar | Patterns/Lists/… (same names; the back office's lists: the phase Manage tab, Projects, Input manager, Users) | none |
+| Patterns/Filter chips · Filter menu · Filter options · Selection bar | Patterns/Lists/… (same names; the back office's lists: the phase Manage tab, Projects, Input manager, Users); 29 Oct: Components/Tables & lists/… | none |
 | Patterns/Section toggle | Patterns/Pages & menu/Section toggle | none |
 | Patterns/Action row · Panel section · Stat card | Patterns/Project page/… (same names) | none |
 | Patterns/Phone preview | Patterns/Project page/Phone preview | PhoneFrame → PhonePreview; AvatarStack → AvatarGroup, now in Avatar.tsx |
 | Patterns/Phase timeline | Patterns/Project rail/Phase timeline | none |
+| Components/Data display/Data table · Table toolbar, Patterns/Lists/Filter chips · Filter menu · Selection bar | Components/Tables & lists/… (same names; one place for the list page's kit; no file moves) | none |
+| Base/Link · RadioGroup · CheckboxGroup | Components/Navigation/Link · Components/Forms/Radio group · Components/Forms/Checkbox group (29 Oct: pages use them; files stay in `src/components/`) | none; imported from `govocal-ds`, no longer `govocal-ds/base` |
 
 Kept for a later pass (after Figma mirrors this): Compact button stays its own entry (not yet a Button size), Stat card
 stays apart from Stat tile, Status badge keeps `state` (draft/live) and Card keeps its Figma Type values, List header,
@@ -175,7 +183,7 @@ then by slash, so Components › Actions › Button is Storybook's `Components/A
 code and Figma can land in either order.
 
 - **Components** (32): a row per group, A–Z (Actions, Charts, Data display, Forms, Layout & containers, Navigation,
-  Overlays, Status & feedback), a text heading per row, components A–Z inside. No section or frame around them: the
+  Overlays, Status & feedback, Text), a text heading per row, components A–Z inside. No section or frame around them: the
   Assets panel groups by those too, which would add a level (Actions › Actions › Button).
 - **Patterns** (10): rows Participation methods, Project page, Project rail (App shell, Pages & menu: nothing drawn
   yet).

@@ -1,6 +1,6 @@
 // Invented data for the Map stories: 160 ideas in one town, 120 with a place on the map and 40 without. The places are
 // scattered at random round a town centre from a fixed seed: nobody's address. Streets and titles are invented too.
-import type {MapItem, MapTone} from '../MapView';
+import type {MapItem, MapTone} from '../../components/gv/MapView';
 
 export interface MapIdea {
   id: string;

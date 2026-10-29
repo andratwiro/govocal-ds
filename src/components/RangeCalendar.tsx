@@ -25,7 +25,7 @@ export function RangeCalendar<T extends DateValue>({
 }: RangeCalendarProps<T>) {
   let months = props.visibleDuration?.months || 1;
   return (
-    <AriaRangeCalendar {...props} className={keepClass(props.className)}>
+    <AriaRangeCalendar {...props} className={keepClass(props.className, 'gv-base-range-calendar')}>
       <div className="months">
         {Array.from({length: months}, (_, i) => (
           <div key={i} className="month">
@@ -35,7 +35,7 @@ export function RangeCalendar<T extends DateValue>({
                   <ChevronLeft />
                 </Button>
               )}
-              <CalendarHeading offset={{months: i}} />
+              <CalendarHeading className="react-aria-CalendarHeading gv-base-calendar-heading" offset={{months: i}} />
               {i === months - 1 && (
                 <Button slot="next" variant="quiet">
                   <ChevronRight />
@@ -46,7 +46,7 @@ export function RangeCalendar<T extends DateValue>({
           </div>
         ))}
       </div>
-      {errorMessage && <Text slot="errorMessage">{errorMessage}</Text>}
+      {errorMessage && <Text className="react-aria-Text gv-base-text" slot="errorMessage">{errorMessage}</Text>}
     </AriaRangeCalendar>
   );
 }
@@ -54,7 +54,7 @@ export function RangeCalendar<T extends DateValue>({
 /** A day in the range calendar: the range's two ends are filled. */
 export function RangeCalendarCell(props: CalendarCellProps) {
   return (
-    <AriaCalendarCell {...props} className={keepClass(props.className)}>
+    <AriaCalendarCell {...props} className={keepClass(props.className, 'gv-base-calendar-cell')}>
       {composeRenderProps(
         props.children,
         (

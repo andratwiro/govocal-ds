@@ -127,7 +127,7 @@ export function useMultilingualField(props: MultilingualFieldProps, inputId?: st
   const head: ReactNode = (label || switcher) && (
     <div className="gv-multilingual-field__head">
       {label && (
-        <Label className="react-aria-Label gv-multilingual-field__label" htmlFor={inputId}>
+        <Label className="react-aria-Label gv-base-label gv-multilingual-field__label" htmlFor={inputId}>
           {label}
           {isRequired && (
             <span className="gv-multilingual-field__required" aria-hidden="true">
@@ -245,11 +245,11 @@ export function MultilingualTextField({
         isInvalid={field.isInvalid}
         isDisabled={isDisabled}
         validationBehavior="aria"
-        className="react-aria-TextField gv-multilingual-field__field">
+        className="react-aria-TextField gv-base-text-field gv-multilingual-field__field">
         {isMultiline ? (
-          <TextArea {...inputProps} className="react-aria-TextArea inset" />
+          <TextArea {...inputProps} className="react-aria-TextArea gv-base-text-area inset" />
         ) : (
-          <Input {...inputProps} className="react-aria-Input inset" />
+          <Input {...inputProps} className="react-aria-Input gv-base-input inset" />
         )}
         <div className="gv-text-field-foot">
           {description && <Description>{description}</Description>}
