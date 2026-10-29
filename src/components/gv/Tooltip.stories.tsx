@@ -1,14 +1,15 @@
-import {Tooltip, TooltipTrigger} from './Tooltip';
-import {Button} from './Button';
+import {Tooltip, TooltipTrigger} from '../Tooltip';
+import {Button} from '../Button';
 import {Save} from 'lucide-react';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof Tooltip> = {
+  title: 'Components/Overlays/Tooltip',
   component: Tooltip,
   parameters: {
     layout: 'centered'
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'not-in-figma']
 };
 
 export default meta;
@@ -25,7 +26,7 @@ export const Example: Story = args => (
 );
 
 /** One line up to 320, then even lines; the tail only on the project's step cards. */
-export const AllStates: StoryFn<typeof Tooltip> = () => (
+export const AllVariants: StoryFn<typeof Tooltip> = () => (
   <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 72, paddingTop: 48}}>
     <TooltipTrigger isOpen>
       <Button variant="secondary">Platform menu</Button>
@@ -41,3 +42,14 @@ export const AllStates: StoryFn<typeof Tooltip> = () => (
     </TooltipTrigger>
   </div>
 );
+
+/** Two lines: the text wraps, balanced, and the box hugs the longer line (quick actions, icon actions). */
+export const TwoLines: StoryFn<typeof Tooltip> = () => (
+  <div style={{paddingTop: 48}}>
+    <TooltipTrigger isOpen>
+      <Button variant="secondary">Private</Button>
+      <Tooltip>Private, so it does not appear on the homepage, in search or in widgets.</Tooltip>
+    </TooltipTrigger>
+  </div>
+);
+TwoLines.storyName = 'Two lines';
