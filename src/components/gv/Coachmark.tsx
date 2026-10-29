@@ -34,7 +34,7 @@ export function Coachmark({
     <AriaPopover {...props} placement={placement} className="gv-coachmark">
       <OverlayArrow className="gv-coachmark__arrow">
         <svg width={13} height={13} viewBox="0 0 13 13">
-          <rect width={13} height={13} />
+          <rect width={13} height={13} rx={2} />
         </svg>
       </OverlayArrow>
       <div className="gv-coachmark__hd">

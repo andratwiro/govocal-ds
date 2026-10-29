@@ -43,7 +43,7 @@ export const AllVariants: Story = () => {
   const [rightOpen, setRightOpen] = useState(true);
   const [bottomOpen, setBottomOpen] = useState(true);
   return (
-    <div style={{display: 'flex', gap: 160, padding: 140}}>
+    <div style={{display: 'flex', alignItems: 'flex-start', gap: 440, padding: '120px 40px 220px'}}>
       <div>
         <span ref={rightRef} style={{display: 'inline-block'}}>
           <Button onPress={() => setRightOpen(true)}>Phase rail</Button>

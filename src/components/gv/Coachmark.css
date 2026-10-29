@@ -11,7 +11,8 @@
   border-radius: var(--gv-radius-12);
   padding: 15px 17px 13px;
   box-shadow: var(--gv-shadow-dialog);
-  font: var(--gv-type-ui) var(--gv-font-family);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   transition:
     transform 200ms,
     opacity 200ms;
@@ -23,31 +24,58 @@
     opacity: 0;
   }
 
+  /* 12 from the trigger: the tail (a 13 square turned 45°, half inside the card) ends 3 short of it. */
   &[data-placement='top'] {
     --origin: translateY(8px);
-    margin-bottom: 10px;
+    margin-bottom: var(--gv-space-12);
   }
 
   &[data-placement='bottom'] {
     --origin: translateY(-8px);
-    margin-top: 10px;
+    margin-top: var(--gv-space-12);
   }
 
   &[data-placement='left'] {
     --origin: translateX(8px);
-    margin-right: 10px;
+    margin-right: var(--gv-space-12);
   }
 
   &[data-placement='right'] {
     --origin: translateX(-8px);
-    margin-left: 10px;
+    margin-left: var(--gv-space-12);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: opacity 120ms;
+
+    &[data-entering],
+    &[data-exiting] {
+      transform: none;
+    }
   }
 }
 
+/* .pj-coach__tail: a 13 square, radius 2, turned 45°, half of it over the card's edge. */
 .gv-coachmark__arrow svg {
   display: block;
+  overflow: visible;
   fill: var(--gv-action-primary);
-  transform: rotate(45deg);
+}
+
+.gv-coachmark[data-placement='top'] .gv-coachmark__arrow svg {
+  transform: translateY(-6.5px) rotate(45deg);
+}
+
+.gv-coachmark[data-placement='bottom'] .gv-coachmark__arrow svg {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.gv-coachmark[data-placement='left'] .gv-coachmark__arrow svg {
+  transform: translateX(-6.5px) rotate(45deg);
+}
+
+.gv-coachmark[data-placement='right'] .gv-coachmark__arrow svg {
+  transform: translateX(6.5px) rotate(45deg);
 }
 
 .gv-coachmark__hd {
@@ -58,15 +86,19 @@
 }
 
 .gv-coachmark__title {
-  font: var(--gv-type-body-strong) var(--gv-font-family);
+  font: var(--gv-type-body-strong);
+  letter-spacing: var(--gv-type-body-strong-tracking);
 }
 
+/* The prototype paints the words and buttons in white at 75–90 % on the brand fill; no token holds white at an
+   alpha, so each is the white mixed into the fill. */
 .gv-coachmark__x {
   flex: none;
   margin-top: 1px;
   border: none;
   background: none;
   padding: 0;
+  border-radius: var(--gv-radius-4);
   color: color-mix(in srgb, var(--gv-text-inverse) 75%, var(--gv-action-primary));
   cursor: pointer;
   display: inline-flex;
@@ -78,7 +110,8 @@
 
 .gv-coachmark__body {
   margin-top: var(--gv-space-6);
-  font: var(--gv-type-ui) var(--gv-font-family);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   color: color-mix(in srgb, var(--gv-text-inverse) 90%, var(--gv-action-primary));
 }
 
@@ -90,13 +123,17 @@
   margin-top: var(--gv-space-14);
 }
 
+.gv-coachmark__skip,
+.gv-coachmark__got {
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  cursor: pointer;
+}
+
 .gv-coachmark__skip {
   border: none;
   background: none;
   color: color-mix(in srgb, var(--gv-text-inverse) 85%, var(--gv-action-primary));
-  font: inherit;
-  font-size: 13px;
-  cursor: pointer;
   padding: 6px 9px;
   border-radius: var(--gv-radius-6);
 }
@@ -105,18 +142,24 @@
   background: color-mix(in srgb, var(--gv-text-inverse) 12%, transparent);
 }
 
+/* "Got it": outlined in half-white, radius 8 (the prototype's radius-2 step is 8). */
 .gv-coachmark__got {
   border: 1px solid color-mix(in srgb, var(--gv-text-inverse) 50%, transparent);
   background: none;
   color: var(--gv-text-inverse);
-  font: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
+  font-weight: var(--gv-type-ui-strong-weight);
   padding: 6px 14px;
-  border-radius: var(--gv-radius-2);
+  border-radius: var(--gv-radius-8);
 }
 
 .gv-coachmark__got:hover {
   background: color-mix(in srgb, var(--gv-text-inverse) 14%, transparent);
+}
+
+/* On the brand fill the selected-blue ring would vanish: the focus ring is white here. */
+.gv-coachmark__x:focus-visible,
+.gv-coachmark__skip:focus-visible,
+.gv-coachmark__got:focus-visible {
+  outline: 2px solid var(--gv-text-inverse);
+  outline-offset: 2px;
 }
