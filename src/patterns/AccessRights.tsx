@@ -251,7 +251,7 @@ export function AccessRightsModal({
     <>
       <Modal
         title={title}
-        size="wide"
+        width="wide"
         isOpen={isOpen}
         defaultOpen={defaultOpen}
         onOpenChange={onOpenChange}

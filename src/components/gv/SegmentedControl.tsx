@@ -16,20 +16,20 @@ import './SegmentedControl.css';
 
 export interface SegmentedControlProps extends Omit<ToggleButtonGroupProps, 'className' | 'style'>, PlacementProps {
   /**
-   * `default` is Figma's Segmented control (the Build / Manage / Insights tabs, 36 tall).
-   * `small` is the range switch in a dashboard card's header (Figma Dashboard card · Votes over
-   * time "Range switch", prototype `.pj-dseg`): 30 tall, Small type, on the stage grey.
+   * The height. `36` is Figma's Segmented control (the Build / Manage / Insights tabs). `30` is the range switch in
+   * a dashboard card's header (Figma Dashboard card · Votes over time "Range switch", prototype `.pj-dseg`): Small
+   * type, on the stage grey.
    *
-   * @default 'default'
+   * @default 36
    */
-  size?: 'default' | 'small';
+  size?: 36 | 30;
 }
 
 /**
  * Segmented control (Figma node 14:883; prototype `.pj-hseg`): React Aria's ToggleButtonGroup, ToggleButton and
  * SelectionIndicator, painted with gv- classes.
  */
-export function SegmentedControl({size = 'default', className, style, ...props}: SegmentedControlProps) {
+export function SegmentedControl({size = 36, className, style, ...props}: SegmentedControlProps) {
   return <RACToggleButtonGroup {...props} className={clsx('gv-segmented-control', className)} style={style} data-size={size} />;
 }
 

@@ -133,9 +133,9 @@ export const PhaseStatus: Story = {
   name: 'Phase status',
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 8, width: 320}}>
-      <Banner compact tone="neutral" title="Not started">Starts in 4 days</Banner>
-      <Banner compact tone="success" title="Live">Ends in 3 days</Banner>
-      <Banner compact tone="neutral" title="Ended">Closed on 12 Dec</Banner>
+      <Banner density="compact" tone="neutral" title="Not started">Starts in 4 days</Banner>
+      <Banner density="compact" tone="success" title="Live">Ends in 3 days</Banner>
+      <Banner density="compact" tone="neutral" title="Ended">Closed on 12 Dec</Banner>
     </div>
   )
 };

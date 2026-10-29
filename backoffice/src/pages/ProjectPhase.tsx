@@ -206,9 +206,9 @@ function phaseDates(dates: string): [string, string] | null {
 
 function PhaseStatus({phase}: {phase: Phase}) {
   const range = phaseDates(phase.dates);
-  if (phase.status === 'Live') return <Banner compact tone="success" title="Live">{range ? `Ends on ${range[1]}` : phase.dates}</Banner>;
-  if (phase.status === 'Done') return <Banner compact tone="neutral" title="Ended">{range ? `Closed on ${range[1]}` : phase.dates}</Banner>;
-  return <Banner compact tone="neutral" title="Not started">{range ? `Starts on ${range[0]}` : phase.dates}</Banner>;
+  if (phase.status === 'Live') return <Banner density="compact" tone="success" title="Live">{range ? `Ends on ${range[1]}` : phase.dates}</Banner>;
+  if (phase.status === 'Done') return <Banner density="compact" tone="neutral" title="Ended">{range ? `Closed on ${range[1]}` : phase.dates}</Banner>;
+  return <Banner density="compact" tone="neutral" title="Not started">{range ? `Starts on ${range[0]}` : phase.dates}</Banner>;
 }
 
 // The phase's own cards, after the "Ideation · Build" Figma frame (Card types Required, Add, Review, To set).
@@ -661,7 +661,7 @@ export function ProjectSettings({project, tab, onTabChange, onClose}: {project: 
   onTabChange: (tab: SettingsTab) => void; onClose: () => void}) {
   return (
     // Modal's "With side tabs": a fixed height, an unpadded body, the vertical Tabs as a side list beside the panel.
-    <Modal title="Project settings" size="wide" height="fixed" isFlush isOpen={tab !== null}
+    <Modal title="Project settings" width="wide" height="fixed" isFlush isOpen={tab !== null}
       onOpenChange={o => { if (!o) onClose(); }} footer={<Button size={32} slot="close">Save</Button>}>
       <Tabs orientation="vertical" selectedKey={tab ?? 'General'} onSelectionChange={k => onTabChange(k as SettingsTab)}
         className="bo-phase-settings">
@@ -738,7 +738,7 @@ function Attachments({isOpen, onOpenChange, files, onChange}: {isOpen: boolean; 
     <Modal title="Attachments" isOpen={isOpen} onOpenChange={onOpenChange}
       footer={<Button variant="secondary" slot="close">Done</Button>}>
       <div className="bo-phase-attach">
-        <DropZone size="compact" acceptedFileTypes={['*']} allowsMultiple onSelect={list => list && add([...list])}
+        <DropZone density="compact" acceptedFileTypes={['*']} allowsMultiple onSelect={list => list && add([...list])}
           onDrop={async e => add(await Promise.all(e.items.flatMap(i => (i.kind === 'file' ? [i.getFile()] : []))))}>
           Drop a file here or browse
         </DropZone>

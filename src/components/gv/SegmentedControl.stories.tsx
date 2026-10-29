@@ -47,7 +47,7 @@ export const AllVariants: Story = {
         </SegmentedControlItem>
         <SegmentedControlItem id="insights">Insights</SegmentedControlItem>
       </SegmentedControl>
-      <SegmentedControl size="small" aria-label="Range" defaultSelectedKeys={['daily']} disallowEmptySelection>
+      <SegmentedControl size={30} aria-label="Range" defaultSelectedKeys={['daily']} disallowEmptySelection>
         <SegmentedControlItem id="daily">Daily</SegmentedControlItem>
         <SegmentedControlItem id="weekly">Weekly</SegmentedControlItem>
       </SegmentedControl>
@@ -92,7 +92,7 @@ export const InsightsManageUnread: Story = {
 export const SmallRangeSwitch: Story = {
   name: 'Small · range switch',
   render: () => (
-    <SegmentedControl size="small" aria-label="Range" defaultSelectedKeys={['daily']} disallowEmptySelection>
+    <SegmentedControl size={30} aria-label="Range" defaultSelectedKeys={['daily']} disallowEmptySelection>
       <SegmentedControlItem id="daily">Daily</SegmentedControlItem>
       <SegmentedControlItem id="weekly">Weekly</SegmentedControlItem>
     </SegmentedControl>
@@ -106,7 +106,7 @@ export const SmallRangeSwitch: Story = {
 export const IconAndLabelSmall: Story = {
   name: 'Icon and label · small',
   render: () => (
-    <SegmentedControl size="small" aria-label="View" defaultSelectedKeys={['map']} disallowEmptySelection>
+    <SegmentedControl size={30} aria-label="View" defaultSelectedKeys={['map']} disallowEmptySelection>
       <SegmentedControlItem id="list">
         <List aria-hidden />
         List

@@ -357,7 +357,7 @@ function ParticipationFeed() {
       toolbar={toolbar}
       footer={rows.length > 0 && <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Feed pages" />}>
       {rows.length === 0 && !q ? (
-        <EmptyState size="panel" illustration="empty-notebook" headingLevel={3}
+        <EmptyState layout="panel" illustration="empty-notebook" headingLevel={3}
           title={show === 'new' ? 'You are all caught up' : 'Nothing viewed yet'}
           description={show === 'new' ? 'New ideas, comments and proposals will appear here.' : 'Items you mark as viewed move here.'} />
       ) : (

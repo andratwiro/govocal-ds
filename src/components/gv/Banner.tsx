@@ -47,10 +47,12 @@ export interface BannerProps extends PlacementProps {
   onDismiss?: () => void;
   dismissLabel?: string;
   /**
-   * The phase status strip: one compact row (icon, bold title, lighter meta), not the padded
-   * message card. `title` + `children` (the meta, e.g. "Starts in 4 days").
+   * `compact`: the phase status strip, one row (icon, bold title, lighter meta), not the padded message card;
+   * `title` + `children` (the meta, e.g. "Starts in 4 days").
+   *
+   * @default 'default'
    */
-  compact?: boolean;
+  density?: 'default' | 'compact';
 }
 
 /** A message box: icon + text, on a tone's tint (+ title, link, action, dismiss). */
@@ -66,7 +68,7 @@ export function Banner({
   action,
   onDismiss,
   dismissLabel = 'Dismiss',
-  compact = false,
+  density = 'default',
   className,
   style
 }: BannerProps) {
@@ -74,7 +76,7 @@ export function Banner({
   const isLink = type === 'info-link';
   const ToneIcon = TONE_ICON[resolvedTone];
 
-  if (compact) {
+  if (density === 'compact') {
     return (
       <div className={clsx('gv-banner gv-banner--compact', className)} style={style} data-tone={resolvedTone} role="status">
         {icon !== null && <span className="gv-banner__icon">{icon ?? <ToneIcon aria-hidden size={16} strokeWidth={1.75} />}</span>}

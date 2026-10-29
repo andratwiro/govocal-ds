@@ -55,7 +55,7 @@
 
 /* Compact (the prototype's `.gv-dropzone`: Add a cause, Add input, Event image): one left-aligned
    row, icon beside a two-line label, 14/16 padding instead of the default zone's 22/16 centred one. */
-.gv-drop-zone[data-size='compact'] .gv-drop-zone-trigger {
+.gv-drop-zone[data-density='compact'] .gv-drop-zone-trigger {
   flex-direction: row;
   align-items: center;
   gap: var(--gv-space-12);

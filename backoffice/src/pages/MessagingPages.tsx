@@ -93,7 +93,7 @@ export function EmailStats() {
       description={<>Sent {email.date} to {email.to}{email.project && <> · Project: {email.project}</>}</>}>
       <div className="bo-messaging-stack">
         <div className="bo-messaging-kpis">
-          <StatTile label="Recipients" value={n(sent)} type="tall" />
+          <StatTile label="Recipients" value={n(sent)} layout="tall" />
           <StatTile label="Delivered" value={n(delivered)} note={`${n(sent - delivered)} bounced`} />
           <StatTile label="Opened" value={`${email.opened ?? 0}%`} note={`${n(pctOf(email.opened))} people`} />
           <StatTile label="Clicked" value={`${email.clicked ?? 0}%`} note={`${n(pctOf(email.clicked))} people`} />

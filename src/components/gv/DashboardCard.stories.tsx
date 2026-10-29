@@ -127,7 +127,7 @@ const cards = {
       title="Participation over time"
       subtitle="Votes cast · cumulative"
       action={
-        <SegmentedControl size="small" aria-label="Range" disallowEmptySelection defaultSelectedKeys={['daily']}>
+        <SegmentedControl size={30} aria-label="Range" disallowEmptySelection defaultSelectedKeys={['daily']}>
           <SegmentedControlItem id="daily">Daily</SegmentedControlItem>
           <SegmentedControlItem id="weekly">Weekly</SegmentedControlItem>
         </SegmentedControl>
@@ -217,17 +217,17 @@ export const DemographicCommute: Story = {name: 'Demographic · commute', render
 
 /**
  * Not in Figma. A card with no data yet, as the prototype's freshly published phase and its "Demographics and audience"
- * card: an EmptyState (`size="panel"`, no heading: the card has one) right under the title. The prototype draws one
+ * card: an EmptyState (`layout="panel"`, no heading: the card has one) right under the title. The prototype draws one
  * muted line; the EmptyState's strong title is a step louder, kept so every empty place reads the same.
  */
 export const Empty: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 14}}>
       <DashboardCard kind="participation-over-time" title="Participation over time">
-        <EmptyState size="panel" headingLevel="none" title="No participation yet" description="The trend will appear here." />
+        <EmptyState layout="panel" headingLevel="none" title="No participation yet" description="The trend will appear here." />
       </DashboardCard>
       <DashboardCard title="Demographics and audience">
-        <EmptyState size="panel" headingLevel="none" title="No demographic data yet" description="It appears once participants fill in their profile." />
+        <EmptyState layout="panel" headingLevel="none" title="No demographic data yet" description="It appears once participants fill in their profile." />
       </DashboardCard>
     </div>
   ),

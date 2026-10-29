@@ -18,7 +18,7 @@ import clsx from 'clsx';
 import './Select.css';
 import {keepClass} from './className';
 
-export interface SelectProps<T, M extends 'single' | 'multiple'> extends Omit<
+interface SelectBaseProps<T, M extends 'single' | 'multiple'> extends Omit<
   AriaSelectProps<T, M>,
   'children'
 > {
@@ -27,19 +27,6 @@ export interface SelectProps<T, M extends 'single' | 'multiple'> extends Omit<
   errorMessage?: string | ((validation: ValidationResult) => string);
   items?: Iterable<T>;
   children: React.ReactNode | ((item: T) => React.ReactNode);
-  /**
-   * The trigger's look. `field`: a form field, as wide as the Select. `pill`: a round grey chip sized to its value,
-   * for a value shown among others (New project's "Space", a side panel's Status). `quiet`: no fill until hovered,
-   * for a toolbar ("Sort: Newest").
-   *
-   * @default 'field'
-   */
-  variant?: 'field' | 'pill' | 'quiet';
-  /**
-   * The trigger's height. A field or a quiet trigger is 32 or 36 (@default 36, quiet 32); a pill is 28 (New
-   * project) or 22 (a side panel's property row, Small strong).
-   */
-  size?: 22 | 28 | 32 | 36;
   /** A 16 icon at the start of the trigger, when the options carry none of their own (theirs show there too). */
   icon?: ReactNode;
   /** Words before the value, seen but not read ("Space:"): the label or `aria-label` names the field. */
@@ -53,6 +40,19 @@ export interface SelectProps<T, M extends 'single' | 'multiple'> extends Omit<
   /** What the list says when the search matches nothing. @default 'No results' */
   emptyLabel?: string;
 }
+
+/**
+ * The trigger's look and its height, which the look decides.
+ * - `field` (default): a form field, as wide as the Select; 36 (default) or 32.
+ * - `quiet`: no fill until hovered, for a toolbar ("Sort: Newest"); 32 (default) or 36.
+ * - `pill`: a round grey chip sized to its value, for a value shown among others (New project's "Space", a side
+ *   panel's Status); 28 (default, New project) or 22 (a side panel's property row, Small strong).
+ */
+export type SelectLook =
+  | {variant?: 'field' | 'quiet'; size?: 32 | 36}
+  | {variant: 'pill'; size?: 22 | 28};
+
+export type SelectProps<T, M extends 'single' | 'multiple' = 'single'> = SelectBaseProps<T, M> & SelectLook;
 
 /**
  * Pick one value (or several) from a list in a popover: React Aria's Select, its options the dropdown rows (a 16

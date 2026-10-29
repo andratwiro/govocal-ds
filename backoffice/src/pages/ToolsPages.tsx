@@ -91,7 +91,7 @@ function WebhookModal({draft, isNew, onClose, onSave}: {draft: Draft; isNew: boo
   const valid = d.name.trim() && /^https?:\/\/\S+$/.test(d.url) && d.events.length > 0;
   const label = isNew ? 'Create webhook' : 'Update webhook';
   return (
-    <Modal isOpen onOpenChange={o => { if (!o) onClose(); }} size="wide"
+    <Modal isOpen onOpenChange={o => { if (!o) onClose(); }} width="wide"
       title={isNew ? 'Create a new webhook' : 'Edit webhook'}
       footer={<>
         <Button variant="secondary" onPress={onClose}>Cancel</Button>

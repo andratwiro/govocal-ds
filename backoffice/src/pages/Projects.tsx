@@ -202,7 +202,7 @@ function TemplateGallery({onClose, onUse}: {onClose: () => void; onUse: (templat
   const [chosen, setChosen] = useState<string | null>(null);
   const list = TEMPLATES.filter(t => matches(t.title, query));
   return (
-    <Modal title="Start from a template" size="wide" isOpen onOpenChange={closing(onClose)}
+    <Modal title="Start from a template" width="wide" isOpen onOpenChange={closing(onClose)}
       footer={footer('Use template', () => chosen && onUse(chosen), !chosen || !list.some(t => t.title === chosen))}>
       <div className="bo-projects-gallery">
         <div className="bo-projects-gallery-head">
@@ -216,7 +216,7 @@ function TemplateGallery({onClose, onUse}: {onClose: () => void; onUse: (templat
               <ChoiceCard key={t.title} value={t.title} media={methodTile(t.method)} description={t.summary}>{t.title}</ChoiceCard>
             ))}
           </RadioGroup>
-        ) : <EmptyState size="panel" headingLevel="none" title="No templates match" description="Try another word." />}
+        ) : <EmptyState layout="panel" headingLevel="none" title="No templates match" description="Try another word." />}
       </div>
     </Modal>
   );
@@ -357,7 +357,7 @@ function CalendarView({projects}: {projects: Project[]}) {
             </DataTableBody>
           </DataTable>
         </Gap>
-      ) : <EmptyState size="panel" headingLevel="none" icon={<Calendar aria-hidden />} title={`No projects run in ${label}`}
+      ) : <EmptyState layout="panel" headingLevel="none" icon={<Calendar aria-hidden />} title={`No projects run in ${label}`}
         description="Pick another month with the arrows." />}
     </Panel>
   );

@@ -36,7 +36,7 @@ export interface DashboardCardProps extends Omit<HTMLAttributes<HTMLElement>, 't
   action?: ReactNode;
   /**
    * The card's content: a LineChart, Sparkline, StatTile row or one of the Dashboard* lists below. With no data yet,
-   * an EmptyState (`size="panel"`, `headingLevel="none"`): the card drops its gap so it sits under the title.
+   * an EmptyState (`layout="panel"`, `headingLevel="none"`): the card drops its gap so it sits under the title.
    */
   children?: ReactNode;
   /** Under the body: a ChartLegend. */

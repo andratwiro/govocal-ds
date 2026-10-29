@@ -163,9 +163,9 @@ export function SeatsOverview() {
       <div className="bo-users-stack">
         <div className="bo-users-kpis">
           <StatTile label="Admin seats used" value={admins.length} note={`of ${SEATS.admins} in your plan`} />
-          <StatTile label="Admin seats available" value={SEATS.admins - admins.length} type="tall" />
+          <StatTile label="Admin seats available" value={SEATS.admins - admins.length} layout="tall" />
           <StatTile label="Manager seats used" value={managers.length} note={`of ${SEATS.managers} in your plan`} />
-          <StatTile label="Manager seats available" value={SEATS.managers - managers.length} type="tall" />
+          <StatTile label="Manager seats available" value={SEATS.managers - managers.length} layout="tall" />
         </div>
         <div className="bo-users-pair">
           <Meter label="Admin seats" value={admins.length} maxValue={SEATS.admins} valueLabel={`${admins.length} of ${SEATS.admins}`} />

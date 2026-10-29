@@ -46,7 +46,7 @@ export const CustomLabel: Story = {
  * the label. */
 export const Compact: Story = {
   args: {
-    size: 'compact',
+    density: 'compact',
     children: 'Drag an image here, or browse',
     hint: 'PNG or JPG · max 5 MB',
     acceptedFileTypes: ['image/png', 'image/jpeg']

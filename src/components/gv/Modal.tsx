@@ -21,7 +21,7 @@ export interface ModalProps extends PlacementProps {
    *
    * @default 'default'
    */
-  size?: 'default' | 'wide';
+  width?: 'default' | 'wide';
   /**
    * `fixed` holds the dialog at 640 (capped by the viewport) so a tabbed body always fills it and
    * scrolls on its own, rather than the shell growing and shrinking with the active tab.
@@ -51,7 +51,7 @@ export function Modal({
   title,
   children,
   footer,
-  size = 'default',
+  width = 'default',
   height = 'auto',
   isFlush = false,
   isOpen,
@@ -64,7 +64,7 @@ export function Modal({
 }: ModalProps) {
   return (
     <StarterModal isOpen={isOpen} defaultOpen={defaultOpen} onOpenChange={onOpenChange} isDismissable={isDismissable}>
-      <Dialog className={clsx('gv-modal', className)} style={style} data-size={size} data-height={height}>
+      <Dialog className={clsx('gv-modal', className)} style={style} data-width={width} data-height={height}>
         <div className="gv-modal__head">
           <Heading slot="title" className="gv-modal__title">
             {title}

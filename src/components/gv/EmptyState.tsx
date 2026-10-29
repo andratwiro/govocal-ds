@@ -22,7 +22,7 @@ export interface EmptyStateProps extends PlacementProps {
    *
    * @default 'page'
    */
-  size?: 'page' | 'panel';
+  layout?: 'page' | 'panel';
   /** A dashed frame, where the empty thing is a list someone fills (the front office's input list). */
   isFramed?: boolean;
   /**
@@ -46,7 +46,7 @@ export function EmptyState({
   illustration,
   icon,
   action,
-  size = 'page',
+  layout = 'page',
   isFramed,
   headingLevel = 3,
   className,
@@ -57,10 +57,10 @@ export function EmptyState({
     <div
       className={clsx('gv-empty-state', className)}
       style={style}
-      data-size={size}
+      data-layout={layout}
       data-framed={isFramed || undefined}>
       {illustration ? (
-        <Illustration className="gv-empty-state__art" name={illustration} size={ART_WIDTH[size]} />
+        <Illustration className="gv-empty-state__art" name={illustration} size={ART_WIDTH[layout]} />
       ) : icon ? (
         <span className="gv-empty-state__icon" aria-hidden>
           {icon}

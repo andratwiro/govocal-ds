@@ -15,7 +15,7 @@ export interface DropZoneProps extends Omit<RACDropZoneProps, 'className' | 'sty
   onSelect?: (files: FileList | null) => void;
   /** The label, in place of "Drop a file here or browse". Plain text: the whole zone is the button. */
   children?: ReactNode;
-  /** A line under the label, shown only at `size="compact"` (e.g. "PNG or JPG · max 5 MB"). */
+  /** A line under the label, shown only at `density="compact"` (e.g. "PNG or JPG · max 5 MB"). */
   hint?: ReactNode;
   /**
    * `compact`: one left-aligned row, icon beside the text (the prototype's `.gv-dropzone`: Add a
@@ -23,7 +23,7 @@ export interface DropZoneProps extends Omit<RACDropZoneProps, 'className' | 'sty
    *
    * @default 'default'
    */
-  size?: 'default' | 'compact';
+  density?: 'default' | 'compact';
 }
 
 /**
@@ -38,19 +38,19 @@ export function DropZone({
   onSelect,
   children,
   hint,
-  size = 'default',
+  density = 'default',
   className,
   style,
   ...props
 }: DropZoneProps) {
   return (
-    <RACDropZone {...props} className={clsx('gv-drop-zone', className)} style={style} data-size={size}>
+    <RACDropZone {...props} className={clsx('gv-drop-zone', className)} style={style} data-density={density}>
       <FileTrigger acceptedFileTypes={acceptedFileTypes} allowsMultiple={allowsMultiple} onSelect={onSelect}>
         <Button className="gv-drop-zone-trigger" isDisabled={props.isDisabled}>
           <Upload aria-hidden="true" className="gv-drop-zone-icon" />
           <span className="gv-drop-zone-text">
             <span className="gv-drop-zone-label">{children ?? 'Drop a file here or browse'}</span>
-            {size === 'compact' && hint && <span className="gv-drop-zone-hint">{hint}</span>}
+            {density === 'compact' && hint && <span className="gv-drop-zone-hint">{hint}</span>}
           </span>
         </Button>
       </FileTrigger>

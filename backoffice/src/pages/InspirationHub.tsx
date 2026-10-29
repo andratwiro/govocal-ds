@@ -97,7 +97,7 @@ const longDate = (iso: string) => new Date(`${iso}T12:00:00`).toLocaleDateString
 /** The project's preview: what it asked, its facts as a Property list, how (its phases, one per method). */
 function ProjectPreview({project, copied, onCopy, onClose}: {project: LibraryProject | null; copied: boolean; onCopy: () => void; onClose: () => void}) {
   return (
-    <Modal title={project?.title ?? 'Project'} size="wide" isOpen={project !== null} onOpenChange={o => { if (!o) onClose(); }}
+    <Modal title={project?.title ?? 'Project'} width="wide" isOpen={project !== null} onOpenChange={o => { if (!o) onClose(); }}
       footer={<>
         <Button variant="secondary" slot="close">Close</Button>
         <Button variant="primary" isDisabled={copied} onPress={() => { onCopy(); onClose(); }}>
@@ -191,7 +191,7 @@ export function InspirationHub() {
               {pinned.map(p => card(p, true))}
             </ul>
           ) : (
-            <EmptyState size="panel" icon={<Sparkles size={24} />} headingLevel={3} title="Nothing highlighted here yet"
+            <EmptyState layout="panel" icon={<Sparkles size={24} />} headingLevel={3} title="Nothing highlighted here yet"
               description="Highlights for this country appear here as the Go Vocal team picks them." />
           )}
         </Panel>
@@ -208,7 +208,7 @@ export function InspirationHub() {
               {shown.map(p => card(p))}
             </ul>
           ) : (
-            <EmptyState size="panel" icon={<SearchX size={24} />} headingLevel={3} title="No projects match"
+            <EmptyState layout="panel" icon={<SearchX size={24} />} headingLevel={3} title="No projects match"
               description="Try another search, or fewer filters."
               action={<Button variant="secondary" size={32} onPress={clear}>Clear search and filters</Button>} />
           )}

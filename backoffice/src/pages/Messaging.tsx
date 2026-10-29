@@ -314,9 +314,9 @@ function Sms() {
       <div className="bo-messaging-stack">
         <div className="bo-messaging-kpis">
           <StatTile label="SMS credits remaining" value={n(SMS_BALANCE.purchased - used)} note={`of ${n(SMS_BALANCE.purchased)} credits purchased`} />
-          <StatTile label="SMS campaigns" value={n(SMS_BALANCE.usedCampaigns)} type="tall" />
-          <StatTile label="Test messages" value={n(SMS_BALANCE.usedTests)} type="tall" />
-          <StatTile label="Total used" value={n(used)} type="tall" />
+          <StatTile label="SMS campaigns" value={n(SMS_BALANCE.usedCampaigns)} layout="tall" />
+          <StatTile label="Test messages" value={n(SMS_BALANCE.usedTests)} layout="tall" />
+          <StatTile label="Total used" value={n(used)} layout="tall" />
         </div>
         <Banner>A message too long for one SMS is sent in several parts, and each part costs a credit for every recipient.</Banner>
         <Card tone="manage" title="Campaigns" summary={`${SMS.length} messages`}>

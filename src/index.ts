@@ -63,7 +63,7 @@ export {
 } from './components/gv/PropertyList';
 export {ReactionCounts, type ReactionCountsProps} from './components/gv/ReactionCounts';
 export {StatRow, type StatRowProps} from './components/gv/StatRow';
-export {StatTile, type StatTileType, type StatTileTrend, type StatTileProps} from './components/gv/StatTile';
+export {StatTile, type StatTileLayout, type StatTileTrend, type StatTileProps} from './components/gv/StatTile';
 export {
   TableToolbarHeading, TableToolbar, type TableToolbarHeadingProps, type TableToolbarProps
 } from './components/gv/TableToolbar';

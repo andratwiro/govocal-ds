@@ -23,7 +23,7 @@
   font-family: var(--gv-font-family);
   color: var(--gv-text-body);
 
-  &[data-size='wide'] {
+  &[data-width='wide'] {
     width: 866px;
   }
 

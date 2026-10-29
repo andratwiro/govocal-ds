@@ -119,7 +119,7 @@ const inputs = [
 function InputManagerModal() {
   return (
     <Modal
-      size="wide"
+      width="wide"
       title="Input manager"
       footer={
         <>
@@ -160,7 +160,7 @@ const settingsGroups = [
  */
 function SideTabsModal() {
   return (
-    <Modal title="Settings" size="wide" height="fixed" isFlush footer={<Button slot="close">Save</Button>}>
+    <Modal title="Settings" width="wide" height="fixed" isFlush footer={<Button slot="close">Save</Button>}>
       <GroupedTabs defaultSelectedKey="general" style={{minHeight: 0}}>
         <GroupedTabList
           aria-label="Settings"

@@ -77,7 +77,7 @@
 
 /* size="small": a dashboard card's range switch (Figma Dashboard card · Votes over time "Range switch",
    prototype .pj-dseg): stage-grey track, padding 3, radius 8; segments 4/11, radius 6, Small type. */
-.gv-segmented-control[data-size='small'] {
+.gv-segmented-control[data-size='30'] {
   gap: 0;
   background: var(--gv-surface-stage);
   border-radius: var(--gv-radius-8);

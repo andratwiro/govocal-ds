@@ -156,7 +156,7 @@ function Participants({quarter}: {quarter: number}) {
 /** View survey: the survey as residents get it, its questions in order with the sentiment scale. */
 function SurveyModal({isOpen, onOpenChange}: {isOpen: boolean; onOpenChange: (o: boolean) => void}) {
   return (
-    <Modal title="Community monitor survey" size="wide" isOpen={isOpen} onOpenChange={onOpenChange}
+    <Modal title="Community monitor survey" width="wide" isOpen={isOpen} onOpenChange={onOpenChange}
       footer={<Button variant="secondary" slot="close">Close</Button>}>
       <div className="bo-community-monitor-modal">
         <p className="bo-note">How residents see it: a short popup, eleven questions, each answered on the same five-point scale.</p>
@@ -182,7 +182,7 @@ function SurveyModal({isOpen, onOpenChange}: {isOpen: boolean; onOpenChange: (o:
 function ReportModal({report, onClose}: {report: Report | null; onClose: () => void}) {
   const q = report ? Math.max(0, QUARTERS.indexOf(report.quarter)) : CURRENT;
   return (
-    <Modal title={report?.title ?? 'Report'} size="wide" isOpen={report !== null} onOpenChange={o => { if (!o) onClose(); }}
+    <Modal title={report?.title ?? 'Report'} width="wide" isOpen={report !== null} onOpenChange={o => { if (!o) onClose(); }}
       footer={<Button variant="secondary" slot="close">Close</Button>}>
       {report && (
         <div className="bo-community-monitor-modal">
@@ -262,7 +262,7 @@ function Reports() {
         description="Reports built from the monitor's quarterly results."
         footer={reports.length > 0 && <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Report pages" />}>
         {reports.length === 0 ? (
-          <EmptyState size="panel" icon={<FileText size={24} />} title="No reports yet" headingLevel={4}
+          <EmptyState layout="panel" icon={<FileText size={24} />} title="No reports yet" headingLevel={4}
             description="Create one from a quarter's results, then publish it when it reads right." />
         ) : (
           <DataTable aria-label="Reports">
@@ -312,7 +312,7 @@ function Reports() {
 /** Edit survey: the questions' wording, one field each, grouped by category. */
 function EditSurveyModal({isOpen, onOpenChange, onSave}: {isOpen: boolean; onOpenChange: (o: boolean) => void; onSave: () => void}) {
   return (
-    <Modal title="Edit survey" size="wide" isOpen={isOpen} onOpenChange={onOpenChange}
+    <Modal title="Edit survey" width="wide" isOpen={isOpen} onOpenChange={onOpenChange}
       footer={<>
         <Button variant="secondary" slot="close">Cancel</Button>
         <Button variant="primary" onPress={() => { onSave(); onOpenChange(false); }}>Save</Button>
@@ -472,7 +472,7 @@ function Settings() {
             description="Admins and these community monitor managers see the results and edit the survey."
             actions={<Button variant="secondary" size={32} onPress={show('manager')}><Plus aria-hidden size={16} />Add a manager</Button>}>
             {managers.length === 0 ? (
-              <EmptyState size="panel" icon={<ShieldCheck size={24} />} title="Only admins for now" headingLevel={4}
+              <EmptyState layout="panel" icon={<ShieldCheck size={24} />} title="Only admins for now" headingLevel={4}
                 description="Add a manager to share the monitor with someone who isn't an admin." />
             ) : (
               <DataTable aria-label="Managers">
