@@ -17,6 +17,7 @@
 
 .gv-segment {
   all: unset;
+  box-sizing: border-box; /* `all: unset` leaves content-box: 30 + 10 padding drew a 40 segment, a 46 track */
   position: relative;
   display: flex;
   align-items: center;
@@ -60,6 +61,14 @@
   align-items: center;
   gap: var(--gv-space-6);
   white-space: nowrap;
+}
+
+/* Unread: the New dot sits in the segment's top-right corner and takes no width (Figma places it
+   absolutely, 6 from the top; the prototype's `.pj-newdot--tab` is 6 from the top and the side). */
+.gv-segment > .gv-new-dot {
+  position: absolute;
+  top: var(--gv-space-6);
+  inset-inline-end: var(--gv-space-6);
 }
 
 /* size="small": a dashboard card's range switch (Figma Dashboard card · Votes over time "Range switch",

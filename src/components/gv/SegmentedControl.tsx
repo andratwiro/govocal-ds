@@ -35,7 +35,7 @@ export function SegmentedControl({size = 'default', ...props}: SegmentedControlP
 
 export interface SegmentProps extends ToggleButtonProps {
   children?: ReactNode;
-  /** Shows the New dot before the label (Figma `Segment` State=Unread). */
+  /** Shows the New dot in the segment's top-right corner (Figma `Segment` State=Unread). */
   isUnread?: boolean;
 }
 
@@ -46,10 +46,8 @@ export function Segment({children, isUnread, ...props}: SegmentProps) {
       {composeRenderProps(children, resolvedChildren => (
         <>
           <SelectionIndicator className="gv-segment-indicator" data-selected />
-          <span className="gv-segment-label">
-            {isUnread && <NewDot aria-label="Unread" />}
-            {resolvedChildren}
-          </span>
+          <span className="gv-segment-label">{resolvedChildren}</span>
+          {isUnread && <NewDot aria-label="Unread" />}
         </>
       ))}
     </ToggleButton>
