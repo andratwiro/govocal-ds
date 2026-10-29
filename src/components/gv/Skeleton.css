@@ -1,0 +1,45 @@
+@import '../theme.css';
+
+/* Tali's loading placeholder (augur-design.html .pj-skel): flat grey block, a calm
+   opacity pulse (never a shimmer sweep), respects reduced motion. */
+.gv-skeleton {
+  display: block;
+  background: var(--gv-surface-hover-strong);
+  border-radius: var(--gv-radius-4);
+  animation: gv-skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+.gv-skeleton--line {
+  width: 100%;
+  height: var(--gv-space-16);
+  border-radius: var(--gv-radius-4);
+}
+
+.gv-skeleton--block {
+  width: 100%;
+  height: var(--gv-space-56);
+  border-radius: var(--gv-radius-8);
+}
+
+.gv-skeleton--circle {
+  width: var(--gv-space-32);
+  height: var(--gv-space-32);
+  border-radius: var(--gv-radius-full);
+}
+
+@keyframes gv-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gv-skeleton {
+    animation: none;
+    opacity: 0.75;
+  }
+}
