@@ -1,0 +1,53 @@
+@import '../theme.css';
+
+/* Tali's Drop zone (Figma node 5:490): toolbar fill, control border (dashed per the prototype), radius 10. */
+.gv-drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gv-space-8);
+  padding: var(--gv-space-22) var(--gv-space-16);
+  border: 1.5px dashed var(--gv-border-control);
+  border-radius: var(--gv-radius-10);
+  background: var(--gv-surface-toolbar);
+  text-align: center;
+  outline: none;
+
+  &[data-focus-visible],
+  &[data-drop-target] {
+    border-color: var(--gv-border-selected);
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: -1px;
+  }
+
+  &[data-drop-target] {
+    background: var(--gv-surface-info);
+  }
+
+  &[data-disabled] {
+    opacity: 0.6;
+  }
+}
+
+.gv-drop-zone-icon {
+  color: var(--gv-icon-default);
+}
+
+.gv-drop-zone-text {
+  font: var(--gv-type-ui);
+  color: var(--gv-text-secondary);
+}
+
+.gv-drop-zone-browse {
+  all: unset;
+  color: var(--gv-text-accent);
+  cursor: pointer;
+  text-decoration: underline;
+  -webkit-tap-highlight-color: transparent;
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
+    border-radius: var(--gv-radius-2);
+  }
+}

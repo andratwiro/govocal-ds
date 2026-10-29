@@ -1,0 +1,110 @@
+@import '../theme.css';
+
+/*
+ * Tali's Breadcrumb (Figma node 14:875, Level=Project/Phase·Draft/Phase·Live; prototype `.pj-bc`).
+ * Project level: plain link trail, chevron separators, a pill-shaped current label.
+ * Phase level: panel-toggle + back-arrow icon buttons, a divider, "/" separators (prototype's
+ * `.pj-bc__sep--slash`), and a trailing Draft/Live status pill.
+ */
+.gv-breadcrumb {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-5);
+  font: var(--gv-type-ui);
+}
+
+.gv-breadcrumb-icon-btn {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--gv-space-28);
+  height: var(--gv-space-28);
+  border-radius: var(--gv-radius-8);
+  color: var(--gv-icon-default);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &[data-hovered] {
+    background: var(--gv-surface-hover);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 1px;
+  }
+}
+
+.gv-breadcrumb-divider {
+  width: 1px;
+  height: var(--gv-space-20);
+  background: var(--gv-divider-strong);
+}
+
+.gv-breadcrumb-trail {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gv-breadcrumb-crumb {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-5);
+}
+
+.gv-breadcrumb-link {
+  color: var(--gv-text-secondary);
+  text-decoration: none;
+  outline: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &[data-hovered],
+  &[data-focus-visible] {
+    text-decoration: underline;
+  }
+
+  &[data-focus-visible] {
+    border-radius: var(--gv-radius-4);
+    outline: 2px solid var(--gv-border-selected);
+  }
+}
+
+.gv-breadcrumb-sep-icon {
+  color: var(--gv-icon-quiet);
+}
+
+.gv-breadcrumb-sep-slash {
+  color: var(--gv-text-quiet);
+}
+
+.gv-breadcrumb-current {
+  font: var(--gv-type-ui-strong);
+  color: var(--gv-text-primary);
+
+  &[data-level='project'] {
+    padding: var(--gv-space-1) var(--gv-space-5);
+    border-radius: var(--gv-radius-6);
+  }
+}
+
+.gv-breadcrumb-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--gv-space-6);
+  border-radius: var(--gv-radius-full);
+  font: var(--gv-type-small-strong);
+}
+
+.gv-breadcrumb-status[data-state='draft'] {
+  background: var(--gv-surface-stage);
+  color: var(--gv-text-pill);
+}
+
+.gv-breadcrumb-status[data-state='live'] {
+  background: var(--gv-surface-live);
+  color: var(--gv-text-live);
+}

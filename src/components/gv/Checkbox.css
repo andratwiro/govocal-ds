@@ -1,0 +1,40 @@
+@import '../theme.css';
+
+/*
+ * Tali's Checkbox (Figma node 5:317, 15x15 box, radius 4, panel fill + control border).
+ * The prototype's checked state (`.gv-checkbox input:checked + .box`) fills with its link/brand
+ * colour; nearest token is --gv-action-checked (same brand-650 step as --gv-border-selected).
+ */
+.gv-checkbox {
+  --checkmark-color: var(--gv-text-inverse);
+
+  .react-aria-CheckboxButton {
+    .indicator {
+      width: var(--gv-space-15);
+      height: var(--gv-space-15);
+      border-radius: var(--gv-radius-4);
+      border: 1px solid var(--gv-border-control);
+      background: var(--gv-surface-panel);
+    }
+
+    &[data-selected],
+    &[data-indeterminate] {
+      .indicator {
+        background: var(--gv-action-checked);
+        border-color: var(--gv-action-checked);
+      }
+    }
+
+    &[data-disabled] {
+      .indicator {
+        background: var(--gv-surface-app);
+        border-color: var(--gv-border-subtle);
+      }
+    }
+
+    &[data-focus-visible] .indicator {
+      outline: 2px solid var(--gv-border-selected);
+      outline-offset: 2px;
+    }
+  }
+}

@@ -1,0 +1,51 @@
+@import '../theme.css';
+
+/* Tali's Title field (Figma node 4:123): a full-width 36.8px input, placeholder text, no label. */
+.gv-title-field-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-12);
+  width: 100%;
+}
+
+.gv-title-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  .react-aria-Input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: var(--gv-space-9) var(--gv-space-12);
+    border: 1px solid var(--gv-border-control);
+    border-radius: var(--gv-radius-8);
+    background: var(--gv-surface-panel);
+    color: var(--gv-text-primary);
+    font: var(--gv-type-ui);
+    outline: none;
+
+    &::placeholder {
+      color: var(--gv-text-placeholder);
+    }
+
+    &[data-hovered] {
+      border-color: var(--gv-border-control-hover);
+    }
+
+    &[data-focused] {
+      border-color: var(--gv-border-selected);
+      outline: 2px solid var(--gv-border-selected);
+      outline-offset: -1px;
+    }
+
+    &[data-invalid] {
+      border-color: var(--gv-state-notification);
+    }
+  }
+
+  .react-aria-FieldError {
+    margin-top: var(--gv-space-4);
+    color: var(--gv-state-notification);
+    font: var(--gv-type-small);
+  }
+}

@@ -1,0 +1,71 @@
+@import '../theme.css';
+
+/*
+ * Tali's Segmented control (Figma node 14:883) + Segment (14:882).
+ * Figma and the prototype's `.pj-hseg`/`.pj-hseg__b` agree: radius 5 (not a full pill), a sliding
+ * selected segment with --gv-shadow-segment-selected, text --gv-text-segment (default) /
+ * --gv-text-primary + type ui-strong (selected).
+ */
+.gv-segmented-control {
+  display: inline-flex;
+  width: fit-content;
+  gap: var(--gv-space-2);
+  padding: var(--gv-space-3);
+  background: var(--gv-surface-pill);
+  border-radius: var(--gv-radius-5);
+}
+
+.gv-segment {
+  all: unset;
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  padding: var(--gv-space-5) var(--gv-space-14);
+  border-radius: var(--gv-radius-5);
+  font: var(--gv-type-ui);
+  color: var(--gv-text-segment);
+  cursor: pointer;
+  z-index: 1;
+  -webkit-tap-highlight-color: transparent;
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
+  }
+
+  &[data-selected] {
+    font: var(--gv-type-ui-strong);
+    color: var(--gv-text-primary);
+  }
+}
+
+.gv-segment-indicator {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: var(--gv-radius-5);
+  background: var(--gv-surface-panel);
+  box-shadow: var(--gv-shadow-segment-selected);
+  transition-property: translate, width;
+  transition-duration: 200ms;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.gv-segment-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+  white-space: nowrap;
+}
+
+.gv-segment-dot {
+  width: var(--gv-space-6);
+  height: var(--gv-space-6);
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-state-notification);
+  flex-shrink: 0;
+}

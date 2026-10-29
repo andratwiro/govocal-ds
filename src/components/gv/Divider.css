@@ -1,0 +1,15 @@
+@import '../theme.css';
+
+/* Tali's Divider (Figma node 5:303): fill --gv-divider-default, 1px. */
+.gv-divider {
+  background: var(--gv-divider-default);
+  border-style: none;
+  height: 1px;
+  width: 100%;
+
+  &[aria-orientation='vertical'] {
+    width: 1px;
+    height: 100%;
+    min-height: var(--gv-space-32);
+  }
+}
