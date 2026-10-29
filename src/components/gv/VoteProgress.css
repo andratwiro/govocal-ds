@@ -1,0 +1,60 @@
+@import '../theme.css';
+
+.gv-vote-progress {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.gv-vote-progress--threshold {
+  gap: var(--gv-space-6);
+}
+
+.gv-vote-progress--count {
+  gap: var(--gv-space-12);
+}
+
+.gv-vote-progress__count {
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.gv-vote-progress__of {
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-secondary);
+  margin-right: var(--gv-space-6);
+}
+
+.gv-vote-progress__track {
+  display: block;
+  width: 112px;
+  height: 4px;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-stage);
+  overflow: hidden;
+}
+
+.gv-vote-progress--threshold .gv-vote-progress__fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-brand-mark);
+}
+
+.gv-vote-progress--count .gv-vote-progress__fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-icon-default);
+}
+
+.gv-vote-progress__new {
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-accent);
+  margin-left: var(--gv-space-8);
+  white-space: nowrap;
+}
