@@ -7,6 +7,7 @@ import {Tooltip, TooltipTrigger} from '../components/Tooltip';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
 import {useNumberFormatter} from '../components/format';
+import {mergeLabels} from '../components/labels';
 import './SideNav.css';
 
 /**
@@ -44,11 +45,27 @@ export function SideNavGroup({isAtBottom, children, className, style}: SideNavGr
   );
 }
 
-/** The band at the top that leaves the back office for the resident site. */
-export interface SideNavHomeProps extends PlacementProps {href: string; children?: string}
+/** The words Side nav home says itself (docs/API.md rule 11). */
+export interface SideNavHomeLabels {
+  /** The band's words, when no `children` give them. */
+  home: string;
+}
 
-export function SideNavHome({href, children = 'To platform', className, style}: SideNavHomeProps) {
+/** Side nav home's English words; a page passes its own over them with `labels`. */
+export const sideNavHomeLabels: SideNavHomeLabels = {home: 'To platform'};
+
+/** The band at the top that leaves the back office for the resident site. */
+export interface SideNavHomeProps extends PlacementProps {
+  href: string;
+  /** @default `labels.home` ("To platform") */
+  children?: string;
+  /** Its own words, over `sideNavHomeLabels`. */
+  labels?: Partial<SideNavHomeLabels>;
+}
+
+export function SideNavHome({href, children: words, labels, className, style}: SideNavHomeProps) {
   const folded = useContext(Folded);
+  const children = words ?? mergeLabels(sideNavHomeLabels, labels).home;
   return (
     <WithTooltip label={children} on={folded}>
       <Link className={clsx('gv-side-nav__home', className)} style={style} href={href}>

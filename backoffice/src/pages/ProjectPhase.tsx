@@ -106,8 +106,8 @@ export function ProjectRail({project, href, current, added, onAdd, onHide, remov
   const phases = [...timeline(project, href, current), ...addedTimeline(added)].filter(p => !removed.has(p.id));
   return (
     <aside className="bo-phase-panel bo-phase-rail" aria-label="Participation">
-      <RailHeader title="Participation" onAdd={onAdd} addLabel="Add a phase"
-        onTogglePanel={onHide} togglePanelLabel="Hide the participation rail" />
+      <RailHeader title="Participation" onAdd={onAdd} onTogglePanel={onHide}
+        labels={{add: 'Add a phase', togglePanel: 'Hide the participation rail'}} />
       <nav aria-label="Phases" className="bo-phase-rail-section">
         <SectionLabel>Timeline</SectionLabel>
         {/* Phase timeline's rows, drawn here as Rail phases: the timeline takes no delete (Rail phase's onDelete). The
@@ -238,7 +238,7 @@ function Build({project, phase, onSettings, onChange}: {project: Project; phase:
         actions={<IconButton aria-label="Project settings" onPress={() => onSettings('General')}><Settings aria-hidden size={16} /></IconButton>}>
         {email ? (
           <NotificationEmail key={email.id} name={email.name} who={email.who} when={email.when}
-            backLabel={`Back to ${phase.method} setup`} onBack={() => setEmailId(null)}
+            labels={{back: `Back to ${phase.method} setup`}} onBack={() => setEmailId(null)}
             isSelected={emailsOn.has(email.id)} onChange={on => setEmail(email.id, on)}
             replyTo="support@example.org" subject={email.name} buttonText="View it" />
         ) : (

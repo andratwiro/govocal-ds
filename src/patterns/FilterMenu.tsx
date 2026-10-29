@@ -7,11 +7,29 @@ import {Menu, MenuItem, SubmenuTrigger} from '../components/Menu';
 import {Separator} from '../components/Separator';
 import {Popover} from '../components/Popover';
 import {IconButton} from '../components/gv/IconButton';
-import {OptionList, type OptionListItem} from '../components/gv/OptionList';
+import {OptionList, optionListLabels, type OptionListItem, type OptionListLabels} from '../components/gv/OptionList';
 import type {PlacementProps} from '../components/className';
 import {useNumberFormatter} from '../components/format';
+import {mergeLabels} from '../components/labels';
 import clsx from 'clsx';
 import './FilterMenu.css';
+
+/** The words Filter menu says itself (docs/API.md rule 11), with the Option list's, which it hands on. */
+export interface FilterMenuLabels extends OptionListLabels {
+  /** The trigger's and the menu's name, when no `aria-label` is given. */
+  filter: string;
+  /** The trigger's name while filters are on, given that name and how many facets are on. */
+  active: (label: string, count: number, formatted: string) => string;
+  clearAll: string;
+}
+
+/** Filter menu's English words; a page passes its own over them with `labels`. */
+export const filterMenuLabels: FilterMenuLabels = {
+  ...optionListLabels,
+  filter: 'Filter',
+  active: (label, count, n) => `${label} (${n} on)`,
+  clearAll: 'Clear all filters'
+};
 
 /** One thing a list can be filtered by ("Tags"), with the values it can take. */
 export interface FilterFacet {
@@ -37,10 +55,12 @@ export interface FilterMenuProps extends PlacementProps {
   onChange: (value: FilterValue) => void;
   /** Words for an option's count in the submenus, e.g. `n => \`${n} ideas\``. */
   countLabel?: (n: number) => string;
-  /** Names the trigger and the menu. @default 'Filter' */
+  /** Names the trigger and the menu. @default `labels.filter` ("Filter") */
   'aria-label'?: string;
   /** Opens the menu on first render (for stories and screenshots). */
   defaultOpen?: boolean;
+  /** Its own words (the trigger's name, Clear all filters, the submenus' search), over `filterMenuLabels`. */
+  labels?: Partial<FilterMenuLabels>;
 }
 
 /**
@@ -50,18 +70,20 @@ export interface FilterMenuProps extends PlacementProps {
  * is on. Ticking an option keeps the menus open. React Aria's MenuTrigger, Menu and SubmenuTrigger underneath.
  * Pair it with `FilterChips` on the same `value` so the two stay in sync. Not in Figma yet.
  */
-export function FilterMenu({facets, value, onChange, countLabel, 'aria-label': label = 'Filter', defaultOpen, className, style}: FilterMenuProps) {
+export function FilterMenu({facets, value, onChange, countLabel, 'aria-label': ariaLabel, defaultOpen, labels, className, style}: FilterMenuProps) {
+  const l = mergeLabels(filterMenuLabels, labels);
+  const label = ariaLabel ?? l.filter;
   const on = activeFacets(facets, value).length;
   const number = useNumberFormatter();
   const options = (f: FilterFacet) => (
-    <OptionList aria-label={f.label} items={f.items} icon={f.icon} countLabel={countLabel}
+    <OptionList aria-label={f.label} items={f.items} icon={f.icon} countLabel={countLabel} labels={l}
       isSearchable={f.isSearchable ?? f.items.length > 5} value={value[f.id] ?? []}
       onChange={next => onChange({...value, [f.id]: next})} />
   );
   return (
     <AriaMenuTrigger defaultOpen={defaultOpen}>
       <span className={clsx('gv-filter-menu__trigger', className)} style={style} data-active={on > 0 || undefined}>
-        <IconButton variant="bordered" emphasis="strong" aria-label={on ? `${label} (${on} on)` : label}>
+        <IconButton variant="bordered" emphasis="strong" aria-label={on ? l.active(label, on, number.format(on)) : label}>
           <Funnel aria-hidden size={16} />
         </IconButton>
       </span>
@@ -86,9 +108,9 @@ export function FilterMenu({facets, value, onChange, countLabel, 'aria-label': l
           })}
           {on > 0 && <Separator />}
           {on > 0 && (
-            <MenuItem id="clear-all" textValue="Clear all filters">
+            <MenuItem id="clear-all" textValue={l.clearAll}>
               <X aria-hidden />
-              <span className="gv-filter-menu__label">Clear all filters</span>
+              <span className="gv-filter-menu__label">{l.clearAll}</span>
             </MenuItem>
           )}
         </Menu>

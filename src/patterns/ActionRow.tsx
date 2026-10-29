@@ -9,7 +9,26 @@ import {Popover} from '../components/Popover';
 import {Check, ChevronRight} from 'lucide-react';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {mergeLabels} from '../components/labels';
 import './ActionRow.css';
+
+/** The words Action row says itself (docs/API.md rule 11). */
+export interface ActionRowLabels {
+  /** A working row's progress name when its label isn't plain text. */
+  working: string;
+}
+
+/** Action row's English words; a page passes its own over them with `labels`. */
+export const actionRowLabels: ActionRowLabels = {working: 'Working'};
+
+/** The words Action row list says itself (docs/API.md rule 11). */
+export interface ActionRowListLabels {
+  /** What an empty list says, when no `emptyLabel` is given. */
+  empty: string;
+}
+
+/** Action row list's English words; a page passes its own over them with `labels`. */
+export const actionRowListLabels: ActionRowListLabels = {empty: 'All caught up. Nothing left to suggest.'};
 
 export interface ActionRowProps extends PlacementProps {
   /** What the row does ("Message participants", "Add a report"). */
@@ -44,6 +63,8 @@ export interface ActionRowProps extends PlacementProps {
   menu?: ReactNode;
   /** The menu's accessible name. Defaults to the label when it is a string. */
   menuLabel?: string;
+  /** Its own words (a working row's name), over `actionRowLabels`. */
+  labels?: Partial<ActionRowLabels>;
 }
 
 /**
@@ -63,6 +84,7 @@ export function ActionRow({
   isDisabled,
   menu,
   menuLabel,
+  labels,
   className,
   style
 }: ActionRowProps) {
@@ -75,7 +97,7 @@ export function ActionRow({
       {working && (
         <ProgressBar
           className="gv-action-row__lead gv-action-row__ring"
-          aria-label={label ?? 'Working'}
+          aria-label={label ?? mergeLabels(actionRowLabels, labels).working}
           value={progress}
           isIndeterminate={progress == null}>
           {({percentage, isIndeterminate}) => (
@@ -147,16 +169,20 @@ export function ActionRow({
 export interface ActionRowListProps extends PlacementProps {
   /** The rows (`ActionRow`s). */
   children?: ReactNode;
-  /** What an empty list says. @default 'All caught up. Nothing left to suggest.' */
+  /** What this list says when empty. @default `labels.empty` ("All caught up. Nothing left to suggest.") */
   emptyLabel?: ReactNode;
   /** Names the list ("Recommended actions") when no heading does. */
   'aria-label'?: string;
+  /** Its own words (the empty line), over `actionRowListLabels`. */
+  labels?: Partial<ActionRowListLabels>;
 }
 
 /** Action rows stacked 8 apart, as a list; with no rows it says so (the Insights panel's "All caught up."). */
-export function ActionRowList({children, emptyLabel = 'All caught up. Nothing left to suggest.', 'aria-label': ariaLabel, className, style}: ActionRowListProps) {
+export function ActionRowList({children, emptyLabel, 'aria-label': ariaLabel, labels, className, style}: ActionRowListProps) {
   const rows = Children.toArray(children);
-  if (!rows.length) return <p className={clsx('gv-action-row-empty', className)} style={style}>{emptyLabel}</p>;
+  if (!rows.length) {
+    return <p className={clsx('gv-action-row-empty', className)} style={style}>{emptyLabel ?? mergeLabels(actionRowListLabels, labels).empty}</p>;
+  }
   return (
     <ul className={clsx('gv-action-row-list', className)} style={style} aria-label={ariaLabel}>
       {rows.map((row, i) => (

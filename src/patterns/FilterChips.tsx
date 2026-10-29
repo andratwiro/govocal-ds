@@ -5,7 +5,28 @@ import {Tag, TagGroup, TagList} from 'react-aria-components/TagGroup';
 import {activeFacets, type FilterFacet, type FilterValue} from './FilterMenu';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {useListFormatter} from '../components/format';
+import {mergeLabels, type CountLabel} from '../components/labels';
 import './FilterChips.css';
+
+/** The words Filter chips says itself (docs/API.md rule 11). */
+export interface FilterChipsLabels {
+  /** The bar's name, when no `aria-label` is given. */
+  filters: string;
+  /** Between a facet and its values, given how many values are ticked ("is", "is any of"). */
+  operator: CountLabel;
+  /** A chip's × name, given the facet's (or the quick view's) name. */
+  remove: (name: string) => string;
+  clear: string;
+}
+
+/** Filter chips' English words; a page passes its own over them with `labels`. */
+export const filterChipsLabels: FilterChipsLabels = {
+  filters: 'Active filters',
+  operator: count => (count > 1 ? 'is any of' : 'is'),
+  remove: name => `Remove the ${name} filter`,
+  clear: 'Clear'
+};
 
 export interface FilterChipsProps extends PlacementProps {
   facets: FilterFacet[];
@@ -20,8 +41,11 @@ export interface FilterChipsProps extends PlacementProps {
   metric?: string;
   /** Turns the quick view off. */
   onMetricRemove?: () => void;
-  /** @default 'Active filters' */
+  /** @default `labels.filters` ("Active filters") */
   'aria-label'?: string;
+  /** Its own words ("is", "is any of", each ×'s name, Clear), over `filterChipsLabels`. The values are joined as the
+   * locale lists them. */
+  labels?: Partial<FilterChipsLabels>;
 }
 
 const METRIC = '__metric';
@@ -35,10 +59,12 @@ const METRIC = '__metric';
  * yet.
  */
 export function FilterChips({
-  facets, value, onChange, showClear = true, metric, onMetricRemove, 'aria-label': label = 'Active filters',
+  facets, value, onChange, showClear = true, metric, onMetricRemove, 'aria-label': label, labels,
   className,
   style
 }: FilterChipsProps) {
+  const l = mergeLabels(filterChipsLabels, labels);
+  const list = useListFormatter({type: 'unit', style: 'short'});
   const on = activeFacets(facets, value);
   if (on.length === 0 && !metric) return null;
   const remove = (ids: Iterable<string | number>) => {
@@ -56,26 +82,26 @@ export function FilterChips({
   };
   return (
     <div className={clsx('gv-filter-chips', className)} style={style}>
-      <TagGroup aria-label={label} onRemove={keys => remove(keys)} className="gv-filter-chips__group">
+      <TagGroup aria-label={label ?? l.filters} onRemove={keys => remove(keys)} className="gv-filter-chips__group">
         <TagList className="gv-filter-chips__list">
           {metric && (
             <Tag id={METRIC} textValue={metric} className="gv-filter-chip" data-metric>
               <span className="gv-filter-chip__key">{metric}</span>
-              <Button slot="remove" className="gv-filter-chip__remove" aria-label={`Remove the ${metric} filter`}>
+              <Button slot="remove" className="gv-filter-chip__remove" aria-label={l.remove(metric)}>
                 <X aria-hidden size={14} />
               </Button>
             </Tag>
           )}
           {on.map(f => {
             const ids = value[f.id];
-            const words = ids.map(id => f.items.find(o => o.id === id)?.label ?? id).join(', ');
-            const op = ids.length > 1 ? 'is any of' : 'is';
+            const words = list.format(ids.map(id => f.items.find(o => o.id === id)?.label ?? id));
+            const op = l.operator(ids.length, String(ids.length));
             return (
               <Tag key={f.id} id={f.id} textValue={`${f.label} ${op} ${words}`} className="gv-filter-chip">
                 <span className="gv-filter-chip__key"><span className="gv-filter-chip__icon" aria-hidden>{f.icon}</span>{f.label}</span>
                 <span className="gv-filter-chip__op">{op}</span>
                 <span className="gv-filter-chip__value">{words}</span>
-                <Button slot="remove" className="gv-filter-chip__remove" aria-label={`Remove the ${f.label} filter`}>
+                <Button slot="remove" className="gv-filter-chip__remove" aria-label={l.remove(f.label)}>
                   <X aria-hidden size={14} />
                 </Button>
               </Tag>
@@ -84,7 +110,7 @@ export function FilterChips({
         </TagList>
       </TagGroup>
       {showClear && (
-        <Button className="gv-filter-chips__clear" onPress={clear}>Clear</Button>
+        <Button className="gv-filter-chips__clear" onPress={clear}>{l.clear}</Button>
       )}
     </div>
   );

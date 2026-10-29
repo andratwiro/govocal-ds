@@ -5,7 +5,27 @@ import {Link} from 'react-aria-components/Link';
 import {NewDot} from '../components/gv/NewDot';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {mergeLabels} from '../components/labels';
 import './NotificationList.css';
+
+/** The words Notification list says itself (docs/API.md rule 11). */
+export interface NotificationListLabels {
+  /** The title, when no `title` is given. */
+  title: string;
+  markAllRead: string;
+  /** What an empty list says, when no `emptyLabel` is given. */
+  empty: string;
+  /** An unread row's dot. */
+  unread: string;
+}
+
+/** Notification list's English words; a page passes its own over them with `labels`. */
+export const notificationListLabels: NotificationListLabels = {
+  title: 'Notifications',
+  markAllRead: 'Mark all as read',
+  empty: "You don't have any notifications yet",
+  unread: 'Unread'
+};
 
 export interface NotificationItem {
   id: string;
@@ -21,13 +41,15 @@ export interface NotificationItem {
 }
 
 export interface NotificationListProps extends PlacementProps {
-  /** @default 'Notifications' */
+  /** @default `labels.title` ("Notifications") */
   title?: string;
   items: NotificationItem[];
   /** Shows "Mark all as read". It stays enabled once all are read, so focus never drops out of the panel. */
   onMarkAllRead?: () => void;
-  /** @default "You don't have any notifications yet" */
+  /** @default `labels.empty` ("You don't have any notifications yet") */
   emptyLabel?: string;
+  /** Its own words (the title, Mark all as read, the empty line, Unread), over `notificationListLabels`. */
+  labels?: Partial<NotificationListLabels>;
 }
 
 /**
@@ -35,15 +57,16 @@ export interface NotificationListProps extends PlacementProps {
  * a title with "Mark all as read", then one row per notification, newest first, unread ones
  * bolder and with a red dot. Put it in a Popover + Dialog. Not in Figma yet.
  */
-export function NotificationList({title = 'Notifications', items, onMarkAllRead, emptyLabel = "You don't have any notifications yet", className, style}: NotificationListProps) {
+export function NotificationList({title, items, onMarkAllRead, emptyLabel, labels, className, style}: NotificationListProps) {
+  const l = mergeLabels(notificationListLabels, labels);
   return (
     <div className={clsx('gv-notification-list', className)} style={style}>
       <div className="gv-notification-list__head">
-        <h2 className="gv-notification-list__title">{title}</h2>
-        {onMarkAllRead && <Button variant="quiet" size={32} onPress={onMarkAllRead}>Mark all as read</Button>}
+        <h2 className="gv-notification-list__title">{title ?? l.title}</h2>
+        {onMarkAllRead && <Button variant="quiet" size={32} onPress={onMarkAllRead}>{l.markAllRead}</Button>}
       </div>
       {items.length === 0
-        ? <p className="gv-notification-list__empty">{emptyLabel}</p>
+        ? <p className="gv-notification-list__empty">{emptyLabel ?? l.empty}</p>
         : (
           <ul className="gv-notification-list__items">
             {items.map(item => (
@@ -55,7 +78,7 @@ export function NotificationList({title = 'Notifications', items, onMarkAllRead,
                     : <span className="gv-notification-list__text">{item.text}</span>}
                   <span className="gv-notification-list__time">{item.time}</span>
                 </span>
-                {item.isUnread && <NewDot aria-label="Unread" />}
+                {item.isUnread && <NewDot aria-label={l.unread} />}
               </li>
             ))}
           </ul>

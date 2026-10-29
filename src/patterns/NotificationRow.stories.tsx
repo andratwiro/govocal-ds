@@ -51,7 +51,7 @@ function EmailOpenRender() {
       name="A reply on my comment"
       who="User who commented"
       when="User replies to comment"
-      backLabel="Back to Ideation setup"
+      labels={{back: 'Back to Ideation setup'}}
       onBack={() => {}}
       replyTo="support@example.org"
       subject="You've received a reply on your comment"
@@ -78,7 +78,7 @@ function InACardRender({emails = COMMON_GROUND}: {emails?: typeof EMAILS}) {
         name={email.name}
         who={email.who}
         when={email.when}
-        backLabel="Back to Ideation setup"
+        labels={{back: 'Back to Ideation setup'}}
         onBack={() => setOpen(null)}
         isSelected={on.has(email.id)}
         onChange={v => setOn(s => (v ? new Set(s).add(email.id) : new Set([...s].filter(id => id !== email.id))))}

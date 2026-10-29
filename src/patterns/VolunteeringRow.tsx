@@ -5,7 +5,33 @@ import {Tooltip, TooltipTrigger} from '../components/Tooltip';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
 import {useNumberFormatter} from '../components/format';
+import {mergeLabels, type CountLabel} from '../components/labels';
 import './VolunteeringRow.css';
+
+/** The words Volunteering row says itself (docs/API.md rule 11). */
+export interface VolunteeringRowLabels {
+  /** Build: how many signed up, and the line while nobody has. */
+  signedUp: CountLabel;
+  noSignUps: string;
+  /** Build: the Edit and Delete buttons' names, given the cause's title, and their tooltips. */
+  edit: (title: string) => string;
+  delete: (title: string) => string;
+  editTip: string;
+  deleteTip: string;
+  /** Manage: the word under the count ("volunteers"); the count itself is drawn above it. */
+  volunteers: CountLabel;
+}
+
+/** Volunteering row's English words; a page passes its own over them with `labels`. */
+export const volunteeringRowLabels: VolunteeringRowLabels = {
+  signedUp: (count, n) => `${n} signed up`,
+  noSignUps: 'No sign-ups yet',
+  edit: title => `Edit ${title}`,
+  delete: title => `Delete ${title}`,
+  editTip: 'Edit',
+  deleteTip: 'Delete',
+  volunteers: count => (count === 1 ? 'volunteer' : 'volunteers')
+};
 
 export interface VolunteeringRowProps extends PlacementProps {
   /** The cause's title. */
@@ -36,6 +62,8 @@ export interface VolunteeringRowProps extends PlacementProps {
    * @default false
    */
   isLast?: boolean;
+  /** Its own words (the sign-ups line, Edit, Delete, "volunteers"), over `volunteeringRowLabels`. */
+  labels?: Partial<VolunteeringRowLabels>;
 }
 
 function Action({
@@ -69,9 +97,11 @@ export function VolunteeringRow({
   onEdit,
   onDelete,
   isLast = false,
+  labels,
   className,
   style
 }: VolunteeringRowProps) {
+  const l = mergeLabels(volunteeringRowLabels, labels);
   const number = useNumberFormatter();
   if (layout === 'build') {
     return (
@@ -82,14 +112,14 @@ export function VolunteeringRow({
         <div className="gv-cause-row__cause">
           <div className="gv-cause-row__title">{title}</div>
           <div className="gv-cause-row__signups">
-            {volunteerCount ? `${volunteerCount} signed up` : 'No sign-ups yet'}
+            {volunteerCount ? l.signedUp(volunteerCount, number.format(volunteerCount)) : l.noSignUps}
           </div>
         </div>
         <div className="gv-cause-row__actions">
-          <Action label={`Edit ${title}`} tip="Edit" onPress={onEdit}>
+          <Action label={l.edit(title)} tip={l.editTip} onPress={onEdit}>
             <SquarePen aria-hidden size={16} />
           </Action>
-          <Action label={`Delete ${title}`} tip="Delete" onPress={onDelete}>
+          <Action label={l.delete(title)} tip={l.deleteTip} onPress={onDelete}>
             <Trash2 aria-hidden size={16} />
           </Action>
         </div>
@@ -110,7 +140,7 @@ export function VolunteeringRow({
       </div>
       <div className="gv-cause-row__volunteers">
         <div className="gv-cause-row__count">{number.format(volunteerCount)}</div>
-        <div className="gv-cause-row__word">{volunteerCount === 1 ? 'volunteer' : 'volunteers'}</div>
+        <div className="gv-cause-row__word">{l.volunteers(volunteerCount, number.format(volunteerCount))}</div>
       </div>
     </div>
   );

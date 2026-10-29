@@ -315,7 +315,7 @@ function AutomatedEmails() {
         {current
           ? (
             <NotificationEmail key={current.id} name={current.name} who={current.who} when={current.trigger}
-                backLabel="Back to automated emails" onBack={() => setEditing(null)}
+                labels={{back: 'Back to automated emails'}} onBack={() => setEditing(null)}
                 isSelected={on[current.id]} onChange={v => setOn(current, v)}
                 replyTo={SENDER.replyTo} subject={current.subject} title={current.title} introduction={current.intro}
                 buttonText={current.button} />

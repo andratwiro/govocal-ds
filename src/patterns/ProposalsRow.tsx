@@ -1,10 +1,31 @@
 'use client';
 import {TriangleAlert} from 'lucide-react';
-import {VoteProgress} from './VoteProgress';
+import {VoteProgress, voteProgressLabels, type VoteProgressLabels} from './VoteProgress';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
 import {useNumberFormatter} from '../components/format';
+import {mergeLabels, type CountLabel} from '../components/labels';
 import './ProposalsRow.css';
+
+/** The words Proposals row says itself (docs/API.md rule 11), with Vote progress's, which it hands on. */
+export interface ProposalsRowLabels extends VoteProgressLabels {
+  /** The warning mark's name. */
+  needsAttention: string;
+  /** The vote bar's name, given the proposal's title. */
+  votesFor: (title: string) => string;
+  /** The time left, once voting has ended and before. */
+  closed: string;
+  daysLeft: CountLabel;
+}
+
+/** Proposals row's English words; a page passes its own over them with `labels`. */
+export const proposalsRowLabels: ProposalsRowLabels = {
+  ...voteProgressLabels,
+  needsAttention: 'Needs attention',
+  votesFor: title => `Votes for ${title}`,
+  closed: 'Closed',
+  daysLeft: (count, n) => `${n} days left`
+};
 
 export interface ProposalsRowProps extends PlacementProps {
   title: string;
@@ -22,6 +43,8 @@ export interface ProposalsRowProps extends PlacementProps {
   /** "N days left", or omit and set `isClosed` once voting has ended. */
   daysLeft?: number;
   isClosed?: boolean;
+  /** Its own words (the warning's and the bar's names, "N new", the time left), over `proposalsRowLabels`. */
+  labels?: Partial<ProposalsRowLabels>;
 }
 
 /**
@@ -40,9 +63,11 @@ export function ProposalsRow({
   newCommentCount,
   daysLeft,
   isClosed,
+  labels,
   className,
   style
 }: ProposalsRowProps) {
+  const l = mergeLabels(proposalsRowLabels, labels);
   const number = useNumberFormatter();
   return (
     <div className={clsx('gv-list-row-proposals', className)} style={style}>
@@ -56,7 +81,7 @@ export function ProposalsRow({
             <span className="gv-list-row-proposals__marks">
               <TriangleAlert
                 role="img"
-                aria-label="Needs attention"
+                aria-label={l.needsAttention}
                 className="gv-list-row-proposals__warning"
                 size={16}
                 strokeWidth={1.75}
@@ -67,20 +92,25 @@ export function ProposalsRow({
         <div className="gv-list-row-proposals__cell gv-list-row-proposals__votes-cell">
           <VoteProgress
             kind="threshold"
-            label={`Votes for ${title}`}
+            label={l.votesFor(title)}
             count={voteCount}
             threshold={voteThreshold}
+            labels={l}
           />
         </div>
         <div className="gv-list-row-proposals__cell gv-list-row-proposals__status-cell">{statusLabel}</div>
         <div className="gv-list-row-proposals__cell gv-list-row-proposals__comments-cell" data-num>
           {number.format(commentCount)}
           {Boolean(newCommentCount) && (
-            <span className="gv-list-row-proposals__new">{newCommentCount} new</span>
+            <span className="gv-list-row-proposals__new">{l.new(newCommentCount!, number.format(newCommentCount!))}</span>
           )}
         </div>
         <div className="gv-list-row-proposals__cell gv-list-row-proposals__time-cell">
-          {isClosed ? <span className="gv-list-row-proposals__closed">Closed</span> : `${daysLeft} days left`}
+          {isClosed ? (
+            <span className="gv-list-row-proposals__closed">{l.closed}</span>
+          ) : (
+            daysLeft != null && l.daysLeft(daysLeft, number.format(daysLeft))
+          )}
         </div>
       </div>
     </div>

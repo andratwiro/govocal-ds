@@ -6,7 +6,26 @@ import {IconButton} from '../components/gv/IconButton';
 import {Tooltip, TooltipTrigger} from '../components/Tooltip';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {useNumberFormatter} from '../components/format';
+import {mergeLabels, type CountLabel} from '../components/labels';
 import './RailPhase.css';
+
+/** The words Rail phase says itself (docs/API.md rule 11). */
+export interface RailPhaseLabels {
+  /** "N new" at the top right. */
+  new: CountLabel;
+  /** The delete button's name, given the title when it is text. */
+  delete: (title?: string) => string;
+  /** The delete button's tooltip. */
+  deletePhase: string;
+}
+
+/** Rail phase's English words; a page passes its own over them with `labels`. */
+export const railPhaseLabels: RailPhaseLabels = {
+  new: (count, n) => `${n} new`,
+  delete: title => (title ? `Delete ${title}` : 'Delete phase'),
+  deletePhase: 'Delete phase'
+};
 
 export type RailPhaseStatus = 'upcoming' | 'live' | 'completed';
 
@@ -52,8 +71,8 @@ export interface RailPhaseProps extends PlacementProps {
    * order). It takes "N new"'s place while it shows. Not in Figma: the prototype's rail.
    */
   onDelete?: () => void;
-  /** The delete button's name. @default "Delete <title>" ("Delete phase" when the title isn't text) */
-  deleteLabel?: string;
+  /** Its own words ("N new", the delete button's name and tooltip), over `railPhaseLabels`. */
+  labels?: Partial<RailPhaseLabels>;
 }
 
 /**
@@ -72,10 +91,12 @@ export function RailPhase({
   isCurrent: current,
   onPress,
   onDelete,
-  deleteLabel = typeof title === 'string' ? `Delete ${title}` : 'Delete phase',
+  labels,
   className,
   style
 }: RailPhaseProps) {
+  const l = mergeLabels(railPhaseLabels, labels);
+  const number = useNumberFormatter();
   return (
     <div
       className={clsx('gv-rail-phase', className)} style={style}
@@ -98,17 +119,17 @@ export function RailPhase({
         {newCount != null && newCount > 0 && (
           <span className="gv-rail-phase__new">
             <span className="gv-rail-phase__new-dot" aria-hidden />
-            {newCount} new
+            {l.new(newCount, number.format(newCount))}
           </span>
         )}
       </Link>
       {onDelete && (
         <span className="gv-rail-phase__delete">
           <TooltipTrigger>
-            <IconButton aria-label={deleteLabel} onPress={onDelete}>
+            <IconButton aria-label={l.delete(typeof title === 'string' ? title : undefined)} onPress={onDelete}>
               <Trash2 aria-hidden size={16} />
             </IconButton>
-            <Tooltip>Delete phase</Tooltip>
+            <Tooltip>{l.deletePhase}</Tooltip>
           </TooltipTrigger>
         </span>
       )}

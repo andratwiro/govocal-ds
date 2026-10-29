@@ -1,11 +1,20 @@
 'use client';
 import {TriangleAlert} from 'lucide-react';
 import {Checkbox} from '../components/gv/Checkbox';
-import type {ListRowSelect} from '../components/gv/ListRow';
+import {listRowLabels, type ListRowLabels, type ListRowSelect} from '../components/gv/ListRow';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
 import {useNumberFormatter, usePercentFormatter} from '../components/format';
+import {mergeLabels} from '../components/labels';
 import './CommonGroundRow.css';
+
+/** The words Common Ground row says itself (docs/API.md rule 11): List row's, and the New label. */
+export interface CommonGroundRowLabels extends ListRowLabels {
+  new: string;
+}
+
+/** Common Ground row's English words; a page passes its own over them with `labels`. */
+export const commonGroundRowLabels: CommonGroundRowLabels = {...listRowLabels, new: 'New'};
 
 export interface CommonGroundRowProps extends PlacementProps {
   /** The Common Ground statement text. */
@@ -28,6 +37,8 @@ export interface CommonGroundRowProps extends PlacementProps {
   reactions?: number;
   /** A checkbox in the leading slot, as on `ListRow`. Not in Figma. */
   select?: ListRowSelect;
+  /** Its own words (Select, the warning's name, New), over `commonGroundRowLabels`. */
+  labels?: Partial<CommonGroundRowLabels>;
 }
 
 /**
@@ -44,9 +55,11 @@ export function CommonGroundRow({
   agreePercent,
   reactions,
   select,
+  labels,
   className,
   style
 }: CommonGroundRowProps) {
+  const l = mergeLabels(commonGroundRowLabels, labels);
   const number = useNumberFormatter();
   const percent = usePercentFormatter();
   return (
@@ -59,7 +72,7 @@ export function CommonGroundRow({
           <Checkbox
             isSelected={select.isSelected}
             onChange={select.onChange}
-            aria-label={select['aria-label'] ?? 'Select'}
+            aria-label={select['aria-label'] ?? l.select}
           />
         )}
       </span>
@@ -70,14 +83,14 @@ export function CommonGroundRow({
             <span className="gv-list-row-cg__marks">
               <TriangleAlert
                 role="img"
-                aria-label="Needs attention"
+                aria-label={l.needsAttention}
                 className="gv-list-row-cg__warning"
                 size={16}
                 strokeWidth={1.75}
               />
             </span>
           )}
-          {isNew && <span className="gv-list-row-cg__new">New</span>}
+          {isNew && <span className="gv-list-row-cg__new">{l.new}</span>}
         </div>
         <div className="gv-list-row-cg__cell gv-list-row-cg__assignee-cell">
           {assignee !== undefined && (

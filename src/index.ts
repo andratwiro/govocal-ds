@@ -264,6 +264,44 @@ export {statementRowLabels, type StatementRowLabels} from './components/gv/State
 export {tableToolbarLabels, type TableToolbarLabels} from './components/gv/TableToolbar';
 export {tagPickerLabels, type TagPickerLabels} from './components/gv/TagPicker';
 export {titleFieldLabels, type TitleFieldLabels} from './components/gv/TitleField';
+export {
+  accessRightsLabels, type AccessRightsLabels, accessRightsModalLabels, type AccessRightsModalLabels
+} from './patterns/AccessRights';
+export {
+  actionRowLabels, type ActionRowLabels, actionRowListLabels, type ActionRowListLabels
+} from './patterns/ActionRow';
+export {
+  commentComposerLabels, type CommentComposerLabels, commentThreadLabels, type CommentThreadLabels
+} from './patterns/CommentThread';
+export {commonGroundRowLabels, type CommonGroundRowLabels} from './patterns/CommonGroundRow';
+export {filterChipsLabels, type FilterChipsLabels} from './patterns/FilterChips';
+export {filterMenuLabels, type FilterMenuLabels} from './patterns/FilterMenu';
+export {notificationListLabels, type NotificationListLabels} from './patterns/NotificationList';
+export {
+  notificationRowLabels, type NotificationRowLabels, notificationRowListLabels, type NotificationRowListLabels,
+  notificationEmailLabels, type NotificationEmailLabels
+} from './patterns/NotificationRow';
+export {officialUpdateLabels, type OfficialUpdateLabels} from './patterns/OfficialUpdate';
+export {
+  participantActionRowLabels, type ParticipantActionRowLabels, participantLimitLabels, type ParticipantLimitLabels,
+  participantActionListLabels, type ParticipantActionListLabels
+} from './patterns/ParticipantActionRow';
+export {phaseTimelineLabels, type PhaseTimelineLabels} from './patterns/PhaseTimeline';
+export {phonePreviewLabels, type PhonePreviewLabels} from './patterns/PhonePreview';
+export {projectHeaderLabels, type ProjectHeaderLabels} from './patterns/ProjectHeader';
+export {proposalsRowLabels, type ProposalsRowLabels} from './patterns/ProposalsRow';
+export {railHeaderLabels, type RailHeaderLabels} from './patterns/RailHeader';
+export {railPhaseLabels, type RailPhaseLabels} from './patterns/RailPhase';
+export {sectionToggleLabels, type SectionToggleLabels} from './patterns/SectionToggle';
+export {selectionBarLabels, type SelectionBarLabels} from './patterns/SelectionBar';
+export {setupStepLabels, type SetupStepLabels} from './patterns/SetupStep';
+export {sideNavHomeLabels, type SideNavHomeLabels} from './patterns/SideNav';
+export {
+  viewOptionRowLabels, type ViewOptionRowLabels, viewOptionListLabels, type ViewOptionListLabels
+} from './patterns/ViewOptionRow';
+export {volunteeringRowLabels, type VolunteeringRowLabels} from './patterns/VolunteeringRow';
+export {voteProgressLabels, type VoteProgressLabels} from './patterns/VoteProgress';
+export {votingRowLabels, type VotingRowLabels} from './patterns/VotingRow';
 
 // Placement: every part with a DOM root takes className and style; they place it (grid area, width, margin,
 // alignment) and never paint it.

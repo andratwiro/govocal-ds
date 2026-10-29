@@ -7,7 +7,26 @@ import {Toolbar} from 'react-aria-components/Toolbar';
 import {Button} from '../components/Button';
 import {Popover} from '../components/Popover';
 import {IconButton} from '../components/gv/IconButton';
+import {useNumberFormatter} from '../components/format';
+import {mergeLabels, type CountLabel} from '../components/labels';
 import './SelectionBar.css';
+
+/** The words Selection bar says itself (docs/API.md rule 11). */
+export interface SelectionBarLabels {
+  /** The bar's name, when no `aria-label` is given. */
+  actions: string;
+  /** "2 selected". */
+  selected: CountLabel;
+  /** The ×'s name. */
+  clear: string;
+}
+
+/** Selection bar's English words; a page passes its own over them with `labels`. */
+export const selectionBarLabels: SelectionBarLabels = {
+  actions: 'Selection actions',
+  selected: (count, n) => `${n} selected`,
+  clear: 'Clear selection'
+};
 
 /** One button of the bar: it opens its `menu`, or it is a plain button that calls its `onPress` and the bar's
  * `onAction`. */
@@ -34,8 +53,10 @@ export interface SelectionBarProps {
   onClear: () => void;
   /** What shows while nothing is selected, e.g. the list's count heading or an "Export all" button. */
   children?: ReactNode;
-  /** @default 'Selection actions' */
+  /** @default `labels.actions` ("Selection actions") */
   'aria-label'?: string;
+  /** Its own words ("2 selected", the ×'s name), over `selectionBarLabels`. */
+  labels?: Partial<SelectionBarLabels>;
   /** Places the bar while it shows (nothing is drawn around `children`); never paints it. */
   className?: string;
   style?: CSSProperties;
@@ -49,12 +70,14 @@ export interface SelectionBarProps {
  * between actions. On the phase Manage tab, the Input manager and Users. Not in Figma yet.
  */
 export function SelectionBar({
-  count, items, onAction, onClear, children, 'aria-label': label = 'Selection actions', className, style
+  count, items, onAction, onClear, children, 'aria-label': label, labels, className, style
 }: SelectionBarProps) {
+  const l = mergeLabels(selectionBarLabels, labels);
+  const number = useNumberFormatter();
   if (count === 0) return <>{children}</>;
   return (
-    <Toolbar aria-label={label} className={clsx('gv-selection-bar', className)} style={style}>
-      <span className="gv-selection-bar__count" role="status">{count} selected</span>
+    <Toolbar aria-label={label ?? l.actions} className={clsx('gv-selection-bar', className)} style={style}>
+      <span className="gv-selection-bar__count" role="status">{l.selected(count, number.format(count))}</span>
       {items.map(a => a.menu ? (
         <MenuTrigger key={a.id}>
           <Button variant="secondary" size={32}>{a.icon}{a.label}</Button>
@@ -65,7 +88,7 @@ export function SelectionBar({
           {a.icon}{a.label}
         </Button>
       ))}
-      <IconButton aria-label="Clear selection" onPress={onClear}><X aria-hidden size={16} /></IconButton>
+      <IconButton aria-label={l.clear} onPress={onClear}><X aria-hidden size={16} /></IconButton>
     </Toolbar>
   );
 }

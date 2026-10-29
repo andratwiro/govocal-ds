@@ -6,7 +6,17 @@ import {Popover} from '../components/Popover';
 import {Badge} from '../components/gv/Badge';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
+import {mergeLabels} from '../components/labels';
 import './SetupStep.css';
+
+/** The words Setup step says itself (docs/API.md rule 11). */
+export interface SetupStepLabels {
+  /** Read after a done step's title (hidden from sight: the check shows it). */
+  done: string;
+}
+
+/** Setup step's English words; a page passes its own over them with `labels`. */
+export const setupStepLabels: SetupStepLabels = {done: '(done)'};
 
 export interface SetupStepProps extends PlacementProps {
   /**
@@ -34,6 +44,8 @@ export interface SetupStepProps extends PlacementProps {
   defaultExpanded?: boolean;
   isExpanded?: boolean;
   onExpandedChange?: (isExpanded: boolean) => void;
+  /** Its own words (what a done step reads), over `setupStepLabels`. */
+  labels?: Partial<SetupStepLabels>;
 }
 
 /* Figma's circle-dashed-1/16 and the prototype's PJP_CHK_OFF: a 14.5 ring, 1px, short round dashes (2.4 / 2).
@@ -71,6 +83,7 @@ export function SetupStep({
   value,
   picker,
   pickerKind = 'dialog',
+  labels,
   className,
   style
 }: SetupStepProps) {
@@ -79,7 +92,7 @@ export function SetupStep({
       <Check isDone={isDone} />
       <span className="gv-setup-card__text">
         <span className="gv-setup-card__title">{title}</span>
-        {isDone && <span className="gv-setup-card__sr">(done)</span>}
+        {isDone && <span className="gv-setup-card__sr">{mergeLabels(setupStepLabels, labels).done}</span>}
         {value != null && <span className="gv-setup-card__value"><Badge variant="value">{value}</Badge></span>}
       </span>
     </>

@@ -1,10 +1,27 @@
 'use client';
 import {TriangleAlert} from 'lucide-react';
-import {VoteProgress} from './VoteProgress';
+import {VoteProgress, voteProgressLabels, type VoteProgressLabels} from './VoteProgress';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
 import {useNumberFormatter} from '../components/format';
+import {mergeLabels} from '../components/labels';
 import './VotingRow.css';
+
+/** The words Voting row says itself (docs/API.md rule 11), with Vote progress's, which it hands on ("N new" is
+ * shared by the votes and the comments). */
+export interface VotingRowLabels extends VoteProgressLabels {
+  /** The warning mark's name. */
+  needsAttention: string;
+  /** The vote bar's name, given the option's title. */
+  votesFor: (title: string) => string;
+}
+
+/** Voting row's English words; a page passes its own over them with `labels`. */
+export const votingRowLabels: VotingRowLabels = {
+  ...voteProgressLabels,
+  needsAttention: 'Needs attention',
+  votesFor: title => `Votes for ${title}`
+};
 
 export interface VotingRowProps extends PlacementProps {
   title: string;
@@ -21,6 +38,8 @@ export interface VotingRowProps extends PlacementProps {
   commentCount: number;
   /** Unseen comments since the admin's last visit. */
   newCommentCount?: number;
+  /** Its own words (the warning's and the bar's names, "N new"), over `votingRowLabels`. */
+  labels?: Partial<VotingRowLabels>;
 }
 
 /**
@@ -39,9 +58,11 @@ export function VotingRow({
   offlineCount,
   commentCount,
   newCommentCount,
+  labels,
   className,
   style
 }: VotingRowProps) {
+  const l = mergeLabels(votingRowLabels, labels);
   // Vote progress scales the bar by the leading option's count: recover it from this row's relative fill.
   const number = useNumberFormatter();
   const maxCount = fillPercent > 0 ? Math.round((voteCount * 100) / fillPercent) : Math.max(voteCount, 1);
@@ -55,7 +76,7 @@ export function VotingRow({
             <span className="gv-list-row-voting__marks">
               <TriangleAlert
                 role="img"
-                aria-label="Needs attention"
+                aria-label={l.needsAttention}
                 className="gv-list-row-voting__warning"
                 size={16}
                 strokeWidth={1.75}
@@ -66,10 +87,11 @@ export function VotingRow({
         <div className="gv-list-row-voting__cell gv-list-row-voting__votes-cell">
           <VoteProgress
             kind="count"
-            label={`Votes for ${title}`}
+            label={l.votesFor(title)}
             count={voteCount}
             maxCount={maxCount}
             newCount={newVoteCount || undefined}
+            labels={l}
           />
         </div>
         <div className="gv-list-row-voting__cell" data-num>
@@ -80,7 +102,7 @@ export function VotingRow({
         </div>
         <div className="gv-list-row-voting__cell gv-list-row-voting__comments-cell" data-num>
           {number.format(commentCount)}
-          {Boolean(newCommentCount) && <span className="gv-list-row-voting__new">{newCommentCount} new</span>}
+          {Boolean(newCommentCount) && <span className="gv-list-row-voting__new">{l.new(newCommentCount!, number.format(newCommentCount!))}</span>}
         </div>
       </div>
     </div>
