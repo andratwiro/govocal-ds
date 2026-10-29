@@ -1,16 +1,25 @@
 'use client';
 import type {ReactNode} from 'react';
-import {Button, Disclosure, DisclosurePanel, Heading} from 'react-aria-components';
+import {Button, Dialog, DialogTrigger, Disclosure, DisclosurePanel, Heading, MenuTrigger} from 'react-aria-components';
 import {ChevronDown, ChevronRight} from 'lucide-react';
+import {Popover} from '../components/Popover';
+import {Badge} from '../components/gv/Badge';
 import './SetupStep.css';
 
 export interface SetupStepProps {
   /**
-   * Figma "Action": Open leads somewhere else (chevron →); Expand opens the card in place (chevron ⌄).
+   * Figma "Action": Open leads somewhere else (chevron →); Expand opens the card in place (chevron ⌄). Not in Figma:
+   * Pick opens a picker in a popover under the card (chevron ⌄), the prototype's Set area and Set topic tags.
    *
    * @default 'open'
    */
-  action?: 'open' | 'expand';
+  action?: 'open' | 'expand' | 'pick';
+  /** What the step is set to, short ("Harbour", "2 tags"): a teal value badge before the chevron. */
+  value?: ReactNode;
+  /** Pick: what the popover holds. An Option list (`pickerType="dialog"`) or a Menu (`"menu"`, e.g. with a submenu). */
+  picker?: ReactNode;
+  /** Pick: the picker's kind. @default 'dialog' */
+  pickerType?: 'dialog' | 'menu';
   /** The step's name, e.g. "Settings" or "Set project card". */
   title: string;
   /** The step is done: the dashed circle becomes a filled check. */
@@ -47,7 +56,7 @@ function Check({isDone}: {isDone?: boolean}) {
   );
 }
 
-/** A setup checklist step: a dashed circle until it's done, then a check. */
+/** A setup checklist step: a dashed circle until it's done, then a check; what it is set to in a value badge. */
 export function SetupStep({
   action = 'open',
   title,
@@ -56,19 +65,53 @@ export function SetupStep({
   children,
   defaultExpanded,
   isExpanded,
-  onExpandedChange
+  onExpandedChange,
+  value,
+  picker,
+  pickerType = 'dialog'
 }: SetupStepProps) {
+  const label = (
+    <>
+      <Check isDone={isDone} />
+      <span className="gv-setup-card__text">
+        <span className="gv-setup-card__title">{title}</span>
+        {isDone && <span className="gv-setup-card__sr">(done)</span>}
+        {value != null && <span className="gv-setup-card__value"><Badge variant="value">{value}</Badge></span>}
+      </span>
+    </>
+  );
   if (action === 'open') {
     return (
       <div className="gv-setup-card" data-action="open" data-done={isDone || undefined}>
         <Button className="gv-setup-card__header" onPress={onPress}>
-          <Check isDone={isDone} />
-          <span className="gv-setup-card__title">{title}</span>
-          {isDone && <span className="gv-setup-card__sr">(done)</span>}
+          {label}
           <span className="gv-setup-card__chevron" aria-hidden>
             <ChevronRight size={17} strokeWidth={2} />
           </span>
         </Button>
+      </div>
+    );
+  }
+  if (action === 'pick') {
+    const header = (
+      <Button className="gv-setup-card__header">
+        {label}
+        <span className="gv-setup-card__chevron" aria-hidden>
+          <ChevronDown size={16} />
+        </span>
+      </Button>
+    );
+    // The popover hangs under the card, as wide as it.
+    const popover = (content: ReactNode) => (
+      <Popover placement="bottom start" hideArrow className="react-aria-Popover gv-setup-card__popover">{content}</Popover>
+    );
+    return (
+      <div className="gv-setup-card" data-action="pick" data-done={isDone || undefined}>
+        {pickerType === 'menu' ? (
+          <MenuTrigger>{header}{popover(picker)}</MenuTrigger>
+        ) : (
+          <DialogTrigger>{header}{popover(<Dialog aria-label={title} className="gv-setup-card__dialog">{picker}</Dialog>)}</DialogTrigger>
+        )}
       </div>
     );
   }
@@ -82,9 +125,7 @@ export function SetupStep({
       onExpandedChange={onExpandedChange}>
       <Heading className="gv-setup-card__heading">
         <Button slot="trigger" className="gv-setup-card__header">
-          <Check isDone={isDone} />
-          <span className="gv-setup-card__title">{title}</span>
-          {isDone && <span className="gv-setup-card__sr">(done)</span>}
+          {label}
           <span className="gv-setup-card__chevron" aria-hidden>
             <ChevronDown size={16} />
           </span>

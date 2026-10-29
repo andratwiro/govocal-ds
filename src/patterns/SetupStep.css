@@ -61,8 +61,19 @@
   stroke: var(--gv-icon-inverse);
 }
 
-.gv-setup-card__title {
+/* Title and value share the room: each gets up to what it says, both cut short evenly only when neither fits; the
+   value sits at the end. */
+.gv-setup-card__text {
   flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(0, max-content);
+  justify-content: space-between;
+  align-items: center;
+  column-gap: var(--gv-space-8);
+}
+
+.gv-setup-card__title {
   min-width: 0;
   font: var(--gv-type-small);
   letter-spacing: var(--gv-type-small-tracking);
@@ -87,8 +98,43 @@
   }
 }
 
-.gv-setup-card[data-expanded] .gv-setup-card__chevron svg {
+.gv-setup-card[data-expanded] .gv-setup-card__chevron svg,
+.gv-setup-card__header[aria-expanded='true'] .gv-setup-card__chevron svg {
   rotate: 180deg;
+}
+
+/* Not in Figma: what the step is set to (the prototype's `.pjsum-pill--on`), the teal value badge at radius 6, cut
+   short with an ellipsis. */
+.gv-setup-card__value {
+  display: flex;
+  min-width: 0;
+
+  .gv-pill {
+    min-width: 0;
+    max-width: 100%;
+    border-radius: var(--gv-radius-6);
+  }
+
+  .gv-pill__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* Pick: the picker hangs under the card, as wide as it; an Option list or a Menu brings its own frame padding. */
+.react-aria-Popover.gv-setup-card__popover {
+  width: var(--trigger-width);
+  padding: 0;
+
+  .gv-option-list {
+    inline-size: 100%;
+  }
+}
+
+.gv-setup-card__dialog {
+  outline: none;
+  max-height: inherit;
 }
 
 /* An open card's body (the prototype's Set project card): from the card's edge, 12 12 24, its sections 24 apart. */
