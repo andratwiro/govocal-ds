@@ -133,13 +133,15 @@ test('closing the survey is instant, with an Undo toast', async ({page}) => {
 test('anonymizing user data asks first in an Alert dialog', async ({page}) => {
   await openSettings(page, 'Access rights');
   const sw = page.getByRole('switch', {name: 'Anonymize all user data'});
-  await sw.click({force: true});
+  // Press the switch's visible label, as a person does: a forced click on its hidden input misses below the fold.
+  const label = page.locator('label').filter({has: sw});
+  await label.click();
   const confirm = page.getByRole('alertdialog', {name: 'Anonymize all user data?'});
   await expect(confirm).toBeVisible();
   a11yReport(await axeOn(page, '[role="alertdialog"]'));
   await confirm.getByRole('button', {name: 'Cancel'}).click();
   await expect(sw).not.toBeChecked();
-  await sw.click({force: true});
+  await label.click();
   await page.getByRole('alertdialog', {name: 'Anonymize all user data?'}).getByRole('button', {name: 'Anonymize'}).click();
   await expect(sw).toBeChecked();
   await expect(toast(page).first()).toContainText('User data anonymized');
