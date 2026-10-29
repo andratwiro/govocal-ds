@@ -27,7 +27,7 @@ export interface NotificationListProps extends PlacementProps {
   /** Shows "Mark all as read". It stays enabled once all are read, so focus never drops out of the panel. */
   onMarkAllRead?: () => void;
   /** @default "You don't have any notifications yet" */
-  emptyText?: string;
+  emptyLabel?: string;
 }
 
 /**
@@ -35,7 +35,7 @@ export interface NotificationListProps extends PlacementProps {
  * a title with "Mark all as read", then one row per notification, newest first, unread ones
  * bolder and with a red dot. Put it in a Popover + Dialog. Not in Figma yet.
  */
-export function NotificationList({title = 'Notifications', items, onMarkAllRead, emptyText = "You don't have any notifications yet", className, style}: NotificationListProps) {
+export function NotificationList({title = 'Notifications', items, onMarkAllRead, emptyLabel = "You don't have any notifications yet", className, style}: NotificationListProps) {
   return (
     <div className={clsx('gv-notification-list', className)} style={style}>
       <div className="gv-notification-list__head">
@@ -43,7 +43,7 @@ export function NotificationList({title = 'Notifications', items, onMarkAllRead,
         {onMarkAllRead && <Button variant="quiet" size={32} onPress={onMarkAllRead}>Mark all as read</Button>}
       </div>
       {items.length === 0
-        ? <p className="gv-notification-list__empty">{emptyText}</p>
+        ? <p className="gv-notification-list__empty">{emptyLabel}</p>
         : (
           <ul className="gv-notification-list__items">
             {items.map(item => (

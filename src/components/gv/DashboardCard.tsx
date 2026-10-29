@@ -33,7 +33,7 @@ export interface DashboardCardProps extends Omit<HTMLAttributes<HTMLElement>, 't
   /** An icon before the title (AI summary: lucide `Sparkles`). Decorative. */
   icon?: ReactNode;
   /** Header, inline end: a control for the whole card (Votes over time: Daily / Weekly). */
-  action?: ReactNode;
+  actions?: ReactNode;
   /**
    * The card's content: a LineChart, Sparkline, StatTile row or one of the Dashboard* lists below. With no data yet,
    * an EmptyState (`layout="panel"`, `headingLevel="none"`): the card drops its gap so it sits under the title.
@@ -55,7 +55,7 @@ export function DashboardCard({
   title,
   subtitle,
   icon,
-  action,
+  actions,
   children,
   legend,
   footer,
@@ -65,7 +65,7 @@ export function DashboardCard({
 }: DashboardCardProps) {
   const id = useId();
   const H = `h${headingLevel}` as const;
-  const hasHeader = title != null || subtitle != null || action != null;
+  const hasHeader = title != null || subtitle != null || actions != null;
   return (
     <section
       {...rest}
@@ -82,7 +82,7 @@ export function DashboardCard({
             )}
             {subtitle != null && <p className="gv-dashboard-card__subtitle">{subtitle}</p>}
           </div>
-          {action != null && <div className="gv-dashboard-card__action">{action}</div>}
+          {actions != null && <div className="gv-dashboard-card__action">{actions}</div>}
         </div>
       )}
       {children != null && <div className="gv-dashboard-card__body">{children}</div>}

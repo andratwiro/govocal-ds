@@ -66,7 +66,7 @@ function DashCard({title, type, control, legend, footer, children}: {
 }) {
   const action = <span className="bo-dashboard-card-actions">{control}<DownloadMenu title={title} /></span>;
   return (
-    <DashboardCard kind={type} title={title} action={action} legend={legend} footer={footer}>
+    <DashboardCard kind={type} title={title} actions={action} legend={legend} footer={footer}>
       <div className="bo-dashboard-body">{children}</div>
     </DashboardCard>
   );

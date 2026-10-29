@@ -94,7 +94,7 @@ function LiveMonitor({quarter}: {quarter: number}) {
           return (
             <DashboardCard key={c.id} title={c.label}
               subtitle={`${rows.length} questions · ${n(RESPONDENTS[quarter])} responses · sentiment scale, optional`}
-              action={<Badge>{score(c.scores[quarter])}</Badge>}>
+              actions={<Badge>{score(c.scores[quarter])}</Badge>}>
               {rows.map(({qn, i}) => {
                 const s = questionScore(i, quarter);
                 return <BarRow key={qn.title} label={`${i + 1}. ${qn.title}`} percent={(s / 5) * 100} value={score(s)} />;
@@ -103,7 +103,7 @@ function LiveMonitor({quarter}: {quarter: number}) {
           );
         })}
         <DashboardCard title="Answers per question" subtitle={`${QUARTERS[quarter]} · share of answers per level`}
-          action={
+          actions={
             <Select aria-label="Question" selectedKey={String(question)} onSelectionChange={k => setQuestion(Number(k))}>
               {QUESTIONS.map((qn, i) => <SelectItem key={qn.title} id={String(i)}>{`${i + 1}. ${qn.title}`}</SelectItem>)}
             </Select>

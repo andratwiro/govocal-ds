@@ -96,7 +96,7 @@ export const WithAction: Story = {
     tone: 'warning',
     title: 'Screening is on',
     children: 'There are 5 ideas. Participants cannot see them until you approve them.',
-    action: <Button variant="secondary" size={32} onPress={() => {}}>Review</Button>
+    actions: <Button variant="secondary" size={32} onPress={() => {}}>Review</Button>
   },
   decorators: [Story => <div style={{width: 400}}><Story /></div>]
 };

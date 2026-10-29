@@ -1128,7 +1128,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
                   <article className="bo-report-sheet" aria-label="Page 1">
                     <EmptyState title="No widgets in this report yet" icon={<Plus size={24} />} headingLevel={2}
                       description="Choose a widget from the library, or ask the assistant to generate a first version."
-                      action={<Button variant="primary" size={32} onPress={() => setLibrary(true)}><Plus aria-hidden size={16} />Add widget</Button>} />
+                      actions={<Button variant="primary" size={32} onPress={() => setLibrary(true)}><Plus aria-hidden size={16} />Add widget</Button>} />
                   </article>
                 )}
               </div>

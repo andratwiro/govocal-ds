@@ -15,7 +15,7 @@ const meta: Meta<typeof EmptyState> = {
   argTypes: {
     illustration: {control: 'select', options: [undefined, ...illustrationNames]},
     icon: {control: false},
-    action: {control: false}
+    actions: {control: false}
   }
 };
 
@@ -49,7 +49,7 @@ export const AllVariants: Story = {
           illustration="empty-notebook"
           title="Ideas will appear here"
           description="Once the project is live, you can review and manage ideas here"
-          action={<Button variant="secondary">Go to project</Button>}
+          actions={<Button variant="secondary">Go to project</Button>}
         />
       </Panel>
       <Panel width={280} height={260}>
@@ -205,7 +205,7 @@ export const WithAction: Story = {
         illustration="empty-notebook"
         title="Ideas will appear here"
         description="Once the project is live, you can review and manage ideas here"
-        action={<Button variant="secondary">Go to project</Button>}
+        actions={<Button variant="secondary">Go to project</Button>}
       />
     </Panel>
   )

@@ -210,7 +210,7 @@ export function InspirationHub() {
           ) : (
             <EmptyState layout="panel" icon={<SearchX size={24} />} headingLevel={3} title="No projects match"
               description="Try another search, or fewer filters."
-              action={<Button variant="secondary" size={32} onPress={clear}>Clear search and filters</Button>} />
+              actions={<Button variant="secondary" size={32} onPress={clear}>Clear search and filters</Button>} />
           )}
         </Panel>
         <GapLegend names={['project images', 'the highlight quote']} />

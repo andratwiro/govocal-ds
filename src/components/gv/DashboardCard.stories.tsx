@@ -126,7 +126,7 @@ const cards = {
       kind="votes-over-time"
       title="Participation over time"
       subtitle="Votes cast · cumulative"
-      action={
+      actions={
         <SegmentedControl size={30} aria-label="Range" disallowEmptySelection defaultSelectedKeys={['daily']}>
           <SegmentedControlItem id="daily">Daily</SegmentedControlItem>
           <SegmentedControlItem id="weekly">Weekly</SegmentedControlItem>

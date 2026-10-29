@@ -42,7 +42,7 @@ export interface BannerProps extends PlacementProps {
   linkHref?: string;
   onLinkPress?: () => void;
   /** A block action under the message, e.g. a "Review" button (the screening banner). */
-  action?: ReactNode;
+  actions?: ReactNode;
   /** Shows a dismiss × in the corner and calls this when it's pressed. */
   onDismiss?: () => void;
   dismissLabel?: string;
@@ -55,7 +55,7 @@ export interface BannerProps extends PlacementProps {
   density?: 'default' | 'compact';
 }
 
-/** A message box: icon + text, on a tone's tint (+ title, link, action, dismiss). */
+/** A message box: icon + text, on a tone's tint (+ title, link, actions, dismiss). */
 export function Banner({
   type,
   tone,
@@ -65,7 +65,7 @@ export function Banner({
   linkLabel,
   linkHref,
   onLinkPress,
-  action,
+  actions,
   onDismiss,
   dismissLabel = 'Dismiss',
   density = 'default',
@@ -109,7 +109,7 @@ export function Banner({
             </Link>
           )}
         </div>
-        {action && <div className="gv-banner__action">{action}</div>}
+        {actions && <div className="gv-banner__action">{actions}</div>}
       </div>
       {onDismiss && (
         <span className="gv-banner__dismiss">

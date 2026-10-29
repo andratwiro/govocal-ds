@@ -67,7 +67,7 @@ export interface AccessRightsProps extends PlacementProps {
   defaultWho?: AccessWho;
   onWhoChange?: (who: AccessWho) => void;
   /** The choices this action offers (some offer two). @default ['anyone', 'signin', 'admins'] */
-  options?: AccessWho[];
+  whoItems?: AccessWho[];
   /** Sign-in's security requirement: participants set a password. @default true */
   defaultRequirePassword?: boolean;
   /** The groups an action can be limited to; the first is "no restriction". */
@@ -93,7 +93,7 @@ export function AccessRights({
   who: whoProp,
   defaultWho = 'signin',
   onWhoChange,
-  options = ['anyone', 'signin', 'admins'],
+  whoItems = ['anyone', 'signin', 'admins'],
   defaultRequirePassword = true,
   groups = ['All participants (no group restriction)'],
   onPlatformDefaults,
@@ -152,7 +152,7 @@ export function AccessRights({
           onChange={v => setWho(v as AccessWho)}
           isReadOnly={readOnly}
           className="gv-access-rights__who">
-          {options.map(key => (
+          {whoItems.map(key => (
             <ChoiceCard key={key} value={key} media={WHO[key].icon} description={WHO[key].description}>
               {WHO[key].label}
             </ChoiceCard>
