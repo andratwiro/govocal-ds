@@ -19,14 +19,14 @@ import {keepClass, ownClass} from './className';
 import clsx from 'clsx';
 
 export function ListBox<T>({children, ...props}: ListBoxProps<T>) {
-  return <AriaListBox {...props} className={keepClass(props.className)}>{children}</AriaListBox>;
+  return <AriaListBox {...props} className={keepClass(props.className, 'gv-base-list-box')}>{children}</AriaListBox>;
 }
 
 export function ListBoxItem(props: ListBoxItemProps) {
   let textValue =
     props.textValue || (typeof props.children === 'string' ? props.children : undefined);
   return (
-    <AriaListBoxItem {...props} className={keepClass(props.className)} textValue={textValue}>
+    <AriaListBoxItem {...props} className={keepClass(props.className, 'gv-base-list-box-item')} textValue={textValue}>
       {composeRenderProps(props.children, children =>
         typeof children === 'string' ? <Text slot="label">{children}</Text> : children
       )}
@@ -35,12 +35,12 @@ export function ListBoxItem(props: ListBoxItemProps) {
 }
 
 export function ListBoxSection<T>(props: ListBoxSectionProps<T>) {
-  return <AriaListBoxSection {...props} className={clsx('react-aria-ListBoxSection', props.className)} />;
+  return <AriaListBoxSection {...props} className={clsx('react-aria-ListBoxSection gv-base-list-box-section', props.className)} />;
 }
 
 export function ListBoxLoadMoreItem(props: ListBoxLoadMoreItemProps) {
   return (
-    <AriaListBoxLoadMoreItem {...props} className={clsx('react-aria-ListBoxLoadingIndicator', props.className)}>
+    <AriaListBoxLoadMoreItem {...props} className={clsx('react-aria-ListBoxLoadingIndicator gv-base-list-box-loading-indicator', props.className)}>
       <ProgressCircle isIndeterminate aria-label="Loading more..." />
     </AriaListBoxLoadMoreItem>
   );

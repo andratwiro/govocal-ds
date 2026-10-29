@@ -103,9 +103,9 @@ export function OfficialUpdateForm({onPublish, id, onDraftChange, submitLabel = 
       {/* The system TextArea always draws a visible label; this field is named by its place, so it is built from
           the same parts (and the system field's look) with an aria-label. */}
       <AriaTextField aria-label="Official update" value={draft.text} onChange={text => change({...draft, text})}
-        autoFocus={autoFocus} className="react-aria-TextField">
+        autoFocus={autoFocus} className="react-aria-TextField gv-base-text-field">
         <AriaTextArea rows={3} placeholder="Add an official update" onKeyDown={onKeyDown}
-          className="react-aria-TextArea inset gv-official-update__words" />
+          className="react-aria-TextArea gv-base-text-area inset gv-official-update__words" />
       </AriaTextField>
       <TextField aria-label="Name shown with the update" placeholder="Choose how people see your name"
         value={draft.name} onChange={name => change({...draft, name})} />

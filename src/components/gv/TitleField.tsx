@@ -28,7 +28,7 @@ export function TitleField({placeholder = 'Add a title', isRequired, errorMessag
   return (
     <div className={clsx('gv-title-field-wrap', className)} style={style} data-required={isRequired || undefined}>
       <AriaTextField {...props} isRequired={isRequired} className="gv-title-field">
-        <Input placeholder={placeholder} />
+        <Input className="react-aria-Input gv-base-input" placeholder={placeholder} />
         <FieldError>{errorMessage}</FieldError>
       </AriaTextField>
       {isRequired && (

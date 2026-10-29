@@ -21,7 +21,7 @@ import {keepClass} from './className';
 import clsx from 'clsx';
 
 export function Tree<T>(props: TreeProps<T>) {
-  return <AriaTree {...props} className={keepClass(props.className)} />;
+  return <AriaTree {...props} className={keepClass(props.className, 'gv-base-tree')} />;
 }
 
 export function TreeItemContent(
@@ -32,14 +32,14 @@ export function TreeItemContent(
       {({selectionBehavior, selectionMode, allowsDragging}: TreeItemContentRenderProps) => (
         <>
           {allowsDragging && (
-            <Button slot="drag">
+            <Button className="react-aria-Button gv-base-button" slot="drag">
               <GripVertical size={16} />
             </Button>
           )}
           {selectionBehavior === 'toggle' && selectionMode !== 'none' && (
             <Checkbox slot="selection" />
           )}
-          <Button slot="chevron">
+          <Button className="react-aria-Button gv-base-button" slot="chevron">
             <ChevronRight />
           </Button>
           {props.children}
@@ -56,7 +56,7 @@ export interface TreeItemProps extends Partial<AriaTreeItemProps> {
 export function TreeItem(props: TreeItemProps) {
   let textValue = typeof props.title === 'string' ? props.title : '';
   return (
-    <AriaTreeItem textValue={textValue} {...props} className={keepClass(props.className)}>
+    <AriaTreeItem textValue={textValue} {...props} className={keepClass(props.className, 'gv-base-tree-item')}>
       {props.title != null ? (
         <>
           <TreeItemContent>{props.title}</TreeItemContent>
@@ -78,10 +78,10 @@ export function TreeLoadMoreItem(props: TreeLoadMoreItemProps) {
 }
 
 export function TreeSection(props: React.ComponentProps<typeof AriaTreeSection>) {
-  return <AriaTreeSection {...props} className={clsx('react-aria-TreeSection', props.className)} />;
+  return <AriaTreeSection {...props} className={clsx('react-aria-TreeSection gv-base-tree-section', props.className)} />;
 }
 
 export function TreeHeader(props: React.ComponentProps<typeof AriaTreeHeader>) {
-  return <AriaTreeHeader {...props} className={clsx('react-aria-TreeHeader', props.className)} />;
+  return <AriaTreeHeader {...props} className={clsx('react-aria-TreeHeader gv-base-tree-header', props.className)} />;
 }
 export type {TreeProps};

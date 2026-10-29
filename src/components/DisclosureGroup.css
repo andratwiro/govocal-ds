@@ -1,11 +1,11 @@
 @import './theme.css';
 
 /* The prototype's accordion list (.pj-acc): a 1px divider above the first item and under every item; square headers. */
-.react-aria-DisclosureGroup {
+.gv-base-disclosure-group {
   width: 200px;
   border-top: 1px solid var(--gv-border-default);
 
-  > .react-aria-Disclosure {
+  > .gv-base-disclosure {
     width: auto;
     border-bottom: 1px solid var(--gv-border-default);
 

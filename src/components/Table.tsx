@@ -31,7 +31,7 @@ import {keepClass} from './className';
 import clsx from 'clsx';
 
 export function Table(props: TableProps) {
-  return <AriaTable {...props} className={keepClass(props.className)} />;
+  return <AriaTable {...props} className={keepClass(props.className, 'gv-base-table')} />;
 }
 
 interface ColumnProps extends AriaColumnProps {
@@ -40,7 +40,7 @@ interface ColumnProps extends AriaColumnProps {
 
 export function Column(props: Omit<ColumnProps, 'children'> & {children?: React.ReactNode}) {
   return (
-    <AriaColumn {...props} className={keepClass(props.className, 'button-base')}>
+    <AriaColumn {...props} className={keepClass(props.className, 'gv-base-column', 'button-base')}>
       {({allowsSorting, sortDirection}) => (
         <div className="column-header">
           <Group role="presentation" tabIndex={-1} className="column-name">
@@ -51,7 +51,7 @@ export function Column(props: Omit<ColumnProps, 'children'> & {children?: React.
               {sortDirection === 'ascending' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </span>
           )}
-          {props.allowsResizing && <ColumnResizer />}
+          {props.allowsResizing && <ColumnResizer className="react-aria-ColumnResizer gv-base-column-resizer" />}
         </div>
       )}
     </AriaColumn>
@@ -62,14 +62,14 @@ export function TableHeader<T>({columns, children, ...otherProps}: TableHeaderPr
   let {selectionBehavior, selectionMode, allowsDragging} = useTableOptions();
 
   return (
-    <AriaTableHeader {...otherProps} className={keepClass(otherProps.className)}>
+    <AriaTableHeader {...otherProps} className={keepClass(otherProps.className, 'gv-base-table-header')}>
       {/* Add extra columns for drag and drop and selection. */}
       {allowsDragging && (
         <AriaColumn
           width={20}
           minWidth={20}
           style={{width: 20}}
-          className="react-aria-Column button-base"
+          className="react-aria-Column gv-base-column button-base"
         />
       )}
       {selectionBehavior === 'toggle' && (
@@ -81,7 +81,7 @@ export function TableHeader<T>({columns, children, ...otherProps}: TableHeaderPr
           focusMode="child"
           allowsArrowNavigation
           ///- end highlight -///
-          className="react-aria-Column button-base">
+          className="react-aria-Column gv-base-column button-base">
           {selectionMode === 'multiple' && <Checkbox slot="selection" />}
         </AriaColumn>
       )}
@@ -94,7 +94,7 @@ export function Row<T>({id, columns, children, ...otherProps}: RowProps<T>) {
   let {selectionBehavior, allowsDragging} = useTableOptions();
 
   return (
-    <AriaRow id={id} {...otherProps} className={keepClass(otherProps.className)}>
+    <AriaRow id={id} {...otherProps} className={keepClass(otherProps.className, 'gv-base-row')}>
       {allowsDragging && (
         <Cell>
           <Button slot="drag" className="drag-button">
@@ -118,20 +118,20 @@ export function Row<T>({id, columns, children, ...otherProps}: RowProps<T>) {
 }
 
 export function TableBody<T>(props: TableBodyProps<T>) {
-  return <AriaTableBody {...props} className={keepClass(props.className)} />;
+  return <AriaTableBody {...props} className={keepClass(props.className, 'gv-base-table-body')} />;
 }
 
 export function TableFooter<T>(props: TableFooterProps<T>) {
-  return <AriaTableFooter {...props} className={clsx('react-aria-TableFooter', props.className)} />;
+  return <AriaTableFooter {...props} className={clsx('react-aria-TableFooter gv-base-table-footer', props.className)} />;
 }
 
 export function Cell(props: CellProps) {
   return (
-    <AriaCell {...props} className={keepClass(props.className)}>
+    <AriaCell {...props} className={keepClass(props.className, 'gv-base-cell')}>
       {composeRenderProps(props.children, (children, {hasChildItems, isTreeColumn}) => (
         <>
           {isTreeColumn && hasChildItems && (
-            <Button slot="chevron">
+            <Button className="react-aria-Button gv-base-button" slot="chevron">
               <ChevronRight />
             </Button>
           )}
@@ -144,7 +144,7 @@ export function Cell(props: CellProps) {
 
 export function TableLoadMoreItem(props: TableLoadMoreItemProps) {
   return (
-    <AriaTableLoadMoreItem {...props} className={clsx('react-aria-TableLoadingIndicator', props.className)}>
+    <AriaTableLoadMoreItem {...props} className={clsx('react-aria-TableLoadingIndicator gv-base-table-loading-indicator', props.className)}>
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <ProgressCircle isIndeterminate aria-label="Loading more..." />
       </div>

@@ -23,7 +23,7 @@ export interface CalendarProps<T extends DateValue> extends AriaCalendarProps<T>
 export function Calendar<T extends DateValue>({errorMessage, ...props}: CalendarProps<T>) {
   let months = props.visibleDuration?.months || 1;
   return (
-    <AriaCalendar {...props} className={keepClass(props.className)}>
+    <AriaCalendar {...props} className={keepClass(props.className, 'gv-base-calendar')}>
       <div className="months">
         {Array.from({length: months}, (_, i) => (
           <div key={i} className="month">
@@ -33,7 +33,7 @@ export function Calendar<T extends DateValue>({errorMessage, ...props}: Calendar
                   <ChevronLeft />
                 </Button>
               )}
-              <CalendarHeading offset={{months: i}} />
+              <CalendarHeading className="react-aria-CalendarHeading gv-base-calendar-heading" offset={{months: i}} />
               {i === months - 1 && (
                 <Button slot="next" variant="quiet">
                   <ChevronRight />
@@ -53,12 +53,12 @@ export function CalendarCell(props: CalendarCellProps) {
   return (
     <AriaCalendarCell
       {...props}
-      className={keepClass(props.className, 'button-base')}
+      className={keepClass(props.className, 'gv-base-calendar-cell', 'button-base')}
       data-variant="quiet"
     />
   );
 }
 
 export function CalendarGrid(props: CalendarGridProps) {
-  return <AriaCalendarGrid {...props} className={clsx('react-aria-CalendarGrid', props.className)} />;
+  return <AriaCalendarGrid {...props} className={clsx('react-aria-CalendarGrid gv-base-calendar-grid', props.className)} />;
 }

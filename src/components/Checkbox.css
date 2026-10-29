@@ -1,13 +1,13 @@
 @import './theme.css';
 @import './utilities.css';
 
-.react-aria-CheckboxField {
+.gv-base-checkbox-field {
   display: flex;
   flex-direction: column;
   gap: var(--gv-space-4);
 
   [slot='description'],
-  .react-aria-FieldError {
+  .gv-base-field-error {
     margin-inline-start: calc(var(--gv-space-16) + var(--gv-space-8));
   }
 
@@ -18,7 +18,7 @@
 
 /* One checkbox for the system: Figma's Checkbox (node 5:317, the gv Checkbox): a 15 box, radius 4, a 1px control
    border on white; checked or mixed = the checked brand blue with a white mark; UI label 8 to the right. */
-.react-aria-CheckboxButton {
+.gv-base-checkbox-button {
   --checkmark-color: var(--gv-text-inverse);
 
   display: flex;

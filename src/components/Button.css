@@ -7,7 +7,7 @@
  * The prototype adds what Figma leaves out: hover (secondary lifts to a near-white fill with the
  * darker border, primary brightens), disabled at .45, a .75 menu chevron, no press scale.
  */
-.react-aria-Button {
+.gv-base-button {
   appearance: none;
   font: var(--gv-type-ui-strong);
   margin: 0;

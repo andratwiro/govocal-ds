@@ -9,14 +9,14 @@ import {TileGrid} from '../src/components/gv/TileGrid.tsx';
 describe('Text', () => {
   it('a kind and a colour paint it; strong only where the kind has a strong weight', () => {
     const html = renderToStaticMarkup(h(Text, {kind: 'small', isStrong: true, color: 'meta'}, 'Posted'));
-    expect(html).toBe('<span class="react-aria-Text gv-text" data-kind="small" data-strong="true" data-color="meta">Posted</span>');
+    expect(html).toBe('<span class="react-aria-Text gv-base-text gv-text" data-kind="small" data-strong="true" data-color="meta">Posted</span>');
   });
   it('without a kind or a colour it is a slot\'s plain text, as React Aria draws it', () => {
-    expect(renderToStaticMarkup(h(Text, {slot: 'description'}, 'Words'))).toBe('<span class="react-aria-Text" slot="description">Words</span>');
+    expect(renderToStaticMarkup(h(Text, {slot: 'description'}, 'Words'))).toBe('<span class="react-aria-Text gv-base-text" slot="description">Words</span>');
   });
   it('elementType picks the element; className places it', () => {
     const html = renderToStaticMarkup(h(Text, {elementType: 'h2', kind: 'body', className: 'page-title'}, 'Where'));
-    expect(html).toMatch(/^<h2 class="react-aria-Text gv-text page-title" data-kind="body">/);
+    expect(html).toMatch(/^<h2 class="react-aria-Text gv-base-text gv-text page-title" data-kind="body">/);
   });
 });
 

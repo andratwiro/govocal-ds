@@ -30,7 +30,7 @@ export function CheckboxGroup({
   ...props
 }: CheckboxGroupProps) {
   return (
-    <AriaCheckboxGroup {...props} className={keepClass(props.className)} data-orientation={orientation}>
+    <AriaCheckboxGroup {...props} className={keepClass(props.className, 'gv-base-checkbox-group')} data-orientation={orientation}>
       {label && <Label>{label}</Label>}
       <div className="checkbox-items">{children}</div>
       {description && <Description>{description}</Description>}

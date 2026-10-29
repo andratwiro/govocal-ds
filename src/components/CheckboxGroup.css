@@ -1,7 +1,7 @@
 @import './theme.css';
 @import './Form.css';
 
-.react-aria-CheckboxGroup {
+.gv-base-checkbox-group {
   display: flex;
   flex-direction: column;
   gap: var(--gv-space-4);

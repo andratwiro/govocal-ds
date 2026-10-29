@@ -1,7 +1,7 @@
 @import './theme.css';
 @import './utilities.css';
 
-.react-aria-TextField {
+.gv-base-text-field {
   display: flex;
   flex-direction: column;
 }
@@ -9,8 +9,8 @@
 /* The field: Figma's Title field and the prototype's .pj-input / .pjc2-in: white, a 1px control border (the
    `inset` utility), radius 8, UI 13/20 primary, padding 12 at the sides; 36 tall, the height of the default Button
    and the Select trigger, so fields and buttons line up in a row. Focus = the 2px selected ring inside. */
-.react-aria-Input,
-.react-aria-TextArea {
+.gv-base-input,
+.gv-base-text-area {
   width: 100%;
   min-height: var(--gv-size-control-36);
   padding: 0 var(--gv-space-12);
@@ -41,7 +41,7 @@
   }
 }
 
-.react-aria-TextArea {
+.gv-base-text-area {
   min-height: 64px;
   padding: var(--gv-space-8) var(--gv-space-12);
   resize: vertical;
@@ -60,7 +60,7 @@
     outline-offset: -1px;
   }
 
-  .react-aria-Input {
+  .gv-base-input {
     flex: 1;
     min-width: 0;
 

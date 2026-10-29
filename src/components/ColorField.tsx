@@ -24,9 +24,9 @@ export function ColorField({
   ...props
 }: ColorFieldProps) {
   return (
-    <AriaColorField {...props} className={keepClass(props.className)}>
+    <AriaColorField {...props} className={keepClass(props.className, 'gv-base-color-field')}>
       {label && <Label>{label}</Label>}
-      <Input className="react-aria-Input inset" placeholder={placeholder} />
+      <Input className="react-aria-Input gv-base-input inset" placeholder={placeholder} />
       {description && <Description>{description}</Description>}
       <FieldError>{errorMessage}</FieldError>
     </AriaColorField>

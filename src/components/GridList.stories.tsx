@@ -22,8 +22,8 @@ export const Example: Story = args => (
         width={600}
         height={400}
       />
-      <Text>Desert Sunset</Text>
-      <Text slot="description">PNG • 2/3/2024</Text>
+      <Text className="react-aria-Text gv-base-text">Desert Sunset</Text>
+      <Text className="react-aria-Text gv-base-text" slot="description">PNG • 2/3/2024</Text>
     </GridListItem>
     <GridListItem textValue="Hiking Trail">
       <img
@@ -31,8 +31,8 @@ export const Example: Story = args => (
         width={600}
         height={900}
       />
-      <Text>Hiking Trail</Text>
-      <Text slot="description">JPEG • 1/10/2022</Text>
+      <Text className="react-aria-Text gv-base-text">Hiking Trail</Text>
+      <Text className="react-aria-Text gv-base-text" slot="description">JPEG • 1/10/2022</Text>
     </GridListItem>
     <GridListItem textValue="Lion">
       <img
@@ -40,8 +40,8 @@ export const Example: Story = args => (
         width={600}
         height={899}
       />
-      <Text>Lion</Text>
-      <Text slot="description">JPEG • 8/28/2021</Text>
+      <Text className="react-aria-Text gv-base-text">Lion</Text>
+      <Text className="react-aria-Text gv-base-text" slot="description">JPEG • 8/28/2021</Text>
     </GridListItem>
     <GridListItem textValue="Mountain Sunrise">
       <img
@@ -49,8 +49,8 @@ export const Example: Story = args => (
         width={600}
         height={900}
       />
-      <Text>Mountain Sunrise</Text>
-      <Text slot="description">PNG • 3/15/2015</Text>
+      <Text className="react-aria-Text gv-base-text">Mountain Sunrise</Text>
+      <Text className="react-aria-Text gv-base-text" slot="description">PNG • 3/15/2015</Text>
     </GridListItem>
     <GridListItem textValue="Giraffe tongue">
       <img
@@ -58,8 +58,8 @@ export const Example: Story = args => (
         width={600}
         height={900}
       />
-      <Text>Giraffe tongue</Text>
-      <Text slot="description">PNG • 11/27/2019</Text>
+      <Text className="react-aria-Text gv-base-text">Giraffe tongue</Text>
+      <Text className="react-aria-Text gv-base-text" slot="description">PNG • 11/27/2019</Text>
     </GridListItem>
     <GridListItem textValue="Golden Hour">
       <img
@@ -67,8 +67,8 @@ export const Example: Story = args => (
         width={600}
         height={402}
       />
-      <Text>Golden Hour</Text>
-      <Text slot="description">WEBP • 7/24/2024</Text>
+      <Text className="react-aria-Text gv-base-text">Golden Hour</Text>
+      <Text className="react-aria-Text gv-base-text" slot="description">WEBP • 7/24/2024</Text>
     </GridListItem>
     <GridListItem textValue="Architecture">
       <img
@@ -76,8 +76,8 @@ export const Example: Story = args => (
         width={600}
         height={900}
       />
-      <Text>Architecture</Text>
-      <Text slot="description">PNG • 12/24/2016</Text>
+      <Text className="react-aria-Text gv-base-text">Architecture</Text>
+      <Text className="react-aria-Text gv-base-text" slot="description">PNG • 12/24/2016</Text>
     </GridListItem>
     <GridListItem textValue="Peeking leopard">
       <img
@@ -85,8 +85,8 @@ export const Example: Story = args => (
         width={600}
         height={400}
       />
-      <Text>Peeking leopard</Text>
-      <Text slot="description">JPEG • 3/2/2016</Text>
+      <Text className="react-aria-Text gv-base-text">Peeking leopard</Text>
+      <Text className="react-aria-Text gv-base-text" slot="description">JPEG • 3/2/2016</Text>
     </GridListItem>
     <GridListItem textValue="Roofs">
       <img
@@ -94,8 +94,8 @@ export const Example: Story = args => (
         width={600}
         height={900}
       />
-      <Text>Roofs</Text>
-      <Text slot="description">JPEG • 4/24/2025</Text>
+      <Text className="react-aria-Text gv-base-text">Roofs</Text>
+      <Text className="react-aria-Text gv-base-text" slot="description">JPEG • 4/24/2025</Text>
     </GridListItem>
     <GridListItem textValue="Half Dome Deer">
       <img
@@ -103,8 +103,8 @@ export const Example: Story = args => (
         width={600}
         height={990}
       />
-      <Text>Half Dome Deer</Text>
-      <Text slot="description">DNG • 8/28/2018</Text>
+      <Text className="react-aria-Text gv-base-text">Half Dome Deer</Text>
+      <Text className="react-aria-Text gv-base-text" slot="description">DNG • 8/28/2018</Text>
     </GridListItem>
   </GridList>
 );
@@ -117,16 +117,16 @@ Example.args = {
 
 export const Sections: Story = args => (
   <GridList {...args} style={{width: 800, maxWidth: 'calc(100vw - 80px)'}} aria-label="Photos">
-    <GridListSection>
-      <GridListHeader>Fruit</GridListHeader>
+    <GridListSection className="react-aria-GridListSection gv-base-grid-list-section">
+      <GridListHeader className="react-aria-GridListHeader gv-base-grid-list-header">Fruit</GridListHeader>
       <GridListItem textValue="Apple">
         <img
           src="https://images.unsplash.com/photo-1630563451961-ac2ff27616ab?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           width={600}
           height={400}
         />
-        <Text>Apple</Text>
-        <Text slot="description">PNG • 9/2/2021</Text>
+        <Text className="react-aria-Text gv-base-text">Apple</Text>
+        <Text className="react-aria-Text gv-base-text" slot="description">PNG • 9/2/2021</Text>
       </GridListItem>
       <GridListItem textValue="Peach">
         <img
@@ -134,8 +134,8 @@ export const Sections: Story = args => (
           width={600}
           height={900}
         />
-        <Text>Peach</Text>
-        <Text slot="description">JPEG • 1/16/2022</Text>
+        <Text className="react-aria-Text gv-base-text">Peach</Text>
+        <Text className="react-aria-Text gv-base-text" slot="description">JPEG • 1/16/2022</Text>
       </GridListItem>
       <GridListItem textValue="Blueberry">
         <img
@@ -143,20 +143,20 @@ export const Sections: Story = args => (
           width={600}
           height={900}
         />
-        <Text>Blueberry</Text>
-        <Text slot="description">JPEG • 11/30/2020</Text>
+        <Text className="react-aria-Text gv-base-text">Blueberry</Text>
+        <Text className="react-aria-Text gv-base-text" slot="description">JPEG • 11/30/2020</Text>
       </GridListItem>
     </GridListSection>
-    <GridListSection>
-      <GridListHeader>Vegetables</GridListHeader>
+    <GridListSection className="react-aria-GridListSection gv-base-grid-list-section">
+      <GridListHeader className="react-aria-GridListHeader gv-base-grid-list-header">Vegetables</GridListHeader>
       <GridListItem textValue="Broccoli">
         <img
           src="https://images.unsplash.com/photo-1685504445355-0e7bdf90d415?q=80&w=928&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           width={600}
           height={900}
         />
-        <Text>Broccoli</Text>
-        <Text slot="description">PNG • 5/30/2023</Text>
+        <Text className="react-aria-Text gv-base-text">Broccoli</Text>
+        <Text className="react-aria-Text gv-base-text" slot="description">PNG • 5/30/2023</Text>
       </GridListItem>
       <GridListItem textValue="Brussels Sprouts">
         <img
@@ -164,8 +164,8 @@ export const Sections: Story = args => (
           width={600}
           height={900}
         />
-        <Text>Brussels Sprouts</Text>
-        <Text slot="description">PNG • 7/3/2021</Text>
+        <Text className="react-aria-Text gv-base-text">Brussels Sprouts</Text>
+        <Text className="react-aria-Text gv-base-text" slot="description">PNG • 7/3/2021</Text>
       </GridListItem>
       <GridListItem textValue="Peas">
         <img
@@ -173,8 +173,8 @@ export const Sections: Story = args => (
           width={600}
           height={900}
         />
-        <Text>Peas</Text>
-        <Text slot="description">PNG • 4/20/2020</Text>
+        <Text className="react-aria-Text gv-base-text">Peas</Text>
+        <Text className="react-aria-Text gv-base-text" slot="description">PNG • 4/20/2020</Text>
       </GridListItem>
     </GridListSection>
   </GridList>

@@ -16,9 +16,9 @@ type Story = StoryObj<typeof ActionRow>;
 
 const shareMenu = (
   <>
-    <MenuItem id="messaging" textValue="Go to Messaging"><MessageSquare aria-hidden /><Text slot="label">Go to Messaging</Text></MenuItem>
-    <MenuItem id="text" textValue="Add a text block to the page"><FileText aria-hidden /><Text slot="label">Add a text block to the page</Text></MenuItem>
-    <MenuItem id="phase" textValue="Create an information phase"><Info aria-hidden /><Text slot="label">Create an information phase</Text></MenuItem>
+    <MenuItem id="messaging" textValue="Go to Messaging"><MessageSquare aria-hidden /><Text className="react-aria-Text gv-base-text" slot="label">Go to Messaging</Text></MenuItem>
+    <MenuItem id="text" textValue="Add a text block to the page"><FileText aria-hidden /><Text className="react-aria-Text gv-base-text" slot="label">Add a text block to the page</Text></MenuItem>
+    <MenuItem id="phase" textValue="Create an information phase"><Info aria-hidden /><Text className="react-aria-Text gv-base-text" slot="label">Create an information phase</Text></MenuItem>
   </>
 );
 

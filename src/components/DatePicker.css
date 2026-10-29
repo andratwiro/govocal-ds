@@ -3,11 +3,11 @@
 
 /* One field (the Group carries TextField's chrome), the date segments, and a calendar button at the end, as the
    prototype's .pj-dateinput draws its calendar glyph inside the box. */
-.react-aria-DatePicker {
+.gv-base-date-picker {
   color: var(--gv-text-primary);
   max-width: 100%;
 
-  .react-aria-Group {
+  .gv-base-group {
     display: flex;
     align-items: center;
     width: fit-content;
@@ -30,7 +30,7 @@
     }
   }
 
-  .react-aria-DateInput {
+  .gv-base-date-input {
     flex: 1;
     width: unset;
     min-width: 0;

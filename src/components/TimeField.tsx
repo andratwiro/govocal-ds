@@ -23,7 +23,7 @@ export function TimeField<T extends TimeValue>({
   ...props
 }: TimeFieldProps<T>) {
   return (
-    <AriaTimeField {...props} className={keepClass(props.className)}>
+    <AriaTimeField {...props} className={keepClass(props.className, 'gv-base-time-field')}>
       <Label>{label}</Label>
       <DateInput>{segment => <DateSegment segment={segment} />}</DateInput>
       {description && <Description>{description}</Description>}

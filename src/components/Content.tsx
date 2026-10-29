@@ -11,17 +11,17 @@ export type KeyboardProps = ComponentProps<typeof AriaKeyboard>;
 
 /** A heading a React Aria part reads by its slot (a Dialog's `slot="title"`). */
 export function Heading(props: HeadingProps) {
-  return <AriaHeading {...props} className={clsx('react-aria-Heading', props.className)} />;
+  return <AriaHeading {...props} className={clsx('react-aria-Heading gv-base-heading', props.className)} />;
 }
 
 /** Text a React Aria part reads by its slot (an item's `slot="label"` and `slot="description"`). */
 export function Text(props: TextProps) {
-  return <AriaText {...props} className={clsx('react-aria-Text', props.className)} />;
+  return <AriaText {...props} className={clsx('react-aria-Text gv-base-text', props.className)} />;
 }
 
 /** A section's title inside a Menu or a ListBox section. */
 export function Header(props: HeaderProps) {
-  return <AriaHeader {...props} className={clsx('react-aria-Header', props.className)} />;
+  return <AriaHeader {...props} className={clsx('react-aria-Header gv-base-header', props.className)} />;
 }
 
 /** A keyboard shortcut at the end of a menu item. */

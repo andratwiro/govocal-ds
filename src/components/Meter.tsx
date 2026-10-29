@@ -10,7 +10,7 @@ export interface MeterProps extends AriaMeterProps {
 
 export function Meter({label, ...props}: MeterProps) {
   return (
-    <AriaMeter {...props} className={keepClass(props.className)}>
+    <AriaMeter {...props} className={keepClass(props.className, 'gv-base-meter')}>
       {({percentage, valueText}) => (
         <>
           <Label>{label}</Label>

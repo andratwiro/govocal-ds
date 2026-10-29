@@ -9,6 +9,6 @@ import clsx from 'clsx';
  * page, the line is a Divider. className and style place it; they never paint it.
  */
 export function Separator(props: SeparatorProps) {
-  return <RACSeparator {...props} className={clsx('react-aria-Separator', props.className)} />;
+  return <RACSeparator {...props} className={clsx('react-aria-Separator gv-base-separator', props.className)} />;
 }
 export type {SeparatorProps};

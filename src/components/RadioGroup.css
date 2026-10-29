@@ -2,7 +2,7 @@
 @import './utilities.css';
 @import './Form.css';
 
-.react-aria-RadioGroup {
+.gv-base-radio-group {
   display: flex;
   flex-direction: column;
   max-width: 100%;
@@ -27,7 +27,7 @@
   }
 }
 
-.react-aria-RadioField {
+.gv-base-radio-field {
   display: flex;
   flex-direction: column;
 
@@ -48,7 +48,7 @@
 /* The prototype's radio (augur-design.html .pjc2-r, the New project modal measured from Figma 81:354): a 16 circle,
    1px radio-grey ring on white; selected = the ring and an 8 dot in the selected brand blue. The label is UI, slate
    until it is the chosen one, then primary. */
-.react-aria-RadioButton {
+.gv-base-radio-button {
   display: flex;
   /* This is needed so the HiddenInput is positioned correctly */
   position: relative;

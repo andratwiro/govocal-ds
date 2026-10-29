@@ -20,7 +20,7 @@ export function ToggleButton(props: ToggleButtonProps) {
   return (
     <RACToggleButton
       {...props}
-      className={keepClass(props.className, 'button-base')}
+      className={keepClass(props.className, 'gv-base-toggle-button', 'button-base')}
       data-variant={props.variant || 'primary'}>
       {composeRenderProps(props.children, children => (
         <span>{children}</span>

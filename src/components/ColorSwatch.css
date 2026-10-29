@@ -1,6 +1,6 @@
 @import './theme.css';
 
-.react-aria-ColorSwatch {
+.gv-base-color-swatch {
   width: var(--gv-space-32);
   height: var(--gv-space-32);
   border-radius: var(--gv-radius-full);

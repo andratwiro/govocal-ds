@@ -81,7 +81,7 @@ export function Button(props: ButtonProps) {
   return (
     <RACButton
       {...rest}
-      className={keepClass(className)}
+      className={keepClass(className, 'gv-base-button')}
       data-full-width={isFullWidth || undefined}
       data-variant={variant || 'primary'}
       data-size={size || 36}

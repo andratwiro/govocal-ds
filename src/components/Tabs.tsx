@@ -38,12 +38,12 @@ import './Tabs.css';
  * A `className` (or `style`) places the part; it is added to React Aria's own class, never instead of it.
  */
 export function Tabs({className, ...props}: TabsProps) {
-  return <RACTabs {...props} className={composeRenderProps(className, c => clsx('react-aria-Tabs', c))} />;
+  return <RACTabs {...props} className={composeRenderProps(className, c => clsx('react-aria-Tabs gv-base-tabs', c))} />;
 }
 
 /** The row (or, `orientation="vertical"` on Tabs, the column) of `Tab`s. Name it with `aria-label`. */
 export function TabList<T>({className, ...props}: TabListProps<T>) {
-  return <RACTabList {...props} className={composeRenderProps(className, c => clsx('react-aria-TabList', c))} />;
+  return <RACTabList {...props} className={composeRenderProps(className, c => clsx('react-aria-TabList gv-base-tab-list', c))} />;
 }
 
 /** A status dot's meaning (a field language: `success` complete, `danger` missing, `warning` incomplete). */
@@ -70,14 +70,14 @@ export interface TabProps extends RACTabProps {
 export function Tab({count, status, statusLabel, className, ...props}: TabProps) {
   const {locale} = useLocale();
   return (
-    <RACTab {...props} className={composeRenderProps(className, c => clsx('react-aria-Tab', c))}>
+    <RACTab {...props} className={composeRenderProps(className, c => clsx('react-aria-Tab gv-base-tab', c))}>
       {composeRenderProps(props.children, children => (
         <>
           {status && <span className="gv-tab__status" data-status={status} aria-hidden />}
           {children}
           {count != null && <span className="gv-tab__count"> ({new Intl.NumberFormat(locale).format(count)})</span>}
           {status && <VisuallyHidden>, {statusLabel ?? STATUS_WORDS[status]}</VisuallyHidden>}
-          <SelectionIndicator />
+          <SelectionIndicator className="react-aria-SelectionIndicator gv-base-selection-indicator" />
         </>
       ))}
     </RACTab>
@@ -92,7 +92,7 @@ const warned = new Set<string>();
 export function TabPanels<T>({className, ...props}: TabPanelsProps<T>) {
   return (
     <InTabPanels.Provider value>
-      <RACTabPanels {...props} className={clsx('react-aria-TabPanels', className)} />
+      <RACTabPanels {...props} className={clsx('react-aria-TabPanels gv-base-tab-panels', className)} />
     </InTabPanels.Provider>
   );
 }
@@ -105,7 +105,7 @@ export function TabPanel({className, ...props}: TabPanelProps) {
     console.warn(`TabPanel "${String(props.id)}" sits outside TabPanels. Wrap the panels in <TabPanels>: a panel fading ` +
       'out is laid against it, and floats over the page without it.');
   }
-  return <RACTabPanel {...props} className={composeRenderProps(className, c => clsx('react-aria-TabPanel', c))} />;
+  return <RACTabPanel {...props} className={composeRenderProps(className, c => clsx('react-aria-TabPanel gv-base-tab-panel', c))} />;
 }
 
 /* ───────────── Grouped tabs: vertical tabs under group headings ─────────────
@@ -160,7 +160,7 @@ export function GroupedTabs({selectedKey, defaultSelectedKey, onSelectionChange,
   );
   return (
     <GroupedTabsContext.Provider value={value}>
-      <div className={['react-aria-Tabs', 'gv-grouped-tabs', className].filter(Boolean).join(' ')} style={style} data-orientation="vertical">
+      <div className={['react-aria-Tabs gv-base-tabs', 'gv-grouped-tabs', className].filter(Boolean).join(' ')} style={style} data-orientation="vertical">
         {children}
       </div>
     </GroupedTabsContext.Provider>
@@ -183,7 +183,7 @@ export function GroupedTabList({children, className, style, ...aria}: GroupedTab
   return (
     <ListBox
       {...aria}
-      className={['react-aria-TabList', 'gv-grouped-tabs__list', className].filter(Boolean).join(' ')}
+      className={['react-aria-TabList gv-base-tab-list', 'gv-grouped-tabs__list', className].filter(Boolean).join(' ')}
       style={style}
       data-orientation="vertical"
       selectionMode="single"
@@ -234,7 +234,7 @@ export function GroupedTab({id, children, textValue, isDisabled}: GroupedTabProp
       id={id}
       textValue={textValue ?? (typeof children === 'string' ? children : undefined)}
       isDisabled={isDisabled}
-      className="react-aria-Tab gv-grouped-tab">
+      className="react-aria-Tab gv-base-tab gv-grouped-tab">
       <span id={labelId(id)} className="gv-grouped-tab__label">{children}</span>
     </ListBoxItem>
   );

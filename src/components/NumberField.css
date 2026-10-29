@@ -6,19 +6,19 @@
 .gv-number-field-wrap[data-label-position='side'] {
   display: flex;
 
-  .react-aria-NumberField {
+  .gv-base-number-field {
     display: flex;
     align-items: center;
     gap: var(--gv-space-8);
   }
 
-  .react-aria-Label {
+  .gv-base-label {
     margin-bottom: 0;
     flex-shrink: 0;
   }
 }
 
-.react-aria-NumberField {
+.gv-base-number-field {
   color: var(--gv-text-primary);
 
   /* The field + its prefix (e.g. "€", budget / voting min-max): one relative box so the prefix can
@@ -39,11 +39,11 @@
     pointer-events: none;
   }
 
-  .react-aria-NumberField-field[data-has-prefix] .react-aria-Input {
+  .react-aria-NumberField-field[data-has-prefix] .gv-base-input {
     padding-inline-start: calc(var(--gv-space-12) + var(--gv-space-16));
   }
 
-  .react-aria-Group {
+  .gv-base-group {
     display: flex;
     width: fit-content;
     border-radius: var(--gv-radius-8);
@@ -70,7 +70,7 @@
     }
   }
 
-  .react-aria-Button {
+  .gv-base-button {
     padding: 0;
     display: inline-flex;
     align-items: center;
@@ -88,7 +88,7 @@
     }
   }
 
-  .react-aria-Input {
+  .gv-base-input {
     z-index: 1;
     outline: none;
     width: 5.25rem;

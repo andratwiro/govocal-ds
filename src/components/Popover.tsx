@@ -19,11 +19,11 @@ export interface PopoverProps extends Omit<AriaPopoverProps, 'children'> {
 
 export function Popover({children, showArrow = true, ...props}: PopoverProps) {
   return (
-    <AriaPopover {...props} className={keepClass(props.className)}>
+    <AriaPopover {...props} className={keepClass(props.className, 'gv-base-popover')}>
       {({trigger}) => (
         <>
           {showArrow && trigger !== 'MenuTrigger' && trigger !== 'SubmenuTrigger' && (
-            <OverlayArrow>
+            <OverlayArrow className="react-aria-OverlayArrow gv-base-overlay-arrow">
               <svg width={12} height={12} viewBox="0 0 12 12">
                 <path d="M0 0 L6 6 L12 0" />
               </svg>

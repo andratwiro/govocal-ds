@@ -4,7 +4,7 @@
 /* The prototype's list table (govocal-bo.css .gv-bo-table, Figma's List header / List row): a card-grey 1px frame,
    radius 8; the header Small strong in the secondary grey over a 1px card-grey line, no column dividers; rows UI
    primary, 12 tall padding, a hairline between them, the hover surface on hover, a 5 % brand tint when chosen. */
-.react-aria-Table {
+.gv-base-table {
   border: 1px solid var(--gv-border-default);
   border-radius: var(--gv-radius-8);
   background: var(--gv-surface-panel);
@@ -30,16 +30,16 @@
     background: var(--gv-surface-info);
   }
 
-  &:has(.react-aria-TableBody[data-empty]) {
+  &:has(.gv-base-table-body[data-empty]) {
     height: 100%;
     min-height: 100px;
   }
 
-  .react-aria-TableHeader {
+  .gv-base-table-header {
     color: var(--gv-text-secondary);
   }
 
-  .react-aria-TableBody {
+  .gv-base-table-body {
     padding: 0;
 
     &[data-empty] {
@@ -49,7 +49,7 @@
   }
 }
 
-.react-aria-Row {
+.gv-base-row {
   outline: none;
   cursor: default;
   color: var(--gv-text-primary);
@@ -126,8 +126,8 @@
   }
 }
 
-.react-aria-Cell,
-.react-aria-Column {
+.gv-base-cell,
+.gv-base-column {
   padding: var(--gv-space-12);
   text-align: left;
   outline: none;
@@ -140,11 +140,11 @@
     height: 100%;
   }
 
-  &:is(.react-aria-Row:last-child > :first-child) {
+  &:is(.gv-base-row:last-child > :first-child) {
     border-end-start-radius: var(--gv-radius-8);
   }
 
-  &:is(.react-aria-Row:last-child > :last-child) {
+  &:is(.gv-base-row:last-child > :last-child) {
     border-end-end-radius: var(--gv-radius-8);
   }
 
@@ -154,7 +154,7 @@
   }
 }
 
-.react-aria-Column {
+.gv-base-column {
   --button-color: var(--gv-surface-panel);
   --button-border: transparent;
   --button-shadow: transparent;
@@ -209,7 +209,7 @@
   }
 }
 
-.react-aria-ColumnResizer {
+.gv-base-column-resizer {
   width: 1px;
   border-radius: var(--gv-radius-4);
   background-color: var(--gv-border-control);
@@ -246,7 +246,7 @@
   }
 }
 
-.react-aria-Cell {
+.gv-base-cell {
   transform: translateZ(0);
   --border-color: var(--gv-border-row);
   color: var(--gv-text-primary);
@@ -270,7 +270,7 @@
     }
   }
 
-  .react-aria-Button[slot='chevron'] {
+  .gv-base-button[slot='chevron'] {
     all: unset;
     vertical-align: middle;
     margin-inline-end: var(--gv-space-4);
@@ -286,18 +286,18 @@
     }
   }
 
-  &[data-expanded] .react-aria-Button[slot='chevron'] svg {
+  &[data-expanded] .gv-base-button[slot='chevron'] svg {
     rotate: 90deg;
   }
 }
 
-.react-aria-DropIndicator[data-drop-target] {
+:where(.gv-base-table) .react-aria-DropIndicator[data-drop-target] {
   outline: 1px solid var(--gv-border-selected);
   transform: translateZ(0);
   translate: calc(68px + (var(--table-row-level) - 1) * var(--gv-space-16)) 0;
 }
 
-.react-aria-ResizableTableContainer {
+.react-aria-ResizableTableContainer:where(:has(> .gv-base-table)) {
   width: 100%;
   overflow: auto;
   position: relative;
@@ -305,41 +305,41 @@
   border-radius: var(--gv-radius-8);
   background: var(--gv-surface-panel);
 
-  .react-aria-Table {
+  .gv-base-table {
     border: none;
     border-radius: 0;
 
-    &:has(.react-aria-TableBody[data-empty]) {
+    &:has(.gv-base-table-body[data-empty]) {
       height: 100%;
     }
   }
 
-  .react-aria-TableHeader {
+  .gv-base-table-header {
     position: sticky;
     top: 0;
     z-index: var(--gv-layer-sticky);
   }
 
-  .react-aria-Cell {
+  .gv-base-cell {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 }
 
-.react-aria-Cell img {
+.gv-base-cell img {
   height: 30px;
   width: 30px;
   object-fit: cover;
   display: block;
 }
 
-.react-aria-TableLoadingIndicator {
+.gv-base-table-loading-indicator {
   height: 32px;
   position: relative;
 }
 
-.react-aria-TableFooter {
+.gv-base-table-footer {
   font: var(--gv-type-ui-strong);
   background: var(--gv-surface-app);
 }

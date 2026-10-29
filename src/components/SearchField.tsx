@@ -93,7 +93,7 @@ export function SearchField({
   };
 
   return (
-    <AriaSearchField {...props} className={keepClass(props.className)} onKeyDown={onKeyDown}
+    <AriaSearchField {...props} className={keepClass(props.className, 'gv-base-search-field')} onKeyDown={onKeyDown}
       onBlur={e => {
         props.onBlur?.(e);
         // Leaving an empty field folds it (not while an Esc fold is already on its way back to the button).
@@ -102,7 +102,7 @@ export function SearchField({
       data-collapsible={isCollapsible || undefined} data-opened={(isCollapsible && opened.current) || undefined}>
       {label && <Label>{label}</Label>}
       <Search size={18} />
-      <Input ref={input} placeholder={placeholder} className="react-aria-Input inset" />
+      <Input ref={input} placeholder={placeholder} className="react-aria-Input gv-base-input inset" />
       <Button className="clear-button">
         <X size={14} />
       </Button>

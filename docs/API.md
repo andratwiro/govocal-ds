@@ -44,6 +44,11 @@ radius and borders come from the part's props and the tokens.
 - A part over React Aria keeps `react-aria-X` and adds the caller's class, and the function form still works:
   `className={({isFocused}) => …}`. Inside the system, `keepClass` (starter parts) and `ownClass` (parts painted with
   their own `gv-…` class) in `src/components/className.ts` do this.
+- Base's stylesheets paint only the system's own elements. Each Base part also carries `gv-base-<x>`
+  (`react-aria-TextField` → `gv-base-text-field`), and `src/components/*.css` selects that, never React Aria's global
+  `react-aria-X`, so a host app's own React Aria elements are left as the app paints them. `npm run css:scope` writes
+  both halves (the TSX class, the CSS selector) and is safe to re-run after a merge; `tests/css-scope.test.mjs` runs
+  its `--check`. `react-aria-X` stays on every element for tests and queries.
 - A part that must not be restyled (`Coachmark`), or that renders no element of its own (triggers, an item's content),
   takes no `className`: TypeScript refuses it rather than dropping it.
 - Inside the system the same holds between parts: a stylesheet selects only its own block (`tests/own-block.test.mjs`).

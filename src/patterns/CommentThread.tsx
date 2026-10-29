@@ -95,14 +95,14 @@ export function CommentThread({
     );
   }
   return (
-    <Tabs className={clsx('react-aria-Tabs gv-comment-thread', className)} style={style} selectedKey={tab} defaultSelectedKey={defaultTab}
+    <Tabs className={clsx('react-aria-Tabs gv-base-tabs gv-comment-thread', className)} style={style} selectedKey={tab} defaultSelectedKey={defaultTab}
       onSelectionChange={k => onTabChange?.(k as ThreadTab)}>
-      <TabList aria-label="Conversation" className="react-aria-TabList gv-comment-thread__tabs">
+      <TabList aria-label="Conversation" className="react-aria-TabList gv-base-tab-list gv-comment-thread__tabs">
         <Tab id="comments">Comments ({count(comments)})</Tab>
         <Tab id="internal">Internal conversation ({count(internal)})</Tab>
       </TabList>
-      <TabPanel id="comments" className="react-aria-TabPanel gv-comment-thread__panel">{pane('comments', comments)}</TabPanel>
-      <TabPanel id="internal" className="react-aria-TabPanel gv-comment-thread__panel">{pane('internal', internal)}</TabPanel>
+      <TabPanel id="comments" className="react-aria-TabPanel gv-base-tab-panel gv-comment-thread__panel">{pane('comments', comments)}</TabPanel>
+      <TabPanel id="internal" className="react-aria-TabPanel gv-base-tab-panel gv-comment-thread__panel">{pane('internal', internal)}</TabPanel>
     </Tabs>
   );
 }
@@ -234,10 +234,10 @@ export function CommentComposer({me, isInternal, replyTo, onCancelReply, onPost,
       )}
       <div className="gv-comment-thread__compose-row">
         <span className="gv-comment-thread__avatar" aria-hidden><Avatar initials={me} /></span>
-        <AriaTextField className="react-aria-TextField gv-comment-thread__field" value={text} onChange={setText}
+        <AriaTextField className="react-aria-TextField gv-base-text-field gv-comment-thread__field" value={text} onChange={setText}
           aria-label={isInternal ? 'Internal comment' : replyTo ? `Reply to ${replyTo}` : 'Comment'}>
           <AriaTextArea ref={fieldRef} rows={1} placeholder={placeholder} onKeyDown={onKeyDown}
-            className="react-aria-TextArea inset gv-comment-thread__input" />
+            className="react-aria-TextArea gv-base-text-area inset gv-comment-thread__input" />
         </AriaTextField>
         <Button variant="secondary" isDisabled={!text.trim()} onPress={post}>Post</Button>
       </div>

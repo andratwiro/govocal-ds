@@ -2,7 +2,7 @@
 
 /* Same family as the Figma Modal (gv/Modal, 5:513): content 24 in from the edge, UI type. A plain Dialog has no head
    bar or hairline, so its title is one step up (Title 16/24) to stand clear of the UI-strong field labels under it. */
-.react-aria-Dialog {
+.gv-base-dialog {
   outline: none;
   max-height: inherit;
   box-sizing: border-box;
@@ -16,7 +16,7 @@
     padding: 0;
   }
 
-  .react-aria-Heading[slot='title'] {
+  .gv-base-heading[slot='title'] {
     margin-top: 0;
     margin-bottom: var(--gv-space-12);
     font: var(--gv-type-title);

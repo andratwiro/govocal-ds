@@ -1,6 +1,6 @@
 @import './theme.css';
 
-.react-aria-Toolbar {
+.gv-base-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -16,11 +16,11 @@
     align-items: start;
   }
 
-  .react-aria-Group {
+  .gv-base-group {
     display: contents;
   }
 
-  .react-aria-Separator {
+  .gv-base-separator {
     &[aria-orientation='vertical'] {
       height: auto;
       margin: 0px var(--gv-space-4);

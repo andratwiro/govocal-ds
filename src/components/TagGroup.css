@@ -2,7 +2,7 @@
 @import './utilities.css';
 @import './Form.css';
 
-.react-aria-TagGroup {
+.gv-base-tag-group {
   display: flex;
   flex-direction: column;
   font: var(--gv-type-ui);
@@ -15,7 +15,7 @@
   }
 }
 
-.react-aria-TagList {
+.gv-base-tag-list {
   display: flex;
   flex-wrap: wrap;
   gap: var(--gv-space-6);
@@ -23,7 +23,7 @@
 
 /* The prototype's tag (augur-design.html PANEL SPEC v2: "tag = white + a 0.5 cool-grey-500 border"): the pill's
    shape (22 tall, 10 at the sides, fully round, Small strong in the pill slate); chosen = the brand fill. */
-.react-aria-Tag {
+.gv-base-tag {
   --button-color: var(--gv-surface-panel);
   --button-border: var(--gv-color-slate-500);
   --button-border-size: 0.5px;

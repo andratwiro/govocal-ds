@@ -14,12 +14,12 @@ import {keepClass} from './className';
 import clsx from 'clsx';
 
 export function Disclosure(props: DisclosureProps) {
-  return <AriaDisclosure {...props} className={keepClass(props.className)} />;
+  return <AriaDisclosure {...props} className={keepClass(props.className, 'gv-base-disclosure')} />;
 }
 
 export function DisclosureHeader({children, ...props}: HeadingProps) {
   return (
-    <Heading {...props} className={clsx('react-aria-Heading', props.className)}>
+    <Heading {...props} className={clsx('react-aria-Heading gv-base-heading', props.className)}>
       <Button slot="trigger" className="disclosure-button">
         <ChevronRight size={16} />
         <span>{children}</span>
@@ -30,7 +30,7 @@ export function DisclosureHeader({children, ...props}: HeadingProps) {
 
 export function DisclosurePanel(props: DisclosurePanelProps) {
   return (
-    <AriaDisclosurePanel {...props} className={keepClass(props.className)}>
+    <AriaDisclosurePanel {...props} className={keepClass(props.className, 'gv-base-disclosure-panel')}>
       <div>{props.children}</div>
     </AriaDisclosurePanel>
   );

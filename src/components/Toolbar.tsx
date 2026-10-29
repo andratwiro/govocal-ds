@@ -11,7 +11,7 @@ export function Toolbar(props: ToolbarProps) {
     <ToggleButtonGroupContext.Provider value={{orientation}}>
       <SeparatorContext.Provider
         value={{orientation: orientation === 'horizontal' ? 'vertical' : 'horizontal'}}>
-        <RACToolbar {...props} className={keepClass(props.className)} />
+        <RACToolbar {...props} className={keepClass(props.className, 'gv-base-toolbar')} />
       </SeparatorContext.Provider>
     </ToggleButtonGroupContext.Provider>
   );

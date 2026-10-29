@@ -3,7 +3,7 @@
 
 /* A toggle button is a Button that stays down. On, it takes the prototype's chosen-segment fill (.pj-seg2 button.on:
    the near-black heading ink, white text), the same dark the Switch uses when on, rather than the brand blue. */
-.react-aria-ToggleButton {
+.gv-base-toggle-button {
   border: none;
   forced-color-adjust: none;
   border-radius: var(--gv-radius-8);

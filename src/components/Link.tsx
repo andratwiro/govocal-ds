@@ -18,5 +18,5 @@ export interface LinkProps extends RACLinkProps {
  * never paint it.
  */
 export function Link({size, ...props}: LinkProps) {
-  return <RACLink {...props} className={keepClass(props.className)} data-size={size} />;
+  return <RACLink {...props} className={keepClass(props.className, 'gv-base-link')} data-size={size} />;
 }

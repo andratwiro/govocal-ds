@@ -39,16 +39,16 @@ export function NumberField({
 }: NumberFieldProps) {
   return (
     <div className={clsx('gv-number-field-wrap', className)} style={style} data-label-position={labelPosition}>
-      <AriaNumberField {...props}>
+      <AriaNumberField className="react-aria-NumberField gv-base-number-field" {...props}>
         <Label>{label}</Label>
-        <Group>
+        <Group className="react-aria-Group gv-base-group">
           <div className="react-aria-NumberField-field" data-has-prefix={prefix ? true : undefined}>
             {prefix && (
               <span className="react-aria-NumberField-prefix" aria-hidden="true">
                 {prefix}
               </span>
             )}
-            <Input className="react-aria-Input inset" />
+            <Input className="react-aria-Input gv-base-input inset" />
           </div>
           <Button slot="decrement" variant="secondary">
             <Minus />

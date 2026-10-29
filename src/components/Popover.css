@@ -3,7 +3,7 @@
 /* The prototype's dropdown container (augur-design.html #pj-dd-canon): white, 1px control border, radius 12,
    padding 6 and the subtlest shadow (the prototype's two-layer "very minimal" shadow has no token; the subtle one
    is the nearest). Menus and list boxes bring their own 6 padding, so their popovers have none. */
-.react-aria-Popover {
+.gv-base-popover {
   --background-color: var(--gv-surface-panel);
 
   border: 1px solid var(--gv-border-control);
@@ -25,7 +25,7 @@
     padding: 0;
   }
 
-  .react-aria-OverlayArrow svg {
+  .gv-base-overlay-arrow svg {
     display: block;
     fill: var(--background-color);
     stroke: var(--gv-border-control);
@@ -42,7 +42,7 @@
   &[data-placement='top'] {
     --origin: translateY(var(--gv-space-8));
 
-    &:has(.react-aria-OverlayArrow) {
+    &:has(.gv-base-overlay-arrow) {
       margin-bottom: var(--gv-space-6);
     }
   }
@@ -50,11 +50,11 @@
   &[data-placement='bottom'] {
     --origin: translateY(calc(-1 * var(--gv-space-8)));
 
-    &:has(.react-aria-OverlayArrow) {
+    &:has(.gv-base-overlay-arrow) {
       margin-top: var(--gv-space-6);
     }
 
-    .react-aria-OverlayArrow svg {
+    .gv-base-overlay-arrow svg {
       transform: rotate(180deg);
     }
   }
@@ -62,11 +62,11 @@
   &[data-placement='right'] {
     --origin: translateX(calc(-1 * var(--gv-space-8)));
 
-    &:has(.react-aria-OverlayArrow) {
+    &:has(.gv-base-overlay-arrow) {
       margin-left: var(--gv-space-6);
     }
 
-    .react-aria-OverlayArrow svg {
+    .gv-base-overlay-arrow svg {
       transform: rotate(90deg);
     }
   }
@@ -74,11 +74,11 @@
   &[data-placement='left'] {
     --origin: translateX(var(--gv-space-8));
 
-    &:has(.react-aria-OverlayArrow) {
+    &:has(.gv-base-overlay-arrow) {
       margin-right: var(--gv-space-6);
     }
 
-    .react-aria-OverlayArrow svg {
+    .gv-base-overlay-arrow svg {
       transform: rotate(-90deg);
     }
   }

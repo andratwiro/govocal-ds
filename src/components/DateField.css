@@ -1,7 +1,7 @@
 @import './theme.css';
 @import './utilities.css';
 
-.react-aria-DateField {
+.gv-base-date-field {
   display: flex;
   flex-direction: column;
 }
@@ -9,7 +9,7 @@
 /* The date input reads as one of the fields (TextField's chrome: 32 tall, radius 8, the 1px control border from the
    `inset` utility, the 2px selected ring inside on focus). The prototype's .pj-dateinput is that same bordered,
    radius-8 box with UI text. */
-.react-aria-DateInput {
+.gv-base-date-input {
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
@@ -35,7 +35,7 @@
   }
 }
 
-.react-aria-DateSegment {
+.gv-base-date-segment {
   padding: 0 var(--gv-space-2);
   border-radius: var(--gv-radius-4);
   font-variant-numeric: tabular-nums;

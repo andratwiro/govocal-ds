@@ -47,12 +47,12 @@ export function MenuTrigger({placement, ...props}: MenuTriggerProps) {
  * draws it. Not in Figma yet.
  */
 export function Menu<T>(props: MenuProps<T>) {
-  return <AriaMenu {...props} className={keepClass(props.className)}>{props.children}</AriaMenu>;
+  return <AriaMenu {...props} className={keepClass(props.className, 'gv-base-menu')}>{props.children}</AriaMenu>;
 }
 
 export function MenuLoadMoreItem(props: MenuLoadMoreItemProps) {
   return (
-    <AriaMenuLoadMoreItem {...props} className={clsx('react-aria-MenuLoadingIndicator', props.className)}>
+    <AriaMenuLoadMoreItem {...props} className={clsx('react-aria-MenuLoadingIndicator gv-base-menu-loading-indicator', props.className)}>
       <ProgressCircle isIndeterminate aria-label="Loading more..." />
     </AriaMenuLoadMoreItem>
   );
@@ -72,7 +72,7 @@ export function MenuItem({icon, description, badge, ...props}: MenuItemProps) {
   let textValue =
     props.textValue || (typeof props.children === 'string' ? props.children : undefined);
   return (
-    <AriaMenuItem {...props} className={keepClass(props.className)} textValue={textValue}>
+    <AriaMenuItem {...props} className={keepClass(props.className, 'gv-base-menu-item')} textValue={textValue}>
       {({hasSubmenu, isSelected, selectionMode}) => (
         <>
           {selectionMode === 'multiple' && (
@@ -100,7 +100,7 @@ export function MenuItem({icon, description, badge, ...props}: MenuItemProps) {
 }
 
 export function MenuSection<T>(props: MenuSectionProps<T>) {
-  return <AriaMenuSection {...props} className={clsx('react-aria-MenuSection', props.className)} />;
+  return <AriaMenuSection {...props} className={clsx('react-aria-MenuSection gv-base-menu-section', props.className)} />;
 }
 
 export function SubmenuTrigger(props: SubmenuTriggerProps) {

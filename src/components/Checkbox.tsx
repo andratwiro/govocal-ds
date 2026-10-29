@@ -18,8 +18,8 @@ interface CheckboxProps extends CheckboxFieldProps {
 
 export function Checkbox({children, description, errorMessage, ...props}: CheckboxProps) {
   return (
-    <CheckboxField {...props} className={keepClass(props.className)}>
-      <CheckboxButton>
+    <CheckboxField {...props} className={keepClass(props.className, 'gv-base-checkbox-field')}>
+      <CheckboxButton className="react-aria-CheckboxButton gv-base-checkbox-button">
         {({isIndeterminate}) => (
           <>
             <div className="indicator">
