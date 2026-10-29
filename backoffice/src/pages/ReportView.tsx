@@ -5,7 +5,7 @@ import {ArrowDown, ArrowUp, Bold, CalendarDays, ChartBar, ChartColumn, ChartLine
   SeparatorHorizontal, Send, Sparkles, Trash2, Type, X, ZoomIn, ZoomOut, Folder, LayoutGrid, FileType} from 'lucide-react';
 import {Avatar, Badge, Banner, BarRow, Button, type ChartColor, ChartLegend, type ChartLegendItem, ChoiceCard,
   DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableRow, Divider, EmptyState,
-  IconButton, LineChart, Menu, MenuItem, MenuTrigger, Modal, Panel, PropertyList, PropertyListItem, queue, RadioGroup,
+  IconButton, LineChart, Menu, MenuItem, MenuTrigger, Modal, MultilingualTextField, Panel, PropertyList, PropertyListItem, queue, RadioGroup,
   RichTextToolbarButton, SegmentedControl, SegmentedControlItem, Select, SelectItem, SidePanel, SidePanelSection,
   Skeleton, StatTile, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Text, TextArea, TextField, ToastRegion, Tooltip,
   TooltipTrigger} from 'govocal-ds';
@@ -610,6 +610,7 @@ function HistoryFeed({entries, onRestore}: {entries: HistoryEntry[]; onRestore: 
   );
 }
 
+const REPORT_LOCALES = LANGUAGES.map(l => l.id);
 const missingIn = (lang: Lang, has: boolean) => (lang !== 'en' && !has ? `Missing in ${LANG_NAME(lang)}: readers see the English.` : undefined);
 
 /** A figure's words in the editing language; a field the language lacks says so and shows the English as a hint. */
@@ -671,8 +672,11 @@ function Settings({block, lang, patch}: {block: Block; lang: Lang; patch: (p: Pa
       return (
         <SidePanelSection>
           <p className="bo-note">Edit the words here; the block’s toolbar on the page sets bold, italic and a list.</p>
-          <TextField label={block.kind === 'section' ? 'Section heading' : 'Heading (optional)'} value={words.heading}
-            onChange={v => set('heading', v)} placeholder={lang === 'en' ? undefined : block.heading}
+          {/* The heading in every report language; the page's editing-language Select picks the one shown. */}
+          <MultilingualTextField label={block.kind === 'section' ? 'Section heading' : 'Heading (optional)'}
+            locales={REPORT_LOCALES} locale={lang} showLocaleSwitcher={false}
+            value={{en: block.heading ?? '', fr: fr.heading ?? ''}} onChange={(v, l) => set('heading', v[l] ?? '')}
+            placeholder={lang === 'en' ? undefined : block.heading}
             description={block.heading ? missingIn(lang, !!fr.heading) : undefined} />
           {block.kind === 'section' && block.bullets?.length ? (
             <TextArea label="Points, one per line" value={block.bullets.join('\n')}

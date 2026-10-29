@@ -8,8 +8,9 @@ import {AlertDialog, Avatar, Badge, Button, ChoiceCard, DataTable, DataTableAssi
   EmptyState, FilterChips, type FilterFacet, FilterMenu, type FilterValue, IconButton, Link, Menu, MenuItem,
   MenuTrigger, Modal, Pagination, Panel, queue, RadioGroup, SearchField, Select, SelectItem, StatusBadge, Tab,
   TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, TextArea, TextField,
-  ToastRegion} from 'govocal-ds';
+  ToastRegion, MultilingualTextField, type Multiloc} from 'govocal-ds';
 import {DatePicker, DateRangePicker, ToggleButton} from 'govocal-ds/base';
+import {LOCALES} from '../data-settings';
 import {PROJECTS, type Project} from '../data';
 import {CALENDAR_START, FOLDERS, PENDING, SPACES, TEMPLATES, type Folder as FolderRow} from '../data-projects';
 import {Gap, GapLegend} from '../Gap';
@@ -223,16 +224,22 @@ function TemplateGallery({onClose, onUse}: {onClose: () => void; onUse: (templat
   );
 }
 
+// The platform's languages (Settings' Platform configuration).
+const LANGUAGES = LOCALES.map(l => l.id);
+
 /** The product's second step: title, start date and folder of the project made from the template. */
 function TemplateCreate({template, folders, onClose, onCreate}: {template: string; folders: FolderRow[];
   onClose: () => void; onCreate: (title: string, folder?: string) => void}) {
-  const [title, setTitle] = useState('');
+  const [titles, setTitles] = useState<Multiloc>({});
   const [folder, setFolder] = useState(NO_FOLDER);
+  // The list shows the title in the platform's first language.
+  const title = titles[LANGUAGES[0]] ?? '';
   return (
     <Modal title={`Create a project based on the template '${template}'`} isOpen onOpenChange={closing(onClose)}
       footer={footer('Create project', () => onCreate(title.trim() || template, orNone(folder)))}>
       <div className="bo-projects-form">
-        <TextField label="The title of your project" placeholder="Type the name of the project" value={title} onChange={setTitle} />
+        <MultilingualTextField label="The title of your project" placeholder="Type the name of the project"
+          locales={LANGUAGES} value={titles} onChange={setTitles} />
         <DatePicker label="The start date of your project" />
         <Select label="Project folder" selectedKey={folder} onSelectionChange={k => setFolder(String(k))}>{folderItems(folders)}</Select>
       </div>

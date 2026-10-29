@@ -213,7 +213,10 @@ test('the settings cog opens the project settings, tab by tab', async ({page}) =
   for (const t of ['General', 'Project page', 'Input tags', 'Access rights', 'Audience', 'Messaging', 'Files', 'Events'])
     await expect(tabs.getByRole('option', {name: t})).toBeVisible();
   for (const g of ['Project', 'Participation', 'Inputs']) await expect(tabs.getByText(g, {exact: true})).toBeVisible();
-  await expect(dialog.getByRole('textbox', {name: 'Title'})).toHaveValue('Green Corridors for Larkvale');
+  // The title is a Multilingual text field: English filled, the other platform languages marked empty.
+  await expect(dialog.getByRole('textbox', {name: 'Title, English'})).toHaveValue('Green Corridors for Larkvale');
+  await expect(dialog.getByRole('radiogroup', {name: 'Language of Title'}).getByRole('radio', {name: /^FR-BE/}))
+    .toHaveAccessibleName(/empty, required$/);
   await tabs.getByRole('option', {name: 'Input tags'}).click();
   await expect(dialog.getByRole('row', {name: 'Cycling'})).toBeVisible();
 });
@@ -223,7 +226,7 @@ test('Add a phase puts a new upcoming phase on the timeline', async ({page}) => 
   await page.getByRole('complementary', {name: 'Participation'}).getByRole('button', {name: 'Add a phase'}).click();
   const dialog = page.getByRole('dialog', {name: 'Add a phase'});
   await expect(dialog.getByRole('button', {name: 'Add phase'})).toBeDisabled();
-  await dialog.getByRole('textbox', {name: 'Title'}).fill('Walk the route');
+  await dialog.getByRole('textbox', {name: 'Title, English'}).fill('Walk the route');
   await dialog.getByRole('textbox', {name: 'Dates'}).fill('9 to 23 Feb');
   await dialog.getByRole('button', {name: 'Add phase'}).click();
   await expect(dialog).toHaveCount(0);

@@ -1,7 +1,7 @@
-import {useId, useState} from 'react';
-import {Button, Checkbox, CheckboxGroup, ChoiceCard, DropZone, FileList, type FileListItemData, NumberField, Panel,
-  RadioGroup, SegmentedControl, SegmentedControlItem, Select, SelectItem, Switch, Tab, TabList, TabPanel, TabPanels,
-  Tabs, TextArea, TextField, TitleField, ToastRegion} from 'govocal-ds';
+import {useState} from 'react';
+import {Button, Checkbox, CheckboxGroup, ChoiceCard, DropZone, FileList, type FileListItemData, MultilingualTextField,
+  type Multiloc, NumberField, Panel, RadioGroup, Select, SelectItem, Switch, Tab, TabList, TabPanel, TabPanels, Tabs,
+  TextArea, TextField, ToastRegion} from 'govocal-ds';
 import {ColorField} from 'govocal-ds/base';
 import {APPROVERS, LOCALES, PLATFORM_NAME} from '../data-settings';
 import {AreasTab, PoliciesTab, StatusesTab, TagsTab, toast} from './SettingsLists';
@@ -36,34 +36,22 @@ function InstantSwitch({label, description, start}: {label: string; description:
 }
 
 function PlatformConfiguration() {
-  const labelId = useId();
   const [languages, setLanguages] = useState<string[]>(LOCALES.map(l => l.id));
-  const [locale, setLocale] = useState('en');
-  const [names, setNames] = useState(PLATFORM_NAME);
+  const [names, setNames] = useState<Multiloc>(PLATFORM_NAME);
   const [website, setWebsite] = useState('');
   const [population, setPopulation] = useState(100000);
   const {isDirty, touch, onSave} = useDirty();
   const active = LOCALES.filter(l => languages.includes(l.id));
-  const current = active.find(l => l.id === locale) ?? active[0];
 
   return (
     <Panel title="Platform configuration" headingLevel={3}
       description="Choose how people will see your organization name, select the languages of your platform and link to your website."
       footer={<SaveButton label="Platform configuration" isDirty={isDirty} onSave={onSave} />}>
       <div className="bo-settings-fields">
-        <div className="bo-settings-field">
-          <div className="bo-settings-field-head">
-            <span id={labelId} className="bo-settings-label">Name of city or organization</span>
-            <SegmentedControl aria-label="Language of the name" selectionMode="single" disallowEmptySelection
-              selectedKeys={current ? [current.id] : []} onSelectionChange={k => setLocale(String([...k][0]))}>
-              {active.map(l => <SegmentedControlItem key={l.id} id={l.id} isUnread={!names[l.id]}>{l.code}</SegmentedControlItem>)}
-            </SegmentedControl>
-          </div>
-          {current && (
-            <TitleField aria-label={`Name of city or organization (${current.label})`} isRequired placeholder="Name of your platform"
-              value={names[current.id]} onChange={v => { setNames(n => ({...n, [current.id]: v})); touch(); }} />
-          )}
-        </div>
+        {/* Multilingual text field: the name in each of the platform's languages (the ones ticked below), the
+            language switcher over it marking the languages still without one. */}
+        <MultilingualTextField label="Name of city or organization" isRequired placeholder="Name of your platform"
+          locales={active.map(l => l.id)} value={names} onChange={v => { setNames(v); touch(); }} />
         <CheckboxGroup label="Languages" value={languages}
           onChange={v => { if (v.length) { setLanguages(v); touch(); } }}>
           {LOCALES.map(l => <Checkbox key={l.id} value={l.id}>{l.label}</Checkbox>)}

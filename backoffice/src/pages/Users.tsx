@@ -4,9 +4,10 @@ import {Ban, ChartColumn, Download, Mail, Pencil, Plus, SearchX, ShieldCheck, Sh
   Users as UsersIcon, Zap} from 'lucide-react';
 import {AlertDialog, Banner, Button, ChoiceCard, DataTable, DataTableBody, DataTableCell, DataTableColumn,
   DataTableHeader, DataTableOptions, DataTablePerson, DataTableRow, DataTableStack, EmptyState, type Key, Menu, MenuItem,
-  Modal, Panel, queue, RadioGroup, SearchField, Select, type SelectionAction, SelectionBar, SelectItem, Separator,
+  Modal, MultilingualTextField, type Multiloc, Panel, queue, RadioGroup, SearchField, Select, type SelectionAction, SelectionBar, SelectItem, Separator,
   TableToolbar, TableToolbarHeading, TextField, toKeySet, ToastRegion} from 'govocal-ds';
 import {ListBox, ListBoxItem} from 'govocal-ds/base';
+import {LOCALES} from '../data-settings';
 import {ALL_PEOPLE, GROUPS, SEGMENTS, SMART_RULES, type Person} from '../data-users';
 import {Gap} from '../Gap';
 import {Page} from './Page';
@@ -291,6 +292,9 @@ function HeaderActions() {
   );
 }
 
+// The platform's languages (Settings' Platform configuration).
+const LANGUAGES = LOCALES.map(l => l.id);
+
 /** The real admin's two kinds of group: hand-picked members, or rules that fill the group by themselves. */
 const KINDS = [
   {kind: 'manual' as const, title: 'Create a normal group', note: 'Add users to it by hand, from the users list.'},
@@ -302,7 +306,9 @@ function GroupModal({editing, onClose, onSave}: {
   editing?: Group; onClose: () => void; onSave: (label: string, kind: Group['kind']) => void;
 }) {
   const [kind, setKind] = useState<Group['kind'] | null>(editing?.kind ?? null);
-  const [name, setName] = useState(editing?.label ?? '');
+  const [names, setNames] = useState<Multiloc>(editing ? {[LANGUAGES[0]]: editing.label} : {});
+  // The list shows the name in the platform's first language.
+  const name = names[LANGUAGES[0]] ?? '';
   const title = editing ? 'Edit Group' : 'Add a new group';
   const footer = (
     <>
@@ -329,7 +335,7 @@ function GroupModal({editing, onClose, onSave}: {
           ))}
         </RadioGroup>
       )}
-      {kind && <TextField label="Name of the group" value={name} onChange={setName} autoFocus />}
+      {kind && <MultilingualTextField label="Name of the group" isRequired locales={LANGUAGES} value={names} onChange={setNames} autoFocus />}
       </div>
     </Modal>
   );

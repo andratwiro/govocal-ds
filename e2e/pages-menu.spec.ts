@@ -181,7 +181,7 @@ test('New custom page opens Create custom page, with Settings and Content tabs',
   await expect(page.getByRole('heading', {level: 2, name: 'Page settings'})).toBeVisible();
   const save = page.getByRole('button', {name: 'Save custom page'});
   await expect(save).toBeDisabled();
-  await page.getByRole('textbox', {name: 'Title'}).fill('Neighbourhood budget');
+  await page.getByRole('textbox', {name: 'Title, English'}).fill('Neighbourhood budget');
   await expect(page.getByRole('textbox', {name: 'Slug'})).toHaveValue('neighbourhood-budget');
   await tabs.getByRole('tab', {name: 'Content'}).click();
   await expect(page.getByRole('heading', {level: 2, name: /Page content/})).toContainText('2 of 6 shown');
@@ -198,7 +198,7 @@ test('a custom page\'s Edit and View open the page; an unknown page says so', as
   await option(page, 'Options for page: About', 'Edit page');
   await expect(page).toHaveURL(/#\/pages-menu\/pages\/about$/);
   await expect(page.getByRole('heading', {level: 1, name: 'About'})).toBeVisible();
-  await expect(page.getByRole('textbox', {name: 'Title'})).toHaveValue('About');
+  await expect(page.getByRole('textbox', {name: 'Title, English'})).toHaveValue('About');
   await page.getByRole('button', {name: 'View page'}).click();
   await expect(page).toHaveURL(/#\/pages-menu\/pages\/about\/view$/);
   await expect(page.getByRole('heading', {level: 1, name: 'About'})).toBeVisible();

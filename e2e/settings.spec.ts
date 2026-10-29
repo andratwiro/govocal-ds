@@ -13,7 +13,7 @@ test('settings follows the real admin: seven tabs, General open on its five sect
     'User name display (for users with email confirmed only)', 'Project approval settings']) {
     await expect(page.getByRole('heading', {level: 3, name: h, exact: true})).toBeVisible();
   }
-  await expect(page.getByRole('textbox', {name: /Name of city or organization/})).toHaveValue('Larkvale participates');
+  await expect(page.getByRole('textbox', {name: 'Name of city or organization, English'})).toHaveValue('Larkvale participates');
   await expect(page.getByRole('group', {name: 'Languages'})).toBeVisible();
   await expect(page.getByRole('textbox', {name: 'Website'})).toBeVisible();
   // Attached, not visible: Text field's description collapses to zero width today (a system-side fix is on its way).
@@ -33,13 +33,16 @@ test('settings follows the real admin: seven tabs, General open on its five sect
 
 test('the platform name is multilingual: one value per platform language', async ({page}) => {
   await page.goto('/backoffice/#/settings');
-  const locales = page.getByRole('radiogroup', {name: 'Language of the name'});
-  for (const l of ['EN', 'NL-BE', 'FR-BE']) await expect(locales.getByRole('radio', {name: l})).toBeVisible();
-  await locales.getByRole('radio', {name: 'FR-BE'}).click();
-  await expect(page.getByRole('textbox', {name: /Name of city or organization/})).toHaveValue('Larkvale participe');
+  // The Multilingual text field: its switcher names each language and whether it has text.
+  const locales = page.getByRole('radiogroup', {name: 'Language of Name of city or organization'});
+  for (const l of ['EN', 'NL-BE', 'NL-NL', 'FR-BE']) await expect(locales.getByRole('radio', {name: new RegExp(`^${l}`)})).toBeVisible();
+  await expect(locales.getByRole('radio', {name: /^NL-NL/})).toHaveAccessibleName(/empty, required$/);
+  // The radio is a visually hidden input under its chip: click what a person sees.
+  await locales.locator('.gv-locale-switcher__item', {hasText: 'FR-BE'}).click();
+  await expect(page.getByRole('textbox', {name: 'Name of city or organization, French (Belgium)'})).toHaveValue('Larkvale participe');
   // Turning a language off removes its version of the name.
   await page.getByRole('group', {name: 'Languages'}).getByText('Français (Belgique)').click();
-  await expect(locales.getByRole('radio', {name: 'FR-BE'})).toHaveCount(0);
+  await expect(locales.getByRole('radio', {name: /^FR-BE/})).toHaveCount(0);
 });
 
 const toastWith = (page: Page, text: string) => page.locator('.react-aria-Toast').filter({hasText: text});
@@ -210,6 +213,7 @@ test('settings is built from the system, with no gaps', async ({page}) => {
   await page.goto('/backoffice/#/settings');
   await expect(page.locator('.gv-panel').first()).toBeVisible();
   await expect(page.locator('.gv-card')).toHaveCount(0);
-  await expect(page.locator('.gv-title-field')).toBeVisible();
+  // The platform name is a Multilingual text field (was a Title field under a Segmented control).
+  await expect(page.locator('.gv-multilingual-field')).toBeVisible();
   await expect(page.locator('[data-gap]')).toHaveCount(0);
 });

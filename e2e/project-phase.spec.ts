@@ -556,11 +556,27 @@ test('Build: Available views and Notifications; an email opens in the setup\'s p
   await expect(setup(page).getByRole('heading', {name: 'Before you publish'})).toBeVisible();
 });
 
+// Title field's "Multilingual" story: the content-language menu in the title's end drives the description under it.
+test('Build: the phase title and description are multilingual, one Content language menu for both', async ({page}) => {
+  await page.goto(BUILD);
+  const title = setup(page).getByRole('textbox', {name: 'Phase title'});
+  await expect(title).not.toHaveValue('');
+  const menu = setup(page).getByRole('button', {name: /Content language/});
+  await expect(menu).toHaveAccessibleName(/^EN.*English, \d of 4 languages filled/);
+  await menu.click();
+  await page.getByRole('listbox', {name: 'Content language'}).getByRole('option', {name: 'French (Belgium)'}).click();
+  await expect(title).toHaveValue('');
+  await expect(title).toHaveAttribute('lang', 'fr-BE');
+  await expect(setup(page).getByRole('textbox', {name: 'Phase description, French (Belgium)'})).toBeVisible();
+  await title.fill('Partagez vos idées');
+  await expect(menu).toHaveAccessibleName(/^FR-BE.*French \(Belgium\)/);
+});
+
 test('Build: the header\'s Save turns on with a change and off once saved', async ({page}) => {
   await page.goto(BUILD);
   const save = page.getByRole('button', {name: 'Save'});
   await expect(save).toBeDisabled();
-  await setup(page).getByRole('textbox', {name: 'Phase description'}).fill('Where should the corridor go?');
+  await setup(page).getByRole('textbox', {name: 'Phase description, English'}).fill('Where should the corridor go?');
   await expect(save).toBeEnabled();
   await save.click();
   await expect(page.getByText('Changes saved')).toBeVisible();

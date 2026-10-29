@@ -180,6 +180,11 @@ test('one language control and the Download menu', async ({page}) => {
   const panel = page.getByRole('dialog', {name: 'Platform participation'});
   await expect(panel.getByText('Missing in French: readers see the English.').first()).toBeVisible();
   await expect(panel.getByRole('textbox', {name: 'Finding'})).toHaveValue('');
+  // A section's heading is a Multilingual text field with no switcher of its own: the page's language picks it.
+  await block(page, /Executive summary/).click();
+  const section = page.getByRole('dialog', {name: 'Executive summary'});
+  await expect(section.getByRole('textbox', {name: 'Section heading, French'})).toHaveValue('Synthèse');
+  await expect(section.getByRole('radiogroup', {name: /^Language of/})).toHaveCount(0);
   // Download: PDF, or Word (Beta).
   await page.getByRole('button', {name: 'Download'}).click();
   await expect(page.getByRole('menuitem', {name: 'PDF'})).toBeVisible();

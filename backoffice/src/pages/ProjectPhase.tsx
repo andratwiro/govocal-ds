@@ -8,8 +8,9 @@ import {ACCESS_WHO_VALUE, AccessRightsModal, type AccessWho, ActionRow, ActionRo
   DataTableAssignee, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader, DataTableRow,
   DataTableStack, DataTableTags, DataTableText, DataTableThumbnail, DateRangeField, DropZone, EmptyState, FileList,
   type FileListItemData, FilterChips, type FilterFacet, FilterMenu, type FilterValue, GroupedTab, GroupedTabList,
-  GroupedTabPanel, GroupedTabs, IconButton, type Key, LineChart, ListHeader, type ListHeaderColumn, MapCard, MapChip,
-  type MapItem, MapOverlay, MapView, Menu, MenuItem, MenuSection,
+  GroupedTabPanel, GroupedTabs, IconButton, type Key, LineChart, ListHeader, type ListHeaderColumn, LocaleSwitcher,
+  MapCard, MapChip, type MapItem, MapOverlay, MapView, Menu, MenuItem, MenuSection, MultilingualRichTextEditor,
+  MultilingualTextField, type Multiloc,
   MenuTrigger, Modal, NotificationEmail, NotificationRow, NotificationRowList, OfficialUpdate, OptionList, Pagination,
   Panel, PanelSection, ParticipantActionList, ParticipantActionRow, ParticipantLimit, PhaseTimeline, PhoneHeader,
   PhoneImage, PhonePreview, PhoneStage, type PostedUpdate, ProjectHeader, PropertyList, PropertyListItem, ProposalsRow,
@@ -22,6 +23,7 @@ import {Dialog, Form, Tag as TagItem, TagGroup} from 'govocal-ds/base';
 import {PICTURES} from '../../../src/stories/images';
 // Form field summary is a recipe (a story and its CSS): the page keeps its markup and uses the recipe's stylesheet.
 import {ME, METHODS, PROJECTS, type Method, type Phase, type Project} from '../data';
+import {LOCALES} from '../data-settings';
 import {IDEAS, IDEA_ASSIGNEES, IDEA_REPLIES, IDEA_SOURCES, IDEA_STATUSES, IDEA_TAGS, AREAS, TOPICS, PHASE_FILES, SCREENING_PHASES, TEAM, addedTimeline,
   NO_OVERVIEW, OVERVIEWS, PHONE_CALL, INSIGHT_WEEKS, PARTICIPATION_WEEKS, AI_SUMMARY, VOTE_OPTIONS, VOTES_BY_DAY, VOTER_AGES,
   VOTER_COMMUTES, PROPOSALS, IDEA_FORM, PARTICIPANT_ACTIONS, IDEA_VIEWS, PHASE_EMAILS, CAUSES,
@@ -296,7 +298,14 @@ function PhaseStatus({phase}: {phase: Phase}) {
 const firstPlus = (words: string[]) => (words.length ? [{label: words[0] + (words.length > 1 ? ` +${words.length - 1}` : '')}] : undefined);
 const DATES_HELP = 'Ideas can be posted from the first day to the last.';
 
+// The platform's languages (Settings' Platform configuration): every multilingual field of the project takes them.
+const LANGUAGES = LOCALES.map(l => l.id);
+
 function DatesAndTitle({phase, onChange, help}: {phase: Phase; onChange: () => void; help: string}) {
+  // Title field's "Multilingual" story: one content-language menu in the title's end drives the description under it.
+  const [locale, setLocale] = useState(LANGUAGES[0]);
+  const [title, setTitle] = useState<Multiloc>({[LANGUAGES[0]]: phase.title});
+  const [description, setDescription] = useState<Multiloc>({});
   return <>
     <li data-gv="setup-card"><Card title="Dates" isRequired summary={phase.dates} control="expand">
       {/* Date range field: it can't start on the phase's dates yet (it takes date objects the back office can't make). */}
@@ -304,8 +313,15 @@ function DatesAndTitle({phase, onChange, help}: {phase: Phase; onChange: () => v
     </Card></li>
     <li data-gv="setup-card"><Card title="Title and description" isRequired control="expand" defaultExpanded>
       <div className="bo-phase-stack">
-        <TitleField aria-label="Phase title" defaultValue={phase.title} isRequired onChange={onChange} />
-        <TitleField aria-label="Phase description" placeholder="Add a short description" onChange={onChange} />
+        <TitleField aria-label="Phase title" isRequired lang={locale} value={title[locale] ?? ''}
+          onChange={text => { setTitle(t => ({...t, [locale]: text})); onChange(); }}
+          localeSwitcher={(
+            <LocaleSwitcher kind="menu" aria-label="Content language" locales={LANGUAGES} locale={locale}
+              onLocaleChange={setLocale} values={[title, description]} isRequired />
+          )} />
+        <MultilingualRichTextEditor aria-label="Phase description" placeholder="Add a short description" locales={LANGUAGES}
+          locale={locale} onLocaleChange={setLocale} showLocaleSwitcher={false} value={description}
+          onChange={v => { setDescription(v); onChange(); }} />
       </div>
     </Card></li>
   </>;
@@ -1133,11 +1149,11 @@ export function ProjectSettings({project, tab, onTabChange, onClose}: {project: 
               <h3 className="bo-section-title bo-phase-flush">{t}</h3>
               <p className="bo-note bo-phase-flush">{SETTINGS_ABOUT[t]}</p>
               {t === 'General' && <>
-                <TextField label="Title" defaultValue={project.title} />
+                <MultilingualTextField label="Title" isRequired locales={LANGUAGES} defaultValue={{[LANGUAGES[0]]: project.title}} />
                 <TextField label="Project URL" prefix="internal.govocal.com/en/projects/" defaultValue={project.id} />
               </>}
               {t === 'Events' && <>
-                <TextField label="Event title" placeholder="e.g. Walk along the corridor" />
+                <MultilingualTextField label="Event title" placeholder="e.g. Walk along the corridor" locales={LANGUAGES} />
                 <DateRangeField label="Event dates" showTime />
               </>}
               {t === 'Input tags' && (
@@ -1154,23 +1170,25 @@ export function ProjectSettings({project, tab, onTabChange, onClose}: {project: 
 
 export function AddPhase({isOpen, onOpenChange, onAdd}: {isOpen: boolean; onOpenChange: (open: boolean) => void;
   onAdd: (phase: NewPhase) => void}) {
-  const [title, setTitle] = useState('');
+  const [titles, setTitles] = useState<Multiloc>({});
   const [method, setMethod] = useState<Method>('Ideation');
   const [dates, setDates] = useState('');
+  // The timeline shows the title in the platform's first language: that one adds the phase; the others can follow.
+  const title = titles[LANGUAGES[0]]?.trim() ?? '';
   const add = () => {
-    if (!title.trim()) return;
-    onAdd({id: `new-${Date.now()}`, title: title.trim(), method, dates: dates.trim() || 'Dates not set'});
-    setTitle(''); setDates('');
+    if (!title) return;
+    onAdd({id: `new-${Date.now()}`, title, method, dates: dates.trim() || 'Dates not set'});
+    setTitles({}); setDates('');
     onOpenChange(false);
   };
   return (
     <Modal title="Add a phase" isOpen={isOpen} onOpenChange={onOpenChange}
       footer={<>
         <Button variant="secondary" size={32} slot="close">Cancel</Button>
-        <Button size={32} isDisabled={!title.trim()} onPress={add}>Add phase</Button>
+        <Button size={32} isDisabled={!title} onPress={add}>Add phase</Button>
       </>}>
       <Form className="bo-phase-stack" onSubmit={e => { e.preventDefault(); add(); }}>
-        <TextField label="Title" isRequired value={title} onChange={setTitle} autoFocus />
+        <MultilingualTextField label="Title" isRequired locales={LANGUAGES} value={titles} onChange={setTitles} autoFocus />
         <Select label="Method" selectedKey={method} onSelectionChange={k => setMethod(k as Method)}>
           {METHODS.map(m => <SelectItem key={m} id={m}>{m}</SelectItem>)}
         </Select>

@@ -95,8 +95,6 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 /* ── Settings ── */
 .bo-settings-stack { display: grid; gap: var(--gv-space-16); margin-block-start: var(--gv-space-24); }
 .bo-settings-fields { display: grid; gap: var(--gv-space-24); }
-.bo-settings-field { display: grid; gap: var(--gv-space-8); }
-.bo-settings-field-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--gv-space-8); }
 .bo-settings-switches { display: grid; gap: var(--gv-space-16); }
 .bo-settings-modal { display: grid; gap: var(--gv-space-16); }
 /* ── Messaging ── */

@@ -249,7 +249,7 @@ test('Add a new group: choose normal or smart, name it, and it joins the list wi
   a11yReport(await axeOn(page, '.gv-modal'));
   await kinds.getByText('Create a smart group').click();
   await expect(kinds.getByRole('radio', {name: /Create a smart group/})).toBeChecked();
-  await modal.getByRole('textbox', {name: 'Name of the group'}).fill('Cyclists');
+  await modal.getByRole('textbox', {name: 'Name of the group, English'}).fill('Cyclists');
   // The rules open under the smart card once it is chosen (Choice card's `revealed`), still a Gap.
   await expect(kinds.locator('.gv-choice-card__revealed').getByRole('button', {name: /Rule/})).toBeVisible();
   await modal.getByRole('button', {name: 'Save group'}).click();
@@ -270,7 +270,7 @@ test('a group has its own page: its members, Edit Group to rename it, Delete Gro
   await expect(page.getByRole('grid', {name: 'Youth panel'}).getByRole('row')).toHaveCount(4);
   await page.getByRole('button', {name: 'Edit Group'}).click();
   const modal = page.getByRole('dialog', {name: 'Edit Group'});
-  await modal.getByRole('textbox', {name: 'Name of the group'}).fill('Youth council');
+  await modal.getByRole('textbox', {name: 'Name of the group, English'}).fill('Youth council');
   await modal.getByRole('button', {name: 'Save group'}).click();
   await expect(page.getByRole('grid', {name: 'Youth council'})).toBeVisible();
   // Delete Group confirms in an Alert dialog: no ×, focus on Cancel, Esc cancels; then Delete group deletes.

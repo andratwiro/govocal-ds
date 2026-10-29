@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {Eye, FileQuestion} from 'lucide-react';
 import {Banner, Button, Divider, EmptyState, Panel, queue, Radio, RadioGroup, SectionToggle, Tab, TabList, TabPanel,
-  TabPanels, Tabs, TextField, ToastRegion} from 'govocal-ds';
+  TabPanels, Tabs, TextField, ToastRegion, MultilingualTextField, type Multiloc} from 'govocal-ds';
 import {CUSTOM_PAGE_SECTIONS, HOME_SECTIONS, MENU_ENTRIES, NAV_NAMES, PAGE_INTRO, PAGE_META, type PageSection} from '../data-pages-menu';
 import {LOCALES} from '../data-settings';
 import {Gap} from '../Gap';
@@ -10,6 +10,8 @@ import {Page} from './Page';
 
 // The first screens behind Pages & menu: the homepage builder, a navbar item's form, a custom page's editor and
 // its view. Shallow, as the real admin's routes under /pages-menu.
+// The platform's languages (Settings' Platform configuration).
+const LANGUAGES = LOCALES.map(l => l.id);
 const CRUMB = [{key: 'pages-menu', label: 'Pages & menu', href: '#/pages-menu'}];
 
 /** Save, which turns off until something changes again; the save says so in a Toast. */
@@ -117,7 +119,9 @@ export function CustomPageEditor() {
 function CustomPageForm({pageId}: {pageId?: string}) {
   const navigate = useNavigate();
   const page = pageId ? MENU_ENTRIES.find(e => e.id === pageId && e.kind === 'page') : undefined;
-  const [title, setTitle] = useState(page?.label ?? '');
+  const [titles, setTitles] = useState<Multiloc>(page ? {[LANGUAGES[0]]: page.label} : {});
+  // The slug and Save follow the title in the platform's first language.
+  const title = titles[LANGUAGES[0]] ?? '';
   const [slug, setSlug] = useState(pageId ? PAGE_META[pageId]?.slug ?? '' : '');
   const [slugTouched, setSlugTouched] = useState(!!page);
   const [linked, setLinked] = useState('none');
@@ -144,8 +148,12 @@ function CustomPageForm({pageId}: {pageId?: string}) {
           <TabPanel id="settings" className="react-aria-TabPanel bo-pages-menu-panel">
             <Panel title="Page settings" description="The page's title, its address on the platform, and what it links to.">
               <div className="bo-pages-menu-form">
-                <TextField label="Title" isRequired placeholder="Enter a title" value={title}
-                  onChange={v => { setTitle(v); if (!slugTouched) setSlug(slugify(v)); touch(); }} />
+                <MultilingualTextField label="Title" isRequired placeholder="Enter a title" locales={LANGUAGES} value={titles}
+                  onChange={(v, locale) => {
+                    setTitles(v);
+                    if (!slugTouched && locale === LANGUAGES[0]) setSlug(slugify(v[locale] ?? ''));
+                    touch();
+                  }} />
                 <TextField label="Slug" value={slug} description="Lowercase letters (a-z), numbers (0-9) and hyphens only."
                   onChange={v => { setSlug(v); setSlugTouched(true); touch(); }} />
                 <RadioGroup label="Linked items" description="Select which items and related events can be displayed on the page."

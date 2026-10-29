@@ -205,7 +205,7 @@ test('Use a template opens the gallery; Use template asks for a title, then adds
   await gallery.getByRole('radio', {name: /Participatory budget/}).check({force: true});
   await gallery.getByRole('button', {name: 'Use template'}).click();
   const create = page.getByRole('dialog', {name: "Create a project based on the template 'Participatory budget'"});
-  await create.getByRole('textbox', {name: 'The title of your project'}).fill('Budget for the parks');
+  await create.getByRole('textbox', {name: 'The title of your project, English'}).fill('Budget for the parks');
   await create.getByRole('button', {name: 'Create project'}).click();
   await expect(page.getByRole('row', {name: /Budget for the parks/}).locator('.gv-status')).toHaveText('Draft');
 });
