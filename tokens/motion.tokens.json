@@ -1,0 +1,52 @@
+{
+  "$description": "Not in Figma: Figma has no motion variables yet. Written by hand (DTCG); npm run tokens:pull never touches this file, npm run tokens:build merges it with the Figma tokens into src/tokens.css. Values from the prototype's clusters (augur-design.html). Each duration's com.govocal.reducedMotion is what it becomes under prefers-reduced-motion: reduce.",
+  "motion": {
+    "duration": {
+      "fast": {
+        "$type": "duration",
+        "$value": {"value": 120, "unit": "ms"},
+        "$description": "A change in place: hover, press and focus colours, fades, a chevron turning, a tooltip or menu appearing, a dialog leaving.",
+        "$extensions": {"com.govocal.reducedMotion": {"value": 1, "unit": "ms"}}
+      },
+      "medium": {
+        "$type": "duration",
+        "$value": {"value": 200, "unit": "ms"},
+        "$description": "A short move or an entrance: an indicator or knob sliding, a tick drawing, a dialog or coachmark coming in.",
+        "$extensions": {"com.govocal.reducedMotion": {"value": 1, "unit": "ms"}}
+      },
+      "slow": {
+        "$type": "duration",
+        "$value": {"value": 300, "unit": "ms"},
+        "$description": "A change of size or a long move: a panel opening, a tab panel resizing, a sheet or toast sliding, a bar filling.",
+        "$extensions": {"com.govocal.reducedMotion": {"value": 1, "unit": "ms"}}
+      },
+      "loop": {
+        "$type": "duration",
+        "$value": {"value": 1.6, "unit": "s"},
+        "$description": "One cycle of a repeating status: a skeleton pulsing, an indeterminate bar sweeping. Not shortened under reduced motion (a 1 ms loop flickers): the component stops it."
+      }
+    },
+    "easing": {
+      "standard": {
+        "$type": "cubicBezier",
+        "$value": [0.25, 0.1, 0.25, 1],
+        "$description": "In place: colours, fades, a chevron turning, a press; and one transition that plays both ways (a popover in and out). CSS's ease, the prototype's default."
+      },
+      "enter": {
+        "$type": "cubicBezier",
+        "$value": [0.22, 0.61, 0.36, 1],
+        "$description": "Something arriving: quick start, soft landing (a dialog, toast or card coming in)."
+      },
+      "exit": {
+        "$type": "cubicBezier",
+        "$value": [0.42, 0, 1, 1],
+        "$description": "Something leaving: soft start, quick finish (a dialog or toast going away). CSS's ease-in."
+      },
+      "move": {
+        "$type": "cubicBezier",
+        "$value": [0.65, 0, 0.35, 1],
+        "$description": "Something travelling or resizing on screen: an indicator or knob sliding, a panel opening, a bar filling; and loops."
+      }
+    }
+  }
+}

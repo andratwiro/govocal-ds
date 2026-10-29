@@ -1,6 +1,8 @@
 import {describe, it, expect} from 'vitest';
+import {readFileSync} from 'node:fs';
 import {parseFoundations} from '../scripts/lib/foundations.mjs';
 import {toCss} from '../scripts/lib/css.mjs';
+import {mergeTokens} from '../scripts/lib/merge.mjs';
 import {parseIcons} from '../scripts/lib/icons.mjs';
 
 const text = (name, chars, style = {}) => ({type: 'TEXT', name, characters: chars, style});
@@ -98,5 +100,74 @@ describe('parseIcons', () => {
       {type: 'COMPONENT', name: 'chevron-right-thin'}
     ]}]};
     expect(parseIcons(iconsPage)).toEqual(['chevron-right-thin', 'link', 'x']);
+  });
+});
+
+// Motion is Not in Figma: hand-authored in tokens/motion.tokens.json, merged at build time, never pulled.
+const ms = (value, unit = 'ms') => ({value, unit});
+const motionFile = {
+  $description: 'Not in Figma',
+  motion: {
+    duration: {
+      fast: {$type: 'duration', $value: ms(120), $description: 'Hover and press.',
+        $extensions: {'com.govocal.reducedMotion': ms(1)}},
+      loop: {$type: 'duration', $value: ms(1.6, 's')}
+    },
+    easing: {standard: {$type: 'cubicBezier', $value: [0.25, 0.1, 0.25, 1], $description: 'In place.'}}
+  }
+};
+
+describe('mergeTokens', () => {
+  const figma = parseFoundations(page).tokens;
+  it('adds the hand-authored groups to the Figma ones, leaving the Figma ones as they are', () => {
+    const merged = mergeTokens(figma, motionFile);
+    expect(merged.motion.duration.fast.$value).toEqual(ms(120));
+    expect(merged.surface).toBe(figma.surface);
+    expect(merged.$description).toBeUndefined();
+    expect(figma.motion).toBeUndefined();
+  });
+  it('refuses a group that both files define', () => {
+    expect(() => mergeTokens({...figma, motion: {}}, motionFile)).toThrow(/motion/);
+  });
+  it('a Figma pull writes only the Figma files', () => {
+    const pull = readFileSync('scripts/figma-pull.mjs', 'utf8');
+    expect(pull).not.toMatch(/motion/);
+    expect(readFileSync('scripts/build-tokens.mjs', 'utf8')).toContain('tokens/motion.tokens.json');
+  });
+});
+
+describe('toCss motion', () => {
+  const css = toCss(mergeTokens(parseFoundations(page).tokens, motionFile));
+  it('writes durations and easings, annotated for the Animation and Easing presenters', () => {
+    expect(css).toContain('/** @tokens Motion duration @presenter Animation */');
+    expect(css).toContain('--gv-motion-duration-fast: 120ms; /* Hover and press. */');
+    expect(css).toContain('--gv-motion-duration-loop: 1.6s;');
+    expect(css).toContain('/** @tokens Motion easing @presenter Easing */');
+    expect(css).toContain('--gv-motion-easing-standard: cubic-bezier(0.25, 0.1, 0.25, 1); /* In place. */');
+  });
+  it('shortens a duration under reduced motion only where the token says so', () => {
+    const reduced = css.slice(css.indexOf('@media (prefers-reduced-motion: reduce)'));
+    expect(reduced).toMatch(/^@media \(prefers-reduced-motion: reduce\) \{\n {2}:root \{\n {4}--gv-motion-duration-fast: 1ms;\n {2}\}\n\}\n$/);
+    expect(reduced).not.toContain('loop');
+  });
+  it('writes no motion and no media block without motion tokens', () => {
+    const plain = toCss(parseFoundations(page).tokens);
+    expect(plain).not.toContain('--gv-motion');
+    expect(plain).not.toContain('@media');
+  });
+  it('refuses a duration without a time unit and a curve that is not four numbers in range', () => {
+    const bad = (duration, easing) => () => toCss(mergeTokens(parseFoundations(page).tokens,
+      {motion: {duration: {x: {$type: 'duration', $value: duration}}, easing: {y: {$type: 'cubicBezier', $value: easing}}}}));
+    expect(bad({value: 120, unit: 'px'}, [0, 0, 1, 1])).toThrow(/motion.duration.x/);
+    expect(bad(ms(120), [0, 0, 1])).toThrow(/motion.easing.y/);
+    expect(bad(ms(120), [1.2, 0, 1, 1])).toThrow(/motion.easing.y/);
+  });
+});
+
+describe('src/tokens.css', () => {
+  it('is the build of the Figma file and the motion file (run npm run tokens:build)', () => {
+    const figma = JSON.parse(readFileSync('tokens/foundations.tokens.json', 'utf8'));
+    const motion = JSON.parse(readFileSync('tokens/motion.tokens.json', 'utf8'));
+    expect(readFileSync('src/tokens.css', 'utf8')).toBe(toCss(mergeTokens(figma, motion)));
   });
 });
