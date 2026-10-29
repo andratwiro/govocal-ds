@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {ListHeader, type ListHeaderColumn} from './ListHeader';
 import {ListRow} from './ListRow';
 import {Table, TableHeader, TableBody, Column, Row, Cell} from '../Table';
@@ -21,14 +22,14 @@ type Story = StoryFn<typeof ListHeader>;
 
 const ideation: ListHeaderColumn[] = [
   {key: 'idea', label: 'Idea', width: 572},
-  {key: 'status', label: 'Status', width: 136, square: true}
+  {key: 'status', label: 'Status', width: 136}
 ];
 
 const commonGround: ListHeaderColumn[] = [
   {key: 'statement', label: 'Statement', width: 404, square: true},
   {key: 'assignee', label: 'Assignee', width: 88, square: true},
   {key: 'likes', label: 'Likes', width: 56, variant: 'number'},
-  {key: 'agree', label: 'Agree', width: 71, variant: 'number', sorted: true},
+  {key: 'agree', label: 'Agree', width: 72, variant: 'number', sorted: true},
   {key: 'reactions', label: 'Reactions', width: 88, variant: 'number'}
 ];
 
@@ -48,44 +49,114 @@ const voting: ListHeaderColumn[] = [
   {key: 'comments', label: 'Comments', width: 112, variant: 'number'}
 ];
 
+const Label = ({children}: {children: React.ReactNode}) => (
+  <p style={{font: 'var(--gv-type-small-strong)', margin: '0 0 8px'}}>{children}</p>
+);
+
+/** Figma's four `Method` variants. Ideation and Common ground carry the select-all checkbox. */
 export const AllVariants: Story = () => (
   <div style={{display: 'flex', flexDirection: 'column', gap: 32, width: 764}}>
     <div>
-      <p style={{font: 'var(--gv-type-small-strong)', marginBottom: 8}}>Method · Ideation</p>
-      <ListHeader columns={ideation} onAddColumn={() => {}} />
+      <Label>Method · Ideation</Label>
+      <ListHeader method="ideation" columns={ideation} selectAll={{}} onAddColumn={() => {}} />
     </div>
     <div>
-      <p style={{font: 'var(--gv-type-small-strong)', marginBottom: 8}}>Method · Common ground</p>
-      <ListHeader columns={commonGround} />
+      <Label>Method · Common ground</Label>
+      <ListHeader method="common-ground" columns={commonGround} selectAll={{}} />
     </div>
     <div>
-      <p style={{font: 'var(--gv-type-small-strong)', marginBottom: 8}}>Method · Proposals</p>
-      <ListHeader columns={proposals} />
+      <Label>Method · Proposals</Label>
+      <ListHeader method="proposals" columns={proposals} />
     </div>
     <div>
-      <p style={{font: 'var(--gv-type-small-strong)', marginBottom: 8}}>Method · Voting</p>
-      <ListHeader columns={voting} />
+      <Label>Method · Voting</Label>
+      <ListHeader method="voting" columns={voting} />
     </div>
   </div>
 );
 
+const Wide = ({children}: {children: React.ReactNode}) => <div style={{width: 764}}>{children}</div>;
+
 export const Ideation: Story = () => (
-  <ListHeader columns={ideation} onAddColumn={() => {}} />
+  <Wide>
+    <ListHeader columns={ideation} selectAll={{}} onAddColumn={() => {}} />
+  </Wide>
 );
 
-export const CommonGround: Story = () => <ListHeader columns={commonGround} />;
+export const CommonGround: Story = () => (
+  <Wide>
+    <ListHeader columns={commonGround} selectAll={{}} />
+  </Wide>
+);
 
-export const Proposals: Story = () => <ListHeader columns={proposals} />;
+export const Proposals: Story = () => (
+  <Wide>
+    <ListHeader columns={proposals} />
+  </Wide>
+);
 
-export const Voting: Story = () => <ListHeader columns={voting} />;
+export const Voting: Story = () => (
+  <Wide>
+    <ListHeader columns={voting} />
+  </Wide>
+);
+
+const IDEAS = [
+  ['Organise open-air cinema nights on Linden Avenue in summer. It would be a great way for neighbours to meet.', 'Viewed', true],
+  ['Build rain gardens along the north district so the street stops flooding after every heavy storm.', 'Rejected', false],
+  ['Widen the pavement on Riverside Park. With prams, wheelchairs and shop terraces there is simply not enough room.', 'Under consideration', false],
+  ['Set up a repair café near Riverside Park where people can fix bikes, clothes and small appliances.', 'Viewed', false]
+] as const;
 
 /**
- * `ListHeader` and `ListRow` compose directly into a selectable React Aria
- * `Table`: the starter `Table`/`TableHeader`/`Row` already add the checkbox
- * column when `selectionMode="multiple"`, and handle focus, keyboard
- * navigation and selection state — `ListHeader`/`ListRow` only supply
- * the design system's look, as the single (non-tree) column's content. The same pattern
- * works with `GridList`/`GridListItem` for a looser, card-less list.
+ * The prototype's Manage table: `ListHeader` with its select-all, then `ListRow`s with theirs.
+ * The header checkbox selects every row, and shows a dash while only some are picked.
+ */
+export const ManageTable: Story = () => {
+  const [picked, setPicked] = useState<Set<number>>(new Set());
+  const all = picked.size === IDEAS.length;
+  return (
+    <div style={{width: 764, padding: 8, background: 'var(--gv-surface-panel)'}}>
+      <ListHeader
+        columns={ideation}
+        onSort={() => {}}
+        onAddColumn={() => {}}
+        selectAll={{
+          isSelected: all,
+          isIndeterminate: picked.size > 0 && !all,
+          onChange: on => setPicked(on ? new Set(IDEAS.map((_, i) => i)) : new Set())
+        }}
+      />
+      {IDEAS.map(([title, status, warning], i) => (
+        <ListRow
+          key={i}
+          title={title}
+          status={status}
+          warning={warning}
+          select={{
+            isSelected: picked.has(i),
+            'aria-label': `Select: ${title}`,
+            onChange: on =>
+              setPicked(p => {
+                const n = new Set(p);
+                if (on) n.add(i);
+                else n.delete(i);
+                return n;
+              })
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+/**
+ * `ListHeader` and `ListRow` inside a selectable React Aria `Table`: the starter
+ * `Table`/`TableHeader`/`Row` add the checkbox column when `selectionMode="multiple"`,
+ * and handle focus, keyboard navigation and selection state. `ListHeader`/`ListRow` only
+ * supply the look, as the single column's content (`leadSlot` keeps the header in line with
+ * the row's empty checkbox slot). The starter Table keeps its own zebra and borders; the
+ * prototype's look is `ManageTable`.
  */
 export const InATable: Story = () => (
   <Table
@@ -94,7 +165,7 @@ export const InATable: Story = () => (
     style={{width: 764}}>
     <TableHeader>
       <Column isRowHeader>
-        <ListHeader columns={ideation} onAddColumn={() => alert('Add column')} />
+        <ListHeader columns={ideation} leadSlot onAddColumn={() => alert('Add column')} />
       </Column>
     </TableHeader>
     <TableBody>

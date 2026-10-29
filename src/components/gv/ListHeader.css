@@ -1,26 +1,33 @@
 @import '../theme.css';
 
+/*
+ * Figma "List header": [Checkbox 28] Columns [Add column 28], 32 tall, a Border subtle hairline.
+ * The prototype's .pj-intable__hd is the same: a 28 select-all slot for the selectable methods
+ * (Ideation, Common ground), a grid of columns whose first one fills, a 28 slot at the end.
+ */
 .gv-list-header {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 0 var(--gv-space-28);
   border-bottom: 1px solid var(--gv-border-subtle);
 }
 
-.gv-list-header__columns {
+.gv-list-header__lead,
+.gv-list-header__trail {
+  flex: 0 0 28px;
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+.gv-list-header__columns {
   flex: 1;
   min-width: 0;
-}
+  display: grid;
+  align-items: center;
 
-.gv-list-header__cell-slot {
-  display: flex;
-  min-width: 0;
-  flex: 1 1 0;
-}
-
-.gv-list-header__cell-slot .gv-list-header-cell {
-  width: 100%;
+  > .gv-list-header-cell {
+    width: 100%;
+  }
 }
