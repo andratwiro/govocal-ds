@@ -47,17 +47,26 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Tree** `Tree` Stories: Example.
 
 ## Components / Overlays
-- **Alert dialog** `AlertDialog` (not in Figma): A destructive or high-stakes confirm: `role="alertdialog"`, no ×, Esc acts as Cancel, focus starts on Cancel (§C). Stories: All Variants, Confirm, Destructive, Type To Confirm, With Impact List.
+- **Alert dialog** `AlertDialog` (not in Figma): Alert dialog: a destructive or high-stakes confirm, `role="alertdialog"`, with no ×. - **Both buttons close it.** Confirm calls `onConfirm`, Cancel (or Esc,… Stories: All Variants, Confirm, Destructive, Type To Confirm, With Impact List.
 - **Coachmark** `Coachmark` (not in Figma): Onboarding coachmark. Stories: All Variants, Example.
 - **Help popover** `HelpPopover` (not in Figma): A help icon (or a "Learn more" text button) that opens a short popover with a heading and a sentence or two. Stories: Icon, Learn More, Open.
 - **Modal** `Modal`: Modal: head (title + ×), a body, and a footer of buttons on the toolbar grey. Stories: All Variants, Attachments, Share, Access, Input Manager, Fixed Height, Paged, With Side Tabs.
-- **Side panel** `SidePanel` (not in Figma): Side panel: one record of a list beside the list, the prototype's Manage drawer (`#pj-idrawer`). Stories: All Variants, Default, First Record, Last Record, Long Body With Footer, Screening, Closed, Right To Left.
+- **Side panel** `SidePanel` (not in Figma): Side panel: one record of a list beside the list, the prototype's Manage drawer (`#pj-idrawer`). Stories: All Variants, Default, First Record, Last Record, Long Body With Footer, Screening, Closed, Narrow, Right To Left, Record Head.
 - **Tooltip** `Tooltip` (not in Figma) Stories: Example.
+
+## Components / Layout & containers
+- **App provider** `AppProvider` (not in Figma): App provider: wrap the app in it once, at its root. Stories: Default, With A Pages Own Region.
+- **Card** `Card` (not in Figma): Card: a titled box with a status line (Required, review status, summary, pills), a control (chevron, icon buttons, compact buttons, a switch), an optional bo… Stories: All Variants, Add, Empty, Required, Review Icon Pill, Review Pill, To Set, Review Pill Section, Review Pill Dropdown, Manage Add, Manage Not Set, Statements, Insights Add Report, Insights Share Results, Insights Ai Summary, Manage Exports, Embed Url, Report, Naming Proposals, Manage Toggle, Survey Placement, Survey Options, Options To Vote On, Voting Method, Reviewed, Menu Icons, Disabled Action, With Media, With Media Filled.
+- **Divider** `Divider`: Divider (Figma node 5:303): a 1px hairline, horizontal or vertical. Stories: All Variants, Horizontal, Vertical.
+- **Page header** `PageHeader` (not in Figma): Page header: the top of a page, the breadcrumbs (on a sub-page), then the title with the page's actions at the end of its row, then a line about the page. Stories: Default, With Breadcrumbs, Title Only.
+- **Panel** `Panel` (not in Figma): The white frame a table or list sits in: a head with the title, an optional count Badge and description and trailing actions, over a hairline; an optional to… Stories: All Variants, Default, With Count And Description, With Actions, With Footer, With A Toolbar, In A Composer, Right To Left.
+- **Section label** `SectionLabel`: A quiet label over a group of rows: the rail's Timeline / Spotlight / Events, Insights' "Who is voting", the Create report checklist's "Project context" (Fig… Stories: All Variants, Default, As A Heading, With Icon.
+- **Tile grid** `TileGrid` (not in Figma): Tile grid: tiles in as many equal columns as fit, each at least `minTileWidth` wide, wrapping onto new rows, one column on a narrow screen. Stories: Stat Tiles, Gallery, Panels.
 
 ## Components / Data display
 - **Avatar** `Avatar`: A small round avatar: initials on a filled circle, a photo over them, or an empty/unassigned ring. Stories: All Variants, Filled, Unassigned, Image, Image Fails, Stack.
-- **Data table** (not in Figma) Stories: All Variants, Default, Sorted Ascending, Sorted Descending, Selectable Some Selected, Selectable Without Select All, Person Cell, Numeric Columns, Row Options, Empty, With Thumbnails, Assignee Column, Tags Column, Projects List Cells, Manage Inputs, In A Panel, Right To Left.
-- **File list** `FileList` (not in Figma): File list: one row per attachment — a file icon, its name and "PDF · 0 KB", then View / Delete. Stories: Default, Empty, With Add Button, In A Dialog.
+- **Data table** (not in Figma) Stories: All Variants, Default, Sorted Ascending, Sorted Descending, Selectable Some Selected, Selectable Without Select All, Person Cell, Numeric Columns, Row Options, Empty, With Thumbnails, Assignee Column, Tags Column, Projects List Cells, Manage Inputs, In A Panel, With Bulk Selection And An Open Row, Right To Left.
+- **File list** `FileList` (not in Figma): File list: one row per attachment — a file icon, its name and "PDF · 0 KB", then View / Delete. Stories: Default, Empty, With Add Button, Deleting, In A Dialog.
 - **Illustration** `Illustration` (not in Figma): An illustration: one self-contained SVG file drawn inline, so it paints with the page's `--gv-*` tokens. Stories: All Variants, Auto, Once, Loop, Hover, Still, Sizes, Cover, With Alt, Timings.
 - **List header** `ListHeader` Stories: All Variants, Ideation, Common Ground, Proposals, Voting, Manage Table, In A Table.
 - **List header cell** `ListHeaderCell` Stories: All Variants, Label, Add Column, Label Square, Number_, Number Sorted, Label Sorted.
@@ -76,7 +85,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Review status** `ReviewStatus`: The small word at the end of a card's header that says whether the admin has looked at it. Stories: All Variants, To Review, To Set, Reviewed.
 - **Skeleton** `Skeleton` (not in Figma): A grey placeholder. Stories: All Variants, Line, Block, Pill, Circle.
 - **Status badge** `StatusBadge`: Status badge: a small status pill ("Draft" / "Live"). Stories: All Variants, Draft, Live.
-- **Toast** (not in Figma) Stories: All Variants, With Undo, Simple, Stacked, Example.
+- **Toast** `Toast` (not in Figma): One toast, as `ToastRegion` draws it. Stories: All Variants, With Undo, Simple, Stacked, Example.
 
 ## Components / Charts
 - **Bar row** `BarRow`: Figma "Bar row": a label, a thin bar and its value. Stories: All Variants, Default, Empty, Two Line Label, Without Value, With Detail.
@@ -88,7 +97,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 ## Components / Navigation
 - **Breadcrumbs** `Breadcrumbs`: Breadcrumbs. Stories: All Variants, Project, Phase Draft, Phase Live.
 - **Pagination** `Pagination` (not in Figma): The pager at the foot of a table: "‹ 1 2 3 4 5 … 12 ›", the current page filled. Stories: All Variants, First, Middle, Last, Few Pages, One Page, Right To Left.
-- **Tabs** `Tabs` (not in Figma) Stories: All Variants, Underline, With Count, With Icons, With Status Dots, Vertical, Vertical With Group Headings.
+- **Tabs** `Tabs` (not in Figma): Tabs: a `TabList` of `Tab`s, then one `TabPanels` holding a `TabPanel` per tab (same `id`). Stories: All Variants, Underline, With Count, With Icons, With Status Dots, Vertical, Vertical With Group Headings.
 
 ## Components / Actions
 - **Button** `Button` Stories: All States, Primary, Secondary, Sizes, With Menu, Disabled, Quiet, Danger, Quiet Danger, Pending, Icon Plus Text Vs Icon Only.
@@ -97,16 +106,10 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Menu** `Menu` (not in Figma): A list of actions or options in a popover (React Aria's Menu), in the prototype's one dropdown rhythm: rows 32 tall, a leading icon, a description line, sect… Stories: All Variants, With Icons, With Badges, With Sections, Multiple With A Footer Action, With A Submenu Checklist.
 - **Segmented control** `SegmentedControl`: Segmented control. Stories: All Variants, Build, Two Tabs, Insights Manage Unread, Small Range Switch, Icon And Label Small, Unread With Tooltip.
 
-## Components / Layout & containers
-- **Card** `Card` (not in Figma): Card: a titled box with a status line (Required, review notice, summary, pills), a control (chevron, icon buttons, compact buttons, a switch) and an optional… Stories: All Variants, Add, Empty, Required, Review Icon Pill, Review Pill, To Set, Review Pill Section, Review Pill Dropdown, Manage Add, Manage Not Set, Statements, Insights Add Report, Insights Share Results, Insights Ai Summary, Manage Exports, Embed Url, Report, Naming Proposals, Manage Toggle, Survey Placement, Survey Options, Options To Vote On, Voting Method, Reviewed, Menu Icons, Disabled Action.
-- **Divider** `Divider`: Divider (Figma node 5:303): a 1px hairline, horizontal or vertical. Stories: All Variants, Horizontal, Vertical.
-- **Panel** `Panel` (not in Figma): The white frame a table or list sits in: a head with the title, an optional count Badge and description and trailing actions, over a hairline; an optional to… Stories: All Variants, Default, With Count And Description, With Actions, With Footer, With A Toolbar, In A Composer, Right To Left.
-- **Section label** `SectionLabel`: A quiet label over a group of rows: the rail's Timeline / Spotlight / Events, Insights' "Who is voting", the Create report checklist's "Project context" (Fig… Stories: All Variants, Default, As A Heading, With Icon.
-
 ## Components / Forms
 - **Checkbox** `Checkbox`: Checkbox: a 15x15 rounded box, token-fill when checked/indeterminate. Stories: All Variants, Default, Selected, Indeterminate, With Description, Quiet, Disabled.
 - **Choice card** `ChoiceCard` (not in Figma): Choice card: a bordered, selectable tile — one component for radio tiles (inside a RadioGroup) and checkbox tiles (`ChoiceCardCheckbox`, inside a CheckboxGro… Stories: All Variants, With Icon, With Revealed Content, Checkbox Group With Group Headings, Long List.
-- **Date range field** `DateRangeField` (not in Figma): Date range field: two DatePickers joined by an "Add end date" link, never the starter DateRangePicker — a phase or event's end may stay open-ended (§C). Stories: Start Only, Start And End, With Times, With Timezone, Required, Invalid.
+- **Date range field** `DateRangeField` (not in Figma): Date range field: two DatePickers joined by an "Add end date" button, never the starter DateRangePicker, because a phase or event's end may stay open. Stories: Start Only, Start And End, With Times, With Timezone, Required, Invalid, Controlled.
 - **Drop zone** `DropZone`: Drop zone: an upload icon with "Drop a file here or browse". Stories: All Variants, Default, Disabled, Custom Label, Compact.
 - **Number field** `NumberField` Stories: Default, Label At The Side, With Prefix.
 - **Option list** `OptionList` (not in Figma): A list of options to pick from, in a popover (a filter's submenu, a tag picker, a setup step): an optional search over rows of box · icon · value · count. Stories: All Variants, Single, Multiple, With Counts, Searchable, People, With Footer, Empty, Right To Left.
@@ -120,6 +123,10 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Tag picker** `TagPicker` (not in Figma): The tags on an item, each removable, then "+ Add tag", which opens the Option list (several, searchable) in a popover. ←→ move between the tags, Delete or Ba… Stories: All Variants, Default, Empty, Many, Disabled.
 - **Text field** `TextField` Stories: Default, With Prefix, With Counter, Read Only.
 - **Title field** `TitleField`: Title field (Figma node 4:123): the big project/page name input at the top of an editor. Stories: All Variants, Empty, Required, Filled, Invalid.
+
+## Components / Text
+- **Text** `Text` (not in Figma): Text: words in one of the system's type styles and colours, `<Text kind="small" color="meta">Posted 2 days ago</Text>` or `<Text elementType="h2" kind="body"… Stories: All Variants, Colors, Heading And Paragraph, Playground.
+- **Visually hidden** `VisuallyHidden` (not in Figma): Visually hidden: content for screen readers only, kept in the page's reading order. Stories: Default, Focusable.
 
 ## Patterns / Build tab
 - **Access rights** `AccessRights` (not in Figma): Who can take one participant action: following the platform's defaults (read-only, with Override) or set for this phase. Stories: All Variants, Using Defaults, Override, Security Requirements, Two Choices, In The Modal, Modal.
@@ -150,7 +157,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 ## Patterns / Lists
 - **Filter chips** `FilterChips` (not in Figma): The active-filter bar: one chip per facet that is on, reading "Assignee | is | Manager A | ×" ("is any of" and a list once several values are ticked), on a q… Stories: Two Filters, Any Of, Wrapping, Without Clear, Metric Chip, Empty, Right To Left.
 - **Filter menu** `FilterMenu` (not in Figma): The filter button and its menu: a bordered funnel icon button that wears a dot while any filter is on; its menu lists the facets, each with how many values a… Stories: Empty, Open, Active, In Sync With Chips, Right To Left.
-- **Selection bar** `SelectionBar` (not in Figma): The bulk-action bar of a list with checkboxes: while rows are selected it reads "2 selected", then one secondary button per action and a × that clears the se… Stories: One Selected, Many, With A Contextual Action, Empty, Users List, Right To Left.
+- **Selection bar** `SelectionBar` (not in Figma): The bulk-action bar of a list with checkboxes: while rows are selected it reads "2 selected", then one secondary button per item and a × that clears the sele… Stories: One Selected, Many, With A Contextual Action, Empty, Users List, Right To Left.
 
 ## Patterns / App shell
 - **Notification list** `NotificationList` (not in Figma): The notifications list the admin sidebar's bell opens (the real admin's notification menu): a title with "Mark all as read", then one row per notification, n… Stories: Default, All Read, Empty.
@@ -165,4 +172,4 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Section toggle** `SectionToggle` (not in Figma): One page section in a builder's section list: the name and a line about it, whether it is shown on the page, and the switch that shows or hides it. Stories: Shown, Hidden, Locked, List.
 
 ## Not in Figma yet
-Tagged `not-in-figma` in their stories (46): Alert dialog, Banner, Card, Choice card, Coachmark, Data table, Date range field, Empty state, File list, Help popover, Illustration, Menu, Option list, Pagination, Panel, Property list, Reaction counts, Search field, Select, Side panel, Skeleton, Table toolbar, Tabs, Tag picker, Toast, Tooltip, Access rights, Action row, Comment thread, Filter chips, Filter menu, Form field summary, Notification list, Notification row, Official update, Panel section, Participant action row, Phase timeline, Phone preview, Rail phase, Section toggle, Selection bar, Side nav, Stat card, View option row, Volunteering row.
+Tagged `not-in-figma` in their stories (51): Alert dialog, App provider, Banner, Card, Choice card, Coachmark, Data table, Date range field, Empty state, File list, Help popover, Illustration, Menu, Option list, Page header, Pagination, Panel, Property list, Reaction counts, Search field, Select, Side panel, Skeleton, Table toolbar, Tabs, Tag picker, Text, Tile grid, Toast, Tooltip, Visually hidden, Access rights, Action row, Comment thread, Filter chips, Filter menu, Form field summary, Notification list, Notification row, Official update, Panel section, Participant action row, Phase timeline, Phone preview, Rail phase, Section toggle, Selection bar, Side nav, Stat card, View option row, Volunteering row.
