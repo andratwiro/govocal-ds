@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
-import {MyToastRegion, queue} from './Toast';
-import {Button} from './Button';
+import {MyToastRegion, queue} from '../Toast';
+import {Button} from '../Button';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
 interface ToastStoryArgs {
@@ -12,11 +12,11 @@ interface ToastStoryArgs {
 }
 
 const meta: Meta<ToastStoryArgs> = {
-  title: 'Toast',
+  title: 'Components/Status & feedback/Toast',
   parameters: {
     layout: 'centered'
   },
-  tags: ['autodocs'],
+  tags: ['autodocs', 'not-in-figma'],
   argTypes: {
     title: {
       control: 'text',
@@ -50,8 +50,8 @@ const meta: Meta<ToastStoryArgs> = {
 export default meta;
 type Story = StoryObj<ToastStoryArgs>;
 
-/** The three toasts the prototype shows, open on load: confirmation, delete with Undo, and no icon. */
-export const AllStates: Story = {
+/** The three toasts the prototype shows: a confirmation, a one-liner, and an undo. */
+export const AllVariants: Story = {
   render: () => {
     useEffect(() => {
       queue.clear(); // the queue is global: start this story from an empty one
@@ -110,6 +110,37 @@ export const WithUndo: Story = {
         onAction: () => queue.add({title: 'Idea restored', icon: null}, {timeout: 5000})
       });
       return () => queue.close(key);
+    }, []);
+    return <MyToastRegion />;
+  }
+};
+
+/** The one-liner: a Toast with no body and no action, same shell as the rest. */
+export const Simple: Story = {
+  render: () => {
+    useEffect(() => {
+      queue.clear();
+      const key = queue.add({title: 'Idea restored', icon: null});
+      return () => queue.close(key);
+    }, []);
+    return <MyToastRegion />;
+  }
+};
+
+/** Two toasts at once, newest on top. */
+export const Stacked: Story = {
+  render: () => {
+    useEffect(() => {
+      queue.clear();
+      const keys = [
+        queue.add({title: 'Idea restored', icon: null}),
+        queue.add({
+          title: '"Green Corridors for Riverside" deleted',
+          action: 'Undo',
+          onAction: () => {}
+        })
+      ];
+      return () => keys.forEach(key => queue.close(key));
     }, []);
     return <MyToastRegion />;
   }
