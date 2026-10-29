@@ -23,6 +23,7 @@ test('stat tile: the info icon opens a Help popover by press and by keyboard', a
   await expect(dialog).toContainText('Phase participants as a share');
   await page.keyboard.press('Escape');
   await expect(dialog).toHaveCount(0);
+  await help.focus();
   await page.keyboard.press('Enter');
   await expect(dialog).toBeVisible();
 });
