@@ -11,7 +11,13 @@ const NAMES = new Set(['6fa29cc695ff56e2', 'ad4b388c696c4250', 'f074d7b772fd6204
 const HER = /\bher (prototype|Figma|tokens|system|look|spec|frames?|file|seat|account|agent)\b/i;
 const TEXT = /\.(tsx?|jsx?|mjs|mdx?|css|html|json|ya?ml|txt|svg)$/; // svg: illustrations carry text (invented people)
 
-const hash = w => createHash('sha256').update(w).digest('hex').slice(0, 16);
+// Cached per word: the scan hashes every word of every tracked file, and most words repeat.
+const hashes = new Map();
+const hash = w => {
+  let h = hashes.get(w);
+  if (h === undefined) hashes.set(w, h = createHash('sha256').update(w).digest('hex').slice(0, 16));
+  return h;
+};
 export const named = (line, names = NAMES) =>
   HER.test(line) || line.toLowerCase().split(/[^a-z]+/).some(w => w && names.has(hash(w)));
 
