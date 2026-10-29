@@ -38,7 +38,7 @@ function Demo({initial = {}, query: initialQuery = '', withExport, selected: ini
 }
 
 const meta: Meta<typeof TableToolbar> = {
-  title: 'Components/Data display/Table toolbar',
+  title: 'Components/Tables & lists/Table toolbar',
   component: TableToolbar,
   subcomponents: {TableToolbarHeading},
   tags: ['autodocs', 'not-in-figma'],

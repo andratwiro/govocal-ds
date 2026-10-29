@@ -20,7 +20,6 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 
 ## Components / Data display
 - **Avatar** `Avatar`: A small round avatar: initials on a filled circle, a photo over them, or an empty/unassigned ring. Stories: All Variants, Filled, Unassigned, Image, Image Fails, Stack.
-- **Data table** (not in Figma) Stories: All Variants, Default, Sorted Ascending, Sorted Descending, Selectable Some Selected, Selectable Without Select All, Person Cell, Numeric Columns, Row Options, Empty, With Thumbnails, Assignee Column, Tags Column, Projects List Cells, Manage Inputs, In A Panel, With Bulk Selection And An Open Row, Right To Left.
 - **File list** `FileList` (not in Figma): File list: one row per attachment — a file icon, its name and "PDF · 0 KB", then View / Delete. Stories: Default, Empty, With Add Button, Deleting, In A Dialog.
 - **Illustration** `Illustration` (not in Figma): An illustration: one self-contained SVG file drawn inline, so it paints with the page's `--gv-*` tokens. Stories: All Variants, Auto, Once, Loop, Hover, Still, Sizes, Cover, With Alt, Timings.
 - **List header** `ListHeader` Stories: All Variants, Ideation, Common Ground, Proposals, Voting, Manage Table, In A Table.
@@ -30,7 +29,6 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Reaction counts** `ReactionCounts` (not in Figma): How people reacted to an input: likes, dislikes and comments, each a 16px icon and its number. Stories: All Variants, Default, With Comments, Zero.
 - **Stat row** `StatRow` Stories: All Variants, Default, Default New, Hover, Static, Selected.
 - **Stat tile** `StatTile`: A labelled number tile. Stories: All Variants, Default, Tall, With Note, Band, With Sparkline, With Trend, Empty, With Info.
-- **Table toolbar** `TableToolbar` (not in Figma): The row above a table: the count heading, or a Selection bar while rows are selected, at the start; the tools at the end (a collapsible Search field, the Fil… Stories: All Variants, Default, With Export, Searching, With A Selection, Right To Left.
 
 ## Components / Forms
 - **Checkbox** `Checkbox`: Checkbox: a 15x15 rounded box, token-fill when checked/indeterminate. Stories: All Variants, Default, Selected, Indeterminate, With Description, Quiet, Disabled.
@@ -85,6 +83,13 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Status badge** `StatusBadge`: Status badge: a small status pill ("Draft" / "Live"). Stories: All Variants, Draft, Live.
 - **Toast** `Toast` (not in Figma): One toast, as `ToastRegion` draws it. Stories: All Variants, With Undo, Simple, Stacked, Example.
 
+## Components / Tables & lists
+- **Data table** (not in Figma) Stories: All Variants, Default, Sorted Ascending, Sorted Descending, Selectable Some Selected, Selectable Without Select All, Person Cell, Numeric Columns, Row Options, Empty, With Thumbnails, Assignee Column, Tags Column, Projects List Cells, Manage Inputs, In A Panel, With Bulk Selection And An Open Row, Right To Left.
+- **Table toolbar** `TableToolbar` (not in Figma): The row above a table: the count heading, or a Selection bar while rows are selected, at the start; the tools at the end (a collapsible Search field, the Fil… Stories: All Variants, Default, With Export, Searching, With A Selection, Right To Left.
+- **Filter chips** `FilterChips` (not in Figma): The active-filter bar: one chip per facet that is on, reading "Assignee | is | Manager A | ×" ("is any of" and a list once several values are ticked), on a q… Stories: Two Filters, Any Of, Wrapping, Without Clear, Metric Chip, Empty, Right To Left.
+- **Filter menu** `FilterMenu` (not in Figma): The filter button and its menu: a bordered funnel icon button that wears a dot while any filter is on; its menu lists the facets, each with how many values a… Stories: Empty, Open, Active, In Sync With Chips, Right To Left.
+- **Selection bar** `SelectionBar` (not in Figma): The bulk-action bar of a list with checkboxes: while rows are selected it reads "2 selected", then one secondary button per item and a × that clears the sele… Stories: One Selected, Many, With A Contextual Action, Empty, Users List, Right To Left.
+
 ## Components / Text
 - **Text** `Text` (not in Figma): Text: words in one of the system's type styles and colours, `<Text kind="small" color="meta">Posted 2 days ago</Text>` or `<Text elementType="h2" kind="body"… Stories: All Variants, Colors, Heading And Paragraph, Playground.
 - **Visually hidden** `VisuallyHidden` (not in Figma): Visually hidden: content for screen readers only, kept in the page's reading order. Stories: Default, Focusable.
@@ -99,11 +104,6 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Notification row** `NotificationRow` (not in Figma): One email in a phase's Notifications card: a switch, then the email's name with who it goes to and what sends it, and a chevron to its page. Stories: All Variants, On, Off, In A Card, Ideation Emails.
 - **Participant action row** `ParticipantActionRow` (not in Figma): One action in a phase's Participant actions card: a switch, the action, and who can take it with a chevron to Access rights. Stories: All Variants, On, Sign In Required, Limited, Locked, In A Card.
 - **View option row** `ViewOptionRow` (not in Figma): One view in a phase's Available views card: a switch (or a check for the view that is always on), the view's name and words, and Make default. Stories: All Variants, Default, Off, With Options, In A Card.
-
-## Patterns / Lists
-- **Filter chips** `FilterChips` (not in Figma): The active-filter bar: one chip per facet that is on, reading "Assignee | is | Manager A | ×" ("is any of" and a list once several values are ticked), on a q… Stories: Two Filters, Any Of, Wrapping, Without Clear, Metric Chip, Empty, Right To Left.
-- **Filter menu** `FilterMenu` (not in Figma): The filter button and its menu: a bordered funnel icon button that wears a dot while any filter is on; its menu lists the facets, each with how many values a… Stories: Empty, Open, Active, In Sync With Chips, Right To Left.
-- **Selection bar** `SelectionBar` (not in Figma): The bulk-action bar of a list with checkboxes: while rows are selected it reads "2 selected", then one secondary button per item and a × that clears the sele… Stories: One Selected, Many, With A Contextual Action, Empty, Users List, Right To Left.
 
 ## Patterns / Manage tab
 - **Comment thread** `CommentThread` (not in Figma): Comment thread: the conversation under a record in the Manage tab's Side panel. Stories: All Variants, Default, New, Content Warning, Empty, Internal Conversation, Comments Only, In A Side Panel.

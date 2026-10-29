@@ -1,10 +1,10 @@
 import {test, expect, type Page} from '@playwright/test';
 import {a11yReport, axeViolations} from './axe';
 
-// Data table: bulk selection and an open row on one table (Components/Data display/Data table, "With bulk selection
+// Data table: bulk selection and an open row on one table (Components/Tables & lists/Data table, "With bulk selection
 // and an open row"). A row press always opens; the checkbox, Space and Shift / ⌘ / Ctrl clicks tick; `openKey` marks
 // the open row.
-const story = '/storybook/iframe.html?id=components-data-display-data-table--with-bulk-selection-and-an-open-row&viewMode=story';
+const story = '/storybook/iframe.html?id=components-tables-lists-data-table--with-bulk-selection-and-an-open-row&viewMode=story';
 const table = (page: Page) => page.getByRole('grid', {name: 'Ideas'});
 const row = (page: Page, id: string) => table(page).locator(`[role="row"][data-key="${id}"]`);
 const panel = (page: Page) => page.getByRole('dialog', {name: 'Collect ideas'});

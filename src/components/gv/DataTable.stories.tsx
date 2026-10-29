@@ -103,7 +103,7 @@ function PeopleTable({initialSort, selectable, initialSelection = [], empty, sho
 }
 
 const meta: Meta = {
-  title: 'Components/Data display/Data table',
+  title: 'Components/Tables & lists/Data table',
   parameters: {layout: 'padded'},
   tags: ['autodocs', 'not-in-figma']
 };

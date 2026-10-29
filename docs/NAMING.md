@@ -45,20 +45,22 @@ Foundations             Colour · Typography · Spacing · Radius · Shadows · 
 Components              src/components/gv/
   Actions               Button · Compact button · Icon button · Menu · Segmented control (with Segmented control item)
   Charts                Bar row · Chart · Dashboard card · Legend row · Statement row
-  Data display          Avatar (with Avatar group) · Data table · File list · Illustration · List header · List header cell · List row
-                        · Property list · Reaction counts · Stat row · Stat tile · Table toolbar
+  Data display          Avatar (with Avatar group) · File list · Illustration · List header · List header cell · List row
+                        · Property list · Reaction counts · Stat row · Stat tile
   Forms                 Checkbox · Checkbox group · Choice card · Date range field · Drop zone · Number field · Option list
                         · Radio group · Required marker · Rich text editor · Rich text toolbar · Rich text toolbar button
                         · Search field · Select · Switch · Tag picker · Text field · Title field
-  Layout & containers   Card · Divider · Panel · Section label
+  Layout & containers   App provider · Card · Divider · Page header · Panel · Section label · Tile grid
   Navigation            Breadcrumbs · Link · Pagination · Tabs
   Overlays              Alert dialog · Coachmark · Help popover · Modal · Side panel · Tooltip
   Status & feedback     Badge · Banner · Empty state · New dot · Review status · Skeleton · Status badge · Toast
+  Tables & lists        Data table · Filter chips · Filter menu · Selection bar · Table toolbar (the list page's kit;
+                        Filter chips, Filter menu and Selection bar still live in src/patterns/)
+  Text                  Text · Visually hidden
 Patterns                src/patterns/
   App shell             Notification list · Side nav
   Build tab             Access rights · Form field summary (recipe) · Notification row · Participant action row
                         · View option row
-  Lists                 Filter chips · Filter menu · Selection bar (used by every list page)
   Manage tab            Comment thread · Official update
   Pages & menu          Section toggle
   Participation methods Common ground row · Proposals row · Vote progress · Volunteering row · Voting row
@@ -157,11 +159,12 @@ below). Rows without a rename say "same".
 |---|---|---|
 | Components/Coachmark · Skeleton · Data table | Components/Overlays/Coachmark · Components/Status & feedback/Skeleton · Components/Data display/Data table | none |
 | Patterns/Help popover · Notification list · Side nav | Patterns/App shell/… (same names) | none |
-| Patterns/Filter chips · Filter menu · Filter options · Selection bar | Patterns/Lists/… (same names; the back office's lists: the phase Manage tab, Projects, Input manager, Users) | none |
+| Patterns/Filter chips · Filter menu · Filter options · Selection bar | Patterns/Lists/… (same names; the back office's lists: the phase Manage tab, Projects, Input manager, Users); 29 Oct: Components/Tables & lists/… | none |
 | Patterns/Section toggle | Patterns/Pages & menu/Section toggle | none |
 | Patterns/Action row · Panel section · Stat card | Patterns/Project page/… (same names) | none |
 | Patterns/Phone preview | Patterns/Project page/Phone preview | PhoneFrame → PhonePreview; AvatarStack → AvatarGroup, now in Avatar.tsx |
 | Patterns/Phase timeline | Patterns/Project rail/Phase timeline | none |
+| Components/Data display/Data table · Table toolbar, Patterns/Lists/Filter chips · Filter menu · Selection bar | Components/Tables & lists/… (same names; one place for the list page's kit; no file moves) | none |
 | Base/Link · RadioGroup · CheckboxGroup | Components/Navigation/Link · Components/Forms/Radio group · Components/Forms/Checkbox group (29 Oct: pages use them; files stay in `src/components/`) | none; imported from `govocal-ds`, no longer `govocal-ds/base` |
 
 Kept for a later pass (after Figma mirrors this): Compact button stays its own entry (not yet a Button size), Stat card
