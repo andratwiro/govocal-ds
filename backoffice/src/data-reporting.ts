@@ -40,15 +40,17 @@ export const SLIDES: Slide[] = [
 ];
 
 /** The blank builder's "Report contents" checklist (the prototype). */
-export const CONTENTS = [
-  {id: 'cover', label: 'Cover and summary', meta: 'Title, period, project manager', on: true},
-  {id: 'totals', label: 'Participation totals', meta: '1,846 participants · 4 metrics', on: true},
-  {id: 'timeline', label: 'Participants timeline', meta: 'Weekly · 4 May to 10 Jul', on: true},
-  {id: 'phases', label: 'What each phase produced', meta: '3 phases', on: true},
-  {id: 'demographics', label: 'Demographics', meta: 'Age and area breakdown', on: false},
-  {id: 'top', label: 'Top ideas by votes', meta: 'From the ideation phase', on: false},
-  {id: 'survey', label: 'Survey results', meta: 'Survey · 45 responses', on: false},
-  {id: 'recs', label: 'Recommendations', meta: 'AI-written next steps', on: true}
+// The Create report checklist, grouped under the Choice card's group headings.
+export const CONTENT_GROUPS = ['Project context', 'Participation', 'Results'] as const;
+export const CONTENTS: {id: string; label: string; meta: string; on: boolean; group: typeof CONTENT_GROUPS[number]}[] = [
+  {id: 'cover', label: 'Cover and summary', meta: 'Title, period, project manager', on: true, group: 'Project context'},
+  {id: 'phases', label: 'What each phase produced', meta: '3 phases', on: true, group: 'Project context'},
+  {id: 'totals', label: 'Participation totals', meta: '1,846 participants · 4 metrics', on: true, group: 'Participation'},
+  {id: 'timeline', label: 'Participants timeline', meta: 'Weekly · 4 May to 10 Jul', on: true, group: 'Participation'},
+  {id: 'demographics', label: 'Demographics', meta: 'Age and area breakdown', on: false, group: 'Participation'},
+  {id: 'top', label: 'Top ideas by votes', meta: 'From the ideation phase', on: false, group: 'Results'},
+  {id: 'survey', label: 'Survey results', meta: 'Survey · 45 responses', on: false, group: 'Results'},
+  {id: 'recs', label: 'Recommendations', meta: 'AI-written next steps', on: true, group: 'Results'}
 ];
 
 export const DECK = {

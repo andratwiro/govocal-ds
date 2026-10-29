@@ -9,23 +9,28 @@ import {Select, SelectItem} from '../../../src/components/Select';
 import {SearchField} from '../../../src/components/SearchField';
 import {Switch} from '../../../src/components/Switch';
 import {ListBox, ListBoxItem} from '../../../src/components/ListBox';
-import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
-import {TextArea} from '../../../src/components/TextField';
+import {MenuTrigger, Menu, MenuItem, Separator} from '../../../src/components/Menu';
+import {Tooltip, TooltipTrigger} from '../../../src/components/Tooltip';
 import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Button} from '../../../src/components/Button';
 import {Link} from '../../../src/components/Link';
 import {Badge} from '../../../src/components/gv/Badge';
 import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {NewDot} from '../../../src/components/gv/NewDot';
-import {IconButton} from '../../../src/components/gv/IconButton';
 import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {PanelSection} from '../../../src/patterns/PanelSection';
+import {Avatar} from '../../../src/components/gv/Avatar';
+import {IconButton} from '../../../src/components/gv/IconButton';
+import {TagPicker} from '../../../src/components/gv/TagPicker';
+import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
+import {SidePanel, SidePanelActions, SidePanelSection, type SidePanelAction} from '../../../src/components/gv/SidePanel';
+import {PropertyList, PropertyListItem} from '../../../src/components/gv/PropertyList';
+import {ReactionCounts} from '../../../src/components/gv/ReactionCounts';
+import {OfficialUpdate} from '../../../src/patterns/OfficialUpdate';
+import {CommentThread, type ThreadTab, type ThreadTarget} from '../../../src/patterns/CommentThread';
 import {SelectionBar, type SelectionAction} from '../../../src/patterns/SelectionBar';
-import {ChevronDown, ChevronLeft, ChevronRight, CircleCheck, Download, Trash2, TriangleAlert, User, X} from 'lucide-react';
+import {CircleCheck, Download, ExternalLink, SquarePen, Trash2, TriangleAlert, User} from 'lucide-react';
 import {Pagination} from '../../../src/components/gv/Pagination';
 import {ASSIGNEES, ME, PROJECTS, STATUSES} from '../data';
 import {MANAGED_INPUTS, PAGE_SIZE, TOPICS, type ManagedInput} from '../data-inputs';
-import {Gap} from '../Gap';
 import {Page} from './Page';
 
 const title = (id: string) => PROJECTS.find(p => p.id === id)?.title ?? id;
@@ -36,61 +41,107 @@ const statusState = (s: string) => s === 'Accepted' || s === 'Implemented' ? 'li
 type Sort = 'title' | 'comments' | 'likes' | 'dislikes' | 'published';
 type Change = (id: string, patch: Partial<ManagedInput>) => void;
 
-/** The real admin's per-row "Unassigned ▾": assign an input without opening it. */
+/** The Select's "With avatars" options: a 16 Avatar before each manager, Unassigned the dashed one. */
+const people = () => ASSIGNEES.map(a => (
+  <SelectItem key={a} id={a} textValue={a}
+    icon={a === 'Unassigned' ? <Avatar size={16} unassigned /> : <Avatar size={16} initials={a.slice(-1)} />}>{a}</SelectItem>
+));
+
+/** The real admin's per-row "Unassigned ▾": assign an input without opening it, on the side panel's pill. */
 function AssigneeSelect({input, label, onChange}: {input: ManagedInput; label: string; onChange: Change}) {
   return (
-    <Select aria-label={label} selectedKey={input.assignee} onSelectionChange={k => onChange(input.id, {assignee: String(k)})}>
-      {ASSIGNEES.map(a => <SelectItem key={a} id={a}>{a}</SelectItem>)}
+    <Select variant="pill" size={22} aria-label={label} selectedKey={input.assignee}
+      onSelectionChange={k => onChange(input.id, {assignee: String(k)})}>
+      {people()}
     </Select>
   );
 }
 
-/** The input preview the real admin slides in beside the list: the input, its status, assignee and feedback. */
-function InputPreview({input, onChange, onClose}: {input: ManagedInput; onChange: Change; onClose: () => void}) {
-  const [draft, setDraft] = useState('');
-  const post = () => {
-    onChange(input.id, {feedback: [...input.feedback, draft.trim()], needsFeedback: false});
-    setDraft('');
+// The row's Comments count: each comment and each reply under it.
+const countOf = (thread: ManagedInput['thread']) => thread.reduce((n, c) => n + 1 + (c.replies?.length ?? 0), 0);
+const ME_INITIALS = `M${ME.slice(-1)}`;
+const TAG_OPTIONS = TOPICS.map(t => ({id: t, label: t}));
+type Patch = (id: string, patch: Partial<ManagedInput>, toast: string, body?: string) => void;
+
+/** The open input in the Side panel (the Comment thread's "In a side panel" story): its title and words, its
+ * reactions and quick actions, its properties, its official updates, then the thread. Every change applies at once,
+ * with an Undo toast: the panel has no Save. */
+function InputPanel({input, patch, onDelete}: {input: ManagedInput; patch: Patch; onDelete: () => void}) {
+  const notYet = (what: string) => () => queue.add({title: `${what}: not in Figma yet`, icon: null}, {timeout: 5000});
+  const quick: SidePanelAction[] = [
+    {id: 'edit', label: 'Edit', icon: <SquarePen aria-hidden size={16} />, onPress: notYet('Editing an input')},
+    {id: 'view', label: 'View on the site', icon: <ExternalLink aria-hidden size={16} />, onPress: notYet('The input on the site')},
+    {id: 'delete', label: 'Delete', icon: <Trash2 aria-hidden size={16} />, onPress: onDelete}
+  ];
+  // A post lands at once (no toast); Delete and Dismiss warning apply at once with an Undo toast.
+  const setThread = (key: 'thread' | 'internal', list: ManagedInput['thread'], toast = '') =>
+    patch(input.id, {[key]: list, ...(key === 'thread' ? {comments: countOf(list)} : {})}, toast);
+  const post = (text: string, {tab, replyTo}: ThreadTarget) => {
+    const key = tab === 'internal' ? 'internal' : 'thread';
+    const c = {id: `${input.id}-p${Date.now()}`, author: ME, initials: ME_INITIALS, time: 'Just now', text};
+    const list = input[key];
+    setThread(key, replyTo ? list.map(x => (x.id === replyTo ? {...x, replies: [...(x.replies ?? []), c]} : x)) : [...list, c]);
   };
+  const remove = (id: string, tab: ThreadTab) => {
+    const key = tab === 'internal' ? 'internal' : 'thread';
+    const list = input[key];
+    const next = list.filter(c => c.id !== id).map(c => ({...c, replies: c.replies?.filter(r => r.id !== id)}));
+    setThread(key, next, 'Comment deleted');
+  };
+  const dismiss = (id: string) => setThread('thread', input.thread.map(c => (c.id === id ? {...c, warning: undefined} : c)),
+    'Content warning dismissed');
   return (
-    // The system has no side panel (drawer) yet: the preview sits in a grid column beside the list, framed as a gap.
-    <div className="bo-inputs-side">
-      <Gap name="Side panel">
-        <aside className="bo-inputs-preview" aria-label="Input preview" onKeyDown={e => { if (e.key === 'Escape') onClose(); }}>
-          <div className="bo-inputs-preview-head">
-            <h2 className="bo-section-title">{input.title}</h2>
-            <IconButton aria-label="Close the preview" onPress={onClose}><X aria-hidden size={16} /></IconButton>
-          </div>
-          <p className="bo-note">{input.author} · Registered user · {input.published}</p>
-          <p className="bo-inputs-preview-body">{input.body}</p>
-          <div className="bo-inputs-preview-meta">
+    <>
+      <SidePanelSection>
+        <div className="bo-inputs-record">
+          <h2 className="bo-section-title">{input.title}</h2>
+          <p>{input.body}</p>
+          <p className="bo-note bo-inputs-record-meta">
+            <span>Posted by {input.author} · Registered user</span><span>{input.published}</span>
+          </p>
+        </div>
+        <SidePanelActions actions={quick}>
+          <ReactionCounts likes={input.likes} dislikes={input.dislikes} comments={input.comments} />
+        </SidePanelActions>
+      </SidePanelSection>
+      <SidePanelSection>
+        <PropertyList aria-label="Input details">
+          <PropertyListItem label="Status">
+            <Select variant="pill" size={22} aria-label="Status" selectedKey={input.status}
+              onSelectionChange={k => patch(input.id, {status: String(k)}, `Status changed to ${k}`)}>
+              {STATUSES.map(st => <SelectItem key={st} id={st}>{st}</SelectItem>)}
+            </Select>
+          </PropertyListItem>
+          <PropertyListItem label="Assignee">
+            <Select variant="pill" size={22} aria-label="Assignee" selectedKey={input.assignee}
+              onSelectionChange={k => patch(input.id, {assignee: String(k)}, k === 'Unassigned' ? 'Input unassigned' : `Assigned to ${k}`)}>
+              {people()}
+            </Select>
+          </PropertyListItem>
+          <PropertyListItem label="Tags">
+            <TagPicker aria-label="Tags" options={TAG_OPTIONS} selected={input.tags} selectionLabel={n => `${n} selected`}
+              onChange={tags => patch(input.id, {tags}, 'Tags changed')} />
+          </PropertyListItem>
+          <PropertyListItem label="Project">
             <Link href={`#/projects/${input.project}`}>{title(input.project)}</Link>
-            <Badge>{input.topic}</Badge>
-          </div>
-          <div className="bo-inputs-preview-fields">
-            <Select label="Status" selectedKey={input.status} onSelectionChange={k => onChange(input.id, {status: String(k)})}>
-              {STATUSES.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
-            </Select>
-            <Select label="Assignee" selectedKey={input.assignee} onSelectionChange={k => onChange(input.id, {assignee: String(k)})}>
-              {ASSIGNEES.map(a => <SelectItem key={a} id={a}>{a}</SelectItem>)}
-            </Select>
-          </div>
-          <PanelSection title="Official feedback" level={3} aside={input.needsFeedback ? 'Waiting for feedback' : undefined}>
-            <div className="bo-inputs-preview-feedback">
-              {input.feedback.length > 0 && (
-                <ul aria-label="Posted feedback" className="bo-inputs-preview-posted">
-                  {input.feedback.map((f, n) => <li key={n}><span className="bo-note">{ME} · just now</span><p>{f}</p></li>)}
-                </ul>
-              )}
-              <TextArea label="Feedback" value={draft} onChange={setDraft} placeholder="Write an official update" />
-              <span><Button variant="primary" size={32} isDisabled={!draft.trim()} onPress={post}>Post feedback</Button></span>
-            </div>
-          </PanelSection>
-        </aside>
-      </Gap>
-    </div>
+          </PropertyListItem>
+        </PropertyList>
+      </SidePanelSection>
+      <SidePanelSection>
+        <OfficialUpdate updates={input.updates} onPublish={({text, name}) => patch(input.id,
+          {updates: [{id: `${input.id}-u${Date.now()}`, text, by: name || undefined, date: 'Today'}, ...input.updates], needsFeedback: false},
+          'Official update published', 'The author and everyone following this input will see it.')} />
+      </SidePanelSection>
+      <SidePanelSection>
+        <CommentThread comments={input.thread} internal={input.internal} me={ME_INITIALS}
+          onPost={post} onDelete={remove} onDismissWarning={dismiss} />
+      </SidePanelSection>
+    </>
   );
 }
+
+const rowOf = (id: string) =>
+  document.querySelector<HTMLElement>(`[role="grid"][aria-label="Inputs"] [role="row"][data-key="${CSS.escape(id)}"]`);
 
 export function Inputs() {
   const [inputs, setInputs] = useState(MANAGED_INPUTS);
@@ -104,13 +155,14 @@ export function Inputs() {
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<Set<Key>>(new Set());
   const [open, setOpen] = useState<string | null>(null);
-  const [confirmDelete, setConfirmDelete] = useState(false);
+  // The inputs Delete asks about: the checked rows (Selection bar) or the open input (its quick action).
+  const [toDelete, setToDelete] = useState<string[] | null>(null);
 
   const rows = useMemo(() => {
     const list = inputs.filter(i =>
       (assignee === 'any' || (assignee === 'none' ? i.assignee === 'Unassigned' : i.assignee === ME)) &&
       (project === 'all' || i.project === project) && (status === 'all' || i.status === status) &&
-      (topic === 'all' || i.topic === topic) &&
+      (topic === 'all' || i.tags.includes(topic)) &&
       (!needsFeedback || i.needsFeedback) && i.title.toLowerCase().includes(query.toLowerCase()));
     if (sort === 'published') return list;
     return [...list].sort((a, b) => sort === 'title' ? a.title.localeCompare(b.title) : b[sort] - a[sort]);
@@ -127,15 +179,23 @@ export function Inputs() {
   // Each sortable column has one order (titles A-Z, counts and dates highest/newest first), as before.
   const sortDescriptor = {column: sort, direction: sort === 'title' ? 'ascending' : 'descending'} as const;
   const change: Change = (id, patch) => setInputs(list => list.map(i => i.id === id ? {...i, ...patch} : i));
+  // A change from the panel or a row applies at once; its toast can undo it (the panel has no Save).
+  const patch: Patch = (id, next, toast, body) => {
+    const before = inputs.find(i => i.id === id);
+    if (!before) return;
+    const undo = Object.fromEntries(Object.keys(next).map(k => [k, before[k as keyof ManagedInput]])) as Partial<ManagedInput>;
+    change(id, next);
+    if (toast) queue.add({title: toast, body, action: 'Undo', onAction: () => change(id, undo)}, {timeout: 6000});
+  };
   const changeSelected = (patch: Partial<ManagedInput>) =>
     setInputs(list => list.map(i => selected.has(i.id) ? {...i, ...patch} : i));
-  const deleteSelected = () => {
-    const n = selected.size;
-    setInputs(list => list.filter(i => !selected.has(i.id)));
-    if (open && selected.has(open)) setOpen(null);
-    setSelected(new Set());
-    setConfirmDelete(false);
-    queue.add({title: n === 1 ? '1 input deleted' : `${n} inputs deleted`}, {timeout: 5000});
+  const deleteChosen = () => {
+    const gone = new Set(toDelete ?? []);
+    setInputs(list => list.filter(i => !gone.has(i.id)));
+    if (open && gone.has(open)) setOpen(null);
+    setSelected(s => new Set([...s].filter(k => !gone.has(String(k)))));
+    setToDelete(null);
+    queue.add({title: gone.size === 1 ? '1 input deleted' : `${gone.size} inputs deleted`}, {timeout: 5000});
   };
   const select = (keys: Selection) => setSelected(keys === 'all' ? new Set(shown.map(i => i.id)) : new Set(keys));
   const exportFile = (key: Key) => queue.add({
@@ -143,6 +203,14 @@ export function Inputs() {
     description: 'The .xlsx file downloads when it is ready.'
   }, {timeout: 5000});
   const preview = inputs.find(i => i.id === open);
+  // The pager walks the filtered, sorted list across its pages; the table turns to the open input's page.
+  const at = preview ? rows.findIndex(i => i.id === preview.id) : -1;
+  const walk = (n: number) => {
+    const next = rows[n - 1];
+    if (!next) return;
+    setOpen(next.id);
+    setPage(Math.ceil(n / PAGE_SIZE));
+  };
   const bulkActions: SelectionAction[] = [
     {id: 'status', label: 'Change status', icon: <CircleCheck aria-hidden size={16} />, menu: (
       <Menu aria-label="Change status" onAction={k => changeSelected({status: String(k)})}>
@@ -160,7 +228,7 @@ export function Inputs() {
   return (
     <Page title="Input manager" description="Give feedback, add tags and move input from one project to another.">
       <div className="bo-filters bo-inputs-toolbar">
-        <Select aria-label="Assignee" selectedKey={assignee} onSelectionChange={k => setAssignee(String(k))}>
+        <Select variant="quiet" aria-label="Assignee" selectedKey={assignee} onSelectionChange={k => setAssignee(String(k))}>
           <SelectItem id="any">Any administrator</SelectItem>
           <SelectItem id="me">Assigned to me</SelectItem>
           <SelectItem id="none">Unassigned</SelectItem>
@@ -170,14 +238,6 @@ export function Inputs() {
         </Switch>
         <span className="bo-push" />
         <SearchField aria-label="Search inputs" placeholder="Search" value={query} onChange={setQuery} />
-        <MenuTrigger>
-          <Button variant="secondary" size={32}><Download aria-hidden size={16} /> Exports<ChevronDown aria-hidden size={16} /></Button>
-          <Menu aria-label="Exports" onAction={exportFile} disabledKeys={selected.size ? [] : ['selected']}>
-            <MenuItem id="inputs">Export all inputs (.xlsx)</MenuItem>
-            <MenuItem id="comments">Export all comments (.xlsx)</MenuItem>
-            <MenuItem id="selected">Export selected</MenuItem>
-          </Menu>
-        </MenuTrigger>
       </div>
       <div className="bo-inputs-body">
         <Tabs defaultSelectedKey="projects" onSelectionChange={() => setSelected(new Set())}>
@@ -213,11 +273,26 @@ export function Inputs() {
         </Tabs>
         <div className="bo-inputs-main">
           <div className="bo-inputs-list">
-            <div className="bo-inputs-list-head">
-              <p className="bo-note">{rows.length} inputs</p>
+            {/* The Data table's "In a panel" toolbar: the count (the Selection bar while rows are checked), the export. */}
+            <TableToolbar aria-label="Input tools" start={(
               <SelectionBar aria-label="Bulk actions" count={selected.size} actions={bulkActions}
-                onAction={id => id === 'delete' && setConfirmDelete(true)} onClear={() => setSelected(new Set())} />
-            </div>
+                onAction={id => id === 'delete' && setToDelete([...selected].map(String))} onClear={() => setSelected(new Set())}>
+                <TableToolbarHeading>{rows.length} inputs</TableToolbarHeading>
+              </SelectionBar>
+            )}>
+              <MenuTrigger placement="bottom end">
+                <TooltipTrigger>
+                  <IconButton variant="bordered" tone="strong" aria-label="Export"><Download aria-hidden size={16} /></IconButton>
+                  <Tooltip>Export</Tooltip>
+                </TooltipTrigger>
+                <Menu aria-label="Export" onAction={exportFile} disabledKeys={selected.size ? [] : ['selected']}>
+                  <MenuItem id="inputs">All inputs (.xlsx)</MenuItem>
+                  <MenuItem id="comments">All comments (.xlsx)</MenuItem>
+                  <Separator />
+                  <MenuItem id="selected">Selected inputs (.xlsx)</MenuItem>
+                </Menu>
+              </MenuTrigger>
+            </TableToolbar>
             <div className="bo-inputs-table">
               <DataTable aria-label="Inputs" selectionMode="multiple" className="bo-inputs-grid"
                 selectedKeys={selected} onSelectionChange={select}
@@ -234,8 +309,8 @@ export function Inputs() {
                 <DataTableBody renderEmptyState={() => <DataTableEmpty>No inputs match these filters.</DataTableEmpty>}>{shown.map(i => (
                   <DataTableRow key={i.id} id={i.id} onAction={() => setOpen(i.id)}>
                     <DataTableCell textValue={i.title}>
-                      {/* The prototype's title over a quiet sub-line: the input's project (still a link) and topic. */}
-                      <DataTableStack strong sub={<><Link href={`#/projects/${i.project}`}>{title(i.project)}</Link> · {i.topic}</>}>
+                      {/* The prototype's title over a quiet sub-line: the input's project (still a link) and tags. */}
+                      <DataTableStack strong sub={<><Link href={`#/projects/${i.project}`}>{title(i.project)}</Link> · {i.tags.join(', ')}</>}>
                         <span className="bo-inputs-title-line">
                           {i.title}
                           {FLAGGED.has(i.id) && <TriangleAlert aria-label="Content warning" size={14} />}
@@ -244,7 +319,8 @@ export function Inputs() {
                     </DataTableCell>
                     <DataTableCell textValue={i.status}><StatusBadge state={statusState(i.status)}>{i.status}</StatusBadge></DataTableCell>
                     <DataTableCell textValue={i.assignee}>
-                      <AssigneeSelect input={i} label={`Assignee for ${i.title}`} onChange={change} />
+                      <AssigneeSelect input={i} label={`Assignee for ${i.title}`}
+                        onChange={(id, p) => patch(id, p, p.assignee === 'Unassigned' ? 'Input unassigned' : `Assigned to ${p.assignee}`)} />
                     </DataTableCell>
                     <DataTableCell align="number">{i.comments}</DataTableCell>
                     <DataTableCell align="number">{i.likes}</DataTableCell>
@@ -260,12 +336,22 @@ export function Inputs() {
             </div>
             <Pagination page={current} pageCount={pages} onPageChange={setPage} aria-label="Input pages" />
           </div>
-          {preview && <InputPreview key={preview.id} input={preview} onChange={change} onClose={() => setOpen(null)} />}
+          {preview && (
+            <div className="bo-inputs-side">
+              <SidePanel isInline label={title(preview.project)} aria-label={`Input: ${preview.title}`} itemName="input"
+                position={at >= 0 ? {current: at + 1, total: rows.length} : undefined} onPositionChange={walk}
+                onOpenChange={o => !o && setOpen(null)} returnFocus={() => (open ? rowOf(open) : null)}
+                closeLabel="Close the input">
+                <InputPanel key={preview.id} input={preview} patch={patch} onDelete={() => setToDelete([preview.id])} />
+              </SidePanel>
+            </div>
+          )}
         </div>
       </div>
-      <AlertDialog tone="danger" title="Delete these inputs?" isOpen={confirmDelete} onOpenChange={setConfirmDelete}
-        confirmLabel={`Delete ${selected.size === 1 ? 'input' : `${selected.size} inputs`}`} onConfirm={deleteSelected}>
-        <p>{selected.size === 1 ? 'The selected input' : `The ${selected.size} selected inputs`} and their comments will be deleted. This cannot be undone.</p>
+      <AlertDialog tone="danger" title={toDelete?.length === 1 ? 'Delete this input?' : 'Delete these inputs?'}
+        isOpen={toDelete !== null} onOpenChange={o => !o && setToDelete(null)}
+        confirmLabel={`Delete ${toDelete?.length === 1 ? 'input' : `${toDelete?.length} inputs`}`} onConfirm={deleteChosen}>
+        <p>{toDelete?.length === 1 ? 'The input' : `The ${toDelete?.length} selected inputs`} and their comments will be deleted. This cannot be undone.</p>
       </AlertDialog>
       <ToastRegion />
     </Page>

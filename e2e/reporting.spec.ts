@@ -1,4 +1,5 @@
 import {test, expect} from '@playwright/test';
+import {axeViolations, a11yReport} from './axe';
 import {headingJumps} from './headings';
 
 test('reporting follows the real admin: report list with search and report tabs', async ({page}) => {
@@ -64,6 +65,18 @@ test('creating a report starts blank: title, template, contents, then the deck',
   const tpl = builder.getByRole('radiogroup', {name: 'Report template'});
   for (const t of ['Start blank', 'Use a template', 'Create with AI']) await expect(tpl.getByRole('radio', {name: new RegExp(`^${t}`)})).toBeVisible();
   await expect(builder.getByRole('checkbox', {name: /Participation totals/})).toBeChecked();
+  // The Choice card's radio tiles and its "Checkbox group with group headings": the contents under three headings.
+  await expect(tpl.locator('.gv-choice-card')).toHaveCount(3);
+  await expect(tpl.getByRole('radio', {name: /^Use a template/})).toBeChecked();
+  const contents = builder.getByRole('group', {name: 'Report contents'});
+  await expect(contents.getByRole('checkbox')).toHaveCount(8);
+  await expect(contents.locator('.gv-choice-card')).toHaveCount(8);
+  for (const h of ['Project context', 'Participation', 'Results']) {
+    await expect(contents.locator('.gv-choice-card-group-heading', {hasText: h})).toBeVisible();
+  }
+  await contents.getByText('Demographics').click();
+  await expect(contents.getByRole('checkbox', {name: /Demographics/})).toBeChecked();
+  a11yReport(await axeViolations(page, '.bo-reporting-blank'));
   await expect(builder.getByRole('radiogroup', {name: 'Number of slides'})).toBeVisible();
   await tpl.getByText('Create with AI').click();
   await expect(tpl.getByRole('radio', {name: /^Create with AI/})).toBeChecked();

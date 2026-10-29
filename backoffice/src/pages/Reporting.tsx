@@ -11,7 +11,10 @@ import {TextField} from '../../../src/components/TextField';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {Switch} from '../../../src/components/Switch';
 import {ListBox, ListBoxItem} from '../../../src/components/ListBox';
-import {Card, CardRadio, CardRadioGroup} from '../../../src/components/gv/Card';
+import {Card} from '../../../src/components/gv/Card';
+import {ChoiceCard, ChoiceCardCheckbox, ChoiceCardGroupHeading} from '../../../src/components/gv/ChoiceCard';
+import {RadioGroup} from '../../../src/components/RadioGroup';
+import {CheckboxGroup} from '../../../src/components/CheckboxGroup';
 import {DashboardCard} from '../../../src/components/gv/DashboardCard';
 import {StatTile} from '../../../src/components/gv/StatTile';
 import {LineChart} from '../../../src/components/gv/Chart';
@@ -21,11 +24,10 @@ import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {Badge} from '../../../src/components/gv/Badge';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {Banner} from '../../../src/components/gv/Banner';
-import {Checkbox} from '../../../src/components/gv/Checkbox';
 import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
 import {Modal} from '../../../src/components/gv/Modal';
 import {ToastRegion, queue} from '../../../src/components/Toast';
-import {CONTENTS, DECK, REPORTS, SLIDES, type Report, type Slide} from '../data-reporting';
+import {CONTENTS, CONTENT_GROUPS, DECK, REPORTS, SLIDES, type Report, type Slide} from '../data-reporting';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
 import {SectionHeading} from '../SectionHeading';
@@ -129,19 +131,25 @@ function BlankBuilder({onCreate}: {onCreate: (title: string, template: Template)
         <div className="bo-reporting-form">
           <p className="bo-note">Turn a project's results into a slide deck you can share. Start from scratch, pick a template, or let Go Vocal AI draft it from your data.</p>
           <TextField label="Report title" placeholder="Larkvale park renewal: project report" value={title} onChange={setTitle} />
-          <CardRadioGroup aria-label="Report template" orientation="horizontal" value={template} onChange={v => setTemplate(v as Template)}>
-            <CardRadio value="blank" description="Add slides one by one.">Start blank</CardRadio>
-            <CardRadio value="template" description="Start from a ready structure.">Use a template</CardRadio>
-            <CardRadio value="ai" description="Draft it from your project data.">Create with AI</CardRadio>
-          </CardRadioGroup>
+          <RadioGroup aria-label="Report template" value={template} onChange={v => setTemplate(v as Template)}>
+            <ChoiceCard value="blank" description="Add slides one by one.">Start blank</ChoiceCard>
+            <ChoiceCard value="template" description="Start from a ready structure.">Use a template</ChoiceCard>
+            <ChoiceCard value="ai" description="Draft it from your project data.">Create with AI</ChoiceCard>
+          </RadioGroup>
         </div>
       </Card>
       <Card tone="manage" layout="stacked" title="Report contents">
         <div className="bo-reporting-form">
           <p className="bo-note">Choose what this report covers. Each becomes one or more slides.</p>
-          <div className="bo-reporting-checks">
-            {CONTENTS.map(c => <Checkbox key={c.id} defaultSelected={c.on} description={c.meta}>{c.label}</Checkbox>)}
-          </div>
+          {/* The Choice card's "Checkbox group with group headings": the contents under their group's heading. */}
+          <CheckboxGroup aria-label="Report contents" defaultValue={CONTENTS.filter(c => c.on).map(c => c.id)}>
+            {CONTENT_GROUPS.map(g => [
+              <ChoiceCardGroupHeading key={g}>{g}</ChoiceCardGroupHeading>,
+              ...CONTENTS.filter(c => c.group === g).map(c => (
+                <ChoiceCardCheckbox key={c.id} value={c.id} description={c.meta}>{c.label}</ChoiceCardCheckbox>
+              ))
+            ])}
+          </CheckboxGroup>
           <div className="bo-reporting-field">
             <span className="bo-note" aria-hidden>Number of slides</span>
             <SegmentedControl aria-label="Number of slides" selectionMode="single" disallowEmptySelection defaultSelectedKeys={['auto']}>
