@@ -1,5 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {LineChart, Sparkline, ChartLegend} from './Chart';
+import {LineChart, Sparkline as SparklineChart, ChartLegend} from './Chart';
 
 const figma = (id: string) => ({
   design: {type: 'figma', url: `https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=${id}`}
@@ -28,7 +28,7 @@ export const AllVariants: Story = {
     <div style={{display: 'flex', flexDirection: 'column', gap: 24}}>
       <LineChart labels={WEEKS} series={[{label: 'Participants', values: PARTICIPANTS}, {label: 'Visitors', values: VISITORS}]} />
       <LineChart labels={WEEKS} series={[{label: 'Visitors', values: VISITORS_DOC}]} />
-      <Sparkline label="Votes cast" values={VOTES} />
+      <SparklineChart label="Votes cast" values={VOTES} />
     </div>
   )
 };
@@ -45,9 +45,8 @@ export const Line1Series: Story = {
   parameters: figma('23-211')
 };
 
-export const SparklineStory: Story = {
-  name: 'Sparkline',
-  render: () => <Sparkline label="Votes cast" values={VOTES} />,
+export const Sparkline: Story = {
+  render: () => <SparklineChart label="Votes cast" values={VOTES} />,
   parameters: figma('23-218')
 };
 
@@ -71,7 +70,7 @@ export const SparklineSmall: Story = {
   name: 'Sparkline · small',
   render: () => (
     <div style={{width: 200}}>
-      <Sparkline label="Participants" values={[20, 24, 31, 28, 35, 44, 52, 61]} height={34} grid={false} />
+      <SparklineChart label="Participants" values={[20, 24, 31, 28, 35, 44, 52, 61]} height={34} grid={false} />
     </div>
   )
 };
