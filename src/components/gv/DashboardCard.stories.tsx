@@ -43,11 +43,11 @@ const STATUSES = [
   {label: 'Implemented', percent: 3, count: 1, color: 'green'}
 ] as const;
 const OPTIONS = [
-  {title: 'Green Corridors for Riverside', votes: 214},
-  {title: 'Shade sails over the Lagoon playground', votes: 168},
-  {title: 'A covered bike park at Market Square', votes: 121},
-  {title: 'Night lighting on the canal towpath', votes: 77},
-  {title: 'Community fridge at the library', votes: 42}
+  {title: 'Green Corridors for Riverside', count: 214},
+  {title: 'Shade sails over the Lagoon playground', count: 168},
+  {title: 'A covered bike park at Market Square', count: 121},
+  {title: 'Night lighting on the canal towpath', count: 77},
+  {title: 'Community fridge at the library', count: 42}
 ];
 const VOTES = [12, 18, 24, 28, 35, 48, 62, 71, 78, 89, 94, 108, 124, 142, 168, 198, 228, 258, 291, 318, 342];
 const DAYS = VOTES.map((_, i) => `${i + 1} May`);

@@ -160,19 +160,24 @@ export function DashboardBars({items, className, style}: DashboardBarsProps) {
 
 export interface DashboardRankingItem {
   title: ReactNode;
-  votes: number;
+  /** What it counts (votes on the Live ranking), in `unit`s. */
+  count: number;
 }
 
-/** Live ranking: options by votes, with rank, share bar (the leader in green) and count. */
-export interface DashboardRankingProps extends PlacementProps {items: DashboardRankingItem[]; unit?: string}
+/** Live ranking: options by their count, with rank, share bar (the leader in green) and count. */
+export interface DashboardRankingProps extends PlacementProps {
+  items: DashboardRankingItem[];
+  /** The words after each count. @default 'votes' */
+  unit?: string;
+}
 
 export function DashboardRanking({items, unit = 'votes', className, style}: DashboardRankingProps) {
-  const total = items.reduce((s, o) => s + o.votes, 0) || 1;
-  const ranked = [...items].sort((x, y) => y.votes - x.votes);
+  const total = items.reduce((s, o) => s + o.count, 0) || 1;
+  const ranked = [...items].sort((x, y) => y.count - x.count);
   return (
     <ol className={clsx('gv-dashboard-ranking', className)} style={style}>
       {ranked.map((o, i) => {
-        const share = Math.round((o.votes / total) * 100);
+        const share = Math.round((o.count / total) * 100);
         return (
           <li key={i} className="gv-dashboard-ranking__row">
             <span className="gv-dashboard-ranking__rank" aria-hidden>#{i + 1}</span>
@@ -183,7 +188,7 @@ export function DashboardRanking({items, unit = 'votes', className, style}: Dash
               </span>
             </div>
             <span className="gv-dashboard-ranking__value">
-              {share}%<small>{o.votes.toLocaleString('en-GB')} {unit}</small>
+              {share}%<small>{o.count.toLocaleString('en-GB')} {unit}</small>
             </span>
           </li>
         );
