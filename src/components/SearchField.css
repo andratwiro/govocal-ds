@@ -1,6 +1,8 @@
 @import './theme.css';
 @import './TextField.css';
 
+/* A field like the others (radius 8, not a pill), as the prototype's searches (.pj-insearch, the dropdown search):
+   a 16 search icon in the default icon grey 10 from the start, the words 8 after it, and a quiet × to clear. */
 .react-aria-SearchField {
   display: grid;
   grid-template-areas:
@@ -15,11 +17,15 @@
   .lucide-search {
     grid-area: icon;
     z-index: 2;
-    margin-inline-start: var(--spacing-2);
+    width: var(--gv-space-16);
+    height: var(--gv-space-16);
+    margin-inline-start: var(--gv-space-10);
+    color: var(--gv-icon-default);
+    pointer-events: none;
   }
 
   &[data-disabled] .lucide-search {
-    color: var(--text-color-disabled);
+    color: var(--gv-icon-quiet);
   }
 
   .react-aria-Label {
@@ -29,8 +35,7 @@
   .react-aria-Input {
     grid-area: input;
     width: 100%;
-    border-radius: 9999px;
-    padding: 0 var(--spacing-8);
+    padding: 0 var(--spacing-8) 0 34px;
 
     &::-webkit-search-cancel-button,
     &::-webkit-search-decoration {
@@ -41,26 +46,31 @@
   .clear-button {
     all: unset;
     grid-area: button;
-    width: var(--spacing-4);
-    height: var(--spacing-4);
-    border-radius: 9999px;
-    margin-left: calc(-1 * var(--spacing-6));
-    text-align: center;
-    background: var(--gray-700);
-    color: var(--gray-50);
-    border: none;
-    padding: 0;
+    box-sizing: border-box;
+    width: var(--gv-space-24);
+    height: var(--gv-space-24);
+    margin-inline-start: calc(-1 * var(--gv-space-28));
+    border-radius: var(--gv-radius-6);
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--gv-icon-default);
+    cursor: pointer;
     -webkit-tap-highlight-color: transparent;
 
+    &[data-hovered],
     &[data-pressed] {
-      background: var(--gray-800);
+      background: var(--gv-surface-hover-strong);
+      color: var(--gv-icon-strong);
+    }
+
+    &[data-focus-visible] {
+      outline: 2px solid var(--focus-ring-color);
+      outline-offset: 0;
     }
 
     &[data-disabled] {
-      background: var(--text-color-disabled);
+      color: var(--gv-icon-quiet);
     }
   }
 
