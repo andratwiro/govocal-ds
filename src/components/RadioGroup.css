@@ -9,9 +9,11 @@
   color: var(--text-color);
   gap: var(--spacing-1);
 
+  /* The prototype's option lists (augur-design.html .pjc2-opts / .pjfc__row): 12 apart stacked; side by side
+     24 apart, and 20 when a row wraps. */
   .radio-items {
     display: flex;
-    gap: var(--spacing-3);
+    gap: var(--gv-space-12);
   }
 
   &[data-orientation='vertical'] .radio-items {
@@ -21,6 +23,7 @@
   &[data-orientation='horizontal'] .radio-items {
     flex-direction: row;
     flex-wrap: wrap;
+    gap: var(--gv-space-20) var(--gv-space-24);
   }
 }
 
@@ -28,8 +31,14 @@
   display: flex;
   flex-direction: column;
 
+  /* .pjc2-r__d: Small, tertiary, 2 under the label, lined up with it (16 dot + 8). */
   [slot='description'] {
-    margin-left: calc(var(--spacing) * 6.5);
+    margin-top: var(--gv-space-2);
+    margin-inline-start: var(--gv-space-24);
+    font: var(--gv-type-small);
+    letter-spacing: var(--gv-type-small-tracking);
+    color: var(--gv-text-tertiary);
+    contain: none;
   }
 
   &[data-disabled] [slot='description'] {
@@ -37,18 +46,20 @@
   }
 }
 
+/* The prototype's radio (augur-design.html .pjc2-r, the New project modal measured from Figma 81:354): a 16 circle,
+   1px radio-grey ring on white; selected = the ring and an 8 dot in the selected brand blue. The label is UI, slate
+   until it is the chosen one, then primary. */
 .react-aria-RadioButton {
   display: flex;
   /* This is needed so the HiddenInput is positioned correctly */
   position: relative;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--gv-space-8);
-  font: var(--gv-type-ui) var(--gv-font-family);
-  color: var(--gv-text-secondary);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-color-slate-750);
   forced-color-adjust: none;
   -webkit-tap-highlight-color: transparent;
-  /* The prototype's radio (augur-design.html .pj-optrad / .pj-radio__dot): 16px circle, 1.5px border,
-     unchecked slate-250 border, checked border + centred dot in the brand colour. */
   --dot-color: var(--gv-border-selected);
 
   @media (forced-colors: active) {
@@ -60,10 +71,13 @@
     width: 16px;
     height: 16px;
     flex-shrink: 0;
+    margin-top: var(--gv-space-2);
     box-sizing: border-box;
-    border: 1.5px solid var(--gv-border-radio);
-    border-radius: 50%;
+    border: 1px solid var(--gv-border-radio);
+    border-radius: var(--gv-radius-full);
     background: var(--gv-surface-panel);
+    box-shadow: none;
+    scale: 1;
     transition: border-color 150ms ease;
 
     &::after {
@@ -76,11 +90,13 @@
     }
   }
 
-  &:hover .indicator {
+  &[data-hovered] .indicator {
     border-color: var(--gv-border-control-hover);
   }
 
   &[data-selected] {
+    color: var(--gv-text-primary);
+
     .indicator {
       border-color: var(--gv-border-selected);
     }
@@ -90,12 +106,28 @@
     }
   }
 
+  &[data-focus-visible] .indicator {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
+  }
+
+  &[data-invalid] .indicator {
+    border-color: var(--gv-state-notification);
+  }
+
   &[data-disabled] {
     color: var(--gv-text-quiet);
     --dot-color: var(--gv-text-quiet);
 
     .indicator {
       border-color: var(--gv-border-subtle);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .indicator,
+    .indicator::after {
+      transition: none;
     }
   }
 }
