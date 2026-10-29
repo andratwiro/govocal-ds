@@ -23,7 +23,7 @@ export interface BannerProps {
 export function Banner({type = 'info', children, linkLabel, linkHref, onLinkPress}: BannerProps) {
   return (
     <div className="gv-banner" data-type={type} role="note">
-      <Info className="gv-banner__icon" aria-hidden size={16} />
+      <Info className="gv-banner__icon" aria-hidden size={16} strokeWidth={1.75} />
       <p className="gv-banner__text">
         {children}
         {type === 'info-link' && linkLabel && (

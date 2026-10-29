@@ -1,12 +1,12 @@
 @import '../theme.css';
 
-/* Banner (Figma 33:479; prototype .bn--info): surface-info, radius 12, gap 12. */
+/* Banner (Figma 33:479; prototype .bn--info): surface-info, radius 12, padding 16, gap 12. */
 .gv-banner {
   display: flex;
   align-items: flex-start;
   gap: var(--gv-space-12);
   box-sizing: border-box;
-  padding: var(--gv-space-12) var(--gv-space-16);
+  padding: var(--gv-space-16);
   border-radius: var(--gv-radius-12);
   background: var(--gv-surface-info);
   font-family: var(--gv-font-family);
