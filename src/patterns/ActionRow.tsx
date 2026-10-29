@@ -1,6 +1,8 @@
 'use client';
 import {Children, type ReactNode} from 'react';
-import {Button, MenuTrigger, ProgressBar} from 'react-aria-components';
+import {Button} from 'react-aria-components/Button';
+import {MenuTrigger} from 'react-aria-components/Menu';
+import {ProgressBar} from 'react-aria-components/ProgressBar';
 import type {LinkProps} from 'react-aria-components/Link';
 import {Link} from '../components/Link';
 import {Menu} from '../components/Menu';

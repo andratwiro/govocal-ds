@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {Download, FileChartColumn, FileText, Info, Link2, MessageSquare, Sparkles} from 'lucide-react';
-import {Text} from 'react-aria-components';
+import {Text} from 'react-aria-components/Text';
 import {MenuItem} from '../components/Menu';
 import {ActionRow, ActionRowList} from './ActionRow';
 
