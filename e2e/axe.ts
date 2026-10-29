@@ -9,9 +9,18 @@ export async function settled(page: Page) {
 
 export async function axeViolations(page: Page, within: string) {
   await settled(page);
-  const {violations} = await new AxeBuilder({page}).include(within)
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
-  return violations.map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`);
+  // In a story, Storybook's a11y panel runs axe in the same frame on load; a second run at that moment is refused
+  // ("Axe is already running"), so wait for it and try again.
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const {violations} = await new AxeBuilder({page}).include(within)
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+      return violations.map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`);
+    } catch (e) {
+      if (attempt >= 10 || !String(e).includes('Axe is already running')) throw e;
+      await page.waitForTimeout(200);
+    }
+  }
 }
 
 /**
