@@ -22,7 +22,7 @@ export function Meter({label, ...props}: MeterProps) {
                   width: percentage + '%',
                   '--fill-color':
                     percentage < 70
-                      ? 'var(--gv-chart-agree)'
+                      ? 'var(--gv-surface-brand-mark)'
                       : percentage < 90
                         ? 'var(--gv-icon-warning)'
                         : 'var(--gv-state-notification)'

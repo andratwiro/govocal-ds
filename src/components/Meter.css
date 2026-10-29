@@ -1,38 +1,47 @@
 @import './theme.css';
 @import './utilities.css';
 
+/* Same bar as the ProgressBar (the prototype's 6px round .gv-progress: pill-grey track, no frame). The fill is the
+   tenant teal, then the warning amber from 70 % and the notification red from 90 % (Meter.tsx sets --fill-color). */
 .react-aria-Meter {
   display: grid;
   grid-template-areas:
     'label value'
     'bar bar';
   grid-template-columns: 1fr auto;
+  row-gap: var(--gv-space-6);
   width: 250px;
-  color: var(--text-color);
-  font: var(--font-size) var(--gv-font-family);
+  color: var(--gv-text-primary);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+
+  .react-aria-Label {
+    margin-bottom: 0;
+  }
 
   .value {
     grid-area: value;
+    color: var(--gv-text-secondary);
+    font-variant-numeric: tabular-nums;
   }
 
   .track {
     grid-area: bar;
     forced-color-adjust: none;
-    height: calc(var(--spacing-2) + 2px);
-    border-radius: 9999px;
+    height: 6px;
+    border-radius: var(--gv-radius-full);
+    background: var(--gv-surface-pill);
+    box-shadow: none;
     overflow: hidden;
   }
 
   .fill {
-    --fill-color: var(--gv-chart-agree);
+    --fill-color: var(--gv-surface-brand-mark);
     background: var(--fill-color);
-    height: calc(100% - 2px);
-    margin: 1px 0 0 1px;
+    height: 100%;
     border-radius: inherit;
-    box-shadow: 0 0 0 1px var(--fill-color);
 
     @media (forced-colors: active) {
-      box-shadow: none;
       background: Highlight;
     }
   }
