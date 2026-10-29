@@ -1,6 +1,6 @@
 import {RailPhase} from './RailPhase';
 import {RailHeader} from './RailHeader';
-import {RailSectionLabel} from '../components/gv/SectionLabel';
+import {SectionLabel} from '../components/gv/SectionLabel';
 import {Divider} from '../components/gv/Divider';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
@@ -100,7 +100,7 @@ export const Rail: StoryObj = {
       style={{width: 264, padding: '25px 18px', background: 'var(--gv-surface-panel)'}}>
       <RailHeader title="Participation" onTogglePanel={() => {}} onAdd={() => {}} addLabel="Add a phase" />
       <nav aria-label="Phases" style={{marginTop: 16}}>
-        <RailSectionLabel>Timeline</RailSectionLabel>
+        <SectionLabel>Timeline</SectionLabel>
         <ul style={{listStyle: 'none', margin: '0 -10px', padding: '4px 0 0'}}>
           <li>
             <RailPhase
@@ -138,11 +138,11 @@ export const Rail: StoryObj = {
       <div style={{margin: '12px 0 16px'}}>
         <Divider />
       </div>
-      <RailSectionLabel>Spotlight</RailSectionLabel>
+      <SectionLabel>Spotlight</SectionLabel>
       <div style={{margin: '16px 0'}}>
         <Divider />
       </div>
-      <RailSectionLabel>Events</RailSectionLabel>
+      <SectionLabel>Events</SectionLabel>
     </aside>
   )
 };

@@ -33,7 +33,7 @@ import {PropertyList, PropertyListItem} from '../../../src/components/gv/Propert
 import {ReactionCounts} from '../../../src/components/gv/ReactionCounts';
 import {SidePanel, SidePanelActions, SidePanelDecision, SidePanelSection} from '../../../src/components/gv/SidePanel';
 import {RailHeader} from '../../../src/patterns/RailHeader';
-import {RailSectionLabel} from '../../../src/components/gv/SectionLabel';
+import {SectionLabel} from '../../../src/components/gv/SectionLabel';
 import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
 import {SetupStep} from '../../../src/patterns/SetupStep';
 import {StatRow} from '../../../src/components/gv/StatRow';
@@ -107,16 +107,16 @@ function Rail({project, current, tab, added, onAdd}: {project: Project; current:
     <aside className="bo-phase-panel bo-phase-rail" aria-label="Participation">
       <RailHeader title="Participation" onAdd={onAdd} addLabel="Add a phase" />
       <nav aria-label="Phases" className="bo-phase-rail-section">
-        <RailSectionLabel>Timeline</RailSectionLabel>
+        <SectionLabel>Timeline</SectionLabel>
         <div className="bo-project-rail-list">
           <PhaseTimeline phases={[...timeline(project, p => `#${phaseUrl(project, p, p.method === 'Ideation' || tab !== 'manage' ? tab : 'build')}`, current.id),
             ...addedTimeline(added)]} />
         </div>
       </nav>
       <Divider />
-      <RailSectionLabel>Spotlight</RailSectionLabel>
+      <SectionLabel>Spotlight</SectionLabel>
       <Divider />
-      <RailSectionLabel>Events</RailSectionLabel>
+      <SectionLabel>Events</SectionLabel>
     </aside>
   );
 }

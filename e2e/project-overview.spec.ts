@@ -120,7 +120,7 @@ async function violations(page: Page, within?: string) {
   const {violations} = await builder
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
   return violations
-    .map(v => ({...v, nodes: v.nodes.filter(n => !(v.id === 'color-contrast' && /gv-rail-section-label|gv-rail-phase__state/.test(String(n.target))))}))
+    .map(v => ({...v, nodes: v.nodes.filter(n => !(v.id === 'color-contrast' && /gv-section-label|gv-rail-phase__state/.test(String(n.target))))}))
     .filter(v => v.nodes.length)
     .map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`);
 }

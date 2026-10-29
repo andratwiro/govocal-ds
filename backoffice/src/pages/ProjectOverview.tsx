@@ -11,7 +11,7 @@ import {Divider} from '../../../src/components/gv/Divider';
 import {ProjectHeader} from '../../../src/patterns/ProjectHeader';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {RailHeader} from '../../../src/patterns/RailHeader';
-import {RailSectionLabel} from '../../../src/components/gv/SectionLabel';
+import {SectionLabel} from '../../../src/components/gv/SectionLabel';
 import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {ActionRow} from '../../../src/patterns/ActionRow';
 import {PanelSection} from '../../../src/patterns/PanelSection';
@@ -181,14 +181,14 @@ function Rail({project, o, added, onAdd, onHide}: {project: Project; o: Overview
         <IconButton tone="strong" aria-label="Add a phase" onPress={onAdd}><Plus aria-hidden size={16} /></IconButton>
       </div>
       <nav aria-label="Phases" className="bo-phase-rail-section">
-        <RailSectionLabel>Timeline</RailSectionLabel>
+        <SectionLabel>Timeline</SectionLabel>
         <div className="bo-project-rail-list">
           <PhaseTimeline phases={[...timeline(project, p => `#/projects/${project.id}/phases/${p.id}/build`), ...addedTimeline(added)]} />
         </div>
       </nav>
       {o.spotlight.length > 0 && (
         <div className="bo-phase-rail-section">
-          <RailSectionLabel>Spotlight</RailSectionLabel>
+          <SectionLabel>Spotlight</SectionLabel>
           <div className="bo-project-rail-list"><PhaseTimeline phases={o.spotlight} /></div>
         </div>
       )}
