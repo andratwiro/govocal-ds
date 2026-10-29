@@ -1,0 +1,26 @@
+@import '../theme.css';
+
+.gv-list-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 var(--gv-space-28);
+  border-bottom: 1px solid var(--gv-border-subtle);
+}
+
+.gv-list-header__columns {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.gv-list-header__cell-slot {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+.gv-list-header__cell-slot .gv-list-header-cell {
+  width: 100%;
+}
