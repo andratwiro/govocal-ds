@@ -19,6 +19,20 @@ export interface ModalProps {
    * @default 'default'
    */
   size?: 'default' | 'wide';
+  /**
+   * `fixed` holds the dialog at 640 (capped by the viewport) so a tabbed body always fills it and
+   * scrolls on its own, rather than the shell growing and shrinking with the active tab.
+   *
+   * @default 'auto'
+   */
+  height?: 'auto' | 'fixed';
+  /**
+   * Off for a body that lays out its own regions and scrolling (the side-tabs dialog's own list +
+   * panel), rather than the default single padded, scrolling block.
+   *
+   * @default true
+   */
+  padBody?: boolean;
   /** Controlled open state; inside a `DialogTrigger` the trigger handles it. */
   isOpen?: boolean;
   defaultOpen?: boolean;
@@ -35,6 +49,8 @@ export function Modal({
   children,
   footer,
   size = 'default',
+  height = 'auto',
+  padBody = true,
   isOpen,
   defaultOpen,
   onOpenChange,
@@ -43,7 +59,7 @@ export function Modal({
 }: ModalProps) {
   return (
     <StarterModal isOpen={isOpen} defaultOpen={defaultOpen} onOpenChange={onOpenChange} isDismissable={isDismissable}>
-      <Dialog className="gv-modal" data-size={size}>
+      <Dialog className="gv-modal" data-size={size} data-height={height}>
         <div className="gv-modal__head">
           <Heading slot="title" className="gv-modal__title">
             {title}
@@ -52,7 +68,7 @@ export function Modal({
             <X aria-hidden size={20} strokeWidth={1.75} />
           </Button>
         </div>
-        <div className="gv-modal__body">{children}</div>
+        <div className="gv-modal__body" data-unpadded={!padBody || undefined}>{children}</div>
         {footer && <div className="gv-modal__footer">{footer}</div>}
       </Dialog>
     </StarterModal>

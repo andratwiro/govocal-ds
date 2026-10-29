@@ -1,10 +1,11 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import type {ReactNode} from 'react';
+import {useState, type ReactNode} from 'react';
 import {DialogTrigger} from 'react-aria-components';
-import {Link as LinkIcon} from 'lucide-react';
+import {Link as LinkIcon, Settings, Paperclip, Tag, Sparkles} from 'lucide-react';
 import {Button} from '../Button';
 import {Radio, RadioGroup} from '../RadioGroup';
 import {TextField} from '../TextField';
+import {Tabs, TabList, Tab, TabPanels, TabPanel} from '../Tabs';
 import {Checkbox} from './Checkbox';
 import {DropZone} from './DropZone';
 import {Modal} from './Modal';
@@ -142,6 +143,101 @@ function InputManagerModal() {
   );
 }
 
+const settingsTabs = [
+  {id: 'general', icon: Settings, label: 'General information'},
+  {id: 'resources', icon: Paperclip, label: 'Resources'},
+  {id: 'tags', icon: Tag, label: 'Tags'},
+  {id: 'perspectives', icon: Sparkles, label: 'Perspectives'}
+];
+
+/** The prototype's Settings dialog: a fixed height (640) so the side list and the panel each scroll on their own. */
+function SideTabsModal() {
+  return (
+    <Modal title="Settings" height="fixed" padBody={false} footer={<Button slot="close">Save</Button>}>
+      <Tabs orientation="vertical" defaultSelectedKey="general" style={{display: 'flex', width: '100%', minHeight: 0}}>
+        <TabList
+          aria-label="Settings"
+          items={settingsTabs}
+          style={{flex: '0 0 200px', padding: '16px 12px', overflowY: 'auto', borderInlineEnd: '1px solid var(--gv-border-row)'}}>
+          {tab => (
+            <Tab id={tab.id}>
+              <tab.icon aria-hidden size={16} strokeWidth={1.75} />
+              {tab.label}
+            </Tab>
+          )}
+        </TabList>
+        <TabPanels items={settingsTabs} style={{flex: '1 1 auto', minWidth: 0, overflowY: 'auto', padding: '20px 24px'}}>
+          {tab => (
+            <TabPanel id={tab.id}>
+              <p style={{margin: '0 0 12px', font: 'var(--gv-type-body-strong)', color: 'var(--gv-text-primary)'}}>{tab.label}</p>
+              <TextField label="Project name" defaultValue="Untitled project" />
+            </TabPanel>
+          )}
+        </TabPanels>
+      </Tabs>
+    </Modal>
+  );
+}
+
+/** A multi-step form modal ("Page 1 of 3"): the footer's Back/Next walk the pages, the last page's Next becomes Done. */
+function PagedModal() {
+  const pages = ['Add a title and description', 'Set the dates', 'Review and publish'];
+  const [page, setPage] = useState(0);
+  const last = page === pages.length - 1;
+  return (
+    <Modal
+      title={pages[page]}
+      footer={
+        <>
+          <span style={{marginInlineEnd: 'auto', color: 'var(--gv-text-secondary)', font: 'var(--gv-type-small)'}}>
+            Page {page + 1} of {pages.length}
+          </span>
+          {page > 0 && <Button variant="secondary" onPress={() => setPage(p => p - 1)}>Back</Button>}
+          {last
+            ? <Button slot="close" onPress={() => setPage(0)}>Done</Button>
+            : <Button onPress={() => setPage(p => p + 1)}>Next</Button>}
+        </>
+      }>
+      {page === 0 && <TextField label="Title" placeholder="A renewed Araucano Park" />}
+      {page === 1 && (
+        <div style={{display: 'flex', gap: 8}}>
+          <TextField label="Start date" placeholder="dd/mm/yyyy" />
+          <TextField label="End date" placeholder="dd/mm/yyyy" />
+        </div>
+      )}
+      {page === 2 && <p style={{margin: 0, color: 'var(--gv-text-secondary)'}}>Everything's ready. Publish when you are.</p>}
+    </Modal>
+  );
+}
+
+/** A tall body (Input manager's list, repeated): the shell holds at 640 and only the body scrolls. */
+function FixedHeightModal() {
+  return (
+    <Modal
+      title="Input manager"
+      height="fixed"
+      footer={
+        <>
+          <Button variant="secondary" slot="close">Cancel</Button>
+          <Button slot="close">Move 3 inputs to Vote on proposals</Button>
+        </>
+      }>
+      <p style={{margin: '0 0 12px', color: 'var(--gv-text-secondary)'}}>
+        Pick the ideas from Collect ideas that go to the vote.
+      </p>
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        {[...inputs, ...inputs].map((idea, i) => (
+          <div key={i} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            padding: '10px 0', borderTop: '1px solid var(--gv-border-row)'}}>
+            <Checkbox defaultSelected={i < 3}>{idea}</Checkbox>
+            <span style={{color: 'var(--gv-text-tertiary)', font: 'var(--gv-type-small)'}}>{48 - (i % inputs.length) * 7} likes</span>
+          </div>
+        ))}
+      </div>
+    </Modal>
+  );
+}
+
 /** One trigger per modal: press one to open it. */
 export const AllVariants: Story = {
   parameters: {docs: {story: {inline: true}}},
@@ -151,6 +247,8 @@ export const AllVariants: Story = {
       <Open label="Share" open={false}><ShareModal /></Open>
       <Open label="Access" open={false}><AccessModal /></Open>
       <Open label="Input manager" open={false}><InputManagerModal /></Open>
+      <Open label="With side tabs" open={false}><SideTabsModal /></Open>
+      <Open label="Paged" open={false}><PagedModal /></Open>
     </div>
   )
 };
@@ -174,4 +272,24 @@ export const Access: Story = {
 export const InputManager: Story = {
   name: 'Input manager',
   render: () => <Open label="Input manager"><InputManagerModal /></Open>
+};
+
+/** `height="fixed"`: the shell holds at 640 and only the body scrolls (a long list, the Input manager). */
+export const FixedHeight: Story = {
+  name: 'Fixed height',
+  render: () => <Open label="Fixed height"><FixedHeightModal /></Open>
+};
+
+/** A multi-step form: "Page 1 of 3" in the footer, Back/Next walk the pages. */
+export const Paged: Story = {
+  render: () => <Open label="Paged"><PagedModal /></Open>
+};
+
+/**
+ * The Settings dialog: a fixed height, `Tabs orientation="vertical"` as the side list (today's
+ * Tabs; a later package adds grouped side-tab headings).
+ */
+export const WithSideTabs: Story = {
+  name: 'With side tabs',
+  render: () => <Open label="With side tabs"><SideTabsModal /></Open>
 };

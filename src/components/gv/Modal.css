@@ -26,6 +26,12 @@
   &[data-size='wide'] {
     width: 866px;
   }
+
+  /* Fixed height (a tabbed dialog): the body always fills it and scrolls on its own, instead of
+     the shell growing and shrinking with the active tab. */
+  &[data-height='fixed'] {
+    height: min(640px, 88vh);
+  }
 }
 
 /* Head: padding 16 24 12, gap 12, Body strong title, a hairline under it. */
@@ -84,6 +90,13 @@
   padding: var(--gv-space-16) var(--gv-space-24) var(--gv-space-24);
   font: var(--gv-type-ui);
   letter-spacing: var(--gv-type-ui-tracking);
+}
+
+/* Side tabs: the body lays out its own list + panel (each scrolls on its own), no outer padding. */
+.gv-modal__body[data-unpadded] {
+  display: flex;
+  overflow: hidden;
+  padding: 0;
 }
 
 /* Footer: padding 12 24, buttons at the end, a 1px border-row on top. The prototype's .pj-modal__foot sets them
