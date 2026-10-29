@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {CircleCheck, Copy, Download, MessageSquareText, Tag, User, Users} from 'lucide-react';
+import {CircleCheck, Copy, Download, MessageSquareText, Tag, TriangleAlert, User, Users} from 'lucide-react';
 import {Button} from '../components/Button';
 import {Menu, MenuItem} from '../components/Menu';
 import {SelectionBar, type SelectionAction} from './SelectionBar';
@@ -24,11 +24,14 @@ const USER_ACTIONS: SelectionAction[] = [
   {id: 'export', label: 'Export selected', icon: ic(Download)}
 ];
 
+// Shown after the others while the content-warnings view is on.
+const DISMISS: SelectionAction = {id: 'dismiss-warnings', label: 'Dismiss warnings', icon: ic(TriangleAlert)};
+
 function Demo({initial, actions = ACTIONS}: {initial: number; actions?: SelectionAction[]}) {
   const [count, setCount] = useState(initial);
   const [last, setLast] = useState('');
   return (
-    <div style={{display: 'grid', gap: 12, width: 760}}>
+    <div style={{display: 'grid', gap: 12, width: 960}}>
       <SelectionBar count={count} actions={actions} onClear={() => setCount(0)} onAction={setLast}>
         <h3 style={{margin: 0, font: 'var(--gv-type-title)'}}>124 ideas</h3>
       </SelectionBar>
@@ -53,6 +56,15 @@ export const OneSelected: Story = {name: 'Default', render: () => <Demo initial=
 
 /** Several selected: the same bar, the count follows. */
 export const Many: Story = {render: () => <Demo initial={12} />};
+
+/**
+ * A contextual action: while the table shows only ideas with content warnings, "Dismiss warnings" joins the bar after
+ * Official update. It leaves with the view.
+ */
+export const WithAContextualAction: Story = {
+  name: 'With a contextual action',
+  render: () => <Demo initial={2} actions={[...ACTIONS, DISMISS]} />
+};
 
 /** Empty: nothing selected, the bar gives way to the list's own heading. */
 export const Empty: Story = {render: () => <Demo initial={0} />};
