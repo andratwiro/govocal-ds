@@ -4,6 +4,15 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Back office redesign on the current components (29 Oct 2026)
+
+**Dashboard**
+- Dashboard filters: Project as a field Select, the date preset as a Menu button, the dates as the starter DateRangePicker → **Select pill with search ("Project:"), Select quiet for the preset, the Date range field only on Custom** → the selector calls above; a preset already says which dates.
+- A card's metric picker as a field Select in the card head → **Select quiet** → the toolbar sorts' look; a field belongs in a form.
+- Series named two ways (Legend rows over Representativeness bars and Internal adoption, the Chart legend under line charts) → **the Chart legend, in the Dashboard card's legend slot; Internal adoption's figures as Stat rows, like Emails** → one legend look; a Legend row carrying a figure was a Stat row drawn another way.
+- "Go to Input Manager" as a centred link in the card body → **the Dashboard card's footer** → the slot Figma draws for it.
+- Participation and Management feeds as a bare starter Table under a Segmented control or a field Select → **list pages: Panel, Table toolbar, Data table, Pagination; the Action filter as the Filter menu and chips; Mark as viewed at once with Undo, ticked rows through the Selection bar; Empty state when nothing is left** → one list shape on every admin table.
+
 ## Building from the prototype review (29 Oct 2026)
 
 Calls made while planning the build of the review's findings (selectors, tables, side panel, feedback, forms,

@@ -1,26 +1,34 @@
-import {useState, type ReactNode} from 'react';
+import {useMemo, useState, type ReactNode} from 'react';
 import {useNavigate, useParams} from 'react-router';
-import {ArrowRight, Download, Eye} from 'lucide-react';
+import {ArrowRight, CalendarDays, Download, Eye, FolderOpen, Zap} from 'lucide-react';
 import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
 import {Select, SelectItem} from '../../../src/components/Select';
-import {DateRangePicker} from '../../../src/components/DateRangePicker';
+import {SearchField} from '../../../src/components/SearchField';
 import {Meter} from '../../../src/components/Meter';
 import {Button} from '../../../src/components/Button';
 import {Link} from '../../../src/components/Link';
 import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
 import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Table, TableHeader, Column, TableBody, Row, Cell} from '../../../src/components/Table';
+import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
+  DataTableStack, DataTableText} from '../../../src/components/gv/DataTable';
+import {Panel} from '../../../src/components/gv/Panel';
+import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
+import {Pagination} from '../../../src/components/gv/Pagination';
+import {EmptyState} from '../../../src/components/gv/EmptyState';
+import {DateRangeField} from '../../../src/components/gv/DateRangeField';
 import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
 import {DashboardCard, DashboardBars, DashboardDemographic, type DashboardCardType} from '../../../src/components/gv/DashboardCard';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {StatTile} from '../../../src/components/gv/StatTile';
-import {LineChart, Sparkline} from '../../../src/components/gv/Chart';
+import {ChartLegend, LineChart, Sparkline} from '../../../src/components/gv/Chart';
 import {BarRow} from '../../../src/components/gv/BarRow';
 import {StatRow} from '../../../src/components/gv/StatRow';
-import {LegendRow} from '../../../src/components/gv/LegendRow';
 import {Badge} from '../../../src/components/gv/Badge';
 import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {Banner} from '../../../src/components/gv/Banner';
+import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
+import {FilterChips} from '../../../src/patterns/FilterChips';
+import {SelectionBar} from '../../../src/patterns/SelectionBar';
 import {DASHBOARD, PROJECTS} from '../data';
 import {MONTHS, PER_TAG, STATUS_BREAKDOWN, EMAILS, INVITATIONS, EVENTS, ADOPTION, DATE_PRESETS, METRICS, PROJECT_METRICS,
   TAG_METRICS, USERS, VISITORS, REPRESENTATION, PARTICIPATION_FEED, MANAGEMENT_FEED, FEED_ACTIONS,
@@ -38,9 +46,12 @@ const SECTIONS = [
   {slug: 'management-feed', label: 'Management feed'}
 ];
 const ALL = 'all';
+const PAGE_SIZE = 10;
 const n = (v: number) => v.toLocaleString('en');
 const pct = (part: number, whole: number) => Math.round((part / whole) * 100);
 const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const itemsWord = (k: number) => `${k} ${k === 1 ? 'item' : 'items'}`;
+const changesWord = (k: number) => `${k} ${k === 1 ? 'change' : 'changes'}`;
 
 type Headline = {label: string; value: number; last30: number; series: number[]};
 
@@ -70,40 +81,44 @@ function DownloadMenu({title}: {title: string}) {
   );
 }
 
-/** The real admin's dashboard card (title, download, body) as the gv Dashboard card from the prototype. */
-function DashCard({title, type, control, children}: {title: string; type?: DashboardCardType; control?: ReactNode; children: ReactNode}) {
+/** The real admin's dashboard card (title, download, body) as the gv Dashboard card: its legend and foot slots too. */
+function DashCard({title, type, control, legend, footer, children}: {
+  title: string; type?: DashboardCardType; control?: ReactNode; legend?: ReactNode; footer?: ReactNode; children: ReactNode;
+}) {
   const action = <span className="bo-dashboard-card-actions">{control}<DownloadMenu title={title} /></span>;
   return (
-    <DashboardCard type={type} title={title} action={action}>
+    <DashboardCard type={type} title={title} action={action} legend={legend} footer={footer}>
       <div className="bo-dashboard-body">{children}</div>
     </DashboardCard>
   );
 }
 
-/** The real admin's "All Time ▾" preset, in front of the date range. */
-function DatePreset({preset, onChange}: {preset: string; onChange: (p: string) => void}) {
+/** Three figures side by side (Events, Invitations, Emails, Internal adoption): static Stat rows. */
+function StatTrio({items}: {items: [string, string][]}) {
   return (
-    <MenuTrigger>
-      <Button variant="quiet" size={32} hasMenu aria-label={`Date preset: ${preset}`}>{preset}</Button>
-      <Menu aria-label="Date preset" selectionMode="single" selectedKeys={[preset]}
-        onSelectionChange={keys => { const [k] = [...keys]; if (k) onChange(String(k)); }}>
-        {DATE_PRESETS.map(p => <MenuItem key={p} id={p}>{p}</MenuItem>)}
-      </Menu>
-    </MenuTrigger>
+    <div className="bo-dashboard-stats">
+      {items.map(([label, value]) => <StatRow key={label} isStatic label={label} value={value} />)}
+    </div>
   );
 }
 
 type FilterState = {project: string; setProject: (p: string) => void; preset: string; setPreset: (p: string) => void};
 
+/** The filter row: the project and the date preset as Select pill and quiet (docs/DECISIONS.md), the dates as the
+ * gv Date range field, the resolution as a Segmented control at the end. */
 function Filters({project, setProject, preset, setPreset}: FilterState) {
   return (
-    <div className="bo-filters bo-dashboard-filters">
-      <Select label="Project" selectedKey={project} onSelectionChange={k => setProject(String(k))}>
-        <SelectItem id={ALL}>All projects</SelectItem>
-        {PROJECTS.map(p => <SelectItem key={p.id} id={p.id}>{p.title}</SelectItem>)}
+    <div className="bo-dashboard-filters">
+      <Select variant="pill" aria-label="Project" prefix="Project:" searchable selectedKey={project}
+        onSelectionChange={k => k != null && setProject(String(k))}>
+        <SelectItem id={ALL} icon={<FolderOpen aria-hidden size={16} />}>All projects</SelectItem>
+        {PROJECTS.map(p => <SelectItem key={p.id} id={p.id} icon={<FolderOpen aria-hidden size={16} />}>{p.title}</SelectItem>)}
       </Select>
-      <DatePreset preset={preset} onChange={setPreset} />
-      <DateRangePicker label="Dates" />
+      <Select variant="quiet" aria-label="Date preset" icon={<CalendarDays aria-hidden size={16} />} selectedKey={preset}
+        onSelectionChange={k => k != null && setPreset(String(k))}>
+        {DATE_PRESETS.map(p => <SelectItem key={p} id={p}>{p}</SelectItem>)}
+      </Select>
+      {preset === 'Custom' && <DateRangeField />}
       <span className="bo-push" />
       <SegmentedControl aria-label="Resolution" selectionMode="single" disallowEmptySelection defaultSelectedKeys={['months']}>
         <SegmentedControlItem id="days">Days</SegmentedControlItem>
@@ -123,12 +138,20 @@ function narrow(h: Headline, project: string): Headline {
   return {...h, value, last30: Math.round(h.last30 * share), series: h.series.map(v => Math.round(v * share))};
 }
 
+function Section({id, title, children}: {id: string; title: string; children: ReactNode}) {
+  return (
+    <section aria-labelledby={`bo-dashboard-${id}`} className="bo-dashboard-section">
+      <h2 id={`bo-dashboard-${id}`} className="bo-section-title">{title}</h2>
+      {children}
+    </section>
+  );
+}
+
 function People({project}: {project: string}) {
   const [reg, rawPart] = DASHBOARD.people;
   const part = narrow(rawPart, project);
   return (
-    <section aria-labelledby="bo-dashboard-people">
-      <h2 id="bo-dashboard-people" className="bo-section-title">People</h2>
+    <Section id="people" title="People">
       <div className="bo-dashboard-kpis">
         <HeadlineTile {...reg} note={project === ALL ? undefined : 'Platform-wide'} />
         <HeadlineTile {...part} />
@@ -136,13 +159,14 @@ function People({project}: {project: string}) {
       <DashCard title="Registrations and participants" type="participation-over-time">
         <LineChart labels={MONTHS} legend series={[{label: part.label, values: part.series}, {label: reg.label, values: reg.series}]} />
       </DashCard>
-    </section>
+    </Section>
   );
 }
 
+/** A card's metric picker: the quiet Select, as the toolbar sorts (docs/DECISIONS.md). */
 function MetricSelect({value, onChange}: {value: Metric; onChange: (m: Metric) => void}) {
   return (
-    <Select aria-label="Metric" selectedKey={value} onSelectionChange={k => onChange(k as Metric)}>
+    <Select variant="quiet" aria-label="Metric" selectedKey={value} onSelectionChange={k => k != null && onChange(k as Metric)}>
       {METRICS.map(m => <SelectItem key={m} id={m}>{m}</SelectItem>)}
     </Select>
   );
@@ -159,8 +183,7 @@ function Participation({project}: {project: string}) {
   const tags = PER_TAG.map(t => ({label: t.tag, value: TAG_METRICS[t.tag][tagMetric]}));
   const tagMax = Math.max(...tags.map(t => t.value));
   return (
-    <section aria-labelledby="bo-dashboard-participation">
-      <h2 id="bo-dashboard-participation" className="bo-section-title">Projects and participation</h2>
+    <Section id="participation" title="Projects and participation">
       <div className="bo-dashboard-kpis">{headlines.map(d => <HeadlineTile key={d.label} {...d} />)}</div>
       <div className="bo-dashboard-cards">
         <DashCard title="Participation over time" type="participation-over-time">
@@ -175,63 +198,51 @@ function Participation({project}: {project: string}) {
           </DashCard>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }
 
 function Management() {
   const s = DASHBOARD.inputStatus;
   const total = STATUS_BREAKDOWN.reduce((a, b) => a + b.count, 0);
+  const adoptionTotal = ADOPTION.admins.total + ADOPTION.managers.total;
   return (
-    <section aria-labelledby="bo-dashboard-management">
-      <h2 id="bo-dashboard-management" className="bo-section-title">Management</h2>
+    <Section id="management" title="Management">
       <div className="bo-dashboard-cards">
         <div className="bo-dashboard-stack">
-          <DashCard title="Input status">
+          <DashCard title="Input status" type="status-breakdown" footer={(
+            <Link href="#/inputs" className="react-aria-Link bo-dashboard-more">Go to Input Manager <ArrowRight aria-hidden size={16} /></Link>
+          )}>
             <Meter label="Feedback given" value={s.feedbackGiven} />
             <DashboardBars items={STATUS_BREAKDOWN.map(b => ({label: b.label, percent: (b.count / total) * 100, count: b.count, color: b.color}))} />
-            <div className="bo-dashboard-stats">
-              <StatRow isStatic label="Status changed" value={n(s.statusChanged)} />
-              <StatRow isStatic label="Official updates" value={n(s.officialUpdates)} />
-              <StatRow isStatic label="Avg. response" value={`${s.avgResponseDays} days`} />
-            </div>
+            <StatTrio items={[['Status changed', n(s.statusChanged)], ['Official updates', n(s.officialUpdates)],
+              ['Avg. response', `${s.avgResponseDays} days`]]} />
             <StatRow label="Waiting for feedback" value={n(total - s.statusChanged)} isNew href="#/inputs" />
-            <Link href="#/inputs" className="react-aria-Link bo-dashboard-more">Go to Input Manager <ArrowRight aria-hidden size={14} /></Link>
           </DashCard>
           <DashCard title="Events">
-            <div className="bo-dashboard-stats">
-              <StatRow isStatic label="Total events added" value={n(EVENTS.added)} />
-              <StatRow isStatic label="Upcoming" value={n(EVENTS.upcoming)} />
-              <StatRow isStatic label="Completed" value={n(EVENTS.completed)} />
-            </div>
+            <StatTrio items={[['Total events added', n(EVENTS.added)], ['Upcoming', n(EVENTS.upcoming)], ['Completed', n(EVENTS.completed)]]} />
           </DashCard>
         </div>
         <div className="bo-dashboard-stack">
           <DashCard title="Emails">
-            <div className="bo-dashboard-stats">
-              <StatRow isStatic label="Total emails sent" value={n(EMAILS.automated.total + EMAILS.custom.total)} />
-              <StatRow isStatic label="Automated emails" value={n(EMAILS.automated.total)} />
-              <StatRow isStatic label="Custom emails" value={n(EMAILS.custom.total)} />
-            </div>
+            <StatTrio items={[['Total emails sent', n(EMAILS.automated.total + EMAILS.custom.total)],
+              ['Automated emails', n(EMAILS.automated.total)], ['Custom emails', n(EMAILS.custom.total)]]} />
             <LineChart labels={MONTHS} legend series={[{label: 'Automated emails', values: EMAILS.automated.series}, {label: 'Custom emails', values: EMAILS.custom.series}]} />
           </DashCard>
           <DashCard title="Invitations">
-            <div className="bo-dashboard-stats">
-              <StatRow isStatic label="Total invites sent" value={n(INVITATIONS.sent)} />
-              <StatRow isStatic label="Pending" value={n(INVITATIONS.pending)} />
-              <StatRow isStatic label="Accepted" value={n(INVITATIONS.accepted)} />
-            </div>
+            <StatTrio items={[['Total invites sent', n(INVITATIONS.sent)], ['Pending', n(INVITATIONS.pending)], ['Accepted', n(INVITATIONS.accepted)]]} />
           </DashCard>
+          {/* Was two Legend rows carrying figures: now the same Stat rows and charted legend as Emails. */}
           <DashCard title="Internal adoption">
-            <div className="bo-dashboard-rows">
-              <LegendRow color="--gv-chart-line-primary" label={`Admins · ${ADOPTION.admins.total}`} value={`${ADOPTION.admins.active30} active last 30 days`} />
-              <LegendRow color="--gv-chart-line-secondary" label={`Project managers · ${ADOPTION.managers.total}`} value={`${ADOPTION.managers.active30} active last 30 days`} />
-            </div>
-            <LineChart labels={MONTHS} series={[{label: 'Active admins', values: ADOPTION.admins.series}, {label: 'Active project managers', values: ADOPTION.managers.series}]} />
+            <StatTrio items={[['Admins', `${ADOPTION.admins.active30} of ${ADOPTION.admins.total}`],
+              ['Project managers', `${ADOPTION.managers.active30} of ${ADOPTION.managers.total}`],
+              ['Total', `${ADOPTION.admins.active30 + ADOPTION.managers.active30} of ${adoptionTotal}`]]} />
+            <p className="bo-note">Active in the last 30 days</p>
+            <LineChart labels={MONTHS} legend series={[{label: 'Active admins', values: ADOPTION.admins.series}, {label: 'Active project managers', values: ADOPTION.managers.series}]} />
           </DashCard>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }
 
@@ -248,7 +259,7 @@ function UsersTab({project}: {project: string}) {
         <StatTile label="Active users" value={n(USERS.active)} note="Took part in the last 90 days" />
       </div>
       <DashCard title="Participants timeline" type="participation-over-time">
-        <Banner>Participation numbers may not be fully accurate, as some data is captured in an external survey that is not tracked.</Banner>
+        <Banner tone="info">Participation numbers may not be fully accurate, as some data is captured in an external survey that is not tracked.</Banner>
         <LineChart labels={MONTHS} legend series={[{label: part.label, values: part.series}, {label: reg.label, values: reg.series}]} />
       </DashCard>
       <div className="bo-dashboard-cards">
@@ -285,8 +296,10 @@ function VisitorsTab() {
   );
 }
 
-/** Representativeness: participants against the reference population, one card per registration field. */
+/** Representativeness: participants against the reference population, one card per registration field. The two
+ * series are named once, in the card's legend slot (the Chart legend, as every chart), not as Legend rows. */
 function RepresentativenessTab() {
+  const legend = <ChartLegend shape="square" align="start" items={[{label: 'Participants', color: 'bar'}, {label: 'Reference population', color: 'pass'}]} />;
   return (
     <div className="bo-dashboard-tab">
       <div className="bo-dashboard-kpis">
@@ -296,11 +309,7 @@ function RepresentativenessTab() {
       </div>
       <div className="bo-dashboard-cards">
         {REPRESENTATION.fields.map(f => (
-          <DashCard key={f.field} title={f.field}>
-            <div className="bo-dashboard-rows">
-              <LegendRow color="--gv-chart-bar" label="Participants" value="% of participants" />
-              <LegendRow color="--gv-chart-pass" label="Reference population" value="% of residents" />
-            </div>
+          <DashCard key={f.field} title={f.field} legend={legend}>
             {f.rows.map(r => (
               <div key={r.label} className="bo-dashboard-pair">
                 <BarRow label={r.label} percent={r.users} value={`${r.users}%`} />
@@ -315,82 +324,147 @@ function RepresentativenessTab() {
   );
 }
 
-/** Participation feed (the real admin's moderation feed): new activity, marked as viewed one by one. */
+/** Participation feed (the real admin's moderation feed) as a list page: a Panel with the Not yet viewed / Viewed
+ * switch in its head, the Table toolbar (count, Selection bar, search), the Data table and Pagination. Marking as
+ * viewed applies at once, with Undo in a Toast. */
 function ParticipationFeed() {
   const [viewed, setViewed] = useState(() => new Set(PARTICIPATION_FEED.filter(f => f.viewed).map(f => f.id)));
   const [show, setShow] = useState<'new' | 'viewed'>('new');
-  const rows = PARTICIPATION_FEED.filter(f => viewed.has(f.id) === (show === 'viewed'));
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [selected, setSelected] = useState<Set<string | number>>(new Set());
+  const q = query.trim().toLowerCase();
+  const rows = PARTICIPATION_FEED.filter(f => viewed.has(f.id) === (show === 'viewed'))
+    .filter(f => !q || f.content.toLowerCase().includes(q) || f.project.toLowerCase().includes(q));
+  const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  const current = Math.min(page, pageCount);
+  const shown = rows.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
   const unseen = PARTICIPATION_FEED.length - viewed.size;
+  const ticked = [...selected].map(String).filter(id => shown.some(r => r.id === id));
+
+  const markViewed = (ids: string[]) => {
+    setViewed(prev => new Set([...prev, ...ids]));
+    setSelected(new Set());
+    queue.add({
+      title: ids.length === 1 ? 'Marked as viewed' : `${itemsWord(ids.length)} marked as viewed`,
+      action: 'Undo',
+      onAction: () => setViewed(prev => { const next = new Set(prev); ids.forEach(id => next.delete(id)); return next; })
+    }, {timeout: 6000});
+  };
+  const switchTo = (v: 'new' | 'viewed') => { setShow(v); setPage(1); setSelected(new Set()); };
+
+  const toolbar = (
+    <TableToolbar aria-label="Feed tools" start={(
+      <SelectionBar count={show === 'new' ? ticked.length : 0}
+        actions={[{id: 'viewed', label: 'Mark as viewed', icon: <Eye aria-hidden size={16} />}]}
+        onAction={() => markViewed(ticked)} onClear={() => setSelected(new Set())}>
+        <TableToolbarHeading>{itemsWord(rows.length)}</TableToolbarHeading>
+      </SelectionBar>
+    )}>
+      <SearchField isCollapsible aria-label="Search the feed" placeholder="Search" value={query}
+        onChange={v => { setQuery(v); setPage(1); }} />
+    </TableToolbar>
+  );
+
   return (
-    <div className="bo-dashboard-tab">
-      <div className="bo-tabs-row">
+    <Panel title="Participation feed" description="New ideas, comments and proposals from every project." flush
+      actions={(
         <SegmentedControl aria-label="Show" selectionMode="single" disallowEmptySelection selectedKeys={[show]}
-          onSelectionChange={k => { const [v] = [...k]; if (v) setShow(v as 'new' | 'viewed'); }}>
+          onSelectionChange={k => { const [v] = [...k]; if (v) switchTo(v as 'new' | 'viewed'); }}>
           <SegmentedControlItem id="new" isUnread={unseen > 0}>Not yet viewed</SegmentedControlItem>
           <SegmentedControlItem id="viewed">Viewed</SegmentedControlItem>
         </SegmentedControl>
-        <span className="bo-note" aria-live="polite">{unseen} not yet viewed</span>
-      </div>
-      <Table aria-label="Participation feed" className="react-aria-Table bo-dashboard-table">
-        <TableHeader>
-          <Column>Type</Column>
-          <Column isRowHeader>Content</Column>
-          <Column>Project</Column>
-          <Column>Date</Column>
-          <Column><span className="bo-visually-hidden">Actions</span></Column>
-        </TableHeader>
-        <TableBody renderEmptyState={() => <p className="bo-note">Nothing here.</p>}>
-          {rows.map(f => (
-            <Row key={f.id} id={f.id}>
-              <Cell><Badge>{f.type}</Badge></Cell>
-              <Cell>{f.content}</Cell>
-              <Cell>{f.project}</Cell>
-              <Cell>{f.date}</Cell>
-              <Cell>
-                {show === 'new'
-                  ? <Button variant="quiet" size={32} aria-label={`Mark as viewed: ${f.content}`}
-                    onPress={() => setViewed(prev => new Set(prev).add(f.id))}><Eye aria-hidden size={16} /> Mark as viewed</Button>
-                  : <StatusBadge state="live">Viewed</StatusBadge>}
-              </Cell>
-            </Row>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+      )}
+      toolbar={toolbar}
+      footer={rows.length > 0 && <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Feed pages" />}>
+      {rows.length === 0 && !q ? (
+        <EmptyState size="panel" illustration="empty-notebook" headingLevel={3}
+          title={show === 'new' ? 'You are all caught up' : 'Nothing viewed yet'}
+          description={show === 'new' ? 'New ideas, comments and proposals will appear here.' : 'Items you mark as viewed move here.'} />
+      ) : (
+        <DataTable aria-label="Participation feed" selectionMode={show === 'new' ? 'multiple' : 'none'}
+          selectedKeys={selected} onSelectionChange={k => setSelected(new Set(k === 'all' ? shown.map(r => r.id) : k))}>
+          <DataTableHeader>
+            <DataTableColumn id="type">Type</DataTableColumn>
+            <DataTableColumn id="content" isRowHeader>Content</DataTableColumn>
+            <DataTableColumn id="project">Project</DataTableColumn>
+            <DataTableColumn id="date">Date</DataTableColumn>
+            <DataTableColumn id="actions" align="options" hideLabel>Actions</DataTableColumn>
+          </DataTableHeader>
+          <DataTableBody renderEmptyState={() => <DataTableEmpty>No results</DataTableEmpty>}>
+            {shown.map(f => (
+              <DataTableRow key={f.id} id={f.id} textValue={f.content}>
+                <DataTableCell><Badge>{f.type}</Badge></DataTableCell>
+                <DataTableCell><DataTableText lines={2}>{f.content}</DataTableText></DataTableCell>
+                <DataTableCell muted>{f.project}</DataTableCell>
+                <DataTableCell muted><span className="bo-dashboard-nowrap">{f.date}</span></DataTableCell>
+                <DataTableCell align="options">
+                  {show === 'new'
+                    ? <Button variant="quiet" size={32} aria-label={`Mark as viewed: ${f.content}`}
+                      onPress={() => markViewed([f.id])}><Eye aria-hidden size={16} /> Mark as viewed</Button>
+                    : <StatusBadge state="live">Viewed</StatusBadge>}
+                </DataTableCell>
+              </DataTableRow>
+            ))}
+          </DataTableBody>
+        </DataTable>
+      )}
+    </Panel>
   );
 }
 
-/** Management feed: who changed what, filtered by action (the real admin's Date / User / Item / Action table). */
+const ACTION_FACET: FilterFacet = {
+  id: 'action', label: 'Action', icon: <Zap aria-hidden size={16} />,
+  options: FEED_ACTIONS.map(a => ({id: a, label: a, count: MANAGEMENT_FEED.filter(m => m.action === a).length}))
+};
+
+/** Management feed: who changed what (the real admin's Date / User / Item / Action table), as a list page: Panel,
+ * Table toolbar with search and the Filter menu, Filter chips, Data table, Pagination. */
 function ManagementFeed() {
-  const [action, setAction] = useState(ALL);
-  const rows = MANAGEMENT_FEED.filter(m => action === ALL || m.action === action);
+  const [filter, setFilter] = useState<FilterValue>({});
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const fresh = <T,>(set: (v: T) => void) => (v: T) => { set(v); setPage(1); };
+  const rows = useMemo(() => {
+    const actions = filter.action ?? [];
+    const q = query.trim().toLowerCase();
+    return MANAGEMENT_FEED.filter(m => (!actions.length || actions.includes(m.action))
+      && (!q || m.item.toLowerCase().includes(q) || m.user.toLowerCase().includes(q)));
+  }, [filter, query]);
+  const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  const current = Math.min(page, pageCount);
+  const shown = rows.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
   return (
-    <div className="bo-dashboard-tab">
-      <div className="bo-filters">
-        <Select label="Action" selectedKey={action} onSelectionChange={k => setAction(String(k))}>
-          <SelectItem id={ALL}>All actions</SelectItem>
-          {FEED_ACTIONS.map(a => <SelectItem key={a} id={a}>{a}</SelectItem>)}
-        </Select>
-      </div>
-      <Table aria-label="Management feed" className="react-aria-Table bo-dashboard-table">
-        <TableHeader>
-          <Column>Date</Column>
-          <Column>User</Column>
-          <Column isRowHeader>Item</Column>
-          <Column>Action</Column>
-        </TableHeader>
-        <TableBody>
-          {rows.map(m => (
-            <Row key={m.id} id={m.id}>
-              <Cell>{m.date}</Cell>
-              <Cell>{m.user}</Cell>
-              <Cell><span className="bo-dashboard-item">{m.item}<span className="bo-note">{m.kind}</span></span></Cell>
-              <Cell><Badge>{m.action}</Badge></Cell>
-            </Row>
+    <Panel title="Management feed" description="What admins and managers created, changed and deleted." flush
+      toolbar={(
+        <>
+          <TableToolbar aria-label="Feed tools" start={<TableToolbarHeading>{changesWord(rows.length)}</TableToolbarHeading>}>
+            <SearchField isCollapsible aria-label="Search changes" placeholder="Search" value={query} onChange={fresh(setQuery)} />
+            <FilterMenu aria-label="Filter changes" facets={[ACTION_FACET]} value={filter} onChange={fresh(setFilter)} countLabel={changesWord} />
+          </TableToolbar>
+          <FilterChips aria-label="Active filters" facets={[ACTION_FACET]} value={filter} onChange={fresh(setFilter)} />
+        </>
+      )}
+      footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Change pages" />}>
+      <DataTable aria-label="Management feed">
+        <DataTableHeader>
+          <DataTableColumn id="date">Date</DataTableColumn>
+          <DataTableColumn id="user">User</DataTableColumn>
+          <DataTableColumn id="item" isRowHeader>Item</DataTableColumn>
+          <DataTableColumn id="action">Action</DataTableColumn>
+        </DataTableHeader>
+        <DataTableBody renderEmptyState={() => <DataTableEmpty>No results</DataTableEmpty>}>
+          {shown.map(m => (
+            <DataTableRow key={m.id} id={m.id} textValue={m.item}>
+              <DataTableCell muted><span className="bo-dashboard-nowrap">{m.date}</span></DataTableCell>
+              <DataTableCell>{m.user}</DataTableCell>
+              <DataTableCell><DataTableStack sub={m.kind}>{m.item}</DataTableStack></DataTableCell>
+              <DataTableCell><Badge>{m.action}</Badge></DataTableCell>
+            </DataTableRow>
           ))}
-        </TableBody>
-      </Table>
-    </div>
+        </DataTableBody>
+      </DataTable>
+    </Panel>
   );
 }
 
@@ -416,8 +490,9 @@ export function Dashboard() {
         <TabPanel id="users"><SectionHeading>Users</SectionHeading>{filters}<UsersTab project={project} /></TabPanel>
         <TabPanel id="visitors"><SectionHeading>Visitors</SectionHeading>{filters}<VisitorsTab /></TabPanel>
         <TabPanel id="representativeness"><SectionHeading>Representativeness</SectionHeading><RepresentativenessTab /></TabPanel>
-        <TabPanel id="participation-feed"><SectionHeading>Participation feed</SectionHeading><ParticipationFeed /></TabPanel>
-        <TabPanel id="management-feed"><SectionHeading>Management feed</SectionHeading><ManagementFeed /></TabPanel>
+        {/* The feeds are Panels: their h2 is the Panel's title. */}
+        <TabPanel id="participation-feed"><div className="bo-dashboard-tab"><ParticipationFeed /></div></TabPanel>
+        <TabPanel id="management-feed"><div className="bo-dashboard-tab"><ManagementFeed /></div></TabPanel>
         </TabPanels>
       </Tabs>
       <ToastRegion />

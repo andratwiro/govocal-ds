@@ -48,20 +48,20 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-projects-order-item { display: flex; align-items: center; gap: var(--gv-space-8); padding-block: var(--gv-space-6); }
 
 /* ── Dashboard ── */
-.bo-dashboard-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--gv-space-12); margin-block-end: var(--gv-space-16); }
+.bo-dashboard-filters { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-12); margin-block: var(--gv-space-16); }
+.bo-dashboard-section { display: grid; gap: var(--gv-space-16); }
+.bo-dashboard-section > .bo-section-title { margin: var(--gv-space-24) 0 0; }
+.bo-dashboard-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--gv-space-12); }
 .bo-dashboard-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gv-space-8); }
 .bo-dashboard-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: var(--gv-space-16); align-items: start; }
 .bo-dashboard-stack { display: grid; gap: var(--gv-space-16); }
 .bo-dashboard-body { display: grid; gap: var(--gv-space-16); padding-block-start: var(--gv-space-4); }
-.bo-dashboard-rows { display: grid; gap: var(--gv-space-8); }
-.bo-dashboard-filters { align-items: center; }
+.bo-dashboard-body > .bo-note { margin: 0; }
 .bo-dashboard-card-actions { display: inline-flex; align-items: center; gap: var(--gv-space-8); }
-.bo-dashboard-more { display: inline-flex; align-items: center; gap: var(--gv-space-4); justify-self: center; }
+.bo-dashboard-more { display: inline-flex; align-items: center; gap: var(--gv-space-4); }
 .bo-dashboard-tab { display: grid; gap: var(--gv-space-16); padding-block-start: var(--gv-space-16); }
-.bo-dashboard-tab > .bo-dashboard-kpis { margin-block-end: 0; }
 .bo-dashboard-pair { display: grid; gap: var(--gv-space-2); }
-.bo-dashboard-table { width: 100%; }
-.bo-dashboard-item { display: grid; gap: var(--gv-space-2); }
+.bo-dashboard-nowrap { white-space: nowrap; }
 
 /* ── Input manager ── */
 .bo-inputs-toolbar { align-items: center; }
