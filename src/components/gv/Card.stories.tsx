@@ -40,8 +40,11 @@ const reviewPillSection: CardProps = {
   children: 'Participants can browse ideas as a list. Add a map to show where they are.'
 };
 const reviewPillDropdown: CardProps = {
-  title: 'Sorting', review: 'to-review', pills: [{label: 'Trending'}], control: 'expand',
-  children: 'Ideas are sorted by trending first: the most liked in the last week.'
+  title: 'Sorting', review: 'to-review', control: 'menu', defaultSelectedKey: 'trending',
+  menuItems: [
+    {id: 'trending', label: 'Trending'}, {id: 'discussed', label: 'Most discussed'}, {id: 'random', label: 'Random'},
+    {id: 'reactions', label: 'Most reactions'}, {id: 'recent', label: 'Most recent'}, {id: 'oldest', label: 'Oldest'}
+  ]
 };
 const manageAdd: CardProps = {tone: 'manage', title: 'Add an idea', iconActions: [{icon: Plus, label: 'Add an idea'}]};
 const manageNotSet: CardProps = {
@@ -71,7 +74,7 @@ const manageExports: CardProps = {
 };
 const embedUrl: CardProps = {
   title: 'Embed Konveio URL', isRequired: true,
-  children: <TextField aria-label="Konveio URL" placeholder="https://riverside.konveio.com/…" />
+  children: <TextField aria-label="Konveio URL" placeholder="https://" />
 };
 const report: CardProps = {
   title: 'Report',
@@ -174,7 +177,11 @@ export const ReviewIconPill: Story = {name: 'Review · icon pill', args: reviewI
 export const ReviewPill: Story = {name: 'Review · pill', args: reviewPill, decorators: width(444), parameters: figma('5-198')};
 export const ToSet: Story = {name: 'To set', args: toSet, decorators: width(444), parameters: figma('5-214')};
 export const ReviewPillSection: Story = {name: 'Review · pill section', args: reviewPillSection, decorators: width(444), parameters: figma('5-234')};
+/** The header drops a list; the chosen value is the pill (the prototype's Sorting card). */
 export const ReviewPillDropdown: Story = {name: 'Review · pill dropdown', args: reviewPillDropdown, decorators: width(444), parameters: figma('5-254')};
+
+/** Not in Figma (the prototype, 22 Oct): once the admin has looked, the notice turns green. */
+export const Reviewed: Story = {args: {...reviewPillDropdown, review: 'reviewed'}, decorators: width(444)};
 export const ManageAdd: Story = {name: 'Manage · add', args: manageAdd, decorators: stage(276), parameters: figma('5-414')};
 export const ManageNotSet: Story = {name: 'Manage · not set', args: manageNotSet, decorators: stage(276), parameters: figma('5-430')};
 export const Statements: Story = {args: statements, decorators: width(444), parameters: figma('24-196')};

@@ -1,13 +1,17 @@
 'use client';
-import type {ReactNode} from 'react';
+import {useState, type ReactNode} from 'react';
 import {
   Button,
   Disclosure,
   DisclosurePanel,
   Heading,
+  Menu,
+  MenuItem,
+  MenuTrigger,
   type RadioGroupProps
 } from 'react-aria-components';
-import {ChevronDown, ChevronRight, type LucideIcon} from 'lucide-react';
+import {Check, ChevronDown, ChevronRight, type LucideIcon} from 'lucide-react';
+import {Popover} from '../Popover';
 import {Radio, RadioGroup, type RadioProps} from '../RadioGroup';
 import {Switch, type SwitchProps} from '../Switch';
 import {IconButton} from './IconButton';
@@ -20,6 +24,11 @@ export interface CardPill {
   label: string;
   /** A 14 lucide icon before the label (Figma "Pill · Icon=Yes"). */
   icon?: LucideIcon;
+}
+
+export interface CardMenuItem {
+  id: string;
+  label: string;
 }
 
 export interface CardIconAction {
@@ -52,13 +61,23 @@ export interface CardProps {
   review?: ReviewNoticeProps['state'];
   /** Grey words for the current value, e.g. "Not set". */
   summary?: string;
-  /** Summary pills, e.g. "6 questions", or "Idea" with a lightbulb. Hidden while the card is open. */
+  /**
+   * Summary pills, e.g. "6 questions", or "Idea" with a lightbulb. Hidden while the card is open. A `menu` card
+   * without pills shows its chosen item as the pill.
+   */
   pills?: CardPill[];
   /**
-   * The header's chevron. `expand` opens the body in place (a Disclosure); `open` leads somewhere else (→).
+   * The header's chevron. `expand` opens the body in place (a Disclosure); `open` leads somewhere else (→);
+   * `menu` drops a list to pick one value from (Figma "Review · pill dropdown", the prototype's Sorting card).
    * `placeholder` keeps the 28 box empty (Figma's "Empty" card).
    */
-  control?: 'expand' | 'open' | 'placeholder';
+  control?: 'expand' | 'open' | 'placeholder' | 'menu';
+  /** `control="menu"`: the values to pick from. */
+  menuItems?: CardMenuItem[];
+  /** `control="menu"`: the chosen value's id (controlled), or the first one (uncontrolled). */
+  selectedKey?: string;
+  defaultSelectedKey?: string;
+  onSelectionChange?: (id: string) => void;
   /** What the → does (`control="open"`). */
   onOpen?: () => void;
   /** Ghost icon buttons in the header (plus, upload, download, link, sparkles…). */
@@ -128,10 +147,66 @@ export function Card({
   children,
   defaultExpanded,
   isExpanded,
-  onExpandedChange
+  onExpandedChange,
+  menuItems = [],
+  selectedKey,
+  defaultSelectedKey,
+  onSelectionChange
 }: CardProps) {
+  const [innerKey, setInnerKey] = useState(defaultSelectedKey);
   const roomy = Boolean(actions) && layout === 'row';
   const status = <Status isRequired={isRequired} review={review} summary={summary} pills={pills} />;
+
+  if (control === 'menu') {
+    const current = selectedKey ?? innerKey;
+    const chosen = menuItems.find(item => item.id === current);
+    return (
+      <div className="gv-card" data-tone={tone}>
+        <Heading className="gv-card__heading">
+          <MenuTrigger>
+            <Button className="gv-card__header gv-card__header--trigger">
+              <span className="gv-card__title">{title}</span>
+              <Status
+                isRequired={isRequired}
+                review={review}
+                summary={summary}
+                pills={pills ?? (chosen ? [{label: chosen.label}] : undefined)}
+              />
+              <span className="gv-card__chevron" aria-hidden>
+                <ChevronDown size={16} />
+              </span>
+            </Button>
+            <Popover placement="bottom end" offset={6} className="gv-card__popover">
+              <Menu
+                className="gv-card__menu"
+                aria-label={typeof title === 'string' ? title : undefined}
+                items={menuItems}
+                selectionMode="single"
+                disallowEmptySelection
+                selectedKeys={current ? [current] : []}
+                onSelectionChange={keys => {
+                  const [id] = keys === 'all' ? [] : [...keys];
+                  if (id === undefined) return;
+                  setInnerKey(String(id));
+                  onSelectionChange?.(String(id));
+                }}>
+                {item => (
+                  <MenuItem id={item.id} textValue={item.label} className="gv-card__menu-item">
+                    {({isSelected}) => (
+                      <>
+                        <span>{item.label}</span>
+                        {isSelected && <Check aria-hidden size={16} strokeWidth={1.75} />}
+                      </>
+                    )}
+                  </MenuItem>
+                )}
+              </Menu>
+            </Popover>
+          </MenuTrigger>
+        </Heading>
+      </div>
+    );
+  }
 
   if (control === 'expand') {
     return (
@@ -193,11 +268,15 @@ export function Card({
 }
 
 /**
- * The Card's on/off switch (Figma "Manage · Toggle"): the design system's Switch, with no visible label
- * (give it an `aria-label`).
+ * The Card's on/off switch (Figma "Manage · Toggle", the prototype's `.pj-sw`): the design system's Switch at the
+ * card's 26 × 16 size, with no visible label (give it an `aria-label`).
  */
 export function CardSwitch(props: Omit<SwitchProps, 'children' | 'className' | 'description' | 'errorMessage'>) {
-  return <Switch {...props}>{null}</Switch>;
+  return (
+    <Switch {...props} className="react-aria-SwitchField gv-card-switch">
+      {null}
+    </Switch>
+  );
 }
 
 /** The choice cards' radio list (Survey placement, Survey options, Voting method): the design system's RadioGroup. */

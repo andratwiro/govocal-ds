@@ -38,7 +38,7 @@
   }
 }
 
-/* An expand card's whole header is the Disclosure trigger. */
+/* An expand or menu card's whole header is the trigger. */
 .gv-card__header--trigger {
   appearance: none;
   border: none;
@@ -50,8 +50,11 @@
   cursor: pointer;
   outline: none;
 
-  &[data-hovered] .gv-card__chevron {
-    background: var(--gv-surface-hover-strong);
+  /* The drawn chevron lights up like the ghost Icon button it stands for (the prototype's .pjsec__chev hover). */
+  &[data-hovered] .gv-card__chevron,
+  &[aria-haspopup][aria-expanded='true'] .gv-card__chevron {
+    background: var(--gv-surface-hover);
+    color: var(--gv-icon-strong);
   }
 
   &[data-focus-visible] {
@@ -70,6 +73,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Required: 6 before the chevron (Figma's Actions frame pads it 6; the prototype's .pjfd-req margin-right 6). */
+.gv-card .gv-required {
+  margin-inline-end: var(--gv-space-6);
 }
 
 /* Review slot: 8 of breathing room before the pills. */
@@ -131,8 +139,89 @@
   transition: rotate 200ms;
 }
 
-.gv-card[data-expanded] .gv-card__chevron svg {
+.gv-card[data-expanded] .gv-card__chevron svg,
+.gv-card__header--trigger[aria-expanded='true'] .gv-card__chevron svg {
   rotate: 180deg;
+}
+
+/* The menu card's list (the prototype's .pjdd__menu): 190 wide, padding 6, radius 12, a border-control hairline;
+   32-tall UI rows, padding 6 8, radius 8, the chosen one ticked at the end. */
+.react-aria-Popover.gv-card__popover {
+  outline-color: var(--gv-border-control);
+  border-radius: var(--gv-radius-12);
+}
+
+.gv-card__menu {
+  display: flex;
+  flex-direction: column;
+  min-width: 190px;
+  box-sizing: border-box;
+  padding: var(--gv-space-6);
+  outline: none;
+}
+
+.gv-card__menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-10);
+  min-height: 32px;
+  box-sizing: border-box;
+  padding: var(--gv-space-6) var(--gv-space-8);
+  border-radius: var(--gv-radius-8);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-primary);
+  cursor: pointer;
+  outline: none;
+
+  svg {
+    flex: none;
+    color: var(--gv-action-checked);
+  }
+
+  /* No fill for the item focused on open (the prototype's chosen row has none); the pointer and the keyboard light it. */
+  &[data-hovered],
+  &[data-focus-visible] {
+    background: var(--gv-surface-hover);
+  }
+}
+
+/* An input in the body is 40 tall, Body type (Figma's Embed URL field; the prototype's .pj-input). */
+.gv-card__body .react-aria-Input {
+  min-height: 40px;
+  padding-inline: var(--gv-space-12);
+  font: var(--gv-type-body);
+  letter-spacing: var(--gv-type-body-tracking);
+}
+
+/* The card's switch: 26 × 16, a 12 knob, off = toggle-off (Figma "Manage · Toggle"; the prototype's .pj-sw).
+   The system Switch is the prototype's 36 × 20 form toggle. */
+.gv-card-switch .react-aria-SwitchButton {
+  .track {
+    --height: 16px;
+    width: 26px;
+    height: 16px;
+    background: var(--gv-control-toggle-off);
+    box-shadow: none;
+
+    .handle {
+      width: 12px;
+      height: 12px;
+      box-shadow: var(--gv-shadow-subtle);
+    }
+  }
+
+  &[data-selected] {
+    .track {
+      background: var(--gv-control-toggle-on);
+    }
+
+    .handle {
+      transform: translateX(10px);
+      transform-origin: 12px 50%;
+    }
+  }
 }
 
 /* Body: padding 0 12 12, gap 2; Small secondary words (Manage · Toggle). */
