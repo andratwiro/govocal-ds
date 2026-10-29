@@ -1,16 +1,14 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import type {Key, Selection} from 'react-aria-components';
-import {Plus} from 'lucide-react';
 import {Button} from '../Button';
 import {Menu, MenuItem, MenuTrigger} from '../Menu';
 import {Select, SelectItem} from '../Select';
-import {Tag, TagGroup} from '../TagGroup';
+import {TagPicker} from './TagPicker';
 import {PropertyList, PropertyListItem} from './PropertyList';
 import {SidePanel, SidePanelSection} from './SidePanel';
 
-// Story helpers, shared with the Side panel's stories: today's Select, TagGroup and Menu. The pill Select and the Tag
-// picker take their place once they land. Every change applies at once (the panel has no Save).
+// Story helpers, shared with the Side panel's stories: the pill Select (22, the drawer's size), the Tag picker and Menu.
+// Every change applies at once (the panel has no Save).
 
 export const STATUSES = ['Proposed', 'Viewed', 'Under consideration', 'Accepted', 'Rejected', 'Implemented'];
 export const ASSIGNEES = ['Unassigned', 'Manager A', 'Manager B', 'Manager C'];
@@ -24,7 +22,7 @@ type Change = (value: string) => void;
 export function DemoStatus({value, onChange}: {value: string; onChange: Change}) {
   const options = STATUSES.includes(value) ? STATUSES : [value, ...STATUSES];
   return (
-    <Select aria-label="Status" selectedKey={value} onSelectionChange={k => onChange(String(k))}
+    <Select aria-label="Status" variant="pill" size={22} selectedKey={value} onSelectionChange={k => onChange(String(k))}
       disabledKeys={STATUSES.includes(value) ? [] : [value]}>
       {options.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
     </Select>
@@ -34,30 +32,16 @@ export function DemoStatus({value, onChange}: {value: string; onChange: Change})
 /** Assignee: a single choice, applied at once. */
 export function DemoAssignee({value, onChange}: {value: string; onChange: Change}) {
   return (
-    <Select aria-label="Assignee" selectedKey={value} onSelectionChange={k => onChange(String(k))}>
+    <Select aria-label="Assignee" variant="pill" size={22} searchable searchPlaceholder="Search people..."
+      selectedKey={value} onSelectionChange={k => onChange(String(k))}>
       {ASSIGNEES.map(a => <SelectItem key={a} id={a}>{a}</SelectItem>)}
     </Select>
   );
 }
 
-/** Tags: removable tags, then "Add tag" opening a checklist of the project's tags. */
+/** Tags: removable tags, then "Add tag" opening the project's tags (searchable past five). */
 export function DemoTags({value, onChange}: {value: string[]; onChange: (tags: string[]) => void}) {
-  return (
-    <>
-      {value.length > 0 && (
-        <TagGroup aria-label="Tags" onRemove={(keys: Set<Key>) => onChange(value.filter(t => !keys.has(t)))}>
-          {value.map(t => <Tag key={t} id={t}>{t}</Tag>)}
-        </TagGroup>
-      )}
-      <MenuTrigger>
-        <Button variant="quiet" size={32}><Plus aria-hidden size={16} />Add tag</Button>
-        <Menu aria-label="Tags" selectionMode="multiple" selectedKeys={new Set(value)}
-          onSelectionChange={(keys: Selection) => onChange(keys === 'all' ? TAGS : TAGS.filter(t => keys.has(t)))}>
-          {TAGS.map(t => <MenuItem key={t} id={t}>{t}</MenuItem>)}
-        </Menu>
-      </MenuTrigger>
-    </>
-  );
+  return <TagPicker aria-label="Tags" options={TAGS.map(t => ({id: t, label: t}))} selected={value} onChange={onChange} />;
 }
 
 /** Phase: the phase's name, then "Copy to phase" opening the phases it can go to. */

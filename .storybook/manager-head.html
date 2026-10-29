@@ -135,11 +135,11 @@
       'patterns-phase-timeline': 'patterns-project-rail-phase-timeline',
       'patterns-filter-chips': 'patterns-lists-filter-chips',
       'patterns-filter-menu': 'patterns-lists-filter-menu',
-      'patterns-filter-options': 'patterns-lists-filter-options',
+      'patterns-filter-options': 'components-forms-option-list',
       'patterns-selection-bar': 'patterns-lists-selection-bar',
       'patterns-manage-tab-filter-chips': 'patterns-lists-filter-chips',
       'patterns-manage-tab-filter-menu': 'patterns-lists-filter-menu',
-      'patterns-manage-tab-filter-options': 'patterns-lists-filter-options',
+      'patterns-manage-tab-filter-options': 'components-forms-option-list',
       'patterns-manage-tab-selection-bar': 'patterns-lists-selection-bar',
       'overview-foundations': 'foundations-colour',
       'overview-icons': 'foundations-icons',
@@ -148,7 +148,10 @@
       'patterns-app-shell-help-popover': 'components-overlays-help-popover',
       'base-switch': 'components-forms-switch',
       'base-textfield': 'components-forms-text-field',
-      'base-numberfield': 'components-forms-number-field'
+      'base-numberfield': 'components-forms-number-field',
+      'patterns-lists-filter-options': 'components-forms-option-list',
+      'base-select': 'components-forms-select',
+      'base-menu': 'components-actions-menu'
     };
     var u = new URL(location.href), m = (u.searchParams.get('path') || '').match(/^\/(story|docs)\/(.+?)--(.+)$/);
     if (m && MOVED[m[2]]) {

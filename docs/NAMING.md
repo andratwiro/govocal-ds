@@ -43,20 +43,21 @@ entry, stories keep their file order.
 Overview                Welcome · Accessibility
 Foundations             Colour · Typography · Spacing · Radius · Shadows · Motion · Icons · Illustrations (a page each)
 Components              src/components/gv/
-  Actions               Button · Compact button · Icon button · Segmented control (with Segmented control item)
+  Actions               Button · Compact button · Icon button · Menu · Segmented control (with Segmented control item)
   Charts                Bar row · Chart · Dashboard card · Legend row · Statement row
   Data display          Avatar (with Avatar group) · Data table · File list · List header · List header cell · List row
                         · Property list · Reaction counts · Stat row · Stat tile
-  Forms                 Checkbox · Choice card · Date range field · Drop zone · Number field · Required marker
-                        · Rich text editor · Rich text toolbar · Rich text toolbar button · Switch · Text field
-                        · Title field
+  Forms                 Checkbox · Choice card · Date range field · Drop zone · Number field · Option list · Required marker
+                        · Rich text editor · Rich text toolbar · Rich text toolbar button · Select · Switch · Tag picker
+                        · Text field · Title field
   Layout & containers   Card · Divider
   Navigation            Breadcrumbs
   Overlays              Alert dialog · Coachmark · Help popover · Modal · Side panel · Tooltip
   Status & feedback     Badge · Banner · New dot · Review status · Skeleton · Status badge · Toast
 Patterns                src/patterns/
   App shell             Notification list · Side nav
-  Manage tab            Comment thread · Filter chips · Filter menu · Filter options · Official update · Selection bar
+  Lists                 Filter chips · Filter menu · Selection bar (used by every list page)
+  Manage tab            Comment thread · Official update
   Pages & menu          Section toggle
   Participation methods Common ground row · Proposals row · Vote progress · Volunteering row · Voting row
   Project page          Action row · Panel section · Phone preview · Project header · Setup step · Stat card

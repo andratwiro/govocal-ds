@@ -74,6 +74,24 @@ dashboards, Build tab).
 - Text field prefix/suffix → **a border on the whole group**; Number field's "€" → **plain text inside the field** →
   one glyph needs no seam, and Voting's Min/Max widths stay as measured.
 
+**Built in the selectors package**
+- Single picks drawn with a checkbox in the drawer, a check at the end in New project → **pick several = a box at the
+  start, pick one = a check at the end**, in Menu, Option list and Select alike → the box says "tick more", the check
+  says "this one".
+- In a pick-several list Enter ticks and closes every menu → **Enter ticks and the list stays open; Esc or Done
+  closes** → otherwise the keyboard can't tick two tags through a search. Applies in the Filter menu too.
+- "No matches" (Option list) vs "No results" (Select) → **"No results"** for both.
+- Done in brand-blue text, "+ Add tag" in brand blue → **quiet Buttons** → blue text is the Link's.
+- Pill selects in two sizes (New project 28, drawer properties 22) → **Select `variant="pill"` with `size` 22 or 28**;
+  a third look, quiet, for toolbar sorts ("Sort: Newest ▾").
+- Pill with icon and prefix → **the icon leads: "✱ Space: City parks"**.
+- New project's search has no magnifier → **a leading magnifier**, as every search field.
+- Removable tag's 0.5px hairline → **1px** (no half-pixel strokes).
+- Setup step's value badge radius 6 vs the round Badge → **radius 6 kept on the Setup step** (its own look in Figma).
+- Option list is a Menu, not a list box (the plan) → **a Menu with selection** → it has to work as a Filter menu
+  submenu; Select keeps the list box. Both draw the same rows.
+- Candidates for new Figma tokens: a value badge surface/text pair (teal), a pill hover surface (slate-200).
+
 **Prototype bugs found on the way** (not copied into the system):
 - Space and Folder search: an empty popover with no "No results" text, arrow keys don't move, no search icon.
 - Ideation Manage: with every column on, columns run into the "+" column; the count heading ignores the search.
