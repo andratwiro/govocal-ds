@@ -101,3 +101,18 @@ test('sparkline with dates: the same card and keyboard explorer; without them, a
   await open(page, 'components-charts-chart--sparkline');
   await expect(page.getByRole('slider')).toHaveCount(0);
 });
+
+test('bar row: hover darkens the bar and shows the exact count and share; screen readers get it with the label', async ({page}) => {
+  await open(page, 'components-charts-bar-row--with-detail');
+  const row = page.locator('.gv-bar-row', {hasText: 'Green Corridors'});
+  const card = row.locator('.gv-chart-card');
+  await expect(card).toBeHidden();
+  const before = await row.locator('.gv-bar-row__fill').evaluate(el => getComputedStyle(el).backgroundColor);
+  await row.hover();
+  await expect(card).toBeVisible();
+  await expect(card).toHaveText('822 of 3,410 inputs · 24%');
+  await expect.poll(() => row.locator('.gv-bar-row__fill').evaluate(el => getComputedStyle(el).backgroundColor)).not.toBe(before);
+  await expect(row.locator('.gv-bar-row__label')).toHaveText('Green Corridors, 822 of 3,410 inputs · 24%');
+  await open(page, 'components-charts-bar-row--without-value');
+  await expect(page.locator('.gv-bar-row__value')).toHaveCount(0);
+});

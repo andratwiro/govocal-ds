@@ -23,9 +23,24 @@
   white-space: nowrap;
 }
 
-.gv-bar-row__track {
+/* Two lines (the AI summary's Top themes): the label wraps, then cuts off after the second line. */
+.gv-bar-row[data-lines='2'] .gv-bar-row__label {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* The track and, over its fill's end, the hover card. */
+.gv-bar-row__bar {
+  position: relative;
   flex: 1.1 1 0;
   min-width: 0;
+}
+
+.gv-bar-row__track {
   height: 6px;
   border-radius: var(--gv-radius-3);
   background: var(--gv-surface-stage);
@@ -35,6 +50,28 @@
 .gv-bar-row__fill {
   height: 100%;
   border-radius: var(--gv-radius-3);
+  background: var(--bar-color);
+  transition: background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+}
+
+/* Hover (Not in Figma): the bar darkens a step (a third of the way to the primary text colour), visible on the dark
+   brand bar too. */
+.gv-bar-row:hover .gv-bar-row__fill {
+  background: color-mix(in srgb, var(--bar-color) 65%, var(--gv-text-primary));
+}
+
+/* The detail card: centred over the fill's end, 6 above the bar, only while the row is hovered. */
+.gv-bar-row .gv-bar-row__card {
+  display: none;
+  inset-block-start: auto;
+  inset-block-end: calc(100% + var(--gv-space-6));
+  translate: -50% 0;
+}
+.gv-bar-row .gv-bar-row__card:dir(rtl) {
+  translate: 50% 0;
+}
+.gv-bar-row:hover .gv-bar-row__card {
+  display: flex;
 }
 
 .gv-bar-row__value {
