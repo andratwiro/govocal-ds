@@ -88,16 +88,17 @@ import {ComboBox, ComboBoxItem} from 'govocal-ds/base';  // a Base part, only wh
 
 ## MCP servers (`.mcp.json`)
 
-- **storybook** (`http://localhost:6006/mcp`): works only while `npm run storybook` runs. It lists every entry and
-  story with its props and snippets (`docs-list`, `docs-show`, `docs-show-story`). Start Storybook first; if it is
-  down, use `docs/COMPONENTS.md` and the stories files. The same data is built to
-  `dist/storybook/manifests/components.json`.
+- **storybook** (`http://localhost:6006/mcp`): works only while `npm run storybook` runs. `docs-list` lists every
+  entry, `docs-show <id>` gives its props (its own and the React Aria ones a page sets: `isDisabled`, `onPress`,
+  `isInvalid`, `selectedKeys`…) and every story's code; `stories-preview` returns links to look at. Start Storybook
+  first; if it is down, use `docs/COMPONENTS.md` and the stories files. The same manifest is built to
+  `dist/storybook/manifests/components.json` (`features.componentsManifest` and the docgen in `.storybook/main.ts`).
 - **figma** (`https://mcp.figma.com/mcp`, Figma's remote server): works once you sign in to Figma through `/mcp` in
   Claude Code, with a Full or Dev seat (about 200 calls a day). Nothing secret is in the file. Figma's desktop server
   (`http://127.0.0.1:3845/mcp`) works only while the Figma desktop app runs with its MCP server on; add it yourself if
   you prefer it (`docs/FIGMA.md`, "Components").
-- **react-aria** (`@react-aria/mcp`, React Aria's own docs): always; it needs network. For a React Aria prop the
-  system passes through (`validationBehavior`, `selectionMode`).
+- **react-aria** (`@react-aria/mcp@1.2.1`, Adobe's server for React Aria's docs, run with `npx`): always, with
+  network. For how a React Aria prop the system passes through behaves (`validationBehavior`, `selectionMode`).
 
 ## Hard rules
 

@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "storybook": {"type": "http", "url": "http://localhost:6006/mcp"},
+    "figma": {"type": "http", "url": "https://mcp.figma.com/mcp"},
+    "react-aria": {"type": "stdio", "command": "npx", "args": ["-y", "@react-aria/mcp@1.2.1"]}
+  }
+}
