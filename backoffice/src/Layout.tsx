@@ -3,7 +3,7 @@ import {Outlet, useLocation, useMatch} from 'react-router';
 import {Bell, BookOpen, Languages, LogOut, MessageSquare, FileChartColumn, Flag, Inbox, LifeBuoy, ScrollText, User, UserCheck, Users, Building2} from 'lucide-react';
 import {SideNav, SideNavGroup, SideNavHome, SideNavLink, SideNavButton} from '../../src/patterns/SideNav';
 import {NotificationList} from '../../src/patterns/NotificationList';
-import {MenuTrigger, Menu, MenuItem, SubmenuTrigger, Text} from '../../src/components/Menu';
+import {MenuTrigger, Menu, MenuItem, SubmenuTrigger} from '../../src/components/Menu';
 import {DialogTrigger, Dialog} from '../../src/components/Dialog';
 import {Popover} from '../../src/components/Popover';
 import {Avatar} from '../../src/components/gv/Avatar';
@@ -59,16 +59,16 @@ export function Layout() {
             <SideNavButton label={ME.name} sub={ME.role} chevron icon={<Avatar initials={ME.initials} size={24} />} />
             <Menu aria-label="Account">
               <SubmenuTrigger>
-                <MenuItem textValue="Language">
-                  <Languages aria-hidden /><Text slot="label">Language: {current}</Text>
+                <MenuItem textValue="Language" icon={<Languages aria-hidden size={16} />}>
+                  Language: {current}
                 </MenuItem>
                 <Menu aria-label="Language" selectionMode="single" selectedKeys={[locale]}
                   onSelectionChange={keys => keys !== 'all' && keys.size && setLocale(String([...keys][0]))}>
                   {LOCALES.map(l => <MenuItem key={l.id} id={l.id}>{l.label}</MenuItem>)}
                 </Menu>
               </SubmenuTrigger>
-              <MenuItem href="#/platform?profile" textValue="My profile"><User aria-hidden /><Text slot="label">My profile</Text></MenuItem>
-              <MenuItem href="#/platform?signed-out" textValue="Sign out"><LogOut aria-hidden /><Text slot="label">Sign out</Text></MenuItem>
+              <MenuItem href="#/platform?profile" textValue="My profile" icon={<User aria-hidden size={16} />}>My profile</MenuItem>
+              <MenuItem href="#/platform?signed-out" textValue="Sign out" icon={<LogOut aria-hidden size={16} />}>Sign out</MenuItem>
             </Menu>
           </MenuTrigger>
           <MenuTrigger>
@@ -78,8 +78,9 @@ export function Layout() {
                 const Icon = SUPPORT_ICON[s.id];
                 const external = s.href.startsWith('http');
                 return (
-                  <MenuItem key={s.id} href={s.href} textValue={s.label} target={external ? '_blank' : undefined} rel={external ? 'noreferrer' : undefined}>
-                    <Icon aria-hidden /><Text slot="label">{s.label}</Text>
+                  <MenuItem key={s.id} href={s.href} textValue={s.label} target={external ? '_blank' : undefined} rel={external ? 'noreferrer' : undefined}
+                    icon={<Icon aria-hidden size={16} />}>
+                    {s.label}
                   </MenuItem>
                 );
               })}

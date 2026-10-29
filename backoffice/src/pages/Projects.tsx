@@ -528,8 +528,8 @@ export function Projects() {
     <MenuTrigger>
       <Button variant="primary" size={32}><Plus aria-hidden size={16} />New project<ChevronDown aria-hidden size={16} /></Button>
       <Menu aria-label="New project" onAction={k => setDialog({kind: k === 'template' ? 'gallery' : 'scratch'})}>
-        <MenuItem id="scratch"><FileText aria-hidden size={16} />From scratch</MenuItem>
-        <MenuItem id="template"><LayoutGrid aria-hidden size={16} />Use a template</MenuItem>
+        <MenuItem id="scratch" icon={<FileText aria-hidden size={16} />}>From scratch</MenuItem>
+        <MenuItem id="template" icon={<LayoutGrid aria-hidden size={16} />}>Use a template</MenuItem>
       </Menu>
     </MenuTrigger>
   );

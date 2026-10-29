@@ -78,8 +78,8 @@ export function ProjectOverview() {
         <MenuTrigger>
           <Button variant="secondary" size={32} hasMenu>Share</Button>
           <Menu aria-label="Share" onAction={k => (k === 'invite' ? setInviting(true) : setNote('Link copied'))}>
-            <MenuItem id="invite" textValue="Invite people"><UserPlus aria-hidden />Invite people</MenuItem>
-            <MenuItem id="copy" textValue="Copy link" isDisabled={!live}><Link aria-hidden />Copy link</MenuItem>
+            <MenuItem id="invite" textValue="Invite people" icon={<UserPlus aria-hidden size={16} />}>Invite people</MenuItem>
+            <MenuItem id="copy" textValue="Copy link" isDisabled={!live} icon={<Link aria-hidden size={16} />}>Copy link</MenuItem>
           </Menu>
         </MenuTrigger>
         <MenuTrigger>

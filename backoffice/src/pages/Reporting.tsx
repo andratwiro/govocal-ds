@@ -361,8 +361,8 @@ function Builder({open, setOpen, hideTitle}: {open: Open; setOpen: (o: Open) => 
             <Menu aria-label="Share" onAction={k => (k === 'link'
               ? toast('Web link ready', `Anyone with the link can view ${open.title}: example.org/reports/${slug(open.title)}`)
               : toast('Preparing the PDF', `${open.title}.pdf downloads when it is ready.`))}>
-              <MenuItem id="link"><Copy aria-hidden size={16} />Share as web link</MenuItem>
-              <MenuItem id="pdf"><Download aria-hidden size={16} />Print to PDF</MenuItem>
+              <MenuItem id="link" icon={<Copy aria-hidden size={16} />}>Share as web link</MenuItem>
+              <MenuItem id="pdf" icon={<Download aria-hidden size={16} />}>Print to PDF</MenuItem>
             </Menu>
           </MenuTrigger>
         )}
