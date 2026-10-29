@@ -3,7 +3,8 @@ on:
   push: {branches: [main]}
   workflow_dispatch:
 permissions: {contents: read, pages: write, id-token: write}
-concurrency: {group: pages, cancel-in-progress: true}
+# A newer push waits for the running deploy instead of cancelling it (a cancelled run says nothing about the push).
+concurrency: {group: pages, cancel-in-progress: false}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,10 +14,14 @@ jobs:
         with: {node-version: 24, cache: npm}
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - run: npm run typecheck
       - run: npm test --if-present
       - run: npm run build
       - run: npm run a11y:scan --if-present
       - run: npx playwright test
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with: {name: playwright-report, path: playwright-report, retention-days: 14}
       - uses: actions/upload-pages-artifact@v4
         with: {path: dist}
   deploy:
