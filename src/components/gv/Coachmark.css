@@ -1,0 +1,122 @@
+@import '../theme.css';
+
+/* Tali's onboarding coachmark (augur-design.html #pj-coach / .pj-coach__bubble): a dark,
+   fixed-width card with a rotated-square tail pointing at the UI it explains. */
+.gv-coachmark {
+  position: relative;
+  width: 266px;
+  box-sizing: border-box;
+  background: var(--gv-action-primary);
+  color: var(--gv-text-inverse);
+  border-radius: var(--gv-radius-12);
+  padding: 15px 17px 13px;
+  box-shadow: var(--gv-shadow-dialog);
+  font: var(--gv-type-ui) var(--gv-font-family);
+  transition:
+    transform 200ms,
+    opacity 200ms;
+  outline: none;
+
+  &[data-entering],
+  &[data-exiting] {
+    transform: var(--origin);
+    opacity: 0;
+  }
+
+  &[data-placement='top'] {
+    --origin: translateY(8px);
+    margin-bottom: 10px;
+  }
+
+  &[data-placement='bottom'] {
+    --origin: translateY(-8px);
+    margin-top: 10px;
+  }
+
+  &[data-placement='left'] {
+    --origin: translateX(8px);
+    margin-right: 10px;
+  }
+
+  &[data-placement='right'] {
+    --origin: translateX(-8px);
+    margin-left: 10px;
+  }
+}
+
+.gv-coachmark__arrow svg {
+  display: block;
+  fill: var(--gv-action-primary);
+  transform: rotate(45deg);
+}
+
+.gv-coachmark__hd {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gv-space-10);
+}
+
+.gv-coachmark__title {
+  font: var(--gv-type-body-strong) var(--gv-font-family);
+}
+
+.gv-coachmark__x {
+  flex: none;
+  margin-top: 1px;
+  border: none;
+  background: none;
+  padding: 0;
+  color: color-mix(in srgb, var(--gv-text-inverse) 75%, var(--gv-action-primary));
+  cursor: pointer;
+  display: inline-flex;
+}
+
+.gv-coachmark__x:hover {
+  color: var(--gv-text-inverse);
+}
+
+.gv-coachmark__body {
+  margin-top: var(--gv-space-6);
+  font: var(--gv-type-ui) var(--gv-font-family);
+  color: color-mix(in srgb, var(--gv-text-inverse) 90%, var(--gv-action-primary));
+}
+
+.gv-coachmark__acts {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gv-space-6);
+  margin-top: var(--gv-space-14);
+}
+
+.gv-coachmark__skip {
+  border: none;
+  background: none;
+  color: color-mix(in srgb, var(--gv-text-inverse) 85%, var(--gv-action-primary));
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 9px;
+  border-radius: var(--gv-radius-6);
+}
+
+.gv-coachmark__skip:hover {
+  background: color-mix(in srgb, var(--gv-text-inverse) 12%, transparent);
+}
+
+.gv-coachmark__got {
+  border: 1px solid color-mix(in srgb, var(--gv-text-inverse) 50%, transparent);
+  background: none;
+  color: var(--gv-text-inverse);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px 14px;
+  border-radius: var(--gv-radius-2);
+}
+
+.gv-coachmark__got:hover {
+  background: color-mix(in srgb, var(--gv-text-inverse) 14%, transparent);
+}
