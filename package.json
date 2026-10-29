@@ -25,7 +25,8 @@
     "a11y:scan": "node scripts/a11y-scan.mjs",
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "api:imports": "node scripts/use-public-api.mjs backoffice/src"
   },
   "dependencies": {
     "clsx": "^2.1.1",
