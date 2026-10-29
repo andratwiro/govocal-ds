@@ -7,6 +7,37 @@
 `docs/research/storybook-benchmark/report.md`, then this plan. Execute it overnight in the order under *If time runs
 short*, following *Global constraints* in every subagent brief, and leave the morning report described at the end."
 
+**Already in flight (the steward, 29 Oct 23:15).** Builders running tonight land these on `main` through the
+steward; don't build them twice, build on them once merged:
+- **Task 6, locale and strings:** branch `strings`. Every fixed word becomes a `labels` prop with English defaults (API
+  rule 11, "Words"). Numbers and dates follow React Aria's locale, never `en-GB`. A guard test, and a locale toolbar
+  in Storybook.
+- **Task 5, Base:** branch `structure`.
+  - Base gets an intro page ("primitives: prefer Components"), a line on every Base docs page, and sorts last.
+  - The 17 dead starter parts are deleted.
+  - Link, Radio group and Checkbox group are promoted.
+  - Tables & lists and Text groups.
+  - A guard against one stylesheet reaching into another's classes.
+- **Tasks 4, 5 and 7 (part):** branch `docs-wave`.
+  - `AGENTS.md`, `CLAUDE.md`, `.mcp.json`, `README.md` ("Start here" per audience), `CONTRIBUTING.md`, `llms.txt`.
+  - A truthful manifest.
+  - `docs/CONSUMING.md` plus an Overview "For developers" page: what it is and isn't, copy vs package, the CSS scoping
+    caveat, providers, a react-hook-form recipe.
+  - A form-validation recipe story.
+  - The Storybook pages "Start here", "Questions for developers" and "AI assistance" are still to build, on top of
+    these.
+- **Landed since 8bd57e5:**
+  - multilingual fields (`19582a8`);
+  - Map view (`f699c3c`);
+  - a virtualised Data table with load-more (`af60b0c`).
+- **Building now, from the back office's deep dive of the live prototypes:**
+  - AI assistant parts (chat thread, message, progress, prompt composer, suggestions, item chip, Assistant panel,
+    Activity feed);
+  - report parts (report type tokens, Page stage + Zoom bar, Block frame, inline rich text, StatTile plain, Figure,
+    Quote, Sortable list);
+  - next: project screens (one setup row, header, rail, workspace layout, phone preview) and a batch of small fixes,
+    including doc comments for the 19 undocumented components.
+
 **Goal:** by morning, close the gaps between this Storybook and the benchmark panel
 ([report](../research/storybook-benchmark/report.md)) that matter most to its two readers: the designer who will run
 it as the design bible, and the developers who will import its components and compose screens. Only work the design
