@@ -17,3 +17,11 @@ export const Example: Story = args => <DateField {...args} />;
 Example.args = {
   label: 'Event date'
 };
+
+export const AllStates: StoryFn<typeof DateField> = () => (
+  <div style={{display: 'flex', gap: 24}}>
+    <DateField label="Phase start" />
+    <DateField label="Phase end" isDisabled />
+    <DateField label="Submission deadline" isInvalid errorMessage="Pick a date after the start." />
+  </div>
+);

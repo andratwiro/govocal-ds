@@ -7,21 +7,39 @@
     display: flex;
     width: 100%;
     align-items: center;
-    height: var(--spacing-8);
-    border-radius: var(--radius);
+    height: var(--gv-space-32);
+    border-radius: var(--gv-radius-2);
     overflow: clip;
   }
 
   .react-aria-DateInput {
     flex: 1;
     min-width: 0;
-    padding-right: var(--spacing-10);
+    border: none;
+    padding-right: var(--gv-space-10);
     overflow-x: auto;
     overflow-y: clip;
     scrollbar-width: none;
   }
 
+  /* the Group itself carries the border so the field + trigger button share one chrome */
+  &:has(.react-aria-Group) .react-aria-Group,
+  .react-aria-Group {
+    border: 1px solid var(--gv-border-control);
+    background: var(--gv-surface-panel);
+  }
+
+  &:hover .react-aria-Group {
+    border-color: var(--gv-border-control-hover);
+  }
+
+  .react-aria-Group[data-focus-within] {
+    border-color: var(--gv-border-selected);
+    box-shadow: 0 0 0 3px var(--gv-surface-info);
+  }
+
   .field-Button {
-    margin-right: var(--spacing-1);
+    margin-right: var(--gv-space-4);
+    color: var(--gv-icon-default);
   }
 }
