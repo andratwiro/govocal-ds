@@ -14,7 +14,8 @@ import {Divider} from '../../../src/components/gv/Divider';
 import {DropZone} from '../../../src/components/gv/DropZone';
 import {SegmentedControl, Segment} from '../../../src/components/gv/SegmentedControl';
 import {TitleField} from '../../../src/components/gv/TitleField';
-import {APPROVERS, LOCALES, PLATFORM_NAME, SETTINGS_LISTS} from '../data-settings';
+import {APPROVERS, LOCALES, PLATFORM_NAME} from '../data-settings';
+import {AreasTab, PoliciesTab, StatusesTab, TagsTab} from './SettingsLists';
 import {Page} from './Page';
 import {SectionHeading} from '../SectionHeading';
 
@@ -44,6 +45,13 @@ function SaveRow({label, isDirty, saved, onSave}: {label: string; isDirty: boole
       </div>
     </>
   );
+}
+
+/** A section's changed and saved state: any change turns Save on; Save turns it off and says so. */
+function useSave() {
+  const [isDirty, setDirty] = useState(false);
+  const [saved, setSaved] = useState(false);
+  return {isDirty, saved, touch: () => { setDirty(true); setSaved(false); }, onSave: () => { setDirty(false); setSaved(true); }};
 }
 
 function PlatformConfiguration() {
@@ -110,32 +118,56 @@ function ProjectApproval() {
   );
 }
 
+function ContentModeration() {
+  const {touch, ...save} = useSave();
+  return (
+    <Section title="Content moderation">
+      <div className="bo-settings-switches">
+        <Switch defaultSelected onChange={touch} description="Block input, proposals and comments containing the most commonly reported offensive words.">
+          Profanity blocker
+        </Switch>
+        <Switch defaultSelected onChange={touch} description="Auto-detect inappropriate content posted on the platform.">
+          Detect inappropriate content
+        </Switch>
+      </div>
+      <SaveRow label="Content moderation" {...save} />
+    </Section>
+  );
+}
+
+function Statistics() {
+  const {touch, ...save} = useSave();
+  return (
+    <Section title="Statistics">
+      <Switch onChange={touch} description="Leave out the participation and visits of admins and managers from statistics and graphs.">
+        Exclude admins and managers from statistics
+      </Switch>
+      <SaveRow label="Statistics" {...save} />
+    </Section>
+  );
+}
+
+function UserNameDisplay() {
+  const {touch, ...save} = useSave();
+  return (
+    <Section title="User name display (for users with email confirmed only)"
+      help="Choose how users without a name in their profile will appear on the platform. This happens when a phase's access rights are set to 'Email confirmation'. Upon participation, users can always update the name we generated for them.">
+      <RadioGroup aria-label="User name display" defaultValue="user" onChange={touch}>
+        <Radio value="user" description="e.g. User 123456">User</Radio>
+        <Radio value="animal" description="e.g. Elephant Cat">Animal</Radio>
+      </RadioGroup>
+      <SaveRow label="User name display" {...save} />
+    </Section>
+  );
+}
+
 function General() {
   return (
     <div className="bo-settings-stack">
       <PlatformConfiguration />
-      <Section title="Content moderation">
-        <div className="bo-settings-switches">
-          <Switch defaultSelected description="Block input, proposals and comments containing the most commonly reported offensive words.">
-            Profanity blocker
-          </Switch>
-          <Switch defaultSelected description="Auto-detect inappropriate content posted on the platform.">
-            Detect inappropriate content
-          </Switch>
-        </div>
-      </Section>
-      <Section title="Statistics">
-        <Switch description="Leave out the participation and visits of admins and managers from statistics and graphs.">
-          Exclude admins and managers from statistics
-        </Switch>
-      </Section>
-      <Section title="User name display (for users with email confirmed only)"
-        help="Choose how users without a name in their profile will appear on the platform. This happens when a phase's access rights are set to 'Email confirmation'. Upon participation, users can always update the name we generated for them.">
-        <RadioGroup aria-label="User name display" defaultValue="user">
-          <Radio value="user" description="e.g. User 123456">User</Radio>
-          <Radio value="animal" description="e.g. Elephant Cat">Animal</Radio>
-        </RadioGroup>
-      </Section>
+      <ContentModeration />
+      <Statistics />
+      <UserNameDisplay />
       <ProjectApproval />
     </div>
   );
@@ -172,29 +204,18 @@ function Branding() {
 }
 
 function Registration() {
+  const {touch, ...save} = useSave();
   return (
     <div className="bo-settings-stack">
       <Section title="Sign-up" help="What residents see and are asked when they create an account.">
         <div className="bo-settings-fields">
-          <TextArea label="Sign-up help text" defaultValue="Create an account to take part in Larkvale's projects." />
-          <Switch defaultSelected description="Residents confirm their email address with a six-digit code.">Confirm email address</Switch>
-          <Switch description="Ask for first and last name when a resident signs up.">Ask for a full name</Switch>
+          <TextArea label="Sign-up help text" defaultValue="Create an account to take part in Larkvale's projects." onChange={touch} />
+          <Switch defaultSelected onChange={touch} description="Residents confirm their email address with a six-digit code.">Confirm email address</Switch>
+          <Switch onChange={touch} description="Ask for first and last name when a resident signs up.">Ask for a full name</Switch>
         </div>
+        <SaveRow label="Sign-up" {...save} />
       </Section>
     </div>
-  );
-}
-
-function ListTab({id}: {id: keyof typeof SETTINGS_LISTS}) {
-  const {title, note, items} = SETTINGS_LISTS[id];
-  return (
-    <Section title={title} help={note}>
-      <ul className="bo-settings-list">
-        {items.map((item, i) => (
-          <li key={item}>{i > 0 && <Divider />}<span className="bo-settings-list-item">{item}</span></li>
-        ))}
-      </ul>
-    </Section>
   );
 }
 
@@ -206,7 +227,10 @@ export function Settings() {
         <TabPanel id="general"><SectionHeading>General</SectionHeading><General /></TabPanel>
         <TabPanel id="branding"><SectionHeading>Branding</SectionHeading><Branding /></TabPanel>
         <TabPanel id="registration"><SectionHeading>Registration</SectionHeading><Registration /></TabPanel>
-        {(['tags', 'areas', 'statuses', 'policies'] as const).map(id => <TabPanel key={id} id={id}><SectionHeading>{TABS.find(t => t[0] === id)![1]}</SectionHeading><ListTab id={id} /></TabPanel>)}
+        <TabPanel id="tags"><SectionHeading>Tags</SectionHeading><TagsTab /></TabPanel>
+        <TabPanel id="areas"><SectionHeading>Areas</SectionHeading><AreasTab /></TabPanel>
+        <TabPanel id="statuses"><SectionHeading>Statuses</SectionHeading><StatusesTab /></TabPanel>
+        <TabPanel id="policies"><SectionHeading>Policies</SectionHeading><PoliciesTab /></TabPanel>
       </Tabs>
     </Page>
   );

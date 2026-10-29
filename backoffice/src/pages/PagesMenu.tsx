@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {useNavigate} from 'react-router';
 import {ArrowUpDown, Eye, GripVertical, Lock, Pencil, Plus, Trash2} from 'lucide-react';
 import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
 import {Button} from '../../../src/components/Button';
@@ -31,6 +32,7 @@ type MenuProps = {menu: string[]; setMenu: (m: string[]) => void};
 // label, then its actions at the end.
 function MenuRow({item, index, count, menu, setMenu}: MenuProps & {item: MenuEntry; index: number; count: number}) {
   const pinned = item.kind === 'home';
+  const navigate = useNavigate();
   return (
     <GridListItem id={item.id} textValue={item.label}>
       <div className="bo-pages-menu-row">
@@ -40,7 +42,8 @@ function MenuRow({item, index, count, menu, setMenu}: MenuProps & {item: MenuEnt
         <span className="bo-pages-menu-label">{item.label}</span>
         {item.kind !== 'page' && <Pill>Default</Pill>}
         <span className="bo-push" />
-        <IconButton variant="bordered" aria-label={pinned ? 'Edit homepage' : `Edit ${item.label}`}>
+        <IconButton variant="bordered" aria-label={pinned ? 'Edit homepage' : `Edit ${item.label}`}
+          onPress={() => navigate(pinned ? '/pages-menu/homepage-builder' : `/pages-menu/navbar-items/edit/${item.id}`)}>
           <Pencil aria-hidden size={16} />
         </IconButton>
         {!pinned && <>
@@ -85,11 +88,12 @@ function MenuTab({menu, setMenu, pages}: MenuProps & {pages: string[]}) {
 }
 
 function PagesTab({menu, setMenu, pages, setPages}: MenuProps & {pages: string[]; setPages: (p: string[]) => void}) {
+  const navigate = useNavigate();
   return (
     <Card
       layout="stacked"
       title="Custom pages"
-      actions={<Button variant="primary" size={32}><Plus aria-hidden size={16} />New custom page</Button>}>
+      actions={<Button variant="primary" size={32} onPress={() => navigate('/pages-menu/pages/new')}><Plus aria-hidden size={16} />New custom page</Button>}>
       <div className="bo-pages-menu-body">
         <p className="bo-note bo-pages-menu-intro">Every custom page you’ve built. Edit content, view, or delete a page.</p>
         {pages.length === 0
@@ -109,8 +113,8 @@ function PagesTab({menu, setMenu, pages, setPages}: MenuProps & {pages: string[]
                     <span className="bo-push" />
                     <Switch isSelected={inMenu}
                       onChange={on => setMenu(on ? [...menu, id] : menu.filter(m => m !== id))} aria-label={`Show ${page.label} in menu`}>Show in menu</Switch>
-                    <IconButton variant="bordered" aria-label={`Edit page: ${page.label}`}><Pencil aria-hidden size={16} /></IconButton>
-                    <IconButton variant="bordered" aria-label={`View page: ${page.label}`}><Eye aria-hidden size={16} /></IconButton>
+                    <IconButton variant="bordered" aria-label={`Edit page: ${page.label}`} onPress={() => navigate(`/pages-menu/pages/${id}`)}><Pencil aria-hidden size={16} /></IconButton>
+                    <IconButton variant="bordered" aria-label={`View page: ${page.label}`} onPress={() => navigate(`/pages-menu/pages/${id}/view`)}><Eye aria-hidden size={16} /></IconButton>
                     <IconButton variant="bordered" aria-label={`Delete page: ${page.label}`}
                       onPress={() => { setPages(pages.filter(p => p !== id)); setMenu(menu.filter(m => m !== id)); }}>
                       <Trash2 aria-hidden size={16} />

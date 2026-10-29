@@ -62,6 +62,82 @@ test('pages lists the custom pages; the switch puts a page in the menu', async (
   await expect(page.getByRole('grid', {name: 'Menu items'}).getByRole('row').last()).toContainText('Neighbourhood grants');
 });
 
+test('home Edit opens the homepage builder: sections on and off, then Save', async ({page}) => {
+  await page.goto('/backoffice/#/pages-menu');
+  await page.getByRole('button', {name: 'Edit homepage'}).click();
+  await expect(page).toHaveURL(/#\/pages-menu\/homepage-builder$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'Homepage'})).toBeVisible();
+  const sections = page.getByRole('list', {name: 'Sections'});
+  for (const s of ['Homepage banner', 'Projects', 'Events', 'Proposals', 'Image & text cards']) {
+    await expect(sections.getByRole('switch', {name: `Show ${s}`})).toBeVisible();
+  }
+  const save = page.getByRole('button', {name: 'Save homepage'});
+  await expect(save).toBeDisabled();
+  const events = sections.getByRole('switch', {name: 'Show Events'});
+  await expect(events).toBeChecked();
+  await events.click({force: true});
+  await expect(events).not.toBeChecked();
+  await expect(sections.getByRole('listitem').filter({hasText: 'Events'}).getByText('Not shown on page')).toBeVisible();
+  await save.click();
+  await expect(page.getByText('Homepage saved')).toBeVisible();
+  await expect(page.locator('[data-gap="Homepage preview"]')).toBeVisible();
+  await page.getByRole('navigation', {name: 'Breadcrumbs'}).getByRole('link', {name: 'Pages & menu'}).click();
+  await expect(page.getByRole('heading', {level: 1, name: 'Pages & menu'})).toBeVisible();
+});
+
+test('a menu item\'s Edit opens its form: the name in every language, then Save', async ({page}) => {
+  await page.goto('/backoffice/#/pages-menu');
+  await page.getByRole('grid', {name: 'Menu items'}).getByRole('button', {name: 'Edit All projects'}).click();
+  await expect(page).toHaveURL(/#\/pages-menu\/navbar-items\/edit\/projects$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'All projects'})).toBeVisible();
+  const en = page.getByRole('textbox', {name: 'Name in navbar (English)'});
+  await expect(en).toHaveValue('All projects');
+  await expect(page.getByRole('textbox', {name: 'Name in navbar (Français (Belgique))'})).toBeVisible();
+  const save = page.getByRole('button', {name: 'Save page'});
+  await expect(save).toBeDisabled();
+  await en.fill('Projects');
+  await save.click();
+  await expect(page.getByText('Page successfully saved')).toBeVisible();
+});
+
+test('New custom page opens Create custom page, with Settings and Content tabs', async ({page}) => {
+  await page.goto('/backoffice/#/pages-menu');
+  await page.getByRole('tab', {name: 'Pages'}).click();
+  await page.getByRole('button', {name: 'New custom page'}).click();
+  await expect(page).toHaveURL(/#\/pages-menu\/pages\/new$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'Create custom page'})).toBeVisible();
+  const tabs = page.getByRole('tablist', {name: 'Custom page sections'});
+  await expect(tabs.getByRole('tab', {name: 'Settings'})).toHaveAttribute('aria-selected', 'true');
+  const save = page.getByRole('button', {name: 'Save custom page'});
+  await expect(save).toBeDisabled();
+  await page.getByRole('textbox', {name: 'Title'}).fill('Neighbourhood budget');
+  await expect(page.getByRole('textbox', {name: 'Slug'})).toHaveValue('neighbourhood-budget');
+  await tabs.getByRole('tab', {name: 'Content'}).click();
+  const sections = page.getByRole('list', {name: 'Sections'});
+  await expect(sections.getByRole('switch', {name: 'Show Top info section'})).toBeVisible();
+  await sections.getByRole('switch', {name: 'Show Attachments'}).click({force: true});
+  await save.click();
+  await expect(page.getByText('Page successfully created')).toBeVisible();
+});
+
+test('a custom page\'s Edit and View open the page', async ({page}) => {
+  await page.goto('/backoffice/#/pages-menu');
+  await page.getByRole('tab', {name: 'Pages'}).click();
+  await page.getByRole('button', {name: 'Edit page: About'}).click();
+  await expect(page).toHaveURL(/#\/pages-menu\/pages\/about$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'About'})).toBeVisible();
+  await expect(page.getByRole('textbox', {name: 'Title'})).toHaveValue('About');
+  await page.getByRole('button', {name: 'View page'}).click();
+  await expect(page).toHaveURL(/#\/pages-menu\/pages\/about\/view$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'About'})).toBeVisible();
+
+  await page.goto('/backoffice/#/pages-menu');
+  await page.getByRole('tab', {name: 'Pages'}).click();
+  await page.getByRole('button', {name: 'View page: FAQ'}).click();
+  await expect(page).toHaveURL(/#\/pages-menu\/pages\/faq\/view$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'FAQ'})).toBeVisible();
+});
+
 test('pages & menu names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/pages-menu');
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);

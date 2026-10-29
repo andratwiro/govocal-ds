@@ -1,0 +1,37 @@
+@import '../components/theme.css';
+
+/* A section row: name and line at the start, then the shown-on-page status and the switch. 56 tall at least. */
+.gv-section-toggle {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gv-space-12);
+  min-block-size: var(--gv-space-48);
+  padding-block: var(--gv-space-8);
+  font-family: var(--gv-font-family);
+}
+
+.gv-section-toggle__text {
+  display: grid;
+  gap: var(--gv-space-2);
+  flex: 1;
+  min-inline-size: min(100%, 200px);
+}
+
+.gv-section-toggle__title {
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-section-toggle__description {
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-meta);
+}
+
+.gv-section-toggle__switch-label {
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+}

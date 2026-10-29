@@ -16,6 +16,8 @@ import {CommunityMonitor} from './pages/CommunityMonitor';
 import {InspirationHub} from './pages/InspirationHub';
 import {PagesMenu} from './pages/PagesMenu';
 import {Platform} from './pages/Platform';
+import {EsriIntegration, McpAuthorizations, PowerBi, PublicApiTokens, Webhooks, Widget} from './pages/ToolsPages';
+import {CustomPageEditor, CustomPageView, HomepageBuilder, NavbarItemEdit} from './pages/PagesMenuPages';
 
 export const router = createHashRouter([{
   path: '/', element: <Layout />, children: [
@@ -33,6 +35,18 @@ export const router = createHashRouter([{
     {path: 'reporting', element: <Reporting />},
     {path: 'community-monitor', element: <CommunityMonitor />},
     {path: 'pages-menu', element: <PagesMenu />},
+    // The tools' and Pages & menu's first screens, at the real admin's paths.
+    {path: 'tools/public-api-tokens', element: <PublicApiTokens />},
+    {path: 'tools/webhooks', element: <Webhooks />},
+    {path: 'tools/power-bi', element: <PowerBi />},
+    {path: 'tools/esri-integration', element: <EsriIntegration />},
+    {path: 'tools/mcp', element: <McpAuthorizations />},
+    {path: 'tools/widgets', element: <Widget />},
+    {path: 'pages-menu/homepage-builder', element: <HomepageBuilder />},
+    {path: 'pages-menu/navbar-items/edit/:itemId', element: <NavbarItemEdit />},
+    {path: 'pages-menu/pages/new', element: <CustomPageEditor key="new" />},
+    {path: 'pages-menu/pages/:pageId', element: <CustomPageEditor />},
+    {path: 'pages-menu/pages/:pageId/view', element: <CustomPageView />},
     ...NAV.filter(n => !['community-monitor', 'dashboard', 'inputs', 'inspiration-hub', 'messaging', 'pages-menu', 'projects', 'reporting', 'settings', 'tools', 'users'].includes(n.id))
       .map(n => ({path: n.id, element: <Placeholder item={n} />}))
   ]
