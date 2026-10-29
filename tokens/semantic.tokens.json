@@ -119,17 +119,17 @@
     },
     "brand": {
       "$type": "color",
-      "$value": "{color.brand.650}",
+      "$value": "{color.navy.650}",
       "$description": "Brand words that are not links: \"new\" markers, ranks, badges, the current page number."
     },
     "link-hovered": {
       "$type": "color",
-      "$value": "{color.brand.900}",
+      "$value": "{color.navy.900}",
       "$description": "A link under the pointer."
     },
     "link-pressed": {
       "$type": "color",
-      "$value": "{color.brand.700}",
+      "$value": "{color.navy.700}",
       "$description": "A link being pressed."
     }
   },
@@ -141,7 +141,7 @@
     },
     "brand": {
       "$type": "color",
-      "$value": "{color.brand.650}",
+      "$value": "{color.navy.650}",
       "$description": "A brand icon: a check in a selected option, a selected menu item's tick, an active filter's icon."
     },
     "disabled": {
@@ -173,7 +173,7 @@
     },
     "focused": {
       "$type": "color",
-      "$value": "{color.brand.650}",
+      "$value": "{color.navy.650}",
       "$description": "The keyboard focus ring's colour. Components draw the whole ring with --gv-focus-ring."
     }
   },
@@ -305,6 +305,18 @@
       "$value": {"value": 0, "unit": "px"},
       "$description": "The one letter spacing, 0px, set once on :root (theme.css) and inherited by every element and form control. No role tracks its own.",
       "$extensions": {"com.figma.variableId": "VariableID:1:169"}
+    }
+  },
+  "space": {
+    "40": {
+      "$type": "dimension",
+      "$value": {"value": 40, "unit": "px"},
+      "$description": "Not in Figma yet (Figma has 44; code snapped it to 40, what the prototype drew): a section's padding on a page, an empty state's room."
+    },
+    "64": {
+      "$type": "dimension",
+      "$value": {"value": 64, "unit": "px"},
+      "$description": "Not in Figma, unused for now: the next step on the ladder, so it has no hole."
     }
   }
 }

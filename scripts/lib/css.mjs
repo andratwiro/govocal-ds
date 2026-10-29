@@ -133,7 +133,8 @@ export function toCss(tokens) {
   sections.push(plainLines('layer', number));
 
   // Type roles: `font: var(--gv-type-<role>)`, the one way to set text. With font primitives, the shorthand is built
-  // from them (a part with no matching primitive stays a number, so a missing primitive shows in the diff).
+  // from them (a part with no matching primitive stays a number, so a missing primitive shows in the diff). No
+  // per-role size, line, weight or tracking parts: an override takes a font primitive.
   const roleLines = [];
   for (const [role, t] of Object.entries(tokens.type)) {
     const v = t.$value;
@@ -143,11 +144,11 @@ export function toCss(tokens) {
     const weightCss = isRef(v.fontWeight) ? varOf(v.fontWeight) : fontVar(tokens, 'weight-', weight) ?? weight;
     const lineCss = fontVar(tokens, 'line-height-', {value: line, unit: 'px'}) ?? `${line}px`;
     roleLines.push(`--gv-type-${role}: ${weightCss} ${sizeCss}/${lineCss} var(--gv-font-family);${note(t)}`);
-    // The parts each role used to carry, kept until the codemod (npm run tokens:rename) moves their uses.
-    roleLines.push(`--gv-type-${role}-tracking: ${dim(resolve(tokens, v.letterSpacing))};`);
-    roleLines.push(`--gv-type-${role}-size: ${dim(size)};`);
-    roleLines.push(`--gv-type-${role}-line: ${line}px;`);
-    roleLines.push(`--gv-type-${role}-weight: ${weight};`);
+    // One tracking for every role, set once on :root (theme.css). A role that ever needs its own gets its own token
+    // and a guard for that role; until then a role that tracks differently is refused.
+    const tracking = resolve(tokens, v.letterSpacing), one = font.tracking && resolve(tokens, font.tracking.$value);
+    if (one && (tracking.value !== one.value || tracking.unit !== one.unit))
+      throw new Error(`type.${role} tracks ${dim(tracking)}, not --gv-font-tracking (${dim(one)}): give it its own token`);
   }
   sections.push(roleLines);
 

@@ -1,4 +1,425 @@
 {
   "pulled": "2026-10-29T11:43:10Z",
-  "report": []
+  "report": [
+    {
+      "kind": "rename",
+      "id": "VariableID:1:40",
+      "figma": "surface/stage",
+      "code": "--gv-surface-tertiary",
+      "text": "Figma still calls VariableID:1:40 `surface/stage`; code calls it `--gv-surface-tertiary`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:41",
+      "figma": "surface/toolbar",
+      "code": "--gv-surface-secondary",
+      "text": "Figma still calls VariableID:1:41 `surface/toolbar`; code calls it `--gv-surface-secondary`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:42",
+      "figma": "surface/hover",
+      "code": "--gv-surface-hovered",
+      "text": "Figma still calls VariableID:1:42 `surface/hover`; code calls it `--gv-surface-hovered`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:43",
+      "figma": "surface/hover-strong",
+      "code": "--gv-surface-pressed",
+      "text": "Figma still calls VariableID:1:43 `surface/hover-strong`; code calls it `--gv-surface-pressed`"
+    },
+    {
+      "kind": "rename",
+      "id": null,
+      "figma": "brand/900",
+      "code": "--gv-color-navy-900",
+      "text": "Figma still calls `brand/900`; code calls it `--gv-color-navy-900`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:44",
+      "figma": "surface/nav",
+      "code": "--gv-side-nav-surface",
+      "text": "Figma still calls VariableID:1:44 `surface/nav`; code calls it `--gv-side-nav-surface`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:45",
+      "figma": "surface/nav-active",
+      "code": "--gv-side-nav-surface-current",
+      "text": "Figma still calls VariableID:1:45 `surface/nav-active`; code calls it `--gv-side-nav-surface-current`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:48",
+      "figma": "surface/pill",
+      "code": "--gv-surface-neutral",
+      "text": "Figma still calls VariableID:1:48 `surface/pill`; code calls it `--gv-surface-neutral`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:49",
+      "figma": "surface/brand-mark",
+      "code": "--gv-surface-accent-strong",
+      "text": "Figma still calls VariableID:1:49 `surface/brand-mark`; code calls it `--gv-surface-accent-strong`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:10:4",
+      "figma": "surface/live",
+      "code": "--gv-surface-success",
+      "text": "Figma still calls VariableID:10:4 `surface/live`; code calls it `--gv-surface-success`"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:20:17",
+      "figma": "surface/ai",
+      "code": "--gv-surface-info",
+      "text": "Figma still has VariableID:20:17 `surface/ai` (teal/75); code merged it into `--gv-surface-info` (merge, ΔE 1.4 (teal 75 into teal 50))"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:53",
+      "figma": "text/meta",
+      "code": "--gv-text-secondary",
+      "text": "Figma still has VariableID:1:53 `text/meta` (slate/650); code merged it into `--gv-text-secondary` (merge, ΔE 1.7 (slate 650 into slate 600))"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:55",
+      "figma": "text/quiet",
+      "code": "--gv-text-disabled",
+      "text": "Figma still calls VariableID:1:55 `text/quiet`; code calls it `--gv-text-disabled`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:56",
+      "figma": "text/pill",
+      "code": "--gv-text-neutral",
+      "text": "Figma still calls VariableID:1:56 `text/pill`; code calls it `--gv-text-neutral`"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:57",
+      "figma": "text/segment",
+      "code": "--gv-text-neutral",
+      "text": "Figma still has VariableID:1:57 `text/segment` (slate/800); code merged it into `--gv-text-neutral` (merge, ΔE 2.4 (slate 800 into slate 700): the project lead's rule, tokens win)"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:58",
+      "figma": "text/live",
+      "code": "--gv-text-success-strong",
+      "text": "Figma still calls VariableID:1:58 `text/live`; code calls it `--gv-text-success-strong`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:59",
+      "figma": "text/reviewed",
+      "code": "--gv-text-success",
+      "text": "Figma still calls VariableID:1:59 `text/reviewed`; code calls it `--gv-text-success`"
+    },
+    {
+      "kind": "rename",
+      "id": null,
+      "figma": "brand/650",
+      "code": "--gv-color-navy-650",
+      "text": "Figma still calls `brand/650`; code calls it `--gv-color-navy-650`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:20:16",
+      "figma": "text/accent",
+      "code": "--gv-text-link",
+      "text": "Figma still calls VariableID:20:16 `text/accent`; code calls it `--gv-text-link`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:62",
+      "figma": "border/control-hover",
+      "code": "--gv-border-control-hovered",
+      "text": "Figma still calls VariableID:1:62 `border/control-hover`; code calls it `--gv-border-control-hovered`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:63",
+      "figma": "border/card",
+      "code": "--gv-border-default",
+      "text": "Figma still calls VariableID:1:63 `border/card`; code calls it `--gv-border-default`"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:66",
+      "figma": "border/separator",
+      "code": "--gv-border-default",
+      "text": "Figma still has VariableID:1:66 `border/separator` (slate/150); code merged it into `--gv-border-default` (merge, ΔE 0.7 (slate 150 into slate 200))"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:68",
+      "figma": "border/avatar",
+      "code": "--gv-border-inverse",
+      "text": "Figma still calls VariableID:1:68 `border/avatar`; code calls it `--gv-border-inverse`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:20:15",
+      "figma": "border/radio",
+      "code": "--gv-border-strong",
+      "text": "Figma still calls VariableID:20:15 `border/radio`; code calls it `--gv-border-strong`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:69",
+      "figma": "icon/default",
+      "code": "--gv-icon-tertiary",
+      "text": "Figma still calls VariableID:1:69 `icon/default`; code calls it `--gv-icon-tertiary`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:70",
+      "figma": "icon/strong",
+      "code": "--gv-icon-secondary",
+      "text": "Figma still calls VariableID:1:70 `icon/strong`; code calls it `--gv-icon-secondary`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:73",
+      "figma": "icon/pill",
+      "code": "--gv-icon-neutral",
+      "text": "Figma still calls VariableID:1:73 `icon/pill`; code calls it `--gv-icon-neutral`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:74",
+      "figma": "icon/nav",
+      "code": "--gv-side-nav-icon",
+      "text": "Figma still calls VariableID:1:74 `icon/nav`; code calls it `--gv-side-nav-icon`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:75",
+      "figma": "icon/nav-active",
+      "code": "--gv-side-nav-icon-current",
+      "text": "Figma still calls VariableID:1:75 `icon/nav-active`; code calls it `--gv-side-nav-icon-current`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:78",
+      "figma": "icon/reviewed",
+      "code": "--gv-icon-success",
+      "text": "Figma still calls VariableID:1:78 `icon/reviewed`; code calls it `--gv-icon-success`"
+    },
+    {
+      "kind": "rename",
+      "id": null,
+      "figma": "brand/700",
+      "code": "--gv-color-navy-700",
+      "text": "Figma still calls `brand/700`; code calls it `--gv-color-navy-700`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:80",
+      "figma": "action/primary",
+      "code": "--gv-surface-brand-strong",
+      "text": "Figma still calls VariableID:1:80 `action/primary`; code calls it `--gv-surface-brand-strong`"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:81",
+      "figma": "action/checked",
+      "code": "--gv-surface-selected-strong",
+      "text": "Figma still calls VariableID:1:81 `action/checked`; code calls it `--gv-surface-selected-strong`"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:82",
+      "figma": "control/toggle-on",
+      "code": "--gv-surface-inverse",
+      "text": "Figma still has VariableID:1:82 `control/toggle-on` (slate/750); code merged it into `--gv-surface-inverse` (merge with a value change, slate 750 into neutral 900: a Switch that is on is near-black (docs/DECISIONS.md); the project lead's rule, tokens win)"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:83",
+      "figma": "control/toggle-off",
+      "code": "--gv-surface-neutral-strong",
+      "text": "Figma still calls VariableID:1:83 `control/toggle-off`; code calls it `--gv-surface-neutral-strong`"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:84",
+      "figma": "control/knob",
+      "code": "--gv-surface-panel",
+      "text": "Figma still has VariableID:1:84 `control/knob` (neutral/0); code merged it into `--gv-surface-panel` (merge, same value)"
+    },
+    {
+      "kind": "rename",
+      "id": "VariableID:1:85",
+      "figma": "state/notification",
+      "code": "--gv-surface-danger-strong",
+      "text": "Figma still calls VariableID:1:85 `state/notification`; code calls it `--gv-surface-danger-strong`"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:86",
+      "figma": "state/upcoming",
+      "code": "--gv-surface-neutral-strong",
+      "text": "Figma still has VariableID:1:86 `state/upcoming` (neutral/200); code merged it into `--gv-surface-neutral-strong` (merge, same value)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:87",
+      "figma": "avatar/fill",
+      "code": "--gv-surface-brand-strong",
+      "text": "Figma still has VariableID:1:87 `avatar/fill` (brand/700); code merged it into `--gv-surface-brand-strong` (merge, same value)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:2:2",
+      "figma": "divider/default",
+      "code": "--gv-border-subtle",
+      "text": "Figma still has VariableID:2:2 `divider/default` (slate/100); code merged it into `--gv-border-subtle` (merge, same value)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:2:3",
+      "figma": "divider/strong",
+      "code": "--gv-border-default",
+      "text": "Figma still has VariableID:2:3 `divider/strong` (slate/150); code merged it into `--gv-border-default` (merge, ΔE 0.7 (slate 150 into slate 200))"
+    },
+    {
+      "kind": "drop",
+      "id": "VariableID:1:89",
+      "figma": "space/1",
+      "code": null,
+      "text": "Figma still has VariableID:1:89 `space/1`; code dropped it (an offset, not spacing: a raw 1px on positions and margins; space-2 in a padding or gap)"
+    },
+    {
+      "kind": "drop",
+      "id": "VariableID:1:91",
+      "figma": "space/3",
+      "code": null,
+      "text": "Figma still has VariableID:1:91 `space/3`; code dropped it (an offset, not spacing: a raw 3px on positions and margins; space-4 in a padding or gap)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:93",
+      "figma": "space/5",
+      "code": "--gv-space-4",
+      "text": "Figma still has VariableID:1:93 `space/5`; code merged it into `--gv-space-4` (base 4: 5 snaps to 4)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:20:34",
+      "figma": "space/7",
+      "code": "--gv-space-8",
+      "text": "Figma still has VariableID:20:34 `space/7`; code merged it into `--gv-space-8` (base 4: 7 snaps to 8)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:96",
+      "figma": "space/9",
+      "code": "--gv-space-8",
+      "text": "Figma still has VariableID:1:96 `space/9`; code merged it into `--gv-space-8` (base 4: 9 snaps to 8)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:98",
+      "figma": "space/11",
+      "code": "--gv-space-12",
+      "text": "Figma still has VariableID:1:98 `space/11`; code merged it into `--gv-space-12` (base 4: 11 snaps to 12)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:100",
+      "figma": "space/14",
+      "code": "--gv-space-16",
+      "text": "Figma still has VariableID:1:100 `space/14`; code merged it into `--gv-space-16` (base 4: 14 snaps to 16)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:20:35",
+      "figma": "space/15",
+      "code": "--gv-space-16",
+      "text": "Figma still has VariableID:20:35 `space/15`; code merged it into `--gv-space-16` (base 4: 15 snaps to 16)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:102",
+      "figma": "space/18",
+      "code": "--gv-space-16",
+      "text": "Figma still has VariableID:1:102 `space/18`; code merged it into `--gv-space-16` (base 4: 18 snaps to 16)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:103",
+      "figma": "space/22",
+      "code": "--gv-space-24",
+      "text": "Figma still has VariableID:1:103 `space/22`; code merged it into `--gv-space-24` (base 4: 22 snaps to 24)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:105",
+      "figma": "space/25",
+      "code": "--gv-space-24",
+      "text": "Figma still has VariableID:1:105 `space/25`; code merged it into `--gv-space-24` (base 4: 25 snaps to 24)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:20:38",
+      "figma": "space/44",
+      "code": "--gv-space-40",
+      "text": "Figma still has VariableID:20:38 `space/44`; code merged it into `--gv-space-40` (base 4: 44 snaps to 40)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:108",
+      "figma": "radius/3",
+      "code": "--gv-radius-4",
+      "text": "Figma still has VariableID:1:108 `radius/3`; code merged it into `--gv-radius-4` (radius on 2, 4, 6, 8, 10, 12, 14, 22: 3 snaps to 4)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:110",
+      "figma": "radius/5",
+      "code": "--gv-radius-6",
+      "text": "Figma still has VariableID:1:110 `radius/5`; code merged it into `--gv-radius-6` (radius on 2, 4, 6, 8, 10, 12, 14, 22: 5 snaps to 6)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:112",
+      "figma": "radius/7",
+      "code": "--gv-radius-8",
+      "text": "Figma still has VariableID:1:112 `radius/7`; code merged it into `--gv-radius-8` (radius on 2, 4, 6, 8, 10, 12, 14, 22: 7 snaps to 8)"
+    },
+    {
+      "kind": "merge",
+      "id": "VariableID:1:114",
+      "figma": "radius/9",
+      "code": "--gv-radius-8",
+      "text": "Figma still has VariableID:1:114 `radius/9`; code merged it into `--gv-radius-8` (radius on 2, 4, 6, 8, 10, 12, 14, 22: 9 snaps to 8)"
+    },
+    {
+      "kind": "rename",
+      "id": null,
+      "figma": "shadow/segment-selected",
+      "code": "--gv-shadow-raised-strong",
+      "text": "Figma still calls `shadow/segment-selected`; code calls it `--gv-shadow-raised-strong`"
+    },
+    {
+      "kind": "rename",
+      "id": null,
+      "figma": "shadow/subtle",
+      "code": "--gv-shadow-raised",
+      "text": "Figma still calls `shadow/subtle`; code calls it `--gv-shadow-raised`"
+    },
+    {
+      "kind": "rename",
+      "id": null,
+      "figma": "shadow/dialog",
+      "code": "--gv-shadow-overlay",
+      "text": "Figma still calls `shadow/dialog`; code calls it `--gv-shadow-overlay`"
+    }
+  ]
 }

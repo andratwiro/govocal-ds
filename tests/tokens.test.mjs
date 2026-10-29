@@ -2,7 +2,9 @@ import {describe, it, expect} from 'vitest';
 import {readFileSync, existsSync} from 'node:fs';
 import {parseFoundations} from '../scripts/lib/foundations.mjs';
 import {toCss} from '../scripts/lib/css.mjs';
-import {mergeTokens} from '../scripts/lib/merge.mjs';
+import {mergeTokens, describe as describeTokens} from '../scripts/lib/merge.mjs';
+import {loadTokens} from '../scripts/lib/build.mjs';
+import {cssOf} from '../scripts/lib/names.mjs';
 import {parseIcons} from '../scripts/lib/icons.mjs';
 
 const text = (name, chars, style = {}) => ({type: 'TEXT', name, characters: chars, style});
@@ -185,10 +187,13 @@ describe('toCss annotations for storybook-design-token', () => {
     expect(toCss(mergeTokens(parseFoundations(page).tokens, fontFile))).toContain(
       '--gv-type-stat-small: var(--gv-font-weight-medium) var(--gv-font-size-20)/var(--gv-font-line-height-24) var(--gv-font-family);');
   });
-  it('splits type roles for the presenters', () => {
-    expect(css).toContain('--gv-type-stat-small-size: 20px;');
-    expect(css).toContain('--gv-type-stat-small-line: 24px;');
-    expect(css).toContain('--gv-type-stat-small-weight: 500;');
+  it('writes no per-role size, line, weight or tracking: an override takes a font primitive', () => {
+    expect(css).not.toMatch(/--gv-type-[a-z-]+-(size|line|weight|tracking):/);
+  });
+  it('refuses a role that tracks differently from --gv-font-tracking', () => {
+    const tokens = mergeTokens(parseFoundations(page).tokens, fontFile);
+    tokens.type['stat-small'].$value.letterSpacing = {value: 0.5, unit: 'px'};
+    expect(() => toCss(tokens)).toThrow(/type.stat-small tracks 0.5px/);
   });
 });
 
@@ -240,9 +245,31 @@ describe('mergeTokens', () => {
   it('a Figma pull writes only the Figma files', () => {
     const pull = readFileSync('scripts/figma-pull.mjs', 'utf8');
     expect(pull).not.toMatch(/motion|size\.tokens|semantic\.tokens/);
-    expect(readFileSync('scripts/build-tokens.mjs', 'utf8')).toContain('tokens/motion.tokens.json');
-    expect(readFileSync('scripts/build-tokens.mjs', 'utf8')).toContain('tokens/size.tokens.json');
-    expect(readFileSync('scripts/build-tokens.mjs', 'utf8')).toContain('tokens/semantic.tokens.json');
+    const build = readFileSync('scripts/lib/build.mjs', 'utf8');
+    for (const f of ['motion', 'size', 'semantic']) expect(build).toContain(`tokens/${f}.tokens.json`);
+  });
+});
+
+describe('describe (tokens/descriptions.json)', () => {
+  const tree = () => ({surface: {app: {$type: 'color', $value: '{color.slate.100}'}},
+    color: {slate: {'50': {$type: 'color', $value: {}}, '100': {$type: 'color', $value: {}}}}});
+  const name = path => cssOf(...path);
+  it('lays a description on each token by CSS name, and a `-*` key on a whole ramp', () => {
+    const out = describeTokens(tree(), {'--gv-surface-app': 'The page.', '--gv-color-slate-*': 'Cool grey.',
+      '--gv-color-slate-50': 'The lightest.'}, name);
+    expect(out.surface.app.$description).toBe('The page.');
+    expect(out.color.slate['50'].$description).toBe('The lightest.');
+    expect(out.color.slate['100'].$description).toBe('Cool grey.');
+  });
+  it('refuses a name that is no token, and a token described twice', () => {
+    expect(() => describeTokens(tree(), {'--gv-surface-gone': 'x'}, name)).toThrow(/--gv-surface-gone/);
+    const t = tree(); t.surface.app.$description = 'Own.';
+    expect(() => describeTokens(t, {'--gv-surface-app': 'x'}, name)).toThrow(/--gv-surface-app has a \$description/);
+  });
+  it('leaves the tree it was given alone', () => {
+    const t = tree();
+    describeTokens(t, {'--gv-surface-app': 'x'}, name);
+    expect(t.surface.app.$description).toBeUndefined();
   });
 });
 
@@ -306,10 +333,17 @@ describe('toCss size', () => {
 });
 
 describe('src/tokens.css', () => {
-  it('is the build of the Figma file and the hand-written ones (run npm run tokens:build)', () => {
-    const read = path => JSON.parse(readFileSync(path, 'utf8'));
-    expect(readFileSync('src/tokens.css', 'utf8')).toBe(toCss(mergeTokens(read('tokens/foundations.tokens.json'),
-      read('tokens/semantic.tokens.json'), read('tokens/motion.tokens.json'), read('tokens/size.tokens.json'))));
+  it('is the build of the Figma file, the hand-written ones and the descriptions (run npm run tokens:build)', () => {
+    expect(readFileSync('src/tokens.css', 'utf8')).toBe(toCss(loadTokens()));
+  });
+  it('describes every token', () => {
+    const missing = [];
+    const walk = (node, path) => Object.entries(node).forEach(([k, v]) => {
+      if (k.startsWith('$') || typeof v !== 'object') return;
+      if ('$value' in v) { if (!v.$description?.trim()) missing.push(cssOf(...path, k)); } else walk(v, [...path, k]);
+    });
+    walk(loadTokens(), []);
+    expect(missing).toEqual([]);
   });
   it('every Figma id on a hand-written token is the one tokens/variable-ids.json gives that name', () => {
     const ids = JSON.parse(readFileSync('tokens/variable-ids.json', 'utf8'));
