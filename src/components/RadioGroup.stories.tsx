@@ -24,3 +24,17 @@ export const Example: Story = args => (
 Example.args = {
   label: 'Favorite sport'
 };
+
+export const AllStates: StoryFn<typeof RadioGroup> = () => (
+  <div style={{display: 'flex', gap: 32}}>
+    <RadioGroup label="Who can take part" defaultValue="anyone">
+      <Radio value="anyone">Anyone</Radio>
+      <Radio value="selection">Selected groups</Radio>
+      <Radio value="admins">Admins and managers only</Radio>
+    </RadioGroup>
+    <RadioGroup label="Voting method" defaultValue="single" isDisabled>
+      <Radio value="single">Single choice</Radio>
+      <Radio value="multiple">Multiple choice</Radio>
+    </RadioGroup>
+  </div>
+);
