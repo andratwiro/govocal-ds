@@ -202,17 +202,19 @@ export function DataTableText({children, lines = 3, marks}: DataTableTextProps) 
 export interface DataTablePersonProps {
   /** The person's (invented) display name, or a link carrying it. */
   name: ReactNode;
-  /** Initials for the gv Avatar, e.g. "RE". */
+  /** Initials for the gv Avatar, e.g. "RE". They also stand in for a photo that can't load. */
   initials: string;
+  /** A photo for the Avatar (the prototype's Audience table). */
+  src?: string;
   /** The line under the name, e.g. an email address. */
   sub?: ReactNode;
 }
 
 /** A person cell: gv Avatar, then the name over a quieter sub-line (the prototype's `__person`). */
-export function DataTablePerson({name, initials, sub}: DataTablePersonProps) {
+export function DataTablePerson({name, initials, src, sub}: DataTablePersonProps) {
   return (
     <span className="gv-data-table__person">
-      <Avatar initials={initials} />
+      <Avatar initials={initials} src={src} />
       <span className="gv-data-table__stack">
         <span className="gv-data-table__name">{name}</span>
         {sub && <span className="gv-data-table__sub">{sub}</span>}
