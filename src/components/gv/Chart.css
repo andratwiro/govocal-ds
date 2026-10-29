@@ -51,7 +51,10 @@
   border-radius: var(--gv-radius-2);
 }
 
-/* ── Line chart (Figma Chart · Line, 730 × 177) ── */
+/* ── Line chart (Figma Chart · Line, 730 × 177) ──
+   Geometry from Figma and the prototype's pj-chart2 (620 × 150 drawn at 730): labels right-aligned in a 24 column,
+   the plot 30 in from the start and 10 short of the end, so the last date label centres on the last point and runs
+   10 past the chart's edge, as in Figma. */
 .gv-line-chart {
   display: flex;
   flex-direction: column;
@@ -71,6 +74,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-inline-size: var(--gv-space-24);
   margin-block: calc(-1 * var(--gv-space-8));
   font: var(--gv-type-small);
   letter-spacing: var(--gv-type-small-tracking);
@@ -79,7 +83,7 @@
 }
 .gv-line-chart__plot {
   display: block;
-  inline-size: calc(100% - var(--gv-space-20));
+  inline-size: calc(100% - var(--gv-space-10));
   block-size: var(--plot-height);
   overflow: visible;
 }
@@ -90,7 +94,8 @@
 .gv-line-chart__line {
   fill: none;
   stroke: var(--chart-color);
-  stroke-width: 2;
+  /* Figma's Series stroke: the prototype's 2 at 620 wide, scaled to 730. */
+  stroke-width: 2.35;
   stroke-linejoin: round;
   stroke-linecap: round;
 }
@@ -98,7 +103,7 @@
   grid-column: 2;
   position: relative;
   block-size: 16px;
-  margin-inline-end: var(--gv-space-20);
+  margin-inline-end: var(--gv-space-10);
   font: var(--gv-type-small);
   letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-chart-axis);
