@@ -13,7 +13,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 
 ## Components / Charts
 - **Bar row** `BarRow`: Figma "Bar row": a label, a thin bar and its value. Stories: All Variants, Default, Empty, Two Line Label, Without Value, With Detail.
-- **Chart** `LineChart`: Figma "Chart" · Line: gridded line chart with a y axis from 0 and dated x labels. Stories: All Variants, Line2 Series, Line1 Series, Sparkline, With Legend, Large Numbers, Sparkline Small, Legends, Interactive, Sparkline Interactive, With Legend Rows.
+- **Chart** `LineChart`: Figma "Chart" · Line: gridded line chart with a y axis from 0 and dated x labels. Stories: All Variants, Line 2 Series, Line 1 Series, Sparkline, With Legend, Large Numbers, Sparkline Small, Legends, Interactive, Sparkline Interactive, With Legend Rows.
 - **Dashboard card** `DashboardCard`: A white dashboard tile with a header, a body and optional legend and footer (Figma "Dashboard card"). Stories: All Variants, Statements, Visitors Over Time, Participation Over Time, Ai Summary, Topic Breakdown, Status Breakdown, Votes Over Time, Live Ranking, List, Demographic Age, Demographic Commute, Empty.
 - **Legend row** `LegendRow`: A swatch, a label and its value: the key under a stacked bar or beside a chart (Figma "Legend row"). Stories: All Variants, Default, Count And Percent, Highlighted.
 - **Statement row** `StatementRow`: A single Common Ground statement with its agree/disagree/pass bar — the compact row used in results and summary views (as opposed to the full `CommonGroundRo… Stories: All Variants, Default, Long Value, Narrow, Four Shares, With Counts.
@@ -87,7 +87,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Toast** `Toast` (not in Figma): One toast, as `ToastRegion` draws it. Stories: All Variants, With Undo, Simple, Stacked, Example.
 
 ## Components / Tables & lists
-- **Data table** (not in Figma) Stories: All Variants, Default, Sorted Ascending, Sorted Descending, Selectable Some Selected, Selectable Without Select All, Person Cell, Numeric Columns, Row Options, Empty, With Thumbnails, Assignee Column, Tags Column, Projects List Cells, Manage Inputs, In A Panel, With Bulk Selection And An Open Row, Virtualized5000 People, Virtualized Loading More, Right To Left.
+- **Data table** (not in Figma) Stories: All Variants, Default, Sorted Ascending, Sorted Descending, Selectable Some Selected, Selectable Without Select All, Person Cell, Numeric Columns, Row Options, Empty, With Thumbnails, Assignee Column, Tags Column, Projects List Cells, Manage Inputs, In A Panel, With Bulk Selection And An Open Row, Virtualized 5000 People, Virtualized Loading More, Right To Left.
 - **Table toolbar** `TableToolbar` (not in Figma): The row above a table: the count heading, or a Selection bar while rows are selected, at the start; the tools at the end (a collapsible Search field, the Fil… Stories: All Variants, Default, With Export, Searching, With A Selection, Right To Left.
 - **Filter chips** `FilterChips` (not in Figma): The active-filter bar: one chip per facet that is on, reading "Assignee | is | Manager A | ×" ("is any of" and a list once several values are ticked), on a q… Stories: Two Filters, Any Of, Wrapping, Without Clear, Metric Chip, Empty, Right To Left.
 - **Filter menu** `FilterMenu` (not in Figma): The filter button and its menu: a bordered funnel icon button that wears a dot while any filter is on; its menu lists the facets, each with how many values a… Stories: Empty, Open, Active, In Sync With Chips, Right To Left.
@@ -104,7 +104,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 
 ## Patterns / Build tab
 - **Access rights** `AccessRights` (not in Figma): Who can take one participant action: following the platform's defaults (read-only, with Override) or set for this phase. Stories: All Variants, Using Defaults, Override, Security Requirements, Two Choices, In The Modal, Modal.
-- **Form field summary** (not in Figma) Stories: All Variants, Default, With More, In A Card.
+- **Form field summary** (not in Figma): A recipe, not a component (NAMING: a pattern used on one page): a form's questions at a glance, in a phase's Idea form or Proposal form card, with Edit form… Stories: All Variants, Default, With More, In A Card.
 - **Notification row** `NotificationRow` (not in Figma): One email in a phase's Notifications card: a switch, then the email's name with who it goes to and what sends it, and a chevron to its page. Stories: All Variants, On, Off, In A Card, Ideation Emails.
 - **Participant action row** `ParticipantActionRow` (not in Figma): One action in a phase's Participant actions card: a switch, the action, and who can take it with a chevron to Access rights. Stories: All Variants, On, Sign In Required, Limited, Locked, In A Card.
 - **View option row** `ViewOptionRow` (not in Figma): One view in a phase's Available views card: a switch (or a check for the view that is always on), the view's name and words, and Make default. Stories: All Variants, Default, Off, With Options, In A Card.
@@ -136,6 +136,9 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Rail header** `RailHeader`: The rail's header row: 18 tall (Figma), its 28 buttons hanging 5 above and below and 6 past the right edge so their icons line up with the rail. Stories: All Variants, With Action, With Panel Toggle, Without Action.
 - **Rail phase** `RailPhase` (not in Figma): A phase in the project rail. Stories: All Variants, Upcoming, Live, Completed, Meta Only, With Delete.
 
+## Patterns / Recipes
+- **Form validation** `Form` (not in Figma): Form validation, a recipe: every field in its invalid state, and a form that checks itself on submit and moves focus to the first field to fix. Stories: All Invalid, Submit To Validate.
+
 ## Base
 React Aria parts painted with the tokens. Primitives: don't use them directly in pages; prefer the Components entry; when a page truly needs one, import it from `govocal-ds/base`.
 
@@ -164,4 +167,4 @@ React Aria parts painted with the tokens. Primitives: don't use them directly in
 - **Tree** `Tree` (primitive) Stories: Example.
 
 ## Not in Figma yet
-Tagged `not-in-figma` in their stories (58): Alert dialog, App provider, Banner, Card, Checkbox group, Choice card, Coachmark, Data table, Date range field, Empty state, File list, Help popover, Illustration, Link, Locale switcher, Map view, Menu, Multilingual rich text editor, Multilingual text field, Option list, Page header, Pagination, Panel, Property list, Radio group, Reaction counts, Search field, Select, Side panel, Skeleton, Table toolbar, Tabs, Tag picker, Text, Tile grid, Toast, Tooltip, Visually hidden, Access rights, Action row, Comment thread, Filter chips, Filter menu, Form field summary, Notification list, Notification row, Official update, Panel section, Participant action row, Phase timeline, Phone preview, Rail phase, Section toggle, Selection bar, Side nav, Stat card, View option row, Volunteering row.
+Tagged `not-in-figma` in their stories (59): Alert dialog, App provider, Banner, Card, Checkbox group, Choice card, Coachmark, Data table, Date range field, Empty state, File list, Help popover, Illustration, Link, Locale switcher, Map view, Menu, Multilingual rich text editor, Multilingual text field, Option list, Page header, Pagination, Panel, Property list, Radio group, Reaction counts, Search field, Select, Side panel, Skeleton, Table toolbar, Tabs, Tag picker, Text, Tile grid, Toast, Tooltip, Visually hidden, Access rights, Action row, Comment thread, Filter chips, Filter menu, Form field summary, Notification list, Notification row, Official update, Panel section, Participant action row, Phase timeline, Phone preview, Rail phase, Section toggle, Selection bar, Side nav, Stat card, View option row, Volunteering row, Form validation.

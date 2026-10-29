@@ -4,8 +4,8 @@ import {a11yReport, axeViolations} from './axe';
 // Data table, virtualised (Components/Data display/Data table, "Virtualized · 5,000 people"): 5,000 invented people,
 // sorted by name (Admin 50, Admin 100, … Resident 4999), of whom the table draws only the rows in view. The same
 // table otherwise: keyboard, bulk selection with `toKeySet`, an open row, a pinned header.
-const story = '/storybook/iframe.html?id=components-data-display-data-table--virtualized-5000-people&viewMode=story';
-const more = '/storybook/iframe.html?id=components-data-display-data-table--virtualized-loading-more&viewMode=story';
+const story = '/storybook/iframe.html?id=components-tables-lists-data-table--virtualized-5000-people&viewMode=story';
+const more = '/storybook/iframe.html?id=components-tables-lists-data-table--virtualized-loading-more&viewMode=story';
 const table = (page: Page) => page.getByRole('grid', {name: 'Users'});
 const rows = (page: Page) => table(page).locator('[role="row"][data-key]');
 const row = (page: Page, id: string) => table(page).locator(`[role="row"][data-key="${id}"]`);

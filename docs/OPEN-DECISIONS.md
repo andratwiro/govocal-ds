@@ -72,6 +72,9 @@ question for each: add a Figma variable (code then names it), or keep the stand-
 
 ## Storybook
 
+- The project lead's call: protect `main` (the `checks` job required) and turn on auto-merge, so every change comes
+  through a pull request? — today a push to `main` deploys once deploy.yml's typecheck, tests, build and e2e are green;
+  CONTRIBUTING.md describes both flows — repository settings, not Storybook
 - Brand colours: tokens for the Go Vocal mark's mint and coral? — the mark's exact colours live only in its SVG; the chrome uses the info surface and the red 450 primitive — see `.storybook/static/favicon.svg`, `overview-welcome--docs`.
 
 ## Contrast findings
