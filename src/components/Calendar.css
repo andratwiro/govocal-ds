@@ -8,7 +8,7 @@
   width: fit-content;
   max-width: 100%;
   color: var(--text-color);
-  font: var(--font-size) system-ui;
+  font: var(--font-size) var(--gv-font-family);
 
   .months {
     display: flex;
@@ -48,7 +48,7 @@
   }
 
   [slot='errorMessage'] {
-    font: var(--font-size-sm) system-ui;
+    font: var(--font-size-sm) var(--gv-font-family);
     color: var(--invalid-color);
   }
 }

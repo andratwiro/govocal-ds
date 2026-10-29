@@ -22,10 +22,10 @@ export function Meter({label, ...props}: MeterProps) {
                   width: percentage + '%',
                   '--fill-color':
                     percentage < 70
-                      ? 'var(--green)'
+                      ? 'var(--gv-chart-agree)'
                       : percentage < 90
-                        ? 'var(--orange)'
-                        : 'var(--red)'
+                        ? 'var(--gv-icon-warning)'
+                        : 'var(--gv-state-notification)'
                 } as any
               }
             />

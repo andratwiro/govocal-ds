@@ -9,7 +9,7 @@
   grid-template-columns: 1fr auto;
   width: 250px;
   color: var(--text-color);
-  font: var(--font-size) system-ui;
+  font: var(--font-size) var(--gv-font-family);
 
   .value {
     grid-area: value;
@@ -27,9 +27,9 @@
   .fill {
     background: linear-gradient(
       to right,
-      oklch(from var(--tint) 58% c h) 0px,
-      oklch(from var(--tint) 72% c h) 20px,
-      oklch(from var(--tint) 58% c h) 40px
+      var(--tint-600) 0px,
+      var(--tint-400) 20px,
+      var(--tint-600) 40px
     );
     background-size: 40px 100%;
     height: calc(100% - 2px);
@@ -37,19 +37,7 @@
     margin: 1px 0 0 1px;
     border-radius: inherit;
     animation: progress-fill 1s infinite linear;
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.3),
-      /* top specular highlight */ inset 0 2px 2px rgb(255 255 255 / 0.2),
-      /* 3d effect */ 0 1px 0 lch(from var(--tint) 42% c h),
-      /* bottom shadow */ 0 0 0 1px var(--tint-900); /* border */
-
-    @media (prefers-color-scheme: dark) {
-      box-shadow:
-        0 -1px 0 rgb(255 255 255 / 0.6),
-        /* top specular highlight */ inset 0 2px 2px rgb(255 255 255 / 0.2),
-        /* 3d effect */ 0 1px 0 lch(from var(--tint) 42% c h),
-        /* bottom shadow */ 0 0 0 1px var(--tint-900); /* border */
-    }
+    box-shadow: 0 0 0 1px var(--tint-900);
 
     @media (prefers-reduced-motion: reduce) {
       background: var(--highlight-background);
@@ -66,7 +54,7 @@
   /* indeterminate */
   &:not([aria-valuenow]) {
     .fill {
-      --fill-dark: oklch(from var(--tint) 58% c h);
+      --fill-dark: var(--tint-600);
       --fill-light: var(--tint-200);
       background-image: linear-gradient(
         45deg,

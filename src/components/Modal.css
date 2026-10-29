@@ -6,10 +6,10 @@
   left: 0;
   width: var(--page-width);
   height: var(--page-height);
-  background: rgba(0 0 0 / 0.5);
+  background: var(--gv-surface-backdrop);
   overflow: clip;
   z-index: 100;
-  font-family: system-ui;
+  font-family: var(--gv-font-family);
   font-size: var(--font-size);
 
   &[data-entering] {
@@ -27,7 +27,7 @@
   top: calc(var(--visual-viewport-height) / 2);
   margin-left: 50vw;
   translate: -50% -50%;
-  box-shadow: 0 8px 32px rgba(0 0 0 / 0.2);
+  box-shadow: var(--gv-shadow-dialog);
   border-radius: var(--radius-xl);
   background: var(--overlay-background);
   color: var(--text-color);

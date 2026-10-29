@@ -12,7 +12,7 @@
   width: 100%;
   word-break: break-word;
   forced-color-adjust: none;
-  font: var(--font-size) system-ui;
+  font: var(--font-size) var(--gv-font-family);
 
   div& {
     padding: 0;
@@ -164,7 +164,7 @@
 }
 
 .react-aria-Column {
-  --button-color: var(--gray);
+  --button-color: var(--gv-surface-panel);
   --button-border: transparent;
   --button-shadow: transparent;
   --button-border-size: 0px;
@@ -183,7 +183,7 @@
   }
 
   &[data-sort-direction] {
-    --button-color: var(--tint);
+    --button-color: var(--tint-600);
 
     &[data-pressed] {
       background: var(--tint-200);
@@ -270,7 +270,7 @@
   }
 
   [data-selected]:has(+ [data-selected]) & {
-    --border-color: rgb(255 255 255 / 0.3);
+    --border-color: var(--gv-color-neutral-0);
   }
 
   @media (forced-colors: active) {

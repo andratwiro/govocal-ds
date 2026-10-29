@@ -5,7 +5,7 @@
   color: var(--text-color);
   outline: 1px solid var(--overlay-border);
   box-shadow: var(--popover-shadow);
-  font-family: system-ui;
+  font-family: var(--gv-font-family);
   font-size: var(--font-size);
   height: auto;
   max-height: calc(100% - 32px);
@@ -90,7 +90,7 @@
 .react-aria-SheetBackdrop {
   /* Only the bottom-most sheet in a stack dims the page behind it. */
   &[data-stack-index='0'] {
-    background: rgb(0 0 0 / 0.4);
+    background: var(--gv-surface-backdrop);
   }
 }
 

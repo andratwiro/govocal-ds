@@ -9,7 +9,7 @@
   forced-color-adjust: none;
   outline: none;
   box-sizing: border-box;
-  font: var(--font-size) system-ui;
+  font: var(--font-size) var(--gv-font-family);
   color: var(--text-color);
 
   &:has(.react-aria-ListBoxSection) {
@@ -55,10 +55,6 @@
     box-shadow:
       inset 0px 1px 0px white,
       inset 0px -4px 8px var(--gray-200);
-
-    @media (prefers-color-scheme: dark) {
-      box-shadow: inset 0px 4px 8px var(--gray-200);
-    }
   }
 
   &:first-child .react-aria-Header {
@@ -72,7 +68,7 @@
   outline: none;
   cursor: default;
   color: var(--text-color);
-  font: var(--font-size) system-ui;
+  font: var(--font-size) var(--gv-font-family);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -118,7 +114,7 @@
 
     &:has(+ [data-selected]),
     &:has(+ .react-aria-DropIndicator + [data-selected]) {
-      --border-color: rgb(255 255 255 / 0.3);
+      --border-color: var(--gv-color-neutral-0);
     }
   }
 
@@ -272,7 +268,7 @@
   forced-color-adjust: none;
   outline: none;
   box-sizing: border-box;
-  font: var(--font-size) system-ui;
+  font: var(--font-size) var(--gv-font-family);
   color: var(--text-color);
 
   &[data-empty] {
@@ -293,7 +289,7 @@
   outline: none;
   cursor: default;
   color: var(--text-color);
-  font: var(--font-size) system-ui;
+  font: var(--font-size) var(--gv-font-family);
   font-weight: 500;
   position: relative;
   display: flex;

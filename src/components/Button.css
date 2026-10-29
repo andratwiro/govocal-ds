@@ -2,21 +2,42 @@
 @import './utilities.css';
 
 .react-aria-Button {
-  border: none;
-  border-radius: var(--radius);
   appearance: none;
-  font: var(--font-size) system-ui;
-  font-weight: 500;
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
   margin: 0;
-  height: var(--spacing-8);
-  padding: 0 var(--spacing-3);
+  border-radius: var(--gv-radius-8);
+  height: 36px;
+  padding: 0 var(--gv-space-12);
+  gap: var(--gv-space-6);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-1);
   flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
+
+  &[data-size='32'] {
+    height: 32px;
+    padding: 0 var(--gv-space-16);
+    gap: var(--gv-space-8);
+  }
+
+  &[data-variant='primary'] {
+    background: var(--gv-action-primary);
+    color: var(--gv-text-inverse);
+    border: none;
+  }
+
+  &[data-variant='secondary'] {
+    background: var(--gv-surface-panel);
+    color: var(--gv-text-primary);
+    border: 1px solid var(--gv-border-control);
+
+    &[data-hovered] {
+      border-color: var(--gv-border-control-hover);
+    }
+  }
 
   > svg {
     width: calc(var(--spacing) * 4.5);
@@ -24,24 +45,31 @@
   }
 
   &:has(> svg:only-child) {
-    width: var(--spacing-8);
+    width: 36px;
     flex-shrink: 0;
     padding: 0;
-    border-radius: 9999px;
+    border-radius: var(--gv-radius-full);
+
+    &[data-size='32'] {
+      width: 32px;
+    }
   }
 
   &[data-pressed] {
     scale: 0.95;
   }
 
-  .react-aria-ProgressBar {
-    @media (prefers-color-scheme: dark) {
-      --highlight-background: var(--gray-1600);
-    }
+  &[data-disabled] {
+    opacity: 0.5;
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
   }
 
   kbd {
-    font: var(--font-size-sm) system-ui;
+    font: var(--gv-type-small);
     background: var(--highlight-hover);
     border: 0.5px solid var(--tint-500);
     padding: 0 var(--spacing-1);

@@ -5,7 +5,7 @@
 .react-aria-TagGroup {
   display: flex;
   flex-direction: column;
-  font: var(--font-size) system-ui;
+  font: var(--font-size) var(--gv-font-family);
   color: var(--text-color);
 
   [slot='errorMessage'] {
@@ -22,14 +22,14 @@
 }
 
 .react-aria-Tag {
-  --button-color: var(--gray);
+  --button-color: var(--gv-surface-panel);
   --button-gradient-size: 4px;
   text-shadow: none;
   forced-color-adjust: none;
   border-radius: 9999px;
   height: var(--spacing-5);
   padding: 0 var(--spacing-3);
-  font: var(--font-size-sm) system-ui;
+  font: var(--font-size-sm) var(--gv-font-family);
   cursor: default;
   display: flex;
   align-items: center;
@@ -50,7 +50,7 @@
   }
 
   &[data-selected] {
-    --button-color: var(--tint);
+    --button-color: var(--tint-600);
   }
 
   &[data-href] {
@@ -109,7 +109,7 @@
     .remove-button {
       color: inherit;
       &[data-hovered] {
-        background: rgb(255 255 255 / 0.2);
+        background: var(--highlight-overlay);
       }
     }
   }

@@ -1,7 +1,7 @@
 @import './theme.css';
 
 .react-aria-Tooltip {
-  box-shadow: 0 8px 20px rgba(0 0 0 / 0.1);
+  box-shadow: var(--gv-shadow-subtle);
   border-radius: var(--radius);
   background: var(--highlight-background);
   color: var(--highlight-foreground);
@@ -14,7 +14,7 @@
   transition:
     transform 200ms,
     opacity 200ms;
-  font: var(--font-size) system-ui;
+  font: var(--font-size) var(--gv-font-family);
 
   &[data-entering],
   &[data-exiting] {

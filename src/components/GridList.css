@@ -120,11 +120,11 @@
   outline: none;
   cursor: default;
   color: var(--text-color);
-  font: var(--font-size) system-ui;
+  font: var(--font-size) var(--gv-font-family);
   box-sizing: border-box;
   padding-bottom: var(--spacing-4);
   background: var(--overlay-background);
-  box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+  box-shadow: var(--gv-shadow-subtle);
   min-width: 0;
   max-width: 250px;
   overflow: clip;
@@ -149,8 +149,8 @@
     inset: 0;
     pointer-events: none;
     border-radius: inherit;
-    border: 2px solid light-dark(black, white);
-    outline: 2px solid light-dark(rgb(255 255 255 / 0.7), rgb(0 0 0 / 0.7));
+    border: 2px solid var(--gv-color-neutral-0);
+    outline: 2px solid var(--gv-color-neutral-900);
     outline-offset: -4px;
     opacity: 0;
     transition: opacity 200ms;
@@ -177,10 +177,10 @@
 
     .react-aria-CheckboxButton {
       --focus-ring-color: var(--highlight-foreground);
-      --checkmark-color: light-dark(white, black);
+      --checkmark-color: var(--gv-color-neutral-0);
 
       .indicator {
-        --indicator-border: light-dark(rgb(0 0 0 / 0.9), rgb(255 255 255 / 0.7));
+        --indicator-border: var(--gv-color-neutral-900);
 
         @media (forced-colors: active) {
           --indicator-border: ButtonBorder;
@@ -188,11 +188,11 @@
       }
 
       &[data-selected] .indicator {
-        --indicator-color: light-dark(black, var(--highlight-foreground));
+        --indicator-background: var(--gv-color-neutral-900);
         --indicator-shadow: transparent;
 
         @media (forced-colors: active) {
-          --indicator-color: Highlight;
+          --indicator-background: Highlight;
           --checkmark-color: HighlightText;
         }
       }
@@ -201,8 +201,8 @@
         content: '';
         position: absolute;
         inset: -4px;
-        background: light-dark(rgb(255 255 255 / 0.51), rgb(0 0 0 / 0.56));
-        box-shadow: rgba(0, 0, 0, 0.24) 0px 2px 8px 0px;
+        background: var(--gv-surface-panel);
+        box-shadow: var(--gv-shadow-dialog);
         border-radius: var(--radius);
       }
     }
@@ -304,8 +304,4 @@
     inset 0px -4px 8px var(--gray-200);
   border-radius: var(--radius);
   padding: var(--spacing-1) var(--spacing-4);
-
-  @media (prefers-color-scheme: dark) {
-    box-shadow: inset 0px 4px 8px var(--gray-200);
-  }
 }

@@ -45,7 +45,7 @@
   outline: none;
   cursor: default;
   color: var(--text-color);
-  font: var(--font-size) system-ui;
+  font: var(--font-size) var(--gv-font-family);
   position: relative;
   display: grid;
   grid-column-start: 1;
@@ -125,7 +125,7 @@
     grid-area: end;
     justify-self: end;
     margin-inline-start: var(--spacing-4);
-    font-family: system-ui;
+    font-family: var(--gv-font-family);
     font-size: var(--font-size-sm);
     text-align: end;
     background: var(--highlight-hover);
@@ -135,8 +135,8 @@
   }
 
   &[data-focused] kbd {
-    background: rgb(255 255 255 / 0.1);
-    border-color: rgb(255 255 255 / 0.2);
+    background: var(--highlight-overlay);
+    border-color: var(--highlight-overlay);
   }
 
   .lucide-chevron-right {
@@ -173,10 +173,6 @@
     box-shadow:
       inset 0px 1px 0px white,
       inset 0px -4px 8px var(--gray-200);
-
-    @media (prefers-color-scheme: dark) {
-      box-shadow: inset 0px 4px 8px var(--gray-200);
-    }
   }
 
   &:first-child .react-aria-Header {
