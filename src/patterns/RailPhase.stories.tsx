@@ -51,6 +51,14 @@ export const AllVariants: Story = {
         meta="Information"
         href="#share"
       />
+      <RailPhase
+        status="upcoming"
+        title="Collect ideas"
+        state="Upcoming"
+        meta="Ideation"
+        href="#collect-new"
+        onDelete={() => {}}
+      />
     </div>
   )
 };
@@ -90,8 +98,19 @@ export const MetaOnly: Story = {
 };
 
 /**
+ * Not in Figma (the prototype's rail): hover the row, or Tab to it, and a delete button shows at its end ("Delete
+ * phase" on hover); it takes "N new"'s place while it shows.
+ */
+export const WithDelete: Story = {
+  name: 'With delete',
+  tags: ['not-in-figma'],
+  decorators: [Story => <div style={{width: 284}}><Story /></div>],
+  args: {status: 'upcoming', title: 'Collect ideas', state: 'Upcoming', meta: 'Ideation', href: '#', onDelete: () => {}}
+};
+
+/**
  * The rail composed as the prototype's Participation panel: 264 of content, the phase rows reaching 10
- * past it on both sides, each phase in its own list item.
+ * past it on both sides, each phase in its own list item; hover a phase for its delete.
  */
 export const Rail: StoryObj = {
   render: () => (
@@ -110,6 +129,7 @@ export const Rail: StoryObj = {
               state="Done"
               meta="29 Jul to 30 Sep · Ideation"
               href="#collect"
+              onDelete={() => {}}
             />
           </li>
           <li>
@@ -122,6 +142,7 @@ export const Rail: StoryObj = {
               newCount={18}
               current
               href="#vote"
+              onDelete={() => {}}
             />
           </li>
           <li>
@@ -131,6 +152,7 @@ export const Rail: StoryObj = {
               state="Upcoming"
               meta="Information"
               href="#share"
+              onDelete={() => {}}
             />
           </li>
         </ul>

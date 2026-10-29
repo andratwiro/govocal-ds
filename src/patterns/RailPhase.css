@@ -5,6 +5,15 @@
    green, live light green; a 1px guide through the dots; the state word green; no tint on the open phase. */
 .gv-rail-phase {
   position: relative;
+  border-radius: var(--gv-radius-12);
+}
+
+/* The row lights while the pointer is anywhere on it, its delete button included. */
+.gv-rail-phase:hover {
+  background: var(--gv-surface-hover);
+}
+
+.gv-rail-phase__link {
   box-sizing: border-box;
   display: flex;
   align-items: flex-start;
@@ -15,15 +24,11 @@
   color: inherit;
   cursor: pointer;
   outline: none;
-}
 
-.gv-rail-phase[data-hovered] {
-  background: var(--gv-surface-hover);
-}
-
-.gv-rail-phase[data-focus-visible] {
-  outline: 2px solid var(--gv-border-selected);
-  outline-offset: -2px;
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: -2px;
+  }
 }
 
 .gv-rail-phase__dot {
@@ -136,4 +141,26 @@ li:has(+ li) > .gv-rail-phase[data-status='completed']::after {
   block-size: var(--gv-space-6);
   border-radius: var(--gv-radius-full);
   background: var(--gv-state-notification);
+}
+
+/* Not in Figma: the prototype's delete at the row's end, centred, shown on hover and focus. It stays in the tab
+   order (opacity, not display: the prototype's display: none can't be reached by keyboard) and takes "N new"'s place
+   while it shows; the name keeps the 56 it already leaves free. */
+.gv-rail-phase__delete {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: var(--gv-space-8);
+  translate: 0 -50%;
+  opacity: 0;
+  transition: opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+}
+
+.gv-rail-phase[data-deletable]:is(:hover, :focus-within) {
+  .gv-rail-phase__delete {
+    opacity: 1;
+  }
+
+  .gv-rail-phase__new {
+    opacity: 0;
+  }
 }

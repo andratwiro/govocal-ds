@@ -1,6 +1,9 @@
 'use client';
-import {Link} from 'react-aria-components';
+import {Link} from 'react-aria-components/Link';
 import type {ReactNode} from 'react';
+import {Trash2} from 'lucide-react';
+import {IconButton} from '../components/gv/IconButton';
+import {Tooltip, TooltipTrigger} from '../components/Tooltip';
 import './RailPhase.css';
 
 export type RailPhaseStatus = 'upcoming' | 'live' | 'completed';
@@ -42,6 +45,13 @@ export interface RailPhaseProps {
    */
   current?: boolean;
   onPress?: () => void;
+  /**
+   * A delete button at the end of the row, shown while the row is hovered or has focus (it is always in the tab
+   * order). It takes "N new"'s place while it shows. Not in Figma: the prototype's rail.
+   */
+  onDelete?: () => void;
+  /** The delete button's name. @default "Delete <title>" ("Delete phase" when the title isn't text) */
+  deleteLabel?: string;
 }
 
 /**
@@ -58,34 +68,46 @@ export function RailPhase({
   newCount,
   href,
   current,
-  onPress
+  onPress,
+  onDelete,
+  deleteLabel = typeof title === 'string' ? `Delete ${title}` : 'Delete phase'
 }: RailPhaseProps) {
   return (
-    <Link
-      href={href}
-      onPress={onPress}
-      aria-current={current ? 'page' : undefined}
+    <div
       className="gv-rail-phase"
       data-status={status}
-      data-current={current || undefined}>
-      <span className="gv-rail-phase__dot" aria-hidden />
-      <span className="gv-rail-phase__body">
-        <span className="gv-rail-phase__name">{title}</span>
-        {chip != null && <span className="gv-rail-phase__chip">{chip}</span>}
-        {(state != null || meta != null) && (
-          <span className="gv-rail-phase__meta" data-after-chip={chip != null || undefined}>
-            {state != null && <span className="gv-rail-phase__state">{state}</span>}
-            {state != null && meta != null && ' · '}
-            {meta}
+      data-current={current || undefined}
+      data-deletable={onDelete ? true : undefined}>
+      <Link href={href} onPress={onPress} aria-current={current ? 'page' : undefined} className="gv-rail-phase__link">
+        <span className="gv-rail-phase__dot" aria-hidden />
+        <span className="gv-rail-phase__body">
+          <span className="gv-rail-phase__name">{title}</span>
+          {chip != null && <span className="gv-rail-phase__chip">{chip}</span>}
+          {(state != null || meta != null) && (
+            <span className="gv-rail-phase__meta" data-after-chip={chip != null || undefined}>
+              {state != null && <span className="gv-rail-phase__state">{state}</span>}
+              {state != null && meta != null && ' · '}
+              {meta}
+            </span>
+          )}
+        </span>
+        {newCount != null && newCount > 0 && (
+          <span className="gv-rail-phase__new">
+            <span className="gv-rail-phase__new-dot" aria-hidden />
+            {newCount} new
           </span>
         )}
-      </span>
-      {newCount != null && newCount > 0 && (
-        <span className="gv-rail-phase__new">
-          <span className="gv-rail-phase__new-dot" aria-hidden />
-          {newCount} new
+      </Link>
+      {onDelete && (
+        <span className="gv-rail-phase__delete">
+          <TooltipTrigger>
+            <IconButton aria-label={deleteLabel} onPress={onDelete}>
+              <Trash2 aria-hidden size={16} />
+            </IconButton>
+            <Tooltip>Delete phase</Tooltip>
+          </TooltipTrigger>
         </span>
       )}
-    </Link>
+    </div>
   );
 }
