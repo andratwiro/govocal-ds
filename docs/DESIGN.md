@@ -9,7 +9,13 @@ devs decide strategy and implementation later (maybe lifting it into their Story
 public URL:
 
 - **/storybook**: every component in Tali's system, every state, in left-to-right and Arabic right-to-left, with
-  accessibility results per component.
+  accessibility results per component. Four sections, each built only from the ones above it:
+  - **Foundations**: the tokens (with which components use each), and **Icons**: every icon the system uses,
+    searchable (Storybook's own `IconGallery` doc block).
+  - **Components**: React Aria primitives painted with the tokens.
+  - **Patterns**: compositions that repeat but aren't primitives (the phase timeline, a stat card with a sparkline, a
+    next-action row, the drafts bar). Same stories, states and accessibility check as components.
+  - **Back office** stories: whole pages (the same pages as /backoffice).
 - **/backoffice**: the whole Go Vocal back office, shallow: one page per nav item, invented data, built only from
   the components. Deeper screens borrow patterns from the Augur prototypes.
 
@@ -18,7 +24,8 @@ dev walking the back office sees one consistent system with every main component
 
 ## The flow
 
-1. Tali's Figma (and Rob's Augur patterns) → Figma MCP in the terminal → components and stories in this repo.
+1. Tali's Figma and her working prototype (https://govocal.augur.page/ux-ui-audit/design/, which has components and
+   patterns Figma doesn't yet) → Figma MCP in the terminal → components, patterns and stories in this repo.
 2. The terminal builds back-office pages from those components.
 3. A push to `main` puts both live.
 4. To refine something the agent filled in, Tali pulls it back into Figma (or fixes it in the terminal), then step 1.
@@ -27,7 +34,7 @@ dev walking the back office sees one consistent system with every main component
 
 - **Code wins.** When Figma and the repo disagree, the repo is the truth. Tokens flow one way: Figma variables →
   `tokens/` → `tokens.css`.
-- **System first.** The back office uses only `src/components` and the tokens. A page that needs something the
+- **System first.** The back office uses only `src/components`, `src/patterns` and the tokens. A page that needs something the
   system lacks gets it added to the system first. That is how the demo shows what Tali's system is missing.
 - **Fill the gaps.** The agent applies Tali's system to everything she hasn't drawn (states, RTL, focus). Nothing is
   marked as filled in: Tali browses and judges.
@@ -43,6 +50,7 @@ dev walking the back office sees one consistent system with every main component
 tokens/            Figma variables export (JSON) → built into src/tokens.css (--gv-*)
 src/components/    React Aria Components, painted with the tokens
   *.stories.tsx    every state, LTR + Arabic RTL
+src/patterns/      compositions of components (timeline, stat card…), tokens only, same stories
 backoffice/        Vite app: sidebar + one route per nav item, invented data
 .storybook/        a11y addon (WCAG 2.2 AA + target size), Components page with counts
 AGENTS.md          the rules for Tali's agent
