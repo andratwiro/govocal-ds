@@ -15,14 +15,14 @@ import {Popover} from '../Popover';
 import {Radio, RadioGroup, type RadioProps} from '../RadioGroup';
 import {Switch, type SwitchProps} from '../Switch';
 import {IconButton} from './IconButton';
-import {Pill} from './Pill';
-import {Required} from './Required';
-import {ReviewNotice, type ReviewNoticeProps} from './ReviewNotice';
+import {Badge} from './Badge';
+import {RequiredMarker} from './RequiredMarker';
+import {ReviewStatus, type ReviewStatusProps} from './ReviewStatus';
 import './Card.css';
 
 export interface CardPill {
   label: string;
-  /** A 14 lucide icon before the label (Figma "Pill · Icon=Yes"). */
+  /** A 14 lucide icon before the label (Figma "Badge · Icon=Yes"). */
   icon?: LucideIcon;
 }
 
@@ -58,7 +58,7 @@ export interface CardProps {
   /** The "Required" marker (a dot + the word). */
   isRequired?: boolean;
   /** The review notice at the end of the title line. */
-  review?: ReviewNoticeProps['state'];
+  review?: ReviewStatusProps['state'];
   /** Grey words for the current value, e.g. "Not set". */
   summary?: string;
   /**
@@ -94,19 +94,19 @@ export interface CardProps {
 function Status({isRequired, review, summary, pills}: Pick<CardProps, 'isRequired' | 'review' | 'summary' | 'pills'>) {
   return (
     <>
-      {isRequired && <Required placement="card" />}
+      {isRequired && <RequiredMarker placement="card" />}
       {review && (
         <span className="gv-card__review">
-          <ReviewNotice state={review} />
+          <ReviewStatus state={review} />
         </span>
       )}
       {summary && <span className="gv-card__summary">{summary}</span>}
       {pills && pills.length > 0 && (
         <span className="gv-card__pills">
           {pills.map(({label, icon: Icon}) => (
-            <Pill key={label} icon={Icon && <Icon aria-hidden size={14} />}>
+            <Badge key={label} icon={Icon && <Icon aria-hidden size={14} />}>
               {label}
-            </Pill>
+            </Badge>
           ))}
         </span>
       )}

@@ -17,8 +17,8 @@ import {MyToastRegion, queue} from '../../../src/components/Toast';
 import {Button} from '../../../src/components/Button';
 import {Link} from '../../../src/components/Link';
 import {Avatar} from '../../../src/components/gv/Avatar';
-import {Status} from '../../../src/components/gv/Status';
-import {Pill} from '../../../src/components/gv/Pill';
+import {StatusBadge} from '../../../src/components/gv/StatusBadge';
+import {Badge} from '../../../src/components/gv/Badge';
 import {Modal} from '../../../src/components/gv/Modal';
 import {Card} from '../../../src/components/gv/Card';
 import {IconButton} from '../../../src/components/gv/IconButton';
@@ -69,7 +69,7 @@ function Managers({names}: {names?: string[]}) {
 
 const Visibility = ({p}: {p: Project}) => (
   <span className="bo-projects-visibility">
-    <Status state={p.status === 'Live' ? 'live' : 'draft'}>{p.status === 'Live' ? 'Published' : 'Draft'}</Status>
+    <StatusBadge state={p.status === 'Live' ? 'live' : 'draft'}>{p.status === 'Live' ? 'Published' : 'Draft'}</StatusBadge>
     <span className="bo-note">{p.access}</span>
   </span>
 );
@@ -258,7 +258,7 @@ function FoldersView({folders, projects}: {folders: FolderRow[]; projects: Proje
               {inside.length > 0 && <div className="bo-note">{inside.map(p => p.title).join(', ')}</div>}
             </DataTableCell>
             <DataTableCell><Managers names={f.managers} /></DataTableCell>
-            <DataTableCell><Status state={f.status === 'Published' ? 'live' : 'draft'}>{f.status}</Status></DataTableCell>
+            <DataTableCell><StatusBadge state={f.status === 'Published' ? 'live' : 'draft'}>{f.status}</StatusBadge></DataTableCell>
           </DataTableRow>
         );
       })}
@@ -321,7 +321,7 @@ function CalendarView({projects}: {projects: Project[]}) {
               <li key={p.id} className="bo-projects-calendar-item">
                 <span>{p.title}</span>
                 <span className="bo-note">{p.start} – {p.end ?? 'no end date'}</span>
-                <Status state={p.status === 'Live' ? 'live' : 'draft'}>{p.current ?? ''}</Status>
+                <StatusBadge state={p.status === 'Live' ? 'live' : 'draft'}>{p.current ?? ''}</StatusBadge>
               </li>
             ))}
           </ul>
@@ -443,7 +443,7 @@ export function Projects() {
             {VIEWS.map(({id, icon: Icon}) => (
               <Tab key={id} id={id}>
                 <span className="bo-projects-tab">
-                  <Icon aria-hidden size={16} />{id}{id === 'Spaces' && <span aria-hidden><Pill>New</Pill></span>}
+                  <Icon aria-hidden size={16} />{id}{id === 'Spaces' && <span aria-hidden><Badge>New</Badge></span>}
                 </span>
               </Tab>
             ))}

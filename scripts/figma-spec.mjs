@@ -1,8 +1,8 @@
 import {readFile} from 'node:fs/promises';
-import {fetchFile, page, config} from './lib/figma.mjs';
+import {fetchFile, page, config, findComponent} from './lib/figma.mjs';
 
 const name = process.argv.slice(2).filter(a => !a.startsWith('--')).join(' ');
-if (!name) { console.error('usage: npm run figma:spec -- "<Component name>" [--fresh]'); process.exit(2); }
+if (!name) { console.error('usage: npm run figma:spec -- "<Name or Group/Name>" [--fresh]'); process.exit(2); }
 const file = await fetchFile();
 const ids = JSON.parse(await readFile('tokens/variable-ids.json', 'utf8'));
 const styleName = id => file.styles?.[id]?.name;
@@ -30,10 +30,12 @@ function print(n, depth = 0) {
   console.log('  '.repeat(depth) + line(n));
   for (const c of n.children ?? []) if (c.visible !== false) print(c, depth + 1);
 }
-const root = page(file, config.componentsPage);
-const target = [...function* w(n) { yield n; for (const c of n.children ?? []) yield* w(c); }(root)]
-  .find(n => (n.type === 'COMPONENT_SET' || n.type === 'COMPONENT') && n.name === name);
-if (!target) { console.error(`No component called "${name}" on ${config.componentsPage}`); process.exit(1); }
+// Components, then Patterns (the Patterns page may not exist yet); a name matches on its last slash segment.
+const pages = [page(file, config.componentsPage), file.document.children.find(c => c.name === config.patternsPage)].filter(Boolean);
+const matches = findComponent(pages, name);
+if (!matches.length) { console.error(`No component called "${name}" on ${pages.map(p => p.name).join(' or ')}`); process.exit(1); }
+if (matches.length > 1) console.error(`"${name}" matches ${matches.map(m => `${m.page} › ${m.node.name}`).join(', ')}: the first one`);
+const target = matches[0].node;
 if (target.componentPropertyDefinitions) console.log('properties:', JSON.stringify(Object.fromEntries(
   Object.entries(target.componentPropertyDefinitions).map(([k, d]) => [k.split('#')[0], d.variantOptions ?? d.type]))));
 print(target);

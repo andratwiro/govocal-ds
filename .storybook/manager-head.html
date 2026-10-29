@@ -75,3 +75,73 @@
     color: var(--gv-text-secondary);
   }
 </style>
+<script>
+  // Old links after the naming revamp (29 Oct 2026, docs/NAMING.md): a moved entry's ?path= is rewritten before
+  // Storybook reads it. One line per moved title (old id prefix: new one); drop this block after a month.
+  (function () {
+    var MOVED = {
+      'base-button': 'components-actions-button',
+      'components-button-\u00b7-compact': 'components-actions-compact-button',
+      'components-icon-button': 'components-actions-icon-button',
+      'components-segmented-control': 'components-actions-segmented-control',
+      'components-bar-row': 'components-charts-bar-row',
+      'components-chart': 'components-charts-chart',
+      'components-dashboard-card': 'components-charts-dashboard-card',
+      'components-legend-row': 'components-charts-legend-row',
+      'components-statement-row': 'components-charts-statement-row',
+      'components-avatar': 'components-data-display-avatar',
+      'components-data-table': 'components-data-display-data-table',
+      'components-list-header': 'components-data-display-list-header',
+      'components-list-header-cell': 'components-data-display-list-header-cell',
+      'components-list-row': 'components-data-display-list-row',
+      'components-stat-row': 'components-data-display-stat-row',
+      'components-kpi': 'components-data-display-stat-tile',
+      'components-checkbox': 'components-forms-checkbox',
+      'components-drop-zone': 'components-forms-drop-zone',
+      'components-required': 'components-forms-required-marker',
+      'components-editor': 'components-forms-rich-text-editor',
+      'components-editor-toolbar': 'components-forms-rich-text-toolbar',
+      'components-editor-tool': 'components-forms-rich-text-toolbar-button',
+      'components-title-field': 'components-forms-title-field',
+      'components-card': 'components-layout-containers-card',
+      'components-divider': 'components-layout-containers-divider',
+      'components-breadcrumb': 'components-navigation-breadcrumbs',
+      'components-coachmark': 'components-overlays-coachmark',
+      'components-modal': 'components-overlays-modal',
+      'components-pill': 'components-status-feedback-badge',
+      'components-banner': 'components-status-feedback-banner',
+      'components-new-dot': 'components-status-feedback-new-dot',
+      'components-review-notice': 'components-status-feedback-review-status',
+      'components-skeleton': 'components-status-feedback-skeleton',
+      'components-status': 'components-status-feedback-status-badge',
+      'components-header': 'patterns-project-page-project-header',
+      'components-setup-card': 'patterns-project-page-setup-step',
+      'components-rail-header': 'patterns-project-rail-rail-header',
+      'components-rail-phase': 'patterns-project-rail-rail-phase',
+      'components-rail-section-label': 'patterns-project-rail-rail-section-label',
+      'components-list-row-\u00b7-common-ground': 'patterns-participation-methods-common-ground-row',
+      'components-list-row-\u00b7-proposals': 'patterns-participation-methods-proposals-row',
+      'components-list-row-\u00b7-voting': 'patterns-participation-methods-voting-row',
+      'components-cause-row': 'patterns-participation-methods-volunteering-row',
+      'components-vote-progress': 'patterns-participation-methods-vote-progress',
+      'patterns-help-popover': 'patterns-app-shell-help-popover',
+      'patterns-notification-list': 'patterns-app-shell-notification-list',
+      'patterns-side-nav': 'patterns-app-shell-side-nav',
+      'patterns-section-toggle': 'patterns-pages-menu-section-toggle',
+      'patterns-action-row': 'patterns-project-page-action-row',
+      'patterns-panel-section': 'patterns-project-page-panel-section',
+      'patterns-stat-card': 'patterns-project-page-stat-card',
+      'patterns-phone-preview': 'patterns-project-page-phone-preview',
+      'patterns-phase-timeline': 'patterns-project-rail-phase-timeline',
+      'patterns-filter-chips': 'patterns-manage-tab-filter-chips',
+      'patterns-filter-menu': 'patterns-manage-tab-filter-menu',
+      'patterns-filter-options': 'patterns-manage-tab-filter-options',
+      'patterns-selection-bar': 'patterns-manage-tab-selection-bar'
+    };
+    var u = new URL(location.href), m = (u.searchParams.get('path') || '').match(/^\/(story|docs)\/(.+?)--(.+)$/);
+    if (m && MOVED[m[2]]) {
+      u.searchParams.set('path', '/' + m[1] + '/' + MOVED[m[2]] + '--' + m[3]);
+      history.replaceState(null, '', u);
+    }
+  })();
+</script>

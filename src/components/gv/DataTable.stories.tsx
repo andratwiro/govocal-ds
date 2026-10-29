@@ -80,9 +80,9 @@ function PeopleTable({initialSort, selectable, initialSelection = [], empty}: {
 }
 
 const meta: Meta = {
-  title: 'Components/Data table',
+  title: 'Components/Data display/Data table',
   parameters: {layout: 'padded'},
-  tags: ['autodocs']
+  tags: ['autodocs', 'not-in-figma']
 };
 export default meta;
 type Story = StoryObj;
@@ -92,20 +92,24 @@ export const Default: Story = {render: () => <PeopleTable />};
 
 /** Sortable columns: the sorted one shows its chevron and primary text; press a header to sort or flip. */
 export const SortedAscending: Story = {
+  name: 'Sorted ascending',
   render: () => <PeopleTable initialSort={{column: 'name', direction: 'ascending'}} />
 };
 
 export const SortedDescending: Story = {
+  name: 'Sorted descending',
   render: () => <PeopleTable initialSort={{column: 'joined', direction: 'descending'}} />
 };
 
 /** Multiple selection with the gv Checkbox; the header checkbox selects all (indeterminate when some are). */
 export const SelectableSomeSelected: Story = {
+  name: 'Selectable, some selected',
   render: () => <PeopleTable selectable initialSelection={['b', 'c']} initialSort={{column: 'joined', direction: 'descending'}} />
 };
 
 /** Selection driven by the page's own select-all control: the header's check column stays empty. */
 export const SelectableWithoutSelectAll: Story = {
+  name: 'Selectable, without select all',
   render: () => (
     <DataTable aria-label="Users" selectionMode="multiple" defaultSelectedKeys={['a']}>
       <DataTableHeader selectAll={false}>
@@ -126,6 +130,7 @@ export const SelectableWithoutSelectAll: Story = {
 
 /** The person cell: gv Avatar, the name over its sub-line. */
 export const PersonCell: Story = {
+  name: 'Person cell',
   render: () => (
     <DataTable aria-label="People">
       <DataTableHeader><DataTableColumn isRowHeader>Name</DataTableColumn></DataTableHeader>
@@ -143,6 +148,7 @@ export const PersonCell: Story = {
 
 /** Count columns are centred with tabular figures; a title stacks over its author and date. */
 export const NumericColumns: Story = {
+  name: 'Numeric columns',
   render: () => (
     <DataTable aria-label="Inputs" sortDescriptor={{column: 'comments', direction: 'descending'}}>
       <DataTableHeader>
@@ -166,12 +172,13 @@ export const NumericColumns: Story = {
 };
 
 /** Each row's "…" opens its options menu. */
-export const RowOptions: Story = {render: () => <PeopleTable />};
+export const RowOptions: Story = {name: 'Row options', render: () => <PeopleTable />};
 
 export const Empty: Story = {render: () => <PeopleTable empty selectable />};
 
 /** Right to left (Arabic): columns, padding, the check column and the "…" mirror. */
 export const RightToLeft: Story = {
+  name: 'Right to left',
   globals: {direction: 'rtl'},
   render: () => <PeopleTable selectable initialSelection={['a']} initialSort={{column: 'joined', direction: 'descending'}} />
 };
@@ -271,4 +278,4 @@ function ManageTable() {
  * Likes / Comments columns, and a row click that opens the input. Search and the status filter are the page's
  * (the icon buttons above the table), driving the rows it passes in.
  */
-export const ManageInputs: Story = {render: () => <ManageTable />};
+export const ManageInputs: Story = {name: 'Manage inputs', render: () => <ManageTable />};

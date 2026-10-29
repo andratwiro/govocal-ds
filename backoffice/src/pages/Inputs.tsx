@@ -15,8 +15,8 @@ import {Toolbar} from '../../../src/components/Toolbar';
 import {MyToastRegion, queue} from '../../../src/components/Toast';
 import {Button} from '../../../src/components/Button';
 import {Link} from '../../../src/components/Link';
-import {Pill} from '../../../src/components/gv/Pill';
-import {Status} from '../../../src/components/gv/Status';
+import {Badge} from '../../../src/components/gv/Badge';
+import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {NewDot} from '../../../src/components/gv/NewDot';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {Modal} from '../../../src/components/gv/Modal';
@@ -64,7 +64,7 @@ function InputPreview({input, onChange, onClose}: {input: ManagedInput; onChange
           <p className="bo-inputs-preview-body">{input.body}</p>
           <div className="bo-inputs-preview-meta">
             <Link href={`#/projects/${input.project}`}>{title(input.project)}</Link>
-            <Pill>{input.topic}</Pill>
+            <Badge>{input.topic}</Badge>
           </div>
           <div className="bo-inputs-preview-fields">
             <Select label="Status" selectedKey={input.status} onSelectionChange={k => onChange(input.id, {status: String(k)})}>
@@ -152,7 +152,7 @@ export function Inputs() {
           <SelectItem id="none">Unassigned</SelectItem>
         </Select>
         <Switch isSelected={needsFeedback} onChange={setNeedsFeedback}>
-          <span className="bo-inputs-switch-label">Only show inputs that need feedback <Pill>{waiting}</Pill></span>
+          <span className="bo-inputs-switch-label">Only show inputs that need feedback <Badge>{waiting}</Badge></span>
         </Switch>
         <span className="bo-push" />
         <SearchField aria-label="Search inputs" placeholder="Search" value={query} onChange={setQuery} />
@@ -244,7 +244,7 @@ export function Inputs() {
                         </span>
                       </DataTableStack>
                     </DataTableCell>
-                    <DataTableCell textValue={i.status}><Status state={statusState(i.status)}>{i.status}</Status></DataTableCell>
+                    <DataTableCell textValue={i.status}><StatusBadge state={statusState(i.status)}>{i.status}</StatusBadge></DataTableCell>
                     <DataTableCell textValue={i.assignee}>
                       <AssigneeSelect input={i} label={`Assignee for ${i.title}`} onChange={change} />
                     </DataTableCell>

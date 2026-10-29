@@ -1,0 +1,93 @@
+@import '../components/theme.css';
+
+/* Figma "Volunteering row" (33:483) + prototype .pj-idearow (Volunteering · Manage): thumbnail, cause over its bar, count. */
+
+.gv-cause-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-12);
+  padding: var(--gv-space-12) var(--gv-space-8);
+  width: 100%;
+  box-sizing: border-box;
+  border-block-end: 1px solid var(--gv-border-row);
+}
+
+.gv-cause-row[data-last] {
+  border-block-end: none;
+}
+
+.gv-cause-row__thumb {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--gv-radius-10);
+  background: var(--gv-surface-stage);
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.gv-cause-row__cause {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-3);
+}
+
+.gv-cause-row__title {
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gv-cause-row__desc {
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-block-end: var(--gv-space-8);
+}
+
+.gv-cause-row__bar {
+  height: 6px;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-pill);
+  overflow: hidden;
+}
+
+.gv-cause-row__fill {
+  height: 100%;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-chart-bar);
+}
+
+.gv-cause-row__volunteers {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--gv-space-2);
+  min-width: 58px;
+}
+
+.gv-cause-row__count {
+  font: var(--gv-type-title);
+  letter-spacing: var(--gv-type-title-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-cause-row__word {
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-body);
+}

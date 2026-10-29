@@ -2,13 +2,13 @@ import {Skeleton} from './Skeleton';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof Skeleton> = {
-  title: 'Components/Skeleton',
+  title: 'Components/Status & feedback/Skeleton',
   component: Skeleton,
   parameters: {
     layout: 'centered',
     docs: {description: {component: 'Not in Figma: from the prototype (its loading placeholder).'}}
   },
-  tags: ['autodocs'],
+  tags: ['autodocs', 'not-in-figma'],
   argTypes: {
     shape: {
       control: 'radio',
@@ -19,18 +19,6 @@ const meta: Meta<typeof Skeleton> = {
 
 export default meta;
 type Story = StoryFn<typeof Skeleton>;
-
-export const Line: Story = args => <Skeleton {...args} width={220} />;
-Line.args = {shape: 'line'};
-
-export const Block: Story = args => <Skeleton {...args} width={260} height={120} />;
-Block.args = {shape: 'block'};
-
-export const Pill: Story = args => <Skeleton {...args} />;
-Pill.args = {shape: 'pill'};
-
-export const Circle: Story = args => <Skeleton {...args} />;
-Circle.args = {shape: 'circle'};
 
 /** The prototype's empty list on the phone: white rows (padding 14, radius 8) of a title, two lines and a chip. */
 export const AllVariants: Story = () => (
@@ -69,3 +57,15 @@ export const AllVariants: Story = () => (
     </div>
   </div>
 );
+
+export const Line: Story = args => <Skeleton {...args} width={220} />;
+Line.args = {shape: 'line'};
+
+export const Block: Story = args => <Skeleton {...args} width={260} height={120} />;
+Block.args = {shape: 'block'};
+
+export const Pill: Story = args => <Skeleton {...args} />;
+Pill.args = {shape: 'pill'};
+
+export const Circle: Story = args => <Skeleton {...args} />;
+Circle.args = {shape: 'circle'};

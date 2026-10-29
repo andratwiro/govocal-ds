@@ -2,7 +2,7 @@ import {StatementRow} from './StatementRow';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof StatementRow> = {
-  title: 'Components/Statement row',
+  title: 'Components/Charts/Statement row',
   component: StatementRow,
   parameters: {
     layout: 'padded',
@@ -76,6 +76,7 @@ export const LongValue: Story = () => (
     />
   </Frame>
 );
+LongValue.storyName = 'Long value';
 
 /** Not in Figma: in a narrow column the row stacks, as the prototype's does on a small screen. */
 export const Narrow: Story = () => (

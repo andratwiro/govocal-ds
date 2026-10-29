@@ -13,16 +13,16 @@ import {Switch} from '../../../src/components/Switch';
 import {ListBox, ListBoxItem} from '../../../src/components/ListBox';
 import {Card, CardRadio, CardRadioGroup} from '../../../src/components/gv/Card';
 import {DashboardCard} from '../../../src/components/gv/DashboardCard';
-import {Kpi} from '../../../src/components/gv/Kpi';
+import {StatTile} from '../../../src/components/gv/StatTile';
 import {LineChart} from '../../../src/components/gv/Chart';
 import {BarRow} from '../../../src/components/gv/BarRow';
 import {LegendRow} from '../../../src/components/gv/LegendRow';
-import {Status} from '../../../src/components/gv/Status';
-import {Pill} from '../../../src/components/gv/Pill';
+import {StatusBadge} from '../../../src/components/gv/StatusBadge';
+import {Badge} from '../../../src/components/gv/Badge';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {Banner} from '../../../src/components/gv/Banner';
 import {Checkbox} from '../../../src/components/gv/Checkbox';
-import {SegmentedControl, Segment} from '../../../src/components/gv/SegmentedControl';
+import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
 import {Modal} from '../../../src/components/gv/Modal';
 import {MyToastRegion, queue} from '../../../src/components/Toast';
 import {CONTENTS, DECK, REPORTS, SLIDES, type Report, type Slide} from '../data-reporting';
@@ -63,8 +63,8 @@ function ReportTable({label, reports, onEdit, onDuplicate, onDelete}: {
             <DataTableCell>
               <span className="bo-reporting-title">
                 <span>{r.title}</span>
-                {r.isNew && <Pill>New</Pill>}
-                {r.kind === 'progress' && <Pill>Progress</Pill>}
+                {r.isNew && <Badge>New</Badge>}
+                {r.kind === 'progress' && <Badge>Progress</Badge>}
               </span>
             </DataTableCell>
             <DataTableCell><span className="bo-reporting-nowrap">{r.created}</span></DataTableCell>
@@ -145,10 +145,10 @@ function BlankBuilder({onCreate}: {onCreate: (title: string, template: Template)
           <div className="bo-reporting-field">
             <span className="bo-note" aria-hidden>Number of slides</span>
             <SegmentedControl aria-label="Number of slides" selectionMode="single" disallowEmptySelection defaultSelectedKeys={['auto']}>
-              <Segment id="auto">Auto</Segment>
-              <Segment id="short">Short</Segment>
-              <Segment id="standard">Standard</Segment>
-              <Segment id="detailed">Detailed</Segment>
+              <SegmentedControlItem id="auto">Auto</SegmentedControlItem>
+              <SegmentedControlItem id="short">Short</SegmentedControlItem>
+              <SegmentedControlItem id="standard">Standard</SegmentedControlItem>
+              <SegmentedControlItem id="detailed">Detailed</SegmentedControlItem>
             </SegmentedControl>
           </div>
           <Button variant="primary" size={32} onPress={() => onCreate(title || 'Untitled report', template)}>Create report</Button>
@@ -182,7 +182,7 @@ function SlideBody({slide}: {slide: Slide}) {
     case 'kpis':
       return (
         <div className="bo-reporting-kpis">
-          {DECK.kpis.map(k => <Kpi key={k.label} label={k.label} value={k.value} note={k.note} type="with-note" />)}
+          {DECK.kpis.map(k => <StatTile key={k.label} label={k.label} value={k.value} note={k.note} type="with-note" />)}
         </div>
       );
     case 'timeline':
@@ -315,7 +315,7 @@ function DeckBuilder({title, ai}: {title: string; ai: boolean}) {
               <div className="bo-reporting-field">
                 <span className="bo-note" aria-hidden>Metrics shown</span>
                 <SegmentedControl aria-label="Metrics shown" selectionMode="single" disallowEmptySelection defaultSelectedKeys={['4']}>
-                  <Segment id="4">4</Segment><Segment id="3">3</Segment><Segment id="2">2</Segment>
+                  <SegmentedControlItem id="4">4</SegmentedControlItem><SegmentedControlItem id="3">3</SegmentedControlItem><SegmentedControlItem id="2">2</SegmentedControlItem>
                 </SegmentedControl>
               </div>
               <Switch defaultSelected>Show slide numbers</Switch>
@@ -345,7 +345,7 @@ function Builder({open, setOpen, hideTitle}: {open: Open; setOpen: (o: Open) => 
         <div className="bo-reporting-title">
           {/* The editor's page title already names the report: a hidden h2 keeps headings in order (h1 → h2 → h3). */}
           {hideTitle ? <SectionHeading>Slide deck</SectionHeading> : <h2 className="bo-section-title">{open.title}</h2>}
-          <Status state="draft">Draft</Status>
+          <StatusBadge state="draft">Draft</StatusBadge>
         </div>
         {open.state !== 'blank' && (
           <MenuTrigger>

@@ -1,4 +1,4 @@
-import {RailPhase} from '../components/gv/RailPhase';
+import {RailPhase} from './RailPhase';
 import './PhaseTimeline.css';
 
 export type TimelineState = 'done' | 'in-progress' | 'upcoming';

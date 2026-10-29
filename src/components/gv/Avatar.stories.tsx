@@ -2,7 +2,7 @@ import {Avatar} from './Avatar';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof Avatar> = {
-  title: 'Components/Avatar',
+  title: 'Components/Data display/Avatar',
   component: Avatar,
   parameters: {
     layout: 'centered',
@@ -44,3 +44,4 @@ export const Stack: Story = () => (
     </div>
   </div>
 );
+Stack.storyName = 'Group';

@@ -5,9 +5,9 @@ import {Avatar} from '../components/gv/Avatar';
 import {MenuTrigger, Menu, MenuItem} from '../components/Menu';
 
 const meta: Meta<typeof SideNav> = {
-  title: 'Patterns/Side nav',
+  title: 'Patterns/App shell/Side nav',
   component: SideNav,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'not-in-figma'],
   parameters: {layout: 'fullscreen'},
   decorators: [Story => <div style={{display: 'flex', height: 640}}><Story /></div>]
 };
@@ -36,7 +36,7 @@ const Items = () => (
 );
 
 /** 224px wide: labels, the red counts, the account row's role, chevrons on the rows that open menus. */
-export const Open: Story = {render: () => <div style={{width: 224}}><SideNav aria-label="Main"><Items /></SideNav></div>};
+export const Open: Story = {name: 'Default', render: () => <div style={{width: 224}}><SideNav aria-label="Main"><Items /></SideNav></div>};
 
 /** The 52px icon rail inside a project: names stay accessible and show as tooltips; counts sit on the icons. */
 export const Folded: Story = {render: () => <div style={{width: 52}}><SideNav aria-label="Main" folded><Items /></SideNav></div>};

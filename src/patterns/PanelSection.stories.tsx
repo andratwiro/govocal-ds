@@ -3,9 +3,9 @@ import {PanelSection} from './PanelSection';
 import {ActionRow} from './ActionRow';
 
 const meta: Meta<typeof PanelSection> = {
-  title: 'Patterns/Panel section',
+  title: 'Patterns/Project page/Panel section',
   component: PanelSection,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'not-in-figma'],
   decorators: [Story => <div style={{width: 264}}><Story /></div>]
 };
 export default meta;
@@ -16,6 +16,7 @@ export const Default: Story = {
 };
 
 export const WithNote: Story = {
+  name: 'With note',
   args: {title: 'Before you publish', aside: '0 of 6 ready', children: <p style={{margin: 0}}>The setup steps.</p>}
 };
 
@@ -25,5 +26,6 @@ export const Collapsible: Story = {
 };
 
 export const CollapsibleOpen: Story = {
+  name: 'Collapsible, open',
   args: {title: 'Project details', collapsible: true, defaultExpanded: true, children: <p style={{margin: 0}}>Dates, folder, visibility.</p>}
 };

@@ -21,7 +21,6 @@ export type Overview = {
   since: string;
   /** Methods running outside the timeline. */
   spotlight: TimelinePhase[];
-  drafts: number;
   /** The resident's project page: intro, then more after the participation box. */
   intro: string;
   more: string[];
@@ -33,7 +32,6 @@ export const OVERVIEWS: Record<string, Overview> = {
     weeks: [6, 11, 19, 27, 34, 48, 63, 77, 96, 118, 139, 160, 181, 197, 215],
     since: '10 Aug',
     spotlight: [{id: 's1', title: 'Resident satisfaction', state: 'in-progress', dates: '9 Oct to 18 Nov', method: 'Survey', count: '214 responses'}],
-    drafts: 6,
     intro: 'More trees, safer paths and quieter streets. Help us decide where the next green corridor goes and what it should feel like.',
     more: [
       'The ideas you shared in September became 48 proposals. Vote for the ones you want to see first: the most popular go to the council in December.',
@@ -43,7 +41,7 @@ export const OVERVIEWS: Record<string, Overview> = {
   }
 };
 
-export const NO_OVERVIEW: Overview = {weeks: [], since: '', spotlight: [], drafts: 0, intro: 'This project has no description yet.', more: [], ways: 1};
+export const NO_OVERVIEW: Overview = {weeks: [], since: '', spotlight: [], intro: 'This project has no description yet.', more: [], ways: 1};
 
 // ── Phase screen · Manage (an Ideation phase one week after publishing) ─────────────────────────────────
 // Invented ideas on invented streets. Each idea template appears on four different streets, so the list reads

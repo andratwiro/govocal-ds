@@ -1,0 +1,139 @@
+@import '../components/theme.css';
+
+/* Figma "Rail phase" (284 wide: 8/8/8/12, dot 8 then 12, name 56 short of the edge) with the prototype's
+   rail rows (Figma "newpanel"): dot 6 down so it sits on the name's line, upcoming grey, completed
+   green, live light green; a 1px guide through the dots; the state word green; no tint on the open phase. */
+.gv-rail-phase {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  padding: var(--gv-space-8) var(--gv-space-8) var(--gv-space-8) var(--gv-space-12);
+  border-radius: var(--gv-radius-12);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+.gv-rail-phase[data-hovered] {
+  background: var(--gv-surface-hover);
+}
+
+.gv-rail-phase[data-focus-visible] {
+  outline: 2px solid var(--gv-border-selected);
+  outline-offset: -2px;
+}
+
+.gv-rail-phase__dot {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  inline-size: var(--gv-space-8);
+  block-size: var(--gv-space-8);
+  margin: var(--gv-space-6) var(--gv-space-12) 0 0;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-state-upcoming);
+}
+
+.gv-rail-phase[data-status='completed'] .gv-rail-phase__dot {
+  background: var(--gv-chart-agree);
+}
+
+/* The prototype's live dot is a light mint green the tokens don't have: the live green, lightened. */
+.gv-rail-phase[data-status='live'] .gv-rail-phase__dot {
+  background: color-mix(in srgb, var(--gv-chart-green) 60%, var(--gv-surface-panel));
+}
+
+/* The guide: from this dot's centre down to the next phase's, when one follows (as a sibling or in the
+   next <li>). Not in Figma. */
+.gv-rail-phase:has(+ .gv-rail-phase)::after,
+li:has(+ li) > .gv-rail-phase::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset-inline-start: 15.5px;
+  inset-block: 18px -18px;
+  inline-size: 1px;
+  background: var(--gv-border-subtle);
+}
+
+.gv-rail-phase[data-status='completed']:has(+ .gv-rail-phase)::after,
+li:has(+ li) > .gv-rail-phase[data-status='completed']::after {
+  background: color-mix(in srgb, var(--gv-chart-green) 55%, var(--gv-surface-panel));
+}
+
+.gv-rail-phase__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  flex: 1;
+}
+
+.gv-rail-phase__name {
+  align-self: stretch;
+  padding-inline-end: var(--gv-space-56);
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.gv-rail-phase__chip {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 20px;
+  margin-block-start: var(--gv-space-6);
+  padding: 0 var(--gv-space-8);
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-hover);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+  white-space: nowrap;
+}
+
+.gv-rail-phase__meta {
+  margin-block-start: var(--gv-space-2);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+
+  &[data-after-chip] {
+    margin-block-start: var(--gv-space-8);
+  }
+}
+
+.gv-rail-phase[data-status='completed'] .gv-rail-phase__state,
+.gv-rail-phase[data-status='live'] .gv-rail-phase__state {
+  color: var(--gv-chart-green);
+}
+
+.gv-rail-phase[data-status='live'] .gv-rail-phase__state {
+  font-weight: 500;
+}
+
+/* Not in Figma: the prototype's "N new", top right in the 56 the name leaves free. */
+.gv-rail-phase__new {
+  position: absolute;
+  inset-block-start: var(--gv-space-6);
+  inset-inline-end: var(--gv-space-8);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+  height: 20px;
+  font: var(--gv-type-small-strong);
+  color: var(--gv-state-notification);
+  white-space: nowrap;
+}
+
+.gv-rail-phase__new-dot {
+  flex: none;
+  inline-size: var(--gv-space-6);
+  block-size: var(--gv-space-6);
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-state-notification);
+}

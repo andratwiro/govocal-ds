@@ -10,8 +10,8 @@ import {Avatar} from '../../../src/components/gv/Avatar';
 import {Banner} from '../../../src/components/gv/Banner';
 import {Card} from '../../../src/components/gv/Card';
 import {IconButton} from '../../../src/components/gv/IconButton';
-import {Pill} from '../../../src/components/gv/Pill';
-import {Status} from '../../../src/components/gv/Status';
+import {Badge} from '../../../src/components/gv/Badge';
+import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {COUNTRIES, LIBRARY, METHODS, PHASE_TITLES, POPULATIONS, SORTS, TOPICS, type Country, type LibraryProject} from '../data-inspiration-hub';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
@@ -76,13 +76,13 @@ function ProjectCard({project, highlighted, copied, onCopy, onOpen}: {project: L
           <Gap name="Quote" inline><blockquote className="bo-inspiration-hub-quote">{project.highlight}</blockquote></Gap>
         )}
         <div className="bo-inspiration-hub-tags">
-          {project.methods.map(m => <Pill key={m}>{m}</Pill>)}
+          {project.methods.map(m => <Badge key={m}>{m}</Badge>)}
         </div>
         <div className="bo-inspiration-hub-actions">
           <Button variant="secondary" size={32} isDisabled={copied} onPress={onCopy}>
             <Copy aria-hidden size={16} />Copy project
           </Button>
-          {copied && <Status state="live">Copied to your drafts</Status>}
+          {copied && <StatusBadge state="live">Copied to your drafts</StatusBadge>}
         </div>
       </div>
     </Card>
@@ -108,7 +108,7 @@ function ProjectPreview({project, copied, onCopy, onClose}: {project: LibraryPro
             <span className="bo-note">{project.platform} · {project.country} · {project.participants.toLocaleString('en')} participants</span>
           </p>
           <p>{project.summary}</p>
-          <div className="bo-inspiration-hub-tags">{project.methods.map(m => <Pill key={m}>{m}</Pill>)}</div>
+          <div className="bo-inspiration-hub-tags">{project.methods.map(m => <Badge key={m}>{m}</Badge>)}</div>
           <dl className="bo-inspiration-hub-facts">
             {[['Topic', project.topic], ['Population', project.population], ['Started', longDate(project.start)]].map(([k, v]) => (
               <div key={k}><dt className="bo-note">{k}</dt><dd>{v}</dd></div>
@@ -118,7 +118,7 @@ function ProjectPreview({project, copied, onCopy, onClose}: {project: LibraryPro
           <ol className="bo-inspiration-hub-phases">
             {project.methods.map((m, i) => (
               <li key={m} className="bo-inspiration-hub-phase">
-                <span className="bo-note">{`Phase ${i + 1}`}</span><span>{PHASE_TITLES[m]}</span><Pill>{m}</Pill>
+                <span className="bo-note">{`Phase ${i + 1}`}</span><span>{PHASE_TITLES[m]}</span><Badge>{m}</Badge>
               </li>
             ))}
           </ol>

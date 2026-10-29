@@ -11,12 +11,12 @@ import {TextField} from '../../../src/components/TextField';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {Label} from '../../../src/components/Form';
 import {Card} from '../../../src/components/gv/Card';
-import {Status} from '../../../src/components/gv/Status';
-import {Pill} from '../../../src/components/gv/Pill';
+import {StatusBadge} from '../../../src/components/gv/StatusBadge';
+import {Badge} from '../../../src/components/gv/Badge';
 import {ListRow} from '../../../src/components/gv/ListRow';
-import {Editor} from '../../../src/components/gv/Editor';
+import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
 import {IconButton} from '../../../src/components/gv/IconButton';
-import {Kpi} from '../../../src/components/gv/Kpi';
+import {StatTile} from '../../../src/components/gv/StatTile';
 import {Banner} from '../../../src/components/gv/Banner';
 import {Divider} from '../../../src/components/gv/Divider';
 import {MyToastRegion, queue} from '../../../src/components/Toast';
@@ -57,7 +57,7 @@ function CustomEmailTable({emails, onAction}: {emails: CustomEmail[]; onAction: 
           <DataTableCell>
             <DataTableStack strong sub={<>To: {e.to}{e.project && <> · Project: {e.project}</>}</>}>{e.subject}</DataTableStack>
           </DataTableCell>
-          <DataTableCell><Status state={e.status === 'Sent' ? 'live' : 'draft'}>{e.status}</Status></DataTableCell>
+          <DataTableCell><StatusBadge state={e.status === 'Sent' ? 'live' : 'draft'}>{e.status}</StatusBadge></DataTableCell>
           <DataTableCell><span className="bo-messaging-nowrap">{e.date}</span></DataTableCell>
           <DataTableCell align="number">{pct(e.opened)}</DataTableCell>
           <DataTableCell align="number">{pct(e.clicked)}</DataTableCell>
@@ -100,7 +100,7 @@ function DraftComposer({email, onSave, onSend}: {
           <TextField label="Subject" value={subject} onChange={setSubject} />
           <div className="bo-messaging-field">
             <Label aria-hidden>Email message</Label>
-            <Editor aria-label="Email message" placeholder="Write your message" value={body} onChange={setBody}
+            <RichTextEditor aria-label="Email message" placeholder="Write your message" value={body} onChange={setBody}
               bold={bold} onBoldChange={setBold} italic={italic} onItalicChange={setItalic} list={list} onListChange={setList} />
           </div>
           <div className="bo-messaging-buttons">
@@ -204,7 +204,7 @@ function AutomatedList({on, setOn, onEdit}: {on: Record<string, boolean>; setOn:
             <div className="bo-messaging-groups">
               {g.types.map(t => (
                 <div key={t.type} className="bo-messaging-group">
-                  <span><Pill>{t.type}</Pill></span>
+                  <span><Badge>{t.type}</Badge></span>
                   <ul className="bo-messaging-rows" aria-label={`${g.role}: ${t.type}`}>
                     {t.emails.map(e => (
                       <li key={e.id} className="bo-messaging-row">
@@ -247,7 +247,7 @@ function AutomatedEditor({email}: {email: AutomatedEmail}) {
           {email.title != null && <TextField label="Title" value={title} onChange={setTitle} />}
           <div className="bo-messaging-field">
             <Label aria-hidden>Introduction</Label>
-            <Editor aria-label="Introduction" placeholder="Write an introduction" value={intro} onChange={setIntro} />
+            <RichTextEditor aria-label="Introduction" placeholder="Write an introduction" value={intro} onChange={setIntro} />
           </div>
           {email.button != null && <TextField label="Button text" value={button} onChange={setButton} />}
           <Divider />
@@ -315,10 +315,10 @@ function Sms() {
       </div>
       <div className="bo-messaging-stack">
         <div className="bo-messaging-kpis">
-          <Kpi label="SMS credits remaining" value={n(SMS_BALANCE.purchased - used)} note={`of ${n(SMS_BALANCE.purchased)} credits purchased`} />
-          <Kpi label="SMS campaigns" value={n(SMS_BALANCE.usedCampaigns)} type="tall" />
-          <Kpi label="Test messages" value={n(SMS_BALANCE.usedTests)} type="tall" />
-          <Kpi label="Total used" value={n(used)} type="tall" />
+          <StatTile label="SMS credits remaining" value={n(SMS_BALANCE.purchased - used)} note={`of ${n(SMS_BALANCE.purchased)} credits purchased`} />
+          <StatTile label="SMS campaigns" value={n(SMS_BALANCE.usedCampaigns)} type="tall" />
+          <StatTile label="Test messages" value={n(SMS_BALANCE.usedTests)} type="tall" />
+          <StatTile label="Total used" value={n(used)} type="tall" />
         </div>
         <Banner>A message too long for one SMS is sent in several parts, and each part costs a credit for every recipient.</Banner>
         <Card tone="manage" title="Campaigns" summary={`${SMS.length} messages`}>

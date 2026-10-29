@@ -15,15 +15,15 @@ import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow
 import {Avatar} from '../../../src/components/gv/Avatar';
 import {Card} from '../../../src/components/gv/Card';
 import {Divider} from '../../../src/components/gv/Divider';
-import {Header} from '../../../src/components/gv/Header';
+import {ProjectHeader} from '../../../src/patterns/ProjectHeader';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {Modal} from '../../../src/components/gv/Modal';
-import {RailHeader} from '../../../src/components/gv/RailHeader';
-import {RailSectionLabel} from '../../../src/components/gv/RailSectionLabel';
-import {SegmentedControl, Segment} from '../../../src/components/gv/SegmentedControl';
-import {SetupCard} from '../../../src/components/gv/SetupCard';
+import {RailHeader} from '../../../src/patterns/RailHeader';
+import {RailSectionLabel} from '../../../src/patterns/RailSectionLabel';
+import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
+import {SetupStep} from '../../../src/patterns/SetupStep';
 import {StatRow} from '../../../src/components/gv/StatRow';
-import {Status} from '../../../src/components/gv/Status';
+import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {TitleField} from '../../../src/components/gv/TitleField';
 import {FilterChips} from '../../../src/patterns/FilterChips';
 import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
@@ -37,7 +37,7 @@ import {IDEAS, IDEA_ASSIGNEES, IDEA_REPLIES, IDEA_SOURCES, IDEA_STATUSES, IDEA_T
 type Selection = 'all' | Set<string | number>;
 
 // The phase screen, from the Figma frames "Project · Build" and "Ideation · Manage (data)" (Screens WIP):
-// a header bar (Header · mode switch · actions) over the Participation rail and the tab's panels.
+// a header bar (Project header · mode switch · actions) over the Participation rail and the tab's panels.
 const TABS = ['build', 'manage', 'insights'] as const;
 type Tab = typeof TABS[number];
 const label = (t: string) => t[0].toUpperCase() + t.slice(1);
@@ -60,11 +60,11 @@ export function ProjectPhase() {
     <div className="bo-phase" data-rail={railOpen ? 'open' : 'closed'}>
       <h1 className="bo-visually-hidden">{project.title}</h1>
       <div className="bo-phase-bar">
-        <Header level={phase.status === 'Draft' ? 'phase-draft' : 'phase-live'} projectName={project.title} phaseName={phase.title}
+        <ProjectHeader level={phase.status === 'Draft' ? 'phase-draft' : 'phase-live'} projectName={project.title} phaseName={phase.title}
           projectHref={`#/projects/${project.id}`} onBack={() => navigate(`/projects/${project.id}`)} onTogglePanel={() => setRailOpen(o => !o)} />
         <SegmentedControl aria-label="Phase view" disallowEmptySelection selectedKeys={[view]}
           onSelectionChange={keys => { const next = [...keys][0]; if (next) navigate(phaseUrl(project, phase, next as Tab)); }}>
-          {TABS.map(t => <Segment key={t} id={t}>{label(t)}</Segment>)}
+          {TABS.map(t => <SegmentedControlItem key={t} id={t}>{label(t)}</SegmentedControlItem>)}
         </SegmentedControl>
         <div className="bo-phase-bar-actions">
           <Avatar initials={ME.slice(-1)} aria-label={`${ME} is here`} />
@@ -143,14 +143,14 @@ function Build({phase, onSettings}: {phase: Phase; onSettings: (tab: SettingsTab
           {CHECKLIST.map(c => (
             <li key={c.title} data-gv="setup-card">
               {c.action === 'open'
-                ? <SetupCard title={c.title} onPress={() => open(c.title)} />
-                : <SetupCard action="expand" title={c.title}><p className="bo-note bo-phase-flush">{c.body}</p></SetupCard>}
+                ? <SetupStep title={c.title} onPress={() => open(c.title)} />
+                : <SetupStep action="expand" title={c.title}><p className="bo-note bo-phase-flush">{c.body}</p></SetupStep>}
             </li>
           ))}
         </ul>
         <div className="bo-phase-section-header bo-phase-section-gap">
           <h3 className="bo-phase-flush">{phase.method} setup</h3>
-          <Status state={phase.status === 'Draft' ? 'draft' : 'live'}>{phase.status}</Status>
+          <StatusBadge state={phase.status === 'Draft' ? 'draft' : 'live'}>{phase.status}</StatusBadge>
         </div>
         {phase.method === 'Ideation' ? <IdeationCards phase={phase} onOpen={setStub} /> : (
           <p className="bo-note">The {phase.method.toLowerCase()} setup cards: not in Figma yet.</p>

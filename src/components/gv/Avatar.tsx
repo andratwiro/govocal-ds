@@ -1,3 +1,4 @@
+import type {ReactNode} from 'react';
 import './Avatar.css';
 
 export interface AvatarProps {
@@ -31,6 +32,26 @@ export function Avatar({initials, size, unassigned, 'aria-label': ariaLabel}: Av
       role={ariaLabel ? 'img' : undefined}
       aria-label={ariaLabel}>
       {!unassigned && initials}
+    </span>
+  );
+}
+
+export interface AvatarGroupProps {
+  /** One avatar per person, by initials, each 24 and 6 over the one before. */
+  initials: string[];
+  /** What follows the faces, e.g. "215 participants". */
+  children?: ReactNode;
+}
+
+/** Overlapping avatars before a count ("215 participants"): Spectrum's AvatarGroup. The faces are hidden from
+ * assistive tech; the count says it. */
+export function AvatarGroup({initials, children}: AvatarGroupProps) {
+  return (
+    <span className="gv-avatar-stack">
+      <span className="gv-avatar-stack__faces" aria-hidden>
+        {initials.map((i, n) => <Avatar key={n} initials={i} size={24} />)}
+      </span>
+      {children}
     </span>
   );
 }

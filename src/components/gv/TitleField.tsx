@@ -6,7 +6,7 @@ import {
   type ValidationResult
 } from 'react-aria-components/TextField';
 import {FieldError} from '../Form';
-import {Required} from './Required';
+import {RequiredMarker} from './RequiredMarker';
 import './TitleField.css';
 
 export interface TitleFieldProps extends AriaTextFieldProps {
@@ -31,7 +31,7 @@ export function TitleField({placeholder = 'Add a title', isRequired, errorMessag
       </AriaTextField>
       {isRequired && (
         <span className="gv-title-field-required" aria-hidden="true">
-          <Required placement="field" />
+          <RequiredMarker placement="field" />
         </span>
       )}
     </div>

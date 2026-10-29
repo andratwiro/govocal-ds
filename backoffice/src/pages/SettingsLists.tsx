@@ -7,10 +7,10 @@ import {ColorSwatch} from '../../../src/components/ColorSwatch';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {Card} from '../../../src/components/gv/Card';
 import {Divider} from '../../../src/components/gv/Divider';
-import {Editor} from '../../../src/components/gv/Editor';
+import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {Modal} from '../../../src/components/gv/Modal';
-import {Pill} from '../../../src/components/gv/Pill';
+import {Badge} from '../../../src/components/gv/Badge';
 import {AREAS, INPUT_STATUS_CATEGORIES, INPUT_STATUSES, PLATFORM_TAGS, POLICIES, PROPOSAL_STATUS_CATEGORIES,
   PROPOSAL_STATUSES, type SettingsItem} from '../data-settings';
 
@@ -80,7 +80,7 @@ function ItemList({config, start, back}: {config: ListConfig; start: SettingsIte
                     <span>{item.name}</span>
                     {item.description && <span className="bo-note">{item.description}</span>}
                   </span>
-                  {item.category && <Pill>{item.category}</Pill>}
+                  {item.category && <Badge>{item.category}</Badge>}
                   <Button variant="secondary" size={32} aria-label={`Edit ${item.name}`} onPress={() => setEditing(item)}>
                     <Pencil aria-hidden size={16} />Edit
                   </Button>
@@ -129,7 +129,7 @@ export function StatusesTab() {
             actions={<Button variant="secondary" size={32} onPress={() => setKind(id)}><Pencil aria-hidden size={16} />{k.button}</Button>}>
             <div className="bo-settings-section">
               <p className="bo-note bo-settings-help">{k.help}</p>
-              <div className="bo-settings-pills">{k.start.map(s => <Pill key={s.id}>{s.name}</Pill>)}</div>
+              <div className="bo-settings-pills">{k.start.map(s => <Badge key={s.id}>{s.name}</Badge>)}</div>
             </div>
           </Card>
         );
@@ -155,7 +155,7 @@ function PolicyEditor({id, name, text}: {id: string; name: string; text: string}
         </Button>
       </div>
       {open && <div className="bo-settings-section">
-        <Editor aria-label={name} placeholder={`The ${name.toLowerCase()} residents read`} value={value}
+        <RichTextEditor aria-label={name} placeholder={`The ${name.toLowerCase()} residents read`} value={value}
           onChange={v => { setValue(v); setDirty(true); setSaved(false); }}
           bold={bold} onBoldChange={setBold} italic={italic} onItalicChange={setItalic} list={list} onListChange={setList} />
         <div className="bo-settings-actions">

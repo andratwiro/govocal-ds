@@ -9,12 +9,12 @@ import {Select, SelectItem} from '../../../src/components/Select';
 import {Label} from '../../../src/components/Form';
 import {MyToastRegion, queue} from '../../../src/components/Toast';
 import {Card} from '../../../src/components/gv/Card';
-import {Editor} from '../../../src/components/gv/Editor';
+import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
 import {Divider} from '../../../src/components/gv/Divider';
-import {Kpi} from '../../../src/components/gv/Kpi';
-import {Pill} from '../../../src/components/gv/Pill';
+import {StatTile} from '../../../src/components/gv/StatTile';
+import {Badge} from '../../../src/components/gv/Badge';
 import {Banner} from '../../../src/components/gv/Banner';
-import {PhoneFrame} from '../../../src/patterns/PhonePreview';
+import {PhonePreview} from '../../../src/patterns/PhonePreview';
 import {CUSTOM_EMAILS, GROUP_SIZES, GROUPS, RECIPIENTS, SENDER, type CustomEmail} from '../data-messaging';
 import {Gap} from '../Gap';
 import {Page} from './Page';
@@ -64,7 +64,7 @@ export function EmailComposer() {
           <TextField label="Subject" placeholder="Add a subject line" value={subject} onChange={setSubject} />
           <div className="bo-messaging-field">
             <Label aria-hidden>Email message</Label>
-            <Editor aria-label="Email message" placeholder="Write your message" value={body} onChange={setBody}
+            <RichTextEditor aria-label="Email message" placeholder="Write your message" value={body} onChange={setBody}
               bold={bold} onBoldChange={setBold} italic={italic} onItalicChange={setItalic} list={list} onListChange={setList} />
           </div>
           <Divider />
@@ -97,10 +97,10 @@ export function EmailStats() {
       description={<>Sent {email.date} to {email.to}{email.project && <> · Project: {email.project}</>}</>}>
       <div className="bo-messaging-stack">
         <div className="bo-messaging-kpis">
-          <Kpi label="Recipients" value={n(sent)} type="tall" />
-          <Kpi label="Delivered" value={n(delivered)} note={`${n(sent - delivered)} bounced`} />
-          <Kpi label="Opened" value={`${email.opened ?? 0}%`} note={`${n(pctOf(email.opened))} people`} />
-          <Kpi label="Clicked" value={`${email.clicked ?? 0}%`} note={`${n(pctOf(email.clicked))} people`} />
+          <StatTile label="Recipients" value={n(sent)} type="tall" />
+          <StatTile label="Delivered" value={n(delivered)} note={`${n(sent - delivered)} bounced`} />
+          <StatTile label="Opened" value={`${email.opened ?? 0}%`} note={`${n(pctOf(email.opened))} people`} />
+          <StatTile label="Clicked" value={`${email.clicked ?? 0}%`} note={`${n(pctOf(email.clicked))} people`} />
         </div>
         <SectionHeading>Who got it</SectionHeading>
         <Card tone="manage" title="Recipients" pills={[{label: `${RECIPIENTS.length} of ${n(sent)} shown`}]}>
@@ -114,7 +114,7 @@ export function EmailStats() {
                 {RECIPIENTS.map(r => (
                   <DataTableRow key={r.id} id={r.id} textValue={r.name}>
                     <DataTableCell><DataTablePerson name={r.name} initials={r.name.split(' ').map(w => w[0]).join('')} sub={r.email} /></DataTableCell>
-                    <DataTableCell><Pill>{r.status}</Pill></DataTableCell>
+                    <DataTableCell><Badge>{r.status}</Badge></DataTableCell>
                   </DataTableRow>
                 ))}
               </DataTableBody>
@@ -160,14 +160,14 @@ export function SmsComposer() {
             </div>
           </div>
         </Card>
-        <PhoneFrame aria-label="SMS preview">
+        <PhonePreview aria-label="SMS preview">
           <Gap name="SMS bubble">
             <div className="bo-messaging-sms">
               <span className="bo-note">Text message · now</span>
               <p>{body || 'Your message shows here.'}</p>
             </div>
           </Gap>
-        </PhoneFrame>
+        </PhonePreview>
       </div>
       <MyToastRegion />
     </Page>

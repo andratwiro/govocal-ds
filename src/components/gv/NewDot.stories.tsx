@@ -2,7 +2,7 @@ import {NewDot} from './NewDot';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof NewDot> = {
-  title: 'Components/New dot',
+  title: 'Components/Status & feedback/New dot',
   component: NewDot,
   parameters: {
     layout: 'centered',

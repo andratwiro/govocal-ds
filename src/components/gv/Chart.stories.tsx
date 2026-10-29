@@ -13,7 +13,7 @@ const VISITORS_DOC = [2, 5, 9, 14, 11, 7];
 const VOTES = [12, 18, 24, 28, 35, 48, 62, 71, 78, 89, 94, 108, 124, 142, 168, 198, 228, 258, 291, 318, 342];
 
 const meta: Meta<typeof LineChart> = {
-  title: 'Components/Chart',
+  title: 'Components/Charts/Chart',
   component: LineChart,
   tags: ['autodocs'],
   parameters: {...figma('23-219'), layout: 'padded'},
@@ -65,7 +65,7 @@ export const LargeNumbers: Story = {
   }
 };
 
-/** A small sparkline with no guides, as it sits under a KPI. */
+/** A small sparkline with no guides, as it sits under a Stat tile. */
 export const SparklineSmall: Story = {
   name: 'Sparkline · small',
   render: () => (

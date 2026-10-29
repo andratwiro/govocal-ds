@@ -3,15 +3,15 @@ import {useState} from 'react';
 import {SectionToggle} from './SectionToggle';
 
 const meta: Meta<typeof SectionToggle> = {
-  title: 'Patterns/Section toggle',
+  title: 'Patterns/Pages & menu/Section toggle',
   component: SectionToggle,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'not-in-figma'],
   decorators: [Story => <div style={{width: 560}}><Story /></div>]
 };
 export default meta;
 type Story = StoryObj<typeof SectionToggle>;
 
-export const Shown: Story = {args: {title: 'Events', description: 'Upcoming events from every project.', isSelected: true}};
+export const Shown: Story = {name: 'Default', args: {title: 'Events', description: 'Upcoming events from every project.', isSelected: true}};
 
 export const Hidden: Story = {args: {title: 'Proposals', description: 'Proposals residents can support.', isSelected: false}};
 

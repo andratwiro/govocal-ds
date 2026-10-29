@@ -42,7 +42,7 @@ test('rows use the gv Status, Avatar and icon button; New project opens its menu
 test('projects names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/projects');
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
-  // Avatar, Status, Icon button and Pill now exist in src/components/gv; the project thumbnail is missing.
+  // Avatar, Status badge, Icon button and Badge now exist in src/components/gv; the project thumbnail is missing.
   // Arrange projects reorders with buttons until the system has drag and drop.
   expect(gaps).toEqual(['Project thumbnail']);
   await page.getByRole('tab', {name: 'Arrange projects'}).click();

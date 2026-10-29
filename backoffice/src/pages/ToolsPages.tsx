@@ -11,8 +11,8 @@ import {Card} from '../../../src/components/gv/Card';
 import {Checkbox} from '../../../src/components/gv/Checkbox';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {Modal} from '../../../src/components/gv/Modal';
-import {Pill} from '../../../src/components/gv/Pill';
-import {Status} from '../../../src/components/gv/Status';
+import {Badge} from '../../../src/components/gv/Badge';
+import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {HelpPopover} from '../../../src/patterns/HelpPopover';
 import {API_TOKENS, MCP_CLIENTS, POWER_BI_TEMPLATES, WEBHOOK_EVENTS, WEBHOOK_PROJECTS, WEBHOOKS,
   type ApiToken, type WebhookItem} from '../data-tools';
@@ -148,9 +148,9 @@ export function Webhooks() {
               <Row key={h.id} id={h.id}>
                 <Cell>{h.name}</Cell>
                 <Cell>{h.url}</Cell>
-                <Cell><span className="bo-tools-pills">{h.events.map(e => <Pill key={e}>{e}</Pill>)}</span></Cell>
+                <Cell><span className="bo-tools-pills">{h.events.map(e => <Badge key={e}>{e}</Badge>)}</span></Cell>
                 <Cell>{h.project}</Cell>
-                <Cell><Status state={h.enabled ? 'live' : 'draft'}>{h.enabled ? 'Enabled' : 'Off'}</Status></Cell>
+                <Cell><StatusBadge state={h.enabled ? 'live' : 'draft'}>{h.enabled ? 'Enabled' : 'Off'}</StatusBadge></Cell>
                 <Cell>
                   <span className="bo-tools-row">
                     <IconButton aria-label={`Edit webhook: ${h.name}`} onPress={() => setEditing(h)}><Pencil aria-hidden size={16} /></IconButton>

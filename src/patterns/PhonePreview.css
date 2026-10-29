@@ -74,20 +74,3 @@
   background: var(--gv-surface-hover-strong);
   color: var(--gv-icon-default);
 }
-
-.gv-avatar-stack {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--gv-space-8);
-  font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
-  color: var(--gv-text-primary);
-}
-
-.gv-avatar-stack__faces {
-  display: inline-flex;
-}
-
-.gv-avatar-stack__faces > * + * {
-  margin-inline-start: calc(-1 * var(--gv-space-6));
-}

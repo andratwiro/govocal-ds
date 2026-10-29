@@ -3,7 +3,7 @@ import {Settings, Trash2, ChevronDown} from 'lucide-react';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof IconButton> = {
-  title: 'Components/Icon button',
+  title: 'Components/Actions/Icon button',
   component: IconButton,
   parameters: {
     layout: 'centered',
@@ -44,18 +44,21 @@ export const GhostDefault: Story = () => (
     <Settings aria-hidden size={16} />
   </IconButton>
 );
+GhostDefault.storyName = 'Ghost · Default';
 
 export const GhostStrong: Story = () => (
   <IconButton variant="ghost" tone="strong" aria-label="Collapse section">
     <ChevronDown aria-hidden size={16} />
   </IconButton>
 );
+GhostStrong.storyName = 'Ghost · Strong';
 
 export const BorderedStrong: Story = () => (
   <IconButton variant="bordered" tone="strong" aria-label="Delete idea">
     <Trash2 aria-hidden size={16} />
   </IconButton>
 );
+BorderedStrong.storyName = 'Bordered · Strong';
 
 /** Not in Figma: the prototype's `.btn-icon--sm` for dense toolbars. */
 export const Small: Story = () => (

@@ -10,15 +10,15 @@ import {RadioGroup, Radio} from '../../../src/components/RadioGroup';
 import {Modal} from '../../../src/components/gv/Modal';
 import {DropZone} from '../../../src/components/gv/DropZone';
 import {DashboardCard, DashboardDemographic} from '../../../src/components/gv/DashboardCard';
-import {Kpi} from '../../../src/components/gv/Kpi';
+import {StatTile} from '../../../src/components/gv/StatTile';
 import {LineChart, Sparkline} from '../../../src/components/gv/Chart';
 import {BarRow} from '../../../src/components/gv/BarRow';
 import {LegendRow} from '../../../src/components/gv/LegendRow';
 import {StatRow} from '../../../src/components/gv/StatRow';
 import {Card, CardSwitch} from '../../../src/components/gv/Card';
 import {Checkbox} from '../../../src/components/gv/Checkbox';
-import {Status} from '../../../src/components/gv/Status';
-import {Pill} from '../../../src/components/gv/Pill';
+import {StatusBadge} from '../../../src/components/gv/StatusBadge';
+import {Badge} from '../../../src/components/gv/Badge';
 import {Banner} from '../../../src/components/gv/Banner';
 import {Divider} from '../../../src/components/gv/Divider';
 import {CANDIDATES, CATEGORIES, CURRENT, MANAGERS, POPUP_CONDITIONS, POPUP_SHOWN, QUARTERS, QUESTIONS, REPORTS, RESPONDENTS,
@@ -73,7 +73,7 @@ function ScoreTile({label, scores, quarter}: {label: string; scores: number[]; q
   const now = scores[quarter];
   const note = quarter === 0 ? 'First quarter' : `${signed(now - scores[quarter - 1])} vs ${QUARTERS[quarter - 1]}`;
   return (
-    <Kpi label={label} value={score(now)} note={quarter === CURRENT ? `${note} · updating live` : note} />
+    <StatTile label={label} value={score(now)} note={quarter === CURRENT ? `${note} · updating live` : note} />
   );
 }
 
@@ -102,7 +102,7 @@ function LiveMonitor({quarter}: {quarter: number}) {
           return (
             <DashboardCard key={c.id} title={c.label}
               subtitle={`${rows.length} questions · ${n(RESPONDENTS[quarter])} responses · sentiment scale, optional`}
-              action={<Pill>{score(c.scores[quarter])}</Pill>}>
+              action={<Badge>{score(c.scores[quarter])}</Badge>}>
               {rows.map(({qn, i}) => {
                 const s = questionScore(i, quarter);
                 return <BarRow key={qn.title} label={`${i + 1}. ${qn.title}`} percent={(s / 5) * 100} value={score(s)} />;
@@ -135,12 +135,12 @@ function Participants({quarter}: {quarter: number}) {
   return (
     <div className="bo-community-monitor-body">
       <div className="bo-community-monitor-kpis">
-        <Kpi label="Respondents" value={n(RESPONDENTS[quarter])} note={quarter === CURRENT ? 'updating live' : QUARTERS[quarter]}>
+        <StatTile label="Respondents" value={n(RESPONDENTS[quarter])} note={quarter === CURRENT ? 'updating live' : QUARTERS[quarter]}>
           <Sparkline label="Respondents per quarter" labels={shown} values={RESPONDENTS.slice(0, quarter + 1)} height={34} grid={false} />
-        </Kpi>
-        <Kpi label="Popup shown" value={n(POPUP_SHOWN[quarter])} note="times this quarter" />
-        <Kpi label="Response rate" value={`${rate}%`} note="of residents shown the popup" />
-        <Kpi label="Respondents to date" value={n(allTime)} note={`since ${QUARTERS[0]}`} />
+        </StatTile>
+        <StatTile label="Popup shown" value={n(POPUP_SHOWN[quarter])} note="times this quarter" />
+        <StatTile label="Response rate" value={`${rate}%`} note="of residents shown the popup" />
+        <StatTile label="Respondents to date" value={n(allTime)} note={`since ${QUARTERS[0]}`} />
       </div>
       <DashboardCard type="participation-over-time" title="Respondents over time" subtitle="People who answered · per quarter">
         <LineChart labels={shown} series={[{label: 'Respondents', values: RESPONDENTS.slice(0, quarter + 1), tone: 'primary'}]} />
@@ -195,12 +195,12 @@ function ReportModal({report, onClose}: {report: Report | null; onClose: () => v
       {report && (
         <div className="bo-community-monitor-modal">
           <div className="bo-community-monitor-buttons">
-            <Status state={report.published ? 'live' : 'draft'}>{report.published ? 'Published' : 'Draft'}</Status>
+            <StatusBadge state={report.published ? 'live' : 'draft'}>{report.published ? 'Published' : 'Draft'}</StatusBadge>
             <span className="bo-note">{report.quarter} · updated {report.updated}</span>
           </div>
           <div className="bo-community-monitor-kpis">
-            <Kpi label="Health score" value={score(HEALTH[q])} note={report.quarter} />
-            <Kpi label="Respondents" value={n(RESPONDENTS[q])} note={`${Math.round((RESPONDENTS[q] / POPUP_SHOWN[q]) * 100)}% response rate`} />
+            <StatTile label="Health score" value={score(HEALTH[q])} note={report.quarter} />
+            <StatTile label="Respondents" value={n(RESPONDENTS[q])} note={`${Math.round((RESPONDENTS[q] / POPUP_SHOWN[q]) * 100)}% response rate`} />
           </div>
           <DashboardCard title="Scores by category" subtitle={report.quarter}>
             {CATEGORIES.map(c => <BarRow key={c.id} label={c.label} percent={(c.scores[q] / 5) * 100} value={score(c.scores[q])} />)}
@@ -251,7 +251,7 @@ function Reports() {
         {reports.map(r => (
           <li key={r.title}>
             <Card tone="manage" title={r.title} summary={`Updated ${r.updated}`} pills={[{label: r.quarter}]}
-              actions={<Status state={r.published ? 'live' : 'draft'}>{r.published ? 'Published' : 'Draft'}</Status>}
+              actions={<StatusBadge state={r.published ? 'live' : 'draft'}>{r.published ? 'Published' : 'Draft'}</StatusBadge>}
               control="open" onOpen={() => setOpen(r)} />
           </li>
         ))}
@@ -360,7 +360,7 @@ function Settings() {
           <Card title="Survey" summary={open ? 'Accepting answers' : 'Closed'}
             actions={<CardSwitch aria-label="Open for responses" isSelected={open} onChange={setOpen} />}>
             <div className="bo-community-monitor-section">
-              <Status state={open ? 'live' : 'draft'}>{open ? 'Open for responses' : 'Closed'}</Status>
+              <StatusBadge state={open ? 'live' : 'draft'}>{open ? 'Open for responses' : 'Closed'}</StatusBadge>
               <div className="bo-community-monitor-buttons">
                 <Button variant="secondary" size={32} onPress={show('edit')}><Pencil aria-hidden size={16} /> Edit survey</Button>
                 <Button variant="secondary" size={32} onPress={show('import')}><Upload aria-hidden size={16} /> Import answers</Button>
@@ -411,7 +411,7 @@ function Settings() {
             <div className="bo-community-monitor-section">
               <p className="bo-note">Who are the managers? Admins and these community monitor managers see results and edit the survey.</p>
               <div className="bo-community-monitor-buttons">
-                {managers.map(m => <Pill key={m}>{m}</Pill>)}
+                {managers.map(m => <Badge key={m}>{m}</Badge>)}
                 <Button variant="quiet" size={32} onPress={show('manager')}><Plus aria-hidden size={16} /> Add a manager</Button>
               </div>
             </div>

@@ -50,3 +50,26 @@ export const page = (file, name) => {
   if (!p) throw new Error(`No page called ${name} in ${file.name}`);
   return p;
 };
+
+/** A Figma name's last slash segment: what instance layers, search and swap menus show ("Project rail/Rail header"). */
+export const lastSegment = name => name.split('/').pop().trim();
+
+/** Components and component sets under a node; a set's variants are not walked. */
+function* components(node) {
+  for (const c of node.children ?? []) {
+    if (c.type === 'COMPONENT_SET' || c.type === 'COMPONENT') yield c;
+    else yield* components(c);
+  }
+}
+
+/**
+ * The components a name points at on the given pages, as [{page, node}]: those named exactly so, else those whose last
+ * slash segment matches the name's ("Rail header" and "Project rail/Rail header" both find "Project rail/Rail header").
+ */
+export function findComponent(pages, name) {
+  const found = pages.flatMap(p => [...components(p)].map(node => ({page: p.name, node})));
+  const exact = found.filter(f => f.node.name === name);
+  if (exact.length) return exact;
+  const want = lastSegment(name);
+  return found.filter(f => lastSegment(f.node.name) === want);
+}

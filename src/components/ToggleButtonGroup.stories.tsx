@@ -7,7 +7,7 @@ const meta: Meta<typeof ToggleButtonGroup> = {
   parameters: {
     layout: 'centered'
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'covered']
 };
 
 export default meta;

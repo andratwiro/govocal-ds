@@ -3,7 +3,7 @@ import {Plus} from 'lucide-react';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof CompactButton> = {
-  title: 'Components/Button · compact',
+  title: 'Components/Actions/Compact button',
   component: CompactButton,
   parameters: {
     layout: 'centered',
@@ -53,6 +53,7 @@ export const PrimaryIcon: Story = () => (
     Add a report
   </CompactButton>
 );
+PrimaryIcon.storyName = 'Primary · icon';
 
 export const Disabled: Story = () => (
   <CompactButton variant="primary" isDisabled>

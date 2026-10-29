@@ -1,0 +1,14 @@
+@import '../components/theme.css';
+
+/* Project header (Figma 14:876): 48 tall, padding 5/6, radius 8, around a Breadcrumbs (Breadcrumbs.css). */
+.gv-header {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  min-height: 48px;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: var(--gv-space-5) var(--gv-space-6);
+  border-radius: var(--gv-radius-8);
+  font-family: var(--gv-font-family);
+}

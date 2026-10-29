@@ -92,14 +92,6 @@ test('the phone preview shows what a resident sees', async ({page}) => {
   await expect(preview.getByText('215 participants')).toBeVisible();
 });
 
-test('the drafts bar closes', async ({page}) => {
-  await page.goto(URL);
-  const bar = page.getByRole('region', {name: 'Drafts'});
-  await expect(bar).toContainText('6 drafts open');
-  await bar.getByRole('button', {name: 'Close the drafts bar'}).click();
-  await expect(bar).toHaveCount(0);
-});
-
 test('the overview passes axe (WCAG 2.2 AA)', async ({page}) => {
   await page.goto(URL);
   await expect(page.getByRole('navigation', {name: 'Phases'})).toBeVisible();

@@ -1,0 +1,62 @@
+@import '../components/theme.css';
+
+/* Figma "Vote progress" (33:484) + prototype .pj-mtvotes / .pj-mtbar: count, (threshold), a thin bar, ("N new").
+   Spacing as both draw it: count to bar 12, "/ max" to bar 12, bar to "N new" 14. The bar is the prototype's: 96 in
+   every variant (it shrinks in a narrow cell), so bars in a list compare at one length. Figma's frames are 184 wide with
+   the bar taking what is left (Threshold 112, Count · new 108, Count 158), which gives rows of one list different bars. */
+.gv-vote-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+  width: fit-content;
+  max-inline-size: 100%;
+}
+
+.gv-vote-progress__count {
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-vote-progress--count .gv-vote-progress__count {
+  margin-inline-end: var(--gv-space-6);
+}
+
+.gv-vote-progress__of {
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-secondary);
+  margin-inline-end: var(--gv-space-6);
+  white-space: nowrap;
+}
+
+.gv-vote-progress__track {
+  display: block;
+  flex: 0 1 auto;
+  inline-size: 96px;
+  min-inline-size: var(--gv-space-24);
+  height: 4px;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-stage);
+  overflow: hidden;
+}
+
+.gv-vote-progress__fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-icon-default);
+}
+
+/* Teal once the threshold is reached; grey on the way there (Figma Proposals row, Open vs Closed). */
+.gv-vote-progress--threshold .gv-vote-progress__fill[data-reached] {
+  background: var(--gv-surface-brand-mark);
+}
+
+.gv-vote-progress__new {
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-accent);
+  margin-inline-start: var(--gv-space-8);
+  white-space: nowrap;
+}

@@ -4,9 +4,9 @@ import {FileChartColumn, Inbox, MessageSquare} from 'lucide-react';
 import {NotificationList, type NotificationItem} from './NotificationList';
 
 const meta: Meta<typeof NotificationList> = {
-  title: 'Patterns/Notification list',
+  title: 'Patterns/App shell/Notification list',
   component: NotificationList,
-  tags: ['autodocs']
+  tags: ['autodocs', 'not-in-figma']
 };
 export default meta;
 type Story = StoryObj<typeof NotificationList>;
@@ -25,6 +25,6 @@ export const Default: Story = {
   }
 };
 
-export const AllRead: Story = {args: {items: ITEMS.map(i => ({...i, unread: false})), onMarkAllRead: () => {}}};
+export const AllRead: Story = {name: 'All read', args: {items: ITEMS.map(i => ({...i, unread: false})), onMarkAllRead: () => {}}};
 
 export const Empty: Story = {args: {items: []}};

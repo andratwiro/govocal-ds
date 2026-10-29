@@ -38,7 +38,7 @@ export interface ListHeaderProps {
   onAddColumn?: () => void;
   /**
    * The select-all checkbox (Figma `Method=Ideation` and `Common ground`). Its 28px slot lines the
-   * columns up with `ListRow` and `ListRowCommonGround`, which keep the same slot for their own checkbox.
+   * columns up with `ListRow` and `CommonGroundRow`, which keep the same slot for their own checkbox.
    */
   selectAll?: ListHeaderSelectAll;
   /**

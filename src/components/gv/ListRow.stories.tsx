@@ -3,7 +3,7 @@ import {ListRow} from './ListRow';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof ListRow> = {
-  title: 'Components/List row',
+  title: 'Components/Data display/List row',
   component: ListRow,
   parameters: {
     layout: 'padded',
@@ -46,18 +46,21 @@ export const WarningNoImage: Story = () => (
     <ListRow title="Organise open-air cinema nights on Linden Avenue in summer." status="Viewed" warning />
   </Frame>
 );
+WarningNoImage.storyName = 'Warning · without image';
 
 export const NoneNoImage: Story = () => (
   <Frame>
     <ListRow title="Build rain gardens along the north district." status="Rejected" />
   </Frame>
 );
+NoneNoImage.storyName = 'None · without image';
 
 export const NoneWithImage: Story = () => (
   <Frame>
     <ListRow title="More street trees along the canal would cool the area." status="Under consideration" thumbnail={THUMB} />
   </Frame>
 );
+NoneWithImage.storyName = 'None · with image';
 
 /**
  * Not in Figma: the prototype's Manage table puts a checkbox in the leading slot. It shows on

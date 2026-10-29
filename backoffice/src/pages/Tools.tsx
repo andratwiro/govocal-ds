@@ -2,8 +2,8 @@ import {ArrowRight, Lock} from 'lucide-react';
 import {useNavigate} from 'react-router';
 import {Button} from '../../../src/components/Button';
 import {Card} from '../../../src/components/gv/Card';
-import {Pill} from '../../../src/components/gv/Pill';
-import {Status} from '../../../src/components/gv/Status';
+import {Badge} from '../../../src/components/gv/Badge';
+import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {HelpPopover} from '../../../src/patterns/HelpPopover';
 import {TOOLS, type Tool} from '../data-tools';
 import {Gap, GapLegend} from '../Gap';
@@ -24,9 +24,9 @@ function ToolCard({tool}: {tool: Tool}) {
           <span className="bo-tools-art"><Icon aria-hidden size={40} strokeWidth={1.5} /></span>
         </Gap>
         <div className="bo-tools-tags">
-          <Pill>{tool.category}</Pill>
-          {tool.status && <Status state={tool.status.state}>{tool.status.label}</Status>}
-          {tool.locked && <Pill icon={<Lock aria-hidden size={14} />}>Not in your plan</Pill>}
+          <Badge>{tool.category}</Badge>
+          {tool.status && <StatusBadge state={tool.status.state}>{tool.status.label}</StatusBadge>}
+          {tool.locked && <Badge icon={<Lock aria-hidden size={14} />}>Not in your plan</Badge>}
         </div>
         <p className="bo-tools-text">{tool.description}</p>
         <div className="bo-tools-actions">

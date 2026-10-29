@@ -2,8 +2,8 @@ import type {Decorator, Meta, StoryObj} from '@storybook/react-vite';
 import {Sparkles} from 'lucide-react';
 import {ChartLegend, LineChart, Sparkline} from './Chart';
 import {CompactButton} from './CompactButton';
-import {Kpi} from './Kpi';
-import {Segment, SegmentedControl} from './SegmentedControl';
+import {StatTile} from './StatTile';
+import {SegmentedControlItem, SegmentedControl} from './SegmentedControl';
 import {
   DashboardBars,
   DashboardCard,
@@ -119,8 +119,8 @@ const cards = {
       subtitle="Votes cast · cumulative"
       action={
         <SegmentedControl size="small" aria-label="Range" disallowEmptySelection defaultSelectedKeys={['daily']}>
-          <Segment id="daily">Daily</Segment>
-          <Segment id="weekly">Weekly</Segment>
+          <SegmentedControlItem id="daily">Daily</SegmentedControlItem>
+          <SegmentedControlItem id="weekly">Weekly</SegmentedControlItem>
         </SegmentedControl>
       }>
       <Sparkline label="Votes cast" values={VOTES} />
@@ -144,7 +144,7 @@ const cards = {
 };
 
 const meta: Meta<typeof DashboardCard> = {
-  title: 'Components/Dashboard card',
+  title: 'Components/Charts/Dashboard card',
   component: DashboardCard,
   tags: ['autodocs'],
   parameters: {...figma('33-481'), layout: 'padded'}
@@ -160,10 +160,10 @@ export const AllVariants: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 14, width: 764}}>
       <div style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14}}>
-        <Kpi label="Voters" value="384" note="updating live" />
-        <Kpi label="Votes" value="622" note="updating live" />
-        <Kpi label="Avg per voter" value="1.6" note="multiple picks" />
-        <Kpi label="Participation" value="14%" note="of visitors" />
+        <StatTile label="Voters" value="384" note="updating live" />
+        <StatTile label="Votes" value="622" note="updating live" />
+        <StatTile label="Avg per voter" value="1.6" note="multiple picks" />
+        <StatTile label="Participation" value="14%" note="of visitors" />
       </div>
       {cards.statements}
       {cards.visitors}

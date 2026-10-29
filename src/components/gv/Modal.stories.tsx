@@ -14,7 +14,7 @@ const figma = (id: string) => ({
 });
 
 const meta: Meta<typeof Modal> = {
-  title: 'Components/Modal',
+  title: 'Components/Overlays/Modal',
   component: Modal,
   tags: ['autodocs'],
   parameters: {

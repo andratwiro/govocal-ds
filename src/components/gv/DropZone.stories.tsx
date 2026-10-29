@@ -2,7 +2,7 @@ import {DropZone} from './DropZone';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
 const meta: Meta<typeof DropZone> = {
-  title: 'Components/Drop zone',
+  title: 'Components/Forms/Drop zone',
   component: DropZone,
   parameters: {
     layout: 'centered',
@@ -37,6 +37,7 @@ export const Disabled: Story = {
 };
 
 export const CustomLabel: Story = {
+  name: 'Custom label',
   args: {children: 'Drop your cover image here, or browse', acceptedFileTypes: ['image/*']},
   decorators: [Story => <div style={{width: 370}}><Story /></div>]
 };

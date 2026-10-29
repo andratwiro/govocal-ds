@@ -1,7 +1,7 @@
 import {test, expect} from '@playwright/test';
 // The Figma frames "Project · Build" and "Ideation · Manage (data)" on the phase screen.
 // Two departures from the plan's Step 6 test, both forced by the gv components:
-// - the Header's current crumb is also a link named after the phase, so the rail link is looked up inside the
+// - the Project header's current crumb is also a link named after the phase, so the rail link is looked up inside the
 //   Phases nav;
 // - gv ListHeader is itself a role="row" inside the grid's column header, so the first idea is the first row of
 //   the grid's body, not row 1 of the whole grid;

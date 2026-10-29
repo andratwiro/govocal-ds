@@ -20,7 +20,7 @@ test('input manager follows the real admin: filters, project list, selectable in
   // Today's inputs carry the prototype's new dot.
   await expect(grid.getByRole('img', {name: 'New input'}).first()).toBeVisible();
   await expect(grid.getByRole('img', {name: 'Content warning'})).toHaveCount(1);
-  await expect(page.getByRole('switch', {name: /need feedback\s*8$/})).toBeVisible(); // count of inputs waiting, in a Pill
+  await expect(page.getByRole('switch', {name: /need feedback\s*8$/})).toBeVisible(); // count of inputs waiting, in a Badge
   // The starter's checkbox input is visually hidden under its cell: click what a person sees.
   await inputRows(page).first().locator('.indicator').click();
   await expect(inputRows(page).first().getByRole('checkbox')).toBeChecked();
@@ -60,7 +60,7 @@ test('sortable columns reorder the inputs', async ({page}) => {
 test('input manager names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/inputs');
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
-  // Pill now comes from the system; pagination is still missing (its pages work with plain buttons).
+  // Badge now comes from the system; pagination is still missing (its pages work with plain buttons).
   expect(gaps).toEqual(['Pagination']);
 });
 

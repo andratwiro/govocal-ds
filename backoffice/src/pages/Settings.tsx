@@ -12,7 +12,7 @@ import {Card} from '../../../src/components/gv/Card';
 import {Checkbox} from '../../../src/components/gv/Checkbox';
 import {Divider} from '../../../src/components/gv/Divider';
 import {DropZone} from '../../../src/components/gv/DropZone';
-import {SegmentedControl, Segment} from '../../../src/components/gv/SegmentedControl';
+import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
 import {TitleField} from '../../../src/components/gv/TitleField';
 import {APPROVERS, LOCALES, PLATFORM_NAME} from '../data-settings';
 import {AreasTab, PoliciesTab, StatusesTab, TagsTab} from './SettingsLists';
@@ -76,7 +76,7 @@ function PlatformConfiguration() {
             <span id={labelId} className="bo-settings-label">Name of city or organization</span>
             <SegmentedControl aria-label="Language of the name" selectionMode="single" disallowEmptySelection
               selectedKeys={current ? [current.id] : []} onSelectionChange={k => setLocale(String([...k][0]))}>
-              {active.map(l => <Segment key={l.id} id={l.id} isUnread={!names[l.id]}>{l.code}</Segment>)}
+              {active.map(l => <SegmentedControlItem key={l.id} id={l.id} isUnread={!names[l.id]}>{l.code}</SegmentedControlItem>)}
             </SegmentedControl>
           </div>
           {current && (

@@ -5,7 +5,7 @@ import {Table, TableHeader, TableBody, Column, Row, Cell} from '../Table';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof ListHeader> = {
-  title: 'Components/List header',
+  title: 'Components/Data display/List header',
   component: ListHeader,
   parameters: {
     layout: 'padded',
@@ -88,6 +88,7 @@ export const CommonGround: Story = () => (
     <ListHeader columns={commonGround} selectAll={{}} />
   </Wide>
 );
+CommonGround.storyName = 'Common ground';
 
 export const Proposals: Story = () => (
   <Wide>
@@ -149,6 +150,7 @@ export const ManageTable: Story = () => {
     </div>
   );
 };
+ManageTable.storyName = 'Manage table';
 
 /**
  * `ListHeader` and `ListRow` inside a selectable React Aria `Table`: the starter
@@ -200,3 +202,4 @@ export const InATable: Story = () => (
     </TableBody>
   </Table>
 );
+InATable.storyName = 'In a table';

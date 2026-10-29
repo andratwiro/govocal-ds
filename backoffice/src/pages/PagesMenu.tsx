@@ -7,8 +7,8 @@ import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
 import {Switch} from '../../../src/components/Switch';
 import {GridList, GridListItem} from '../../../src/components/GridList';
 import {Card} from '../../../src/components/gv/Card';
-import {Pill} from '../../../src/components/gv/Pill';
-import {Status} from '../../../src/components/gv/Status';
+import {Badge} from '../../../src/components/gv/Badge';
+import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {Divider} from '../../../src/components/gv/Divider';
 import {MENU_ENTRIES, MENU_START, PAGE_META, type MenuEntry} from '../data-pages-menu';
@@ -40,7 +40,7 @@ function MenuRow({item, index, count, menu, setMenu}: MenuProps & {item: MenuEnt
           ? <span className="bo-pages-menu-grip"><Lock aria-label="Always first" size={16} /></span>
           : <Gap name="Drag-and-drop reordering" inline><span className="bo-pages-menu-grip"><GripVertical aria-hidden size={16} /></span></Gap>}
         <span className="bo-pages-menu-label">{item.label}</span>
-        {item.kind !== 'page' && <Pill>Default</Pill>}
+        {item.kind !== 'page' && <Badge>Default</Badge>}
         <span className="bo-push" />
         <IconButton variant="bordered" aria-label={pinned ? 'Edit homepage' : `Edit ${item.label}`}
           onPress={() => navigate(pinned ? '/pages-menu/homepage-builder' : `/pages-menu/navbar-items/edit/${item.id}`)}>
@@ -109,7 +109,7 @@ function PagesTab({menu, setMenu, pages, setPages}: MenuProps & {pages: string[]
                       <span className="bo-pages-menu-label">{page.label}</span>
                       <span className="bo-note">/pages/{meta.slug} · {meta.edited}</span>
                     </span>
-                    <Status state={inMenu ? 'live' : 'draft'}>{inMenu ? 'In menu' : 'Not in menu'}</Status>
+                    <StatusBadge state={inMenu ? 'live' : 'draft'}>{inMenu ? 'In menu' : 'Not in menu'}</StatusBadge>
                     <span className="bo-push" />
                     <Switch isSelected={inMenu}
                       onChange={on => setMenu(on ? [...menu, id] : menu.filter(m => m !== id))} aria-label={`Show ${page.label} in menu`}>Show in menu</Switch>

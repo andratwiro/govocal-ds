@@ -10,7 +10,7 @@ const meta: Meta<typeof Modal> = {
   parameters: {
     layout: 'centered'
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'covered']
 };
 
 export default meta;

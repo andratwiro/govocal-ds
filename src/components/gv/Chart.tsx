@@ -150,7 +150,7 @@ export interface SparklineProps {
   label?: string;
   /** Optional dates, one per value, so the spoken trend can name the peak. */
   labels?: string[];
-  /** Height in px. Figma: 110 (Votes over time); 34 fits under a KPI. */
+  /** Height in px. Figma: 110 (Votes over time); 34 fits under a Stat tile. */
   height?: number;
   /** Dashed guides at a quarter, half and three quarters. */
   grid?: boolean;

@@ -16,7 +16,7 @@ export interface StatementRowProps {
 /**
  * A single Common Ground statement with its agree/disagree/pass bar —
  * the compact row used in results and summary views (as opposed to the
- * full `ListRowCommonGround`, which is a table row with review columns).
+ * full `CommonGroundRow`, which is a table row with review columns).
  * Stack them 14 apart. A long statement wraps; a row narrower than 480
  * stacks statement, bar and value (Not in Figma; the prototype does it).
  */

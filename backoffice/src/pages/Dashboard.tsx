@@ -10,16 +10,16 @@ import {Link} from '../../../src/components/Link';
 import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
 import {MyToastRegion, queue} from '../../../src/components/Toast';
 import {Table, TableHeader, Column, TableBody, Row, Cell} from '../../../src/components/Table';
-import {SegmentedControl, Segment} from '../../../src/components/gv/SegmentedControl';
+import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
 import {DashboardCard, DashboardBars, DashboardDemographic, type DashboardCardType} from '../../../src/components/gv/DashboardCard';
 import {IconButton} from '../../../src/components/gv/IconButton';
-import {Kpi} from '../../../src/components/gv/Kpi';
+import {StatTile} from '../../../src/components/gv/StatTile';
 import {LineChart, Sparkline} from '../../../src/components/gv/Chart';
 import {BarRow} from '../../../src/components/gv/BarRow';
 import {StatRow} from '../../../src/components/gv/StatRow';
 import {LegendRow} from '../../../src/components/gv/LegendRow';
-import {Pill} from '../../../src/components/gv/Pill';
-import {Status} from '../../../src/components/gv/Status';
+import {Badge} from '../../../src/components/gv/Badge';
+import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {Banner} from '../../../src/components/gv/Banner';
 import {DASHBOARD, PROJECTS} from '../data';
 import {MONTHS, PER_TAG, STATUS_BREAKDOWN, EMAILS, INVITATIONS, EVENTS, ADOPTION, DATE_PRESETS, METRICS, PROJECT_METRICS,
@@ -44,12 +44,12 @@ const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').repla
 
 type Headline = {label: string; value: number; last30: number; series: number[]};
 
-/** The real admin's stat card, in the prototype's look: a KPI tile with its trend under the number. */
-function StatTile({label, value, last30, series, note}: Headline & {note?: string}) {
+/** The real admin's stat card, in the prototype's look: a Stat tile with its trend under the number. */
+function HeadlineTile({label, value, last30, series, note}: Headline & {note?: string}) {
   return (
-    <Kpi label={label} value={n(value)} note={note ?? `Last 30 days: +${n(last30)}`}>
+    <StatTile label={label} value={n(value)} note={note ?? `Last 30 days: +${n(last30)}`}>
       <Sparkline label={`${label} per month`} labels={MONTHS} values={series} height={34} grid={false} />
-    </Kpi>
+    </StatTile>
   );
 }
 
@@ -106,9 +106,9 @@ function Filters({project, setProject, preset, setPreset}: FilterState) {
       <DateRangePicker label="Dates" />
       <span className="bo-push" />
       <SegmentedControl aria-label="Resolution" selectionMode="single" disallowEmptySelection defaultSelectedKeys={['months']}>
-        <Segment id="days">Days</Segment>
-        <Segment id="weeks">Weeks</Segment>
-        <Segment id="months">Months</Segment>
+        <SegmentedControlItem id="days">Days</SegmentedControlItem>
+        <SegmentedControlItem id="weeks">Weeks</SegmentedControlItem>
+        <SegmentedControlItem id="months">Months</SegmentedControlItem>
       </SegmentedControl>
     </div>
   );
@@ -130,8 +130,8 @@ function People({project}: {project: string}) {
     <section aria-labelledby="bo-dashboard-people">
       <h2 id="bo-dashboard-people" className="bo-section-title">People</h2>
       <div className="bo-dashboard-kpis">
-        <StatTile {...reg} note={project === ALL ? undefined : 'Platform-wide'} />
-        <StatTile {...part} />
+        <HeadlineTile {...reg} note={project === ALL ? undefined : 'Platform-wide'} />
+        <HeadlineTile {...part} />
       </div>
       <DashCard title="Registrations and participants" type="participation-over-time">
         <LineChart labels={MONTHS} legend series={[{label: part.label, values: part.series}, {label: reg.label, values: reg.series}]} />
@@ -161,7 +161,7 @@ function Participation({project}: {project: string}) {
   return (
     <section aria-labelledby="bo-dashboard-participation">
       <h2 id="bo-dashboard-participation" className="bo-section-title">Projects and participation</h2>
-      <div className="bo-dashboard-kpis">{headlines.map(d => <StatTile key={d.label} {...d} />)}</div>
+      <div className="bo-dashboard-kpis">{headlines.map(d => <HeadlineTile key={d.label} {...d} />)}</div>
       <div className="bo-dashboard-cards">
         <DashCard title="Participation over time" type="participation-over-time">
           <LineChart labels={MONTHS} legend series={[{label: inputs.label, values: inputs.series}, {label: comments.label, values: comments.series}]} />
@@ -243,9 +243,9 @@ function UsersTab({project}: {project: string}) {
   return (
     <div className="bo-dashboard-tab">
       <div className="bo-dashboard-kpis">
-        <StatTile {...reg} />
-        <StatTile {...part} />
-        <Kpi label="Active users" value={n(USERS.active)} note="Took part in the last 90 days" />
+        <HeadlineTile {...reg} />
+        <HeadlineTile {...part} />
+        <StatTile label="Active users" value={n(USERS.active)} note="Took part in the last 90 days" />
       </div>
       <DashCard title="Participants timeline" type="participation-over-time">
         <Banner>Participation numbers may not be fully accurate, as some data is captured in an external survey that is not tracked.</Banner>
@@ -269,7 +269,7 @@ function VisitorsTab() {
   return (
     <div className="bo-dashboard-tab">
       <div className="bo-dashboard-kpis">
-        {VISITORS.kpis.map(k => <Kpi key={k.label} label={k.label} value={k.value} note={k.note} />)}
+        {VISITORS.kpis.map(k => <StatTile key={k.label} label={k.label} value={k.value} note={k.note} />)}
       </div>
       <DashCard title="Visitors over time" type="visitors-over-time">
         <LineChart labels={MONTHS} legend series={[{label: 'Visitors', values: VISITORS.visitors}, {label: 'Visits', values: VISITORS.visits}]} />
@@ -290,9 +290,9 @@ function RepresentativenessTab() {
   return (
     <div className="bo-dashboard-tab">
       <div className="bo-dashboard-kpis">
-        <Kpi label="Representativeness score" value={`${REPRESENTATION.score}%`} note="How closely participants match the population" />
-        <Kpi label="Fields compared" value={String(REPRESENTATION.fields.length)} note="With reference data" />
-        <Kpi label="Users with data" value={`${REPRESENTATION.withData}%`} note="Filled in the registration fields" />
+        <StatTile label="Representativeness score" value={`${REPRESENTATION.score}%`} note="How closely participants match the population" />
+        <StatTile label="Fields compared" value={String(REPRESENTATION.fields.length)} note="With reference data" />
+        <StatTile label="Users with data" value={`${REPRESENTATION.withData}%`} note="Filled in the registration fields" />
       </div>
       <div className="bo-dashboard-cards">
         {REPRESENTATION.fields.map(f => (
@@ -326,8 +326,8 @@ function ParticipationFeed() {
       <div className="bo-tabs-row">
         <SegmentedControl aria-label="Show" selectionMode="single" disallowEmptySelection selectedKeys={[show]}
           onSelectionChange={k => { const [v] = [...k]; if (v) setShow(v as 'new' | 'viewed'); }}>
-          <Segment id="new" isUnread={unseen > 0}>Not yet viewed</Segment>
-          <Segment id="viewed">Viewed</Segment>
+          <SegmentedControlItem id="new" isUnread={unseen > 0}>Not yet viewed</SegmentedControlItem>
+          <SegmentedControlItem id="viewed">Viewed</SegmentedControlItem>
         </SegmentedControl>
         <span className="bo-note" aria-live="polite">{unseen} not yet viewed</span>
       </div>
@@ -342,7 +342,7 @@ function ParticipationFeed() {
         <TableBody renderEmptyState={() => <p className="bo-note">Nothing here.</p>}>
           {rows.map(f => (
             <Row key={f.id} id={f.id}>
-              <Cell><Pill>{f.type}</Pill></Cell>
+              <Cell><Badge>{f.type}</Badge></Cell>
               <Cell>{f.content}</Cell>
               <Cell>{f.project}</Cell>
               <Cell>{f.date}</Cell>
@@ -350,7 +350,7 @@ function ParticipationFeed() {
                 {show === 'new'
                   ? <Button variant="quiet" size={32} aria-label={`Mark as viewed: ${f.content}`}
                     onPress={() => setViewed(prev => new Set(prev).add(f.id))}><Eye aria-hidden size={16} /> Mark as viewed</Button>
-                  : <Status state="live">Viewed</Status>}
+                  : <StatusBadge state="live">Viewed</StatusBadge>}
               </Cell>
             </Row>
           ))}
@@ -385,7 +385,7 @@ function ManagementFeed() {
               <Cell>{m.date}</Cell>
               <Cell>{m.user}</Cell>
               <Cell><span className="bo-dashboard-item">{m.item}<span className="bo-note">{m.kind}</span></span></Cell>
-              <Cell><Pill>{m.action}</Pill></Cell>
+              <Cell><Badge>{m.action}</Badge></Cell>
             </Row>
           ))}
         </TableBody>

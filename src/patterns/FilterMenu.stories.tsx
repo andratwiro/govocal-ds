@@ -32,9 +32,9 @@ function Demo({initial = {}, open}: {initial?: FilterValue; open?: boolean}) {
 }
 
 const meta: Meta<typeof FilterMenu> = {
-  title: 'Patterns/Filter menu',
+  title: 'Patterns/Manage tab/Filter menu',
   component: FilterMenu,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'not-in-figma'],
   // IDEA_FACETS is shared data for the other filter stories, not a story.
   excludeStories: /^[A-Z_]+$/,
   parameters: {layout: 'padded'}
@@ -43,7 +43,7 @@ export default meta;
 type Story = StoryObj<typeof FilterMenu>;
 
 /** Nothing filtered: no dot on the button, no counts, no "Clear all filters". The chips below stay away. */
-export const Empty: Story = {render: () => <Demo />};
+export const Empty: Story = {name: 'Default', render: () => <Demo />};
 
 /** Open with nothing on: the five facets, each opening its submenu on hover or the arrow key. */
 export const Open: Story = {render: () => <Demo open />};
@@ -52,10 +52,11 @@ export const Open: Story = {render: () => <Demo open />};
 export const Active: Story = {render: () => <Demo open initial={{assignee: ['Manager A'], tags: ['Cycling']}} />};
 
 /** Ticking in a submenu adds a chip below; removing a chip unticks it here: one value, two views. */
-export const InSyncWithChips: Story = {render: () => <Demo initial={{status: ['Proposed', 'Viewed']}} />};
+export const InSyncWithChips: Story = {name: 'In sync with chips', render: () => <Demo initial={{status: ['Proposed', 'Viewed']}} />};
 
 /** Right to left (Arabic): the menu opens from the button's end edge, submenus open towards the start. */
 export const RightToLeft: Story = {
+  name: 'Right to left',
   globals: {direction: 'rtl'},
   render: () => <Demo open initial={{assignee: ['Manager A'], tags: ['Cycling']}} />
 };

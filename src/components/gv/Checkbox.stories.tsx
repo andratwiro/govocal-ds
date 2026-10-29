@@ -2,7 +2,7 @@ import {Checkbox} from './Checkbox';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
 const meta: Meta<typeof Checkbox> = {
-  title: 'Components/Checkbox',
+  title: 'Components/Forms/Checkbox',
   component: Checkbox,
   parameters: {
     layout: 'centered',
@@ -46,6 +46,7 @@ export const Indeterminate: Story = {
 };
 
 export const WithDescription: Story = {
+  name: 'With description',
   render: () => (
     <Checkbox description="You can change this later in project settings.">
       Allow participants to co-sponsor proposals

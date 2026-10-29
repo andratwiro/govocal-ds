@@ -34,16 +34,16 @@ function Demo({initial}: {initial: number}) {
 }
 
 const meta: Meta<typeof SelectionBar> = {
-  title: 'Patterns/Selection bar',
+  title: 'Patterns/Manage tab/Selection bar',
   component: SelectionBar,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'not-in-figma'],
   parameters: {layout: 'padded'}
 };
 export default meta;
 type Story = StoryObj<typeof SelectionBar>;
 
 /** One idea selected: the count, five actions, and the × that clears the selection. */
-export const OneSelected: Story = {render: () => <Demo initial={1} />};
+export const OneSelected: Story = {name: 'Default', render: () => <Demo initial={1} />};
 
 /** Several selected: the same bar, the count follows. */
 export const Many: Story = {render: () => <Demo initial={12} />};
@@ -52,4 +52,4 @@ export const Many: Story = {render: () => <Demo initial={12} />};
 export const Empty: Story = {render: () => <Demo initial={0} />};
 
 /** Right to left (Arabic): the count at the right, actions flowing left, the × last. */
-export const RightToLeft: Story = {globals: {direction: 'rtl'}, render: () => <Demo initial={3} />};
+export const RightToLeft: Story = {name: 'Right to left', globals: {direction: 'rtl'}, render: () => <Demo initial={3} />};

@@ -33,14 +33,14 @@ export function SegmentedControl({size = 'default', ...props}: SegmentedControlP
   return <RACToggleButtonGroup {...props} className="gv-segmented-control" data-size={size} />;
 }
 
-export interface SegmentProps extends ToggleButtonProps {
+export interface SegmentedControlItemProps extends ToggleButtonProps {
   children?: ReactNode;
-  /** Shows the New dot in the segment's top-right corner (Figma `Segment` State=Unread). */
+  /** Shows the New dot in the segment's top-right corner (Figma `Segmented control item` State=Unread). */
   isUnread?: boolean;
 }
 
-/** Segment (Figma node 14:882). */
-export function Segment({children, isUnread, ...props}: SegmentProps) {
+/** Segmented control item (Figma node 14:882): one segment of the control. */
+export function SegmentedControlItem({children, isUnread, ...props}: SegmentedControlItemProps) {
   return (
     <ToggleButton {...props} className="gv-segment" data-unread={isUnread || undefined}>
       {composeRenderProps(children, resolvedChildren => (

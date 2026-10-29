@@ -2,7 +2,7 @@ import {BarRow} from './BarRow';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof BarRow> = {
-  title: 'Components/Bar row',
+  title: 'Components/Charts/Bar row',
   component: BarRow,
   parameters: {
     layout: 'centered',

@@ -19,6 +19,8 @@ const config: StorybookConfig = {
   // The Go Vocal mark: Storybook's tab icon (favicon.svg is picked up by name), the sidebar brand, Welcome.
   staticDirs: ['./static'],
   framework: {name: '@storybook/react-vite', options: {}},
+  // Status marks (docs/NAMING.md): filter the sidebar by them; `covered` hides a Base entry a Components entry wraps.
+  tags: {'not-in-figma': {}, deprecated: {}, covered: {excludeFromSidebar: true}},
   core: {disableTelemetry: true}
 };
 export default config;

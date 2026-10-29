@@ -2,7 +2,7 @@ import {ListHeaderCell} from './ListHeaderCell';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof ListHeaderCell> = {
-  title: 'Components/List header cell',
+  title: 'Components/Data display/List header cell',
   component: ListHeaderCell,
   parameters: {
     layout: 'centered',
@@ -37,12 +37,14 @@ export const AllVariants: Story = () => (
 export const Label: Story = () => <ListHeaderCell variant="label">Idea</ListHeaderCell>;
 
 export const AddColumn: Story = () => <ListHeaderCell variant="add-column" />;
+AddColumn.storyName = 'Add column';
 
 export const LabelSquare: Story = () => (
   <ListHeaderCell variant="label" square>
     Statement
   </ListHeaderCell>
 );
+LabelSquare.storyName = 'Label · square';
 
 export const Number_: Story = () => <ListHeaderCell variant="number">Likes</ListHeaderCell>;
 Number_.storyName = 'Number';
@@ -52,9 +54,11 @@ export const NumberSorted: Story = () => (
     Agree
   </ListHeaderCell>
 );
+NumberSorted.storyName = 'Number · sorted';
 
 export const LabelSorted: Story = () => (
   <ListHeaderCell variant="label" sorted>
     Votes
   </ListHeaderCell>
 );
+LabelSorted.storyName = 'Label · sorted';

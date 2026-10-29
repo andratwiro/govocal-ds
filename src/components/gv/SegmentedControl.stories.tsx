@@ -1,8 +1,8 @@
-import {SegmentedControl, Segment} from './SegmentedControl';
+import {SegmentedControl, SegmentedControlItem} from './SegmentedControl';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
 const meta: Meta<typeof SegmentedControl> = {
-  title: 'Components/Segmented control',
+  title: 'Components/Actions/Segmented control',
   component: SegmentedControl,
   parameters: {
     layout: 'centered',
@@ -21,34 +21,34 @@ export const AllVariants: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 24}}>
       <SegmentedControl defaultSelectedKeys={['build']} selectionMode="single">
-        <Segment id="build">Build</Segment>
-        <Segment id="manage">Manage</Segment>
-        <Segment id="insights">Insights</Segment>
+        <SegmentedControlItem id="build">Build</SegmentedControlItem>
+        <SegmentedControlItem id="manage">Manage</SegmentedControlItem>
+        <SegmentedControlItem id="insights">Insights</SegmentedControlItem>
       </SegmentedControl>
       <SegmentedControl defaultSelectedKeys={['manage']} selectionMode="single">
-        <Segment id="build">Build</Segment>
-        <Segment id="manage">Manage</Segment>
-        <Segment id="insights">Insights</Segment>
+        <SegmentedControlItem id="build">Build</SegmentedControlItem>
+        <SegmentedControlItem id="manage">Manage</SegmentedControlItem>
+        <SegmentedControlItem id="insights">Insights</SegmentedControlItem>
       </SegmentedControl>
       <SegmentedControl defaultSelectedKeys={['insights']} selectionMode="single">
-        <Segment id="build">Build</Segment>
-        <Segment id="manage">Manage</Segment>
-        <Segment id="insights">Insights</Segment>
+        <SegmentedControlItem id="build">Build</SegmentedControlItem>
+        <SegmentedControlItem id="manage">Manage</SegmentedControlItem>
+        <SegmentedControlItem id="insights">Insights</SegmentedControlItem>
       </SegmentedControl>
       <SegmentedControl defaultSelectedKeys={['build']} selectionMode="single">
-        <Segment id="build">Build</Segment>
-        <Segment id="insights">Insights</Segment>
+        <SegmentedControlItem id="build">Build</SegmentedControlItem>
+        <SegmentedControlItem id="insights">Insights</SegmentedControlItem>
       </SegmentedControl>
       <SegmentedControl defaultSelectedKeys={['insights']} selectionMode="single">
-        <Segment id="build">Build</Segment>
-        <Segment id="manage" isUnread>
+        <SegmentedControlItem id="build">Build</SegmentedControlItem>
+        <SegmentedControlItem id="manage" isUnread>
           Manage
-        </Segment>
-        <Segment id="insights">Insights</Segment>
+        </SegmentedControlItem>
+        <SegmentedControlItem id="insights">Insights</SegmentedControlItem>
       </SegmentedControl>
       <SegmentedControl size="small" aria-label="Range" defaultSelectedKeys={['daily']} disallowEmptySelection>
-        <Segment id="daily">Daily</Segment>
-        <Segment id="weekly">Weekly</Segment>
+        <SegmentedControlItem id="daily">Daily</SegmentedControlItem>
+        <SegmentedControlItem id="weekly">Weekly</SegmentedControlItem>
       </SegmentedControl>
     </div>
   )
@@ -57,30 +57,32 @@ export const AllVariants: Story = {
 export const Build: Story = {
   render: () => (
     <SegmentedControl defaultSelectedKeys={['build']} selectionMode="single">
-      <Segment id="build">Build</Segment>
-      <Segment id="manage">Manage</Segment>
-      <Segment id="insights">Insights</Segment>
+      <SegmentedControlItem id="build">Build</SegmentedControlItem>
+      <SegmentedControlItem id="manage">Manage</SegmentedControlItem>
+      <SegmentedControlItem id="insights">Insights</SegmentedControlItem>
     </SegmentedControl>
   )
 };
 
 export const TwoTabs: Story = {
+  name: 'Build · 2 tabs',
   render: () => (
     <SegmentedControl defaultSelectedKeys={['build']} selectionMode="single">
-      <Segment id="build">Build</Segment>
-      <Segment id="insights">Insights</Segment>
+      <SegmentedControlItem id="build">Build</SegmentedControlItem>
+      <SegmentedControlItem id="insights">Insights</SegmentedControlItem>
     </SegmentedControl>
   )
 };
 
 export const InsightsManageUnread: Story = {
+  name: 'Insights · Manage unread',
   render: () => (
     <SegmentedControl defaultSelectedKeys={['insights']} selectionMode="single">
-      <Segment id="build">Build</Segment>
-      <Segment id="manage" isUnread>
+      <SegmentedControlItem id="build">Build</SegmentedControlItem>
+      <SegmentedControlItem id="manage" isUnread>
         Manage
-      </Segment>
-      <Segment id="insights">Insights</Segment>
+      </SegmentedControlItem>
+      <SegmentedControlItem id="insights">Insights</SegmentedControlItem>
     </SegmentedControl>
   )
 };
@@ -90,8 +92,8 @@ export const SmallRangeSwitch: Story = {
   name: 'Small · range switch',
   render: () => (
     <SegmentedControl size="small" aria-label="Range" defaultSelectedKeys={['daily']} disallowEmptySelection>
-      <Segment id="daily">Daily</Segment>
-      <Segment id="weekly">Weekly</Segment>
+      <SegmentedControlItem id="daily">Daily</SegmentedControlItem>
+      <SegmentedControlItem id="weekly">Weekly</SegmentedControlItem>
     </SegmentedControl>
   )
 };

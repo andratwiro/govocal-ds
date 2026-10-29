@@ -20,30 +20,31 @@ function Demo({options, initial = [], searchable, icon = true}: {options: Filter
 }
 
 const meta: Meta<typeof FilterOptions> = {
-  title: 'Patterns/Filter options',
+  title: 'Patterns/Manage tab/Filter options',
   component: FilterOptions,
-  tags: ['autodocs']
+  tags: ['autodocs', 'not-in-figma']
 };
 export default meta;
 type Story = StoryObj<typeof FilterOptions>;
 
 /** The Tags submenu: "Filter..." over seven tags, Cycling ticked. Type to narrow, hover a row to see its box. */
-export const Searchable: Story = {render: () => <Demo options={TAGS} initial={['Cycling']} />};
+export const Searchable: Story = {name: 'Default', render: () => <Demo options={TAGS} initial={['Cycling']} />};
 
 /** Five options or fewer: no search. People get their gv Avatar instead of the facet icon. */
 export const People: Story = {render: () => <Demo options={ASSIGNEES} initial={['Manager A']} />};
 
+/** Without icons or counts. */
+export const Plain: Story = {render: () => <Demo options={TAGS.map(({id, label}) => ({id, label}))} icon={false} />};
+
 /** Nothing ticked: boxes show only on the hovered row. */
-export const NoneTicked: Story = {render: () => <Demo options={TAGS} />};
+export const NoneTicked: Story = {name: 'None ticked', render: () => <Demo options={TAGS} />};
 
 /** Empty: a facet with no values yet says so. */
 export const Empty: Story = {render: () => <Demo options={[]} searchable />};
 
-/** Without icons or counts. */
-export const Plain: Story = {render: () => <Demo options={TAGS.map(({id, label}) => ({id, label}))} icon={false} />};
-
 /** Right to left (Arabic): box, icon and value from the right, the count at the left end. */
 export const RightToLeft: Story = {
+  name: 'Right to left',
   globals: {direction: 'rtl'},
   render: () => <Demo options={TAGS} initial={['Cycling', 'Safety']} />
 };

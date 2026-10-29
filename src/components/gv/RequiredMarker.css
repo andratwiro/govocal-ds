@@ -1,0 +1,19 @@
+@import '../theme.css';
+
+/* Required marker (Figma node 14:878, Placement=Card/Field): identical look, different surrounding gap. */
+.gv-required {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  font: var(--gv-type-small);
+  color: var(--gv-text-tertiary);
+  white-space: nowrap;
+}
+
+.gv-required-dot {
+  width: var(--gv-space-6);
+  height: var(--gv-space-6);
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-icon-default);
+  flex-shrink: 0;
+}

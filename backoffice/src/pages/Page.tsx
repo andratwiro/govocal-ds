@@ -1,5 +1,5 @@
 import type {ReactNode} from 'react';
-import {Breadcrumb, type BreadcrumbItem} from '../../../src/components/gv/Breadcrumb';
+import {Breadcrumbs, type BreadcrumbItem} from '../../../src/components/gv/Breadcrumbs';
 
 /** A back-office page: the title, its actions and a line about it. A sub-page adds the trail back to its parent. */
 export function Page({title, description, actions, crumbs, children}: {
@@ -9,7 +9,7 @@ export function Page({title, description, actions, crumbs, children}: {
     <div className="bo-page">
       {crumbs && (
         <nav aria-label="Breadcrumbs" className="bo-page-crumbs">
-          <Breadcrumb items={[...crumbs, {key: 'current', label: title}]} />
+          <Breadcrumbs items={[...crumbs, {key: 'current', label: title}]} />
         </nav>
       )}
       <header className="bo-page-header"><h1>{title}</h1>{actions && <div className="bo-actions">{actions}</div>}</header>

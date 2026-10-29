@@ -31,7 +31,7 @@ export interface DashboardCardProps extends Omit<HTMLAttributes<HTMLElement>, 't
   icon?: ReactNode;
   /** Header, inline end: a control for the whole card (Votes over time: Daily / Weekly). */
   action?: ReactNode;
-  /** The card's content: a LineChart, Sparkline, Kpi row or one of the Dashboard* lists below. */
+  /** The card's content: a LineChart, Sparkline, StatTile row or one of the Dashboard* lists below. */
   children?: ReactNode;
   /** Under the body: a ChartLegend. */
   legend?: ReactNode;

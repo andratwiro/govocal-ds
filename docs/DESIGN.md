@@ -14,7 +14,7 @@ public URL:
     searchable (Storybook's own `IconGallery` doc block).
   - **Components**: React Aria primitives painted with the tokens.
   - **Patterns**: compositions that repeat but aren't primitives (the phase timeline, a stat card with a sparkline, a
-    next-action row, the drafts bar). Same stories, states and accessibility check as components.
+    next-action row). Same stories, states and accessibility check as components.
   - **Back office** stories: whole pages (the same pages as /backoffice).
 - **/backoffice**: the whole Go Vocal back office, shallow: one page per nav item, invented data, built only from
   the components. Deeper screens borrow patterns from the Augur prototypes.
@@ -34,8 +34,9 @@ dev walking the back office sees one consistent system with every main component
 
 - **Code wins.** When Figma and the repo disagree, the repo is the truth. Tokens flow one way: Figma variables →
   `tokens/` → `tokens.css`.
-- **System first.** The back office uses only `src/components`, `src/patterns` and the tokens. A page that needs something the
-  system lacks gets it added to the system first. That is how the demo shows what the system is missing.
+- **System first, not everything in it.** The back office builds from `src/components`, `src/patterns` and the tokens, and
+  adds to the system only what passes the rule in docs/NAMING.md (generic and used twice, or a Figma component). One-offs
+  stay in their page, built from components.
 - **Fill the gaps.** The agent applies the system to everything Figma doesn't draw (states, RTL, focus). Nothing is
   marked as filled in: the designer browses and judges.
 - **Paint only through `var(--gv-*)`.** Plain React + plain CSS on CSS variables. No styled-components, no Tailwind.
@@ -48,9 +49,11 @@ dev walking the back office sees one consistent system with every main component
 
 ```
 tokens/            Figma variables export (JSON) → built into src/tokens.css (--gv-*)
-src/components/    React Aria Components, painted with the tokens
+src/components/    React Aria Components, painted with the tokens (the starter: Storybook's Base)
+  gv/              the design system's components (Storybook's Components), one file name per export
   *.stories.tsx    every state, LTR + Arabic RTL
 src/patterns/      compositions of components (timeline, stat card…), tokens only, same stories
+docs/NAMING.md     how components and patterns are named and grouped, in Storybook and Figma
 backoffice/        Vite app: sidebar + one route per nav item, invented data
 .storybook/        a11y addon (WCAG 2.2 AA + target size), Components page with counts
 AGENTS.md          the rules for the designer's agent

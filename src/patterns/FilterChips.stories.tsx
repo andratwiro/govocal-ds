@@ -16,19 +16,19 @@ function Demo({initial, showClear}: {initial: FilterValue; showClear?: boolean})
 }
 
 const meta: Meta<typeof FilterChips> = {
-  title: 'Patterns/Filter chips',
+  title: 'Patterns/Manage tab/Filter chips',
   component: FilterChips,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'not-in-figma'],
   parameters: {layout: 'padded'}
 };
 export default meta;
 type Story = StoryObj<typeof FilterChips>;
 
 /** The two filters of the Manage tab: an assignee and a tag. × removes one, Clear removes both. */
-export const TwoFilters: Story = {render: () => <Demo initial={{assignee: ['Manager A'], tags: ['Cycling']}} />};
+export const TwoFilters: Story = {name: 'Default', render: () => <Demo initial={{assignee: ['Manager A'], tags: ['Cycling']}} />};
 
 /** Several values in one facet read "is any of" and list them. */
-export const AnyOf: Story = {render: () => <Demo initial={{status: ['Proposed', 'Viewed', 'Under consideration']}} />};
+export const AnyOf: Story = {name: 'Any of', render: () => <Demo initial={{status: ['Proposed', 'Viewed', 'Under consideration']}} />};
 
 /** Many filters wrap onto a second line; Clear stays at the end of the first. */
 export const Wrapping: Story = {
@@ -37,13 +37,14 @@ export const Wrapping: Story = {
 };
 
 /** Without the Clear button, for bars that put it elsewhere. */
-export const WithoutClear: Story = {render: () => <Demo initial={{tags: ['Housing']}} showClear={false} />};
+export const WithoutClear: Story = {name: 'Without Clear', render: () => <Demo initial={{tags: ['Housing']}} showClear={false} />};
 
 /** Empty: no filter on, nothing renders. */
 export const Empty: Story = {render: () => <Demo initial={{}} />};
 
 /** Right to left (Arabic): chips flow from the right, the × at each chip's end. */
 export const RightToLeft: Story = {
+  name: 'Right to left',
   globals: {direction: 'rtl'},
   render: () => <Demo initial={{assignee: ['Manager A'], tags: ['Cycling', 'Transport']}} />
 };

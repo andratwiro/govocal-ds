@@ -6,7 +6,7 @@ const meta: Meta<typeof Checkbox> = {
   parameters: {
     layout: 'centered'
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'covered']
 };
 
 export default meta;

@@ -10,7 +10,7 @@ const figma = (id: string) => ({
 const width = (w: number) => [(Story: () => JSX.Element) => <div style={{width: w}}><Story /></div>];
 
 const meta: Meta<typeof Card> = {
-  title: 'Components/Card',
+  title: 'Components/Layout & containers/Card',
   component: Card,
   tags: ['autodocs'],
   parameters: figma('14-879')
@@ -180,8 +180,6 @@ export const ReviewPillSection: Story = {name: 'Review · pill section', args: r
 /** The header drops a list; the chosen value is the pill (the prototype's Sorting card). */
 export const ReviewPillDropdown: Story = {name: 'Review · pill dropdown', args: reviewPillDropdown, decorators: width(444), parameters: figma('5-254')};
 
-/** Not in Figma (the prototype, 22 Oct): once the admin has looked, the notice turns green. */
-export const Reviewed: Story = {args: {...reviewPillDropdown, review: 'reviewed'}, decorators: width(444)};
 export const ManageAdd: Story = {name: 'Manage · add', args: manageAdd, decorators: stage(276), parameters: figma('5-414')};
 export const ManageNotSet: Story = {name: 'Manage · not set', args: manageNotSet, decorators: stage(276), parameters: figma('5-430')};
 export const Statements: Story = {args: statements, decorators: width(444), parameters: figma('24-196')};
@@ -193,7 +191,10 @@ export const EmbedUrl: Story = {name: 'Embed URL', args: embedUrl, decorators: w
 export const Report: Story = {args: report, decorators: width(444), parameters: figma('25-423')};
 export const NamingProposals: Story = {name: 'Naming · proposals', args: namingProposals, decorators: width(444), parameters: figma('25-454')};
 export const ManageToggle: Story = {name: 'Manage · Toggle', args: manageToggle, decorators: stage(276), parameters: figma('25-598')};
-export const SurveyPlacement: Story = {args: surveyPlacement, decorators: width(444), parameters: figma('25-632')};
-export const SurveyOptions: Story = {args: surveyOptions, decorators: width(444), parameters: figma('25-670')};
-export const OptionsToVoteOn: Story = {args: optionsToVoteOn, decorators: width(444), parameters: figma('26-445')};
-export const VotingMethod: Story = {args: votingMethod, decorators: width(444), parameters: figma('26-478')};
+export const SurveyPlacement: Story = {name: 'Survey placement', args: surveyPlacement, decorators: width(444), parameters: figma('25-632')};
+export const SurveyOptions: Story = {name: 'Survey options', args: surveyOptions, decorators: width(444), parameters: figma('25-670')};
+export const OptionsToVoteOn: Story = {name: 'Options to vote on', args: optionsToVoteOn, decorators: width(444), parameters: figma('26-445')};
+export const VotingMethod: Story = {name: 'Voting method', args: votingMethod, decorators: width(444), parameters: figma('26-478')};
+
+/** Not in Figma (the prototype, 22 Oct): once the admin has looked, the notice turns green. */
+export const Reviewed: Story = {args: {...reviewPillDropdown, review: 'reviewed'}, decorators: width(444)};

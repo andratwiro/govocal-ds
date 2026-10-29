@@ -1,6 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {PhaseTimeline, type TimelinePhase} from './PhaseTimeline';
-import {RailSectionLabel} from '../components/gv/RailSectionLabel';
+import {RailSectionLabel} from './RailSectionLabel';
 
 const PHASES: TimelinePhase[] = [
   {id: 'a', title: 'Project background', state: 'done', dates: '10 to 30 Aug', method: 'Sharing', count: '1,890 visits', href: '#a'},
@@ -10,16 +10,16 @@ const PHASES: TimelinePhase[] = [
 ];
 
 const meta: Meta<typeof PhaseTimeline> = {
-  title: 'Patterns/Phase timeline',
+  title: 'Patterns/Project rail/Phase timeline',
   component: PhaseTimeline,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'not-in-figma'],
   decorators: [Story => <nav aria-label="Phases" style={{width: 284}}><Story /></nav>]
 };
 export default meta;
 type Story = StoryObj<typeof PhaseTimeline>;
 
 /** Done, in progress and upcoming phases joined by the spine; one carries new inputs. */
-export const Timeline: Story = {args: {phases: PHASES}};
+export const Timeline: Story = {name: 'Default', args: {phases: PHASES}};
 
 /** The phase being viewed is highlighted. */
 export const Current: Story = {args: {phases: PHASES.map(p => ({...p, current: p.id === 'b'}))}};
@@ -35,4 +35,4 @@ export const Spotlight: Story = {
 };
 
 /** Every phase still to come: grey dots, grey spine. */
-export const AllUpcoming: Story = {args: {phases: PHASES.map(p => ({...p, state: 'upcoming', count: undefined, fresh: undefined}))}};
+export const AllUpcoming: Story = {name: 'All upcoming', args: {phases: PHASES.map(p => ({...p, state: 'upcoming', count: undefined, fresh: undefined}))}};

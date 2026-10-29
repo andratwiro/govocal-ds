@@ -339,7 +339,6 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-project-details dd { margin: 0; color: var(--gv-text-primary); }
 .bo-project-phone-box { display: grid; gap: var(--gv-space-12); justify-items: start; }
 .bo-project-phone-box > .react-aria-Button { width: 100%; justify-content: center; }
-.bo-project-drafts { position: fixed; inset-block-end: var(--gv-space-16); inset-inline-start: calc(52px + var(--gv-space-16)); z-index: 1; }
 
 /* ── Sidebar ── */
 .bo-platform { padding: var(--gv-space-24) var(--gv-space-32); }

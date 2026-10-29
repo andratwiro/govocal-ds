@@ -10,9 +10,9 @@ import {Button} from '../../../src/components/Button';
 import {Meter} from '../../../src/components/Meter';
 import {MyToastRegion, queue} from '../../../src/components/Toast';
 import {Card} from '../../../src/components/gv/Card';
-import {Kpi} from '../../../src/components/gv/Kpi';
+import {StatTile} from '../../../src/components/gv/StatTile';
 import {Avatar} from '../../../src/components/gv/Avatar';
-import {Status} from '../../../src/components/gv/Status';
+import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {Banner} from '../../../src/components/gv/Banner';
 import {GROUPS, INVITATIONS, PARTICIPATION, SEATS, type Invitation, type Person, type Role} from '../data-users';
 import {date, initials, peopleStore} from './Users';
@@ -78,7 +78,7 @@ function InvitationTable({invitations}: {invitations: Invitation[]}) {
                 <DataTableCell>{i.email}</DataTableCell>
                 <DataTableCell><span className="bo-users-nowrap">{i.role}</span></DataTableCell>
                 <DataTableCell><span className="bo-users-nowrap">{i.invited}</span></DataTableCell>
-                <DataTableCell><Status state={i.status === 'Accepted' ? 'live' : 'draft'}>{i.status}</Status></DataTableCell>
+                <DataTableCell><StatusBadge state={i.status === 'Accepted' ? 'live' : 'draft'}>{i.status}</StatusBadge></DataTableCell>
               </DataTableRow>
             ))}
           </DataTableBody>
@@ -150,10 +150,10 @@ export function SeatsOverview() {
       description="Your plan includes a number of admin and manager seats. Everyone else takes part for free.">
       <div className="bo-users-stack">
         <div className="bo-users-kpis">
-          <Kpi label="Admin seats used" value={admins.length} note={`of ${SEATS.admins} in your plan`} />
-          <Kpi label="Admin seats available" value={SEATS.admins - admins.length} type="tall" />
-          <Kpi label="Manager seats used" value={managers.length} note={`of ${SEATS.managers} in your plan`} />
-          <Kpi label="Manager seats available" value={SEATS.managers - managers.length} type="tall" />
+          <StatTile label="Admin seats used" value={admins.length} note={`of ${SEATS.admins} in your plan`} />
+          <StatTile label="Admin seats available" value={SEATS.admins - admins.length} type="tall" />
+          <StatTile label="Manager seats used" value={managers.length} note={`of ${SEATS.managers} in your plan`} />
+          <StatTile label="Manager seats available" value={SEATS.managers - managers.length} type="tall" />
         </div>
         <div className="bo-users-pair">
           <Meter label="Admin seats" value={admins.length} maxValue={SEATS.admins} valueLabel={`${admins.length} of ${SEATS.admins}`} />
@@ -201,10 +201,10 @@ export function UserProfile() {
           </div>
         </Card>
         <section aria-label="Participation" className="bo-users-kpis">
-          <Kpi label="Ideas" value={done.ideas} />
-          <Kpi label="Comments" value={done.comments} />
-          <Kpi label="Votes" value={done.votes} />
-          <Kpi label="Projects" value={done.projects} />
+          <StatTile label="Ideas" value={done.ideas} />
+          <StatTile label="Comments" value={done.comments} />
+          <StatTile label="Votes" value={done.votes} />
+          <StatTile label="Projects" value={done.projects} />
         </section>
       </div>
       <MyToastRegion />

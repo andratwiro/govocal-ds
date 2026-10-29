@@ -5,19 +5,18 @@ import {Button} from '../../../src/components/Button';
 import {Menu, MenuItem, MenuTrigger, Separator} from '../../../src/components/Menu';
 import {TextField} from '../../../src/components/TextField';
 import {Modal} from '../../../src/components/gv/Modal';
-import {Avatar} from '../../../src/components/gv/Avatar';
+import {Avatar, AvatarGroup} from '../../../src/components/gv/Avatar';
 import {Divider} from '../../../src/components/gv/Divider';
-import {Header} from '../../../src/components/gv/Header';
+import {ProjectHeader} from '../../../src/patterns/ProjectHeader';
 import {IconButton} from '../../../src/components/gv/IconButton';
-import {RailHeader} from '../../../src/components/gv/RailHeader';
-import {RailSectionLabel} from '../../../src/components/gv/RailSectionLabel';
-import {SetupCard} from '../../../src/components/gv/SetupCard';
-import {Status} from '../../../src/components/gv/Status';
+import {RailHeader} from '../../../src/patterns/RailHeader';
+import {RailSectionLabel} from '../../../src/patterns/RailSectionLabel';
+import {SetupStep} from '../../../src/patterns/SetupStep';
+import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {ActionRow} from '../../../src/patterns/ActionRow';
-import {DraftsBar} from '../../../src/patterns/DraftsBar';
 import {PanelSection} from '../../../src/patterns/PanelSection';
 import {PhaseTimeline} from '../../../src/patterns/PhaseTimeline';
-import {AvatarStack, PhoneFrame, PhoneHeader, PhoneImage} from '../../../src/patterns/PhonePreview';
+import {PhonePreview, PhoneHeader, PhoneImage} from '../../../src/patterns/PhonePreview';
 import {StatCard} from '../../../src/patterns/StatCard';
 import {ME, PROJECTS, type Project} from '../data';
 import {NO_OVERVIEW, OVERVIEWS, addedTimeline, timeline, type NewPhase, type Overview} from '../data-project';
@@ -39,7 +38,6 @@ export function ProjectOverview() {
   const [setupOpen, setSetupOpen] = useState(true);
   const [railOpen, setRailOpen] = useState(true);
   const [previewOpen, setPreviewOpen] = useState(true);
-  const [draftsOpen, setDraftsOpen] = useState(true);
   const [settings, setSettings] = useState<SettingsTab | null>(null);
   const [adding, setAdding] = useState(false);
   const [added, setAdded] = useState<NewPhase[]>([]);
@@ -61,7 +59,7 @@ export function ProjectOverview() {
         <IconButton aria-label={setupOpen ? 'Hide project setup' : 'Show project setup'} onPress={() => setSetupOpen(v => !v)}>
           <PanelLeft aria-hidden size={16} />
         </IconButton>
-        <Header projectName={project.title} parentHref="#/projects" />
+        <ProjectHeader projectName={project.title} parentHref="#/projects" />
         <span className="bo-push" />
         <p role="status" className="bo-note bo-phase-flush">{note}</p>
         <Avatar initials={ME.slice(-1)} aria-label={`${ME} is here`} />
@@ -86,7 +84,7 @@ export function ProjectOverview() {
         </MenuTrigger>
         <MenuTrigger>
           <Button variant="quiet" size={32} hasMenu iconOnly={false} aria-label={`${live ? 'Live' : status}: change status`}>
-            <Status state={live ? 'live' : 'draft'}>{live ? '● Live' : status}</Status>
+            <StatusBadge state={live ? 'live' : 'draft'}>{live ? '● Live' : status}</StatusBadge>
           </Button>
           <Menu aria-label="Project status" onAction={() => setConfirm(next.to)}>
             <MenuItem id={next.to}>{next.label}</MenuItem>
@@ -106,11 +104,6 @@ export function ProjectOverview() {
           </section>
         )}
       </div>
-      {draftsOpen && o.drafts > 0 && (
-        <div className="bo-project-drafts">
-          <DraftsBar count={o.drafts} onShow={() => {}} onHistory={() => {}} onClose={() => setDraftsOpen(false)} />
-        </div>
-      )}
       <ProjectSettings project={project} tab={settings} onTabChange={setSettings} onClose={() => setSettings(null)} />
       <AddPhase isOpen={adding} onOpenChange={setAdding} onAdd={p => setAdded(a => [...a, p])} />
       <Modal title="Invite people" isOpen={inviting} onOpenChange={setInviting}
@@ -163,8 +156,8 @@ function Setup({project, o, live, onSettings}: {project: Project; o: Overview; l
             {CHECKLIST.map(c => (
               <li key={c.title} data-gv="setup-card">
                 {c.action === 'open'
-                  ? <SetupCard title={c.title} onPress={() => { const t = CHECKLIST_TAB[c.title]; if (t) onSettings(t); else setStub(c.title); }} />
-                  : <SetupCard action="expand" title={c.title}><p className="bo-note bo-phase-flush">{c.body}</p></SetupCard>}
+                  ? <SetupStep title={c.title} onPress={() => { const t = CHECKLIST_TAB[c.title]; if (t) onSettings(t); else setStub(c.title); }} />
+                  : <SetupStep action="expand" title={c.title}><p className="bo-note bo-phase-flush">{c.body}</p></SetupStep>}
               </li>
             ))}
           </ul>
@@ -212,19 +205,19 @@ function Rail({project, o, added, onAdd, onHide}: {project: Project; o: Overview
 function Phone({project, o}: {project: Project; o: Overview}) {
   const people = project.participants ?? 0;
   return (
-    <PhoneFrame aria-label="What residents see" header={<PhoneHeader />}>
+    <PhonePreview aria-label="What residents see" header={<PhoneHeader />}>
       <PhoneImage aria-label="Project image" />
       <h2>{project.title}</h2>
       <p>{o.intro}</p>
       <div className="bo-project-phone-box">
         <Button>{o.ways > 1 ? `Participate · ${o.ways} ways` : 'Participate'} <ChevronUp aria-hidden size={16} /></Button>
         {people > 0 && (
-          <AvatarStack initials={['A', 'B', 'C']}>
+          <AvatarGroup initials={['A', 'B', 'C']}>
             {people.toLocaleString('en-GB')} participants <Info aria-hidden size={14} />
-          </AvatarStack>
+          </AvatarGroup>
         )}
       </div>
       {o.more.map(t => <p key={t}>{t}</p>)}
-    </PhoneFrame>
+    </PhonePreview>
   );
 }

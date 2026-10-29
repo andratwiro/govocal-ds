@@ -2,7 +2,7 @@ import {LegendRow} from './LegendRow';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof LegendRow> = {
-  title: 'Components/Legend row',
+  title: 'Components/Charts/Legend row',
   component: LegendRow,
   parameters: {
     layout: 'centered',

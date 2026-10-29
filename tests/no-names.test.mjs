@@ -20,7 +20,7 @@ describe('no names in the repo', () => {
     const zed = new Set([hash('zed')]);
     expect(named("Components from Zed's Figma", zed)).toBe(true);
     expect(named('Built from h' + 'er prototype')).toBe(true);
-    expect(named('<EditorTool icon={Italic} label="Italic" />', zed)).toBe(false);
+    expect(named('<RichTextToolbarButton icon={Italic} label="Italic" />', zed)).toBe(false);
     expect(named('token, broken, ironed')).toBe(false);
   });
   it('no tracked file names anyone', () => {
