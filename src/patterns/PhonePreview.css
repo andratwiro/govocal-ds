@@ -37,7 +37,7 @@
   flex-direction: column;
   block-size: 100%;
   overflow: hidden;
-  border-radius: calc(var(--gv-radius-22) - 1px);
+  border-radius: calc(var(--gv-radius-22) - var(--gv-space-1));
   background: var(--gv-surface-panel);
   color: var(--gv-text-body);
   font-family: var(--gv-font-family);

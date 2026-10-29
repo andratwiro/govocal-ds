@@ -162,7 +162,7 @@
 
   [slot='description'] {
     max-width: 62ch;
-    margin-inline-start: calc(36px + var(--gv-space-8));
+    margin-inline-start: calc(var(--gv-size-control-36) + var(--gv-space-8));
     font: var(--gv-type-small);
     letter-spacing: var(--gv-type-small-tracking);
     color: var(--gv-text-secondary);

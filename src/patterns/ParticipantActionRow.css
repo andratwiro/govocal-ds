@@ -102,7 +102,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--gv-space-6);
-  margin: var(--gv-space-2) 0 var(--gv-space-8) calc(36px + var(--gv-space-10) + var(--gv-space-2));
+  margin: var(--gv-space-2) 0 var(--gv-space-8) calc(var(--gv-size-control-36) + var(--gv-space-10) + var(--gv-space-2));
 }
 
 .gv-participant-limit {

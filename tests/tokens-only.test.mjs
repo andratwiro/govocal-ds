@@ -5,16 +5,6 @@ import {readFileSync, readdirSync} from 'node:fs';
 const css = readdirSync('src', {recursive: true}).filter(f => f.endsWith('.css') && f !== 'tokens.css')
   .map(f => [`src/${f}`, readFileSync(`src/${f}`, 'utf8')]);
 
-// The project package's files, still being rebuilt: drop the list when it lands (its files then pass like the rest).
-const gv = names => names.map(n => `src/components/gv/${n}.css`);
-const patterns = names => names.map(n => `src/patterns/${n}.css`);
-const REBUILDING = [
-  // Project page and Build tab.
-  ...patterns(['RailSectionLabel', 'ActionRow', 'ProjectHeader', 'PhonePreview', 'RailPhase', 'VolunteeringRow',
-    'NotificationRow', 'ParticipantActionRow', 'AccessRights', 'ViewOptionRow']),
-  ...gv(['Card', 'SectionLabel'])
-];
-
 // The families the guard reads, by property. A custom property joins the family its name says: the starter's
 // aliases in theme.css (--spacing-*, --radius-*, --font-size-*, --popover-shadow) and local --gap, --padding.
 const familyOf = prop => {
@@ -182,12 +172,7 @@ describe('spacing, radius, type and shadow come only from tokens', () => {
   });
 
   it('src CSS writes spacing, radius, type and shadow only via tokens', () => {
-    const offenders = css.filter(([f]) => !REBUILDING.includes(f))
-      .flatMap(([f, s]) => rawTokens(s).map(hit => `${f}:${hit}`));
+    const offenders = css.flatMap(([f, s]) => rawTokens(s).map(hit => `${f}:${hit}`));
     expect(offenders).toEqual([]);
-  });
-
-  it('the rebuild allowlist names stylesheets', () => {
-    expect(REBUILDING.filter(f => !/^src\/(components|patterns)\/[\w/]+\.css$/.test(f))).toEqual([]);
   });
 });

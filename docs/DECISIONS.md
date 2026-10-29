@@ -145,6 +145,20 @@ dashboards, Build tab).
 - List / Map switch: white track and grey selected (the prototype) vs the small Segmented control → **the small Segmented control** → one small look.
 - Statement row: Figma's three shares vs the Manage panel's four with gaps → **`unseenPercent`, gaps only with four shares** → Figma's bar stays as drawn.
 
+**Built in the project package**
+
+- A rail-only label vs a general one → **Section label in Layout & containers**, with an optional heading `level` and a 16 icon → it heads groups in the rail, Access rights and Choice card groups (Choice card's own heading now renders it).
+- Next actions and Insights rows drawn differently → **one Action row**; Done = the tinted tile with the brand border; Working = a busy group with a progress ring, nothing to press.
+- The prototype's full project bar vs Figma's levels → **the bar is built into Project header**, switched on by `modes`, `people`, `onSave`, `publishState` or `shareMenu`; the Figma-level API still works.
+- Figma's dark bezel vs the prototype's light device → **the light device (343×683, radius 22)**; one hover/focus look for project and phase (lift, ring, dim, a smoked pill); the eye and caption moved out to Phone stage, so the phone stays reusable.
+- The prototype's 26-wide switch in notification rows → **the system Switch (36)** → one switch in forms.
+- Default vs set-for-this-phase values → **grey vs dark, and different words** → colour is never the only signal.
+- Read-only before Override → **`isReadOnly` on the radios and switches, the body faded once** → `isDisabled` everywhere faded twice and took it out of reach. Revert sits in the footer and asks first.
+- The prototype's disabled "Default" button → **a pressed toggle that ignores presses** → disabling it dropped focus to the page.
+- Form field summary: a GridList (the plan) vs a static list → **a static list** → its rows do nothing, so a grid only adds tab stops; six rows, then "N more".
+- A disabled action that explains itself → **with a `tooltip`, Card's `isDisabled` uses `aria-disabled`** (focusable, no press) → a disabled button can't be hovered, so it can't say why. Card radios are deprecated in favour of Choice card.
+- The rail's delete shown only on hover (`display: none`) → **faded in, always in the tab order** → keyboard users can reach it.
+- Volunteering row in Build → **`variant="build"`** (thumbnail, "No sign-ups yet" / "N signed up", Edit and Delete) → the content differs, which args can't express.
 **Redesign: Community monitor** (on the current components)
 - Reports as Cards with an open chevron vs every other admin list → **a Panel (Create report in the head) over a Data table, row menu and Pagination**; a row opens the report → one list shape.
 - Managers as Badges with "Add a manager" beside them vs the person cells of Users and Projects → **a Data table with person cells in a Panel; remove from the row menu, with an Undo toast** → people read the same everywhere.
@@ -155,6 +169,7 @@ dashboards, Build tab).
 - "Seems like there are no more projects" at the end vs Pagination on every list → **Pagination, six cards a page; no matches is an Empty state with one Clear action**.
 - "Copied to your drafts" as a Status badge on the card vs instant changes elsewhere → **the button turns to a disabled "Copied", and a Toast with Undo** → one feedback channel.
 - Highlighted's country and the sort as labelled field Selects vs pill and quiet Selects in panel heads → **"Country: …" pill and "Sort: …" quiet Select in the Panel heads**; the preview's facts as a Property list.
+
 
 **Tokens everywhere** (the project lead, 29 Oct: every spacing, radius, type and shadow value is a token; a design value with no token snaps to the nearest, guarded by `tests/tokens-only.test.mjs`)
 

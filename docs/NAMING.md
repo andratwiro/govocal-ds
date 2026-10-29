@@ -50,18 +50,20 @@ Components              src/components/gv/
   Forms                 Checkbox · Choice card · Date range field · Drop zone · Number field · Option list · Required marker
                         · Rich text editor · Rich text toolbar · Rich text toolbar button · Search field · Select · Switch
                         · Tag picker · Text field · Title field
-  Layout & containers   Card · Divider · Panel
+  Layout & containers   Card · Divider · Panel · Section label
   Navigation            Breadcrumbs · Pagination · Tabs
   Overlays              Alert dialog · Coachmark · Help popover · Modal · Side panel · Tooltip
   Status & feedback     Badge · Banner · Empty state · New dot · Review status · Skeleton · Status badge · Toast
 Patterns                src/patterns/
   App shell             Notification list · Side nav
+  Build tab             Access rights · Form field summary (recipe) · Notification row · Participant action row
+                        · View option row
   Lists                 Filter chips · Filter menu · Selection bar (used by every list page)
   Manage tab            Comment thread · Official update
   Pages & menu          Section toggle
   Participation methods Common ground row · Proposals row · Vote progress · Volunteering row · Voting row
   Project page          Action row · Panel section · Phone preview · Project header · Setup step · Stat card
-  Project rail          Phase timeline · Rail header · Rail phase · Rail section label
+  Project rail          Phase timeline · Rail header · Rail phase
 Back office             (empty: the whole-page stories DESIGN.md plans land here)
 Base                    src/components/: the React Aria starter, A–Z, React Aria's names (Calendar · CheckboxGroup ·
                         ColorArea · … · Tooltip · Tree). Off the sidebar, tagged `covered`: Breadcrumbs · Checkbox ·
@@ -122,7 +124,7 @@ below). Rows without a rename say "same".
 | Editor toolbar | Forms/Rich text toolbar | Components/Editor toolbar | Components/Forms/Rich text toolbar | EditorToolbar → RichTextToolbar | EditorToolbar.* → RichTextToolbar.* |
 | Editor tool | Forms/Rich text toolbar button | Components/Editor tool | Components/Forms/Rich text toolbar button | EditorTool → RichTextToolbarButton | EditorTool.* → RichTextToolbarButton.* |
 | Title field | Forms/Title field | Components/Title field | Components/Forms/Title field | TitleField (same) | same |
-| Card | Layout & containers/Card | Components/Card | Components/Layout & containers/Card | Card, CardSwitch, CardRadioGroup, CardRadio (same) | same |
+| Card | Layout & containers/Card | Components/Card | Components/Layout & containers/Card | Card, CardSwitch (same); CardRadioGroup, CardRadio deprecated → ChoiceCard | same |
 | Divider | Layout & containers/Divider | Components/Divider | Components/Layout & containers/Divider | Divider (same) | same |
 | Breadcrumb | Navigation/Breadcrumbs | Components/Breadcrumb | Components/Navigation/Breadcrumbs | Breadcrumb → Breadcrumbs | Breadcrumb.* → Breadcrumbs.* |
 | Modal | Overlays/Modal | Components/Modal | Components/Overlays/Modal | Modal (same) | same |
@@ -140,7 +142,7 @@ below). Rows without a rename say "same".
 | Setup card | Project page/Setup step | Components/Setup card | Patterns/Project page/Setup step | SetupCard → SetupStep | SetupStep.* |
 | Rail header | Project rail/Rail header | Components/Rail header | Patterns/Project rail/Rail header | RailHeader (same) | RailHeader.* |
 | Rail phase | Project rail/Rail phase | Components/Rail phase | Patterns/Project rail/Rail phase | RailPhase (same) | RailPhase.* |
-| Rail section label | Project rail/Rail section label | Components/Rail section label | Patterns/Project rail/Rail section label | RailSectionLabel (same) | RailSectionLabel.* |
+| Section label | Layout & containers/Section label | Components/Rail section label | Components/Layout & containers/Section label | RailSectionLabel → SectionLabel | src/patterns/RailSectionLabel.* → src/components/gv/SectionLabel.* |
 | List row · Common ground | Participation methods/Common ground row | Components/List row · Common ground | Patterns/Participation methods/Common ground row | ListRowCommonGround → CommonGroundRow | CommonGroundRow.* |
 | List row · Proposals | Participation methods/Proposals row | Components/List row · Proposals | Patterns/Participation methods/Proposals row | ListRowProposals → ProposalsRow | ProposalsRow.* |
 | List row · Voting | Participation methods/Voting row | Components/List row · Voting | Patterns/Participation methods/Voting row | ListRowVoting → VotingRow | VotingRow.* |

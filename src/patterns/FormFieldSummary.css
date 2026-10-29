@@ -55,6 +55,6 @@
 
 /* "3 more": on the names' x (number 16 + 12). */
 .gv-form-summary__more {
-  padding-inline-start: calc(16px + var(--gv-space-12));
+  padding-inline-start: calc(var(--gv-size-icon-16) + var(--gv-space-12));
   color: var(--gv-text-secondary);
 }
