@@ -17,6 +17,7 @@ const meta: Meta<typeof TitleField> = {
 export default meta;
 type Story = StoryObj<typeof TitleField>;
 
+/** Empty, required, filled, invalid. Figma draws the required one; the invalid state is Not in Figma. */
 export const AllVariants: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 16, width: 444}}>

@@ -11,23 +11,29 @@ import './TitleField.css';
 
 export interface TitleFieldProps extends AriaTextFieldProps {
   placeholder?: string;
-  /** Shows the Required dot + label after the field (Figma: Title field always carries one). */
+  /** Shows the Required dot + label inside the field, on its right (Figma: Title field always carries one). */
   isRequired?: boolean;
   errorMessage?: string | ((validation: ValidationResult) => string);
 }
 
 /**
  * Title field (Figma node 4:123): the big project/page name input at the top of an editor.
- * A plain React Aria TextField — no visible <Label>, the placeholder carries the hint.
+ * A plain React Aria TextField — no visible <Label>, the placeholder carries the hint. The Required
+ * marker sits inside the input's right end, as in Figma and the prototype (`.pj-titlereq`); it is
+ * hidden from screen readers, which hear the input's own aria-required.
  */
 export function TitleField({placeholder = 'Add a title', isRequired, errorMessage, ...props}: TitleFieldProps) {
   return (
-    <div className="gv-title-field-wrap">
+    <div className="gv-title-field-wrap" data-required={isRequired || undefined}>
       <AriaTextField {...props} isRequired={isRequired} className="gv-title-field">
         <Input placeholder={placeholder} />
         <FieldError>{errorMessage}</FieldError>
       </AriaTextField>
-      {isRequired && <Required placement="field" />}
+      {isRequired && (
+        <span className="gv-title-field-required" aria-hidden="true">
+          <Required placement="field" />
+        </span>
+      )}
     </div>
   );
 }

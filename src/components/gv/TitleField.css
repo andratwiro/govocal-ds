@@ -1,35 +1,34 @@
 @import '../theme.css';
 
-/* Title field (Figma node 4:123): a full-width 36.8px input, placeholder text, no label. */
+/*
+ * Title field (Figma node 4:123): a full-width 36 input (padding 9 / 11, Small type, radius 8),
+ * the Required marker inside it on the right. Figma keeps 104 clear at the right end and puts the
+ * marker 52.5 from the edge; the prototype (`.pj-titlereq`, right 47 + its 6 margin) agrees: the
+ * rest of that end is where the content-language button goes.
+ */
 .gv-title-field-wrap {
-  display: flex;
-  align-items: center;
-  gap: var(--gv-space-12);
+  position: relative;
   width: 100%;
 }
 
 .gv-title-field {
   display: flex;
   flex-direction: column;
-  flex: 1;
 
   .react-aria-Input {
     width: 100%;
     box-sizing: border-box;
-    padding: var(--gv-space-9) var(--gv-space-12);
+    padding: var(--gv-space-9) var(--gv-space-11);
     border: 1px solid var(--gv-border-control);
     border-radius: var(--gv-radius-8);
     background: var(--gv-surface-panel);
     color: var(--gv-text-primary);
-    font: var(--gv-type-ui);
+    font: var(--gv-type-small);
+    letter-spacing: var(--gv-type-small-tracking);
     outline: none;
 
     &::placeholder {
       color: var(--gv-text-placeholder);
-    }
-
-    &[data-hovered] {
-      border-color: var(--gv-border-control-hover);
     }
 
     &[data-focused] {
@@ -48,4 +47,18 @@
     color: var(--gv-state-notification);
     font: var(--gv-type-small);
   }
+}
+
+.gv-title-field-wrap[data-required] .react-aria-Input {
+  padding-inline-end: var(--gv-space-104);
+}
+
+.gv-title-field-required {
+  position: absolute;
+  top: 0;
+  inset-inline-end: 53px;
+  display: flex;
+  align-items: center;
+  height: 36px;
+  pointer-events: none;
 }
