@@ -88,6 +88,10 @@ them, and `.storybook/manager.ts` writes the mark after the entry's name):
   stays untagged because Card itself stays.
 - `covered`: a Base entry a Components entry wraps or replaces, hidden from the sidebar. A Components entry that wraps
   a Base entry tags it `covered` in the same commit.
+- `test-only`: an entry that exists only so a test can open it (a fixture, a harness, a stress case nobody would copy),
+  hidden from the sidebar so the public tree shows only what a reader can use. It still builds, so e2e opens it by id.
+  None today; `tests/sidebar-public.test.mjs` fails on a story file or story whose name says test, e2e, fixture,
+  harness or debug without the tag.
 
 ## Story names inside an entry
 

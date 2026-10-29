@@ -60,8 +60,9 @@ const config: StorybookConfig & {experimental_manifests?: typeof withGuides} = {
   // The Go Vocal mark: Storybook's tab icon (favicon.svg is picked up by name), the sidebar brand, Welcome.
   staticDirs: ['./static'],
   framework: {name: '@storybook/react-vite', options: {}},
-  // Status marks (docs/NAMING.md): filter the sidebar by them; `covered` hides a Base entry a Components entry wraps.
-  tags: {'not-in-figma': {}, deprecated: {}, covered: {excludeFromSidebar: true}},
+  // Status marks (docs/NAMING.md): filter the sidebar by them; `covered` hides a Base entry a Components entry wraps;
+  // `test-only` hides an entry that exists only for a test (it still builds, so e2e can open it by id).
+  tags: {'not-in-figma': {}, deprecated: {}, covered: {excludeFromSidebar: true}, 'test-only': {excludeFromSidebar: true}},
   core: {disableTelemetry: true},
   // The component manifest the Storybook MCP serves agents (/mcp while `npm run storybook` runs; built into
   // dist/storybook/manifests/). react-docgen-typescript follows `extends RACButtonProps`, so a part's React Aria props
