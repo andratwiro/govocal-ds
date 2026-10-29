@@ -18,4 +18,19 @@ describe('paint comes only from tokens', () => {
   it('theme.css imports the generated tokens', () => {
     expect(readFileSync(`${dir}/theme.css`, 'utf8')).toMatch(/@import ['"]\.\.\/tokens\.css['"]/);
   });
+  it('has no named colour keywords as declaration values', () => {
+    // transparent / currentColor / inherit are fine; everything else paints through var(--gv-*).
+    const namedColour = /(?<![\w-])(white|black|red|green|blue|gray|grey|silver)(?![\w-])/i;
+    const offenders = [];
+    for (const [file, source] of css) {
+      const noComments = source.replace(/\/\*[\s\S]*?\*\//g, '');
+      // only look inside declaration values (property: value;), never selectors or comments
+      for (const m of noComments.matchAll(/[a-zA-Z-]+\s*:\s*([^;{}]+);/g)) {
+        if (namedColour.test(m[1])) {
+          offenders.push(`${file}: ${m[0].trim()}`);
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
 });

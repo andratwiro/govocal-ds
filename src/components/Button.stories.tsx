@@ -40,6 +40,12 @@ Sizes.args = {
   onPress: () => alert('Hello world!')
 };
 
+export const Quiet: Story = args => <Button {...args}>Edit</Button>;
+Quiet.args = {
+  variant: 'quiet',
+  onPress: () => alert('Hello world!')
+};
+
 export const WithMenu: Story = args => (
   <Button {...args} hasMenu>
     Publish

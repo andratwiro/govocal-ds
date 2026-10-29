@@ -51,7 +51,7 @@
 
   &[data-selected] {
     background-color: var(--highlight-background);
-    color: white;
+    color: var(--gv-text-inverse);
   }
 
   &::selection {

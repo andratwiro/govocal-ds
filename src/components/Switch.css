@@ -63,7 +63,7 @@
     .handle {
       transform: translateX(var(--spacing-4));
       transform-origin: var(--spacing-9) 50%;
-      background: white;
+      background: var(--gv-control-knob);
       box-shadow: inset 0 0 0 1px var(--border-color);
 
       @media (forced-colors: active) {

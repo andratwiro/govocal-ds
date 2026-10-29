@@ -6,7 +6,6 @@
   width: 200px;
 
   .react-aria-Button {
-    --button-color: var(--gv-surface-panel);
     padding: 0 var(--spacing-2) 0 var(--spacing-3);
     width: 100%;
     min-width: 0;

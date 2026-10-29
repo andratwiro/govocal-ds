@@ -300,7 +300,7 @@
   cursor: default;
   user-select: none;
   box-shadow:
-    inset 0px 1px 0px white,
+    inset 0px 1px 0px var(--gv-color-neutral-0),
     inset 0px -4px 8px var(--gray-200);
   border-radius: var(--radius);
   padding: var(--spacing-1) var(--spacing-4);

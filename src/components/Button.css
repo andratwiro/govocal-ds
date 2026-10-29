@@ -39,6 +39,20 @@
     }
   }
 
+  &[data-variant='quiet'] {
+    background: transparent;
+    color: var(--gv-icon-primary);
+    border: none;
+
+    &[data-hovered] {
+      background: var(--gv-surface-hover);
+    }
+
+    &[data-pressed] {
+      background: var(--gv-surface-hover-strong);
+    }
+  }
+
   > svg {
     width: calc(var(--spacing) * 4.5);
     height: calc(var(--spacing) * 4.5);

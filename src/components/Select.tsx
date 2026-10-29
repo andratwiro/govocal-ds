@@ -36,7 +36,7 @@ export function Select<T, M extends 'single' | 'multiple' = 'single'>({
   return (
     <AriaSelect {...props}>
       {label && <Label>{label}</Label>}
-      <Button>
+      <Button variant="secondary">
         <SelectValue />
         <ChevronDown />
       </Button>
