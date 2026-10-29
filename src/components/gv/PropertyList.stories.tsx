@@ -7,6 +7,7 @@ import {Menu, MenuItem, MenuTrigger} from '../Menu';
 import {Select, SelectItem} from '../Select';
 import {Tag, TagGroup} from '../TagGroup';
 import {PropertyList, PropertyListItem} from './PropertyList';
+import {SidePanel, SidePanelSection} from './SidePanel';
 
 // Story helpers, shared with the Side panel's stories: today's Select, TagGroup and Menu. The pill Select and the Tag
 // picker take their place once they land. Every change applies at once (the panel has no Save).
@@ -18,11 +19,14 @@ export const PHASES = ['Shortlist proposals', 'Community vote', 'Find common gro
 
 type Change = (value: string) => void;
 
-/** Status: a single choice, applied at once. */
+/** Status: a single choice, applied at once. A status set by the platform (an idea in screening) shows first and
+ * can't be picked back. */
 export function DemoStatus({value, onChange}: {value: string; onChange: Change}) {
+  const options = STATUSES.includes(value) ? STATUSES : [value, ...STATUSES];
   return (
-    <Select aria-label="Status" selectedKey={value} onSelectionChange={k => onChange(String(k))}>
-      {STATUSES.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
+    <Select aria-label="Status" selectedKey={value} onSelectionChange={k => onChange(String(k))}
+      disabledKeys={STATUSES.includes(value) ? [] : [value]}>
+      {options.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
     </Select>
   );
 }
@@ -123,4 +127,21 @@ export const AllVariants: Story = {
  * phase", a number and an empty value ("–", read as "Not set"). Each change applies at once. */
 export const Default: Story = {
   render: () => <div style={{width: 512}}><IdeaProperties /></div>
+};
+
+/** Its place: a side panel's body, under the record, the label column 24 from the panel's edge. */
+export const InASidePanel: Story = {
+  name: 'In a side panel',
+  render: () => (
+    <div style={{width: 560, height: 420}}>
+      <SidePanel isInline label="Collect ideas" itemName="idea" position={{current: 3, total: 124}}>
+        <SidePanelSection>
+          <p style={{margin: 0, font: 'var(--gv-type-body)'}}>
+            Organise open-air cinema nights on Linden Avenue in summer. It would be a great way for neighbours to meet.
+          </p>
+        </SidePanelSection>
+        <SidePanelSection><IdeaProperties /></SidePanelSection>
+      </SidePanel>
+    </div>
+  )
 };

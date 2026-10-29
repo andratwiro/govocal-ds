@@ -1,0 +1,182 @@
+@import '../theme.css';
+
+/* Side panel (the prototype's #pj-idrawer and its PANEL SPEC v2): floats 16 from the window's top, end and bottom
+   edges, 560 wide (never wider than the window less 32); a 1px card border, radius 14 (the prototype's 18 has no
+   token: the nearest), the panel fill and the dialog shadow. No scrim: the list behind stays usable. It slides in
+   24 from the end edge as it arrives. Inline, it fills its column in the page's flow and doesn't move. */
+.gv-side-panel {
+  --gv-side-panel-shift: 24px;
+  position: fixed;
+  inset-block: var(--gv-space-16);
+  inset-inline-end: var(--gv-space-16);
+  z-index: 50;
+  display: flex;
+  box-sizing: border-box;
+  width: min(560px, calc(100vw - 2 * var(--gv-space-16)));
+  border: 1px solid var(--gv-border-card);
+  border-radius: var(--gv-radius-14);
+  background: var(--gv-surface-panel);
+  box-shadow: var(--gv-shadow-dialog);
+  overflow: hidden;
+  font-family: var(--gv-font-family);
+  color: var(--gv-text-primary);
+  animation: gv-side-panel-in var(--gv-motion-duration-slow) var(--gv-motion-easing-enter);
+
+  &:dir(rtl) {
+    --gv-side-panel-shift: -24px;
+  }
+
+  &[data-inline] {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    width: 100%;
+    height: 100%;
+    box-shadow: none;
+    animation: none;
+  }
+}
+
+@keyframes gv-side-panel-in {
+  from {
+    opacity: 0;
+    translate: var(--gv-side-panel-shift) 0;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.gv-side-panel__dialog {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  outline: none;
+}
+
+/* Head: padding 14, 24 at the start and 18 at the end, a hairline under it. The context label Small secondary,
+   then the pager (‹ "3 of 124" ›) and ×, icon buttons in the strong icon grey. */
+.gv-side-panel__head {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  flex: none;
+  padding-block: var(--gv-space-14);
+  padding-inline: var(--gv-space-24) var(--gv-space-18);
+  border-block-end: 1px solid var(--gv-divider-default);
+}
+
+.gv-side-panel__label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-side-panel__pager {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-2);
+  flex: none;
+  margin-inline-end: var(--gv-space-4);
+}
+
+.gv-side-panel__position {
+  padding: 0 var(--gv-space-4);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  font-variant-numeric: tabular-nums;
+  color: var(--gv-text-secondary);
+  white-space: nowrap;
+}
+
+/* Body: padding 16 24 24, scrolls on its own. */
+.gv-side-panel__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--gv-space-16) var(--gv-space-24) var(--gv-space-24);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+}
+
+/* Footer: padding 16 24, a hairline on top, its content at the end. */
+.gv-side-panel__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gv-space-12);
+  flex: none;
+  padding: var(--gv-space-16) var(--gv-space-24);
+  border-block-start: 1px solid var(--gv-divider-strong);
+}
+
+/* Sections: 24 of air either side of a 1px hairline (the prototype's .pj-mdiv). */
+.gv-side-panel__section + .gv-side-panel__section {
+  margin-block-start: var(--gv-space-24);
+  padding-block-start: var(--gv-space-24);
+  border-block-start: 1px solid var(--gv-divider-strong);
+}
+
+.gv-side-panel__section-title {
+  margin: 0 0 var(--gv-space-12);
+  font: var(--gv-type-body-strong);
+  letter-spacing: var(--gv-type-body-strong-tracking);
+  color: var(--gv-text-primary);
+}
+
+/* The counts and quick actions row (.pj-irow): 12 below what's above it, the counts first, the actions 6 apart. */
+.gv-side-panel__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-12);
+  margin-block-start: var(--gv-space-12);
+}
+
+.gv-side-panel__actions-lead {
+  min-width: 0;
+}
+
+.gv-side-panel__quick {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+  flex: none;
+}
+
+/* Decision strip (.pj-scrstrip): padding 12 12 12 16, radius 12, the warning tint and a 30% amber border (the
+   prototype's amber 50 and 500 have no tokens: colour mixes of the warning icon's amber), Body strong title, its
+   buttons 8 apart; 16 above the record. */
+.gv-side-panel__decision {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-12);
+  margin-block-end: var(--gv-space-16);
+  padding: var(--gv-space-12);
+  padding-inline-start: var(--gv-space-16);
+  border: 1px solid color-mix(in srgb, var(--gv-icon-warning) 30%, transparent);
+  border-radius: var(--gv-radius-12);
+  background: color-mix(in srgb, var(--gv-icon-warning) 9%, var(--gv-surface-panel));
+}
+
+.gv-side-panel__decision-title {
+  font: var(--gv-type-body-strong);
+  letter-spacing: var(--gv-type-body-strong-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-side-panel__decision-actions {
+  display: inline-flex;
+  gap: var(--gv-space-8);
+  flex: none;
+}
