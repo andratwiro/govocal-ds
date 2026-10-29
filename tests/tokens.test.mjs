@@ -131,8 +131,9 @@ describe('mergeTokens', () => {
   });
   it('a Figma pull writes only the Figma files', () => {
     const pull = readFileSync('scripts/figma-pull.mjs', 'utf8');
-    expect(pull).not.toMatch(/motion/);
+    expect(pull).not.toMatch(/motion|size\.tokens/);
     expect(readFileSync('scripts/build-tokens.mjs', 'utf8')).toContain('tokens/motion.tokens.json');
+    expect(readFileSync('scripts/build-tokens.mjs', 'utf8')).toContain('tokens/size.tokens.json');
   });
 });
 
@@ -164,10 +165,41 @@ describe('toCss motion', () => {
   });
 });
 
+// Sizes are Not in Figma too: hand-authored in tokens/size.tokens.json, one group per kind, each named by its value.
+const px = value => ({$type: 'dimension', $value: {value, unit: 'px'}});
+const sizeFile = {
+  $description: 'Not in Figma',
+  size: {
+    icon: {'16': {...px(16), $description: 'The default icon.'}, '20': px(20)},
+    control: {'36': {...px(36), $description: 'Fields and the default Button.'}}
+  }
+};
+
+describe('toCss size', () => {
+  const css = toCss(mergeTokens(parseFoundations(page).tokens, motionFile, sizeFile));
+  it('writes one block per kind, annotated for the Spacing presenter, with each description', () => {
+    expect(css).toContain('/** @tokens Icon size @presenter Spacing */');
+    expect(css).toContain('--gv-size-icon-16: 16px; /* The default icon. */');
+    expect(css).toContain('--gv-size-icon-20: 20px;');
+    expect(css).toContain('/** @tokens Control height @presenter Spacing */');
+    expect(css).toContain('--gv-size-control-36: 36px; /* Fields and the default Button. */');
+  });
+  it('writes no size without size tokens', () => {
+    expect(toCss(parseFoundations(page).tokens)).not.toContain('--gv-size');
+  });
+  it('refuses a size that is not px, not named by its value, or of an unknown kind', () => {
+    const bad = size => () => toCss(mergeTokens(parseFoundations(page).tokens, {size}));
+    expect(bad({icon: {'16': {$type: 'dimension', $value: {value: 1, unit: 'rem'}}}})).toThrow(/size.icon.16/);
+    expect(bad({icon: {'16': px(15)}})).toThrow(/size.icon.16/);
+    expect(bad({icon: {'0': px(0)}})).toThrow(/size.icon.0/);
+    expect(bad({gutter: {'16': px(16)}})).toThrow(/size.gutter/);
+  });
+});
+
 describe('src/tokens.css', () => {
-  it('is the build of the Figma file and the motion file (run npm run tokens:build)', () => {
-    const figma = JSON.parse(readFileSync('tokens/foundations.tokens.json', 'utf8'));
-    const motion = JSON.parse(readFileSync('tokens/motion.tokens.json', 'utf8'));
-    expect(readFileSync('src/tokens.css', 'utf8')).toBe(toCss(mergeTokens(figma, motion)));
+  it('is the build of the Figma file, the motion file and the size file (run npm run tokens:build)', () => {
+    const read = path => JSON.parse(readFileSync(path, 'utf8'));
+    expect(readFileSync('src/tokens.css', 'utf8')).toBe(toCss(mergeTokens(read('tokens/foundations.tokens.json'),
+      read('tokens/motion.tokens.json'), read('tokens/size.tokens.json'))));
   });
 });

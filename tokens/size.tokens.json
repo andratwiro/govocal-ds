@@ -1,0 +1,81 @@
+{
+  "$description": "Not in Figma: our Figma export has no size variables. Written by hand (DTCG); npm run tokens:pull never touches this file, npm run tokens:build merges it with the Figma tokens into src/tokens.css. Values are the sizes the components already draw: icons, control heights (fields and the default Button are 36, docs/DECISIONS.md) and avatars. Each name is its value in px.",
+  "size": {
+    "icon": {
+      "12": {
+        "$type": "dimension",
+        "$value": {"value": 12, "unit": "px"},
+        "$description": "The smallest glyph: a tag's remove ×, a tick in a small mark."
+      },
+      "14": {
+        "$type": "dimension",
+        "$value": {"value": 14, "unit": "px"},
+        "$description": "Icons in dense rows and small controls: a disclosure chevron, a list row's marks, a filter chip's icon."
+      },
+      "16": {
+        "$type": "dimension",
+        "$value": {"value": 16, "unit": "px"},
+        "$description": "The default icon: in buttons, icon buttons, menus, options, cards and fields."
+      },
+      "18": {
+        "$type": "dimension",
+        "$value": {"value": 18, "unit": "px"},
+        "$description": "Navigation and status icons: the side nav, a search field's magnifier, a toast's status mark."
+      },
+      "20": {
+        "$type": "dimension",
+        "$value": {"value": 20, "unit": "px"},
+        "$description": "A standalone icon with room around it: a modal's close ×, a drop zone, the icon gallery."
+      },
+      "24": {
+        "$type": "dimension",
+        "$value": {"value": 24, "unit": "px"},
+        "$description": "The largest UI icon: an alert dialog's badge, an image placeholder, a side nav icon slot."
+      }
+    },
+    "control": {
+      "24": {
+        "$type": "dimension",
+        "$value": {"value": 24, "unit": "px"},
+        "$description": "The smallest square button: a banner's or toast's dismiss ×, a rich text toolbar button."
+      },
+      "28": {
+        "$type": "dimension",
+        "$value": {"value": 28, "unit": "px"},
+        "$description": "Compact controls: the default icon button, a modal's close, a card's chevron, a toast action, a toggle in a group."
+      },
+      "32": {
+        "$type": "dimension",
+        "$value": {"value": 32, "unit": "px"},
+        "$description": "Small controls and rows: Button size 32, Compact button, Segmented control, menu, tree and list items."
+      },
+      "36": {
+        "$type": "dimension",
+        "$value": {"value": 36, "unit": "px"},
+        "$description": "The default control: text, date and number fields, Select, the default Button, a side nav row. Fields line up with buttons beside them."
+      },
+      "40": {
+        "$type": "dimension",
+        "$value": {"value": 40, "unit": "px"},
+        "$description": "Large controls: a field inside a card, a folded side nav item (a square hit area)."
+      }
+    },
+    "avatar": {
+      "16": {
+        "$type": "dimension",
+        "$value": {"value": 16, "unit": "px"},
+        "$description": "A face inside a dense row: an assignee in a list row."
+      },
+      "24": {
+        "$type": "dimension",
+        "$value": {"value": 24, "unit": "px"},
+        "$description": "Avatar groups (overlapping faces) and the side nav's account row."
+      },
+      "28": {
+        "$type": "dimension",
+        "$value": {"value": 28, "unit": "px"},
+        "$description": "The default avatar."
+      }
+    }
+  }
+}
