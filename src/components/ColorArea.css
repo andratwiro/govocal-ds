@@ -10,6 +10,6 @@
 
 .react-aria-ColorArea {
   &[data-disabled] {
-    background: var(--gray-400) !important;
+    background: var(--gray-400) !important; /* raw: colour picker chrome, a disabled well */
   }
 }

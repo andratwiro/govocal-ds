@@ -163,6 +163,7 @@
   --gv-side-nav-surface-current: var(--gv-color-alpha-black-70); /* Side nav only: the current item's background. */
   --gv-side-nav-icon: var(--gv-color-slate-300); /* Side nav only: an item's icon. */
   --gv-side-nav-icon-current: var(--gv-color-teal-400); /* Side nav only: the current item's icon. */
+  --gv-side-nav-icon-accent: var(--gv-color-green-400); /* Side nav only (component tier): an icon in the accent green on the dark nav (the Support row). */
   /** @tokens-end */
 
   /** @tokens chart @presenter Color */

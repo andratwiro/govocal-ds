@@ -45,7 +45,7 @@
 
   &[data-selected] {
     --button-color: var(--gv-color-neutral-900);
-    --button-border: var(--gv-color-neutral-900);
+    --button-border: var(--button-color);
     --button-text: var(--gv-text-inverse);
   }
 

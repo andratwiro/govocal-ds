@@ -23,8 +23,8 @@
     content: '';
     position: absolute;
     inset: 0;
-    border: 2px solid var(--gv-color-neutral-900);
-    outline: 2px solid var(--gv-color-neutral-0);
+    border: 2px solid var(--gv-color-neutral-900); /* raw: colour picker chrome, black and white whatever the colour under it */
+    outline: 2px solid var(--gv-color-neutral-0); /* raw: colour picker chrome, black and white whatever the colour under it */
     outline-offset: -4px;
     border-radius: inherit;
   }

@@ -89,7 +89,7 @@
   color: var(--gv-icon-nav);
 
   &[data-accent] {
-    color: var(--gv-color-green-400);
+    color: var(--gv-side-nav-icon-accent);
   }
 }
 

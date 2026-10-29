@@ -177,6 +177,13 @@
       "$description": "The keyboard focus ring's colour. Components draw the whole ring with --gv-focus-ring."
     }
   },
+  "side-nav": {
+    "icon-accent": {
+      "$type": "color",
+      "$value": "{color.green.400}",
+      "$description": "Side nav only (component tier): an icon in the accent green on the dark nav (the Support row)."
+    }
+  },
   "focus": {
     "ring": {
       "$type": "border",
