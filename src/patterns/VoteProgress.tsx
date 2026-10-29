@@ -11,7 +11,7 @@ interface VoteProgressBase
 }
 
 export interface VoteProgressThresholdProps extends VoteProgressBase {
-  variant: 'threshold';
+  kind: 'threshold';
   /** Votes gathered so far. */
   count: number;
   /** The signature threshold the cause is aiming for. */
@@ -19,20 +19,20 @@ export interface VoteProgressThresholdProps extends VoteProgressBase {
 }
 
 export interface VoteProgressCountProps extends VoteProgressBase {
-  variant: 'count';
+  kind: 'count';
   /** Votes gathered so far. */
   count: number;
   /** The highest count among the options shown, used to scale the bar. */
   maxCount: number;
-  /** How many of the votes are new since last seen. Omit for the plain Count variant. */
+  /** How many of the votes are new since last seen. Omit for the plain Count kind. */
   newCount?: number;
 }
 
 export type VoteProgressProps = VoteProgressThresholdProps | VoteProgressCountProps;
 
 export function VoteProgress(props: VoteProgressProps) {
-  if (props.variant === 'threshold') {
-    const {variant, label, count, threshold, className, style, ...rest} = props;
+  if (props.kind === 'threshold') {
+    const {kind, label, count, threshold, className, style, ...rest} = props;
     const percent = threshold > 0 ? Math.min(100, (count / threshold) * 100) : 0;
     return (
       <ProgressBar
@@ -56,7 +56,7 @@ export function VoteProgress(props: VoteProgressProps) {
     );
   }
 
-  const {variant, label, count, maxCount, newCount, className, style, ...rest} = props;
+  const {kind, label, count, maxCount, newCount, className, style, ...rest} = props;
   const percent = maxCount > 0 ? Math.min(100, (count / maxCount) * 100) : 0;
   return (
     <ProgressBar

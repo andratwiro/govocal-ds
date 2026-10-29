@@ -63,7 +63,7 @@ export function VotingRow({
         </div>
         <div className="gv-list-row-voting__cell gv-list-row-voting__votes-cell">
           <VoteProgress
-            variant="count"
+            kind="count"
             label={`Votes for ${title}`}
             count={voteCount}
             maxCount={maxCount}

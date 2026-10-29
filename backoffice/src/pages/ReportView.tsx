@@ -1109,7 +1109,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
                     <Skeleton width="70%" height={32} />
                     <Skeleton width="100%" />
                     <Skeleton width="90%" />
-                    <Skeleton width="100%" height={160} shape="block" />
+                    <Skeleton width="100%" height={160} variant="block" />
                     <Skeleton width="60%" />
                   </article>
                 ) : pages.length ? pages.map((p, i) => (

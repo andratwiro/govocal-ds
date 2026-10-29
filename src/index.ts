@@ -30,7 +30,7 @@ export {
 } from './components/gv/Chart';
 export {
   DashboardCard, DashboardStatements, DashboardBars, DashboardRanking, DashboardTopics, DashboardList,
-  DashboardDemographic, type DashboardCardType, type DashboardCardProps, type DashboardStatement,
+  DashboardDemographic, type DashboardCardKind, type DashboardCardProps, type DashboardStatement,
   type DashboardStatementsProps, type DashboardBar, type DashboardBarsProps, type DashboardRankingItem,
   type DashboardRankingProps, type DashboardTopic, type DashboardTopicsProps, type DashboardDemographicItem,
   type DashboardListItem, type DashboardListProps, type DashboardDemographicProps

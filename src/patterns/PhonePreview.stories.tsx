@@ -21,7 +21,7 @@ function SkeletonCard({tall = false}: {tall?: boolean}) {
     <PhoneCard>
       <Skeleton width="58%" height={14} />
       <Skeleton width="40%" height={10} />
-      {tall && <Skeleton shape="block" height={96} />}
+      {tall && <Skeleton variant="block" height={96} />}
       <Skeleton width="100%" height={8} />
       <Skeleton width="72%" height={8} />
     </PhoneCard>

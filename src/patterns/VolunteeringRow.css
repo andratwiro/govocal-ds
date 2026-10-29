@@ -95,7 +95,7 @@
 /* Build (Not in Figma; the prototype's .pj-causerow, a phase's Causes card): a 40 thumbnail, radius 8; the title in
    UI over how many signed up, Small secondary; Edit and Delete at the end; 8 above and below, no inline padding (the
    card's body has its own); a hairline between rows. */
-.gv-cause-row[data-variant='build'] {
+.gv-cause-row[data-layout='build'] {
   padding: var(--gv-space-8) 0;
   border-block-end: none;
 

@@ -36,7 +36,7 @@ function SetArea({initial = []}: {initial?: string[]}) {
   const value = picked === 'none' ? 'No specific area' : picked === 'all' ? 'All areas'
     : picked === 'selected' && names.length ? (names.length === 1 ? names[0] : count(names.length, 'area', 'areas')) : undefined;
   return (
-    <SetupStep action="pick" pickerType="menu" title="Set area" value={value} isDone={value != null} picker={
+    <SetupStep kind="pick" pickerKind="menu" title="Set area" value={value} isDone={value != null} picker={
       <Menu aria-label="Area" selectionMode="single" selectedKeys={mode} onSelectionChange={setMode}>
         <MenuItem id="none" icon={pin} description="The project will not show when filtering by area.">No specific area</MenuItem>
         <MenuItem id="all" icon={pin} description="The project will show on every area filter.">All areas</MenuItem>
@@ -57,7 +57,7 @@ function SetArea({initial = []}: {initial?: string[]}) {
 function SetTopicTags({initial = []}: {initial?: string[]}) {
   const [tags, setTags] = useState<string[]>(initial);
   return (
-    <SetupStep action="pick" title="Set topic tags" value={tags.length ? count(tags.length, 'tag', 'tags') : undefined}
+    <SetupStep kind="pick" title="Set topic tags" value={tags.length ? count(tags.length, 'tag', 'tags') : undefined}
       isDone={tags.length > 0} picker={
         <OptionList aria-label="Topic tags" options={TOPICS} selected={tags} onChange={setTags} placeholder="Search tags..."
           searchLabel="Search tags" selectionLabel={n => (n ? `${count(n, 'tag', 'tags')} selected` : 'No tags selected')} />
@@ -68,10 +68,10 @@ function SetTopicTags({initial = []}: {initial?: string[]}) {
 export const AllVariants: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
-      <SetupStep action="open" title="Settings" />
-      <SetupStep action="expand" title="Set project card">{cardText}</SetupStep>
-      <SetupStep action="open" title="Edit project page" isDone />
-      <SetupStep action="expand" title="Set area" isDone defaultExpanded>
+      <SetupStep kind="open" title="Settings" />
+      <SetupStep kind="expand" title="Set project card">{cardText}</SetupStep>
+      <SetupStep kind="open" title="Edit project page" isDone />
+      <SetupStep kind="expand" title="Set area" isDone defaultExpanded>
         Riverside North, Old Harbour
       </SetupStep>
       <SetArea initial={['Harbour']} />
@@ -82,19 +82,19 @@ export const AllVariants: Story = {
 
 /** Action=Open */
 export const Open: Story = {
-  args: {action: 'open', title: 'Settings'},
+  args: {kind: 'open', title: 'Settings'},
   parameters: {design: {type: 'figma', url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=4-19'}}
 };
 
 /** Action=Expand */
 export const Expand: Story = {
-  args: {action: 'expand', title: 'Set project card', children: cardText},
+  args: {kind: 'expand', title: 'Set project card', children: cardText},
   parameters: {design: {type: 'figma', url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=4-37'}}
 };
 
 /** Not in Figma (the prototype's PJP_CHK, 7 Oct): a done step, its dashed ring filled with a tick. */
 export const Done: Story = {
-  args: {action: 'expand', title: 'Set area', isDone: true, defaultExpanded: true, children: 'Riverside North, Old Harbour'}
+  args: {kind: 'expand', title: 'Set area', isDone: true, defaultExpanded: true, children: 'Riverside North, Old Harbour'}
 };
 
 /** Not in Figma (the prototype's `.pjsum-pill--on`): a set step says what it is set to in a teal value badge before
@@ -103,9 +103,9 @@ export const WithValue: Story = {
   name: 'With value',
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
-      <SetupStep action="expand" title="Set area" value="Harbour" isDone>Harbour</SetupStep>
-      <SetupStep action="expand" title="Set topic tags" value="2 tags" isDone>Green spaces, Climate</SetupStep>
-      <SetupStep action="open" title="Plan participation" value="Riverside North, Old Harbour, Westside" isDone />
+      <SetupStep kind="expand" title="Set area" value="Harbour" isDone>Harbour</SetupStep>
+      <SetupStep kind="expand" title="Set topic tags" value="2 tags" isDone>Green spaces, Climate</SetupStep>
+      <SetupStep kind="open" title="Plan participation" value="Riverside North, Old Harbour, Westside" isDone />
     </div>
   )
 };

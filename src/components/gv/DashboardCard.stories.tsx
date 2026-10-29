@@ -79,7 +79,7 @@ const SUMMARY =
 const cards = {
   statements: (
     <DashboardCard
-      type="statements"
+      kind="statements"
       title="Statements"
       subtitle="Where the community aligns and where it splits."
       legend={<ChartLegend variant="square" align="start" items={[{label: 'Agree', color: 'agree'}, {label: 'Disagree', color: 'disagree'}, {label: 'Pass', color: 'pass'}]} />}>
@@ -87,18 +87,18 @@ const cards = {
     </DashboardCard>
   ),
   visitors: (
-    <DashboardCard type="visitors-over-time" title="Visitors over time">
+    <DashboardCard kind="visitors-over-time" title="Visitors over time">
       <LineChart labels={WEEKS} series={[{label: 'Visitors', values: [2, 5, 9, 14, 11, 7]}]} />
     </DashboardCard>
   ),
   participation: (
-    <DashboardCard type="participation-over-time" title="Participation over time">
+    <DashboardCard kind="participation-over-time" title="Participation over time">
       <LineChart showLegend labels={WEEKS} series={[{label: 'Participants', values: [1, 0, 1, 10, 0, 1]}, {label: 'Visitors', values: [0, 3, 9, 9, 6, 6]}]} />
     </DashboardCard>
   ),
   ai: (
     <DashboardCard
-      type="ai-summary"
+      kind="ai-summary"
       icon={<Sparkles />}
       title="What are people saying?"
       footer={<>1 / 34<CompactButton>Explore</CompactButton></>}>
@@ -106,7 +106,7 @@ const cards = {
     </DashboardCard>
   ),
   topics: (
-    <DashboardCard type="topic-breakdown" title="Topic breakdown">
+    <DashboardCard kind="topic-breakdown" title="Topic breakdown">
       <DashboardTopics
         items={[
           {id: 'ai', label: 'AI topic distribution', meta: '34 inputs · 0 topics'},
@@ -117,13 +117,13 @@ const cards = {
     </DashboardCard>
   ),
   status: (
-    <DashboardCard type="status-breakdown" title="Status breakdown">
+    <DashboardCard kind="status-breakdown" title="Status breakdown">
       <DashboardBars items={[...STATUSES]} />
     </DashboardCard>
   ),
   votes: (
     <DashboardCard
-      type="votes-over-time"
+      kind="votes-over-time"
       title="Participation over time"
       subtitle="Votes cast · cumulative"
       action={
@@ -136,7 +136,7 @@ const cards = {
     </DashboardCard>
   ),
   ranking: (
-    <DashboardCard type="live-ranking" title="Live ranking" subtitle="By votes · updating live">
+    <DashboardCard kind="live-ranking" title="Live ranking" subtitle="By votes · updating live">
       <DashboardRanking items={OPTIONS} />
     </DashboardCard>
   ),
@@ -146,12 +146,12 @@ const cards = {
     </DashboardCard>
   ),
   age: (
-    <DashboardCard type="demographic-age">
+    <DashboardCard kind="demographic-age">
       <DashboardDemographic label="Age group" items={[...AGES]} />
     </DashboardCard>
   ),
   commute: (
-    <DashboardCard type="demographic-commute">
+    <DashboardCard kind="demographic-commute">
       <DashboardDemographic label="Primary commute" items={[...COMMUTES]} />
     </DashboardCard>
   )
@@ -223,7 +223,7 @@ export const DemographicCommute: Story = {name: 'Demographic · commute', render
 export const Empty: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 14}}>
-      <DashboardCard type="participation-over-time" title="Participation over time">
+      <DashboardCard kind="participation-over-time" title="Participation over time">
         <EmptyState size="panel" headingLevel="none" title="No participation yet" description="The trend will appear here." />
       </DashboardCard>
       <DashboardCard title="Demographics and audience">

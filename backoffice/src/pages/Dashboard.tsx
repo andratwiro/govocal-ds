@@ -1,7 +1,7 @@
 import {useMemo, useState, type ReactNode} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {ArrowRight, CalendarDays, Download, Eye, FolderOpen, Zap} from 'lucide-react';
-import {Badge, Banner, BarRow, Button, ChartLegend, DashboardBars, DashboardCard, type DashboardCardType,
+import {Badge, Banner, BarRow, Button, ChartLegend, DashboardBars, DashboardCard, type DashboardCardKind,
   DashboardDemographic, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader,
   DataTableRow, DataTableStack, DataTableText, DateRangeField, EmptyState, FilterChips, type FilterFacet, FilterMenu,
   type FilterValue, IconButton, LineChart, Menu, MenuItem, MenuTrigger, Pagination, Panel, queue, SearchField,
@@ -62,11 +62,11 @@ function DownloadMenu({title}: {title: string}) {
 
 /** The real admin's dashboard card (title, download, body) as the gv Dashboard card: its legend and foot slots too. */
 function DashCard({title, type, control, legend, footer, children}: {
-  title: string; type?: DashboardCardType; control?: ReactNode; legend?: ReactNode; footer?: ReactNode; children: ReactNode;
+  title: string; type?: DashboardCardKind; control?: ReactNode; legend?: ReactNode; footer?: ReactNode; children: ReactNode;
 }) {
   const action = <span className="bo-dashboard-card-actions">{control}<DownloadMenu title={title} /></span>;
   return (
-    <DashboardCard type={type} title={title} action={action} legend={legend} footer={footer}>
+    <DashboardCard kind={type} title={title} action={action} legend={legend} footer={footer}>
       <div className="bo-dashboard-body">{children}</div>
     </DashboardCard>
   );

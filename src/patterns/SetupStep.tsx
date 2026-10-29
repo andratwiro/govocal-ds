@@ -15,13 +15,13 @@ export interface SetupStepProps extends PlacementProps {
    *
    * @default 'open'
    */
-  action?: 'open' | 'expand' | 'pick';
+  kind?: 'open' | 'expand' | 'pick';
   /** What the step is set to, short ("Harbour", "2 tags"): a teal value badge before the chevron. */
   value?: ReactNode;
-  /** Pick: what the popover holds. An Option list (`pickerType="dialog"`) or a Menu (`"menu"`, e.g. with a submenu). */
+  /** Pick: what the popover holds. An Option list (`pickerKind="dialog"`) or a Menu (`"menu"`, e.g. with a submenu). */
   picker?: ReactNode;
-  /** Pick: the picker's kind. @default 'dialog' */
-  pickerType?: 'dialog' | 'menu';
+  /** Pick: what kind of picker. @default 'dialog' */
+  pickerKind?: 'dialog' | 'menu';
   /** The step's name, e.g. "Settings" or "Set project card". */
   title: string;
   /** The step is done: the dashed circle becomes a filled check. */
@@ -60,7 +60,7 @@ function Check({isDone}: {isDone?: boolean}) {
 
 /** A setup checklist step: a dashed circle until it's done, then a check; what it is set to in a value badge. */
 export function SetupStep({
-  action = 'open',
+  kind = 'open',
   title,
   isDone,
   onPress,
@@ -70,7 +70,7 @@ export function SetupStep({
   onExpandedChange,
   value,
   picker,
-  pickerType = 'dialog',
+  pickerKind = 'dialog',
   className,
   style
 }: SetupStepProps) {
@@ -84,9 +84,9 @@ export function SetupStep({
       </span>
     </>
   );
-  if (action === 'open') {
+  if (kind === 'open') {
     return (
-      <div className={clsx('gv-setup-card', className)} style={style} data-action="open" data-done={isDone || undefined}>
+      <div className={clsx('gv-setup-card', className)} style={style} data-kind="open" data-done={isDone || undefined}>
         <Button className="gv-setup-card__header" onPress={onPress}>
           {label}
           <span className="gv-setup-card__chevron" aria-hidden>
@@ -96,7 +96,7 @@ export function SetupStep({
       </div>
     );
   }
-  if (action === 'pick') {
+  if (kind === 'pick') {
     const header = (
       <Button className="gv-setup-card__header">
         {label}
@@ -110,8 +110,8 @@ export function SetupStep({
       <Popover placement="bottom start" showArrow={false} className="gv-setup-card__popover">{content}</Popover>
     );
     return (
-      <div className={clsx('gv-setup-card', className)} style={style} data-action="pick" data-done={isDone || undefined}>
-        {pickerType === 'menu' ? (
+      <div className={clsx('gv-setup-card', className)} style={style} data-kind="pick" data-done={isDone || undefined}>
+        {pickerKind === 'menu' ? (
           <MenuTrigger>{header}{popover(picker)}</MenuTrigger>
         ) : (
           <DialogTrigger>{header}{popover(<Dialog aria-label={title} className="gv-setup-card__dialog">{picker}</Dialog>)}</DialogTrigger>
@@ -122,7 +122,7 @@ export function SetupStep({
   return (
     <Disclosure
       className={clsx('gv-setup-card', className)} style={style}
-      data-action="expand"
+      data-kind="expand"
       data-done={isDone || undefined}
       defaultExpanded={defaultExpanded}
       isExpanded={isExpanded}

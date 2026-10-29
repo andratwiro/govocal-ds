@@ -83,7 +83,7 @@ function LiveMonitor({quarter}: {quarter: number}) {
             dissatisfied) to 5 (very satisfied).</HelpPopover></span>} />
         {CATEGORIES.map(c => <ScoreTile key={c.id} label={c.label} scores={c.scores} quarter={quarter} />)}
       </div>
-      <DashboardCard type="participation-over-time" title="Health score over time"
+      <DashboardCard kind="participation-over-time" title="Health score over time"
         subtitle="Average of every sentiment question · per quarter">
         <LineChart labels={shown} max={5} series={[{label: 'Health score', values: HEALTH.slice(0, quarter + 1), color: 'line-primary'}]} />
       </DashboardCard>
@@ -134,7 +134,7 @@ function Participants({quarter}: {quarter: number}) {
         <StatTile label="Response rate" value={`${rate}%`} note="of residents shown the popup" />
         <StatTile label="Respondents to date" value={n(allTime)} note={`since ${QUARTERS[0]}`} />
       </div>
-      <DashboardCard type="participation-over-time" title="Respondents over time" subtitle="People who answered · per quarter">
+      <DashboardCard kind="participation-over-time" title="Respondents over time" subtitle="People who answered · per quarter">
         <LineChart labels={shown} series={[{label: 'Respondents', values: RESPONDENTS.slice(0, quarter + 1), color: 'line-primary'}]} />
         <div className="bo-community-monitor-rows">
           <LegendRow color="--gv-chart-line-primary" label="Respondents" value={`${n(RESPONDENTS[quarter])} in ${QUARTERS[quarter]}`} />
@@ -144,7 +144,7 @@ function Participants({quarter}: {quarter: number}) {
       <Banner>From registration fields. Groups with fewer than 5 respondents are hidden, and no answer is shown next to who gave it.</Banner>
       <div className="bo-community-monitor-cards">
         {WHO.map(w => (
-          <DashboardCard key={w.label} type="demographic-age" aria-label={w.label}>
+          <DashboardCard key={w.label} kind="demographic-age" aria-label={w.label}>
             <DashboardDemographic label={w.label} items={w.items} />
           </DashboardCard>
         ))}

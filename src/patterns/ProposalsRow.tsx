@@ -64,7 +64,7 @@ export function ProposalsRow({
         </div>
         <div className="gv-list-row-proposals__cell gv-list-row-proposals__votes-cell">
           <VoteProgress
-            variant="threshold"
+            kind="threshold"
             label={`Votes for ${title}`}
             count={voteCount}
             threshold={voteThreshold}

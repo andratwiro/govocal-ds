@@ -11,8 +11,8 @@ import type {PlacementProps} from '../className';
 import './Chart.css';
 import './DashboardCard.css';
 
-/** Figma "Dashboard card" · Type. Sets the spacing each variant uses between its parts. */
-export type DashboardCardType =
+/** Figma "Dashboard card" · Type: what the card shows. Sets the spacing each kind uses between its parts. */
+export type DashboardCardKind =
   | 'statements'
   | 'visitors-over-time'
   | 'participation-over-time'
@@ -25,7 +25,7 @@ export type DashboardCardType =
   | 'demographic-commute';
 
 export interface DashboardCardProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
-  type?: DashboardCardType;
+  kind?: DashboardCardKind;
   /** Card title (Title type). Demographic cards have none: their label sits in the body. */
   title?: ReactNode;
   /** The grey line under the title ("By votes · updating live"). */
@@ -51,7 +51,7 @@ const cx = (...c: (string | false | undefined)[]) => c.filter(Boolean).join(' ')
 
 /** A white dashboard tile with a header, a body and optional legend and footer (Figma "Dashboard card"). */
 export function DashboardCard({
-  type,
+  kind,
   title,
   subtitle,
   icon,
@@ -70,7 +70,7 @@ export function DashboardCard({
     <section
       {...rest}
       aria-labelledby={title != null ? id : rest['aria-labelledby']}
-      className={cx('gv-dashboard-card', type && `gv-dashboard-card--${type}`, className)}>
+      className={cx('gv-dashboard-card', kind && `gv-dashboard-card--${kind}`, className)}>
       {hasHeader && (
         <div className="gv-dashboard-card__header">
           <div className="gv-dashboard-card__heading">

@@ -112,7 +112,7 @@ function SetArea() {
   const value = mode === 'none' ? 'No specific area' : mode === 'all' ? 'All areas'
     : mode === 'selected' && names.length ? (names.length === 1 ? names[0] : counted(names.length, 'area', 'areas')) : undefined;
   return (
-    <SetupStep action="pick" pickerType="menu" title="Set area" value={value} isDone={value != null} picker={
+    <SetupStep kind="pick" pickerKind="menu" title="Set area" value={value} isDone={value != null} picker={
       <Menu aria-label="Area" selectionMode="single" selectedKeys={mode ? [mode] : []}
         onSelectionChange={keys => setMode(keys === 'all' ? null : [...keys].map(String)[0] ?? null)}>
         <MenuItem id="none" icon={pin} description="The project will not show when filtering by area.">No specific area</MenuItem>
@@ -134,7 +134,7 @@ function SetArea() {
 function SetTopicTags() {
   const [tags, setTags] = useState<string[]>([]);
   return (
-    <SetupStep action="pick" title="Set topic tags" value={tags.length ? counted(tags.length, 'tag', 'tags') : undefined}
+    <SetupStep kind="pick" title="Set topic tags" value={tags.length ? counted(tags.length, 'tag', 'tags') : undefined}
       isDone={tags.length > 0} picker={
         <OptionList aria-label="Topic tags" options={TOPICS.map(t => ({id: t, label: t}))} selected={tags} onChange={setTags}
           placeholder="Search tags..." searchLabel="Search tags"
@@ -147,7 +147,7 @@ function SetTopicTags() {
 export function ChecklistStep({step, onOpen}: {step: typeof CHECKLIST[number]; onOpen: (title: string) => void}): ReactNode {
   if (step.title === 'Set area') return <SetArea />;
   if (step.title === 'Set topic tags') return <SetTopicTags />;
-  if (step.action === 'expand') return <SetupStep action="expand" title={step.title}><p className="bo-note bo-phase-flush">{step.body}</p></SetupStep>;
+  if (step.action === 'expand') return <SetupStep kind="expand" title={step.title}><p className="bo-note bo-phase-flush">{step.body}</p></SetupStep>;
   return <SetupStep title={step.title} onPress={() => onOpen(step.title)} />;
 }
 
