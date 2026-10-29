@@ -13,7 +13,7 @@
     width: fit-content;
     min-width: 168px;
     max-width: 100%;
-    height: var(--spacing-9);
+    height: var(--gv-size-control-36);
     box-sizing: border-box;
     padding: 0 var(--spacing-1) 0 var(--spacing-3);
     border-radius: var(--radius);

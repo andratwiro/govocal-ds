@@ -13,7 +13,7 @@
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
-  height: var(--spacing-9);
+  height: var(--gv-size-control-36);
   width: fit-content;
   min-width: 150px;
   padding: 0 var(--spacing-3);

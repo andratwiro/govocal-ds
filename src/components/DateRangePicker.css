@@ -11,7 +11,7 @@
     width: fit-content;
     min-width: 220px;
     max-width: 100%;
-    height: var(--spacing-9);
+    height: var(--gv-size-control-36);
     box-sizing: border-box;
     overflow: clip;
     position: relative;

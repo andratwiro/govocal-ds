@@ -10,7 +10,7 @@
   .combobox-field {
     display: flex;
     align-items: center;
-    height: var(--spacing-9);
+    height: var(--gv-size-control-36);
     width: 100%;
   }
 

@@ -13,7 +13,7 @@
   letter-spacing: var(--gv-type-ui-strong-tracking);
   text-align: center;
   margin: 0;
-  height: var(--spacing-9);
+  height: var(--gv-size-control-36);
   padding: 0 var(--spacing-4);
   display: inline-flex;
   align-items: center;
@@ -30,12 +30,12 @@
   }
 
   > span > svg {
-    width: var(--spacing-4);
-    height: var(--spacing-4);
+    width: var(--gv-size-icon-16);
+    height: var(--gv-size-icon-16);
   }
 
   &:has(> span > svg:only-child) {
-    width: var(--spacing-9);
+    width: var(--gv-size-control-36);
     padding: 0;
   }
 
