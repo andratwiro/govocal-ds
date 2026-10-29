@@ -1,7 +1,8 @@
 import {useMemo, useRef, useState} from 'react';
-import {ChevronLeft, ChevronRight, Copy, Download, MoreHorizontal, Play, Plus, Share2, Sparkles} from 'lucide-react';
+import {ChevronLeft, ChevronRight, Copy, Download, Play, Plus, Share2, Sparkles} from 'lucide-react';
 import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
-import {Table, TableHeader, Column, TableBody, Row, Cell} from '../../../src/components/Table';
+import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
+  DataTableOptions} from '../../../src/components/gv/DataTable';
 import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
 import {SearchField} from '../../../src/components/SearchField';
 import {Button} from '../../../src/components/Button';
@@ -42,39 +43,37 @@ function ReportTable({label, reports, onEdit, onDuplicate, onDelete}: {
   onEdit: (r: Report) => void; onDuplicate: (r: Report) => void; onDelete: (r: Report) => void;
 }) {
   return (
-    <Table aria-label={label} className="react-aria-Table bo-reporting-table">
-      <TableHeader>
-        <Column isRowHeader>Report</Column>
-        <Column>Created</Column>
-        <Column>Last edited</Column>
-        <Column><span className="bo-visually-hidden">Actions</span></Column>
-      </TableHeader>
-      <TableBody renderEmptyState={() => <p className="bo-note bo-reporting-empty">No reports match your search.</p>}>
+    <DataTable aria-label={label}>
+      <DataTableHeader>
+        <DataTableColumn isRowHeader>Report</DataTableColumn>
+        <DataTableColumn>Created</DataTableColumn>
+        <DataTableColumn>Last edited</DataTableColumn>
+        <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+      </DataTableHeader>
+      <DataTableBody renderEmptyState={() => <DataTableEmpty>No reports match your search.</DataTableEmpty>}>
         {reports.map(r => (
-          <Row key={r.id} id={r.id}>
-            <Cell>
+          <DataTableRow key={r.id} id={r.id}>
+            <DataTableCell>
               <span className="bo-reporting-title">
                 <span>{r.title}</span>
                 {r.isNew && <Pill>New</Pill>}
                 {r.kind === 'progress' && <Pill>Progress</Pill>}
               </span>
-            </Cell>
-            <Cell><span className="bo-reporting-nowrap">{r.created}</span></Cell>
-            <Cell><span className="bo-note bo-reporting-nowrap">{modified(r.modifiedDays)}</span></Cell>
-            <Cell>
-              <MenuTrigger>
-                <IconButton aria-label={`Actions for ${r.title}`}><MoreHorizontal aria-hidden size={16} /></IconButton>
-                <Menu onAction={k => (k === 'edit' ? onEdit(r) : k === 'copy' ? onDuplicate(r) : onDelete(r))}>
-                  <MenuItem id="edit">Edit</MenuItem>
-                  <MenuItem id="copy">Duplicate</MenuItem>
-                  <MenuItem id="delete">Delete</MenuItem>
-                </Menu>
-              </MenuTrigger>
-            </Cell>
-          </Row>
+            </DataTableCell>
+            <DataTableCell><span className="bo-reporting-nowrap">{r.created}</span></DataTableCell>
+            <DataTableCell><span className="bo-note bo-reporting-nowrap">{modified(r.modifiedDays)}</span></DataTableCell>
+            <DataTableCell align="options">
+              <DataTableOptions aria-label={`Actions for ${r.title}`}
+                onAction={k => (k === 'edit' ? onEdit(r) : k === 'copy' ? onDuplicate(r) : onDelete(r))}>
+                <MenuItem id="edit">Edit</MenuItem>
+                <MenuItem id="copy">Duplicate</MenuItem>
+                <MenuItem id="delete">Delete</MenuItem>
+              </DataTableOptions>
+            </DataTableCell>
+          </DataTableRow>
         ))}
-      </TableBody>
-    </Table>
+      </DataTableBody>
+    </DataTable>
   );
 }
 

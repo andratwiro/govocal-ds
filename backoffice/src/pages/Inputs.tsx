@@ -1,5 +1,7 @@
 import {useMemo, useState} from 'react';
-import {Table, TableHeader, Column, TableBody, Row, Cell} from '../../../src/components/Table';
+import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
+  DataTableStack}
+  from '../../../src/components/gv/DataTable';
 import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {SearchField} from '../../../src/components/SearchField';
@@ -11,7 +13,6 @@ import {Pill} from '../../../src/components/gv/Pill';
 import {Status} from '../../../src/components/gv/Status';
 import {Avatar} from '../../../src/components/gv/Avatar';
 import {NewDot} from '../../../src/components/gv/NewDot';
-import {ListHeaderCell} from '../../../src/components/gv/ListHeaderCell';
 import {Download, TriangleAlert} from 'lucide-react';
 import {INPUTS, ME, PROJECTS, STATUSES} from '../data';
 import {Gap, GapLegend} from '../Gap';
@@ -40,9 +41,8 @@ export function Inputs() {
     return [...list].sort((a, b) => sort === 'title' ? a.title.localeCompare(b.title) : b[sort] - a[sort]);
   }, [assignee, project, status, needsFeedback, query, sort]);
   const waiting = INPUTS.filter(i => i.needsFeedback).length;
-  const sortable = (key: Sort, label: string, variant?: 'number') => (
-    <ListHeaderCell variant={variant} sorted={sort === key} onPress={() => setSort(key)}>{label}</ListHeaderCell>
-  );
+  // Each sortable column has one order (titles A-Z, counts and dates highest/newest first), as before.
+  const sortDescriptor = {column: sort, direction: sort === 'title' ? 'ascending' : 'descending'} as const;
 
   return (
     <Page title="Input manager" description="Give feedback, add tags and move input from one project to another.">
@@ -80,46 +80,47 @@ export function Inputs() {
         <div className="bo-inputs-list">
           <p className="bo-note">{rows.length} inputs</p>
           <div className="bo-inputs-table">
-            <Table aria-label="Inputs" selectionMode="multiple" className="react-aria-Table bo-inputs-grid">
-              <TableHeader>
-                <Column isRowHeader>{sortable('title', 'Title')}</Column>
-                <Column><ListHeaderCell square>Status</ListHeaderCell></Column>
-                <Column><ListHeaderCell square>Assignee</ListHeaderCell></Column>
-                <Column>{sortable('comments', 'Comments', 'number')}</Column>
-                <Column>{sortable('likes', 'Likes', 'number')}</Column>
-                <Column>{sortable('dislikes', 'Dislikes', 'number')}</Column>
-                <Column>{sortable('published', 'Published on')}</Column>
-              </TableHeader>
-              <TableBody renderEmptyState={() => <p className="bo-note">No inputs match these filters.</p>}>{rows.map(i => (
-                <Row key={i.id} id={i.id}>
-                  <Cell textValue={i.title}>
-                    <div className="bo-inputs-title">
+            <DataTable aria-label="Inputs" selectionMode="multiple" className="bo-inputs-grid"
+              sortDescriptor={sortDescriptor} onSortChange={d => setSort(d.column as Sort)}>
+              <DataTableHeader>
+                <DataTableColumn id="title" isRowHeader allowsSorting>Title</DataTableColumn>
+                <DataTableColumn id="status">Status</DataTableColumn>
+                <DataTableColumn id="assignee">Assignee</DataTableColumn>
+                <DataTableColumn id="comments" align="number" allowsSorting>Comments</DataTableColumn>
+                <DataTableColumn id="likes" align="number" allowsSorting>Likes</DataTableColumn>
+                <DataTableColumn id="dislikes" align="number" allowsSorting>Dislikes</DataTableColumn>
+                <DataTableColumn id="published" allowsSorting>Published on</DataTableColumn>
+              </DataTableHeader>
+              <DataTableBody renderEmptyState={() => <DataTableEmpty>No inputs match these filters.</DataTableEmpty>}>{rows.map(i => (
+                <DataTableRow key={i.id} id={i.id}>
+                  <DataTableCell textValue={i.title}>
+                    {/* The prototype's title over a quiet sub-line (here: the input's project, still a link). */}
+                    <DataTableStack strong sub={<Link href={`#/projects/${i.project}`}>{title(i.project)}</Link>}>
                       <span className="bo-inputs-title-line">
                         {i.title}
                         {FLAGGED.has(i.id) && <TriangleAlert aria-label="Content warning" size={14} />}
                       </span>
-                      <Pill><Link href={`#/projects/${i.project}`}>{title(i.project)}</Link></Pill>
-                    </div>
-                  </Cell>
-                  <Cell textValue={i.status}>
+                    </DataTableStack>
+                  </DataTableCell>
+                  <DataTableCell textValue={i.status}>
                     <Status state={i.status === 'Accepted' || i.status === 'Implemented' ? 'live' : 'draft'}>{i.status}</Status>
-                  </Cell>
-                  <Cell textValue={i.assignee}>
+                  </DataTableCell>
+                  <DataTableCell textValue={i.assignee}>
                     {i.assignee === 'Unassigned'
                       ? <Avatar size={24} unassigned aria-label="Unassigned" />
                       : <Avatar size={24} initials={initial(i.assignee)} aria-label={`Assigned to ${i.assignee}`} />}
-                  </Cell>
-                  <Cell><span className="bo-inputs-num">{i.comments}</span></Cell>
-                  <Cell><span className="bo-inputs-num">{i.likes}</span></Cell>
-                  <Cell><span className="bo-inputs-num">{i.dislikes}</span></Cell>
-                  <Cell textValue={i.published}>
+                  </DataTableCell>
+                  <DataTableCell align="number">{i.comments}</DataTableCell>
+                  <DataTableCell align="number">{i.likes}</DataTableCell>
+                  <DataTableCell align="number">{i.dislikes}</DataTableCell>
+                  <DataTableCell textValue={i.published}>
                     <span className="bo-inputs-published">
                       {isNew(i.published) && <NewDot aria-label="New input" />}{i.published}
                     </span>
-                  </Cell>
-                </Row>))}
-              </TableBody>
-            </Table>
+                  </DataTableCell>
+                </DataTableRow>))}
+              </DataTableBody>
+            </DataTable>
           </div>
           <GapLegend names={['Pagination']} />
           <Gap name="Pagination" inline><span className="bo-note">Page 1 of 1</span></Gap>

@@ -10,7 +10,7 @@ test('input manager follows the real admin: filters, project list, selectable in
   await expect(page.getByRole('searchbox', {name: 'Search inputs'})).toBeVisible();
   await expect(page.getByRole('listbox', {name: 'Projects'})).toBeVisible();
   const grid = page.getByRole('grid', {name: 'Inputs'});
-  // Real admin columns, plus the prototype's Status column; headers are gv List header cells.
+  // Real admin columns, plus the prototype's Status column, in the gv DataTable.
   for (const c of ['Title', 'Status', 'Assignee', 'Comments', 'Likes', 'Dislikes', 'Published on']) {
     await expect(grid.getByRole('columnheader', {name: c, exact: true})).toBeVisible();
   }
@@ -49,9 +49,10 @@ test('assignee, feedback switch and search narrow the inputs', async ({page}) =>
 test('sortable columns reorder the inputs', async ({page}) => {
   await page.goto('/backoffice/#/inputs');
   const grid = page.getByRole('grid', {name: 'Inputs'});
-  await expect(grid.getByRole('button', {name: 'Published on'})).toHaveAttribute('aria-pressed', 'true');
-  await grid.getByRole('button', {name: 'Likes', exact: true}).click();
-  await expect(grid.getByRole('button', {name: 'Likes', exact: true})).toHaveAttribute('aria-pressed', 'true');
+  // The gv DataTable marks the sorted column with aria-sort on its header and sorts from the header itself.
+  await expect(grid.getByRole('columnheader', {name: 'Published on'})).toHaveAttribute('aria-sort', /ending/);
+  await grid.getByRole('columnheader', {name: 'Likes', exact: true}).click();
+  await expect(grid.getByRole('columnheader', {name: 'Likes', exact: true})).toHaveAttribute('aria-sort', 'descending');
   await expect(inputRows(page).first()).toContainText('Night buses on weekends'); // most likes (21)
 });
 

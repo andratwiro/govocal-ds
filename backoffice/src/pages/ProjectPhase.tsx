@@ -2,13 +2,13 @@ import {useState} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router';
 import {Download, Funnel, Lightbulb, Paperclip, Plus, Search, Settings, TriangleAlert, Upload} from 'lucide-react';
 import {Button} from '../../../src/components/Button';
-import {Table, TableHeader, TableBody, Column, Row, Cell} from '../../../src/components/Table';
+import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty}
+  from '../../../src/components/gv/DataTable';
 import {Avatar} from '../../../src/components/gv/Avatar';
 import {Card} from '../../../src/components/gv/Card';
 import {Divider} from '../../../src/components/gv/Divider';
 import {Header} from '../../../src/components/gv/Header';
 import {IconButton} from '../../../src/components/gv/IconButton';
-import {ListHeaderCell} from '../../../src/components/gv/ListHeaderCell';
 import {RailHeader} from '../../../src/components/gv/RailHeader';
 import {RailSectionLabel} from '../../../src/components/gv/RailSectionLabel';
 import {SegmentedControl, Segment} from '../../../src/components/gv/SegmentedControl';
@@ -198,20 +198,21 @@ function Manage({project, phase}: {project: Project; phase: Phase}) {
           <IconButton variant="bordered" tone="strong" aria-label="Search ideas"><Search aria-hidden size={16} /></IconButton>
           <IconButton variant="bordered" tone="strong" aria-label="Filter ideas"><Funnel aria-hidden size={16} /></IconButton>
         </div>
-        <Table aria-label="Inputs" selectionMode="multiple">
-          <TableHeader>
-            <Column isRowHeader><ListHeaderCell sorted>Idea</ListHeaderCell></Column>
-            <Column><ListHeaderCell square>Status</ListHeaderCell></Column>
-          </TableHeader>
-          <TableBody renderEmptyState={() => <p className="bo-note">No ideas here yet.</p>}>
+        {/* Shown sorted by idea, as before; the order itself is not interactive yet. */}
+        <DataTable aria-label="Inputs" selectionMode="multiple" sortDescriptor={{column: 'idea', direction: 'ascending'}}>
+          <DataTableHeader>
+            <DataTableColumn id="idea" isRowHeader allowsSorting>Idea</DataTableColumn>
+            <DataTableColumn id="status">Status</DataTableColumn>
+          </DataTableHeader>
+          <DataTableBody renderEmptyState={() => <DataTableEmpty>No ideas here yet.</DataTableEmpty>}>
             {shown.map(i => (
-              <Row key={i.id} id={i.id} textValue={i.title}>
-                <Cell>{i.title}{i.warning && <> <TriangleAlert aria-label="Needs attention" size={14} /></>}</Cell>
-                <Cell>{i.status}</Cell>
-              </Row>
+              <DataTableRow key={i.id} id={i.id} textValue={i.title}>
+                <DataTableCell>{i.title}{i.warning && <> <TriangleAlert aria-label="Needs attention" size={14} /></>}</DataTableCell>
+                <DataTableCell>{i.status}</DataTableCell>
+              </DataTableRow>
             ))}
-          </TableBody>
-        </Table>
+          </DataTableBody>
+        </DataTable>
       </section>
     </>
   );

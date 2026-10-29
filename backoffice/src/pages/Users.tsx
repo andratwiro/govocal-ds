@@ -1,23 +1,21 @@
 import {useMemo, useState, type ComponentProps, type ReactNode} from 'react';
-import {ChartColumn, Download, Mail, MoreHorizontal, Plus, ShieldCheck, Users as UsersIcon, Zap} from 'lucide-react';
-import {Table, TableHeader, Column, TableBody, Row, Cell} from '../../../src/components/Table';
+import {ChartColumn, Download, Mail, Plus, ShieldCheck, Users as UsersIcon, Zap} from 'lucide-react';
+import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
+  DataTablePerson, DataTableStack, DataTableOptions} from '../../../src/components/gv/DataTable';
 import {ListBox, ListBoxItem} from '../../../src/components/ListBox';
 import {SearchField} from '../../../src/components/SearchField';
 import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
 import {Button} from '../../../src/components/Button';
-import {Avatar} from '../../../src/components/gv/Avatar';
 import {Card} from '../../../src/components/gv/Card';
 import {Checkbox} from '../../../src/components/gv/Checkbox';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {ListHeaderCell} from '../../../src/components/gv/ListHeaderCell';
 import {GROUPS, PEOPLE, SEGMENTS, type Person} from '../data-users';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
 
-// React Aria's own types, read off the starter Table (the back office imports only the system).
-type TableProps = ComponentProps<typeof Table>;
+// React Aria's own types, read off the gv DataTable (the back office imports only the system).
+type TableProps = ComponentProps<typeof DataTable>;
 type Selection = Parameters<NonNullable<TableProps['onSelectionChange']>>[0];
-type Sort = {column: 'name' | 'lastActive' | 'joined'; descending: boolean};
+type Sort = {column: 'name' | 'lastActive' | 'joined'; direction: 'ascending' | 'descending'};
 
 const DESCRIPTION = 'Get an overview of all the people and organisations that registered on the platform. ' +
   'Add a selection of users to Manual groups or Smart groups.';
@@ -96,15 +94,12 @@ function Sidebar({view, setView}: {view: string; setView: (v: string) => void}) 
 function RowOptions({person}: {person: Person}) {
   const admin = person.role === 'Platform admin';
   return (
-    <MenuTrigger>
-      <IconButton aria-label={`Options for ${person.name}`}><MoreHorizontal aria-hidden size={16} /></IconButton>
-      <Menu>
-        <MenuItem>{admin ? 'Remove platform admin rights' : 'Make platform admin'}</MenuItem>
-        <MenuItem>Add to group</MenuItem>
-        <MenuItem>Block user</MenuItem>
-        <MenuItem>Delete user</MenuItem>
-      </Menu>
-    </MenuTrigger>
+    <DataTableOptions aria-label={`Options for ${person.name}`}>
+      <MenuItem>{admin ? 'Remove platform admin rights' : 'Make platform admin'}</MenuItem>
+      <MenuItem>Add to group</MenuItem>
+      <MenuItem>Block user</MenuItem>
+      <MenuItem>Delete user</MenuItem>
+    </DataTableOptions>
   );
 }
 
@@ -112,22 +107,19 @@ function UserTable({view}: {view: string}) {
   const title = SEGMENTS.find(s => s.id === view)?.label ?? GROUPS.find(g => g.id === view)!.label;
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<Selection>(new Set());
-  const [sort, setSort] = useState<Sort>({column: 'joined', descending: true});
+  const [sort, setSort] = useState<Sort>({column: 'joined', direction: 'descending'});
   const all = inView(view);
   const rows = useMemo(() => {
     const q = query.toLowerCase();
     const found = all.filter(p => p.name.toLowerCase().includes(q) || p.email?.toLowerCase().includes(q));
-    const sign = sort.descending ? -1 : 1;
+    const sign = sort.direction === 'descending' ? -1 : 1;
     return found.sort((a, b) => sign * compare(a, b, sort.column));
   }, [all, query, sort]);
-  // The gv sortable header cell (the prototype's .gv-bo-th--sort): the sorted column is bold with its arrow;
-  // pressing it again flips the order.
-  const sortable = (column: Sort['column'], label: string) => (
-    <ListHeaderCell sorted={sort.column === column}
-      onPress={() => setSort(s => ({column, descending: s.column === column ? !s.descending : column !== 'name'}))}>
-      {label}
-    </ListHeaderCell>
-  );
+  // The prototype's sortable headers: pressing the sorted one flips it; a new column starts A-Z for names and
+  // newest first for dates.
+  const onSort = ({column, direction}: {column: string | number; direction: Sort['direction']}) =>
+    setSort(s => s.column === column ? {column: s.column, direction}
+      : {column: column as Sort['column'], direction: column === 'name' ? 'ascending' : 'descending'});
   const count = selected === 'all' ? rows.length : rows.filter(r => selected.has(r.id)).length;
 
   const toolbar = (
@@ -158,37 +150,33 @@ function UserTable({view}: {view: string}) {
         {view === 'all' && <p className="bo-note">{DESCRIPTION}</p>}
         {toolbar}
         <div className="bo-users-scroll">
-        <Table aria-label={title} className="react-aria-Table bo-users-table" selectionMode="multiple"
-          selectedKeys={selected} onSelectionChange={setSelected}>
-          <TableHeader>
-            <Column id="name" isRowHeader focusMode="child">{sortable('name', 'Name')}</Column>
-            <Column id="role"><ListHeaderCell square>Role</ListHeaderCell></Column>
-            <Column id="lastActive" focusMode="child">{sortable('lastActive', 'Last active')}</Column>
-            <Column id="joined" focusMode="child">{sortable('joined', 'Joined')}</Column>
-            <Column id="options"><ListHeaderCell square>Options</ListHeaderCell></Column>
-          </TableHeader>
-          <TableBody renderEmptyState={() => <p className="bo-note">No users here.</p>}>{rows.map(p => (
-            <Row key={p.id} id={p.id} textValue={p.name}>
-              <Cell>
-                <span className="bo-users-person">
-                  <Avatar initials={initials(p.name)} />
-                  <span className="bo-users-stack">
-                    <span>{p.name}</span>
-                    {p.email && <span className="bo-note bo-users-nowrap">{p.email}</span>}
-                  </span>
+        <DataTable aria-label={title} selectionMode="multiple" selectedKeys={selected} onSelectionChange={setSelected}
+          sortDescriptor={sort} onSortChange={onSort}>
+          {/* The toolbar's Select checkbox is the one select-all, so the header's check column stays empty. */}
+          <DataTableHeader selectAll={false}>
+            <DataTableColumn id="name" isRowHeader allowsSorting>Name</DataTableColumn>
+            <DataTableColumn id="role">Role</DataTableColumn>
+            <DataTableColumn id="lastActive" allowsSorting>Last active</DataTableColumn>
+            <DataTableColumn id="joined" allowsSorting>Joined</DataTableColumn>
+            <DataTableColumn id="options" align="options">Options</DataTableColumn>
+          </DataTableHeader>
+          <DataTableBody renderEmptyState={() => <DataTableEmpty>No users here.</DataTableEmpty>}>{rows.map(p => (
+            <DataTableRow key={p.id} id={p.id} textValue={p.name}>
+              <DataTableCell>
+                <DataTablePerson name={p.name} initials={initials(p.name)}
+                  sub={p.email && <span className="bo-users-nowrap">{p.email}</span>} />
+              </DataTableCell>
+              <DataTableCell>
+                <span className="bo-users-nowrap">
+                  <DataTableStack sub={p.role !== 'Registered user' && 'Assigned items'}>{p.role}</DataTableStack>
                 </span>
-              </Cell>
-              <Cell>
-                <span className="bo-users-stack bo-users-nowrap">
-                  {p.role}{p.role !== 'Registered user' && <span className="bo-note">Assigned items</span>}
-                </span>
-              </Cell>
-              <Cell>{ago(p.lastActive)}</Cell>
-              <Cell><span className="bo-users-nowrap">{date(p.joined)}</span></Cell>
-              <Cell><RowOptions person={p} /></Cell>
-            </Row>))}
-          </TableBody>
-        </Table>
+              </DataTableCell>
+              <DataTableCell><span className="bo-users-nowrap">{ago(p.lastActive)}</span></DataTableCell>
+              <DataTableCell><span className="bo-users-nowrap">{date(p.joined)}</span></DataTableCell>
+              <DataTableCell align="options"><RowOptions person={p} /></DataTableCell>
+            </DataTableRow>))}
+          </DataTableBody>
+        </DataTable>
         </div>
         <Gap name="Pagination" inline><span className="bo-note">Page 1 of 1</span></Gap>
       </div>

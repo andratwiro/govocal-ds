@@ -1,5 +1,6 @@
 import {Button} from '../../../src/components/Button';
-import {Table, TableHeader, Column, TableBody, Row, Cell} from '../../../src/components/Table';
+import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell}
+  from '../../../src/components/gv/DataTable';
 import {INPUTS, USERS} from '../data';
 import type {NavItem} from '../nav';
 import {Page} from './Page';
@@ -11,10 +12,12 @@ export function Placeholder({item}: {item: NavItem}) {
   return (
     <Page title={item.label} actions={<Button variant="primary" size={32}>New</Button>}>
       <p className="bo-note">Shallow page: layout and components only, invented data.</p>
-      <Table aria-label={item.label}>
-        <TableHeader>{cols.map((c, i) => <Column key={c} isRowHeader={i === 0}>{c}</Column>)}</TableHeader>
-        <TableBody>{rows.map((r, i) => <Row key={i}>{r.map((c, j) => <Cell key={j}>{c}</Cell>)}</Row>)}</TableBody>
-      </Table>
+      <DataTable aria-label={item.label} framed>
+        <DataTableHeader>{cols.map((c, i) => <DataTableColumn key={c} isRowHeader={i === 0}>{c}</DataTableColumn>)}</DataTableHeader>
+        <DataTableBody>{rows.map((r, i) => (
+          <DataTableRow key={i}>{r.map((c, j) => <DataTableCell key={j}>{c}</DataTableCell>)}</DataTableRow>))}
+        </DataTableBody>
+      </DataTable>
     </Page>
   );
 }

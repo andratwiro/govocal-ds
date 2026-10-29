@@ -1,8 +1,9 @@
 import {useState} from 'react';
-import {Clock, Mail, MessageSquare, MoreHorizontal, Pencil, Plus, Send, User} from 'lucide-react';
+import {Clock, Mail, MessageSquare, Pencil, Plus, Send, User} from 'lucide-react';
 import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
-import {Table, TableHeader, Column, TableBody, Row, Cell} from '../../../src/components/Table';
-import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
+import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableStack,
+  DataTableOptions} from '../../../src/components/gv/DataTable';
+import {MenuItem} from '../../../src/components/Menu';
 import {Button} from '../../../src/components/Button';
 import {Switch} from '../../../src/components/Switch';
 import {TextField} from '../../../src/components/TextField';
@@ -29,37 +30,32 @@ const pct = (v?: number) => (v == null ? '—' : `${v}%`);
 
 function CustomEmailTable({onEdit}: {onEdit: (id: string) => void}) {
   return (
-    <Table aria-label="Custom emails" className="react-aria-Table bo-messaging-table">
-      <TableHeader>
-        <Column isRowHeader>Subject</Column>
-        <Column>Status</Column><Column>Date</Column><Column>Opened</Column><Column>Clicked</Column>
-        <Column><span className="bo-visually-hidden">Actions</span></Column>
-      </TableHeader>
-      <TableBody>{CUSTOM_EMAILS.map(e => (
-        <Row key={e.id} id={e.id}>
-          <Cell>
-            <span className="bo-messaging-subject">
-              <span>{e.subject}</span>
-              <span className="bo-note">To: {e.to}{e.project && <> · Project: {e.project}</>}</span>
-            </span>
-          </Cell>
-          <Cell><Status state={e.status === 'Sent' ? 'live' : 'draft'}>{e.status}</Status></Cell>
-          <Cell><span className="bo-messaging-nowrap">{e.date}</span></Cell>
-          <Cell>{pct(e.opened)}</Cell>
-          <Cell>{pct(e.clicked)}</Cell>
-          <Cell>
-            <MenuTrigger>
-              <IconButton aria-label={`Actions for ${e.subject}`}><MoreHorizontal aria-hidden size={16} /></IconButton>
-              <Menu onAction={k => k === 'edit' && onEdit(e.id)}>
-                {e.status === 'Sent'
-                  ? <><MenuItem id="stats">Statistics</MenuItem><MenuItem id="copy">Duplicate</MenuItem></>
-                  : <><MenuItem id="edit">Edit</MenuItem><MenuItem id="copy">Duplicate</MenuItem><MenuItem id="delete">Delete</MenuItem></>}
-              </Menu>
-            </MenuTrigger>
-          </Cell>
-        </Row>))}
-      </TableBody>
-    </Table>
+    <DataTable aria-label="Custom emails">
+      <DataTableHeader>
+        <DataTableColumn isRowHeader>Subject</DataTableColumn>
+        <DataTableColumn>Status</DataTableColumn><DataTableColumn>Date</DataTableColumn>
+        <DataTableColumn align="number">Opened</DataTableColumn><DataTableColumn align="number">Clicked</DataTableColumn>
+        <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+      </DataTableHeader>
+      <DataTableBody>{CUSTOM_EMAILS.map(e => (
+        <DataTableRow key={e.id} id={e.id}>
+          <DataTableCell>
+            <DataTableStack strong sub={<>To: {e.to}{e.project && <> · Project: {e.project}</>}</>}>{e.subject}</DataTableStack>
+          </DataTableCell>
+          <DataTableCell><Status state={e.status === 'Sent' ? 'live' : 'draft'}>{e.status}</Status></DataTableCell>
+          <DataTableCell><span className="bo-messaging-nowrap">{e.date}</span></DataTableCell>
+          <DataTableCell align="number">{pct(e.opened)}</DataTableCell>
+          <DataTableCell align="number">{pct(e.clicked)}</DataTableCell>
+          <DataTableCell align="options">
+            <DataTableOptions aria-label={`Actions for ${e.subject}`} onAction={k => k === 'edit' && onEdit(e.id)}>
+              {e.status === 'Sent'
+                ? <><MenuItem id="stats">Statistics</MenuItem><MenuItem id="copy">Duplicate</MenuItem></>
+                : <><MenuItem id="edit">Edit</MenuItem><MenuItem id="copy">Duplicate</MenuItem><MenuItem id="delete">Delete</MenuItem></>}
+            </DataTableOptions>
+          </DataTableCell>
+        </DataTableRow>))}
+      </DataTableBody>
+    </DataTable>
   );
 }
 

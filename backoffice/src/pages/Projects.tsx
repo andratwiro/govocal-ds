@@ -1,6 +1,7 @@
-import {Calendar, ChevronDown, FileText, Folder, FolderPlus, GripVertical, LayoutGrid, MapPin, MoreHorizontal,
+import {Calendar, ChevronDown, FileText, Folder, FolderPlus, GripVertical, LayoutGrid, MapPin,
   Orbit, Plus, Users} from 'lucide-react';
-import {Table, TableHeader, Column, TableBody, Row, Cell} from '../../../src/components/Table';
+import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableOptions}
+  from '../../../src/components/gv/DataTable';
 import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {SearchField} from '../../../src/components/SearchField';
@@ -11,7 +12,6 @@ import {Button} from '../../../src/components/Button';
 import {Link} from '../../../src/components/Link';
 import {Avatar} from '../../../src/components/gv/Avatar';
 import {Status} from '../../../src/components/gv/Status';
-import {IconButton} from '../../../src/components/gv/IconButton';
 import {Pill} from '../../../src/components/gv/Pill';
 import {PROJECTS} from '../data';
 import {Gap, GapLegend} from '../Gap';
@@ -43,16 +43,17 @@ function Managers({names}: {names?: string[]}) {
 
 function ProjectTable() {
   return (
-    <Table aria-label="Projects" className="react-aria-Table bo-projects-table">
-      <TableHeader>
-        <Column isRowHeader>Project</Column>
-        <Column><span className="bo-projects-icon-head"><Users aria-hidden size={16} /><span className="bo-visually-hidden">Participants</span></span></Column>
-        <Column>Phase</Column><Column>Managers</Column><Column>Visibility</Column><Column>Start</Column><Column>End</Column>
-        <Column><span className="bo-visually-hidden">Actions</span></Column>
-      </TableHeader>
-      <TableBody>{PROJECTS.map(p => (
-        <Row key={p.id} id={p.id}>
-          <Cell>
+    <DataTable aria-label="Projects" framed>
+      <DataTableHeader>
+        <DataTableColumn isRowHeader>Project</DataTableColumn>
+        <DataTableColumn><span className="bo-projects-icon-head"><Users aria-hidden size={16} /><span className="bo-visually-hidden">Participants</span></span></DataTableColumn>
+        <DataTableColumn>Phase</DataTableColumn><DataTableColumn>Managers</DataTableColumn><DataTableColumn>Visibility</DataTableColumn>
+        <DataTableColumn>Start</DataTableColumn><DataTableColumn>End</DataTableColumn>
+        <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+      </DataTableHeader>
+      <DataTableBody>{PROJECTS.map(p => (
+        <DataTableRow key={p.id} id={p.id}>
+          <DataTableCell>
             <span className="bo-projects-name">
               <Gap name="Project thumbnail" inline><MapPin aria-hidden size={16} /></Gap>
               <span>
@@ -60,31 +61,28 @@ function ProjectTable() {
                 {p.folder && <span className="bo-note bo-projects-folder"><Folder aria-hidden size={12} />{p.folder}</span>}
               </span>
             </span>
-          </Cell>
-          <Cell><span className="bo-projects-nowrap">{p.participants}</span></Cell>
-          <Cell>{p.current}{p.timeLeft && <div className="bo-note">{p.timeLeft}</div>}</Cell>
-          <Cell><Managers names={p.managers} /></Cell>
-          <Cell>
+          </DataTableCell>
+          <DataTableCell><span className="bo-projects-nowrap">{p.participants}</span></DataTableCell>
+          <DataTableCell>{p.current}{p.timeLeft && <div className="bo-note">{p.timeLeft}</div>}</DataTableCell>
+          <DataTableCell><Managers names={p.managers} /></DataTableCell>
+          <DataTableCell>
             <span className="bo-projects-visibility">
               <Status state={p.status === 'Live' ? 'live' : 'draft'}>{p.status === 'Live' ? 'Published' : 'Draft'}</Status>
               <span className="bo-note">{p.access}</span>
             </span>
-          </Cell>
-          <Cell><span className="bo-projects-nowrap">{p.start}</span></Cell>
-          <Cell><span className="bo-projects-nowrap">{p.end ?? '—'}</span></Cell>
-          <Cell>
-            <MenuTrigger>
-              <IconButton aria-label={`Actions for ${p.title}`}><MoreHorizontal aria-hidden size={16} /></IconButton>
-              <Menu>
-                <MenuItem>Duplicate</MenuItem>
-                <MenuItem>Move to folder</MenuItem>
-                <MenuItem>Delete</MenuItem>
-              </Menu>
-            </MenuTrigger>
-          </Cell>
-        </Row>))}
-      </TableBody>
-    </Table>
+          </DataTableCell>
+          <DataTableCell><span className="bo-projects-nowrap">{p.start}</span></DataTableCell>
+          <DataTableCell><span className="bo-projects-nowrap">{p.end ?? '—'}</span></DataTableCell>
+          <DataTableCell align="options">
+            <DataTableOptions aria-label={`Actions for ${p.title}`}>
+              <MenuItem>Duplicate</MenuItem>
+              <MenuItem>Move to folder</MenuItem>
+              <MenuItem>Delete</MenuItem>
+            </DataTableOptions>
+          </DataTableCell>
+        </DataTableRow>))}
+      </DataTableBody>
+    </DataTable>
   );
 }
 

@@ -1,4 +1,5 @@
 import {test, expect} from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 test('users follows the real admin: segments, groups, a selectable user table', async ({page}) => {
   await page.goto('/backoffice/#/users');
@@ -70,10 +71,11 @@ test('sorting by name orders the rows, and pressing again flips them', async ({p
   await page.goto('/backoffice/#/users');
   const grid = page.getByRole('grid', {name: 'Registered users'});
   await expect(grid.getByRole('row').nth(2)).toContainText('Resident E'); // default: joined, newest first
-  await grid.getByRole('columnheader', {name: 'Name'}).getByRole('button').click();
+  // The gv DataTable sorts from the column header itself (React Aria's sortable column), no inner button.
+  await grid.getByRole('columnheader', {name: 'Name'}).click();
   await expect(grid.getByRole('row').nth(1)).toContainText('Admin A');
   await expect(grid.getByRole('row').nth(2)).toContainText('Admin B');
-  await grid.getByRole('columnheader', {name: 'Name'}).getByRole('button').click();
+  await grid.getByRole('columnheader', {name: 'Name'}).click();
   await expect(grid.getByRole('row').nth(1)).toContainText('Resident L');
 });
 
@@ -81,4 +83,44 @@ test('users names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/users');
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
   expect(gaps).toEqual(['Pagination']);
+});
+
+test('the table is the gv DataTable: Joined sort toggles, a row selects, one select-all, options open', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  const grid = page.getByRole('grid', {name: 'Registered users'});
+  await expect(grid).toHaveClass(/gv-data-table/);
+  const joined = grid.getByRole('columnheader', {name: 'Joined'});
+  await expect(joined).toHaveAttribute('aria-sort', 'descending');
+  await expect(grid.getByRole('row').nth(1)).toContainText('Admin A'); // newest first
+  await joined.click();
+  await expect(joined).toHaveAttribute('aria-sort', 'ascending');
+  await expect(grid.getByRole('row').nth(1)).not.toContainText('Admin A');
+  await joined.click();
+  await expect(joined).toHaveAttribute('aria-sort', 'descending');
+  await expect(grid.getByRole('row').nth(1)).toContainText('Admin A');
+
+  // One "select all": the toolbar's Select checkbox; the header's checkbox column stays empty.
+  await expect(grid.getByRole('columnheader').getByRole('checkbox')).toHaveCount(0);
+  const row = grid.getByRole('row', {name: /Resident E/});
+  await row.locator('.gv-checkbox .indicator').click();
+  await expect(row).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByText('1 selected')).toBeVisible();
+
+  // The prototype's quiet list: no zebra (two unselected neighbours share one fill), compact rows.
+  await page.mouse.move(0, 0);
+  const [a, b] = [grid.getByRole('row').nth(4), grid.getByRole('row').nth(5)];
+  const bg = (l: typeof a) => l.evaluate(e => getComputedStyle(e).backgroundColor);
+  expect(await bg(a)).toBe(await bg(b));
+  expect((await a.boundingBox())!.height).toBeLessThan(70);
+
+  await row.getByRole('button', {name: 'Options for Resident E'}).click();
+  await expect(page.getByRole('menuitem', {name: 'Block user'})).toBeVisible();
+});
+
+test('the users table passes axe (WCAG 2.2 AA)', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  await expect(page.getByRole('grid', {name: 'Registered users'})).toBeVisible();
+  const {violations} = await new AxeBuilder({page}).include('.gv-data-table')
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+  expect(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`)).toEqual([]);
 });
