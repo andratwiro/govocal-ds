@@ -262,7 +262,7 @@ export function Inputs() {
             )}>
               <MenuTrigger placement="bottom end">
                 <TooltipTrigger>
-                  <IconButton variant="bordered" tone="strong" aria-label="Export"><Download aria-hidden size={16} /></IconButton>
+                  <IconButton variant="bordered" emphasis="strong" aria-label="Export"><Download aria-hidden size={16} /></IconButton>
                   <Tooltip>Export</Tooltip>
                 </TooltipTrigger>
                 <Menu aria-label="Export" onAction={exportFile} disabledKeys={selected.size ? [] : ['selected']}>

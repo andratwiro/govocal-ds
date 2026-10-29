@@ -31,9 +31,9 @@ export interface ButtonProps extends RACButtonProps {
    * Danger: `tone="danger"` on the `primary` variant (a destructive confirm) or `quiet` (an inline
    * Delete). No outlined danger look (§C): the two cover every case.
    *
-   * @default 'default'
+   * @default 'neutral'
    */
-  tone?: 'default' | 'danger';
+  tone?: 'neutral' | 'danger';
   /**
    * Appends a menu chevron, for buttons that open a menu.
    *
@@ -85,7 +85,7 @@ export function Button(props: ButtonProps) {
       data-full-width={isFullWidth || undefined}
       data-variant={variant || 'primary'}
       data-size={size || 36}
-      data-tone={tone || 'default'}
+      data-tone={tone || 'neutral'}
       data-icon-only={resolvedIconOnly || undefined}>
       {composeRenderProps(props.children, (children, {isPending}) => (
         <>

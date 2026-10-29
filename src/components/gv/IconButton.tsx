@@ -12,13 +12,13 @@ export interface IconButtonProps extends Omit<RACButtonProps, 'children' | 'clas
    */
   variant?: 'ghost' | 'bordered';
   /**
-   * The icon colour weight (Figma "Tone"). `bordered` only has a Figma
-   * variant for `strong`; `default` is supported anyway since nothing in the
+   * The icon's colour weight: secondary grey or near-black (Figma's "Tone"; here `tone` is only ever a colour
+   * intent). `bordered` only has a Figma variant for `strong`; `default` is supported anyway since nothing in the
    * token set stops it.
    *
    * @default 'default'
    */
-  tone?: 'default' | 'strong';
+  emphasis?: 'default' | 'strong';
   /**
    * The button's size. Figma only specs 28; 24 is the prototype's
    * `.btn-icon--sm` (used in dense toolbars), carried over for parity.
@@ -33,14 +33,14 @@ export interface IconButtonProps extends Omit<RACButtonProps, 'children' | 'clas
 }
 
 export function IconButton(props: IconButtonProps) {
-  const {variant, tone, size, children, className, style, ...rest} = props;
+  const {variant, emphasis, size, children, className, style, ...rest} = props;
   return (
     <RACButton
       {...rest}
       className={clsx('gv-icon-button', className)}
       style={style}
       data-variant={variant || 'ghost'}
-      data-tone={tone || 'default'}
+      data-emphasis={emphasis || 'default'}
       data-size={size || 28}>
       {children}
     </RACButton>

@@ -126,7 +126,7 @@ export function ExportMenu({selected = 0, onExport}: {selected?: number; onExpor
   return (
     <MenuTrigger>
       <TooltipTrigger>
-        <IconButton variant="bordered" tone="strong" aria-label="Export"><Download aria-hidden size={16} /></IconButton>
+        <IconButton variant="bordered" emphasis="strong" aria-label="Export"><Download aria-hidden size={16} /></IconButton>
         <Tooltip>Export</Tooltip>
       </TooltipTrigger>
       <Popover placement="bottom end" showArrow={false}>

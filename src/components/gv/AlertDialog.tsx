@@ -22,12 +22,12 @@ export interface AlertDialogImpactRow {
 
 export interface AlertDialogProps {
   /**
-   * `danger` shows the warning-triangle icon badge and a danger confirm button. `default` shows
+   * `danger` shows the warning-triangle icon badge and a danger confirm button. `neutral` shows
    * neither (a plain confirm, e.g. "Download the results (PDF)").
    *
-   * @default 'default'
+   * @default 'neutral'
    */
-  tone?: 'default' | 'danger';
+  tone?: 'neutral' | 'danger';
   /** Overrides the tone's icon badge; `null` hides it even for `tone="danger"`. */
   icon?: ReactNode | null;
   /** The question, e.g. "Reset all participation data?". */
@@ -62,7 +62,7 @@ export interface AlertDialogProps {
  * never carries a head or a toolbar footer.
  */
 export function AlertDialog({
-  tone = 'default',
+  tone = 'neutral',
   icon,
   title,
   children,
@@ -129,7 +129,7 @@ export function AlertDialog({
           </Button>
           <Button
             variant="primary"
-            tone={tone === 'danger' ? 'danger' : 'default'}
+            tone={tone === 'danger' ? 'danger' : undefined}
             slot="close"
             isDisabled={confirmBlocked}
             onPress={onConfirm}>

@@ -72,7 +72,7 @@ export function SearchField({
     const name = props['aria-label'] ?? label ?? 'Search';
     return (
       <TooltipTrigger>
-        <IconButton id={buttonId} variant="bordered" tone="strong" aria-label={name} isDisabled={props.isDisabled}
+        <IconButton id={buttonId} variant="bordered" emphasis="strong" aria-label={name} isDisabled={props.isDisabled}
           className={typeof props.className === 'string' ? props.className : undefined} style={typeof props.style === 'object' ? props.style : undefined}
           onPress={() => { opened.current = true; setExpanded(true, 'field'); }}>
           <Search aria-hidden size={16} />

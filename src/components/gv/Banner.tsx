@@ -111,7 +111,7 @@ export function Banner({
       </div>
       {onDismiss && (
         <span className="gv-banner__dismiss">
-          <IconButton variant="ghost" tone="strong" size={24} aria-label={dismissLabel} onPress={onDismiss}>
+          <IconButton variant="ghost" emphasis="strong" size={24} aria-label={dismissLabel} onPress={onDismiss}>
             <X aria-hidden size={16} strokeWidth={1.75} />
           </IconButton>
         </span>

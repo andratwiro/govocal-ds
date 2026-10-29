@@ -163,8 +163,8 @@ function Rail({project, o, added, onAdd, onHide}: {project: Project; o: Overview
     <aside className="bo-phase-panel bo-phase-rail bo-project-rail" aria-label="Participation">
       <div className="bo-project-rail-head">
         <RailHeader title="Participation" />
-        <IconButton tone="strong" aria-label="Hide the participation rail" onPress={onHide}><PanelLeft aria-hidden size={16} /></IconButton>
-        <IconButton tone="strong" aria-label="Add a phase" onPress={onAdd}><Plus aria-hidden size={16} /></IconButton>
+        <IconButton emphasis="strong" aria-label="Hide the participation rail" onPress={onHide}><PanelLeft aria-hidden size={16} /></IconButton>
+        <IconButton emphasis="strong" aria-label="Add a phase" onPress={onAdd}><Plus aria-hidden size={16} /></IconButton>
       </div>
       <nav aria-label="Phases" className="bo-phase-rail-section">
         <SectionLabel>Timeline</SectionLabel>

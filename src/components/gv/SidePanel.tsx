@@ -146,20 +146,20 @@ export function SidePanel({
           <span id={`${id}-label`} className="gv-side-panel__label">{label}</span>
           {position && (
             <Toolbar aria-label="Pager" className="gv-side-panel__pager">
-              <IconButton id={`${id}-prev`} aria-label={`Previous ${itemName}`} tone="strong"
+              <IconButton id={`${id}-prev`} aria-label={`Previous ${itemName}`} emphasis="strong"
                 isDisabled={position.current <= 1} onPress={() => go(position.current - 1)}>
                 <Back aria-hidden size={16} />
               </IconButton>
               <span className="gv-side-panel__position" aria-live="polite">
                 {number.format(position.current)} of {number.format(position.total)}
               </span>
-              <IconButton id={`${id}-next`} aria-label={`Next ${itemName}`} tone="strong"
+              <IconButton id={`${id}-next`} aria-label={`Next ${itemName}`} emphasis="strong"
                 isDisabled={position.current >= position.total} onPress={() => go(position.current + 1)}>
                 <Forward aria-hidden size={16} />
               </IconButton>
             </Toolbar>
           )}
-          <IconButton aria-label={closeLabel} tone="strong" onPress={close}>
+          <IconButton aria-label={closeLabel} emphasis="strong" onPress={close}>
             <X aria-hidden size={16} />
           </IconButton>
         </div>
@@ -211,7 +211,7 @@ export function SidePanelActions({actions, children}: SidePanelActionsProps) {
       <Toolbar aria-label="Quick actions" className="gv-side-panel__quick">
         {actions.map(a => (
           <TooltipTrigger key={a.id}>
-            <IconButton variant="bordered" tone="strong" aria-label={a.label} onPress={a.onPress}>{a.icon}</IconButton>
+            <IconButton variant="bordered" emphasis="strong" aria-label={a.label} onPress={a.onPress}>{a.icon}</IconButton>
             <Tooltip placement="top">{a.label}</Tooltip>
           </TooltipTrigger>
         ))}

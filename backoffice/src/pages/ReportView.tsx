@@ -576,7 +576,7 @@ function Assistant({messages, suggestions, onAsk}: {messages: Message[]; suggest
         </SidePanelSection>
         <form className="bo-report-composer" onSubmit={e => { e.preventDefault(); send(); }}>
           <TextArea aria-label="Ask the assistant" placeholder="Ask the assistant…" value={draft} onChange={setDraft} />
-          <IconButton aria-label="Send" variant="bordered" tone="strong" type="submit" isDisabled={!draft.trim()}><Send aria-hidden size={16} /></IconButton>
+          <IconButton aria-label="Send" variant="bordered" emphasis="strong" type="submit" isDisabled={!draft.trim()}><Send aria-hidden size={16} /></IconButton>
         </form>
       </div>
     </Gap>

@@ -46,7 +46,7 @@ export function RailHeader({
             </IconButton>
           )}
           {onAdd && (
-            <IconButton tone="strong" onPress={onAdd} aria-label={addLabel}>
+            <IconButton emphasis="strong" onPress={onAdd} aria-label={addLabel}>
               <Plus aria-hidden size={16} strokeWidth={1.75} />
             </IconButton>
           )}

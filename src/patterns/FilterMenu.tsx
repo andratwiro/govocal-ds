@@ -58,7 +58,7 @@ export function FilterMenu({facets, value, onChange, countLabel, 'aria-label': l
   return (
     <AriaMenuTrigger defaultOpen={defaultOpen}>
       <span className={clsx('gv-filter-menu__trigger', className)} style={style} data-active={on > 0 || undefined}>
-        <IconButton variant="bordered" tone="strong" aria-label={on ? `${label} (${on} on)` : label}>
+        <IconButton variant="bordered" emphasis="strong" aria-label={on ? `${label} (${on} on)` : label}>
           <Funnel aria-hidden size={16} />
         </IconButton>
       </span>

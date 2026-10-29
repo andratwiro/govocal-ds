@@ -18,43 +18,43 @@ const meta: Meta<typeof IconButton> = {
 export default meta;
 type Story = StoryFn<typeof IconButton>;
 
-/** Figma's three Style × Tone variants, then (Not in Figma) the prototype's 24 size and disabled. */
+/** Figma's three Style × Tone variants (variant × emphasis), then (Not in Figma) the prototype's 24 size and disabled. */
 export const AllVariants: Story = () => (
   <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
-    <IconButton variant="ghost" tone="default" aria-label="Settings for Green Corridors for Riverside">
+    <IconButton variant="ghost" emphasis="default" aria-label="Settings for Green Corridors for Riverside">
       <Settings aria-hidden size={16} />
     </IconButton>
-    <IconButton variant="ghost" tone="strong" aria-label="Collapse section">
+    <IconButton variant="ghost" emphasis="strong" aria-label="Collapse section">
       <ChevronDown aria-hidden size={16} />
     </IconButton>
-    <IconButton variant="bordered" tone="strong" aria-label="Delete idea">
+    <IconButton variant="bordered" emphasis="strong" aria-label="Delete idea">
       <Trash2 aria-hidden size={16} />
     </IconButton>
-    <IconButton variant="bordered" tone="strong" size={24} aria-label="Delete idea (small)">
+    <IconButton variant="bordered" emphasis="strong" size={24} aria-label="Delete idea (small)">
       <Trash2 aria-hidden size={16} />
     </IconButton>
-    <IconButton variant="bordered" tone="strong" isDisabled aria-label="Delete idea (disabled)">
+    <IconButton variant="bordered" emphasis="strong" isDisabled aria-label="Delete idea (disabled)">
       <Trash2 aria-hidden size={16} />
     </IconButton>
   </div>
 );
 
 export const GhostDefault: Story = () => (
-  <IconButton variant="ghost" tone="default" aria-label="Settings">
+  <IconButton variant="ghost" emphasis="default" aria-label="Settings">
     <Settings aria-hidden size={16} />
   </IconButton>
 );
 GhostDefault.storyName = 'Ghost · Default';
 
 export const GhostStrong: Story = () => (
-  <IconButton variant="ghost" tone="strong" aria-label="Collapse section">
+  <IconButton variant="ghost" emphasis="strong" aria-label="Collapse section">
     <ChevronDown aria-hidden size={16} />
   </IconButton>
 );
 GhostStrong.storyName = 'Ghost · Strong';
 
 export const BorderedStrong: Story = () => (
-  <IconButton variant="bordered" tone="strong" aria-label="Delete idea">
+  <IconButton variant="bordered" emphasis="strong" aria-label="Delete idea">
     <Trash2 aria-hidden size={16} />
   </IconButton>
 );
@@ -62,13 +62,13 @@ BorderedStrong.storyName = 'Bordered · Strong';
 
 /** Not in Figma: the prototype's `.btn-icon--sm` for dense toolbars. */
 export const Small: Story = () => (
-  <IconButton variant="bordered" tone="strong" size={24} aria-label="Delete idea">
+  <IconButton variant="bordered" emphasis="strong" size={24} aria-label="Delete idea">
     <Trash2 aria-hidden size={16} />
   </IconButton>
 );
 
 export const Disabled: Story = () => (
-  <IconButton variant="bordered" tone="strong" isDisabled aria-label="Delete idea">
+  <IconButton variant="bordered" emphasis="strong" isDisabled aria-label="Delete idea">
     <Trash2 aria-hidden size={16} />
   </IconButton>
 );
