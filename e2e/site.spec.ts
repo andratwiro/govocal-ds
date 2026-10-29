@@ -15,6 +15,6 @@ test('storybook holds the starter kit', async () => {
 });
 
 test('a story renders', async ({page}) => {
-  await page.goto('/storybook/iframe.html?id=button--primary&viewMode=story');
+  await page.goto('/storybook/iframe.html?id=base-button--primary&viewMode=story');
   await expect(page.getByRole('button', {name: 'Publish'})).toBeVisible();
 });

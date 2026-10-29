@@ -2,7 +2,7 @@ import {test, expect} from '@playwright/test';
 const story = (id: string) => `/storybook/iframe.html?id=${id}&viewMode=story`;
 
 test('primary button wears Tali\'s primary', async ({page}) => {
-  await page.goto(story('button--primary'));
+  await page.goto(story('base-button--primary'));
   const b = page.getByRole('button').first();
   await expect(b).toHaveCSS('background-color', 'rgb(4, 73, 108)');
   await expect(b).toHaveCSS('border-radius', '8px');
@@ -10,12 +10,12 @@ test('primary button wears Tali\'s primary', async ({page}) => {
 });
 
 test('secondary button has the control border', async ({page}) => {
-  await page.goto(story('button--secondary'));
+  await page.goto(story('base-button--secondary'));
   await expect(page.getByRole('button').first()).toHaveCSS('border-top-color', 'rgb(224, 224, 224)');
 });
 
 test('quiet button is transparent until hovered', async ({page}) => {
-  await page.goto(story('button--quiet'));
+  await page.goto(story('base-button--quiet'));
   const b = page.getByRole('button').first();
   await expect(b).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
   await b.hover();
@@ -23,7 +23,7 @@ test('quiet button is transparent until hovered', async ({page}) => {
 });
 
 test('select trigger is a neutral field, not primary', async ({page}) => {
-  await page.goto(story('components-select--example'));
+  await page.goto(story('base-select--example'));
   const trigger = page.getByRole('button').first();
   await expect(trigger).not.toHaveCSS('background-color', 'rgb(4, 73, 108)');
   await expect(trigger).toHaveCSS('border-top-color', 'rgb(224, 224, 224)');
