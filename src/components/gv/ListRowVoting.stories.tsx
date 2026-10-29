@@ -17,14 +17,18 @@ const meta: Meta<typeof ListRowVoting> = {
 export default meta;
 type Story = StoryFn<typeof ListRowVoting>;
 
+const THUMB = 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=64&auto=format&fit=crop';
+
 const Frame = ({children}: {children: React.ReactNode}) => (
-  <div style={{width: 764, border: '1px solid var(--gv-border-card)'}}>{children}</div>
+  <div style={{width: 764, background: 'var(--gv-surface-panel)'}}>{children}</div>
 );
 
+/** Figma's variants, each with its thumbnail. */
 export const AllVariants: Story = () => (
   <Frame>
     <ListRowVoting
       title="New lagoon-side playground"
+      thumbnail={THUMB}
       voteCount={72}
       fillPercent={100}
       newVoteCount={4}
@@ -35,6 +39,7 @@ export const AllVariants: Story = () => (
     />
     <ListRowVoting
       title="Restored central lawn"
+      thumbnail={THUMB}
       voteCount={54}
       fillPercent={75}
       newVoteCount={2}
@@ -44,6 +49,7 @@ export const AllVariants: Story = () => (
     />
     <ListRowVoting
       title="Evening path lighting"
+      thumbnail={THUMB}
       warning
       voteCount={41}
       fillPercent={35}
@@ -59,6 +65,7 @@ export const New: Story = () => (
   <Frame>
     <ListRowVoting
       title="New lagoon-side playground"
+      thumbnail={THUMB}
       voteCount={72}
       fillPercent={100}
       newVoteCount={4}
@@ -74,6 +81,7 @@ export const Default: Story = () => (
   <Frame>
     <ListRowVoting
       title="Restored central lawn"
+      thumbnail={THUMB}
       voteCount={54}
       fillPercent={75}
       newVoteCount={2}
@@ -88,6 +96,7 @@ export const NewWarning: Story = () => (
   <Frame>
     <ListRowVoting
       title="Evening path lighting"
+      thumbnail={THUMB}
       warning
       voteCount={41}
       fillPercent={35}

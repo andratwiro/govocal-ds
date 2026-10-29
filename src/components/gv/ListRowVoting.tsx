@@ -21,9 +21,9 @@ export interface ListRowVotingProps {
 }
 
 /**
- * The content of one Voting-method list row, built around Vote
- * progress (Type=Count / Count · new). Place inside a selectable `Row`/`Cell`
- * (Table) or `GridListItem` — see the `InATable` story.
+ * The content of one Voting-method list row, built around Vote progress
+ * (Type=Count / Count · new): Option · Votes 200 · Online 80 · Offline 80 · Comments 112,
+ * then a trailing 28px slot. Pair it with `ListHeader` (Figma `Method=Voting`).
  */
 export function ListRowVoting({
   title,
@@ -41,43 +41,41 @@ export function ListRowVoting({
   const maxCount = fillPercent > 0 ? Math.round((voteCount * 100) / fillPercent) : Math.max(voteCount, 1);
   return (
     <div className="gv-list-row-voting">
-      <div className="gv-list-row-voting__title-cell">
-        {thumbnail && (
-          <img className="gv-list-row-voting__thumbnail" src={thumbnail} alt="" aria-hidden />
-        )}
-        <span className="gv-list-row-voting__title">
-          {title}
+      <div className="gv-list-row-voting__cells">
+        <div className="gv-list-row-voting__title-cell">
+          {thumbnail && <img className="gv-list-row-voting__thumbnail" src={thumbnail} alt="" aria-hidden />}
+          <span className="gv-list-row-voting__title">{title}</span>
           {warning && (
-            <TriangleAlert
-              aria-label="Needs attention"
-              className="gv-list-row-voting__warning"
-              size={14}
-            />
+            <span className="gv-list-row-voting__marks">
+              <TriangleAlert
+                role="img"
+                aria-label="Needs attention"
+                className="gv-list-row-voting__warning"
+                size={16}
+                strokeWidth={1.75}
+              />
+            </span>
           )}
-        </span>
-      </div>
-      <div className="gv-list-row-voting__cell gv-list-row-voting__votes-cell">
-        <VoteProgress
-          variant="count"
-          label={`Votes for ${title}`}
-          count={voteCount}
-          maxCount={maxCount}
-          newCount={newVoteCount || undefined}
-        />
-      </div>
-      <div className="gv-list-row-voting__cell gv-list-row-voting__number-cell">
-        {onlineCount}
-      </div>
-      <div className="gv-list-row-voting__cell gv-list-row-voting__number-cell">
-        <span className={offlineCount === 0 ? 'gv-list-row-voting__none' : undefined}>
-          {offlineCount}
-        </span>
-      </div>
-      <div className="gv-list-row-voting__cell gv-list-row-voting__comments-cell">
-        {commentCount}
-        {Boolean(newCommentCount) && (
-          <span className="gv-list-row-voting__new">{newCommentCount} new</span>
-        )}
+        </div>
+        <div className="gv-list-row-voting__cell gv-list-row-voting__votes-cell">
+          <VoteProgress
+            variant="count"
+            label={`Votes for ${title}`}
+            count={voteCount}
+            maxCount={maxCount}
+            newCount={newVoteCount || undefined}
+          />
+        </div>
+        <div className="gv-list-row-voting__cell" data-num>
+          {onlineCount}
+        </div>
+        <div className="gv-list-row-voting__cell" data-num>
+          <span className={offlineCount === 0 ? 'gv-list-row-voting__none' : undefined}>{offlineCount}</span>
+        </div>
+        <div className="gv-list-row-voting__cell gv-list-row-voting__comments-cell" data-num>
+          {commentCount}
+          {Boolean(newCommentCount) && <span className="gv-list-row-voting__new">{newCommentCount} new</span>}
+        </div>
       </div>
     </div>
   );
