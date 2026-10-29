@@ -60,6 +60,31 @@ radius and borders come from the part's props and the tokens.
   `gv-list-header__cell`); one that needs a child to look different asks for a prop or a documented custom property.
   Today's reach-ins are listed in the test, and the list only shrinks.
 
+## Page CSS places
+
+The same rule from the page's side: an app's own stylesheet places parts and never paints them. Lay a screen out
+with Stack, Inline and Grid first (their `gap` and padding take spacing token names: `gap="16"`); what CSS remains
+may set only these properties:
+
+| Allowed | Properties |
+| --- | --- |
+| Box and flow | `display`, `box-sizing`, `isolation`, `container`, `container-type`, `container-name` |
+| Position | `position`, `inset`, `inset-*`, `top`, `right`, `bottom`, `left`, `z-index` |
+| Grid and flex | `grid`, `grid-*`, `flex`, `flex-*`, `order`, `gap`, `row-gap`, `column-gap`, `align-*`, `justify-*`, `place-*` |
+| Size | `width`, `height`, `min-*` / `max-*` (`width`, `height`, `inline-size`, `block-size`), `inline-size`, `block-size`, `aspect-ratio` |
+| Space | `margin`, `margin-*`, `padding`, `padding-*` (on spacing tokens) |
+| Scroll | `overflow`, `overflow-x`, `overflow-y`, `overflow-inline`, `overflow-block` |
+| The page's own variables | any `--name` but a `--gv-*` one (that would repaint the system) |
+
+Everything else paints and comes from a part and its props: `color`, `background`, `border` (and `border-radius`),
+`outline`, `font` and every type property (`white-space`, `text-align`, `text-overflow`), `box-shadow`, `fill`,
+`stroke`, `opacity`, `filter`, `zoom`, `list-style`, `clip-path`. A list without bullets is a Stack or Inline with
+`elementType="ul"`; hidden text is Visually hidden.
+
+`tests/backoffice-places.test.mjs` holds the back office to it (the list lives in `scripts/lib/places.mjs`). Today's
+paint in `backoffice/src/layout.css` is listed in `tests/backoffice-paints.json`, by selector and property; the list
+only shrinks, and the back office's move onto the layout parts empties it.
+
 ## The convention
 
 ### 1. Booleans are `isX`, `hasX` or `showX`

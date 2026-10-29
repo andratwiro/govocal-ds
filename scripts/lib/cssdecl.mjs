@@ -12,10 +12,12 @@ export function mask(source, {strings = true} = {}) {
 /**
  * Each declaration as {prop, value, start, end, valueStart, valueEnd, selectors, line}. `start..end` covers
  * `prop: value` (without the `;`), `valueStart..valueEnd` the value, trimmed. `selectors` is the chain of rule
- * preludes it sits in, outermost first (at-rules included, as written).
+ * preludes it sits in, outermost first (at-rules included, as written). Their quoted strings are blanked unless
+ * `selectorStrings` (`[data-zoom="50"]` stays itself, for a guard that lists selectors).
  */
-export function declarations(source) {
+export function declarations(source, {selectorStrings = false} = {}) {
   const text = mask(source);
+  const preludes = selectorStrings ? mask(source, {strings: false}) : text;
   const out = [];
   const stack = [];
   let from = 0, depth = 0; // depth of round brackets: a ; or { inside url(...) or a function never splits
@@ -23,7 +25,7 @@ export function declarations(source) {
     const raw = text.slice(from, end);
     const lead = raw.length - raw.trimStart().length;
     const body = raw.trim();
-    if (opensBlock) { stack.push(body.replace(/\s+/g, ' ')); return; }
+    if (opensBlock) { stack.push(preludes.slice(from, end).trim().replace(/\s+/g, ' ')); return; }
     if (!body || !stack.length) return;
     const colon = body.indexOf(':');
     if (colon <= 0) return;

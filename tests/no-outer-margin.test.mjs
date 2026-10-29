@@ -41,7 +41,7 @@ export function roots(tsx) {
 /** The root classes a stylesheet gives an outer margin, sorted. */
 export function outerMargins(css, rootClasses) {
   const out = new Set();
-  for (const d of declarations(css)) {
+  for (const d of declarations(css, {selectorStrings: true})) {
     if (!/^margin(-|$)/.test(d.prop) || /^0(px)?(\s+0(px)?){0,3}$/.test(d.value.trim())) continue;
     for (const sel of resolveSelectors(d.selectors))
       for (const [, c] of subject(sel).replace(/\([^)]*\)/g, '').matchAll(/\.([\w-]+)/g))
