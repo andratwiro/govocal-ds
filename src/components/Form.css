@@ -83,7 +83,8 @@
   align-items: center;
   justify-content: center;
   transition-property: background, color;
-  transition-duration: 150ms;
+  transition-duration: var(--gv-motion-duration-fast);
+  transition-timing-function: var(--gv-motion-easing-standard);
   -webkit-tap-highlight-color: transparent;
 
   svg {

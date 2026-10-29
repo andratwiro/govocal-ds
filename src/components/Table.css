@@ -57,7 +57,8 @@
   position: relative;
   transform: scale(1);
   transition-property: background, color;
-  transition-duration: 200ms;
+  transition-duration: var(--gv-motion-duration-fast);
+  transition-timing-function: var(--gv-motion-easing-standard);
   -webkit-tap-highlight-color: transparent;
 
   tr:last-child& {
@@ -278,7 +279,7 @@
 
     svg {
       rotate: 0deg;
-      transition: rotate 200ms;
+      transition: rotate var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
       fill: none;
       stroke: currentColor;
       stroke-width: 3px;

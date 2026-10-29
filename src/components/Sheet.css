@@ -50,7 +50,7 @@
     background: var(--gv-border-control);
     position: absolute;
     z-index: 2;
-    transition: opacity 300ms;
+    transition: opacity var(--gv-motion-duration-slow) var(--gv-motion-easing-standard);
   }
 
   &[data-swipe-direction='bottom'] .sheet-handle,

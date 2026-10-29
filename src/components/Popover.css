@@ -13,8 +13,8 @@
   background: var(--background-color);
   color: var(--text-color);
   transition:
-    transform 140ms,
-    opacity 140ms;
+    transform var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+    opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
   font: var(--gv-type-ui);
   letter-spacing: var(--gv-type-ui-tracking);
   padding: var(--gv-space-6);

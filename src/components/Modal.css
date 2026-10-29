@@ -13,11 +13,11 @@
   letter-spacing: var(--gv-type-ui-tracking);
 
   &[data-entering] {
-    animation: modal-fade 200ms;
+    animation: modal-fade var(--gv-motion-duration-medium) var(--gv-motion-easing-enter);
   }
 
   &[data-exiting] {
-    animation: modal-fade 150ms reverse ease-in;
+    animation: modal-fade-out var(--gv-motion-duration-fast) var(--gv-motion-easing-exit);
   }
 }
 
@@ -37,11 +37,7 @@
   max-width: min(500px, 90vw);
 
   &[data-entering] {
-    animation: modal-zoom 200ms cubic-bezier(0.16, 1, 0.3, 1);
-
-    @media (prefers-reduced-motion: reduce) {
-      animation: none;
-    }
+    animation: modal-zoom var(--gv-motion-duration-medium) var(--gv-motion-easing-enter);
   }
 
   .react-aria-TextField {
@@ -56,6 +52,16 @@
 
   to {
     opacity: 1;
+  }
+}
+
+@keyframes modal-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
   }
 }
 

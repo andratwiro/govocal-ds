@@ -73,7 +73,9 @@
   color: inherit;
   font: inherit;
   text-decoration: none;
-  transition: border-color 150ms, box-shadow 150ms;
+  transition:
+    border-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+    box-shadow var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 }
 
 .gv-welcome .gv-welcome__card:hover {
@@ -128,7 +130,9 @@
 
   & svg {
     color: var(--gv-icon-default);
-    transition: translate 150ms, color 150ms;
+    transition:
+      translate var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+      color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
   }
 }
 
@@ -143,13 +147,6 @@
 
 .gv-welcome__desc {
   color: var(--gv-text-secondary);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .gv-welcome .gv-welcome__card,
-  .gv-welcome__name svg {
-    transition: none;
-  }
 }
 
 /* The pictures on the cards (aria-hidden): a few tokens each. */

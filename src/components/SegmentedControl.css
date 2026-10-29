@@ -14,12 +14,9 @@
     height: 100%;
     z-index: -1;
     transition-property: translate, width;
-    transition-duration: 200ms;
+    transition-duration: var(--gv-motion-duration-medium);
+    transition-timing-function: var(--gv-motion-easing-move);
     border-radius: 9999px;
-
-    @media (prefers-reduced-motion: reduce) {
-      transition: none;
-    }
   }
 
   .segmented-control-item {
@@ -33,12 +30,12 @@
     padding: 0 var(--spacing-3);
     position: relative;
     z-index: 1;
-    transition: color 200ms;
+    transition: color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
     -webkit-tap-highlight-color: transparent;
 
     span {
       display: inline-block;
-      transition: scale 200ms;
+      transition: scale var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
     }
 
     &[data-pressed] span {

@@ -328,7 +328,7 @@
   /* The header's select-all is the gv Checkbox's quiet look (dimmed until hovered or checked). */
   .gv-data-table__row .gv-data-table__check .gv-checkbox {
     opacity: 0;
-    transition: opacity 0.15s;
+    transition: opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
   }
 
   .gv-data-table__row:is([data-hovered], [data-selected], [data-focus-visible], :focus-within) .gv-data-table__check .gv-checkbox {

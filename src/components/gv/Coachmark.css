@@ -14,8 +14,8 @@
   font: var(--gv-type-ui);
   letter-spacing: var(--gv-type-ui-tracking);
   transition:
-    transform 200ms,
-    opacity 200ms;
+    transform var(--gv-motion-duration-medium) var(--gv-motion-easing-standard),
+    opacity var(--gv-motion-duration-medium) var(--gv-motion-easing-standard);
   outline: none;
 
   &[data-entering],
@@ -43,15 +43,6 @@
   &[data-placement='right'] {
     --origin: translateX(-8px);
     margin-left: var(--gv-space-12);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: opacity 120ms;
-
-    &[data-entering],
-    &[data-exiting] {
-      transform: none;
-    }
   }
 }
 

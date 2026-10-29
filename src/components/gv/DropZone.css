@@ -11,7 +11,9 @@
   border-radius: var(--gv-radius-10);
   background: var(--gv-surface-toolbar);
   outline: none;
-  transition: border-color 0.12s, background 0.12s;
+  transition:
+    border-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+    background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 
   &[data-hovered] {
     border-color: var(--gv-border-control-hover);

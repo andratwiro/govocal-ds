@@ -19,7 +19,7 @@
   overflow-wrap: anywhere;
   forced-color-adjust: none;
   outline: none;
-  transition: opacity 120ms ease;
+  transition: opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 
   &[data-entering],
   &[data-exiting] {
@@ -76,9 +76,5 @@
 
   &[data-placement='left'] .react-aria-OverlayArrow svg {
     transform: rotate(-90deg);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
   }
 }

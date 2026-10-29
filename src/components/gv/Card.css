@@ -136,7 +136,7 @@
 }
 
 .gv-card__chevron svg {
-  transition: rotate 200ms;
+  transition: rotate var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 }
 
 .gv-card[data-expanded] .gv-card__chevron svg,

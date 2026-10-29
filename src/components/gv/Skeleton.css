@@ -9,7 +9,7 @@
   flex: none;
   background: var(--gv-surface-hover);
   border-radius: var(--gv-radius-4);
-  animation: gv-skeleton-pulse 1.6s ease-in-out infinite;
+  animation: gv-skeleton-pulse var(--gv-motion-duration-loop) var(--gv-motion-easing-move) infinite;
 }
 
 .gv-skeleton--line {

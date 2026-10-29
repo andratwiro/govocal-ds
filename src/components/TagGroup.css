@@ -41,7 +41,8 @@
   align-items: center;
   gap: var(--spacing-1);
   transition-property: scale, background, border-color, box-shadow, text-shadow;
-  transition-duration: 200ms;
+  transition-duration: var(--gv-motion-duration-fast);
+  transition-timing-function: var(--gv-motion-easing-standard);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -78,7 +79,7 @@
     appearance: none;
     color: var(--gv-icon-default);
     font: inherit;
-    transition: color 200ms;
+    transition: color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
     outline: none;
     border-radius: 100%;
     aspect-ratio: 1/1;
@@ -89,7 +90,8 @@
     align-items: center;
     justify-content: center;
     transition-property: background, color, scale;
-    transition-duration: 200ms;
+    transition-duration: var(--gv-motion-duration-fast);
+    transition-timing-function: var(--gv-motion-easing-standard);
     -webkit-tap-highlight-color: transparent;
 
     svg {

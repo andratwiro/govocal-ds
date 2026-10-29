@@ -25,7 +25,7 @@
     gap: var(--gv-space-10);
     padding: var(--gv-space-12) var(--gv-space-15);
     border-radius: var(--radius);
-    transition: background 150ms;
+    transition: background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
     outline: none;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
@@ -55,11 +55,7 @@
       height: 14px;
       color: var(--gv-icon-strong);
       rotate: 0deg;
-      transition: rotate 150ms;
-
-      @media (prefers-reduced-motion: reduce) {
-        transition: none;
-      }
+      transition: rotate var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
     }
   }
 
@@ -81,12 +77,8 @@
   font: var(--gv-type-ui);
   letter-spacing: var(--gv-type-ui-tracking);
   height: var(--disclosure-panel-height);
-  transition: height 250ms;
+  transition: height var(--gv-motion-duration-slow) var(--gv-motion-easing-move);
   overflow: clip;
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 
   > div {
     padding: var(--gv-space-6) var(--gv-space-15) var(--gv-space-16);

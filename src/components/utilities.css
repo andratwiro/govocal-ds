@@ -11,7 +11,8 @@
     box-shadow: inset 0 0 0 var(--button-border-size) var(--button-border);
     outline: none;
     transition-property: background, color, scale, box-shadow;
-    transition-duration: 200ms;
+    transition-duration: var(--gv-motion-duration-fast);
+    transition-timing-function: var(--gv-motion-easing-standard);
     will-change: scale;
     forced-color-adjust: none;
     -webkit-tap-highlight-color: transparent;
@@ -154,7 +155,7 @@
 
     background: var(--inset-background);
     box-shadow: inset 0 0 0 var(--inset-border-size) var(--inset-border);
-    transition: box-shadow 200ms;
+    transition: box-shadow var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
     forced-color-adjust: none;
 
     &:where([data-hovered], [data-pressed]) {

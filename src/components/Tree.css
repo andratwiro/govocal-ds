@@ -84,7 +84,8 @@
   position: relative;
   transform: translateZ(0);
   transition-property: background, color, border-radius;
-  transition-duration: 200ms;
+  transition-duration: var(--gv-motion-duration-fast);
+  transition-timing-function: var(--gv-motion-easing-standard);
   -webkit-tap-highlight-color: transparent;
   --chevron-width: var(--spacing-5);
 
@@ -144,7 +145,7 @@
 
     svg {
       rotate: 0deg;
-      transition: rotate 200ms;
+      transition: rotate var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
       fill: none;
       stroke: currentColor;
       stroke-width: 2px;

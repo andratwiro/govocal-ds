@@ -40,7 +40,9 @@
     border-radius: var(--gv-radius-4);
     background: var(--gv-surface-panel);
     box-shadow: none;
-    transition: background-color 150ms, border-color 150ms;
+    transition:
+      background-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+      border-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -57,7 +59,7 @@
     stroke-dashoffset: 66;
     stroke-linecap: round;
     stroke-linejoin: round;
-    transition: stroke-dashoffset 200ms;
+    transition: stroke-dashoffset var(--gv-motion-duration-medium) var(--gv-motion-easing-standard);
   }
 
   &[data-hovered] .indicator {
@@ -104,13 +106,6 @@
     &[data-indeterminate] .indicator {
       background: var(--gv-border-control);
       border-color: var(--gv-border-control);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .indicator,
-    svg {
-      transition: none;
     }
   }
 }

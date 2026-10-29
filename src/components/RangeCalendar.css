@@ -61,7 +61,7 @@
       width: 100%;
       height: 100%;
       border-radius: var(--radius);
-      transition: scale 200ms;
+      transition: scale var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
     }
 
     /* The days between the ends: a light wash of the selected blue (8 % on the panel), no rules above or below. */

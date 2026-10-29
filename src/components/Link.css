@@ -12,7 +12,7 @@
   cursor: pointer;
   outline: none;
   border-radius: var(--gv-radius-4);
-  transition: color 120ms ease;
+  transition: color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
   -webkit-tap-highlight-color: transparent;
 
   &[data-size='small'] {

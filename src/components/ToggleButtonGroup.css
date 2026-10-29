@@ -47,7 +47,7 @@
     }
 
     > span {
-      transition: scale 200ms;
+      transition: scale var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
     }
 
     &[data-pressed] {

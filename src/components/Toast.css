@@ -156,11 +156,11 @@
 }
 
 ::view-transition-new(.toast):only-child {
-  animation: slide-in 400ms;
+  animation: slide-in var(--gv-motion-duration-slow) var(--gv-motion-easing-enter);
 }
 
 ::view-transition-old(.toast):only-child {
-  animation: slide-out 400ms;
+  animation: slide-out var(--gv-motion-duration-medium) var(--gv-motion-easing-exit);
   animation-fill-mode: forwards;
 }
 

@@ -22,7 +22,10 @@
   color: var(--gv-icon-default);
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition:
+    background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+    color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+    border-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
   -webkit-tap-highlight-color: transparent;
 
   &[data-size='24'] {

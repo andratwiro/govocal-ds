@@ -19,7 +19,8 @@
   align-items: center;
   justify-content: center;
   transition-property: background, box-shadow, text-shadow, scale;
-  transition-duration: 200ms;
+  transition-duration: var(--gv-motion-duration-fast);
+  transition-timing-function: var(--gv-motion-easing-standard);
   -webkit-tap-highlight-color: transparent;
 
   > span {

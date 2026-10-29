@@ -23,7 +23,10 @@
   white-space: nowrap;
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, filter 0.15s;
+  transition:
+    background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+    border-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+    filter var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
   -webkit-tap-highlight-color: transparent;
 
   &[data-variant='secondary'] {
