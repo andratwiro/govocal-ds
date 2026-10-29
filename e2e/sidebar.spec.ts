@@ -103,7 +103,9 @@ test('folded inside a phase: icons only, names still accessible, badges on the i
   // Labels are visually hidden: the Projects row is no wider than the rail.
   const projects = await nav(page).getByRole('link', {name: 'Projects'}).boundingBox();
   expect(projects!.width).toBeLessThanOrEqual(box!.width);
-  // Hover shows the name as a tooltip.
+  // Hover shows the name as a tooltip. React Aria opens it only once it has seen the pointer move, and a real mouse
+  // arrives from somewhere: move it over the page first, or the first jump lands on the row before any move.
+  await page.mouse.move(400, 400);
   await nav(page).getByRole('link', {name: 'Users'}).hover();
   await expect(page.getByRole('tooltip', {name: 'Users'})).toBeVisible();
   // The menus still open from the rail.
