@@ -13,6 +13,7 @@ import {Tools} from './pages/Tools';
 import {Reporting} from './pages/Reporting';
 import {CommunityMonitor} from './pages/CommunityMonitor';
 import {InspirationHub} from './pages/InspirationHub';
+import {PagesMenu} from './pages/PagesMenu';
 
 export const router = createHashRouter([{
   path: '/', element: <Layout />, children: [
@@ -29,7 +30,8 @@ export const router = createHashRouter([{
     {path: 'projects/:projectId/phases/:phaseId/:tab', element: <ProjectPhase />},
     {path: 'reporting', element: <Reporting />},
     {path: 'community-monitor', element: <CommunityMonitor />},
-    ...NAV.filter(n => !['community-monitor', 'dashboard', 'inputs', 'inspiration-hub', 'messaging', 'projects', 'reporting', 'settings', 'tools', 'users'].includes(n.id))
+    {path: 'pages-menu', element: <PagesMenu />},
+    ...NAV.filter(n => !['community-monitor', 'dashboard', 'inputs', 'inspiration-hub', 'messaging', 'pages-menu', 'projects', 'reporting', 'settings', 'tools', 'users'].includes(n.id))
       .map(n => ({path: n.id, element: <Placeholder item={n} />}))
   ]
 }]);
