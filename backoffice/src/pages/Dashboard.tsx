@@ -31,7 +31,7 @@ function StatTile({label, value, last30, series}: Headline) {
   );
 }
 
-/** The real admin's dashboard card (title, download, body) as Tali's Dashboard card from her prototype. */
+/** The real admin's dashboard card (title, download, body) as the gv Dashboard card from the prototype. */
 function DashCard({title, type, children}: {title: string; type?: DashboardCardType; children: ReactNode}) {
   const action = (
     <IconButton aria-label={`Download ${title.toLowerCase()} data`}><Download aria-hidden size={16} /></IconButton>

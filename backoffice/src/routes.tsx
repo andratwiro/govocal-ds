@@ -7,6 +7,8 @@ import {ProjectPhase} from './pages/ProjectPhase';
 import {Dashboard} from './pages/Dashboard';
 import {Inputs} from './pages/Inputs';
 import {Settings} from './pages/Settings';
+import {Messaging} from './pages/Messaging';
+import {Users} from './pages/Users';
 
 export const router = createHashRouter([{
   path: '/', element: <Layout />, children: [
@@ -14,9 +16,12 @@ export const router = createHashRouter([{
     {path: 'dashboard', element: <Dashboard />},
     {path: 'projects', element: <Projects />},
     {path: 'inputs', element: <Inputs />},
+    {path: 'users', element: <Users />},
+    {path: 'messaging', element: <Messaging />},
     {path: 'settings', element: <Settings />},
     {path: 'projects/:projectId', element: <ProjectPhase />},
     {path: 'projects/:projectId/phases/:phaseId/:tab', element: <ProjectPhase />},
-    ...NAV.filter(n => !['dashboard', 'projects', 'inputs', 'settings'].includes(n.id)).map(n => ({path: n.id, element: <Placeholder item={n} />}))
+    ...NAV.filter(n => !['dashboard', 'projects', 'inputs', 'users', 'messaging', 'settings'].includes(n.id))
+      .map(n => ({path: n.id, element: <Placeholder item={n} />}))
   ]
 }]);

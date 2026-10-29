@@ -105,3 +105,47 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-settings-list { list-style: none; margin: 0; padding: 0; display: grid; max-width: 540px; }
 .bo-settings-list-item { display: block; padding-block: var(--gv-space-8); }
 .bo-settings-switches { display: grid; gap: var(--gv-space-16); }
+/* ── Messaging ── */
+.bo-messaging-tab { display: inline-flex; align-items: center; gap: var(--gv-space-6); }
+.bo-messaging-intro { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--gv-space-16); margin-block: var(--gv-space-16); }
+.bo-messaging-intro p { margin: 0; }
+.bo-messaging-stack { display: grid; gap: var(--gv-space-16); }
+.bo-messaging-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: var(--gv-space-16); align-items: start; }
+.bo-messaging-table { width: 100%; }
+.bo-messaging-subject { display: grid; gap: var(--gv-space-2); }
+.bo-messaging-nowrap { white-space: nowrap; }
+.bo-messaging-section { display: grid; }
+.bo-messaging-form { display: grid; gap: var(--gv-space-16); padding-block-start: var(--gv-space-8); }
+.bo-messaging-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--gv-space-16); }
+.bo-messaging-field { display: grid; gap: var(--gv-space-4); }
+.bo-messaging-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-8); }
+.bo-messaging-groups { display: grid; gap: var(--gv-space-16); padding-block-start: var(--gv-space-8); }
+.bo-messaging-group { display: grid; gap: var(--gv-space-4); }
+.bo-messaging-rows, .bo-messaging-list { list-style: none; margin: 0; padding: 0; display: grid; }
+/* A flex parent lets the list row shrink to fit, padding included. */
+.bo-messaging-list > li { display: flex; }
+.bo-messaging-row { display: flex; align-items: center; justify-content: space-between; gap: var(--gv-space-12); padding-block: var(--gv-space-8); }
+.bo-messaging-name { display: grid; gap: var(--gv-space-2); }
+.bo-messaging-meta { display: grid; gap: var(--gv-space-2); }
+.bo-messaging-meta-item { display: inline-flex; align-items: center; gap: var(--gv-space-4); }
+.bo-messaging-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--gv-space-12); }
+.bo-messaging-mailhead { display: grid; grid-template-columns: auto 1fr; gap: var(--gv-space-4) var(--gv-space-12); margin: 0; }
+.bo-messaging-mailhead dd { margin: 0; }
+.bo-messaging-mailbody { display: grid; gap: var(--gv-space-12); justify-items: start; padding-block: var(--gv-space-8); }
+.bo-messaging-mailbody p { margin: 0; }
+/* ── Users ── */
+.bo-users-actions { display: flex; align-items: center; gap: var(--gv-space-8); }
+.bo-users-side { display: grid; gap: var(--gv-space-12); align-content: start; }
+.bo-users-groups-head { display: flex; align-items: center; justify-content: space-between; gap: var(--gv-space-8); }
+.bo-users-groups-head .bo-section-title { margin: var(--gv-space-12) 0 0; }
+.bo-users-option { display: flex; align-items: center; gap: var(--gv-space-8); width: 100%; }
+.bo-users-option-label { flex: 1; }
+.bo-users-body { display: grid; gap: var(--gv-space-12); min-width: 0; }
+.bo-users-toolbar { display: flex; align-items: center; gap: var(--gv-space-12); }
+.bo-users-toolbar > .react-aria-SearchField { flex: 0 1 220px; min-width: 120px; }
+.bo-users-table { width: 100%; }
+.bo-users-person { display: flex; align-items: center; gap: var(--gv-space-12); }
+.bo-users-stack { display: grid; gap: var(--gv-space-2); }
+.bo-users-nowrap { white-space: nowrap; }
+.bo-users-scroll { overflow-x: auto; }
+.bo-users-toolbar > .gv-checkbox { flex: none; white-space: nowrap; }

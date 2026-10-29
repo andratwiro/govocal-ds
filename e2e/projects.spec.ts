@@ -21,7 +21,7 @@ test('a row has its actions menu', async ({page}) => {
   await expect(page.getByRole('menuitem', {name: 'Duplicate'})).toBeVisible();
 });
 
-test('rows use Tali\'s Status, Avatar and icon button; New project opens its menu', async ({page}) => {
+test('rows use the gv Status, Avatar and icon button; New project opens its menu', async ({page}) => {
   await page.goto('/backoffice/#/projects');
   const row = page.getByRole('row', {name: /Green Corridors for Riverside/});
   await expect(row.getByRole('link', {name: 'Green Corridors for Riverside'}))

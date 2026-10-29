@@ -14,8 +14,8 @@ test('dashboard follows the real admin: six sections, filters, three groups of c
   await expect(page.getByRole('meter', {name: 'Feedback given'})).toBeVisible();
 });
 
-// Was: Gap markers for StatCard, Chart · Line, Dashboard card and KPI. Tali's Kpi, Chart and Card now cover them.
-test('dashboard is built from Tali\'s cards, KPI tiles and charts, with no gaps left', async ({page}) => {
+// Was: Gap markers for StatCard, Chart · Line, Dashboard card and KPI. The gv Kpi, Chart and Card now cover them.
+test('dashboard is built from the gv cards, KPI tiles and charts, with no gaps left', async ({page}) => {
   await page.goto('/backoffice/#/dashboard');
   await expect(page.locator('.gv-kpi', {hasText: 'Registrations'})).toContainText('Last 30 days: +46');
   await expect(page.locator('.gv-kpi')).toHaveCount(5);

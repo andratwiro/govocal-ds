@@ -10,7 +10,7 @@ test('input manager follows the real admin: filters, project list, selectable in
   await expect(page.getByRole('searchbox', {name: 'Search inputs'})).toBeVisible();
   await expect(page.getByRole('listbox', {name: 'Projects'})).toBeVisible();
   const grid = page.getByRole('grid', {name: 'Inputs'});
-  // Real admin columns, plus the prototype's Status column; headers are Tali's List header cells.
+  // Real admin columns, plus the prototype's Status column; headers are gv List header cells.
   for (const c of ['Title', 'Status', 'Assignee', 'Comments', 'Likes', 'Dislikes', 'Published on']) {
     await expect(grid.getByRole('columnheader', {name: c, exact: true})).toBeVisible();
   }
@@ -58,6 +58,6 @@ test('sortable columns reorder the inputs', async ({page}) => {
 test('input manager names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/inputs');
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
-  // Pill now comes from Tali's system; only pagination is still missing.
+  // Pill now comes from the system; only pagination is still missing.
   expect(gaps).toEqual(['Pagination']);
 });

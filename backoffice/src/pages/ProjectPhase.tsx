@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router';
-import {Download, Funnel, Lightbulb, Paperclip, Plus, Search, Settings, Upload} from 'lucide-react';
+import {Download, Funnel, Lightbulb, Paperclip, Plus, Search, Settings, TriangleAlert, Upload} from 'lucide-react';
 import {Button} from '../../../src/components/Button';
 import {Table, TableHeader, TableBody, Column, Row, Cell} from '../../../src/components/Table';
 import {Avatar} from '../../../src/components/gv/Avatar';
@@ -8,8 +8,7 @@ import {Card} from '../../../src/components/gv/Card';
 import {Divider} from '../../../src/components/gv/Divider';
 import {Header} from '../../../src/components/gv/Header';
 import {IconButton} from '../../../src/components/gv/IconButton';
-import {ListHeader, type ListHeaderColumn} from '../../../src/components/gv/ListHeader';
-import {ListRow} from '../../../src/components/gv/ListRow';
+import {ListHeaderCell} from '../../../src/components/gv/ListHeaderCell';
 import {RailHeader} from '../../../src/components/gv/RailHeader';
 import {RailPhase} from '../../../src/components/gv/RailPhase';
 import {RailSectionLabel} from '../../../src/components/gv/RailSectionLabel';
@@ -21,7 +20,7 @@ import {TitleField} from '../../../src/components/gv/TitleField';
 import {Gap} from '../Gap';
 import {INPUTS, ME, PROJECTS, type Phase, type Project} from '../data';
 
-// The phase screen, from Tali's frames "Project · Build" and "Ideation · Manage (data)" (Screens WIP):
+// The phase screen, from the Figma frames "Project · Build" and "Ideation · Manage (data)" (Screens WIP):
 // a header bar (Header · mode switch · actions) over the Participation rail and the tab's panels.
 const TABS = ['build', 'manage', 'insights'] as const;
 type Tab = typeof TABS[number];
@@ -56,11 +55,11 @@ export function ProjectPhase() {
       </div>
       <div className="bo-phase-body" data-view={view}>
         {railOpen && <Rail project={project} current={phase} tab={view} />}
-        {view === 'build' && <Build phase={phase} />}
-        {view === 'manage' && phase.method === 'Ideation' && <Manage phase={phase} project={project} />}
+        {view === 'build' && <Build key={`${project.id}/${phase.id}`} phase={phase} />}
+        {view === 'manage' && phase.method === 'Ideation' && <Manage key={`${project.id}/${phase.id}`} phase={phase} project={project} />}
         {(view === 'insights' || (view === 'manage' && phase.method !== 'Ideation')) && (
           <section className="bo-phase-panel bo-phase-grow" aria-label={label(view)}>
-            <p className="bo-note">{phase.title} · {phase.method} · {label(view)}. Tali hasn't drawn this method × tab yet; it follows her frame for it.</p>
+            <p className="bo-note">{phase.title} · {phase.method} · {label(view)}. Not in Figma yet.</p>
           </section>
         )}
       </div>
@@ -134,14 +133,14 @@ function Build({phase}: {phase: Phase}) {
           <Status state={phase.status === 'Live' ? 'live' : 'draft'}>{phase.status}</Status>
         </div>
         {phase.method === 'Ideation' ? <IdeationCards phase={phase} /> : (
-          <p className="bo-note">The {phase.method.toLowerCase()} setup cards follow when Tali draws "{phase.method} · Build".</p>
+          <p className="bo-note">The {phase.method.toLowerCase()} setup cards: not in Figma yet.</p>
         )}
       </aside>
     </>
   );
 }
 
-// The phase's own cards, after Tali's "Ideation · Build" frame (her Card types Required, Add, Review, To set).
+// The phase's own cards, after the "Ideation · Build" Figma frame (Card types Required, Add, Review, To set).
 function IdeationCards({phase}: {phase: Phase}) {
   return (
     <ul className="bo-phase-stack">
@@ -164,10 +163,6 @@ function IdeationCards({phase}: {phase: Phase}) {
 }
 
 // "Ideation · Manage (data)": the metrics and actions on the left, the list of ideas on the right.
-const COLUMNS: ListHeaderColumn[] = [
-  {key: 'idea', label: 'Idea', sorted: true},
-  {key: 'status', label: 'Status', width: 136, square: true}
-];
 type Walk = 'reply' | 'unassigned' | 'new' | 'comments' | 'warnings';
 const WALKS: {key: Walk; label: string; test: (i: typeof INPUTS[number]) => boolean}[] = [
   {key: 'reply', label: 'Waiting for a reply', test: i => i.needsFeedback},
@@ -210,12 +205,14 @@ function Manage({project, phase}: {project: Project; phase: Phase}) {
         </div>
         <Table aria-label="Inputs" selectionMode="multiple">
           <TableHeader>
-            <Column isRowHeader><ListHeader columns={COLUMNS} onAddColumn={() => {}} /></Column>
+            <Column isRowHeader><ListHeaderCell sorted>Idea</ListHeaderCell></Column>
+            <Column><ListHeaderCell square>Status</ListHeaderCell></Column>
           </TableHeader>
           <TableBody renderEmptyState={() => <p className="bo-note">No ideas here yet.</p>}>
             {shown.map(i => (
               <Row key={i.id} id={i.id} textValue={i.title}>
-                <Cell><ListRow title={i.title} status={i.status} warning={i.warning} /></Cell>
+                <Cell>{i.title}{i.warning && <> <TriangleAlert aria-label="Needs attention" size={14} /></>}</Cell>
+                <Cell>{i.status}</Cell>
               </Row>
             ))}
           </TableBody>

@@ -1,5 +1,5 @@
 import {test, expect} from '@playwright/test';
-// Tali's frames "Project · Build" and "Ideation · Manage (data)" on the phase screen.
+// The Figma frames "Project · Build" and "Ideation · Manage (data)" on the phase screen.
 // Two departures from the plan's Step 6 test, both forced by the gv components:
 // - the Header's current crumb is also a link named after the phase, so the rail link is looked up inside the
 //   Phases nav;
@@ -33,5 +33,5 @@ test('the Phases rail moves between phases and other methods keep a note', async
   await expect(page).toHaveURL(/phases\/p4\/build/);
   await page.getByRole('radio', {name: 'Insights'}).click();
   await expect(page).toHaveURL(/phases\/p4\/insights/);
-  await expect(page.getByText(/hasn't drawn this method × tab yet/)).toBeVisible();
+  await expect(page.getByText(/Not in Figma yet/)).toBeVisible();
 });

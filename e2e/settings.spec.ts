@@ -46,7 +46,7 @@ test('save stays off until something changes', async ({page}) => {
   await expect(page.getByText('Platform configuration saved')).toBeVisible();
 });
 
-test('branding takes a logo through Tali\'s drop zone', async ({page}) => {
+test('branding takes a logo through the gv drop zone', async ({page}) => {
   await page.goto('/backoffice/#/settings');
   await page.getByRole('tab', {name: 'Branding'}).click();
   await expect(page.getByRole('heading', {level: 3, name: 'Platform logo', exact: true})).toBeVisible();
