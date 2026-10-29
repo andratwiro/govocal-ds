@@ -13,7 +13,7 @@ export interface SectionLabelProps extends PlacementProps {
    * jump to ("Who can participate" in Access rights). Without it the label is plain text: the rail's "Timeline" names
    * a list that already has its own name.
    */
-  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  headingLevel?: 2 | 3 | 4 | 5 | 6;
   /** A 16 icon before the words (Access rights' "Who can participate"). */
   icon?: ReactNode;
 }
@@ -23,7 +23,7 @@ export interface SectionLabelProps extends PlacementProps {
  * report checklist's "Project context" (Figma "Rail section label", 4:442: a 32 row in Small, quiet grey). Sentence
  * case everywhere, never uppercase tracked (docs/DECISIONS.md).
  */
-export function SectionLabel({children, level, icon, className, style}: SectionLabelProps) {
+export function SectionLabel({children, headingLevel: level, icon, className, style}: SectionLabelProps) {
   const body = (
     <>
       {icon != null && (

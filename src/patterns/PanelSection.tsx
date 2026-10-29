@@ -19,7 +19,7 @@ export interface PanelSectionProps extends PlacementProps {
   isCollapsible?: boolean;
   defaultExpanded?: boolean;
   /** Heading level of the title. @default 3 */
-  level?: 2 | 3 | 4;
+  headingLevel?: 2 | 3 | 4;
   children: ReactNode;
 }
 
@@ -27,7 +27,7 @@ export interface PanelSectionProps extends PlacementProps {
  * A section of a side panel (prototype `.pj-psec`): a small strong title, its body 16 below. Collapsible sections
  * fold with a chevron at the end of the header. Not in Figma yet.
  */
-export function PanelSection({title, aside, isCollapsible, defaultExpanded, level = 3, children, className, style}: PanelSectionProps) {
+export function PanelSection({title, aside, isCollapsible, defaultExpanded, headingLevel: level = 3, children, className, style}: PanelSectionProps) {
   if (isCollapsible) {
     return (
       <Disclosure className={clsx('gv-panel-section', className)} style={style} data-collapsible defaultExpanded={defaultExpanded}>

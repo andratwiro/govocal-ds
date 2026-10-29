@@ -9,14 +9,14 @@ export interface TableToolbarHeadingProps extends PlacementProps {
   /** The count, in words: "124 ideas". */
   children: ReactNode;
   /** @default 3 */
-  level?: 2 | 3 | 4;
+  headingLevel?: 2 | 3 | 4;
 }
 
 /**
  * The count heading at a table's start ("124 ideas"). It follows what the table shows, search and filters
  * included, and says so politely to screen readers as it changes.
  */
-export function TableToolbarHeading({children, level = 3, className, style}: TableToolbarHeadingProps) {
+export function TableToolbarHeading({children, headingLevel: level = 3, className, style}: TableToolbarHeadingProps) {
   const Heading = `h${level}` as const;
   return <Heading className={clsx('gv-table-toolbar__heading', className)} style={style} aria-live="polite" aria-atomic>{children}</Heading>;
 }
@@ -59,7 +59,7 @@ export function TableToolbar({heading, headingLevel, start, children, 'aria-labe
   return (
     <div className={clsx('gv-table-toolbar', className)} style={style}>
       <div className="gv-table-toolbar__start">
-        {start ?? (heading != null && <TableToolbarHeading level={headingLevel}>{heading}</TableToolbarHeading>)}
+        {start ?? (heading != null && <TableToolbarHeading headingLevel={headingLevel}>{heading}</TableToolbarHeading>)}
       </div>
       {children && (
         <div className="gv-table-toolbar__end" onKeyDownCapture={keepCaret}>
