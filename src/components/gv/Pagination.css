@@ -1,0 +1,91 @@
+@import '../theme.css';
+
+/*
+ * Pagination (the prototype's `.gv-bo-pager`, at the foot of the Audience table): 28 squares 8 apart, page numbers in
+ * the accent colour, the current page filled with the primary action colour, ‹ › as quiet icon buttons that fade
+ * when there is nowhere to go. Every button is the square icon-button shape (radius 8), as the system's icon buttons.
+ */
+.gv-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gv-space-8);
+  font-family: var(--gv-font-family);
+}
+
+.gv-pagination__step,
+.gv-pagination__page {
+  appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--gv-space-28);
+  block-size: var(--gv-space-28);
+  margin: 0;
+  padding: 0 var(--gv-space-6);
+  border: 0;
+  border-radius: var(--gv-radius-8);
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  transition: background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+    color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+  -webkit-tap-highlight-color: transparent;
+
+  &[data-hovered] {
+    background: var(--gv-surface-hover);
+  }
+
+  &[data-pressed] {
+    background: var(--gv-surface-hover-strong);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 1px;
+  }
+}
+
+.gv-pagination__step {
+  color: var(--gv-icon-default);
+
+  > svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 1.75;
+  }
+
+  &[data-hovered] {
+    color: var(--gv-icon-primary);
+  }
+
+  &[data-disabled] {
+    background: transparent;
+    color: var(--gv-icon-quiet);
+    cursor: default;
+  }
+}
+
+.gv-pagination__page {
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-accent);
+
+  &[aria-current='page'] {
+    background: var(--gv-action-primary);
+    color: var(--gv-text-inverse);
+    font: var(--gv-type-ui-strong);
+    letter-spacing: var(--gv-type-ui-strong-tracking);
+    cursor: default;
+  }
+}
+
+.gv-pagination__gap {
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-inline-size: var(--gv-space-12);
+  font: var(--gv-type-ui);
+  color: var(--gv-text-tertiary);
+}
