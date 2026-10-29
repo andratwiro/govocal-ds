@@ -1,7 +1,7 @@
 const children = n => n.children ?? [];
 function* walk(n) { yield n; for (const c of children(n)) yield* walk(c); }
 
-// Tali's Icons page in Figma names each component "Icon/<name>/<size>" (one COMPONENT per size,
+// The Icons page in Figma names each component "Icon/<name>/<size>" (one COMPONENT per size,
 // e.g. "Icon/link/16" and "Icon/link/20"); a few carry a variant suffix like "16 alt". Drop the
 // "Icon/" prefix and any trailing size segment, then dedupe: link/16 and link/20 both become "link".
 export function parseIcons(iconsPage) {

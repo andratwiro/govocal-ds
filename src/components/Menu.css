@@ -1,6 +1,6 @@
 @import './theme.css';
 
-/* Tali's floating menu (augur-design.html .pj-menu / .pj-menu__item): white card, 4px
+/* The prototype's floating menu (augur-design.html .pj-menu / .pj-menu__item): white card, 4px
    padding, 6px item radius, 9/11 item padding, hover = the page's surface-hover. */
 .react-aria-Menu {
   margin: 0;

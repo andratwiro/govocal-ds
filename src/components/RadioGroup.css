@@ -47,7 +47,7 @@
   color: var(--gv-text-secondary);
   forced-color-adjust: none;
   -webkit-tap-highlight-color: transparent;
-  /* Tali's radio (augur-design.html .pj-optrad / .pj-radio__dot): 16px circle, 1.5px border,
+  /* The prototype's radio (augur-design.html .pj-optrad / .pj-radio__dot): 16px circle, 1.5px border,
      unchecked slate-250 border, checked border + centred dot in the brand colour. */
   --dot-color: var(--gv-border-selected);
 

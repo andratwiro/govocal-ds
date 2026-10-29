@@ -1,6 +1,6 @@
 @import './theme.css';
 
-/* Tali's "undo snackbar" (augur-design.html .pj-toast--success): a light success-tinted
+/* The prototype's "undo snackbar" (augur-design.html .pj-toast--success): a light success-tinted
    card, bottom-right, title + body + text action, no icon slot in this starter's markup
    (Toast.tsx is G1's file to touch; this file paints the existing structure only). */
 .react-aria-ToastRegion {

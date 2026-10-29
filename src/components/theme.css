@@ -51,7 +51,7 @@
   --font-size: 13px;
   --font-size-lg: 16px;
 
-  /* spacing: 4px grid on Tali's scale */
+  /* spacing: 4px grid on the Figma scale */
   --spacing: 4px;
   --spacing-1: var(--gv-space-4);
   --spacing-2: var(--gv-space-8);

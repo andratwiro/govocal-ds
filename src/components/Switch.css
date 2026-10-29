@@ -22,7 +22,7 @@
   forced-color-adjust: none;
   -webkit-tap-highlight-color: transparent;
 
-  /* Tali's toggle (augur-design.html .gv-toggle): 36x20 track, 2px padding, 16px knob,
+  /* The prototype's toggle (augur-design.html .gv-toggle): 36x20 track, 2px padding, 16px knob,
      off = slate-300 (-> --gv-control-toggle-off is near-white so we use the foundation
      step the prototype actually paints the off-track with), on = dark neutral track. */
   .track {

@@ -1,6 +1,6 @@
 @import './theme.css';
 
-/* Tali's text/link button (augur-design.html .pj-textbtn / .btn--tertiary): quiet grey
+/* The prototype's text/link button (augur-design.html .pj-textbtn / .btn--tertiary): quiet grey
    text, no underline at rest, darkens on hover — never the default blue underlined link. */
 .react-aria-Link {
   color: var(--gv-text-secondary);

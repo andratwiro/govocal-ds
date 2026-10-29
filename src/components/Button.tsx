@@ -17,7 +17,7 @@ interface ButtonProps extends RACButtonProps {
    */
   variant?: 'primary' | 'secondary' | 'quiet';
   /**
-   * The button's height, per Tali's Button spec.
+   * The button's height, per the Figma Button spec.
    *
    * @default 36
    */

@@ -1,7 +1,7 @@
 import {test, expect} from '@playwright/test';
 const story = (id: string) => `/storybook/iframe.html?id=${id}&viewMode=story`;
 
-test('primary button wears Tali\'s primary', async ({page}) => {
+test('primary button wears the Figma primary', async ({page}) => {
   await page.goto(story('base-button--primary'));
   const b = page.getByRole('button').first();
   await expect(b).toHaveCSS('background-color', 'rgb(4, 73, 108)');

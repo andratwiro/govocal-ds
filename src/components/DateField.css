@@ -6,7 +6,7 @@
   flex-direction: column;
 }
 
-/* Tali's date input (augur-design.html .pj-dateinput): bordered field, small radius,
+/* The prototype's date input (augur-design.html .pj-dateinput): bordered field, small radius,
    8/10px padding, UI-size text, calendar glyph at the right (DatePicker supplies the
    real chevron button; a plain DateField just gets the same field chrome). */
 .react-aria-DateInput {

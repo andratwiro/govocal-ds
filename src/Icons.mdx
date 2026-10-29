@@ -7,7 +7,7 @@ import iconsJson from '../tokens/icons.json';
 
 # Icons
 
-Lucide icons. Tali's Figma names them; the full set is at [lucide.dev](https://lucide.dev).
+Lucide icons, named as in Figma; the full set is at [lucide.dev](https://lucide.dev).
 
 export const figmaNames = iconsJson.figma;
 export const hasLucide = name => Boolean(lucide[toPascalCase(name)]);
@@ -24,9 +24,9 @@ export const IconPair = ({name}) => {
   </>;
 };
 
-## In Tali's Figma
+## In Figma
 
-Named on Tali's `Icons` page, with a `lucide-react` match.
+Named on the Figma `Icons` page, with a `lucide-react` match.
 
 <IconGallery>
   {inFigma.map(name => (
@@ -36,7 +36,7 @@ Named on Tali's `Icons` page, with a `lucide-react` match.
 
 ## Drawn in Figma, no Lucide match
 
-Named on Tali's `Icons` page, but `lucide-react` has nothing by that name yet — rename or replace in Figma.
+Named on the Figma `Icons` page, but `lucide-react` has nothing by that name yet — rename or replace in Figma.
 
 <IconGallery>
   {noMatch.map(name => (
@@ -44,9 +44,9 @@ Named on Tali's `Icons` page, but `lucide-react` has nothing by that name yet �
   ))}
 </IconGallery>
 
-## Used by Tali's prototype, not in Figma yet
+## Not in Figma
 
-Her [augur prototype](https://govocal.augur.page/ux-ui-audit/design/?theme=0) already draws these; Figma hasn't named them.
+The [prototype](https://govocal.augur.page/ux-ui-audit/design/?theme=0) already draws these; Figma doesn't name them yet.
 
 <IconGallery>
   {prototypeOnly.map(name => (

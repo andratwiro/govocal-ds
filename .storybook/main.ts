@@ -2,9 +2,9 @@ import type {StorybookConfig} from '@storybook/react-vite';
 const config: StorybookConfig = {
   stories: [
     '../src/**/*.mdx',
-    // Tali's components: explicit titles under Components/.
+    // The design system's components: explicit titles under Components/.
     {directory: '../src/components/gv', files: '**/*.stories.@(ts|tsx)'},
-    // The React Aria starter, painted with her tokens: the base Tali's components are built on.
+    // The React Aria starter, painted with the tokens: the base the components are built on.
     {directory: '../src/components', files: '*.stories.@(ts|tsx)', titlePrefix: 'Base'},
     '../src/patterns/**/*.stories.@(ts|tsx)'
   ],

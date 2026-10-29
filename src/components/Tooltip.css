@@ -1,7 +1,7 @@
 @import './theme.css';
 
 /* GVTooltip's look (augur-design.html #gv-tooltip): dark, hug-content, no shadow,
-   no arrow by default — Tali explicitly dropped the arrow (29 Sep note in prototype). */
+   no arrow by default — the prototype drops the arrow (29 Sep note). */
 .react-aria-Tooltip {
   box-shadow: none;
   border-radius: var(--gv-radius-4);
@@ -56,7 +56,7 @@
   }
 
   .react-aria-OverlayArrow {
-    /* Tali (29 Sep, prototype): no arrow on the tooltip. */
+    /* The prototype (29 Sep): no arrow on the tooltip. */
     display: none;
   }
 
