@@ -89,7 +89,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 
 ## Components / Charts
 - **Bar row** `BarRow`: Figma "Bar row": a label, a thin bar and its value. Stories: All Variants, Default, Empty, Two Line Label, Without Value, With Detail.
-- **Chart** `LineChart`: Figma "Chart" · Line: gridded line chart with a y axis from 0 and dated x labels. Stories: All Variants, Line2 Series, Line1 Series, Sparkline, With Legend, Large Numbers, Sparkline Small, Legends, Interactive, Sparkline Interactive, With Legend Rows.
+- **Chart** `LineChart`: Figma "Chart" · Line: gridded line chart with a y axis from 0 and dated x labels. Stories: All Variants, Line 2 Series, Line 1 Series, Sparkline, With Legend, Large Numbers, Sparkline Small, Legends, Interactive, Sparkline Interactive, With Legend Rows.
 - **Dashboard card** `DashboardCard`: A white dashboard tile with a header, a body and optional legend and footer (Figma "Dashboard card"). Stories: All Variants, Statements, Visitors Over Time, Participation Over Time, Ai Summary, Topic Breakdown, Status Breakdown, Votes Over Time, Live Ranking, List, Demographic Age, Demographic Commute, Empty.
 - **Legend row** `LegendRow`: A swatch, a label and its value: the key under a stacked bar or beside a chart (Figma "Legend row"). Stories: All Variants, Default, Count And Percent, Highlighted.
 - **Statement row** `StatementRow`: A single Common Ground statement with its agree/disagree/pass bar — the compact row used in results and summary views (as opposed to the full `CommonGroundRo… Stories: All Variants, Default, Long Value, Narrow, Four Shares, With Counts.
