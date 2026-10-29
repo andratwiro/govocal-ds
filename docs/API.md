@@ -31,6 +31,14 @@ import {DatePicker, Popover} from 'govocal-ds/base';
 - A new exported part goes in `src/index.ts` beside its Storybook group (or `src/base.ts` for a starter part). The
   guard fails until it is there, or listed as internal with its reason.
 
+## The API report
+
+`docs/API-REPORT.md` lists every name both entry points export, and each component's props: its own with their
+types, the ones passed straight through from React Aria by name, React's and the DOM's attributes by count. It is
+generated from TypeScript (`npm run api:report`), never edited by hand; `tests/api-report.test.mjs` fails while it is
+stale. A change to the API therefore arrives with its diff in that file, for developers to review. A prop marked "no
+description" has no doc comment yet.
+
 ## className and style place, never paint
 
 Every exported part that renders an element takes `className` and `style` (`PlacementProps`) and merges the class with

@@ -37,7 +37,8 @@
     "pretypecheck": "node scripts/token-usage.mjs",
     "typecheck": "tsc --noEmit",
     "api:imports": "node scripts/use-public-api.mjs backoffice/src",
-    "css:scope": "node scripts/scope-base-css.mjs"
+    "css:scope": "node scripts/scope-base-css.mjs",
+    "api:report": "node scripts/api-report.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
