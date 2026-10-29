@@ -7,7 +7,7 @@
   max-height: inherit;
   overflow: auto;
   border: 1px solid var(--gv-border-control);
-  border-radius: var(--radius-lg);
+  border-radius: var(--gv-radius-12);
   background: var(--overlay-background);
   forced-color-adjust: none;
   outline: none;
@@ -17,7 +17,7 @@
   color: var(--text-color);
 
   &:has(.react-aria-ListBoxSection) {
-    scroll-padding: 24px;
+    scroll-padding: var(--gv-space-24);
   }
 
   &[data-focus-visible] {
@@ -71,7 +71,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: var(--gv-space-32);
+  min-height: 32px;
   box-sizing: border-box;
   transition-property: background, color;
   transition-duration: var(--gv-motion-duration-fast);
@@ -198,7 +198,7 @@
   &[data-empty] {
     display: flex;
     align-items: center;
-    min-height: var(--gv-space-32);
+    min-height: 32px;
     padding-inline: var(--gv-space-14);
     color: var(--gv-text-tertiary);
   }
@@ -213,7 +213,7 @@
   align-items: center;
   align-content: center;
   column-gap: 0;
-  min-height: var(--gv-space-32);
+  min-height: 32px;
   padding: 0 var(--gv-space-8);
   box-sizing: border-box;
   border-radius: var(--gv-radius-8);
@@ -237,15 +237,15 @@
     color: var(--gv-icon-strong);
 
     > svg {
-      width: var(--gv-space-16);
-      height: var(--gv-space-16);
+      width: 16px;
+      height: 16px;
     }
   }
 
   .dropdown-item__check {
     grid-area: check;
-    width: var(--gv-space-16);
-    height: var(--gv-space-16);
+    width: 16px;
+    height: 16px;
     margin-inline-start: var(--gv-space-10);
     color: var(--gv-action-checked);
   }

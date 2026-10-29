@@ -8,7 +8,7 @@
   width: 200px;
 
   .react-aria-Button {
-    padding: 0 var(--spacing-2) 0 var(--spacing-3);
+    padding: 0 var(--gv-space-8) 0 var(--gv-space-12);
     gap: var(--select-gap);
     width: 100%;
     min-width: 0;
@@ -35,7 +35,7 @@
 
     &[data-placeholder] {
       color: var(--text-color-placeholder);
-      font-weight: normal;
+      font-weight: var(--gv-type-ui-weight);
     }
 
     [slot='label'] {
@@ -55,8 +55,8 @@
     }
 
     .dropdown-item__icon > svg {
-      width: var(--gv-space-16);
-      height: var(--gv-space-16);
+      width: 16px;
+      height: 16px;
     }
   }
 
@@ -66,8 +66,8 @@
     color: var(--gv-icon-strong);
 
     > svg {
-      width: var(--gv-space-16);
-      height: var(--gv-space-16);
+      width: 16px;
+      height: 16px;
     }
   }
 
@@ -82,8 +82,8 @@
 
   .lucide-chevron-down {
     flex: none;
-    width: var(--gv-space-16);
-    height: var(--gv-space-16);
+    width: 16px;
+    height: 16px;
     color: var(--gv-icon-default);
   }
 
@@ -114,7 +114,7 @@
 
 .react-aria-Select[data-variant='pill'] {
   .react-aria-Button {
-    height: var(--gv-space-28);
+    height: 28px;
     padding: 0 var(--gv-space-12);
     border-radius: var(--gv-radius-full);
     background: var(--gv-surface-pill);
@@ -136,8 +136,8 @@
   }
 
   .lucide-chevron-down {
-    width: var(--gv-space-12);
-    height: var(--gv-space-12);
+    width: 12px;
+    height: 12px;
   }
 }
 
@@ -147,7 +147,7 @@
   --select-gap: var(--gv-space-6);
 
   .react-aria-Button {
-    height: var(--gv-space-22);
+    height: 22px;
     padding: 0 var(--gv-space-10);
   }
 
@@ -164,8 +164,8 @@
 
   .gv-select-icon > svg,
   .react-aria-SelectValue .dropdown-item__icon > svg {
-    width: var(--gv-space-14);
-    height: var(--gv-space-14);
+    width: 14px;
+    height: 14px;
   }
 }
 
@@ -219,7 +219,7 @@
     width: 100%;
 
     .react-aria-Input {
-      height: var(--gv-space-32);
+      height: 32px;
       background: var(--gv-surface-toolbar);
     }
   }

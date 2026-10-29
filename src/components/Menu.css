@@ -32,7 +32,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: var(--gv-space-32);
+    min-height: 32px;
     font: var(--gv-type-ui);
     color: var(--gv-text-tertiary);
   }
@@ -42,13 +42,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: var(--gv-space-32);
+  height: 32px;
   grid-column: 1 / -1;
 }
 
 .react-aria-MenuItem {
   margin: 0;
-  min-height: var(--gv-space-32);
+  min-height: 32px;
   padding: 0 var(--gv-space-8);
   box-sizing: border-box;
   border-radius: var(--gv-radius-8);
@@ -76,8 +76,8 @@
   > svg,
   > .gv-menu-icon {
     grid-area: icon;
-    width: var(--gv-space-16);
-    height: var(--gv-space-16);
+    width: 16px;
+    height: 16px;
     color: var(--gv-icon-strong);
     margin-inline-end: var(--gv-space-10);
   }
@@ -88,8 +88,8 @@
     justify-content: center;
 
     > svg {
-      width: var(--gv-space-16);
-      height: var(--gv-space-16);
+      width: 16px;
+      height: 16px;
     }
   }
 
@@ -112,8 +112,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: var(--gv-space-15);
-    height: var(--gv-space-15);
+    width: 15px;
+    height: 15px;
     margin-inline-end: var(--gv-space-10);
     box-sizing: border-box;
     border: 1px solid var(--gv-border-control);
@@ -151,8 +151,8 @@
   }
 
   .gv-menu-check {
-    width: var(--gv-space-16);
-    height: var(--gv-space-16);
+    width: 16px;
+    height: 16px;
     color: var(--gv-action-checked);
   }
 
@@ -199,8 +199,8 @@
   }
 
   .gv-menu-chevron {
-    width: var(--gv-space-16);
-    height: var(--gv-space-16);
+    width: 16px;
+    height: 16px;
     color: var(--gv-icon-quiet);
 
     &:dir(rtl) {
