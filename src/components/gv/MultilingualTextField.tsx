@@ -68,11 +68,13 @@ export interface MultilingualFieldProps {
   locale?: string;
   /** The language shown first. @default the first of `locales` */
   defaultLocale?: string;
+  /** Fires when the language shown changes, with its locale code. */
   onLocaleChange?: (locale: string) => void;
   /** Show the language switcher over the field; turn it off when another switcher drives `locale`. @default true */
   showLocaleSwitcher?: boolean;
   /** The visible label, at the start of the row the switcher ends. Without it, give an `aria-label`. */
   label?: string;
+  /** The field's name when there is no visible `label`. */
   'aria-label'?: string;
   /** Help under the field, in Small secondary. */
   description?: string;
@@ -223,6 +225,7 @@ export interface MultilingualTextFieldProps
     > {
   /** A text area (several lines, the height grows by hand) instead of a one-line input. */
   isMultiline?: boolean;
+  /** Hint text shown in an empty field. */
   placeholder?: string;
   /** A live "N/maxLength" count of the shown language under the field. Needs `maxLength`. */
   showCounter?: boolean;

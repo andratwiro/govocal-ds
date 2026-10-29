@@ -112,8 +112,11 @@ export interface LocaleSwitcherLabels {
   language: string;
   /** What each language's mark reads, after its name (see `LocaleStatus`). */
   markFilled: string;
+  /** What the mark of a language with no text reads. */
   markEmpty: string;
+  /** What the mark of a required language with no text reads. */
   markRequired: string;
+  /** What the mark of a language with an error reads. */
   markInvalid: string;
   /** The menu's count of languages with text, given the count, then both numbers as the locale writes them. */
   languagesFilled: (filled: number, formatted: string, total: string) => string;
@@ -162,6 +165,7 @@ export interface LocaleSwitcherProps {
   locale?: string;
   /** The language shown first. @default the first of `locales` */
   defaultLocale?: string;
+  /** Fires when the person picks a language, with its locale code. */
   onLocaleChange?: (locale: string) => void;
   /**
    * The text the marks read: a Multiloc, or several sharing this switcher (a language counts as filled when every one
@@ -181,9 +185,11 @@ export interface LocaleSwitcherProps {
    * @default 'buttons'
    */
   kind?: 'buttons' | 'menu';
+  /** The person can't switch language. */
   isDisabled?: boolean;
   /** Names the switcher for screen readers. @default `labels.language` ("Language") */
   'aria-label'?: string;
+  /** The id of an element that names the switcher, over `aria-label`. */
   'aria-labelledby'?: string;
   /** Its own words (the marks, the menu's count), over `localeSwitcherLabels`. */
   labels?: Partial<LocaleSwitcherLabels>;

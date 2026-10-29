@@ -3,7 +3,9 @@
 // clusters, arrow keys between pins, the credits line, and where the open pin's card goes.
 
 export interface LatLng {
+  /** Degrees north of the equator (negative: south). */
   lat: number;
+  /** Degrees east of the Greenwich meridian (negative: west). */
   lng: number;
 }
 

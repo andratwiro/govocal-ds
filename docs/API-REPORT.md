@@ -219,7 +219,7 @@ Interface, from `src/patterns/ActionRow.tsx`. The props of `ActionRow`, listed t
 Interface, from `src/components/gv/ActivityFeed.tsx`.
 
 - `icon?: ReactNode`
-- `id: string` (no description)
+- `id: string`
 - `label: string`
 - `previousLabel?: string`
 - `status?: ItemChipStatus`
@@ -233,7 +233,7 @@ Interface, from `src/components/gv/ActivityFeed.tsx`.
 - `avatar?: ReactNode`
 - `changes?: ActivityChange[]`
 - `day: string`
-- `id: string` (no description)
+- `id: string`
 - `isAssistant?: boolean`
 - `isCurrent?: boolean`
 - `note?: string`
@@ -268,14 +268,14 @@ ActivityFeedLabels
 Interface, from `src/components/gv/ActivityFeed.tsx`.
 
 - `empty: string`
-- `hideChanges: string` (no description)
-- `hidePrompt: string` (no description)
+- `hideChanges: string`
+- `hidePrompt: string`
 - `more: string`
 - `next: string`
 - `page: (page: number, formatted: string) => string`
 - `pagination: string`
 - `previous: string`
-- `restore: string` (no description)
+- `restore: string`
 - `showChanges: CountLabel`
 - `showOlder: string`
 - `showPrompt: string`
@@ -379,7 +379,7 @@ AssistantPanelLabels
 
 Interface, from `src/patterns/AssistantPanel.tsx`.
 
-- `askAccountManager: string` (no description)
+- `askAccountManager: string`
 - `attach: string`
 - `clearScope: string`
 - `drop: string`
@@ -395,7 +395,7 @@ Interface, from `src/patterns/AssistantPanel.tsx`.
 - `removeAttachment: (name: string) => string`
 - `scopedHeading: (name: string) => string`
 - `send: string`
-- `stop: string` (no description)
+- `stop: string`
 
 ### `AssistantPanelProps`
 
@@ -789,8 +789,8 @@ Interface, from `src/components/gv/Chart.tsx`.
 Interface, from `src/components/gv/ChatMessage.tsx`.
 
 - `icon?: ReactNode`
-- `id: string` (no description)
-- `label: string` (no description)
+- `id: string`
+- `label: string`
 - `variant?: 'primary' | 'secondary'`
 
 ### `ChatChoices`
@@ -838,10 +838,10 @@ ChatMessageLabels
 
 Interface, from `src/components/gv/ChatMessage.tsx`.
 
-- `assistant: string` (no description)
+- `assistant: string`
 - `error: string`
-- `retry: string` (no description)
-- `showChange: string` (no description)
+- `retry: string`
+- `showChange: string`
 - `stopped: string`
 - `undo: string`
 - `writing: string`
@@ -895,7 +895,7 @@ Interface, from `src/components/gv/ChatProgress.tsx`. The props of `ChatProgress
 
 Interface, from `src/components/gv/ChatProgress.tsx`.
 
-- `id: string` (no description)
+- `id: string`
 - `label: ReactNode`
 - `status?: 'running' | 'done'`
 
@@ -1421,8 +1421,8 @@ Component, from `src/components/gv/DataTable.tsx`.
 - `aria-label?: string`
 - `children: ReactNode`
 - `labels?: Partial<DataTableAddColumnLabels>`
-- `onAction?: (key: Key) => void` (no description)
-- `onSelectionChange?: (keys: Set<Key>) => void` (no description)
+- `onAction?: (key: Key) => void`
+- `onSelectionChange?: (keys: Set<Key>) => void`
 - `selectedKeys?: Iterable<Key>`
 
 ### `dataTableAddColumnLabels`
@@ -1455,14 +1455,14 @@ type DataTableAlign = 'start' | 'number' | 'options'
 
 Component, from `src/components/gv/DataTable.tsx`.
 
-- `className?: string` (no description)
+- `className?: string`
 - `emptyLabel?: string`
 - `initials?: string`
 - `labels?: Partial<DataTableAssigneeLabels>`
 - `name?: string`
 - `size?: 24 | 28`
 - `src?: string`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 
 ### `dataTableAssigneeLabels`
 
@@ -1528,7 +1528,7 @@ Interface, from `src/components/gv/DataTable.tsx`. The props of `DataTableCell`,
 Component, from `src/components/gv/DataTable.tsx`.
 
 - `align?: DataTableAlign`
-- `children?: ReactNode` (no description)
+- `children?: ReactNode`
 - `showLabel?: boolean`
 - Passed through from @react-types/shared (70): `dir`, `hidden`, `inert`, `lang`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`
 - Passed through from react-aria-components (12): `allowsArrowNavigation`, `allowsSorting`, `defaultWidth`, `focusMode`, `id`, `isRowHeader`, `maxWidth`, `minWidth`, `render`, `style`, `textValue`, `width`
@@ -1541,9 +1541,9 @@ Interface, from `src/components/gv/DataTable.tsx`. The props of `DataTableColumn
 
 Component, from `src/components/gv/DataTable.tsx`.
 
-- `children: ReactNode` (no description)
+- `children: ReactNode`
 - `className?: string`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 
 ### `DataTableEmptyProps`
 
@@ -1570,8 +1570,8 @@ DataTableHeaderLabels
 
 Interface, from `src/components/gv/DataTable.tsx`.
 
-- `addColumn: string` (no description)
-- `selection: string` (no description)
+- `addColumn: string`
+- `selection: string`
 
 ### `DataTableHeaderProps`
 
@@ -1583,7 +1583,7 @@ Component, from `src/components/gv/DataTable.tsx`.
 
 - `aria-label: string`
 - `children: ReactNode`
-- `onAction?: (key: Key) => void` (no description)
+- `onAction?: (key: Key) => void`
 
 ### `DataTableOptionsProps`
 
@@ -1593,11 +1593,11 @@ Interface, from `src/components/gv/DataTable.tsx`. The props of `DataTableOption
 
 Component, from `src/components/gv/DataTable.tsx`.
 
-- `className?: string` (no description)
+- `className?: string`
 - `initials: string`
 - `name: ReactNode`
 - `src?: string`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 - `sub?: ReactNode`
 
 ### `DataTablePersonProps`
@@ -1623,11 +1623,11 @@ Interface, from `src/components/gv/DataTable.tsx`. The props of `DataTableRow`, 
 
 Component, from `src/components/gv/DataTable.tsx`.
 
-- `children: ReactNode` (no description)
-- `className?: string` (no description)
+- `children: ReactNode`
+- `className?: string`
 - `isStrong?: boolean`
 - `leading?: ReactNode`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 - `sub?: ReactNode`
 
 ### `DataTableStackProps`
@@ -1638,11 +1638,11 @@ Interface, from `src/components/gv/DataTable.tsx`. The props of `DataTableStack`
 
 Component, from `src/components/gv/DataTable.tsx`.
 
-- `className?: string` (no description)
+- `className?: string`
 - `items: readonly string[]`
 - `labels?: Partial<DataTableTagsLabels>`
 - `max?: number`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 
 ### `dataTableTagsLabels`
 
@@ -1666,12 +1666,12 @@ Interface, from `src/components/gv/DataTable.tsx`. The props of `DataTableTags`,
 
 Component, from `src/components/gv/DataTable.tsx`.
 
-- `children: ReactNode` (no description)
-- `className?: string` (no description)
+- `children: ReactNode`
+- `className?: string`
 - `leading?: ReactNode`
 - `lines?: 1 | 2 | 3`
 - `marks?: ReactNode`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 
 ### `DataTableTextProps`
 
@@ -1682,11 +1682,11 @@ Interface, from `src/components/gv/DataTable.tsx`. The props of `DataTableText`,
 Component, from `src/components/gv/DataTable.tsx`.
 
 - `alt?: string`
-- `className?: string` (no description)
+- `className?: string`
 - `color?: 'teal' | 'blue'`
 - `icon?: ReactNode`
 - `src?: string`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 
 ### `DataTableThumbnailProps`
 
@@ -2307,8 +2307,8 @@ type KeyboardProps = ComponentProps<typeof AriaKeyboard>
 
 Interface, from `src/components/gv/map/geo.ts`.
 
-- `lat: number` (no description)
-- `lng: number` (no description)
+- `lat: number`
+- `lng: number`
 
 ### `LegendRow`
 
@@ -2536,18 +2536,18 @@ type LocaleStatus = 'filled' | 'empty' | 'required' | 'invalid'
 Component, from `src/components/gv/LocaleSwitcher.tsx`.
 
 - `aria-label?: string`
-- `aria-labelledby?: string` (no description)
+- `aria-labelledby?: string`
 - `className?: string`
 - `defaultLocale?: string`
 - `invalidLocales?: readonly string[]`
-- `isDisabled?: boolean` (no description)
+- `isDisabled?: boolean`
 - `isInvalid?: boolean`
 - `isRequired?: boolean`
 - `kind?: 'buttons' | 'menu'`
 - `labels?: Partial<LocaleSwitcherLabels>`
 - `locale?: string`
 - `locales: readonly string[]`
-- `onLocaleChange?: (locale: string) => void` (no description)
+- `onLocaleChange?: (locale: string) => void`
 - `style?: CSSProperties`
 - `values?: MultilocValues`
 
@@ -2566,10 +2566,10 @@ Interface, from `src/components/gv/LocaleSwitcher.tsx`.
 - `details: (language: string, status?: string) => string`
 - `language: string`
 - `languagesFilled: (filled: number, formatted: string, total: string) => string`
-- `markEmpty: string` (no description)
+- `markEmpty: string`
 - `markFilled: string`
-- `markInvalid: string` (no description)
-- `markRequired: string` (no description)
+- `markInvalid: string`
+- `markRequired: string`
 - `shortCount: (filled: string, total: string) => string`
 
 ### `LocaleSwitcherProps`
@@ -2587,7 +2587,7 @@ Component, from `src/components/gv/MapView.tsx`.
 - `location?: string`
 - `media?: ReactNode`
 - `status?: string`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 - `title: string`
 
 ### `MapCardProps`
@@ -2601,7 +2601,7 @@ Component, from `src/components/gv/MapView.tsx`.
 - `children: ReactNode`
 - `className?: string`
 - `onPress?: () => void`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 
 ### `MapChipProps`
 
@@ -2612,10 +2612,10 @@ Interface, from `src/components/gv/MapView.tsx`. The props of `MapChip`, listed 
 Interface, from `src/components/gv/map/engine.ts`.
 
 - `attribution: string[]`
-- `destroy: void` (no description)
-- `getView: {center: LatLng; zoom: number}` (no description)
-- `maxZoom: number` (no description)
-- `minZoom: number` (no description)
+- `destroy: void`
+- `getView: {center: LatLng; zoom: number}`
+- `maxZoom: number`
+- `minZoom: number`
 - `project: ScreenPoint`
 - `resize: void`
 - `setView: void`
@@ -2646,7 +2646,7 @@ Interface, from `src/components/gv/map/engine.ts`.
 - `container: HTMLElement`
 - `isInteractive: boolean`
 - `label: string`
-- `view: InitialView` (no description)
+- `view: InitialView`
 
 ### `MapItem`
 
@@ -2654,8 +2654,8 @@ Interface, from `src/components/gv/MapView.tsx`.
 
 - `id: Key`
 - `label: string`
-- `lat: number` (no description)
-- `lng: number` (no description)
+- `lat: number`
+- `lng: number`
 - `status?: string`
 - `tone?: MapTone`
 
@@ -2667,14 +2667,14 @@ Component, from `src/components/gv/MapView.tsx`.
 - `className?: string`
 - `items: readonly MapLegendItem[]`
 - `labels?: Partial<MapLegendLabels>`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 - `title?: string`
 
 ### `MapLegendItem`
 
 Interface, from `src/components/gv/MapView.tsx`.
 
-- `label: string` (no description)
+- `label: string`
 - `tone?: MapTone`
 
 ### `mapLegendLabels`
@@ -2708,10 +2708,10 @@ Function, from `src/components/gv/MapView.tsx`.
 
 Component, from `src/components/gv/MapView.tsx`.
 
-- `children: ReactNode` (no description)
+- `children: ReactNode`
 - `className?: string`
 - `placement: 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end'`
-- `style?: CSSProperties` (no description)
+- `style?: CSSProperties`
 
 ### `MapOverlayProps`
 
@@ -2721,8 +2721,8 @@ Interface, from `src/components/gv/MapView.tsx`. The props of `MapOverlay`, list
 
 Component, from `src/components/gv/MapView.tsx`.
 
-- `aria-controls?: string` (no description)
-- `aria-expanded?: boolean` (no description)
+- `aria-controls?: string`
+- `aria-expanded?: boolean`
 - `className?: string`
 - `count?: number`
 - `excludeFromTabOrder?: boolean`
@@ -2730,11 +2730,11 @@ Component, from `src/components/gv/MapView.tsx`.
 - `isSelected?: boolean`
 - `isStatic?: boolean`
 - `label: string`
-- `onFocus?: () => void` (no description)
-- `onHoverChange?: (isHovering: boolean) => void` (no description)
-- `onKeyDown?: (e: KeyboardEvent) => void` (no description)
-- `onPress?: () => void` (no description)
-- `style?: CSSProperties` (no description)
+- `onFocus?: () => void`
+- `onHoverChange?: (isHovering: boolean) => void`
+- `onKeyDown?: (e: KeyboardEvent) => void`
+- `onPress?: () => void`
+- `style?: CSSProperties`
 - `tone?: MapTone`
 
 ### `MapPinProps`
@@ -2789,8 +2789,8 @@ Interface, from `src/components/gv/MapView.tsx`.
 - `cluster: CountLabel`
 - `error: string`
 - `zoom: string`
-- `zoomIn: string` (no description)
-- `zoomOut: string` (no description)
+- `zoomIn: string`
+- `zoomOut: string`
 
 ### `MapViewProps`
 
@@ -2914,10 +2914,10 @@ Interface, from `src/components/gv/MultilingualTextField.tsx`.
 - `languageError: (language: string, message: string) => string`
 - `languageOf: (name: string) => string`
 - `languagesFilled: (filled: number, formatted: string, total: string) => string`
-- `markEmpty: string` (no description)
+- `markEmpty: string`
 - `markFilled: string`
-- `markInvalid: string` (no description)
-- `markRequired: string` (no description)
+- `markInvalid: string`
+- `markRequired: string`
 - `missing: (language: string, more: number, formatted: string) => string`
 - `required: string`
 - `shortCount: (filled: string, total: string) => string`
@@ -2927,7 +2927,7 @@ Interface, from `src/components/gv/MultilingualTextField.tsx`.
 
 Interface, from `src/components/gv/MultilingualTextField.tsx`.
 
-- `aria-label?: string` (no description)
+- `aria-label?: string`
 - `className?: string`
 - `defaultLocale?: string`
 - `defaultValue?: Multiloc`
@@ -2941,7 +2941,7 @@ Interface, from `src/components/gv/MultilingualTextField.tsx`.
 - `locale?: string`
 - `locales: readonly string[]`
 - `onChange?: (value: Multiloc, locale: string) => void`
-- `onLocaleChange?: (locale: string) => void` (no description)
+- `onLocaleChange?: (locale: string) => void`
 - `showLocaleSwitcher?: boolean`
 - `style?: CSSProperties`
 - `value?: Multiloc | null`
@@ -2950,7 +2950,7 @@ Interface, from `src/components/gv/MultilingualTextField.tsx`.
 
 Component, from `src/components/gv/MultilingualRichTextEditor.tsx`.
 
-- `aria-label?: string` (no description)
+- `aria-label?: string`
 - `className?: string`
 - `defaultLocale?: string`
 - `defaultValue?: Multiloc`
@@ -2971,7 +2971,7 @@ Component, from `src/components/gv/MultilingualRichTextEditor.tsx`.
 - `onItalicChange?: (v: boolean) => void`
 - `onLink?: () => void`
 - `onListChange?: (v: boolean) => void`
-- `onLocaleChange?: (locale: string) => void` (no description)
+- `onLocaleChange?: (locale: string) => void`
 - `onVideo?: () => void`
 - `placeholder?: string`
 - `showLocaleSwitcher?: boolean`
@@ -3003,10 +3003,10 @@ Interface, from `src/components/gv/MultilingualRichTextEditor.tsx`.
 - `languagesFilled: (filled: number, formatted: string, total: string) => string`
 - `link: string`
 - `list: string`
-- `markEmpty: string` (no description)
+- `markEmpty: string`
 - `markFilled: string`
-- `markInvalid: string` (no description)
-- `markRequired: string` (no description)
+- `markInvalid: string`
+- `markRequired: string`
 - `missing: (language: string, more: number, formatted: string) => string`
 - `placeholder: string`
 - `required: string`
@@ -3023,7 +3023,7 @@ Interface, from `src/components/gv/MultilingualRichTextEditor.tsx`. The props of
 
 Component, from `src/components/gv/MultilingualTextField.tsx`.
 
-- `aria-label?: string` (no description)
+- `aria-label?: string`
 - `className?: string`
 - `defaultLocale?: string`
 - `defaultValue?: Multiloc`
@@ -3038,8 +3038,8 @@ Component, from `src/components/gv/MultilingualTextField.tsx`.
 - `locale?: string`
 - `locales: readonly string[]`
 - `onChange?: (value: Multiloc, locale: string) => void`
-- `onLocaleChange?: (locale: string) => void` (no description)
-- `placeholder?: string` (no description)
+- `onLocaleChange?: (locale: string) => void`
+- `placeholder?: string`
 - `showCounter?: boolean`
 - `showLocaleSwitcher?: boolean`
 - `style?: CSSProperties`
@@ -3870,7 +3870,7 @@ Component, from `src/components/gv/PromptComposer.tsx`.
 Interface, from `src/components/gv/PromptComposer.tsx`.
 
 - `icon?: ReactNode`
-- `id: string` (no description)
+- `id: string`
 - `name: string`
 
 ### `promptComposerLabels`
@@ -3891,7 +3891,7 @@ Interface, from `src/components/gv/PromptComposer.tsx`.
 - `placeholder: string`
 - `removeAttachment: (name: string) => string`
 - `send: string`
-- `stop: string` (no description)
+- `stop: string`
 
 ### `PromptComposerProps`
 
@@ -3903,7 +3903,7 @@ Interface, from `src/components/gv/PromptSuggestions.tsx`.
 
 - `description?: string`
 - `icon?: ReactNode`
-- `id: string` (no description)
+- `id: string`
 - `label: string`
 
 ### `PromptSuggestions`

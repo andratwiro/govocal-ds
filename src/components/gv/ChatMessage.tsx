@@ -15,12 +15,15 @@ export interface ChatMessageLabels {
   /** Who spoke, read before each message with its punctuation (the bubble and the plain text say it only to the
    * eye). */
   you: string;
+  /** The hidden name before the assistant's words, read by a screen reader. */
   assistant: string;
   /** The change's two icon buttons, named and shown as their tooltips. */
   undo: string;
+  /** The button that shows what the change did. */
   showChange: string;
   /** A failed turn's words when the message has none, and its button. */
   error: string;
+  /** The button that sends a failed turn again. */
   retry: string;
   /** A stopped turn's words when the message has none. A page names what was left alone: "Stopped. The report
    * was not changed." */
@@ -155,7 +158,9 @@ export function ChatMessage({
 
 /** One button of a `ChatChoices`. */
 export interface ChatChoice {
+  /** Tells the choice apart; handed back when it is pressed. */
   id: string;
+  /** The button's words. */
   label: string;
   /** A 16px Lucide icon before the label, `aria-hidden` (✦ on the choice the assistant would act on). */
   icon?: ReactNode;

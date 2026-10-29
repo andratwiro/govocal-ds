@@ -23,6 +23,7 @@ export interface AssistantPanelLabels extends ChatThreadLabels, PromptComposerLa
   previewHeading: string;
   /** Why it is off, and the button that asks for it. */
   notSwitchedOn: string;
+  /** The button under that line that asks for the assistant. */
   askAccountManager: string;
   /** The × on the scope chip: what removing it does. */
   clearScope: string;

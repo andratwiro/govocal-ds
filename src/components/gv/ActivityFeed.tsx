@@ -19,12 +19,15 @@ export interface ActivityFeedLabels extends PaginationLabels {
   showingNow: string;
   /** The prompt quote's toggle. */
   showPrompt: string;
+  /** The same toggle once the prompt is open. */
   hidePrompt: string;
   /** The changes' toggle, given how many. */
   showChanges: CountLabel;
+  /** The same toggle once the changes are open. */
   hideChanges: string;
   /** The ⋯ menu's name and its one item. */
   more: string;
+  /** The ⋯ menu's item that brings this version back. */
   restore: string;
   /** The button at the foot that loads older entries. */
   showOlder: string;
@@ -48,6 +51,7 @@ export const activityFeedLabels: ActivityFeedLabels = {
 
 /** One item a version changed, drawn as an Item chip. */
 export interface ActivityChange {
+  /** Tells the change apart from the others in its version. */
   id: string;
   /** The item's name ("Votes per cycle lane route"). */
   label: string;
@@ -61,6 +65,7 @@ export interface ActivityChange {
 
 /** One version in the feed. */
 export interface ActivityEntry {
+  /** Tells the version apart; the feed's callbacks hand it back. */
   id: string;
   /** The day group it falls in, as the page writes it ("Today", "Yesterday", "28 October"). Entries come newest
    * first; a new value starts a new group. */

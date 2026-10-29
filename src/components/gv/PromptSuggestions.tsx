@@ -8,6 +8,7 @@ import './PromptSuggestions.css';
 
 /** One opening: a prompt to send as it is, or (in the preview) something the assistant could do. */
 export interface PromptSuggestion {
+  /** Tells the suggestion apart; handed back when it is pressed. */
   id: string;
   /** The prompt, as you would type it ("Make the summary shorter"); in the preview, what it could do. */
   label: string;

@@ -32,6 +32,7 @@ export const chatProgressLabels: ChatProgressLabels = {
 
 /** One step of a working trace. */
 export interface ChatProgressStep {
+  /** Tells the step apart from the others in the trace. */
   id: string;
   /** What it does, as it does it: "Counting identifiable participants". */
   label: ReactNode;

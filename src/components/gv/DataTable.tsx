@@ -463,7 +463,9 @@ const TEXT_FIELD = 'input:not([type="checkbox"]):not([type="radio"]), textarea, 
 
 /** The words Data table header says itself (docs/API.md rule 11): its check and add columns' names. */
 export interface DataTableHeaderLabels {
+  /** The name of the check column, e.g. for the select-all check. */
   selection: string;
+  /** The name of the add-column column in the header. */
   addColumn: string;
 }
 
@@ -509,6 +511,7 @@ export function DataTableHeader<T extends object>({columns, children, showSelect
 }
 
 export interface DataTableColumnProps extends Omit<AriaColumnProps, 'children' | 'className'> {
+  /** The column's label. */
   children?: ReactNode;
   /** @default 'start' */
   align?: DataTableAlign;
@@ -584,9 +587,11 @@ export function DataTableBody<T extends object>({
 }
 
 export interface DataTableEmptyProps {
+  /** The line shown when the table has no rows. */
   children: ReactNode;
   /** Places the line; never paints it. */
   className?: string;
+  /** Places the line, like `className`. */
   style?: CSSProperties;
 }
 
@@ -642,11 +647,14 @@ export function DataTableCell({align = 'start', isMuted, children, ...props}: Da
 
 /** `className` and `style` place a cell's content (width, margin, alignment); they never paint it. */
 interface Placement {
+  /** Places the part (grid area, width, margin); never paints it (docs/API.md). */
   className?: string;
+  /** Places the part, like `className`. */
   style?: CSSProperties;
 }
 
 export interface DataTableTextProps extends Placement {
+  /** The text. */
   children: ReactNode;
   /** Before the text, e.g. the idea's picture as a `DataTableThumbnail`. */
   leading?: ReactNode;
@@ -699,6 +707,7 @@ export function DataTablePerson({name, initials, src, sub, className, style}: Da
 }
 
 export interface DataTableStackProps extends Placement {
+  /** The primary line. */
   children: ReactNode;
   /** The quieter line under it. */
   sub?: ReactNode;
@@ -828,6 +837,7 @@ export interface DataTableOptionsProps {
   'aria-label': string;
   /** The menu's items: starter `MenuItem`s. */
   children: ReactNode;
+  /** Fires when the person picks an item from the menu, with the item's key. */
   onAction?: (key: Key) => void;
 }
 
@@ -854,9 +864,11 @@ export const dataTableAddColumnLabels: DataTableAddColumnLabels = {addColumn: 'A
 export interface DataTableAddColumnProps {
   /** The columns that can be added: starter `MenuItem`s (e.g. with `selectionMode` checkmarks). */
   children: ReactNode;
+  /** Fires when the person picks a column from the menu, with its key. */
   onAction?: (key: Key) => void;
   /** Menu selection, to show which optional columns are on. */
   selectedKeys?: Iterable<Key>;
+  /** Fires when the person ticks or unticks a column, with the keys now selected. */
   onSelectionChange?: (keys: Set<Key>) => void;
   /** @default `labels.addColumn` ("Add column") */
   'aria-label'?: string;

@@ -21,6 +21,7 @@ export interface PromptComposerLabels {
   placeholder: string;
   /** The round button: send when there is a prompt, stop while the assistant works. */
   send: string;
+  /** The same button while the assistant works: it stops it. */
   stop: string;
   /** The paperclip. */
   attach: string;
@@ -43,6 +44,7 @@ export const promptComposerLabels: PromptComposerLabels = {
 
 /** A file attached to the prompt, shown as a chip above the field. */
 export interface PromptComposerAttachment {
+  /** Tells the file apart; handed back when its chip is removed. */
   id: string;
   /** The file's name. */
   name: string;

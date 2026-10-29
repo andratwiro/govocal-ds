@@ -24,7 +24,9 @@ export type MapTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'a
 export interface MapItem {
   /** Names the pin for `value` and `hoveredKey`. */
   id: Key;
+  /** Degrees north of the equator. */
   lat: number;
+  /** Degrees east of the Greenwich meridian. */
   lng: number;
   /** The pin's name, read out, and the card's title unless `renderCard` says otherwise. */
   label: string;
@@ -56,7 +58,9 @@ export interface MapViewLabels {
   canvas: string;
   /** The zoom buttons' group, and each button. */
   zoom: string;
+  /** The zoom-in button's name. */
   zoomIn: string;
+  /** The zoom-out button's name. */
   zoomOut: string;
   /** A cluster's name: the pins folded into it (the count, then as the locale writes it). */
   cluster: CountLabel;
@@ -427,16 +431,23 @@ export interface MapPinProps {
   count?: number;
   /** Drawn, not pressable and hidden from screen readers: a legend's swatch, a picture of a map. */
   isStatic?: boolean;
+  /** Fires when the pin is pressed. Without it the pin is static, e.g. a legend swatch. */
   onPress?: () => void;
+  /** Fires when the pointer enters or leaves the pin, with whether it is over it. */
   onHoverChange?: (isHovering: boolean) => void;
+  /** Fires when the pin takes focus. */
   onFocus?: () => void;
+  /** Fires on a key press while the pin has focus, with the event. */
   onKeyDown?: (e: KeyboardEvent) => void;
   /** Leaves the pin out of the Tab order (the Map keeps one pin in it and moves between pins with the arrow keys). */
   excludeFromTabOrder?: boolean;
+  /** Whether the card the pin opens is showing. */
   'aria-expanded'?: boolean;
+  /** The id of the card the pin opens. */
   'aria-controls'?: string;
   /** Places the pin; never paints it. */
   className?: string;
+  /** Places the part, like `className`. */
   style?: CSSProperties;
 }
 
@@ -483,6 +494,7 @@ export interface MapCardProps {
   headingLevel?: 2 | 3 | 4 | 5 | 6;
   /** Places the card; never paints it. */
   className?: string;
+  /** Places the part, like `className`. */
   style?: CSSProperties;
 }
 
@@ -512,9 +524,11 @@ export interface MapOverlayProps {
    * `MapLegend` (above the credits), `top-end` under the zoom buttons. One overlay per corner.
    */
   placement: 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end';
+  /** What lies over the map: a Banner, a `MapChip`, a `MapLegend` or a button. */
   children: ReactNode;
   /** Places the overlay (a width); never paints it. */
   className?: string;
+  /** Places the part, like `className`. */
   style?: CSSProperties;
 }
 
@@ -530,6 +544,7 @@ export interface MapChipProps {
   onPress?: () => void;
   /** Places the chip; never paints it. */
   className?: string;
+  /** Places the part, like `className`. */
   style?: CSSProperties;
 }
 
@@ -540,6 +555,7 @@ export function MapChip({children, onPress, className, style}: MapChipProps) {
 }
 
 export interface MapLegendItem {
+  /** What the colour means, e.g. a status. */
   label: string;
   /** @default 'neutral' */
   tone?: MapTone;
@@ -567,6 +583,7 @@ export interface MapLegendProps {
   labels?: Partial<MapLegendLabels>;
   /** Places the legend; never paints it. */
   className?: string;
+  /** Places the part, like `className`. */
   style?: CSSProperties;
 }
 

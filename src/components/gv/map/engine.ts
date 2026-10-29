@@ -11,12 +11,15 @@ export interface MapEngine {
   project(point: LatLng): ScreenPoint;
   /** The place under a pixel. */
   unproject(point: ScreenPoint): LatLng;
+  /** The camera now: the place at the map's centre and the zoom level. */
   getView(): {center: LatLng; zoom: number};
   /** Moves the camera (eased unless `animate` is false). */
   setView(view: {center?: LatLng; zoom?: number}, animate?: boolean): void;
   /** Zooms in (positive) or out (negative) around the centre, eased. */
   zoomBy(delta: number): void;
+  /** The farthest the camera zooms out. */
   minZoom: number;
+  /** The closest the camera zooms in. */
   maxZoom: number;
   /** The credits the tiles ask for, as their sources give them (HTML: the Map reads it as text, see `parseCredits`). */
   attribution(): string[];
@@ -27,6 +30,7 @@ export interface MapEngine {
   subscribe(listener: (event: MapEngineEvent) => void): () => void;
   /** The container changed size. */
   resize(): void;
+  /** Stops the engine and frees what it holds; the Map calls it on unmount. */
   destroy(): void;
 }
 
@@ -35,6 +39,7 @@ export type MapEngineEvent = {type: 'move' | 'moveend' | 'attribution'} | {type:
 export interface MapEngineOptions {
   /** An empty element the engine fills; the Map sizes it. */
   container: HTMLElement;
+  /** Where the camera starts: a centre and zoom, or bounds to fit. */
   view: InitialView;
   /** Off: no dragging, wheel or keyboard moves. */
   isInteractive: boolean;
