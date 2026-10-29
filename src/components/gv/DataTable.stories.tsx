@@ -513,7 +513,7 @@ function ManagePanel() {
         toolbar={(
           <>
             <TableToolbar start={(
-              <SelectionBar count={selected.size} actions={actions} onClear={() => setSelected(new Set())}
+              <SelectionBar count={selected.size} items={actions} onClear={() => setSelected(new Set())}
                 onAction={id => { setSaid(id === 'dismiss-warnings' ? `Dismissed the warnings on ${ideaCount(selected.size)}.` : `Official update for ${ideaCount(selected.size)}.`); }}>
                 <TableToolbarHeading>{ideaCount(found.length)}</TableToolbarHeading>
               </SelectionBar>
@@ -600,7 +600,7 @@ function BulkAndOpen() {
         <Panel title="Collect ideas" flush
           toolbar={(
             <TableToolbar start={(
-              <SelectionBar count={selected.size} actions={IDEA_ACTIONS} onClear={() => setSelected(new Set())}
+              <SelectionBar count={selected.size} items={IDEA_ACTIONS} onClear={() => setSelected(new Set())}
                 onAction={id => setSaid(`${id} for ${ideaCount(selected.size)}`)}>
                 <TableToolbarHeading>{ideaCount(OPEN_LIST.length)}</TableToolbarHeading>
               </SelectionBar>

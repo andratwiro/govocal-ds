@@ -356,7 +356,7 @@ function ParticipationFeed() {
   const toolbar = (
     <TableToolbar aria-label="Feed tools" start={(
       <SelectionBar count={show === 'new' ? ticked.length : 0}
-        actions={[{id: 'viewed', label: 'Mark as viewed', icon: <Eye aria-hidden size={16} />}]}
+        items={[{id: 'viewed', label: 'Mark as viewed', icon: <Eye aria-hidden size={16} />}]}
         onAction={() => markViewed(ticked)} onClear={() => setSelected(new Set())}>
         <TableToolbarHeading>{itemsWord(rows.length)}</TableToolbarHeading>
       </SelectionBar>

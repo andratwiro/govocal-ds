@@ -23,7 +23,7 @@ function Demo({initial = {}, query: initialQuery = '', withExport, selected: ini
   return (
     <div style={{display: 'grid', gap: 8, width: 900}}>
       <TableToolbar start={
-        <SelectionBar count={selected} actions={IDEA_ACTIONS} onClear={() => setSelected(0)} onAction={setSaid}>
+        <SelectionBar count={selected} items={IDEA_ACTIONS} onClear={() => setSelected(0)} onAction={setSaid}>
           <TableToolbarHeading>{ideaCount(shown)}</TableToolbarHeading>
         </SelectionBar>
       }>

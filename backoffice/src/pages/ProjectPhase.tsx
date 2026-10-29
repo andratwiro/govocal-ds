@@ -706,7 +706,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
         toolbar={(
           <>
             <TableToolbar start={(
-              <SelectionBar count={n} actions={actions} onClear={() => setSelected(new Set())}
+              <SelectionBar count={n} items={actions} onClear={() => setSelected(new Set())}
                 onAction={id => (id === 'update' ? setUpdating(true) : id === 'dismiss-warnings' && dismissWarnings())}>
                 <TableToolbarHeading>{ideasWord(shown.length)}</TableToolbarHeading>
               </SelectionBar>

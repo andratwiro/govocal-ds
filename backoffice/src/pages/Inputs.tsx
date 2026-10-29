@@ -275,7 +275,7 @@ export function Inputs() {
           <div className="bo-inputs-list">
             {/* The Data table's "In a panel" toolbar: the count (the Selection bar while rows are checked), the export. */}
             <TableToolbar aria-label="Input tools" start={(
-              <SelectionBar aria-label="Bulk actions" count={selected.size} actions={bulkActions}
+              <SelectionBar aria-label="Bulk actions" count={selected.size} items={bulkActions}
                 onAction={id => id === 'delete' && setToDelete([...selected].map(String))} onClear={() => setSelected(new Set())}>
                 <TableToolbarHeading>{rows.length} inputs</TableToolbarHeading>
               </SelectionBar>

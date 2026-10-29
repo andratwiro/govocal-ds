@@ -225,7 +225,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
   // Selection bar while rows are ticked; the export and the search stay put at the end.
   const toolbar = (
     <TableToolbar aria-label="User tools" start={(
-      <SelectionBar count={count} actions={actions} onAction={onBulk}
+      <SelectionBar count={count} items={actions} onAction={onBulk}
         onClear={() => setSelected(new Set())}>
         <TableToolbarHeading>{usersWord(rows.length)}</TableToolbarHeading>
       </SelectionBar>

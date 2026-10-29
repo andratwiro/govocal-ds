@@ -32,7 +32,7 @@ function Demo({initial, actions = ACTIONS}: {initial: number; actions?: Selectio
   const [last, setLast] = useState('');
   return (
     <div style={{display: 'grid', gap: 12, width: 960}}>
-      <SelectionBar count={count} actions={actions} onClear={() => setCount(0)} onAction={setLast}>
+      <SelectionBar count={count} items={actions} onClear={() => setCount(0)} onAction={setLast}>
         <h3 style={{margin: 0, font: 'var(--gv-type-title)'}}>124 ideas</h3>
       </SelectionBar>
       <div style={{font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>
