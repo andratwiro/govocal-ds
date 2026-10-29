@@ -1,7 +1,8 @@
-import {useMemo, useState} from 'react';
+import {useMemo, useState, type ReactNode} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {
   DataTable,
+  DataTableAssignee,
   DataTableBody,
   DataTableCell,
   DataTableColumn,
@@ -11,13 +12,29 @@ import {
   DataTablePerson,
   DataTableRow,
   DataTableStack,
+  DataTableTags,
   DataTableText,
+  DataTableThumbnail,
   DataTableAddColumn
 } from './DataTable';
-import {MenuItem, MenuTrigger, Menu} from '../Menu';
+import {MenuItem} from '../Menu';
 import {SearchField} from '../SearchField';
-import {IconButton} from './IconButton';
-import {ListFilter, Search, TriangleAlert} from 'lucide-react';
+import {Button} from '../Button';
+import {NewDot} from './NewDot';
+import {Pagination} from './Pagination';
+import {Panel} from './Panel';
+import {StatusBadge} from './StatusBadge';
+import {TableToolbar, TableToolbarHeading} from './TableToolbar';
+import {ClipboardList, Map as MapIcon, MapPin, Plus, TriangleAlert, Users} from 'lucide-react';
+import {FilterMenu, type FilterValue} from '../../patterns/FilterMenu';
+import {FilterChips} from '../../patterns/FilterChips';
+import {SelectionBar} from '../../patterns/SelectionBar';
+import {StatCard} from '../../patterns/StatCard';
+import {IDEA_FACETS} from '../../patterns/FilterMenu.stories';
+import {
+  DISMISS_WARNINGS, ExportMenu, IDEA_ACTIONS, IDEAS as MANAGE_IDEAS, METRICS, filterIdeas, ideaCount,
+  type Idea as ManageIdea, type Metric
+} from './story-data/ideas';
 
 type Direction = 'ascending' | 'descending';
 type SortDescriptor = {column: string | number; direction: Direction};
@@ -38,17 +55,21 @@ function sortPeople(list: Person[], sort: SortDescriptor) {
   return [...list].sort((a, b) => sign * String(a[key]).localeCompare(String(b[key]), undefined, {numeric: true}));
 }
 
-function PeopleTable({initialSort, selectable, initialSelection = [], empty}: {
+function PeopleTable({initialSort, selectable, initialSelection = [], empty, revealChecks, framed, density}: {
   initialSort?: SortDescriptor;
   selectable?: boolean;
   initialSelection?: string[];
   empty?: boolean;
+  revealChecks?: boolean;
+  framed?: boolean;
+  density?: 'compact';
 }) {
   const [sort, setSort] = useState<SortDescriptor | undefined>(initialSort);
   const [selected, setSelected] = useState<'all' | Iterable<string | number>>(new Set(initialSelection));
   const rows = useMemo(() => (empty ? [] : sort ? sortPeople(PEOPLE, sort) : PEOPLE), [sort, empty]);
   return (
     <DataTable aria-label="Users" sortDescriptor={sort} onSortChange={d => setSort(d as SortDescriptor)}
+      revealChecks={revealChecks} framed={framed} density={density}
       selectionMode={selectable ? 'multiple' : 'none'} selectedKeys={selected}
       onSelectionChange={k => setSelected(k as typeof selected)}>
       <DataTableHeader>
@@ -87,10 +108,29 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+const Caption = ({children}: {children: ReactNode}) => (
+  <h3 style={{margin: '0 0 8px', font: 'var(--gv-type-small-strong)', color: 'var(--gv-text-secondary)'}}>{children}</h3>
+);
+
+/** The three looks: in a Card or Panel (default), standing alone (`framed`), and dense (`compact`). */
+export const AllVariants: Story = {
+  name: 'All variants',
+  render: () => (
+    <div style={{display: 'grid', gap: 32, maxWidth: 900}}>
+      <div><Caption>Default</Caption><PeopleTable initialSort={{column: 'name', direction: 'ascending'}} /></div>
+      <div><Caption>Framed</Caption><PeopleTable framed /></div>
+      <div><Caption>Compact, checks on hover</Caption><PeopleTable density="compact" selectable revealChecks initialSelection={['b']} /></div>
+    </div>
+  )
+};
+
 /** The prototype's back-office list: quiet headers, hairline rows, no zebra, a person cell and the "…" column. */
 export const Default: Story = {render: () => <PeopleTable />};
 
-/** Sortable columns: the sorted one shows its chevron and primary text; press a header to sort or flip. */
+/**
+ * Sortable columns: the sorted one shows its arrow (↑ ascending, ↓ descending) and primary text; a sortable header
+ * under the pointer gets a soft block and a quiet arrow. Press a header to sort or flip; `aria-sort` says which.
+ */
 export const SortedAscending: Story = {
   name: 'Sorted ascending',
   render: () => <PeopleTable initialSort={{column: 'name', direction: 'ascending'}} />
@@ -101,10 +141,14 @@ export const SortedDescending: Story = {
   render: () => <PeopleTable initialSort={{column: 'joined', direction: 'descending'}} />
 };
 
-/** Multiple selection with the gv Checkbox; the header checkbox selects all (indeterminate when some are). */
+/**
+ * Some rows checked: the header's select-all is indeterminate, and selects all at a press. With `revealChecks` (as
+ * here) unchecked rows show their box on hover, and the select-all shows while the table is hovered or focused, or
+ * once anything is checked.
+ */
 export const SelectableSomeSelected: Story = {
-  name: 'Selectable, some selected',
-  render: () => <PeopleTable selectable initialSelection={['b', 'c']} initialSort={{column: 'joined', direction: 'descending'}} />
+  name: 'Select all · indeterminate',
+  render: () => <PeopleTable selectable revealChecks initialSelection={['b', 'c']} initialSort={{column: 'joined', direction: 'descending'}} />
 };
 
 /** Selection driven by the page's own select-all control: the header's check column stays empty. */
@@ -183,6 +227,156 @@ export const RightToLeft: Story = {
   render: () => <PeopleTable selectable initialSelection={['a']} initialSort={{column: 'joined', direction: 'descending'}} />
 };
 
+// ── Cells: thumbnails, assignees, tags, the Projects list ─────────────────────────────────────────
+const FEW = MANAGE_IDEAS.slice(0, 6);
+const shortDate = (iso: string) => new Date(iso).toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+
+/**
+ * A picture before the title (the Manage table's idea image): `DataTableText`'s `leading` takes a
+ * `DataTableThumbnail`, a 32 rounded square. Rows without a picture start their text at the cell's edge, as in the
+ * prototype.
+ */
+export const WithThumbnails: Story = {
+  name: 'With thumbnails',
+  render: () => (
+    <div style={{maxWidth: 760}}>
+      <DataTable aria-label="Ideas">
+        <DataTableHeader>
+          <DataTableColumn isRowHeader>Idea</DataTableColumn>
+          <DataTableColumn>Published</DataTableColumn>
+          <DataTableColumn align="number">Likes</DataTableColumn>
+        </DataTableHeader>
+        <DataTableBody>
+          {FEW.map(i => (
+            <DataTableRow key={i.id} id={i.id} textValue={i.title}>
+              <DataTableCell>
+                <DataTableText lines={2} leading={i.picture && <DataTableThumbnail src={i.picture} />}>{i.title}</DataTableText>
+              </DataTableCell>
+              <DataTableCell muted>{shortDate(i.published)}</DataTableCell>
+              <DataTableCell align="number">{i.likes}</DataTableCell>
+            </DataTableRow>
+          ))}
+        </DataTableBody>
+      </DataTable>
+    </div>
+  )
+};
+
+/**
+ * Who handles each idea: `DataTableAssignee`, the Avatar and the name; nobody is the dashed ring and "Unassigned" in
+ * quieter words. Sortable by name.
+ */
+export const AssigneeColumn: Story = {
+  name: 'Assignee column',
+  render: () => {
+    const [sort, setSort] = useState<SortDescriptor>({column: 'assignee', direction: 'ascending'});
+    const rows = [...FEW].sort((a, b) => (sort.direction === 'descending' ? -1 : 1) *
+      (a.assignee ?? '~').localeCompare(b.assignee ?? '~'));
+    return (
+      <div style={{maxWidth: 760}}>
+        <DataTable aria-label="Ideas" sortDescriptor={sort} onSortChange={d => setSort(d as SortDescriptor)}>
+          <DataTableHeader>
+            <DataTableColumn isRowHeader>Idea</DataTableColumn>
+            <DataTableColumn id="assignee" allowsSorting>Assignee</DataTableColumn>
+          </DataTableHeader>
+          <DataTableBody>
+            {rows.map(i => (
+              <DataTableRow key={i.id} id={i.id} textValue={i.title}>
+                <DataTableCell><DataTableText lines={1}>{i.title}</DataTableText></DataTableCell>
+                <DataTableCell><DataTableAssignee name={i.assignee} initials={i.assignee?.slice(-1)} /></DataTableCell>
+              </DataTableRow>
+            ))}
+          </DataTableBody>
+        </DataTable>
+      </div>
+    );
+  }
+};
+
+/**
+ * Tags: the first two as Badges, each clipped at 96, then "+N" for the rest, which names them on hover and to screen
+ * readers ("Cycling, Environment and Transport, Safety").
+ */
+export const TagsColumn: Story = {
+  name: 'Tags column (+N)',
+  render: () => (
+    <div style={{maxWidth: 760}}>
+      <DataTable aria-label="Ideas">
+        <DataTableHeader>
+          <DataTableColumn isRowHeader>Idea</DataTableColumn>
+          <DataTableColumn>Tags</DataTableColumn>
+        </DataTableHeader>
+        <DataTableBody>
+          {[...FEW.slice(0, 4), {...FEW[4], tags: ['Public space and greenery', 'Environment', 'Culture']}].map(i => (
+            <DataTableRow key={i.id} id={i.id} textValue={i.title}>
+              <DataTableCell><DataTableText lines={1}>{i.title}</DataTableText></DataTableCell>
+              <DataTableCell>{i.tags.length ? <DataTableTags tags={i.tags} /> : <span style={{color: 'var(--gv-text-tertiary)'}}>–</span>}</DataTableCell>
+            </DataTableRow>
+          ))}
+        </DataTableBody>
+      </DataTable>
+    </div>
+  )
+};
+
+// Invented projects, as the prototype's Projects list draws them.
+const PROJECTS = [
+  {id: 'p1', name: 'A renewed riverside park', folder: '', people: 0, phase: 'Collect ideas', manager: undefined, published: false, who: 'Admins and managers', tone: 'teal' as const, icon: <MapPin />},
+  {id: 'p2', name: 'Reimagine the old depot site', folder: '', people: 170, phase: 'Collect ideas', manager: undefined, published: true, who: 'Anyone', tone: 'teal' as const, icon: <MapPin />},
+  {id: 'p3', name: 'Public health options survey', folder: '', people: 2, phase: 'Information', manager: 'Manager B', published: false, who: 'Anyone', tone: 'teal' as const, icon: <ClipboardList />},
+  {id: 'p4', name: 'Your view on the tram extension', folder: '', people: 0, phase: 'Ended', manager: undefined, published: true, who: 'Anyone', tone: 'blue' as const, icon: <MapIcon />},
+  {id: 'p5', name: 'Community assemblies', folder: 'Neighbourhood forums', people: 701, phase: 'Ended', manager: undefined, published: false, who: 'Anyone', tone: 'teal' as const, icon: <Users />},
+  {id: 'p6', name: 'Showroom', folder: 'Participation garage', people: 8, phase: 'Volunteering', manager: 'Manager C', published: true, who: 'Anyone', tone: 'blue' as const, icon: <Users />}
+];
+
+/**
+ * The Projects list's cells, in a framed table: the project's icon tile (a `DataTableThumbnail` with an icon) before
+ * its name and folder, participants, the current phase, the manager ("Not assigned" when nobody), and the visibility
+ * as a Status badge over who can see it. Pagination goes under it (the decision: every admin table pages).
+ */
+export const ProjectsListCells: Story = {
+  name: 'Projects list cells',
+  render: () => (
+    <div style={{display: 'grid', gap: 12, maxWidth: 980}}>
+      <DataTable aria-label="Projects" framed>
+        <DataTableHeader>
+          <DataTableColumn isRowHeader>Project</DataTableColumn>
+          <DataTableColumn align="number">Participants</DataTableColumn>
+          <DataTableColumn>Current phase</DataTableColumn>
+          <DataTableColumn>Manager</DataTableColumn>
+          <DataTableColumn>Visibility</DataTableColumn>
+          <DataTableColumn align="options" hideLabel>Options</DataTableColumn>
+        </DataTableHeader>
+        <DataTableBody>
+          {PROJECTS.map(p => (
+            <DataTableRow key={p.id} id={p.id} textValue={p.name}>
+              <DataTableCell>
+                <DataTableStack leading={<DataTableThumbnail icon={p.icon} tone={p.tone} />} sub={p.folder || undefined}>{p.name}</DataTableStack>
+              </DataTableCell>
+              <DataTableCell align="number">{p.people}</DataTableCell>
+              <DataTableCell>{p.phase}</DataTableCell>
+              <DataTableCell><DataTableAssignee name={p.manager} size={28} emptyLabel="Not assigned" /></DataTableCell>
+              <DataTableCell>
+                <DataTableStack sub={p.who}>
+                  <StatusBadge state={p.published ? 'live' : 'draft'}>{p.published ? 'Published' : 'Draft'}</StatusBadge>
+                </DataTableStack>
+              </DataTableCell>
+              <DataTableCell align="options">
+                <DataTableOptions aria-label={`Options for ${p.name}`}>
+                  <MenuItem>Edit</MenuItem>
+                  <MenuItem>Copy</MenuItem>
+                  <MenuItem>Delete</MenuItem>
+                </DataTableOptions>
+              </DataTableCell>
+            </DataTableRow>
+          ))}
+        </DataTableBody>
+      </DataTable>
+      <Pagination page={1} pageCount={4} aria-label="Project pages" />
+    </div>
+  )
+};
+
 // ── The phase Manage tab's input table ────────────────────────────────────────────────────────────
 // Invented ideas on invented streets and places.
 const STATUSES = ['Proposed', 'Viewed', 'Under consideration', 'Accepted', 'Implemented', 'Rejected'] as const;
@@ -202,17 +396,19 @@ const IDEAS: {id: string; text: string; status: (typeof STATUSES)[number]; likes
 ];
 type Idea = (typeof IDEAS)[number];
 
+const STATUS_FACET = IDEA_FACETS.filter(f => f.id === 'status');
+
 function ManageTable() {
   const [query, setQuery] = useState('');
-  const [searching, setSearching] = useState(false);
-  const [statuses, setStatuses] = useState<Set<string | number>>(new Set());
+  const [filter, setFilter] = useState<FilterValue>({});
   const [sort, setSort] = useState<SortDescriptor>({column: 'text', direction: 'ascending'});
   const [extra, setExtra] = useState<Set<string | number>>(new Set());
   const [selected, setSelected] = useState<'all' | Iterable<string | number>>(new Set());
   const [opened, setOpened] = useState<Idea | undefined>();
+  const statuses = filter.status ?? [];
   const rows = useMemo(() => {
     const q = query.toLowerCase();
-    const found = IDEAS.filter(i => i.text.toLowerCase().includes(q) && (statuses.size === 0 || statuses.has(i.status)));
+    const found = IDEAS.filter(i => i.text.toLowerCase().includes(q) && (statuses.length === 0 || statuses.includes(i.status)));
     const key = sort.column as 'text' | 'status' | 'likes' | 'comments';
     const sign = sort.direction === 'descending' ? -1 : 1;
     return found.sort((a, b) => sign * (typeof a[key] === 'number'
@@ -220,21 +416,11 @@ function ManageTable() {
   }, [query, statuses, sort]);
   return (
     <div style={{display: 'grid', gap: 8, maxWidth: 760}}>
-      <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
-        <h3 style={{margin: 0, flex: 1, font: 'var(--gv-type-title)'}}>{rows.length} ideas</h3>
-        {searching && <SearchField aria-label="Search ideas" placeholder="Search" value={query} onChange={setQuery} autoFocus />}
-        <IconButton variant="bordered" tone="strong" aria-label="Search ideas" aria-pressed={searching}
-          onPress={() => { setSearching(s => !s); setQuery(''); }}>
-          <Search aria-hidden size={16} />
-        </IconButton>
-        <MenuTrigger>
-          <IconButton variant="bordered" tone="strong" aria-label="Filter ideas"><ListFilter aria-hidden size={16} /></IconButton>
-          <Menu aria-label="Filter by status" selectionMode="multiple" selectedKeys={statuses}
-            onSelectionChange={k => setStatuses(new Set(k === 'all' ? STATUSES : k))}>
-            {STATUSES.map(st => <MenuItem key={st} id={st}>{st}</MenuItem>)}
-          </Menu>
-        </MenuTrigger>
-      </div>
+      <TableToolbar heading={`${rows.length} ideas`}>
+        <SearchField isCollapsible aria-label="Search ideas" placeholder="Search" value={query} onChange={setQuery} />
+        <FilterMenu facets={STATUS_FACET} value={filter} onChange={setFilter} aria-label="Filter ideas" />
+      </TableToolbar>
+      <FilterChips facets={STATUS_FACET} value={filter} onChange={setFilter} />
       <DataTable aria-label="Ideas" density="compact" revealChecks selectionMode="multiple"
         selectedKeys={selected} onSelectionChange={k => setSelected(k as typeof selected)}
         sortDescriptor={sort} onSortChange={d => setSort(d as SortDescriptor)}
@@ -275,7 +461,126 @@ function ManageTable() {
 /**
  * The phase Manage tab's input table: compact wrapping rows (up to three lines), a content-warning mark after the
  * idea, the quiet Status word, checkboxes on hover or once checked, sortable Idea and Status, a "+" that adds
- * Likes / Comments columns, and a row click that opens the input. Search and the status filter are the page's
- * (the icon buttons above the table), driving the rows it passes in.
+ * Likes / Comments columns, and a row click that opens the input. Above it, a Table toolbar: the count follows the
+ * collapsible search and the status filter, which drive the rows the table is given.
  */
 export const ManageInputs: Story = {name: 'Manage inputs', render: () => <ManageTable />};
+
+
+// ── The whole Manage table, in a Panel ─────────────────────────────────────────────────────────────
+const PAGE_SIZE = 8;
+type IdeaKey = 'title' | 'assignee' | 'status' | 'likes' | 'comments' | 'published';
+
+function sortIdeas(list: ManageIdea[], sort: SortDescriptor) {
+  const key = sort.column as IdeaKey;
+  const sign = sort.direction === 'descending' ? -1 : 1;
+  const value = (i: ManageIdea) => key === 'assignee' ? i.assignee ?? '~' : i[key];
+  return [...list].sort((a, b) => {
+    const x = value(a), y = value(b);
+    return sign * (typeof x === 'number' && typeof y === 'number' ? x - y : String(x).localeCompare(String(y)));
+  });
+}
+
+function ManagePanel() {
+  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState<FilterValue>({status: ['Proposed', 'Viewed', 'Under consideration']});
+  const [metric, setMetric] = useState<Metric | undefined>();
+  const [sort, setSort] = useState<SortDescriptor>({column: 'likes', direction: 'descending'});
+  const [page, setPage] = useState(1);
+  const [extra, setExtra] = useState<Set<string | number>>(new Set(['comments']));
+  const [selected, setSelected] = useState<Set<string | number>>(new Set());
+  const [said, setSaid] = useState('Click a row to open the idea.');
+
+  // A new search, filter or quick view starts again from the first page.
+  const fresh = <T,>(set: (v: T) => void) => (v: T) => { set(v); setPage(1); };
+  const found = useMemo(() => sortIdeas(filterIdeas(MANAGE_IDEAS, {query, value: filter, metric}), sort), [query, filter, metric, sort]);
+  const pageCount = Math.max(1, Math.ceil(found.length / PAGE_SIZE));
+  const current = Math.min(page, pageCount);
+  const rows = found.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
+  const actions = metric === 'warnings' ? [...IDEA_ACTIONS, DISMISS_WARNINGS] : IDEA_ACTIONS;
+  const total = (m: Metric) => MANAGE_IDEAS.filter(METRICS[m].test).length;
+
+  return (
+    <div style={{display: 'grid', gap: 16, maxWidth: 1080}}>
+      <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 12}}>
+        {(Object.keys(METRICS) as Metric[]).map(m => (
+          <StatCard key={m} label={METRICS[m].label} value={String(total(m))}
+            caption={metric === m ? 'Showing these below' : 'Show these below'}
+            onPress={() => fresh(setMetric)(metric === m ? undefined : m)} />
+        ))}
+      </div>
+      <Panel title="Collect ideas" description="Everything posted in this phase. Select ideas for batch actions; click one to open it." flush
+        actions={<Button variant="secondary" size={32}><Plus aria-hidden size={16} />Add input</Button>}
+        toolbar={(
+          <>
+            <TableToolbar start={(
+              <SelectionBar count={selected.size} actions={actions} onClear={() => setSelected(new Set())}
+                onAction={id => { setSaid(id === 'dismiss-warnings' ? `Dismissed the warnings on ${ideaCount(selected.size)}.` : `Official update for ${ideaCount(selected.size)}.`); }}>
+                <TableToolbarHeading>{ideaCount(found.length)}</TableToolbarHeading>
+              </SelectionBar>
+            )}>
+              <SearchField isCollapsible aria-label="Search ideas" placeholder="Search" value={query} onChange={fresh(setQuery)} />
+              <FilterMenu facets={IDEA_FACETS} value={filter} onChange={fresh(setFilter)} countLabel={ideaCount} />
+              <ExportMenu selected={selected.size} onExport={what => setSaid(`Export started: ${what}.xlsx`)} />
+            </TableToolbar>
+            <FilterChips facets={IDEA_FACETS} value={filter} onChange={fresh(setFilter)}
+              metric={metric && METRICS[metric].label} onMetricRemove={() => fresh(setMetric)(undefined)} />
+          </>
+        )}
+        footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Idea pages" />}>
+        <DataTable aria-label="Ideas" revealChecks selectionMode="multiple"
+          selectedKeys={selected} onSelectionChange={k => setSelected(new Set(k === 'all' ? [...selected, ...rows.map(r => r.id)] : k))}
+          sortDescriptor={sort} onSortChange={d => setSort(d as SortDescriptor)}
+          addColumn={(
+            <DataTableAddColumn selectedKeys={extra} onSelectionChange={setExtra}>
+              <MenuItem id="comments">Comments</MenuItem>
+              <MenuItem id="published">Published</MenuItem>
+            </DataTableAddColumn>
+          )}>
+          <DataTableHeader>
+            <DataTableColumn id="title" isRowHeader allowsSorting>Idea</DataTableColumn>
+            <DataTableColumn id="assignee" allowsSorting>Assignee</DataTableColumn>
+            <DataTableColumn id="tags">Tags</DataTableColumn>
+            <DataTableColumn id="status" allowsSorting>Status</DataTableColumn>
+            <DataTableColumn id="likes" align="number" allowsSorting>Likes</DataTableColumn>
+            {extra.has('comments') && <DataTableColumn id="comments" align="number" allowsSorting>Comments</DataTableColumn>}
+            {extra.has('published') && <DataTableColumn id="published" allowsSorting>Published</DataTableColumn>}
+          </DataTableHeader>
+          <DataTableBody renderEmptyState={() => <DataTableEmpty>No ideas match. Clear the filters to see them all.</DataTableEmpty>}>
+            {rows.map(i => (
+              <DataTableRow key={i.id} id={i.id} textValue={i.title} onAction={() => setSaid(`Opened: ${i.title}`)}>
+                <DataTableCell>
+                  <DataTableText lines={2} leading={i.picture && <DataTableThumbnail src={i.picture} />}
+                    marks={(i.isNew || i.warnings) && <>
+                      {i.isNew && <NewDot aria-label="New" />}
+                      {i.warnings && <TriangleAlert size={16} role="img" aria-label={`${i.warnings} content ${i.warnings === 1 ? 'warning' : 'warnings'}`} />}
+                    </>}>
+                    {i.title}
+                  </DataTableText>
+                </DataTableCell>
+                <DataTableCell><DataTableAssignee name={i.assignee} initials={i.assignee?.slice(-1)} /></DataTableCell>
+                <DataTableCell>{i.tags.length ? <DataTableTags tags={i.tags} /> : null}</DataTableCell>
+                <DataTableCell muted><span style={{whiteSpace: 'nowrap'}}>{i.status}</span></DataTableCell>
+                <DataTableCell align="number">{i.likes}</DataTableCell>
+                {extra.has('comments') && <DataTableCell align="number">{i.comments}</DataTableCell>}
+                {extra.has('published') && <DataTableCell muted><span style={{whiteSpace: 'nowrap'}}>{shortDate(i.published)}</span></DataTableCell>}
+              </DataTableRow>
+            ))}
+          </DataTableBody>
+        </DataTable>
+      </Panel>
+      <p role="status" style={{margin: 0, font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>{said}</p>
+    </div>
+  );
+}
+
+/**
+ * The Manage tab's table whole, everything working: the quick views above (each a stat; pressing one filters the
+ * table and adds its chip), a Panel with the phase, its description and "Add input"; in its toolbar row the count
+ * (it follows the search, filters and quick view), the collapsible search, the Filter menu with its dot and the
+ * export; the filter chips with the quick view's chip first; the table with pictures, new and warning marks,
+ * assignees, tags, sortable columns, checks on hover and a "+" for more columns; and the Pagination in the foot.
+ * Select rows and the Selection bar takes the count's place ("Dismiss warnings" joins it in the Content warnings
+ * view). Click a row: the line under the panel says what opened.
+ */
+export const InAPanel: Story = {name: 'In a panel', render: () => <ManagePanel />};

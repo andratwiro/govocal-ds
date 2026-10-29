@@ -3,8 +3,9 @@
 /*
  * DataTable: the prototype's back-office list table (`gv-bo-table is-list`, as on its Participants screen).
  * Quiet headers (small, secondary text, no fill) over a 1px rule; body rows divided by a lighter hairline,
- * no zebra; 12px row padding, 8px between columns, 20px at the table's two edges. The sorted column only gains
- * primary text and its chevron (no grey block). Rows hover with the soft hover surface.
+ * no zebra; 12px row padding, 8px between columns, 20px at the table's two edges. The sorted column gains primary
+ * text and its arrow; a sortable header under the pointer gets a soft rounded block and a quiet arrow (the
+ * prototype's Manage `.pj-th`). Rows hover with the soft hover surface.
  */
 .gv-data-table {
   width: 100%;
@@ -66,6 +67,10 @@
     &[data-hovered] {
       color: var(--gv-text-primary);
 
+      .gv-data-table__head {
+        background: var(--gv-surface-hover);
+      }
+
       .gv-data-table__sort {
         visibility: visible;
       }
@@ -104,16 +109,27 @@
   display: inline-flex;
   align-items: center;
   gap: var(--gv-space-4);
+  border-radius: var(--gv-radius-6);
+  transition: background-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 }
 
-/* The chevron: always present on a sortable column so widths don't jump; shown when sorted or hovered. */
+/* A sortable header's label sits in a small padded block (the hover's grey), pulled out by its padding so the
+   label still lines up with the cells below. */
+.gv-data-table__column[data-allows-sorting] .gv-data-table__head {
+  padding: var(--gv-space-2) var(--gv-space-6);
+  margin-inline: calc(-1 * var(--gv-space-6));
+}
+
+/* The arrow: always present on a sortable column so widths don't jump; shown when sorted or hovered (quiet until
+   it is the sorted one). Arrows mean order; chevrons mean open. */
 .gv-data-table__sort {
   display: inline-flex;
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-quiet);
   visibility: hidden;
 
   &[data-active] {
     visibility: visible;
+    color: var(--gv-icon-strong);
   }
 }
 
@@ -235,7 +251,7 @@
   position: absolute;
   width: 1px;
   height: 1px;
-  margin: -1px;
+  margin: calc(-1 * var(--gv-space-1));
   padding: 0;
   overflow: hidden;
   clip: rect(0 0 0 0);
@@ -288,11 +304,88 @@
   color: var(--gv-icon-warning);
 }
 
-/* The header's "+": as narrow as its icon button. */
+/* The header's "+": as narrow as its icon button, 8 clear of the last column. */
 .gv-data-table__add {
   width: 1%;
   padding-block: 0;
+  padding-inline-start: var(--gv-space-8);
   text-align: end;
+}
+
+/* A thumbnail before a title: the idea's picture (32 square, radius 6) or the project's icon tile (36×28, radius 4). */
+.gv-data-table__thumb {
+  flex: none;
+  inline-size: var(--gv-space-32);
+  block-size: var(--gv-space-32);
+  border-radius: var(--gv-radius-6);
+  object-fit: cover;
+  background: var(--gv-surface-pill);
+}
+
+.gv-data-table__tile {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: 36px;
+  block-size: var(--gv-space-28);
+  border-radius: var(--gv-radius-4);
+  color: var(--gv-icon-inverse);
+
+  /* No semantic token for a project's tile yet (see the report): the prototype's teal and blue. */
+  &[data-tone='teal'] { background: var(--gv-color-teal-400); }
+  &[data-tone='blue'] { background: var(--gv-color-blue-400); }
+
+  > svg {
+    inline-size: 16px;
+    block-size: 16px;
+  }
+}
+
+/* With a thumbnail the text centres on it while it's one line, and wraps beside it after. */
+.gv-data-table__text[data-leading] {
+  align-items: center;
+}
+
+/* Assignee: the avatar and the name; nobody is the dashed ring and quieter words. A block flex row, so an empty ring
+   (no text, no baseline) sits on the row's middle like a lettered one. */
+.gv-data-table__assignee {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  max-inline-size: 100%;
+  white-space: nowrap;
+
+  &[data-empty] {
+    color: var(--gv-text-secondary);
+  }
+}
+
+.gv-data-table__assignee-name {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Tags: one line of Badges, each clipped at 96, then "+N". */
+.gv-data-table__tags {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-4);
+  white-space: nowrap;
+
+  .gv-pill {
+    max-inline-size: 96px;
+  }
+
+  .gv-pill__label {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.gv-data-table__more {
+  display: inline-flex;
 }
 
 /* Compact (the prototype's Manage input table). */
@@ -304,7 +397,7 @@
 
   .gv-data-table__cell {
     padding-block: var(--gv-space-9);
-    line-height: 18px;
+    line-height: var(--gv-type-ui-line);
     vertical-align: top;
   }
 
@@ -325,13 +418,20 @@
 
 /* Row checkboxes that show on demand. */
 .gv-data-table[data-reveal-checks] {
-  /* The header's select-all is the gv Checkbox's quiet look (dimmed until hovered or checked). */
-  .gv-data-table__row .gv-data-table__check .gv-checkbox {
+  /* Row checkboxes and the header's select-all start hidden; the select-all then wears the gv Checkbox's quiet look
+     (dimmed until hovered or checked). */
+  .gv-data-table__check .gv-checkbox {
     opacity: 0;
     transition: opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
   }
 
   .gv-data-table__row:is([data-hovered], [data-selected], [data-focus-visible], :focus-within) .gv-data-table__check .gv-checkbox {
+    opacity: 1;
+  }
+
+  /* The header's select-all: there while the pointer or focus is in the table, or once anything is checked. */
+  &:is(:hover, :focus-within) .gv-data-table__header .gv-data-table__check .gv-checkbox,
+  .gv-data-table__header .gv-data-table__check .gv-checkbox:has([data-selected], [data-indeterminate]) {
     opacity: 1;
   }
 }

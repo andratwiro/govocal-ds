@@ -15,24 +15,27 @@ import {
   type TableProps as AriaTableProps,
   useTableOptions
 } from 'react-aria-components/Table';
-import {ChevronDown, ChevronUp, MoreHorizontal, Plus} from 'lucide-react';
+import {ArrowDown, ArrowUp, MoreHorizontal, Plus} from 'lucide-react';
 import {createContext, useContext, type ReactNode} from 'react';
 import {Checkbox} from './Checkbox';
 import {Avatar} from './Avatar';
+import {Badge} from './Badge';
 import {IconButton} from './IconButton';
 import {Menu, MenuTrigger} from '../Menu';
 import './DataTable.css';
 
 /**
  * The back office's data table (the prototype's `gv-bo-table is-list`): quiet small headers over a hairline,
- * hairline-divided rows with no zebra, a chevron on the sorted column only, a soft hover, a gv Checkbox column when
- * the table is selectable, and a trailing "…" options column. React Aria's Table underneath: sorting
- * (`sortDescriptor` / `onSortChange`), selection (`selectionMode`, `selectedKeys`), row actions (`onAction` on a row),
- * keyboard grid navigation.
+ * hairline-divided rows with no zebra, an arrow on the sorted column (and on a sortable one under the pointer), a
+ * soft hover, a gv Checkbox column when the table is selectable, and a trailing "…" options column. React Aria's
+ * Table underneath: sorting (`sortDescriptor` / `onSortChange`), selection (`selectionMode`, `selectedKeys`), row
+ * actions (`onAction` on a row), keyboard grid navigation.
  *
  * The phase Manage tab's input table is the same component, `density="compact"` with `revealChecks` and an
  * `addColumn` control: dense rows that grow with wrapping text, checkboxes that appear on hover or once checked,
- * and a trailing "+" in the header. Search and filters stay with the page (see the `ManageInputs` story).
+ * and a trailing "+" in the header. Cells: `DataTableText` (with a `DataTableThumbnail`), `DataTablePerson`,
+ * `DataTableAssignee`, `DataTableTags`, `DataTableStack`, `DataTableOptions`. Around it: a `Panel` frames it, a
+ * `TableToolbar` holds its count, search and filters, `Pagination` sits in the Panel's foot (the `InAPanel` story).
  */
 
 const cx = (...names: (string | false | undefined)[]) => names.filter(Boolean).join(' ');
@@ -57,8 +60,9 @@ export interface DataTableProps extends Omit<AriaTableProps, 'className'> {
    */
   density?: 'default' | 'compact';
   /**
-   * Row checkboxes show only on a hovered, focused or checked row, and the header's select-all is dimmed until
-   * the header is hovered or something is selected (the prototype's Manage table).
+   * Row checkboxes show only on a hovered, focused or checked row, and the header's select-all only while the
+   * table is hovered or focused, or something is selected: dimmed until it is hovered itself, filled (or
+   * indeterminate) once rows are checked (the prototype's Manage table).
    *
    * @default false
    */
@@ -127,7 +131,7 @@ export function DataTableColumn({children, align = 'start', hideLabel, ...props}
           <span className={hideLabel ? 'gv-data-table__hidden' : undefined}>{children}</span>
           {allowsSorting && (
             <span className="gv-data-table__sort" data-active={sortDirection ? true : undefined} aria-hidden>
-              {sortDirection === 'ascending' ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+              {sortDirection === 'descending' ? <ArrowDown size={12} /> : <ArrowUp size={12} />}
             </span>
           )}
         </span>
@@ -179,6 +183,8 @@ export function DataTableCell({align = 'start', muted, ...props}: DataTableCellP
 
 export interface DataTableTextProps {
   children: ReactNode;
+  /** Before the text, e.g. the idea's picture as a `DataTableThumbnail`. */
+  leading?: ReactNode;
   /**
    * Wrap up to this many lines, then clip with an ellipsis.
    *
@@ -189,10 +195,14 @@ export interface DataTableTextProps {
   marks?: ReactNode;
 }
 
-/** Wrapping cell text clamped to a few lines, with trailing marks (the Manage table's idea text and its ⚠). */
-export function DataTableText({children, lines = 3, marks}: DataTableTextProps) {
+/**
+ * Wrapping cell text clamped to a few lines, with trailing marks (the Manage table's idea text and its ⚠) and an
+ * optional leading thumbnail.
+ */
+export function DataTableText({children, leading, lines = 3, marks}: DataTableTextProps) {
   return (
-    <span className="gv-data-table__text">
+    <span className="gv-data-table__text" data-leading={leading ? true : undefined}>
+      {leading}
       <span className="gv-data-table__clamp" data-lines={lines}>{children}</span>
       {marks && <span className="gv-data-table__marks">{marks}</span>}
     </span>
@@ -223,15 +233,96 @@ export function DataTablePerson({name, initials, src, sub}: DataTablePersonProps
   );
 }
 
+export interface DataTableStackProps {
+  children: ReactNode;
+  /** The quieter line under it. */
+  sub?: ReactNode;
+  /** The first line in the strong UI type, e.g. a title. */
+  strong?: boolean;
+  /** Before the two lines, e.g. the project's tile as a `DataTableThumbnail`. */
+  leading?: ReactNode;
+}
+
 /**
- * A primary line over a quieter sub-line, without an avatar (e.g. a role over "Assigned items"; with `strong`, a
- * title over its author and date).
+ * A primary line over a quieter sub-line (e.g. a role over "Assigned items"; with `strong`, a title over its author
+ * and date; with a `leading` tile, a project over its folder).
  */
-export function DataTableStack({children, sub, strong}: {children: ReactNode; sub?: ReactNode; strong?: boolean}) {
-  return (
+export function DataTableStack({children, sub, strong, leading}: DataTableStackProps) {
+  const stack = (
     <span className="gv-data-table__stack">
       <span className={strong ? 'gv-data-table__name' : undefined}>{children}</span>
       {sub && <span className="gv-data-table__sub">{sub}</span>}
+    </span>
+  );
+  return leading ? <span className="gv-data-table__person">{leading}{stack}</span> : stack;
+}
+
+export interface DataTableThumbnailProps {
+  /** A picture: a 32px rounded square it covers (the Manage table's idea image). */
+  src?: string;
+  /** Without a picture, an icon on a coloured 36×28 tile (the Projects list's project tile). */
+  icon?: ReactNode;
+  /** The tile's colour. @default 'teal' */
+  tone?: 'teal' | 'blue';
+  /** What the picture shows. Leave it empty when the text beside it says it all. @default '' */
+  alt?: string;
+}
+
+/** The picture before a row's title: an image, or an icon tile. For `DataTableText` and `DataTableStack`'s `leading`. */
+export function DataTableThumbnail({src, icon, tone = 'teal', alt = ''}: DataTableThumbnailProps) {
+  if (src) return <img className="gv-data-table__thumb" src={src} alt={alt} loading="lazy" />;
+  return <span className="gv-data-table__tile" data-tone={tone} aria-hidden>{icon}</span>;
+}
+
+export interface DataTableAssigneeProps {
+  /** Who it is assigned to (an invented name in stories). Leave it out for nobody. */
+  name?: string;
+  /** Initials for the Avatar. @default the name's first letter at 24, the first letters of its first two words at 28 */
+  initials?: string;
+  /** A photo for the Avatar. */
+  src?: string;
+  /** What nobody reads. @default 'Unassigned' */
+  emptyLabel?: string;
+  /** The avatar's size: 24 in a dense table, 28 in a roomy one. @default 24 */
+  size?: 24 | 28;
+}
+
+/**
+ * An assignee cell: Avatar and name, or the dashed empty ring and "Unassigned" in quieter text (the prototype's
+ * Manage assignee and Projects list manager).
+ */
+export function DataTableAssignee({name, initials, src, emptyLabel = 'Unassigned', size = 24}: DataTableAssigneeProps) {
+  const letters = initials ?? name?.split(/\s+/).slice(0, size === 28 ? 2 : 1).map(w => w[0]).join('').toUpperCase();
+  return (
+    <span className="gv-data-table__assignee" data-empty={name ? undefined : true}>
+      <Avatar size={size} initials={letters} src={src} unassigned={!name} />
+      <span className="gv-data-table__assignee-name">{name ?? emptyLabel}</span>
+    </span>
+  );
+}
+
+export interface DataTableTagsProps {
+  tags: readonly string[];
+  /** How many to show before "+N". @default 2 */
+  max?: number;
+}
+
+/**
+ * A tags cell: the first few as Badges (each clipped at 96px), then "+N" for the rest, which names them on hover and
+ * to screen readers.
+ */
+export function DataTableTags({tags, max = 2}: DataTableTagsProps) {
+  const shown = tags.slice(0, max);
+  const rest = tags.slice(max);
+  return (
+    <span className="gv-data-table__tags">
+      {shown.map(t => <Badge key={t}>{t}</Badge>)}
+      {rest.length > 0 && (
+        <span className="gv-data-table__more" title={rest.join(', ')}>
+          <span aria-hidden><Badge>+{rest.length}</Badge></span>
+          <span className="gv-data-table__hidden">and {rest.join(', ')}</span>
+        </span>
+      )}
     </span>
   );
 }
