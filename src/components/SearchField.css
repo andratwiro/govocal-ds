@@ -83,3 +83,38 @@
     grid-area: help;
   }
 }
+
+/* Collapsible (the prototype's Manage search, .pj-insearch): it opens in place of a 28 icon button, beside other 28
+   icon buttons, so it is 28 tall (not the 36 of a form field: the row must not jump) and 180 wide, a 14 magnifier
+   8 from the start. It grows out of the button's width as it opens. */
+.react-aria-SearchField[data-collapsible] {
+  inline-size: 180px;
+
+  &[data-opened] {
+    transition: inline-size var(--gv-motion-duration-medium) var(--gv-motion-easing-enter);
+  }
+
+  .lucide-search {
+    width: var(--gv-space-14);
+    height: var(--gv-space-14);
+    margin-inline-start: var(--gv-space-8);
+  }
+
+  .react-aria-Input {
+    min-height: var(--gv-space-28);
+    height: var(--gv-space-28);
+    padding-inline-start: 30px;
+  }
+
+  .clear-button {
+    width: var(--gv-space-20);
+    height: var(--gv-space-20);
+    margin-inline-start: calc(-1 * var(--gv-space-24));
+  }
+}
+
+@starting-style {
+  .react-aria-SearchField[data-collapsible][data-opened] {
+    inline-size: var(--gv-space-28);
+  }
+}
