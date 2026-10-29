@@ -1,0 +1,51 @@
+@import '../theme.css';
+
+/* Figma "KPI" (33:480) + prototype #pj-dash .pj-kpi: 16 padding, radius 8, hairline border, label over number. */
+.gv-kpi {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-8);
+  min-inline-size: 0;
+  padding: var(--gv-space-16);
+  border: 1px solid var(--gv-border-subtle);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-panel);
+  font-family: var(--gv-font-family);
+}
+
+.gv-kpi__label {
+  font: var(--gv-type-body);
+  letter-spacing: var(--gv-type-body-tracking);
+  color: var(--gv-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gv-kpi__value {
+  font: var(--gv-type-stat);
+  letter-spacing: var(--gv-type-stat-tracking);
+  color: var(--gv-text-primary);
+}
+
+/* Type=Tall: same content, 8 more at the foot (Figma 102 vs 94). */
+.gv-kpi--tall {
+  padding-block-end: var(--gv-space-24);
+}
+
+/* Type=With note: the note hugs the number (Figma 110 high). */
+.gv-kpi--with-note {
+  gap: var(--gv-space-6);
+}
+
+.gv-kpi__note {
+  margin-block-start: calc(-1 * var(--gv-space-4));
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-kpi__slot {
+  min-inline-size: 0;
+}

@@ -1,0 +1,132 @@
+@import '../theme.css';
+
+/* One name per chart token: `data-chart-color="agree"` → --chart-color. Lines stroke it, swatches and bars fill it. */
+[data-chart-color='line-primary'] { --chart-color: var(--gv-chart-line-primary); }
+[data-chart-color='line-secondary'] { --chart-color: var(--gv-chart-line-secondary); }
+[data-chart-color='bar'] { --chart-color: var(--gv-chart-bar); }
+[data-chart-color='agree'] { --chart-color: var(--gv-chart-agree); }
+[data-chart-color='disagree'] { --chart-color: var(--gv-chart-disagree); }
+[data-chart-color='pass'] { --chart-color: var(--gv-chart-pass); }
+[data-chart-color='blue-1'] { --chart-color: var(--gv-chart-blue-1); }
+[data-chart-color='blue-2'] { --chart-color: var(--gv-chart-blue-2); }
+[data-chart-color='blue-3'] { --chart-color: var(--gv-chart-blue-3); }
+[data-chart-color='blue-4'] { --chart-color: var(--gv-chart-blue-4); }
+[data-chart-color='blue-5'] { --chart-color: var(--gv-chart-blue-5); }
+[data-chart-color='green'] { --chart-color: var(--gv-chart-green); }
+[data-chart-color='olive'] { --chart-color: var(--gv-chart-olive); }
+[data-chart-color='terracotta'] { --chart-color: var(--gv-chart-terracotta); }
+
+/* ── Legend (Figma Dashboard card legends) ── */
+.gv-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gv-space-4) var(--gv-space-18);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+}
+.gv-chart-legend--center { justify-content: center; }
+.gv-chart-legend--start { justify-content: flex-start; }
+.gv-chart-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+}
+.gv-chart-legend__swatch {
+  flex: none;
+  inline-size: 9px;
+  block-size: 9px;
+  border-radius: var(--gv-radius-full);
+  background: var(--chart-color);
+}
+.gv-chart-legend--square { column-gap: var(--gv-space-14); }
+.gv-chart-legend--square .gv-chart-legend__item { gap: var(--gv-space-5); }
+.gv-chart-legend--square .gv-chart-legend__swatch {
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: var(--gv-radius-2);
+}
+
+/* ── Line chart (Figma Chart · Line, 730 × 177) ── */
+.gv-line-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-6);
+  min-inline-size: 0;
+  font-family: var(--gv-font-family);
+}
+.gv-line-chart__body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: var(--plot-height) auto;
+  column-gap: var(--gv-space-6);
+  row-gap: var(--gv-space-10);
+  padding-block-start: var(--gv-space-8);
+}
+.gv-line-chart__y {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-block: calc(-1 * var(--gv-space-8));
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-chart-axis);
+  text-align: end;
+}
+.gv-line-chart__plot {
+  display: block;
+  inline-size: calc(100% - var(--gv-space-20));
+  block-size: var(--plot-height);
+  overflow: visible;
+}
+.gv-line-chart__grid {
+  stroke: var(--gv-chart-grid);
+  stroke-width: 1;
+}
+.gv-line-chart__line {
+  fill: none;
+  stroke: var(--chart-color);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.gv-line-chart__x {
+  grid-column: 2;
+  position: relative;
+  block-size: 16px;
+  margin-inline-end: var(--gv-space-20);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-chart-axis);
+}
+/* Chart coordinates are physical (time runs left to right), so the labels are placed with `left`. */
+.gv-line-chart__x > span {
+  position: absolute;
+  inset-block-start: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* ── Sparkline (Figma Chart · Sparkline, 730 × 110) ── */
+.gv-sparkline {
+  display: block;
+  inline-size: 100%;
+  overflow: visible;
+  color: var(--chart-color);
+}
+.gv-sparkline__grid {
+  stroke: var(--gv-chart-grid);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+.gv-sparkline__line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
