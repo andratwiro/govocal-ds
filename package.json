@@ -19,6 +19,7 @@
     "a11y:scan": "node scripts/a11y-scan.mjs",
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test",
+    "pretypecheck": "node scripts/token-usage.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
