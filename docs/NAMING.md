@@ -81,7 +81,9 @@ them, and `.storybook/manager.ts` writes the mark after the entry's name):
 
 - `not-in-figma`: Figma doesn't draw it yet (Coachmark, Skeleton, Data table and every Storybook-only pattern). Shows
   "no Figma".
-- `deprecated`: on its way out; the export carries JSDoc `@deprecated` too, and both leave with the code. None today.
+- `deprecated`: on its way out; the export carries JSDoc `@deprecated` too, and both leave with the code. No whole
+  entry today. Inside the Card entry, `CardRadioGroup` and `CardRadio` carry `@deprecated` (→ Choice card); the entry
+  stays untagged because Card itself stays.
 - `covered`: a Base entry a Components entry wraps or replaces, hidden from the sidebar. A Components entry that wraps
   a Base entry tags it `covered` in the same commit.
 

@@ -17,7 +17,7 @@ public URL:
   - **Components**: generic parts built on React Aria and painted with the tokens; what pages use.
   - **Patterns**: compositions that repeat but aren't primitives (the phase timeline, a stat card with a sparkline, a
     next-action row). Same stories, states and accessibility check as components.
-  - **Back office** stories: whole pages (the same pages as /backoffice).
+  - **Back office** stories (planned, empty today): whole pages, the same pages as /backoffice.
   - **Base**, last: React Aria's starter painted with the tokens, the primitives the Components build on. Pages don't
     use them directly; when one truly needs a part no Component covers, it imports it from `govocal-ds/base`.
 - **/backoffice**: the whole Go Vocal back office, shallow: one page per nav item, invented data, built only from
@@ -64,9 +64,10 @@ src/components/    React Aria Components, painted with the tokens (the starter: 
 src/patterns/      compositions of components (timeline, stat card…), tokens only, same stories
 docs/NAMING.md     how components and patterns are named and grouped, in Storybook and Figma
 backoffice/        Vite app: sidebar + one route per nav item, invented data
-.storybook/        a11y addon (WCAG 2.2 AA + target size), Components page with counts
+.storybook/        a11y addon (WCAG 2.2 AA + target size), sidebar order and marks, the docs page (Base's line)
+src/overview/      the Overview pages' parts (Accessibility: the scan's results per story)
 AGENTS.md          the rules for the designer's agent
-.github/workflows/ push to main → build both → GitHub Pages
+.github/workflows/ checks.yml: every pull request; deploy.yml: push to main → GitHub Pages
 ```
 
 ## The designer's loop
@@ -83,10 +84,12 @@ with the Figma, Storybook and React Aria MCP servers.
 
 ## Live, and when it breaks
 
-- Push to `main` → GitHub Action: tokens → Storybook → accessibility run (results JSON for the Components page) →
-  back office → GitHub Pages.
+- A pull request into `main` runs the checks: typecheck, unit tests, build (Storybook, back office), e2e. A push to
+  `main` runs them again, the accessibility scan beside the e2e, folds the scan's results into Overview/Accessibility,
+  and publishes to GitHub Pages. The scan never fails the run.
 - A failed build deploys nothing; the last good version stays live; GitHub emails the pusher.
-- Stuck → the agent opens one issue labelled `stuck`: what was tried, the error, one question.
+- Stuck → the agent opens one issue labelled `stuck`: what was tried, the error, one question. (The label and its
+  issue template are still to be made.)
 - The agent never edits the workflow or the accessibility settings (a rule in AGENTS.md, not a lock).
 
 ## Out of scope for the 4 weeks
