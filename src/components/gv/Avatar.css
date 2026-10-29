@@ -26,7 +26,7 @@
   &[data-size='16'] {
     width: 16px;
     height: 16px;
-    font-size: 11px;
+    font-size: var(--gv-type-small-size);
     border-width: 1px;
   }
 
