@@ -1,6 +1,7 @@
 import type {Preview} from '@storybook/react-vite';
 import {useEffect} from 'react';
 import {I18nProvider} from 'react-aria-components';
+import {LucideProvider} from 'lucide-react';
 
 const preview: Preview = {
   globalTypes: {
@@ -16,7 +17,8 @@ const preview: Preview = {
         document.documentElement.dir = dir;
         document.documentElement.lang = locale;
       }, [dir, locale]);
-      return <I18nProvider locale={locale}><Story /></I18nProvider>;
+      // Figma and the prototype draw icons at 1.75 (Lucide's default is 2); an explicit strokeWidth still wins.
+      return <I18nProvider locale={locale}><LucideProvider strokeWidth={1.75}><Story /></LucideProvider></I18nProvider>;
     }
   ],
   parameters: {

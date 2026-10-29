@@ -1,5 +1,6 @@
 import {test, expect, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import {settled} from './axe';
 
 const CATEGORIES = ['Quality of life', 'Service delivery', 'Governance and trust'];
 
@@ -82,6 +83,7 @@ test('the quarter picker shows only on the results sections', async ({page}) => 
 // ── The first clicks: every button on the monitor opens something ──
 
 async function axeOn(page: Page, selector: string) {
+  await settled(page);
   const r = await new AxeBuilder({page}).include(selector).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
   return r.violations.map(v => v.id);
 }
