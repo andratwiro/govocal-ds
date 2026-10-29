@@ -4,6 +4,15 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Words, locale and edge cases (30 Oct 2026)
+
+Calls made while emptying the words guard's `TO_CONVERT` list, adding the Locale toolbar and the edge-case stories (benchmark-gaps plan, Task 6).
+
+- Data table's `loadingLabel` prop vs a `labels` key → **`DataTableBody`'s `labels.loading` (`dataTableBodyLabels`, extending `LoadMoreLabels`), the prop removed** → API rule 11 has no one-off word props; nothing passed it. The default keeps its "…" ("Loading more…"), not the starters' "...".
+- The multilingual fields' words → **one `MultilingualFieldLabels` (extending Locale switcher's and Required marker's; the switcher's marks are `mark…` keys so they never meet Required marker's `required`) for Multilingual text field and the hook every multilingual field shares; Multilingual rich text editor's extends it with the editor's** → a field hands the switcher and the Required marker its words, as rule 11's "a part that draws another's words hands them on". The joins ("EN, English, filled") and the "1/3" count are labels too, so a host can reorder them.
+- Locale switcher's `new Intl.DisplayNames([inLocale])` read as a fixed locale → **the guard flags an Intl formatter only when its locale argument holds a literal** → the names follow the locale the part is handed (React Aria's), which is what rule 11 asks.
+- Overview › Accessibility's scan date in `toLocaleString('en-GB')` → **kept** → it is a docs page, not a part: nothing imports it, its prose is English, and a host never renders it. The guard reads parts (`src/components`, `src/patterns`) only.
+
 ## Maps (29 Oct 2026)
 
 Calls made while adding the Map view (Components/Data display): an external review found maps uncovered, and the ideation phase's Manage tab shows ideas on one.
@@ -41,7 +50,7 @@ Calls made while making Data table virtualise (an external review: nothing suppo
 - A virtualised table has no content width of its own → **it fills its container's width; noted in the recipe** → the plain table grows to fit its rows; a positioned layout can't, so a shrink-to-fit parent collapses it.
 - A framed table's border made the layout measure itself without end (a `width: 100%` block 2px wider than its box) → **the virtualised table is border-box, as a plain table's width already is** → the same outer size in both modes.
 - Cells of any height vs one height per row → **each virtualised cell keeps to its line and clips with an ellipsis (`__fit`, 4px of room for a focus ring)** → a taller cell would spill over the next row.
-- Paging as a separate pattern vs infinite loading → **`DataTableBody`'s `onLoadMore`, `isLoading` and `loadingLabel` ("Loading more…"), on React Aria's load-more row** → it was cheap: React Aria fires it as the last row nears the view, in either mode; the page passes `onLoadMore` only while more remain.
+- Paging as a separate pattern vs infinite loading → **`DataTableBody`'s `onLoadMore`, `isLoading` and `labels.loading` ("Loading more…"), on React Aria's load-more row** → it was cheap: React Aria fires it as the last row nears the view, in either mode; the page passes `onLoadMore` only while more remain.
 - Rows by `.map()` vs `items` with a function → **the recipe and stories use `items`** → React Aria reuses the rows it has built for unchanged items; `.map()` rebuilds all of them on every change.
 - Right to left by the page's `dir` vs React Aria's locale → **the virtualised layout follows the locale (`I18nProvider`)** → React Aria places the columns from the locale's direction, as every other component's keyboard already does.
 ## Structure: one place for each part (29 Oct 2026, architecture review)

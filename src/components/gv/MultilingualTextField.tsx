@@ -9,7 +9,9 @@ import {
 import {useLocale} from 'react-aria-components';
 import clsx from 'clsx';
 import {Description, FieldError, Label} from '../Form';
-import {RequiredMarker} from './RequiredMarker';
+import {RequiredMarker, type RequiredMarkerLabels} from './RequiredMarker';
+import {mergeLabels} from '../labels';
+import {useNumberFormatter} from '../format';
 import {
   LocaleSwitcher,
   emptyLocales,
@@ -17,10 +19,40 @@ import {
   localeName,
   localeStatus,
   useShownLocale,
+  localeSwitcherLabels,
+  type LocaleSwitcherLabels,
   type Multiloc
 } from './LocaleSwitcher';
 import '../TextField.css';
 import './MultilingualTextField.css';
+
+/** The words a multilingual field says itself (docs/API.md rule 11), with its switcher's and Required marker's. */
+export interface MultilingualFieldLabels extends LocaleSwitcherLabels, RequiredMarkerLabels {
+  /** The switcher's name, given the field's name. Without a name the switcher is `language`. */
+  languageOf: (name: string) => string;
+  /** The field's name when it has neither `label` nor `aria-label`. */
+  text: string;
+  /** The input's name: the field's name and the language shown ("Title, French"). */
+  inputName: (name: string, language: string) => string;
+  /** A required field left empty: the first language missing, then how many more (the count, then as written). */
+  missing: (language: string, more: number, formatted: string) => string;
+  /** A language's own error, shown while another language is on screen. */
+  languageError: (language: string, message: string) => string;
+  /** The live count under a text field, both numbers as the locale writes them. */
+  counter: (length: string, max: string) => string;
+}
+
+/** A multilingual field's English words; a page passes its own over them with `labels`. */
+export const multilingualFieldLabels: MultilingualFieldLabels = {
+  ...localeSwitcherLabels,
+  required: 'Required',
+  languageOf: name => `Language of ${name}`,
+  text: 'Text',
+  inputName: (name, language) => `${name}, ${language}`,
+  missing: (language, more, n) => `Add the text in ${language}${more ? ` and ${n} more ${more === 1 ? 'language' : 'languages'}` : ''}`,
+  languageError: (language, message) => `${language}: ${message}`,
+  counter: (length, max) => `${length}/${max}`
+};
 
 /** What every multilingual field takes: the platform's languages, the whole Multiloc, and the language shown. */
 export interface MultilingualFieldProps {
@@ -56,6 +88,8 @@ export interface MultilingualFieldProps {
   isInvalid?: boolean;
   /** The text can't be changed; the switcher still shows each language's text. */
   isDisabled?: boolean;
+  /** Its own words (the switcher's, the errors it writes, Required), over `multilingualFieldLabels`. */
+  labels?: Partial<MultilingualFieldLabels>;
   /** Places the field (width, margin, grid area); never paints it. */
   className?: string;
   /** Places the field (width, margin, grid area); never paints it. */
@@ -70,6 +104,8 @@ export interface MultilingualFieldProps {
 export function useMultilingualField(props: MultilingualFieldProps, inputId?: string) {
   const {locales, isRequired, showLocaleSwitcher = true, label} = props;
   const {locale: uiLocale} = useLocale();
+  const l = mergeLabels(multilingualFieldLabels, props.labels);
+  const number = useNumberFormatter();
   const [inner, setInner] = useState<Multiloc>(props.defaultValue ?? {});
   const value: Multiloc = props.value !== undefined ? (props.value ?? {}) : inner;
   const [locale, setLocale] = useShownLocale(locales, props.locale, props.defaultLocale, props.onLocaleChange);
@@ -101,20 +137,21 @@ export function useMultilingualField(props: MultilingualFieldProps, inputId?: st
   const empty = isRequired ? emptyLocales(locales, value) : [];
   if (typeof props.errorMessage === 'string') error = props.errorMessage;
   else if (errors?.[locale]?.trim()) error = errors[locale];
-  else if (invalidLocales.length) error = `${localeName(invalidLocales[0], uiLocale)}: ${errors![invalidLocales[0]]}`;
+  else if (invalidLocales.length) error = l.languageError(localeName(invalidLocales[0], uiLocale), errors![invalidLocales[0]]!);
   else if (isInvalid && empty.length) {
     const first = empty.includes(locale) ? locale : empty[0];
     const more = empty.length - 1;
-    error = `Add the text in ${localeName(first, uiLocale)}${more ? ` and ${more} more ${more === 1 ? 'language' : 'languages'}` : ''}`;
+    error = l.missing(localeName(first, uiLocale), more, number.format(more));
   }
 
   const isMultilingual = locales.length > 1;
   const name = props['aria-label'] ?? label;
-  const inputLabel = isMultilingual ? `${name ?? 'Text'}, ${localeName(locale, uiLocale)}` : (name ?? localeName(locale, uiLocale));
+  const inputLabel = isMultilingual ? l.inputName(name ?? l.text, localeName(locale, uiLocale)) : (name ?? localeName(locale, uiLocale));
   const switcher = isMultilingual && showLocaleSwitcher && (
     <LocaleSwitcher
       className="gv-multilingual-field__switcher"
-      aria-label={name ? `Language of ${name}` : 'Language'}
+      aria-label={name ? l.languageOf(name) : l.language}
+      labels={l}
       locales={locales}
       locale={locale}
       onLocaleChange={setLocale}
@@ -131,7 +168,7 @@ export function useMultilingualField(props: MultilingualFieldProps, inputId?: st
           {label}
           {isRequired && (
             <span className="gv-multilingual-field__required" aria-hidden="true">
-              <RequiredMarker />
+              <RequiredMarker labels={l} />
             </span>
           )}
         </Label>
@@ -158,7 +195,9 @@ export function useMultilingualField(props: MultilingualFieldProps, inputId?: st
     error,
     /** The label row: label, Required marker, switcher. */
     head,
-    status
+    status,
+    /** The field's words, the page's over the defaults. */
+    labels: l
   };
 }
 
@@ -217,13 +256,15 @@ export function MultilingualTextField({
   showCounter,
   maxLength,
   id,
+  labels,
   ...props
 }: MultilingualTextFieldProps) {
   const ownId = useId();
   const inputId = id ?? ownId;
+  const number = useNumberFormatter();
   const field = useMultilingualField(
     {locales, value, defaultValue, onChange, locale, defaultLocale, onLocaleChange, showLocaleSwitcher, label,
-      'aria-label': ariaLabel, errorMessage, isRequired, isInvalid},
+      'aria-label': ariaLabel, errorMessage, isRequired, isInvalid, labels},
     inputId
   );
   const inputProps = {placeholder, lang: field.lang, dir: field.dir};
@@ -256,7 +297,7 @@ export function MultilingualTextField({
           <FieldError>{field.error}</FieldError>
           {showCounter && maxLength !== undefined && (
             <span className="gv-text-field-counter" aria-hidden="true">
-              {field.text.length}/{maxLength}
+              {field.labels.counter(number.format(field.text.length), number.format(maxLength))}
             </span>
           )}
         </div>

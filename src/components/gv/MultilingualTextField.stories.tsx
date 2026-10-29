@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {fn} from 'storybook/test';
+import {I18nProvider} from 'react-aria-components';
 import type {Multiloc} from './LocaleSwitcher';
 import {MultilingualTextField} from './MultilingualTextField';
 
@@ -80,6 +81,32 @@ export const RightToLeft: Story = {
     defaultValue: {en: 'Green Corridors for Riverside', 'ar-SA': 'ممرات خضراء لريفرسايد'},
     isRequired: true
   }
+};
+
+/**
+ * A Dutch interface: the page hands the field its words in `labels` (from its own i18n), and the language names follow
+ * the React Aria locale. The system never translates; here the story plays the host.
+ */
+export const DutchInterface: Story = {
+  name: 'Dutch interface',
+  args: {
+    label: 'Titel',
+    placeholder: 'Voeg een titel toe',
+    defaultValue: title,
+    isRequired: true,
+    isInvalid: true,
+    labels: {
+      required: 'Verplicht',
+      language: 'Taal',
+      markFilled: 'ingevuld',
+      markEmpty: 'leeg',
+      markRequired: 'leeg, verplicht',
+      markInvalid: 'bevat een fout',
+      languageOf: name => `Taal van ${name}`,
+      missing: (language, more, n) => `Vul de tekst in het ${language} in${more ? ` en in ${n} andere talen` : ''}`
+    }
+  },
+  decorators: [Story => <I18nProvider locale="nl-BE"><Story /></I18nProvider>]
 };
 
 /** Several lines (a description), with the platform's counter. */

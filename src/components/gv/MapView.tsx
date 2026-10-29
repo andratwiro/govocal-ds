@@ -8,6 +8,8 @@ import {Button} from 'react-aria-components/Button';
 import type {Key} from 'react-aria-components';
 import {Minus, Plus} from 'lucide-react';
 import {IconButton} from './IconButton';
+import {mergeLabels, type CountLabel} from '../labels';
+import {useNumberFormatter} from '../format';
 import {clusterPoints, initialView, nextInDirection, parseCredits, placeCard, type Credit, type Direction, type LatLng} from './map/geo';
 import type {MapEngine, MapEngineEvent, MapEngineFactory} from './map/engine';
 import './MapView.css';
@@ -45,6 +47,30 @@ export function maplibreEngine({styleUrl = OPENFREEMAP_POSITRON}: {styleUrl?: st
 }
 
 const DEFAULT_ENGINE = maplibreEngine();
+
+/** The words Map view says itself (docs/API.md rule 11). */
+export interface MapViewLabels {
+  /** The line shown when the tiles can't draw (no WebGL, the engine failed). */
+  error: string;
+  /** The map surface's name, read when it takes focus. Read once, when the map first draws. */
+  canvas: string;
+  /** The zoom buttons' group, and each button. */
+  zoom: string;
+  zoomIn: string;
+  zoomOut: string;
+  /** A cluster's name: the pins folded into it (the count, then as the locale writes it). */
+  cluster: CountLabel;
+}
+
+/** Map view's English words; a page passes its own over them with `labels`. */
+export const mapViewLabels: MapViewLabels = {
+  error: "The map can't be shown here.",
+  canvas: 'Map: arrow keys move it, + and − zoom',
+  zoom: 'Zoom',
+  zoomIn: 'Zoom in',
+  zoomOut: 'Zoom out',
+  cluster: (count, n) => `${n} pins: zoom in`
+};
 
 export interface MapViewProps<T extends MapItem = MapItem> {
   /** Names the map: what its pins are ("Ideas on the map"). */
@@ -88,6 +114,8 @@ export interface MapViewProps<T extends MapItem = MapItem> {
   engine?: MapEngineFactory;
   /** Overlays: `MapOverlay`s holding a Banner, a `MapChip`, a `MapLegend`, a button. */
   children?: ReactNode;
+  /** Its own words (zoom buttons, clusters, the error line), over `mapViewLabels`. */
+  labels?: Partial<MapViewLabels>;
   /** Places the map (its height, a grid area, margin); never paints it. The map fills the height it is given. */
   className?: string;
   /** Places the map, like `className`. */
@@ -127,8 +155,11 @@ interface Marker {
 export function MapView<T extends MapItem = MapItem>({
   'aria-label': label, items = [], center, zoom, onViewChange, value, defaultValue = null, onChange,
   hoveredKey = null, onHoverChange, onMapPress, renderCard, isClustered = false, isInteractive = true, engine: engineProp,
-  children, className, style
+  children, labels, className, style
 }: MapViewProps<T>) {
+  const l = mergeLabels(mapViewLabels, labels);
+  const number = useNumberFormatter();
+  const canvasLabel = useRef(l.canvas).current;
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<MapEngine | null>(null);
@@ -235,7 +266,6 @@ export function MapView<T extends MapItem = MapItem>({
     };
     setStatus('loading');
     const {items: first, center: c, zoom: z} = firstView.current;
-    const canvasLabel = 'Map: arrow keys move it, + and − zoom';
     factory({container, view: initialView(first, c, z), isInteractive, label: canvasLabel}).then(e => {
       if (cancelled) return e.destroy();
       engine = e;
@@ -329,7 +359,7 @@ export function MapView<T extends MapItem = MapItem>({
       aria-busy={status === 'loading' || undefined} data-status={status}
       data-pressable={onMapPress && isInteractive ? true : undefined}>
       <div ref={canvasRef} className="gv-map__canvas" onKeyDown={onCanvasKeyDown} />
-      {status === 'error' && <p className="gv-map__message" role="status">The map can't be shown here.</p>}
+      {status === 'error' && <p className="gv-map__message" role="status">{l.error}</p>}
       <div className="gv-map__pins">
         {markers.map(m => {
           const isOpen = m.item != null && m.item.id === selected;
@@ -344,7 +374,7 @@ export function MapView<T extends MapItem = MapItem>({
                   onHoverChange={h => onHoverChange?.(h ? m.item!.id : null)}
                   onFocus={() => setTabStop(m.key)} onKeyDown={onPinKeyDown(m.key)} />
               ) : (
-                <MapPin label={`${m.count} pins: zoom in`} count={m.count} isStatic={!isInteractive}
+                <MapPin label={l.cluster(m.count!, number.format(m.count!))} count={m.count} isStatic={!isInteractive}
                   excludeFromTabOrder={m.key !== stop} onFocus={() => setTabStop(m.key)} onKeyDown={onPinKeyDown(m.key)}
                   onPress={() => engineRef.current?.setView({center: m, zoom: level + 2})} />
               )}
@@ -359,12 +389,12 @@ export function MapView<T extends MapItem = MapItem>({
       </div>
       {children}
       {isInteractive && (
-        <div className="gv-map__zoom" role="group" aria-label="Zoom">
-          <IconButton aria-label="Zoom in" emphasis="strong" isDisabled={!zoomControls || viewZoom >= zoomControls.maxZoom}
+        <div className="gv-map__zoom" role="group" aria-label={l.zoom}>
+          <IconButton aria-label={l.zoomIn} emphasis="strong" isDisabled={!zoomControls || viewZoom >= zoomControls.maxZoom}
             onPress={() => engineRef.current?.zoomBy(1)}>
             <Plus aria-hidden size={16} />
           </IconButton>
-          <IconButton aria-label="Zoom out" emphasis="strong" isDisabled={!zoomControls || viewZoom <= zoomControls.minZoom}
+          <IconButton aria-label={l.zoomOut} emphasis="strong" isDisabled={!zoomControls || viewZoom <= zoomControls.minZoom}
             onPress={() => engineRef.current?.zoomBy(-1)}>
             <Minus aria-hidden size={16} />
           </IconButton>
@@ -424,7 +454,8 @@ export function MapPin({
     'data-highlighted': isHighlighted || undefined,
     'data-cluster': count != null || undefined
   };
-  const dot = <span className="gv-map-pin__dot">{count}</span>;
+  const number = useNumberFormatter();
+  const dot = <span className="gv-map-pin__dot">{count != null && number.format(count)}</span>;
   if (isStatic) return <span {...data} className={clsx('gv-map-pin', className)} style={style} aria-hidden>{dot}</span>;
   return (
     <Button {...data} {...aria} className={clsx('gv-map-pin', className)} style={style} aria-label={label}
@@ -514,23 +545,37 @@ export interface MapLegendItem {
   tone?: MapTone;
 }
 
+/** The words Map legend says itself (docs/API.md rule 11). */
+export interface MapLegendLabels {
+  /** The legend's name when it has neither `title` nor `aria-label`. */
+  legend: string;
+  /** What shows when there are no items. */
+  empty: string;
+}
+
+/** Map legend's English words; a page passes its own over them with `labels`. */
+export const mapLegendLabels: MapLegendLabels = {legend: 'Legend', empty: 'No legend'};
+
 export interface MapLegendProps {
-  /** What each pin colour means. None: the legend says "No legend". */
+  /** What each pin colour means. None: the legend says `labels.empty` ("No legend"). */
   items: readonly MapLegendItem[];
   /** A title above the rows. */
   title?: string;
-  /** @default the title, else 'Legend' */
+  /** @default the title, else `labels.legend` ("Legend") */
   'aria-label'?: string;
+  /** Its own words, over `mapLegendLabels`. */
+  labels?: Partial<MapLegendLabels>;
   /** Places the legend; never paints it. */
   className?: string;
   style?: CSSProperties;
 }
 
 /** A map's legend: each pin colour and what it means, on the map's white surface. Not in Figma. */
-export function MapLegend({items, title, 'aria-label': label, className, style}: MapLegendProps) {
-  if (!items.length) return <span className={clsx('gv-map-chip', className)} style={style}>No legend</span>;
+export function MapLegend({items, title, 'aria-label': label, labels, className, style}: MapLegendProps) {
+  const l = mergeLabels(mapLegendLabels, labels);
+  if (!items.length) return <span className={clsx('gv-map-chip', className)} style={style}>{l.empty}</span>;
   return (
-    <div className={clsx('gv-map-legend', className)} style={style} role="group" aria-label={label ?? title ?? 'Legend'}>
+    <div className={clsx('gv-map-legend', className)} style={style} role="group" aria-label={label ?? title ?? l.legend}>
       {title && <p className="gv-map-legend__title">{title}</p>}
       <ul className="gv-map-legend__list">
         {items.map(i => (

@@ -30,7 +30,7 @@ import {Badge} from './Badge';
 import {IconButton} from './IconButton';
 import {Menu, MenuTrigger} from '../Menu';
 import {useListFormatter} from '../format';
-import {mergeLabels} from '../labels';
+import {mergeLabels, type LoadMoreLabels} from '../labels';
 import './DataTable.css';
 
 /**
@@ -541,6 +541,12 @@ export function DataTableColumn({children, align = 'start', showLabel = true, wi
   );
 }
 
+/** The words Data table body says itself (docs/API.md rule 11): the load-more row's. */
+export interface DataTableBodyLabels extends LoadMoreLabels {}
+
+/** Data table body's English words; a page passes its own over them with `labels`. */
+export const dataTableBodyLabels: DataTableBodyLabels = {loading: 'Loading more…'};
+
 export interface DataTableBodyProps<T> extends Omit<TableBodyProps<T>, 'className'> {
   /**
    * For a list that arrives in pages as it scrolls: called when the last row comes near the view (within one view's
@@ -548,13 +554,13 @@ export interface DataTableBodyProps<T> extends Omit<TableBodyProps<T>, 'classNam
    */
   onLoadMore?: () => void;
   /**
-   * More rows are on their way: a "Loading more…" row (`loadingLabel`) under the last one.
+   * More rows are on their way: a "Loading more…" row (`labels.loading`) under the last one.
    *
    * @default false
    */
   isLoading?: boolean;
-  /** @default 'Loading more…' */
-  loadingLabel?: string;
+  /** Its own words (the load-more row's), over `dataTableBodyLabels`. */
+  labels?: Partial<DataTableBodyLabels>;
 }
 
 /**
@@ -562,7 +568,7 @@ export interface DataTableBodyProps<T> extends Omit<TableBodyProps<T>, 'classNam
  * then reuses the rows it has built. `onLoadMore` and `isLoading` add the infinite-scroll row at the end.
  */
 export function DataTableBody<T extends object>({
-  items, children, dependencies, onLoadMore, isLoading, loadingLabel = 'Loading more…', ...props
+  items, children, dependencies, onLoadMore, isLoading, labels, ...props
 }: DataTableBodyProps<T>) {
   if (!onLoadMore && !isLoading) {
     return <AriaTableBody {...props} items={items} dependencies={dependencies} className="gv-data-table__body">{children}</AriaTableBody>;
@@ -571,7 +577,7 @@ export function DataTableBody<T extends object>({
     <AriaTableBody {...props} className="gv-data-table__body">
       <Collection items={items} dependencies={dependencies}>{children}</Collection>
       <TableLoadMoreItem className="gv-data-table__loading" onLoadMore={onLoadMore} isLoading={isLoading}>
-        <span className="gv-data-table__loading-label">{loadingLabel}</span>
+        <span className="gv-data-table__loading-label">{mergeLabels(dataTableBodyLabels, labels).loading}</span>
       </TableLoadMoreItem>
     </AriaTableBody>
   );

@@ -7,6 +7,8 @@ import {VisuallyHidden} from 'react-aria-components/VisuallyHidden';
 import {useLocale} from 'react-aria-components';
 import {ChevronDown, Languages} from 'lucide-react';
 import clsx from 'clsx';
+import {mergeLabels} from '../labels';
+import {useNumberFormatter} from '../format';
 import {Popover} from '../Popover';
 import {DropdownItem, DropdownListBox} from '../ListBox';
 import './LocaleSwitcher.css';
@@ -103,11 +105,36 @@ export function localeDirection(locale: string): 'ltr' | 'rtl' {
   return RTL_LANGUAGES.has(locale.split(/[-_]/)[0].toLowerCase()) ? 'rtl' : 'ltr';
 }
 
-const STATUS_WORDS: Record<LocaleStatus, string> = {
-  filled: 'filled',
-  empty: 'empty',
-  required: 'empty, required',
-  invalid: 'has an error'
+/** The words Locale switcher says itself (docs/API.md rule 11). The language names come from the browser, in the
+ * interface's locale (`localeName`). */
+export interface LocaleSwitcherLabels {
+  /** The switcher's name when no `aria-label` is given. */
+  language: string;
+  /** What each language's mark reads, after its name (see `LocaleStatus`). */
+  markFilled: string;
+  markEmpty: string;
+  markRequired: string;
+  markInvalid: string;
+  /** The menu's count of languages with text, given the count, then both numbers as the locale writes them. */
+  languagesFilled: (filled: number, formatted: string, total: string) => string;
+  /** The menu's short count beside the code ("1/3"), both numbers as the locale writes them. */
+  shortCount: (filled: string, total: string) => string;
+  /** What a screen reader hears after a language's code: its name, then its mark or the menu's count. */
+  details: (language: string, status?: string) => string;
+}
+
+const MARK = {filled: 'markFilled', empty: 'markEmpty', required: 'markRequired', invalid: 'markInvalid'} as const;
+
+/** Locale switcher's English words; a page passes its own over them with `labels`. */
+export const localeSwitcherLabels: LocaleSwitcherLabels = {
+  language: 'Language',
+  markFilled: 'filled',
+  markEmpty: 'empty',
+  markRequired: 'empty, required',
+  markInvalid: 'has an error',
+  languagesFilled: (count, filled, total) => `${filled} of ${total} languages filled`,
+  shortCount: (filled, total) => `${filled}/${total}`,
+  details: (language, status) => `, ${language}${status ? `, ${status}` : ''}`
 };
 
 /** The shown locale, controlled or not, falling back to the first locale when it isn't one of them. */
@@ -155,9 +182,11 @@ export interface LocaleSwitcherProps {
    */
   kind?: 'buttons' | 'menu';
   isDisabled?: boolean;
-  /** Names the switcher for screen readers. @default 'Language' */
+  /** Names the switcher for screen readers. @default `labels.language` ("Language") */
   'aria-label'?: string;
   'aria-labelledby'?: string;
+  /** Its own words (the marks, the menu's count), over `localeSwitcherLabels`. */
+  labels?: Partial<LocaleSwitcherLabels>;
   /** Places the switcher (margin, alignment); never paints it. */
   className?: string;
   /** Places the switcher (margin, alignment); never paints it. */
@@ -180,20 +209,25 @@ export function LocaleSwitcher({
   invalidLocales,
   kind = 'buttons',
   isDisabled,
-  'aria-label': ariaLabel = 'Language',
+  'aria-label': ariaLabelProp,
   'aria-labelledby': ariaLabelledby,
+  labels,
   className,
   style
 }: LocaleSwitcherProps) {
   const {locale: uiLocale} = useLocale();
+  const l = mergeLabels(localeSwitcherLabels, labels);
+  const number = useNumberFormatter();
+  const ariaLabel = ariaLabelProp ?? l.language;
   const [shown, setShown] = useShownLocale(locales, locale, defaultLocale, onLocaleChange);
   if (locales.length < 2) return null;
 
   const hasMarks = values !== undefined;
   const status = (code: string) => localeStatus(code, {values, isRequired, isInvalid, invalidLocales});
+  const markWords = (code: string) => l[MARK[status(code)]];
   const mark = (code: string) =>
     hasMarks ? <span className="gv-locale-mark" data-status={status(code)} aria-hidden="true" /> : null;
-  const words = (code: string) => `${localeName(code, uiLocale)}${hasMarks ? `, ${STATUS_WORDS[status(code)]}` : ''}`;
+  const words = (code: string) => l.details(localeName(code, uiLocale), hasMarks ? markWords(code) : undefined);
 
   if (kind === 'menu') {
     const filled = hasMarks ? locales.filter(code => isLocaleFilled(code, values)).length : locales.length;
@@ -216,10 +250,14 @@ export function LocaleSwitcher({
             {() => (
               <>
                 {shown.toUpperCase()}
-                {showCount && <span className="gv-locale-switcher__count">{filled}/{locales.length}</span>}
+                {showCount && (
+                  <span className="gv-locale-switcher__count">
+                    {l.shortCount(number.format(filled), number.format(locales.length))}
+                  </span>
+                )}
                 <VisuallyHidden>
-                  , {localeName(shown, uiLocale)}
-                  {showCount && `, ${filled} of ${locales.length} languages filled`}
+                  {l.details(localeName(shown, uiLocale),
+                    showCount ? l.languagesFilled(filled, number.format(filled), number.format(locales.length)) : undefined)}
                 </VisuallyHidden>
               </>
             )}
@@ -234,7 +272,7 @@ export function LocaleSwitcher({
                 id={code}
                 textValue={localeName(code, uiLocale)}
                 icon={mark(code)}
-                description={hasMarks ? <VisuallyHidden>{STATUS_WORDS[status(code)]}</VisuallyHidden> : undefined}>
+                description={hasMarks ? <VisuallyHidden>{markWords(code)}</VisuallyHidden> : undefined}>
                 {localeName(code, uiLocale)}
               </DropdownItem>
             ))}
@@ -259,7 +297,7 @@ export function LocaleSwitcher({
         <Radio key={code} value={code} className="gv-locale-switcher__item">
           {mark(code)}
           <span className="gv-locale-switcher__code">{code.toUpperCase()}</span>
-          <VisuallyHidden>, {words(code)}</VisuallyHidden>
+          <VisuallyHidden>{words(code)}</VisuallyHidden>
         </Radio>
       ))}
     </RadioGroup>

@@ -59,32 +59,6 @@ const ALLOWED = [
 ];
 const MAX_ALLOWED = 20;
 
-/**
- * Parts that landed on main after the words work branched (Map view, the multilingual fields, the long-list table):
- * their own words still to move into `labels`, and Locale switcher's language names built for a locale it is handed
- * (`Intl.DisplayNames([inLocale])`, which the check reads as fixed). The benchmark-gaps plan (Task 6) converts them;
- * this list only shrinks and is gone when they are done.
- */
-const TO_CONVERT = [
-  {file: 'src/components/gv/DataTable.tsx', text: 'Loading more…'},
-  {file: 'src/components/gv/LocaleSwitcher.tsx', text: 'Language'},
-  {file: 'src/components/gv/LocaleSwitcher.tsx', text: '/'},
-  {file: 'src/components/gv/LocaleSwitcher.tsx', text: ','},
-  {file: 'src/components/gv/LocaleSwitcher.tsx', text: 'of'},
-  {file: 'src/components/gv/LocaleSwitcher.tsx', text: 'languages filled'},
-  {file: 'src/components/gv/LocaleSwitcher.tsx', text: ','},
-  {file: 'src/components/gv/MapView.tsx', text: "The map can't be shown here."},
-  {file: 'src/components/gv/MapView.tsx', text: 'pins: zoom in'},
-  {file: 'src/components/gv/MapView.tsx', text: 'Zoom'},
-  {file: 'src/components/gv/MapView.tsx', text: 'Zoom in'},
-  {file: 'src/components/gv/MapView.tsx', text: 'Zoom out'},
-  {file: 'src/components/gv/MapView.tsx', text: 'No legend'},
-  {file: 'src/components/gv/MapView.tsx', text: 'Legend'},
-  {file: 'src/components/gv/MultilingualTextField.tsx', text: 'Language of'},
-  {file: 'src/components/gv/MultilingualTextField.tsx', text: 'Language'},
-  {file: 'src/components/gv/MultilingualTextField.tsx', text: '/'}
-];
-const LOCALE_TO_CONVERT = ['src/components/gv/LocaleSwitcher.tsx'];
 
 const walk = dir => readdirSync(dir).flatMap(f => {
   const p = join(dir, f);
@@ -137,7 +111,8 @@ export function findWords(file, source = readFileSync(file, 'utf8')) {
       add(node, 'locale', node.expression.name.text);
     }
     if (ts.isNewExpression(node) && node.expression.getText(sf).startsWith('Intl.') && node.arguments?.[0]
-      && (ts.isStringLiteral(node.arguments[0]) || ts.isArrayLiteralExpression(node.arguments[0]))) {
+      && (ts.isStringLiteral(node.arguments[0]) || (ts.isArrayLiteralExpression(node.arguments[0])
+        && node.arguments[0].elements.some(e => ts.isStringLiteral(e) || ts.isNoSubstitutionTemplateLiteral(e))))) {
       add(node, 'locale', node.getText(sf));
     }
     // Words.
@@ -167,12 +142,12 @@ describe('words come from the page (docs/API.md rule 11)', () => {
   const allowed = ALLOWED.filter(a => existsSync(a.file));
 
   it('no part uses a fixed locale: numbers and dates follow the React Aria locale', () => {
-    expect(all.filter(w => w.kind === 'locale' && !LOCALE_TO_CONVERT.includes(w.file))
+    expect(all.filter(w => w.kind === 'locale')
       .map(w => `${w.file}:${w.line} ${w.text}`)).toEqual([]);
   });
 
   it('no part says a word of its own outside its `…Labels` defaults', () => {
-    const left = [...allowed, ...TO_CONVERT];
+    const left = [...allowed];
     const bad = all.filter(w => w.kind !== 'locale').filter(w => {
       const i = left.findIndex(a => a.file === w.file && a.text === w.text);
       if (i < 0) return true;
@@ -181,7 +156,7 @@ describe('words come from the page (docs/API.md rule 11)', () => {
     });
     expect(bad.map(w => `${w.file}:${w.line} ${w.kind}: ${JSON.stringify(w.text)}`),
       'take the words from the page: a content prop, or `labels` over the part\'s `xLabels` (docs/API.md rule 11)').toEqual([]);
-    expect(left.map(a => `${a.file}: ${JSON.stringify(a.text)}`), 'gone from the source: remove these from ALLOWED or TO_CONVERT').toEqual([]);
+    expect(left.map(a => `${a.file}: ${JSON.stringify(a.text)}`), 'gone from the source: remove these from ALLOWED').toEqual([]);
   });
 
   it('the allow-list only shrinks', () => {
@@ -193,6 +168,7 @@ describe('words come from the page (docs/API.md rule 11)', () => {
       export const fooLabels = {close: 'Close', count: n => \`\${n} items\`};
       function Foo({placeholder = 'Add a title', variant = 'default', unit = 'Votes cast', l}) {
         const n = (12).toLocaleString('en-GB');
+        const names = new Intl.DisplayNames([uiLocale], {type: 'language'});
         return <div aria-label="Close" title={l.title ?? 'Fallback'}>Hello{' '}{ok ? 'Yes' : l.no}<X labels={{close: 'Shut'}} count={k => \`\${k} more\`} /></div>;
       }`;
     const got = findWords('t.tsx', src).map(w => `${w.kind}: ${w.text}`);

@@ -255,7 +255,8 @@ export {
 } from './components/gv/DashboardCard';
 export {
   dataTableHeaderLabels, type DataTableHeaderLabels, dataTableAssigneeLabels, type DataTableAssigneeLabels,
-  dataTableTagsLabels, type DataTableTagsLabels, dataTableAddColumnLabels, type DataTableAddColumnLabels
+  dataTableTagsLabels, type DataTableTagsLabels, dataTableAddColumnLabels, type DataTableAddColumnLabels,
+  dataTableBodyLabels, type DataTableBodyLabels
 } from './components/gv/DataTable';
 export {dateRangeFieldLabels, type DateRangeFieldLabels} from './components/gv/DateRangeField';
 export {dropZoneLabels, type DropZoneLabels} from './components/gv/DropZone';
@@ -264,7 +265,15 @@ export {helpPopoverLabels, type HelpPopoverLabels} from './components/gv/HelpPop
 export {listHeaderLabels, type ListHeaderLabels} from './components/gv/ListHeader';
 export {listHeaderCellLabels, type ListHeaderCellLabels} from './components/gv/ListHeaderCell';
 export {listRowLabels, type ListRowLabels} from './components/gv/ListRow';
+export {localeSwitcherLabels, type LocaleSwitcherLabels} from './components/gv/LocaleSwitcher';
+export {mapViewLabels, type MapViewLabels, mapLegendLabels, type MapLegendLabels} from './components/gv/MapView';
 export {modalLabels, type ModalLabels} from './components/gv/Modal';
+export {
+  multilingualFieldLabels, type MultilingualFieldLabels
+} from './components/gv/MultilingualTextField';
+export {
+  multilingualRichTextEditorLabels, type MultilingualRichTextEditorLabels
+} from './components/gv/MultilingualRichTextEditor';
 export {newDotLabels, type NewDotLabels} from './components/gv/NewDot';
 export {optionListLabels, type OptionListLabels} from './components/gv/OptionList';
 export {pageHeaderLabels, type PageHeaderLabels} from './components/gv/PageHeader';
