@@ -137,6 +137,11 @@ dashboards, Build tab).
 - List / Map switch: white track and grey selected (the prototype) vs the small Segmented control → **the small Segmented control** → one small look.
 - Statement row: Figma's three shares vs the Manage panel's four with gaps → **`unseenPercent`, gaps only with four shares** → Figma's bar stays as drawn.
 
+**Redesign: Community monitor** (on the current components)
+- Reports as Cards with an open chevron vs every other admin list → **a Panel (Create report in the head) over a Data table, row menu and Pagination**; a row opens the report → one list shape.
+- Managers as Badges with "Add a manager" beside them vs the person cells of Users and Projects → **a Data table with person cells in a Panel; remove from the row menu, with an Undo toast** → people read the same everywhere.
+- Settings as Cards with a card switch vs forms in Panels (Messaging) → **a Panel per sub-tab; on/off as a Switch with its description; Popup's Save in the Panel foot**; access as Choice cards; instant changes say so in a Toast with Undo; anonymizing asks first in an Alert dialog → it changes what is stored.
+
 **Tokens everywhere** (the project lead, 29 Oct: every spacing, radius, type and shadow value is a token; a design value with no token snaps to the nearest, guarded by `tests/tokens-only.test.mjs`)
 
 - Sizes had no tokens → **a Not-in-Figma size set** (`--gv-size-icon-12…24`, `control-24…40`, `avatar-16…28`; Foundations/Size), like motion → icons, controls and avatars repeat a handful of sizes; naming them keeps the next screen on them.

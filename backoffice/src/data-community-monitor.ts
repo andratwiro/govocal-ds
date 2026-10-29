@@ -57,12 +57,12 @@ export const WHO: Breakdown[] = [
     {label: 'South district', percent: 24, color: 'olive'}, {label: 'East district', percent: 18, color: 'terracotta'}]}
 ];
 
-export type Report = {title: string; quarter: string; updated: string; published: boolean};
+export type Report = {id: string; title: string; quarter: string; updated: string; published: boolean};
 export const REPORTS: Report[] = [
-  {title: 'Q3 2026 results', quarter: 'Q3 2026', updated: '14 Oct 2026', published: true},
-  {title: 'Q2 2026 results', quarter: 'Q2 2026', updated: '9 Jul 2026', published: true},
-  {title: 'Year in review 2025', quarter: 'Q4 2025', updated: '22 Jan 2026', published: true},
-  {title: 'Housing deep dive', quarter: 'Q3 2026', updated: '27 Oct 2026', published: false}
+  {id: 'r1', title: 'Q3 2026 results', quarter: 'Q3 2026', updated: '14 Oct 2026', published: true},
+  {id: 'r2', title: 'Q2 2026 results', quarter: 'Q2 2026', updated: '9 Jul 2026', published: true},
+  {id: 'r3', title: 'Year in review 2025', quarter: 'Q4 2025', updated: '22 Jan 2026', published: true},
+  {id: 'r4', title: 'Housing deep dive', quarter: 'Q3 2026', updated: '27 Oct 2026', published: false}
 ];
 
 export const MANAGERS = ['Manager A', 'Manager B', 'Manager C'];
@@ -78,7 +78,7 @@ export const CANDIDATES = ['Admin D', 'Manager E', 'Manager F'];
 
 /** Access rights: who can take the survey. */
 export const SURVEY_ACCESS = [
-  {id: 'anyone', label: 'Anyone, without signing in'},
-  {id: 'registered', label: 'Registered residents only'},
-  {id: 'groups', label: 'Residents in specific groups'}
+  {id: 'anyone', label: 'Anyone, without signing in', description: 'The most answers; one person can answer twice.'},
+  {id: 'registered', label: 'Registered residents only', description: 'One answer per account, and the Participants tab can show who answered.'},
+  {id: 'groups', label: 'Residents in specific groups', description: 'Only members of the groups you pick see the popup.'}
 ];
