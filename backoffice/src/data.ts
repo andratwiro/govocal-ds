@@ -48,7 +48,9 @@ export const INPUTS = TITLES.map((title, i) => ({
   id: `i${i + 1}`, title, project: INPUT_PROJECTS[i % 4],
   author: ['Resident A', 'Resident B', 'Resident C'][i % 3], votes: (i * 7) % 40, status: STATUSES[i % 5],
   assignee: ASSIGNEES[i % 4], comments: (i * 3) % 11, likes: (i * 7) % 23, dislikes: (i * 5) % 9,
-  published: ['1 hour ago', '2 hours ago'][i] ?? `${i} days ago`, needsFeedback: i % 3 !== 2
+  published: ['1 hour ago', '2 hours ago'][i] ?? `${i} days ago`, needsFeedback: i % 3 !== 2,
+  // Phase screen · Manage: the phase an input came in through, and whether it carries a content warning.
+  phase: INPUT_PROJECTS[i % 4] === 'green-corridors' ? 'p2' : 'p1', warning: i % 8 === 0, newComments: (i * 2) % 3
 }));
 export const USERS = Array.from({length: 10}, (_, i) => ({
   id: `u${i + 1}`, name: `Test user ${i + 1}`, email: `user${i + 1}@example.org`, role: i === 0 ? 'Admin' : 'Resident', joined: `0${(i % 9) + 1} Jan 2027`
