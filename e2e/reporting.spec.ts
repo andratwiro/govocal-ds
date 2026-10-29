@@ -72,7 +72,7 @@ test('creating a report starts blank: title, template, contents, then the deck',
   await expect(contents.getByRole('checkbox')).toHaveCount(8);
   await expect(contents.locator('.gv-choice-card')).toHaveCount(8);
   for (const h of ['Project context', 'Participation', 'Results']) {
-    await expect(contents.locator('.gv-choice-card-group-heading', {hasText: h})).toBeVisible();
+    await expect(contents.getByText(h, {exact: true})).toBeVisible();
   }
   await contents.getByText('Demographics').click();
   await expect(contents.getByRole('checkbox', {name: /Demographics/})).toBeChecked();
