@@ -6,6 +6,9 @@
    · Row: 32 tall, padding 0 8, 10 between icon and words, radius 8, UI 13/20 regular primary; hover the hover
      surface; no gap between rows. Two-line row: padding 6 8, the name in UI, the description Small secondary.
    · Leading icon 16 in the strong icon grey; chevron 16 quiet; check 16.
+   · Pick several: a 15 box at the start (the system Checkbox), shown when ticked or under the pointer, as the
+     prototype's tag and area pickers draw it. Pick one: a check at the end, as Select draws it (DECISIONS: a box
+     means several, a check means one).
    · Divider 1px, margin 6 4. Section label Small secondary, padding 8 8 4.
    · Submenu: the same container, 4 from the menu, its first row on the line of the row that opens it. */
 .react-aria-Menu {
@@ -20,13 +23,10 @@
   outline: none;
   border-radius: inherit;
   display: grid;
-  --check-width: 0px;
-  grid-template-columns: var(--check-width) auto 1fr auto;
+  /* box · icon · name · end. Every track sizes to its content: a fixed 0 first track swallowed the rows' start
+     padding (rows are subgrids, and a subgrid's padding lands in its edge tracks). */
+  grid-template-columns: auto auto 1fr auto;
   grid-auto-rows: max-content;
-
-  &:has(> [data-selection-mode], > .react-aria-MenuSection > [data-selection-mode]) {
-    --check-width: 26px;
-  }
 
   &[data-empty] {
     display: flex;
@@ -62,7 +62,7 @@
   grid-column: 1 / -1;
   grid-template-areas:
     'check icon label end'
-    '. . desc end';
+    '. . desc .';
   grid-template-columns: subgrid;
   align-items: center;
   align-content: center;
@@ -73,12 +73,24 @@
     padding-block: var(--gv-space-6);
   }
 
-  > svg:not(.lucide-check, .lucide-dot, .lucide-chevron-right) {
+  > svg,
+  > .gv-menu-icon {
     grid-area: icon;
     width: var(--gv-space-16);
     height: var(--gv-space-16);
     color: var(--gv-icon-strong);
     margin-inline-end: var(--gv-space-10);
+  }
+
+  > .gv-menu-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    > svg {
+      width: var(--gv-space-16);
+      height: var(--gv-space-16);
+    }
   }
 
   &[data-open],
@@ -93,18 +105,55 @@
     outline-offset: -2px;
   }
 
-  &[data-selection-mode] {
-    .lucide-check,
-    .lucide-dot {
-      grid-area: check;
-      width: var(--gv-space-16);
-      height: var(--gv-space-16);
-      color: var(--gv-action-checked);
+  /* Pick several: the system Checkbox's box (15, radius 4, control border; ticked = the checked colour, a white
+     11 check), hidden until ticked, hovered or focused. */
+  .gv-menu-box {
+    grid-area: check;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--gv-space-15);
+    height: var(--gv-space-15);
+    margin-inline-end: var(--gv-space-10);
+    box-sizing: border-box;
+    border: 1px solid var(--gv-border-control);
+    border-radius: var(--gv-radius-4);
+    background: var(--gv-surface-panel);
+    color: var(--gv-text-inverse);
+    opacity: 0;
+    transition: opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+    > svg {
+      width: 11px;
+      height: 11px;
     }
 
-    .lucide-dot {
-      scale: 3;
+    &[data-selected] {
+      opacity: 1;
+      background: var(--gv-action-checked);
+      border-color: var(--gv-action-checked);
     }
+  }
+
+  &[data-hovered] .gv-menu-box,
+  &[data-focused] .gv-menu-box {
+    opacity: 1;
+  }
+
+  /* The end: a single choice's check, then a submenu's chevron ("Selected areas ✓ ›"). */
+  .gv-menu-end {
+    grid-area: end;
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gv-space-10);
+    margin-inline-start: var(--gv-space-10);
+  }
+
+  .gv-menu-check {
+    width: var(--gv-space-16);
+    height: var(--gv-space-16);
+    color: var(--gv-action-checked);
   }
 
   &[href] {
@@ -115,7 +164,8 @@
   &[data-disabled] {
     color: var(--gv-text-quiet);
 
-    > svg {
+    > svg,
+    > .gv-menu-icon {
       color: var(--gv-icon-quiet);
     }
   }
@@ -123,6 +173,13 @@
   .react-aria-Text:not([slot]),
   [slot='label'] {
     grid-area: label;
+  }
+
+  /* A badge after the name ("Download as Word · Beta"). */
+  [slot='label']:has(.gv-pill) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gv-space-8);
   }
 
   [slot='description'] {
@@ -141,10 +198,7 @@
     text-align: end;
   }
 
-  .lucide-chevron-right {
-    grid-area: end;
-    justify-self: end;
-    margin-inline-start: var(--gv-space-10);
+  .gv-menu-chevron {
     width: var(--gv-space-16);
     height: var(--gv-space-16);
     color: var(--gv-icon-quiet);
@@ -153,6 +207,12 @@
       transform: scaleX(-1);
     }
   }
+}
+
+/* In a menu with boxes, an action that isn't a choice ("+ Add phase") puts its icon in the box column, so every name
+   starts on one line. */
+.react-aria-Menu:has(.gv-menu-box) .react-aria-MenuItem:not([data-selection-mode]) > .gv-menu-icon {
+  grid-area: check;
 }
 
 .react-aria-MenuSection {
