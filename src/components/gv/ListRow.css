@@ -86,15 +86,15 @@
   flex: none;
   display: inline-flex;
   gap: var(--gv-space-6);
-  width: 14px;
-  height: 14px;
+  width: var(--gv-size-icon-14);
+  height: var(--gv-size-icon-14);
   margin-top: var(--gv-space-3);
   overflow: visible;
 }
 
 .gv-list-row__warning {
   flex: none;
-  margin: -1px;
+  margin: calc(-1 * var(--gv-space-1));
   color: var(--gv-icon-warning);
 }
 

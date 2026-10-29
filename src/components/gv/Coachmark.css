@@ -9,7 +9,7 @@
   background: var(--gv-action-primary);
   color: var(--gv-text-inverse);
   border-radius: var(--gv-radius-12);
-  padding: 15px 17px 13px;
+  padding: var(--gv-space-16) var(--gv-space-16) var(--gv-space-12);
   box-shadow: var(--gv-shadow-dialog);
   font: var(--gv-type-ui);
   letter-spacing: var(--gv-type-ui-tracking);
@@ -26,22 +26,22 @@
 
   /* 12 from the trigger: the tail (a 13 square turned 45°, half inside the card) ends 3 short of it. */
   &[data-placement='top'] {
-    --origin: translateY(8px);
+    --origin: translateY(var(--gv-space-8));
     margin-bottom: var(--gv-space-12);
   }
 
   &[data-placement='bottom'] {
-    --origin: translateY(-8px);
+    --origin: translateY(calc(-1 * var(--gv-space-8)));
     margin-top: var(--gv-space-12);
   }
 
   &[data-placement='left'] {
-    --origin: translateX(8px);
+    --origin: translateX(var(--gv-space-8));
     margin-right: var(--gv-space-12);
   }
 
   &[data-placement='right'] {
-    --origin: translateX(-8px);
+    --origin: translateX(calc(-1 * var(--gv-space-8)));
     margin-left: var(--gv-space-12);
   }
 }
@@ -85,7 +85,7 @@
    alpha, so each is the white mixed into the fill. */
 .gv-coachmark__x {
   flex: none;
-  margin-top: 1px;
+  margin-top: var(--gv-space-1);
   border: none;
   background: none;
   padding: 0;
@@ -125,7 +125,7 @@
   border: none;
   background: none;
   color: color-mix(in srgb, var(--gv-text-inverse) 85%, var(--gv-action-primary));
-  padding: 6px 9px;
+  padding: var(--gv-space-6) var(--gv-space-9);
   border-radius: var(--gv-radius-6);
 }
 
@@ -139,7 +139,7 @@
   background: none;
   color: var(--gv-text-inverse);
   font-weight: var(--gv-type-ui-strong-weight);
-  padding: 6px 14px;
+  padding: var(--gv-space-6) var(--gv-space-14);
   border-radius: var(--gv-radius-8);
 }
 

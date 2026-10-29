@@ -14,7 +14,7 @@
   flex-shrink: 0;
   margin: 0;
   gap: var(--gv-space-6);
-  height: 32px;
+  height: var(--gv-size-control-32);
   padding: 0 var(--gv-space-14);
   border: 1px solid transparent;
   border-radius: var(--gv-radius-8);
@@ -64,8 +64,8 @@
 
   /* 16, at Figma's stroke (1.17 at 16 = 1.75 on Lucide's 24 grid). */
   > svg {
-    width: 16px;
-    height: 16px;
+    width: var(--gv-size-icon-16);
+    height: var(--gv-size-icon-16);
     flex-shrink: 0;
     stroke-width: 1.75;
   }

@@ -3,8 +3,8 @@
 /*
  * Title field (Figma node 4:123): a full-width 36 input (padding 9 / 11, Small type, radius 8),
  * the Required marker inside it on the right. Figma keeps 104 clear at the right end and puts the
- * marker 52.5 from the edge; the prototype (`.pj-titlereq`, right 47 + its 6 margin) agrees: the
- * rest of that end is where the content-language button goes.
+ * marker 52.5 from the edge; the prototype (`.pj-titlereq`, right 47 + its 6 margin) agrees (56 here, the nearest
+ * space token): the rest of that end is where the content-language button goes.
  */
 .gv-title-field-wrap {
   position: relative;
@@ -56,9 +56,9 @@
 .gv-title-field-required {
   position: absolute;
   top: 0;
-  inset-inline-end: 53px;
+  inset-inline-end: var(--gv-space-56);
   display: flex;
   align-items: center;
-  height: 36px;
+  height: var(--gv-size-control-36);
   pointer-events: none;
 }

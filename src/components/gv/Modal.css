@@ -60,8 +60,8 @@
   align-items: center;
   justify-content: center;
   flex: none;
-  width: 28px;
-  height: 28px;
+  width: var(--gv-size-control-28);
+  height: var(--gv-size-control-28);
   padding: var(--gv-space-4);
   margin-inline-end: calc(-1 * var(--gv-space-4));
   border: none;

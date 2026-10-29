@@ -2,9 +2,10 @@
 @import '../utilities.css';
 
 /*
- * Icon button (Figma 13:269; the prototype's `.btn-icon`). 28 square, radius 8, icon 16 at Figma's
- * stroke (1.17 at 16 = 1.75 on Lucide's 24 grid). Hover, from the prototype: ghost gets the hover
- * fill, bordered the darker border, and both icons go to the primary (near-black) tone.
+ * Icon button (Figma 13:269; the prototype's `.btn-icon`). 28 square (24 for a dismiss), radius 8, icon 16 at
+ * both sizes (the 24's was 15: no size token) at Figma's stroke (1.17 at 16 = 1.75 on Lucide's 24 grid). Hover,
+ * from the prototype: ghost gets the hover fill, bordered the darker border, and both icons go to the primary
+ * (near-black) tone.
  */
 .gv-icon-button {
   appearance: none;
@@ -14,8 +15,8 @@
   flex-shrink: 0;
   margin: 0;
   padding: 0;
-  width: 28px;
-  height: 28px;
+  width: var(--gv-size-control-28);
+  height: var(--gv-size-control-28);
   border: 1px solid transparent;
   border-radius: var(--gv-radius-8);
   background: transparent;
@@ -29,18 +30,13 @@
   -webkit-tap-highlight-color: transparent;
 
   &[data-size='24'] {
-    width: 24px;
-    height: 24px;
-
-    > svg {
-      width: 15px;
-      height: 15px;
-    }
+    width: var(--gv-size-control-24);
+    height: var(--gv-size-control-24);
   }
 
   > svg {
-    width: 16px;
-    height: 16px;
+    width: var(--gv-size-icon-16);
+    height: var(--gv-size-icon-16);
     stroke-width: 1.75;
   }
 

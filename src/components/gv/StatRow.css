@@ -62,8 +62,8 @@
 
 /* At the end of the line, as Figma (the number's frame fills the row) and the prototype (.pj-stats__go). */
 .gv-stat-row__chevron {
-  width: 16px;
-  height: 16px;
+  width: var(--gv-size-icon-16);
+  height: var(--gv-size-icon-16);
   margin-inline-start: auto;
   color: var(--gv-icon-quiet);
   flex-shrink: 0;

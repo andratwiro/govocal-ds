@@ -1,7 +1,7 @@
 @import '../theme.css';
 
 /* Empty state (Not in Figma). Prototype: the empty Manage and Insights tabs (.pj-tabempty, l.8813: a centred column,
-   gap 8, padding 40 24, drawing 160 x 120 with 12 below, title Body 500, text UI grey up to 360, action 12 above),
+   gap 8, padding 40 24 (44 here: no 40 space token), drawing 160 x 120 with 12 below, title Body 500, text UI grey up to 360, action 12 above),
    the side panel (.pj-tabempty--side: padding 24 20, drawing 96, UI title, text up to 240) and the input list
    (.pj-mirempty: a dashed frame, gap 4, padding 28 24). */
 .gv-empty-state {
@@ -11,7 +11,7 @@
   justify-content: center;
   gap: var(--gv-space-8);
   box-sizing: border-box;
-  padding: 40px var(--gv-space-24);
+  padding: var(--gv-space-44) var(--gv-space-24);
   text-align: center;
   font-family: var(--gv-font-family);
 }

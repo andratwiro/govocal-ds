@@ -77,7 +77,7 @@
 
 .gv-alert-dialog__impact-icon {
   flex: none;
-  margin-block-start: 1px;
+  margin-block-start: var(--gv-space-1);
 }
 
 .gv-alert-dialog__impact-row[data-tone='danger'] .gv-alert-dialog__impact-icon {
@@ -101,7 +101,7 @@
 
 .gv-alert-dialog__impact-description {
   display: block;
-  margin-block-start: 2px;
+  margin-block-start: var(--gv-space-2);
   font: var(--gv-type-small);
   letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);

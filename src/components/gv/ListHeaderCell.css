@@ -31,8 +31,8 @@
   /* 28 × 28 plus, Icon strong (Figma "Add column"; prototype .pj-th--add). */
   &[data-variant='add-column'] {
     flex: none;
-    width: 28px;
-    height: 28px;
+    width: var(--gv-size-control-28);
+    height: var(--gv-size-control-28);
     padding: 0;
     justify-content: center;
     color: var(--gv-icon-strong);

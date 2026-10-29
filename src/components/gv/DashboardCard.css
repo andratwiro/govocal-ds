@@ -34,14 +34,15 @@
   gap: var(--gv-space-2);
   min-inline-size: 0;
 }
-/* Title role, at the prototype's weight 400 (the prototype's 14 Oct override: section titles 16/400); Figma's Title is 500. */
+/* Title role, at the prototype's weight 400 (the prototype's 14 Oct override: section titles 16/400; Regular, the
+   Body role's weight); Figma's Title is 500. */
 .gv-dashboard-card__title {
   display: flex;
   align-items: center;
   gap: var(--gv-space-7);
   margin: 0;
   font: var(--gv-type-title);
-  font-weight: 400;
+  font-weight: var(--gv-type-body-weight);
   letter-spacing: var(--gv-type-title-tracking);
   color: var(--gv-text-primary);
 }
@@ -51,8 +52,8 @@
   color: var(--gv-action-checked);
 }
 .gv-dashboard-card__icon > svg {
-  inline-size: 16px;
-  block-size: 16px;
+  inline-size: var(--gv-size-icon-16);
+  block-size: var(--gv-size-icon-16);
 }
 .gv-dashboard-card__subtitle {
   margin: 0;

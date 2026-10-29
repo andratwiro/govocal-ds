@@ -126,8 +126,8 @@
   align-items: center;
   justify-content: center;
   flex: none;
-  width: 28px;
-  height: 28px;
+  width: var(--gv-size-control-28);
+  height: var(--gv-size-control-28);
   padding: 0;
   border: none;
   border-radius: var(--gv-radius-8);
@@ -165,7 +165,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--gv-space-10);
-  min-height: 32px;
+  min-height: var(--gv-size-control-32);
   box-sizing: border-box;
   padding: var(--gv-space-6) var(--gv-space-8);
   border-radius: var(--gv-radius-8);
@@ -189,7 +189,7 @@
 
 /* An input in the body is 40 tall, Body type (Figma's Embed URL field; the prototype's .pj-input). */
 .gv-card__body .react-aria-Input {
-  min-height: 40px;
+  min-height: var(--gv-size-control-40);
   padding-inline: var(--gv-space-12);
   font: var(--gv-type-body);
   letter-spacing: var(--gv-type-body-tracking);

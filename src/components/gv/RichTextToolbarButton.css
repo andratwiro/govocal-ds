@@ -8,8 +8,8 @@
   flex: none;
   align-items: center;
   justify-content: center;
-  inline-size: var(--gv-space-28);
-  block-size: var(--gv-space-24);
+  inline-size: var(--gv-size-control-28);
+  block-size: var(--gv-size-control-24);
   padding: 0;
   border: none;
   border-radius: var(--gv-radius-6);

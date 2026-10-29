@@ -21,7 +21,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  height: 30px;
+  height: calc(var(--gv-size-control-36) - 2 * var(--gv-space-3)); /* 30: the 36 control less the track's 3 padding */
   padding: var(--gv-space-5) var(--gv-space-14);
   border-radius: var(--gv-radius-5);
   font: var(--gv-type-ui);
