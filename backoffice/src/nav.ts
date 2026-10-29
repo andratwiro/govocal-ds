@@ -3,7 +3,7 @@ export type NavItem = {id: string; label: string; icon: LucideIcon};
 export const NAV: NavItem[] = [
   {id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard},
   {id: 'projects', label: 'Projects', icon: FolderKanban},
-  {id: 'inputs', label: 'Inputs', icon: Inbox},
+  {id: 'inputs', label: 'Input manager', icon: Inbox},
   {id: 'users', label: 'Users', icon: Users},
   {id: 'messaging', label: 'Messaging', icon: Mail},
   {id: 'reporting', label: 'Reporting', icon: FileChartColumn},

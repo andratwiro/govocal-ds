@@ -23,3 +23,6 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-gap-inline { display: inline-block; outline: 1px dashed var(--gv-border-control); outline-offset: 2px; border-radius: var(--gv-radius-4); }
 .bo-tabs-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--gv-space-16); }
 .bo-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.bo-page-description { margin: calc(-1 * var(--gv-space-8)) 0 var(--gv-space-16); }
+.bo-push { flex: 1; }
+.bo-split { display: grid; grid-template-columns: 260px 1fr; gap: var(--gv-space-24); align-items: start; }

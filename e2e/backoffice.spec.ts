@@ -1,5 +1,5 @@
 import {test, expect} from '@playwright/test';
-const NAV = ['Dashboard', 'Projects', 'Inputs', 'Users', 'Messaging', 'Reporting', 'Community monitor',
+const NAV = ['Dashboard', 'Projects', 'Input manager', 'Users', 'Messaging', 'Reporting', 'Community monitor',
   'Inspiration hub', 'Tools', 'Pages & menu', 'Settings'];
 
 test('every nav item opens a page with its title and no console errors', async ({page}) => {

@@ -37,9 +37,17 @@ const LIST: Record<string, Partial<Project>> = {
   'playgrounds': {participants: 57, current: 'Poll', timeLeft: 'Less than a day left', managers: ['Ana P.'], access: 'Anyone', start: '20 Apr 2027', end: '30 Apr 2027'}
 };
 for (const p of PROJECTS) Object.assign(p, LIST[p.id]);
-export const INPUTS = Array.from({length: 12}, (_, i) => ({
-  id: `i${i + 1}`, title: ['More trees on Elm Lane', 'Bike lane by the school', 'Benches in Park Row', 'Night buses on weekends'][i % 4],
-  author: ['Resident A', 'Resident B', 'Resident C'][i % 3], votes: (i * 7) % 40, status: ['New', 'In review', 'Answered'][i % 3]
+const TITLES = ['More trees on Elm Lane', 'Bike lane by the school', 'Benches in Park Row', 'Night buses on weekends',
+  'A water fountain at the station', 'Wider pavements on Mill Road', 'Shade over the market stalls', 'Quiet hours in the library',
+  'A crossing near the clinic', 'Compost bins per block', 'Murals on the underpass', 'Longer green light for walkers'];
+const INPUT_PROJECTS = ['green-corridors', 'school-streets', 'harbour-plan', 'library-hours'];
+export const ASSIGNEES = ['Unassigned', 'Ana P.', 'Sam K.', 'Lee M.'];
+export const STATUSES = ['Proposed', 'Under consideration', 'Accepted', 'Implemented', 'Not selected'];
+export const INPUTS = TITLES.map((title, i) => ({
+  id: `i${i + 1}`, title, project: INPUT_PROJECTS[i % 4],
+  author: ['Resident A', 'Resident B', 'Resident C'][i % 3], votes: (i * 7) % 40, status: STATUSES[i % 5],
+  assignee: ASSIGNEES[i % 4], comments: (i * 3) % 11, likes: (i * 7) % 23, dislikes: (i * 5) % 9,
+  published: ['1 hour ago', '2 hours ago'][i] ?? `${i} days ago`, needsFeedback: i % 3 !== 2
 }));
 export const USERS = Array.from({length: 10}, (_, i) => ({
   id: `u${i + 1}`, name: `Test user ${i + 1}`, email: `user${i + 1}@example.org`, role: i === 0 ? 'Admin' : 'Resident', joined: `0${(i % 9) + 1} Jan 2027`
