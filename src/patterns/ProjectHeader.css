@@ -12,3 +12,58 @@
   border-radius: var(--gv-radius-8);
   font-family: var(--gv-font-family);
 }
+
+/* The project level's panel toggle | crumbs: the same divider the phase level draws between toggle and ←. */
+.gv-header__divider {
+  flex: none;
+  width: 1px;
+  height: 31px;
+  margin-inline: var(--gv-space-4) var(--gv-space-3);
+  background: var(--gv-divider-strong);
+}
+
+.gv-header[data-level='project'] {
+  gap: var(--gv-space-5);
+}
+
+/* The bar (prototype .pj-hdr, the back office's phase bar): the full width of the screen's top, white on the app grey,
+   crumbs | mode switch centred | who is here and the actions. */
+.gv-project-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--gv-space-16);
+  box-sizing: border-box;
+  min-height: 48px;
+  padding-inline: 0 var(--gv-space-16);
+  border-radius: var(--gv-radius-12);
+  background: var(--gv-surface-panel);
+  font-family: var(--gv-font-family);
+
+  > .gv-header {
+    justify-self: start;
+  }
+}
+
+.gv-project-header__end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gv-space-8);
+  min-width: 0;
+}
+
+/* ● Live: the project is published (the live badge's green). */
+.gv-project-header__live {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-text-live);
+}
+
+/* A mode that can't open yet (Manage and Insights before the phase is published): quiet, as the prototype's
+   .pj-hseg__b.is-disabled. Segmented control draws no disabled look of its own yet. */
+.gv-project-header .gv-segment[data-disabled] {
+  color: var(--gv-text-quiet);
+  cursor: default;
+}
