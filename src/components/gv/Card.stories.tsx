@@ -1,5 +1,21 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {Download, FileChartColumn, FileText, Lightbulb, Link, Plus, Sparkles, Upload} from 'lucide-react';
+import {
+  CircleAlert,
+  CircleHelp,
+  Download,
+  FileChartColumn,
+  FileText,
+  Flag,
+  Folder,
+  Gift,
+  Lightbulb,
+  Link,
+  List,
+  ListChecks,
+  Plus,
+  Sparkles,
+  Upload
+} from 'lucide-react';
 import {CompactButton} from './CompactButton';
 import {TextField} from '../TextField';
 import {Card, CardRadio, CardRadioGroup, CardSwitch, type CardProps} from './Card';
@@ -134,6 +150,28 @@ const votingMethod: CardProps = {
   )
 };
 
+/* ── Not in Figma (the prototype) ─────────────────────────────────────────────── */
+
+/* The input term menu: each term with its icon; the chosen one's pill carries it too. */
+const menuIcons: CardProps = {
+  title: 'What should an input be called?', review: 'reviewed', control: 'menu', defaultSelectedKey: 'idea',
+  menuItems: [
+    {id: 'idea', label: 'Idea', icon: Lightbulb}, {id: 'option', label: 'Option', icon: ListChecks},
+    {id: 'project', label: 'Project', icon: Folder}, {id: 'question', label: 'Question', icon: CircleHelp},
+    {id: 'issue', label: 'Issue', icon: CircleAlert}, {id: 'contribution', label: 'Contribution', icon: Gift},
+    {id: 'proposal', label: 'Proposal', icon: FileText}, {id: 'initiative', label: 'Initiative', icon: Flag}
+  ]
+};
+/* A volunteering phase's Causes card before anyone signs up: Download volunteers is greyed and says why. */
+const disabledAction: CardProps = {
+  title: 'Causes', pills: [{label: '1 cause'}],
+  iconActions: [
+    {icon: List, label: 'Reorder causes', tooltip: 'Reorder'},
+    {icon: Plus, label: 'Add a cause', tooltip: 'Add a cause'},
+    {icon: Download, label: 'Download volunteers', isDisabled: true, tooltip: 'Nobody has signed up yet'}
+  ]
+};
+
 const all: [string, CardProps, number][] = [
   ['Add', add, 444], ['Empty', empty, 444], ['Required', required, 444],
   ['Review · icon pill', reviewIconPill, 444], ['Review · pill', reviewPill, 444], ['To set', toSet, 444],
@@ -143,7 +181,8 @@ const all: [string, CardProps, number][] = [
   ['Insights · AI summary', insightsAiSummary, 268], ['Manage · Exports', manageExports, 276],
   ['Embed URL', embedUrl, 444], ['Report', report, 444], ['Naming · proposals', namingProposals, 444],
   ['Manage · Toggle', manageToggle, 276], ['Survey placement', surveyPlacement, 444],
-  ['Survey options', surveyOptions, 444], ['Options to vote on', optionsToVoteOn, 444], ['Voting method', votingMethod, 444]
+  ['Survey options', surveyOptions, 444], ['Options to vote on', optionsToVoteOn, 444], ['Voting method', votingMethod, 444],
+  ['Menu · icons', menuIcons, 444], ['Disabled action', disabledAction, 444]
 ];
 
 export const AllVariants: Story = {
@@ -198,3 +237,17 @@ export const VotingMethod: Story = {name: 'Voting method', args: votingMethod, d
 
 /** Not in Figma (the prototype, 22 Oct): once the admin has looked, the notice turns green. */
 export const Reviewed: Story = {args: {...reviewPillDropdown, review: 'reviewed'}, decorators: width(444)};
+
+/** Not in Figma (the prototype's input term menu): each value with its icon; the chosen one's pill carries it too. */
+export const MenuIcons: Story = {name: 'Menu · icons', args: menuIcons, decorators: width(444), tags: ['not-in-figma']};
+
+/**
+ * Not in Figma (the prototype's Causes card): an action with nothing to do yet is greyed but stays focusable, and its
+ * tooltip says why ("Nobody has signed up yet"). Every header action can carry a tooltip.
+ */
+export const DisabledAction: Story = {
+  name: 'Disabled action',
+  args: disabledAction,
+  decorators: width(444),
+  tags: ['not-in-figma']
+};

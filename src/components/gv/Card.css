@@ -180,6 +180,18 @@
     color: var(--gv-action-checked);
   }
 
+  /* An item's own icon (the input term menu) sits before its label in the icon grey; the tick stays at the end. */
+  .gv-card__menu-label {
+    display: flex;
+    align-items: center;
+    gap: var(--gv-space-10);
+    min-width: 0;
+
+    svg {
+      color: var(--gv-icon-default);
+    }
+  }
+
   /* No fill for the item focused on open (the prototype's chosen row has none); the pointer and the keyboard light it. */
   &[data-hovered],
   &[data-focus-visible] {
@@ -286,4 +298,17 @@
 .gv-card__radio-description {
   font: var(--gv-type-small);
   color: var(--gv-text-tertiary);
+}
+
+/* A header action with nothing to do yet that says why (a tooltip): it stays focusable, so it is greyed by
+   aria-disabled rather than the disabled attribute (IconButton's own [data-disabled] look). */
+.gv-card__actions .gv-icon-button[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: not-allowed;
+
+  &[data-hovered],
+  &[data-pressed] {
+    background: none;
+    color: var(--gv-icon-default);
+  }
 }

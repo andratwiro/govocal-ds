@@ -12,6 +12,7 @@ import {
 } from 'react-aria-components';
 import {Check, ChevronDown, ChevronRight, type LucideIcon} from 'lucide-react';
 import {Popover} from '../Popover';
+import {Tooltip, TooltipTrigger} from '../Tooltip';
 import {Radio, RadioGroup, type RadioProps} from '../RadioGroup';
 import {Switch, type SwitchProps} from '../Switch';
 import {IconButton} from './IconButton';
@@ -29,6 +30,8 @@ export interface CardPill {
 export interface CardMenuItem {
   id: string;
   label: string;
+  /** A 16 lucide icon before the label (the input term menu: Idea, Option, Project…); the chosen one's pill shows it. */
+  icon?: LucideIcon;
 }
 
 export interface CardIconAction {
@@ -36,6 +39,13 @@ export interface CardIconAction {
   /** The button's accessible name, e.g. "Add an attachment". */
   label: string;
   onPress?: () => void;
+  /**
+   * Nothing to do yet (Download volunteers before anyone signs up). The button stays focusable (`aria-disabled`) so
+   * its `tooltip` can say why.
+   */
+  isDisabled?: boolean;
+  /** Words shown on hover and focus; on a disabled action, why it is disabled ("Nobody has signed up yet"). */
+  tooltip?: string;
 }
 
 export interface CardProps {
@@ -118,11 +128,27 @@ function Trailing({iconActions, actions}: Pick<CardProps, 'iconActions' | 'actio
   if (!iconActions?.length && !actions) return null;
   return (
     <span className="gv-card__actions">
-      {iconActions?.map(({icon: Icon, label, onPress}) => (
-        <IconButton key={label} aria-label={label} onPress={onPress}>
-          <Icon aria-hidden size={16} />
-        </IconButton>
-      ))}
+      {iconActions?.map(({icon: Icon, label, onPress, isDisabled, tooltip}) => {
+        // A disabled button can't be hovered or focused, so one that explains itself stays focusable and does nothing.
+        const button = (
+          <IconButton
+            key={label}
+            aria-label={label}
+            onPress={isDisabled ? undefined : onPress}
+            isDisabled={isDisabled && !tooltip}
+            aria-disabled={(isDisabled && Boolean(tooltip)) || undefined}>
+            <Icon aria-hidden size={16} />
+          </IconButton>
+        );
+        return tooltip ? (
+          <TooltipTrigger key={label}>
+            {button}
+            <Tooltip>{tooltip}</Tooltip>
+          </TooltipTrigger>
+        ) : (
+          button
+        );
+      })}
       {actions}
     </span>
   );
@@ -170,7 +196,7 @@ export function Card({
                 isRequired={isRequired}
                 review={review}
                 summary={summary}
-                pills={pills ?? (chosen ? [{label: chosen.label}] : undefined)}
+                pills={pills ?? (chosen ? [{label: chosen.label, icon: chosen.icon}] : undefined)}
               />
               <span className="gv-card__chevron" aria-hidden>
                 <ChevronDown size={16} />
@@ -194,7 +220,10 @@ export function Card({
                   <MenuItem id={item.id} textValue={item.label} className="gv-card__menu-item">
                     {({isSelected}) => (
                       <>
-                        <span>{item.label}</span>
+                        <span className="gv-card__menu-label">
+                          {item.icon && <item.icon aria-hidden size={16} />}
+                          <span>{item.label}</span>
+                        </span>
                         {isSelected && <Check aria-hidden size={16} strokeWidth={1.75} />}
                       </>
                     )}
@@ -279,7 +308,12 @@ export function CardSwitch(props: Omit<SwitchProps, 'children' | 'className' | '
   );
 }
 
-/** The choice cards' radio list (Survey placement, Survey options, Voting method): the design system's RadioGroup. */
+/**
+ * The choice cards' radio list (Survey placement, Survey options, Voting method): the design system's RadioGroup.
+ *
+ * @deprecated Use Choice card (`ChoiceCard` in a `RadioGroup`): the same choices as bordered tiles, as the prototype
+ *   draws them. Kept working until the back office's Reporting and Users pages move over.
+ */
 export function CardRadioGroup({
   orientation = 'vertical',
   children,
@@ -295,7 +329,11 @@ export function CardRadioGroup({
   );
 }
 
-/** One choice: the design system's Radio, with a title and an optional grey line under it. */
+/**
+ * One choice: the design system's Radio, with a title and an optional grey line under it.
+ *
+ * @deprecated Use `ChoiceCard`. Kept working until the back office's Reporting and Users pages move over.
+ */
 export function CardRadio({
   children,
   description,
