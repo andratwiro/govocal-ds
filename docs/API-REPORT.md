@@ -4047,7 +4047,7 @@ Interface, from `src/components/gv/SegmentedControl.tsx`. The props of `Segmente
 Function, from `src/components/Select.tsx`.
 
 ```ts
-<T, M extends "single" | "multiple" = "single">({ label, description, errorMessage, children, items, variant, size, icon, prefix, isSearchable, searchPlaceholder, emptyLabel, labels, ...props }: SelectProps<T, M>): import("/srv/bots/Storybook/role/repos/wt-t45/node_modules/@types/react/index").JSX.Element
+<T, M extends "single" | "multiple" = "single">({ label, description, errorMessage, children, items, variant, size, icon, prefix, isSearchable, searchPlaceholder, emptyLabel, labels, ...props }: SelectProps<T, M>): import("react").JSX.Element
 ```
 
 ### `Selection`
@@ -5141,7 +5141,7 @@ Interface, from `react-aria-components`. The props of `TooltipTrigger`, listed t
 Function, from `src/components/gv/MultilingualTextField.tsx`.
 
 ```ts
-(props: MultilingualFieldProps, inputId?: string): { locale: string; setLocale: (locale: string) => void; value: Partial<Record<string, string>>; text: string; setText: (next: string) => void; inputLabel: string; lang: string; dir: "ltr" | "rtl"; isInvalid: boolean; error: string | undefined; head: string | false | import("/srv/bots/Storybook/role/repos/wt-t45/node_modules/@types/react/index").ReactElement<any, string | import("/srv/bots/Storybook/role/repos/wt-t45/node_modules/@types/react/index").JSXElementConstructor<any>> | Iterable<ReactNode>; status: (code: string) => import("/srv/bots/Storybook/role/repos/wt-t45/src/index").LocaleStatus; labels: MultilingualFieldLabels; }
+(props: MultilingualFieldProps, inputId?: string): { locale: string; setLocale: (locale: string) => void; value: Partial<Record<string, string>>; text: string; setText: (next: string) => void; inputLabel: string; lang: string; dir: "ltr" | "rtl"; isInvalid: boolean; error: string | undefined; head: string | false | import("react").ReactElement<any, string | import("react").JSXElementConstructor<any>> | Iterable<ReactNode>; status: (code: string) => import("src/index").LocaleStatus; labels: MultilingualFieldLabels; }
 ```
 
 ### `ViewOptionList`
@@ -5268,7 +5268,7 @@ Interface, from `src/patterns/VolunteeringRow.tsx`. The props of `VolunteeringRo
 Function, from `src/patterns/VoteProgress.tsx`.
 
 ```ts
-(props: VoteProgressProps): import("/srv/bots/Storybook/role/repos/wt-t45/node_modules/@types/react/index").JSX.Element
+(props: VoteProgressProps): import("react").JSX.Element
 ```
 
 ### `VoteProgressCountProps`

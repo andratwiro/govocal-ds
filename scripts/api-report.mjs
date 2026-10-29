@@ -14,7 +14,11 @@ const ROOT = resolve(import.meta.dirname, '..');
 const OUT = resolve(ROOT, 'docs/API-REPORT.md');
 const ENTRIES = [['govocal-ds', 'src/index.ts'], ['govocal-ds/base', 'src/base.ts']];
 
-const one = s => s.replace(/\s+/g, ' ').replace(/\(\s/g, '(').replace(/\s\)/g, ')').trim();
+// TypeScript prints an inferred type from another file as `import("/abs/path/…")`; the checkout's own path never goes
+// in the report, or it would differ in every clone: `import("react")`, `import("src/index")`.
+const unroot = s => s.replace(/import\("([^"]+)"\)/g, (_, p) => `import("${p.includes('node_modules/')
+  ? p.replace(/^.*node_modules\/(@types\/)?/, '').replace(/\/index$/, '') : relative(ROOT, p)}")`);
+const one = s => unroot(s.replace(/\s+/g, ' ').replace(/\(\s/g, '(').replace(/\s\)/g, ')').trim());
 
 /** Where a declaration lives: `src/…` for ours, the package name for a library's. */
 function origin(decl) {
