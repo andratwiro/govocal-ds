@@ -38,26 +38,19 @@ test('progress reports explain who makes them; each row has edit, duplicate and 
   await expect(table.getByRole('row')).toHaveCount(rows - 1);
 });
 
-test('editing a report opens the slide deck builder (the prototype)', async ({page}) => {
+test('editing a report opens the report view (outline, pages, side panel)', async ({page}) => {
   await page.goto('/backoffice/#/reporting');
-  await page.getByRole('button', {name: 'Create a report'}).click();
   await page.getByRole('tab', {name: /^All reports/}).click();
   await page.getByRole('button', {name: /^Actions for Bike lanes survey results/}).click();
   await page.getByRole('menuitem', {name: 'Edit'}).click();
-  const builder = page.getByRole('region', {name: 'Report builder: Bike lanes survey results'});
-  await expect(builder).toBeVisible();
-  await expect(builder.getByRole('listbox', {name: 'Slides'})).toBeVisible();
-  await expect(builder.getByRole('button', {name: 'Next slide'})).toBeVisible();
-  await expect(builder.getByRole('button', {name: 'Present'})).toBeVisible();
-  await expect(builder.getByRole('button', {name: 'Save'})).toBeVisible();
-  await builder.getByRole('button', {name: 'Share'}).click();
-  for (const m of ['Share as web link', 'Print to PDF']) await expect(page.getByRole('menuitem', {name: m})).toBeVisible();
-  await page.keyboard.press('Escape');
-  await builder.getByRole('option', {name: /Momentum over time/}).click();
-  await expect(builder.getByRole('img', {name: /Participants/}).first()).toBeVisible();
+  await expect(page).toHaveURL(/#\/reporting\/report-builder\/r2\/editor$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'Bike lanes survey results'})).toBeVisible();
+  await expect(page.getByRole('treegrid', {name: 'Report outline'})).toBeVisible();
+  await expect(page.getByRole('region', {name: 'Report pages'})).toBeVisible();
+  await expect(page.getByRole('dialog', {name: 'Assistant'})).toBeVisible();
 });
 
-test('creating a report starts blank: title, template, contents, then the deck', async ({page}) => {
+test('creating a report starts blank: title, template, contents, then the report view', async ({page}) => {
   await page.goto('/backoffice/#/reporting');
   await page.getByRole('button', {name: 'Create a report'}).first().click();
   const builder = page.getByRole('region', {name: /^Report builder:/});
@@ -77,64 +70,37 @@ test('creating a report starts blank: title, template, contents, then the deck',
   await contents.getByText('Demographics').click();
   await expect(contents.getByRole('checkbox', {name: /Demographics/})).toBeChecked();
   a11yReport(await axeViolations(page, '.bo-reporting-blank'));
-  await expect(builder.getByRole('radiogroup', {name: 'Number of slides'})).toBeVisible();
+  await expect(builder.getByRole('radiogroup', {name: 'Length'})).toBeVisible();
   await tpl.getByText('Create with AI').click();
   await expect(tpl.getByRole('radio', {name: /^Create with AI/})).toBeChecked();
   await builder.getByRole('button', {name: 'Create report'}).click();
-  await expect(builder.getByText('Built by Go Vocal AI')).toBeVisible();
-  await expect(builder.getByRole('textbox', {name: 'Refine the report'})).toBeVisible();
+  // The new report opens in the report view, and the assistant offers to write it.
+  await expect(page).toHaveURL(/#\/reporting\/report-builder\/new\/editor$/);
+  await expect(page.getByRole('dialog', {name: 'Generate the report'})).toBeVisible();
 });
 
-test('reporting names what the system still lacks', async ({page}) => {
+test('the report list has no gaps; the report view names its own (e2e/report-view.spec.ts)', async ({page}) => {
   await page.goto('/backoffice/#/reporting');
+  await expect(page.locator('[data-gap]')).toHaveCount(0);
+  await page.goto('/backoffice/#/reporting/report-builder/r2/editor');
+  await expect(page.getByRole('region', {name: 'Report pages'})).toBeVisible();
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
-  expect(gaps).toEqual(expect.arrayContaining(['Slide stage']));
+  expect(gaps).toEqual(expect.arrayContaining(['Page stage', 'Figure', 'Chat']));
+  expect(gaps).not.toContain('Slide stage');
 });
 
 // ── The first clicks (shallow) ──────────────────────────────────────────────
 
-test('a report row opens the report editor: Present, Export PDF and Save each answer', async ({page}) => {
+test('a report row opens the report view: Download answers, the crumb goes back', async ({page}) => {
   await page.goto('/backoffice/#/reporting');
   await page.getByRole('grid', {name: 'All reports'}).getByRole('row', {name: /Bike lanes survey results/}).getByText(/Modified/).click();
   await expect(page).toHaveURL(/#\/reporting\/report-builder\/r2\/editor$/);
   await expect(page.getByRole('heading', {level: 1, name: 'Bike lanes survey results'})).toBeVisible();
-  const builder = page.getByRole('region', {name: 'Report builder: Bike lanes survey results'});
-  await expect(builder.getByRole('listbox', {name: 'Slides'})).toBeVisible();
-  await builder.getByRole('button', {name: 'Present'}).click();
-  const show = page.getByRole('dialog', {name: 'Presenting: Bike lanes survey results'});
-  await expect(show.getByRole('article')).toBeVisible();
-  await show.getByRole('button', {name: 'Next slide'}).click();
-  await page.keyboard.press('Escape');
-  await expect(show).toHaveCount(0);
-  await builder.getByRole('button', {name: 'Export PDF'}).click();
+  await page.getByRole('button', {name: 'Download'}).click();
+  await page.getByRole('menuitem', {name: 'PDF'}).click();
   await expect(page.locator('.react-aria-Toast').first()).toContainText('Bike lanes survey results.pdf');
-  await builder.getByRole('button', {name: 'Save'}).click();
-  await expect(page.locator('.react-aria-Toast').filter({hasText: 'Report saved'})).toBeVisible();
   await page.getByRole('navigation', {name: 'Breadcrumbs'}).getByRole('link', {name: 'Reporting'}).click();
   await expect(page).toHaveURL(/#\/reporting$/);
-});
-
-test('the deck answers: Refine and Add slide add slides, Share gives a web link or a PDF', async ({page}) => {
-  await page.goto('/backoffice/#/reporting');
-  const builder = page.getByRole('region', {name: /^Report builder:/});
-  const slides = builder.getByRole('listbox', {name: 'Slides'}).getByRole('option');
-  await expect(slides).toHaveCount(7);
-  await expect(builder.getByRole('button', {name: 'Refine'})).toBeDisabled();
-  await builder.getByRole('textbox', {name: 'Refine the report'}).fill('Add a slide on the youngest participants');
-  await builder.getByRole('button', {name: 'Refine'}).click();
-  await expect(slides).toHaveCount(8);
-  await expect(slides.nth(7)).toHaveAttribute('aria-selected', 'true');
-  await expect(builder.getByRole('article', {name: /^Slide 8: Add a slide on the youngest/})).toBeVisible();
-  await expect(page.locator('.react-aria-Toast').filter({hasText: 'Report refined'})).toBeVisible();
-  await builder.getByRole('button', {name: 'Add slide'}).click();
-  await expect(slides).toHaveCount(9);
-  await expect(builder.getByRole('article', {name: 'Slide 9: New slide'})).toBeVisible();
-  await builder.getByRole('button', {name: 'Share'}).click();
-  await page.getByRole('menuitem', {name: 'Share as web link'}).click();
-  await expect(page.locator('.react-aria-Toast').filter({hasText: 'Web link ready'})).toBeVisible();
-  await builder.getByRole('button', {name: 'Share'}).click();
-  await page.getByRole('menuitem', {name: 'Print to PDF'}).click();
-  await expect(page.locator('.react-aria-Toast').filter({hasText: 'Preparing the PDF'})).toBeVisible();
 });
 
 test('the reporting pages keep their headings in order (h1 → h2 → h3)', async ({page}) => {

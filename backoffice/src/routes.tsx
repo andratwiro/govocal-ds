@@ -19,7 +19,7 @@ import {Platform} from './pages/Platform';
 import {EsriIntegration, McpAuthorizations, PowerBi, PublicApiTokens, Webhooks, Widget} from './pages/ToolsPages';
 import {SeatsOverview, UserInvitations, UserProfile} from './pages/UsersPages';
 import {EmailComposer, EmailStats, SmsComposer} from './pages/MessagingPages';
-import {ReportEditor} from './pages/Reporting';
+import {ReportView} from './pages/ReportView';
 import {CustomPageEditor, CustomPageView, HomepageBuilder, NavbarItemEdit} from './pages/PagesMenuPages';
 
 export const router = createHashRouter([{
@@ -58,7 +58,7 @@ export const router = createHashRouter([{
     {path: 'messaging/emails/custom/new', element: <EmailComposer />},
     {path: 'messaging/emails/custom/:emailId', element: <EmailStats />},
     {path: 'messaging/texting/new', element: <SmsComposer />},
-    {path: 'reporting/report-builder/:reportId/editor', element: <ReportEditor />},
+    {path: 'reporting/report-builder/:reportId/editor', element: <ReportView />},
     ...NAV.filter(n => !['community-monitor', 'dashboard', 'inputs', 'inspiration-hub', 'messaging', 'pages-menu', 'projects', 'reporting', 'settings', 'tools', 'users'].includes(n.id))
       .map(n => ({path: n.id, element: <Placeholder item={n} />}))
   ]

@@ -21,7 +21,9 @@ export function Layout() {
   // tooltips), as in the prototype, so the project screens get the width the Figma frames give them.
   const inPhase = useMatch('/projects/:projectId/phases/:phaseId/:tab');
   const inProject = useMatch('/projects/:projectId');
-  const folded = !!(inPhase || inProject);
+  // The report view's three columns get the same width.
+  const inReport = useMatch('/reporting/report-builder/:reportId/editor');
+  const folded = !!(inPhase || inProject || inReport);
   const {pathname} = useLocation();
   const [notifications, setNotifications] = useState(NOTIFICATIONS);
   const [unread, setUnread] = useState(UNREAD_NOTIFICATIONS);
