@@ -2,3 +2,54 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Docs pages (Overview and every component's Docs) on the system's type scale. Colours and type are
+     var(--gv-*) from tokens.css, which theme.ts loads on every page. Storybook adds its own docs styles
+     after this block: the doubled .sbdocs class wins ties. Story previews (.sb-unstyled) are left alone. */
+  .sbdocs .sbdocs-title,
+  .sbdocs.sbdocs-content :where(h1:not(.sb-anchor, .sb-unstyled, .sb-unstyled h1)) {
+    font: var(--gv-type-stat);
+    font-weight: var(--gv-type-stat-small-weight);
+    letter-spacing: var(--gv-type-stat-tracking);
+    color: var(--gv-text-primary);
+    margin-block-end: var(--gv-space-16);
+  }
+  .sbdocs .sbdocs-subtitle {
+    font: var(--gv-type-title);
+    font-weight: 400;
+    color: var(--gv-text-secondary);
+  }
+  .sbdocs.sbdocs-content :where(h2:not(.sb-anchor, .sb-unstyled, .sb-unstyled h2)) {
+    font: var(--gv-type-stat-small);
+    letter-spacing: var(--gv-type-stat-small-tracking);
+    color: var(--gv-text-primary);
+    border-block-end-color: var(--gv-divider-strong);
+    padding-block-end: var(--gv-space-8);
+    margin-block: var(--gv-space-32) var(--gv-space-12);
+  }
+  .sbdocs.sbdocs-content :where(h3:not(.sb-anchor, .sb-unstyled, .sb-unstyled h3)) {
+    font: var(--gv-type-title);
+    letter-spacing: var(--gv-type-title-tracking);
+    color: var(--gv-text-primary);
+    margin-block: var(--gv-space-24) var(--gv-space-8);
+  }
+  .sbdocs.sbdocs-content :where(h4:not(.sb-anchor, .sb-unstyled, .sb-unstyled h4)) {
+    font: var(--gv-type-body-strong);
+    letter-spacing: var(--gv-type-body-strong-tracking);
+    color: var(--gv-text-primary);
+  }
+  .sbdocs.sbdocs-content :where(p:not(.sb-anchor, .sb-unstyled, .sb-unstyled p)),
+  .sbdocs.sbdocs-content :where(li:not(.sb-anchor, .sb-unstyled, .sb-unstyled li)) {
+    font: var(--gv-type-body);
+    letter-spacing: var(--gv-type-body-tracking);
+    color: var(--gv-text-body);
+  }
+  /* Autodocs' "Stories" label: sentence case, Small strong, like the sidebar's section labels. */
+  .sbdocs.sbdocs-content h2#stories {
+    font: var(--gv-type-small-strong);
+    letter-spacing: var(--gv-type-small-strong-tracking);
+    text-transform: none;
+    color: var(--gv-text-secondary);
+    border: 0;
+  }
+</style>

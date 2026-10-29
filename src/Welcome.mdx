@@ -1,0 +1,92 @@
+import {Meta, Unstyled} from '@storybook/addon-docs/blocks';
+import {addons} from 'storybook/preview-api';
+import {SELECT_STORY} from 'storybook/internal/core-events';
+import {ArrowRight, ArrowUpRight, Check, FileChartColumn, Funnel, Lightbulb, Search, Sparkles} from 'lucide-react';
+import './Welcome.css';
+
+<Meta title="Overview/Welcome" />
+
+{/* Storybook opens here (first in storySort). The cards name a page or a whole section ("components"):
+    Storybook opens a section on its first entry, whatever it is called, so renames don't break them. A plain
+    click asks the manager to open it in place; the href (a full load) serves a new tab. The small pictures on
+    the cards are drawn with the tokens; they are pictures, not components. */}
+
+export const stroke = 1.75;
+
+export const lede = "Go Vocal's components, drawn in Figma, built on React Aria and painted only with the Figma tokens. " +
+  'Each one shows its states, left to right and in Arabic right to left, with its accessibility results. ' +
+  'The back office is built from these components alone, so it shows what the system covers and what it still lacks.';
+
+export const open = id => event => {
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  addons.getChannel().emit(SELECT_STORY, {storyId: id});
+};
+
+export const Card = ({to, href, name, desc, specimen, wide}) => {
+  const Arrow = to ? ArrowRight : ArrowUpRight;
+  const body = <>
+    <span className="gv-welcome__stage" aria-hidden="true">{specimen}</span>
+    <span className="gv-welcome__text">
+      <span className="gv-welcome__name">{name}<Arrow size={16} strokeWidth={stroke} aria-hidden="true" /></span>
+      <span className="gv-welcome__desc">{desc}</span>
+    </span>
+  </>;
+  return <li className={wide ? 'gv-welcome__item gv-welcome__item--wide' : 'gv-welcome__item'}>
+    {to
+      ? <a className="gv-welcome__card" href={`./?path=/docs/${to}`} target="_top" onClick={open(to)}>{body}</a>
+      : <a className="gv-welcome__card" href={href} target="_top">{body}</a>}
+  </li>;
+};
+
+export const Swatches = () => <>
+  <span className="gv-sp-swatches">
+    {['primary', 'teal', 'green', 'orange', 'coral'].map(c => <i key={c} className={`gv-sp-swatch gv-sp-swatch--${c}`} />)}
+  </span>
+  <span className="gv-sp-aa">Aa</span>
+</>;
+
+export const IconRow = () => <span className="gv-sp-icons">
+  {[Lightbulb, Sparkles, FileChartColumn, Funnel, Search].map((Icon, i) => <Icon key={i} size={20} strokeWidth={stroke} />)}
+</span>;
+
+export const Controls = () => <span className="gv-sp-controls">
+  <span className="gv-sp-button" />
+  <span className="gv-sp-toggle"><span /></span>
+  <span className="gv-sp-check"><Check size={12} strokeWidth={2.5} /></span>
+</span>;
+
+export const Timeline = () => <span className="gv-sp-timeline">
+  {['done', 'live', 'next'].map(s => <span key={s} className={`gv-sp-phase gv-sp-phase--${s}`}><i /><b /></span>)}
+</span>;
+
+export const BackOffice = () => <span className="gv-sp-window">
+  <span className="gv-sp-window__nav"><i /><i /><i /></span>
+  <span className="gv-sp-window__main"><b /><span className="gv-sp-window__cards"><i /><i /></span></span>
+</span>;
+
+<Unstyled>
+  <div className="gv-welcome">
+    <header className="gv-welcome__hero">
+      <img className="gv-welcome__mark" src="./favicon.svg" alt="Go Vocal" width="56" height="56" />
+      <h1 className="gv-welcome__title">Go Vocal design system</h1>
+      <p className="gv-welcome__lede">{lede}</p>
+    </header>
+    <h2 className="gv-welcome__label">The system</h2>
+    <ul className="gv-welcome__grid">
+      <Card to="overview-foundations--docs" name="Foundations" specimen={<Swatches />}
+        desc="Colour, space, radius, type and shadow: the Figma tokens, and which components use each one." />
+      <Card to="overview-icons--docs" name="Icons" specimen={<IconRow />}
+        desc="Every icon the system uses, named as in Figma." />
+      <Card to="components" name="Components" specimen={<Controls />}
+        desc="The building blocks, each with its states, in both directions." />
+      <Card to="patterns" name="Patterns" specimen={<Timeline />}
+        desc="Components put together the way the back office repeats them, like the phase timeline." />
+    </ul>
+    <h2 className="gv-welcome__label">Built from it</h2>
+    <ul className="gv-welcome__grid">
+      <Card href="../backoffice/" name="Back office" specimen={<BackOffice />} wide
+        desc="The whole back office, one page per menu item, with invented data. Opens outside Storybook." />
+    </ul>
+  </div>
+</Unstyled>

@@ -2,6 +2,7 @@ import type {Preview} from '@storybook/react-vite';
 import {useEffect} from 'react';
 import {I18nProvider} from 'react-aria-components';
 import {LucideProvider} from 'lucide-react';
+import {theme} from './theme';
 
 const preview: Preview = {
   globalTypes: {
@@ -23,6 +24,7 @@ const preview: Preview = {
   ],
   parameters: {
     layout: 'centered',
+    docs: {theme},
     a11y: {
       test: 'todo',
       options: {runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']},
@@ -30,7 +32,7 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ['Overview', ['Foundations', 'Icons'], 'Components', 'Patterns', 'Back office', 'Base']
+        order: ['Overview', ['Welcome', 'Foundations', 'Icons'], 'Components', 'Patterns', 'Back office', 'Base']
       }
     }
   }

@@ -1,0 +1,330 @@
+/* Overview/Welcome: where Storybook opens. Paint only through var(--gv-*), like the components. */
+.gv-welcome {
+  font: var(--gv-type-body);
+  letter-spacing: var(--gv-type-body-tracking);
+  color: var(--gv-text-body);
+  padding-block-end: var(--gv-space-48);
+}
+
+.gv-welcome__hero {
+  padding-block: var(--gv-space-8) var(--gv-space-44);
+}
+
+.gv-welcome__mark {
+  display: block;
+  inline-size: var(--gv-space-56);
+  block-size: var(--gv-space-56);
+  margin-block-end: var(--gv-space-24);
+}
+
+.gv-welcome__title {
+  margin: 0 0 var(--gv-space-12);
+  font: var(--gv-type-stat);
+  font-weight: var(--gv-type-stat-small-weight);
+  letter-spacing: var(--gv-type-stat-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-welcome__lede {
+  max-inline-size: 42rem;
+  margin: 0;
+  font: var(--gv-type-title);
+  font-weight: var(--gv-type-body-weight);
+  letter-spacing: var(--gv-type-title-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-welcome__label {
+  margin: 0 0 var(--gv-space-12);
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-welcome__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gv-space-16);
+  margin: 0 0 var(--gv-space-32);
+  padding: 0;
+  list-style: none;
+}
+
+.gv-welcome__item--wide {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+  .gv-welcome__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The card is Storybook's docs link (AnchorMdx) or a plain link: .gv-welcome in front wins over the docs
+   link's own colour and underline. */
+.gv-welcome .gv-welcome__card {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+  overflow: hidden;
+  border: 1px solid var(--gv-border-card);
+  border-radius: var(--gv-radius-12);
+  background: var(--gv-surface-panel);
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+
+.gv-welcome .gv-welcome__card:hover {
+  border-color: var(--gv-border-control-hover);
+  box-shadow: var(--gv-shadow-subtle);
+}
+
+.gv-welcome .gv-welcome__card:focus-visible {
+  outline: 2px solid var(--gv-border-selected);
+  outline-offset: 2px;
+}
+
+.gv-welcome__item--wide .gv-welcome__card {
+  flex-direction: row;
+}
+
+.gv-welcome__stage {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-16);
+  block-size: 88px;
+  padding-inline: var(--gv-space-20);
+  background: var(--gv-surface-info);
+  border-block-end: 1px solid var(--gv-border-subtle);
+}
+
+.gv-welcome__item--wide .gv-welcome__stage {
+  flex: none;
+  justify-content: center;
+  inline-size: 200px;
+  block-size: auto;
+  min-block-size: 88px;
+  border-block-end: 0;
+  border-inline-end: 1px solid var(--gv-border-subtle);
+}
+
+.gv-welcome__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--gv-space-4);
+  padding: var(--gv-space-16) var(--gv-space-20) var(--gv-space-20);
+}
+
+.gv-welcome__name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+  font: var(--gv-type-title);
+  letter-spacing: var(--gv-type-title-tracking);
+  color: var(--gv-text-primary);
+
+  & svg {
+    color: var(--gv-icon-default);
+    transition: translate 150ms, color 150ms;
+  }
+}
+
+.gv-welcome .gv-welcome__card:hover .gv-welcome__name svg {
+  translate: 2px 0;
+  color: var(--gv-action-primary);
+}
+
+.gv-welcome__item--wide .gv-welcome__card:hover .gv-welcome__name svg {
+  translate: 2px -2px;
+}
+
+.gv-welcome__desc {
+  color: var(--gv-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gv-welcome .gv-welcome__card,
+  .gv-welcome__name svg {
+    transition: none;
+  }
+}
+
+/* The pictures on the cards (aria-hidden): a few tokens each. */
+.gv-sp-swatches {
+  display: flex;
+}
+
+.gv-sp-swatch {
+  inline-size: var(--gv-space-28);
+  block-size: var(--gv-space-28);
+  border-radius: var(--gv-radius-full);
+  box-shadow: 0 0 0 2px var(--gv-surface-info);
+
+  & + & {
+    margin-inline-start: calc(-1 * var(--gv-space-8));
+  }
+}
+
+.gv-sp-swatch--primary { background: var(--gv-color-brand-700); }
+.gv-sp-swatch--teal { background: var(--gv-color-teal-400); }
+.gv-sp-swatch--green { background: var(--gv-color-green-500); }
+.gv-sp-swatch--orange { background: var(--gv-color-orange-400); }
+.gv-sp-swatch--coral { background: var(--gv-color-red-450); }
+
+.gv-sp-aa {
+  font: var(--gv-type-stat);
+  color: var(--gv-text-primary);
+}
+
+.gv-sp-icons {
+  display: flex;
+  gap: var(--gv-space-14);
+  color: var(--gv-icon-strong);
+}
+
+.gv-sp-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-14);
+}
+
+.gv-sp-button {
+  inline-size: var(--gv-space-56);
+  block-size: var(--gv-space-24);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-action-primary);
+}
+
+.gv-sp-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  inline-size: var(--gv-space-32);
+  block-size: var(--gv-space-18);
+  padding: var(--gv-space-2);
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-control-toggle-on);
+
+  & span {
+    inline-size: var(--gv-space-14);
+    block-size: var(--gv-space-14);
+    border-radius: var(--gv-radius-full);
+    background: var(--gv-control-knob);
+  }
+}
+
+.gv-sp-check {
+  display: grid;
+  place-items: center;
+  inline-size: var(--gv-space-18);
+  block-size: var(--gv-space-18);
+  border-radius: var(--gv-radius-4);
+  background: var(--gv-action-checked);
+  color: var(--gv-icon-inverse);
+}
+
+/* The phase timeline: completed, live, upcoming (the rail's own colours). */
+.gv-sp-timeline {
+  display: flex;
+  gap: var(--gv-space-6);
+}
+
+.gv-sp-phase {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-8);
+  inline-size: var(--gv-space-48);
+
+  & i {
+    inline-size: var(--gv-space-10);
+    block-size: var(--gv-space-10);
+    border-radius: var(--gv-radius-full);
+    background: var(--gv-state-upcoming);
+  }
+
+  & b {
+    inline-size: 75%;
+    block-size: var(--gv-space-6);
+    border-radius: var(--gv-radius-full);
+    background: var(--gv-divider-strong);
+  }
+
+  &:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    inset-block-start: 4.5px;
+    inset-inline: var(--gv-space-14) calc(-1 * var(--gv-space-2));
+    block-size: 1px;
+    background: var(--gv-border-control-hover);
+  }
+}
+
+.gv-sp-phase--done i { background: var(--gv-chart-agree); }
+.gv-sp-phase--live i {
+  background: var(--gv-chart-green);
+  box-shadow: 0 0 0 3px var(--gv-surface-live);
+}
+
+/* A back-office window: the dark nav, the app surface, two cards. */
+.gv-sp-window {
+  display: flex;
+  overflow: hidden;
+  inline-size: 112px;
+  block-size: 64px;
+  border-radius: var(--gv-radius-6);
+  box-shadow: var(--gv-shadow-subtle), 0 0 0 1px var(--gv-border-card);
+}
+
+.gv-sp-window__nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gv-space-6);
+  inline-size: var(--gv-space-18);
+  padding-block-start: var(--gv-space-8);
+  background: var(--gv-surface-nav);
+
+  & i {
+    inline-size: var(--gv-space-6);
+    block-size: var(--gv-space-6);
+    border-radius: var(--gv-radius-2);
+    background: var(--gv-icon-nav);
+  }
+
+  & i:first-child {
+    background: var(--gv-icon-nav-active);
+  }
+}
+
+.gv-sp-window__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--gv-space-6);
+  padding: var(--gv-space-8);
+  background: var(--gv-surface-app);
+
+  & b {
+    inline-size: 50%;
+    block-size: var(--gv-space-6);
+    border-radius: var(--gv-radius-full);
+    background: var(--gv-text-quiet);
+  }
+}
+
+.gv-sp-window__cards {
+  display: flex;
+  flex: 1;
+  gap: var(--gv-space-6);
+
+  & i {
+    flex: 1;
+    border-radius: var(--gv-radius-3);
+    background: var(--gv-surface-panel);
+  }
+}

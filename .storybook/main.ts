@@ -16,6 +16,8 @@ const config: StorybookConfig = {
     // Glob limited to tokens.css: component CSS has no @tokens annotations and must not be parsed.
     {name: 'storybook-design-token', options: {designTokenGlob: 'src/tokens.css'}}
   ],
+  // The Go Vocal mark: Storybook's tab icon (favicon.svg is picked up by name), the sidebar brand, Welcome.
+  staticDirs: ['./static'],
   framework: {name: '@storybook/react-vite', options: {}},
   core: {disableTelemetry: true}
 };
