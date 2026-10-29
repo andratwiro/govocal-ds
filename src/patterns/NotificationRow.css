@@ -1,0 +1,146 @@
+@import '../components/theme.css';
+
+/* Prototype .pjacc2.pjnf: switch | name over two meta lines (who, what sends it) | chevron. The switch sits on the
+   name's line; the name and meta are one button to the email's page. Off: the name greys and nothing opens. */
+.gv-notification-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.gv-notification-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gv-space-10);
+  min-height: 40px;
+  padding-block: var(--gv-space-8);
+
+  > .react-aria-SwitchField {
+    flex: none;
+    margin-block-start: var(--gv-space-2);
+  }
+}
+
+.gv-notification-row__open {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--gv-space-8);
+  min-width: 0;
+  margin: calc(-1 * var(--gv-space-4)) 0;
+  padding: var(--gv-space-4) var(--gv-space-4) var(--gv-space-4) var(--gv-space-2);
+  border: 0;
+  border-radius: var(--gv-radius-8);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  outline: none;
+  transition: background-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  &[data-hovered] {
+    background: var(--gv-surface-toolbar);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 0;
+  }
+}
+
+.gv-notification-row__text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--gv-space-2);
+  min-width: 0;
+}
+
+.gv-notification-row > .gv-notification-row__text {
+  margin-inline-start: var(--gv-space-2);
+}
+
+.gv-notification-row__name {
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-notification-row[data-off] .gv-notification-row__name {
+  color: var(--gv-text-quiet);
+}
+
+.gv-notification-row__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gv-space-2);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-meta);
+
+  > span {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gv-space-4);
+  }
+
+  svg {
+    flex: none;
+  }
+}
+
+.gv-notification-row__chevron {
+  flex: none;
+  color: var(--gv-icon-quiet);
+}
+
+[dir='rtl'] .gv-notification-row__chevron {
+  transform: scaleX(-1);
+}
+
+/* The email's page (prototype .pj-notifpage): ← and the name, the switch, the fields 20 apart, a rule after Replies. */
+.gv-notification-email {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-16);
+  font-family: var(--gv-font-family);
+}
+
+.gv-notification-email__head {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  min-height: 32px;
+}
+
+.gv-notification-email__title {
+  margin: 0;
+  font: var(--gv-type-title);
+  letter-spacing: var(--gv-type-title-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-notification-email__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-20);
+}
+
+.gv-notification-email__rule {
+  margin: calc(-1 * var(--gv-space-16)) 0 0;
+  border: 0;
+  border-block-start: 1px solid var(--gv-divider-default);
+}
+
+.gv-notification-email__field {
+  display: flex;
+  flex-direction: column;
+}
+
+.gv-notification-email__label {
+  margin-block-end: var(--gv-space-8);
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-primary);
+}
