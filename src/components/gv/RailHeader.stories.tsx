@@ -16,17 +16,24 @@ const meta: Meta<typeof RailHeader> = {
 export default meta;
 type Story = StoryObj<typeof RailHeader>;
 
+/** Figma's row (title and +), the prototype's (hide panel and +, Not in Figma), and a title alone. */
 export const AllVariants: Story = {
   render: () => (
-    <div style={{display: 'flex', flexDirection: 'column', gap: 16, width: 264}}>
+    <div style={{display: 'flex', flexDirection: 'column', gap: 32, width: 264, padding: '8px 0'}}>
       <RailHeader title="Participation" onAdd={() => {}} />
-      <RailHeader title="Green Corridors for Riverside" />
+      <RailHeader title="Participation" onTogglePanel={() => {}} onAdd={() => {}} addLabel="Add a phase" />
+      <RailHeader title="Participation" />
     </div>
   )
 };
 
 export const WithAction: Story = {
   args: {title: 'Participation', onAdd: () => {}}
+};
+
+/** Not in Figma: the prototype's hide-panel button before the +. */
+export const WithPanelToggle: Story = {
+  args: {title: 'Participation', onTogglePanel: () => {}, onAdd: () => {}, addLabel: 'Add a phase'}
 };
 
 export const WithoutAction: Story = {
