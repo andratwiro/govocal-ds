@@ -137,7 +137,8 @@ test('row actions duplicate, move to a folder and delete on the list', async ({p
 
   await page.getByRole('button', {name: 'Actions for Clean air week'}).click();
   await page.getByRole('menuitem', {name: 'Delete'}).click();
-  const confirm = page.getByRole('dialog', {name: 'Delete this project?'});
+  const confirm = page.getByRole('alertdialog', {name: 'Delete this project?'});
+  await expect(confirm.getByRole('button', {name: 'Cancel'})).toBeFocused();
   await confirm.getByRole('button', {name: 'Delete project'}).click();
   await expect(page.getByRole('row', {name: /Clean air week/})).toHaveCount(0);
   await expect(bodyRows(page)).toHaveCount(8);

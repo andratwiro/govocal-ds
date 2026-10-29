@@ -147,9 +147,9 @@ test('MCP authorizations: Revoke access asks first, then removes the client', as
   const rows = page.getByRole('grid', {name: 'MCP authorizations'}).getByRole('rowgroup').last().getByRole('row');
   await expect(rows).toHaveCount(2);
   await rows.first().getByRole('button', {name: /^Revoke access: /}).click();
-  const modal = page.getByRole('dialog', {name: 'Revoke access'});
+  const modal = page.getByRole('alertdialog', {name: 'Revoke access?'});
   await expect(modal.getByText(/re-authorized before it can connect again/)).toBeVisible();
-  a11yReport(await axeViolations(page, '.gv-modal'));
+  a11yReport(await axeViolations(page, '.gv-alert-dialog'));
   await modal.getByRole('button', {name: 'Revoke access'}).click();
   await expect(rows).toHaveCount(1);
 });

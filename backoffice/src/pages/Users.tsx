@@ -10,6 +10,7 @@ import {Button} from '../../../src/components/Button';
 import {Card, CardRadio, CardRadioGroup} from '../../../src/components/gv/Card';
 import {Checkbox} from '../../../src/components/gv/Checkbox';
 import {Modal} from '../../../src/components/gv/Modal';
+import {AlertDialog} from '../../../src/components/gv/AlertDialog';
 import {TextField} from '../../../src/components/TextField';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {ToastRegion, queue} from '../../../src/components/Toast';
@@ -192,7 +193,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
     <Card tone="manage" title={title} pills={[{label: String(all.length)}]} actions={group && (
       <span className="bo-users-actions">
         <Button variant="quiet" size={32} onPress={onEditGroup}><Pencil aria-hidden size={16} />Edit Group</Button>
-        <Button variant="quiet" size={32} onPress={onDeleteGroup}><Trash2 aria-hidden size={16} />Delete Group</Button>
+        <Button variant="quiet" tone="danger" size={32} onPress={onDeleteGroup}><Trash2 aria-hidden size={16} />Delete Group</Button>
       </span>
     )}>
       <div className="bo-users-body">
@@ -294,14 +295,12 @@ function GroupModal({editing, onClose, onSave}: {
 }
 
 function DeleteGroupModal({group, onClose, onDelete}: {group: Group; onClose: () => void; onDelete: () => void}) {
+  // A confirm, not a form: the Alert dialog (no ×, Esc cancels, focus starts on Cancel).
   return (
-    <Modal title="Delete Group" isOpen onOpenChange={open => !open && onClose()} footer={
-      <>
-        <Button variant="quiet" size={32} onPress={onClose}>Cancel</Button>
-        <Button variant="primary" size={32} onPress={onDelete}>Delete</Button>
-      </>}>
-      <p>Delete {group.label}? Its {group.members.length} members stay on the platform.</p>
-    </Modal>
+    <AlertDialog tone="danger" title="Delete this group?" confirmLabel="Delete group" isOpen
+      onOpenChange={open => !open && onClose()} onConfirm={onDelete}>
+      <p>{group.label} is deleted. Its {group.members.length} members stay on the platform.</p>
+    </AlertDialog>
   );
 }
 
@@ -333,15 +332,12 @@ function ConfirmUserModal({person, kind, onClose, onConfirm}: {
 }) {
   const block = kind === 'block';
   return (
-    <Modal title={block ? 'Block this user?' : 'Delete this user?'} isOpen onOpenChange={open => !open && onClose()} footer={
-      <>
-        <Button variant="quiet" size={32} onPress={onClose}>Cancel</Button>
-        <Button variant="primary" size={32} onPress={onConfirm}>{block ? 'Block user' : 'Delete user'}</Button>
-      </>}>
+    <AlertDialog tone="danger" title={block ? 'Block this user?' : 'Delete this user?'} confirmLabel={block ? 'Block user' : 'Delete user'}
+      isOpen onOpenChange={open => !open && onClose()} onConfirm={onConfirm}>
       <p>{block
         ? `${person.name} can no longer sign in or take part. They move to Banned emails.`
         : `${person.name} and their account are deleted. Their inputs stay, without a name. This cannot be undone.`}</p>
-    </Modal>
+    </AlertDialog>
   );
 }
 

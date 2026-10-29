@@ -5,6 +5,7 @@ import {Button} from '../../../src/components/Button';
 import {Menu, MenuItem, MenuTrigger, Separator} from '../../../src/components/Menu';
 import {TextField} from '../../../src/components/TextField';
 import {Modal} from '../../../src/components/gv/Modal';
+import {AlertDialog} from '../../../src/components/gv/AlertDialog';
 import {Avatar, AvatarGroup} from '../../../src/components/gv/Avatar';
 import {Divider} from '../../../src/components/gv/Divider';
 import {ProjectHeader} from '../../../src/patterns/ProjectHeader';
@@ -113,17 +114,14 @@ export function ProjectOverview() {
         </>}>
         <TextField label="Email" type="email" placeholder="name@example.org" autoFocus />
       </Modal>
-      <Modal title={confirm ? `${NEXT[status].label}?` : ''} isOpen={confirm !== null} onOpenChange={v => { if (!v) setConfirm(null); }}
-        footer={<>
-          <Button variant="secondary" size={32} slot="close">Cancel</Button>
-          <Button size={32} onPress={() => { if (confirm) setStatus(confirm); setConfirm(null); }}>{NEXT[status].label}</Button>
-        </>}>
+      <AlertDialog title={confirm ? `${NEXT[status].label}?` : ''} isOpen={confirm !== null} onOpenChange={v => { if (!v) setConfirm(null); }}
+        confirmLabel={NEXT[status].label} onConfirm={() => { if (confirm) setStatus(confirm); setConfirm(null); }}>
         <p className="bo-note bo-phase-flush">
           {status === 'Draft' ? 'Residents can see the project and take part as soon as it is published.'
             : status === 'Published' ? 'Residents can still read the project, but can no longer take part.'
             : 'The project goes back to draft: only managers can see it.'}
         </p>
-      </Modal>
+      </AlertDialog>
     </div>
   );
 }

@@ -11,6 +11,7 @@ import {Card} from '../../../src/components/gv/Card';
 import {Checkbox} from '../../../src/components/gv/Checkbox';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {Modal} from '../../../src/components/gv/Modal';
+import {AlertDialog} from '../../../src/components/gv/AlertDialog';
 import {Badge} from '../../../src/components/gv/Badge';
 import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {HelpPopover} from '../../../src/components/gv/HelpPopover';
@@ -231,13 +232,10 @@ export function McpAuthorizations() {
           ))}
         </TableBody>
       </Table>
-      <Modal isOpen={!!target} onOpenChange={o => { if (!o) setRevoking(null); }} title="Revoke access"
-        footer={<>
-          <Button variant="secondary" onPress={() => setRevoking(null)}>Cancel</Button>
-          <Button variant="primary" onPress={() => { setClients(cs => cs.filter(c => c.id !== revoking)); setRevoking(null); }}>Revoke access</Button>
-        </>}>
-        <p>Revoke the access of {target?.name}? It will need to be re-authorized before it can connect again.</p>
-      </Modal>
+      <AlertDialog tone="danger" isOpen={!!target} onOpenChange={o => { if (!o) setRevoking(null); }} title="Revoke access?"
+        confirmLabel="Revoke access" onConfirm={() => { setClients(cs => cs.filter(c => c.id !== revoking)); setRevoking(null); }}>
+        <p>{target?.name} loses its access. It will need to be re-authorized before it can connect again.</p>
+      </AlertDialog>
     </Page>
   );
 }

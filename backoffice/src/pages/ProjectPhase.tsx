@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router';
-import {CircleCheck, Copy, Download, Inbox, Lightbulb, MessageSquareText, Paperclip, Plus, Search, Settings, Tag,
-  TriangleAlert, Upload, User} from 'lucide-react';
+import {CalendarDays, CircleCheck, Copy, Download, FileText, Inbox, Lightbulb, Lock, Mail, MessageSquareText, Paperclip, Plus,
+  Search, Settings, Tag, TriangleAlert, Upload, User, Users} from 'lucide-react';
 import {Button} from '../../../src/components/Button';
 import {Form} from '../../../src/components/Form';
 import {Select, SelectItem} from '../../../src/components/Select';
@@ -13,6 +13,7 @@ import {TextArea, TextField} from '../../../src/components/TextField';
 import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
   DataTableText, DataTableAddColumn} from '../../../src/components/gv/DataTable';
 import {Avatar} from '../../../src/components/gv/Avatar';
+import {Banner} from '../../../src/components/gv/Banner';
 import {Card} from '../../../src/components/gv/Card';
 import {Divider} from '../../../src/components/gv/Divider';
 import {ProjectHeader} from '../../../src/patterns/ProjectHeader';
@@ -23,7 +24,6 @@ import {RailSectionLabel} from '../../../src/patterns/RailSectionLabel';
 import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
 import {SetupStep} from '../../../src/patterns/SetupStep';
 import {StatRow} from '../../../src/components/gv/StatRow';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {TitleField} from '../../../src/components/gv/TitleField';
 import {FilterChips} from '../../../src/patterns/FilterChips';
 import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
@@ -150,8 +150,8 @@ function Build({phase, onSettings}: {phase: Phase; onSettings: (tab: SettingsTab
         </ul>
         <div className="bo-phase-section-header bo-phase-section-gap">
           <h3 className="bo-phase-flush">{phase.method} setup</h3>
-          <StatusBadge state={phase.status === 'Draft' ? 'draft' : 'live'}>{phase.status}</StatusBadge>
         </div>
+        <div className="bo-phase-status"><PhaseStatus phase={phase} /></div>
         {phase.method === 'Ideation' ? <IdeationCards phase={phase} onOpen={setStub} /> : (
           <p className="bo-note">The {phase.method.toLowerCase()} setup cards: not in Figma yet.</p>
         )}
@@ -159,6 +159,23 @@ function Build({phase, onSettings}: {phase: Phase; onSettings: (tab: SettingsTab
       <CardStub title={stub} onClose={() => setStub(null)} />
     </>
   );
+}
+
+// The phase status strip (the Banner's "Phase status" story): not started and ended are neutral, live is success.
+// The meta reads off the phase's dates ("19 Oct to 16 Nov", "01 Apr – 30 Apr 2027", "1 to 21 Sep").
+function phaseDates(dates: string): [string, string] | null {
+  const parts = dates.split(/\s+(?:to|–)\s+/);
+  if (parts.length !== 2) return null;
+  const [start, end] = parts;
+  // "1 to 21 Sep": the start borrows the end's month.
+  return [/^\d+$/.test(start) ? `${start} ${end.replace(/^\d+\s+/, '').replace(/\s+\d{4}$/, '')}` : start, end];
+}
+
+function PhaseStatus({phase}: {phase: Phase}) {
+  const range = phaseDates(phase.dates);
+  if (phase.status === 'Live') return <Banner compact tone="success" title="Live">{range ? `Ends on ${range[1]}` : phase.dates}</Banner>;
+  if (phase.status === 'Done') return <Banner compact tone="neutral" title="Ended">{range ? `Closed on ${range[1]}` : phase.dates}</Banner>;
+  return <Banner compact tone="neutral" title="Not started">{range ? `Starts on ${range[0]}` : phase.dates}</Banner>;
 }
 
 // The phase's own cards, after the "Ideation · Build" Figma frame (Card types Required, Add, Review, To set).
@@ -380,6 +397,10 @@ function Manage({project, phase}: {project: Project; phase: Phase}) {
 // The settings cog opens the project's settings in a wide modal with side tabs, as the prototype's project settings.
 export const SETTINGS_TABS = ['General', 'Project page', 'Input tags', 'Access rights', 'Audience', 'Messaging', 'Files', 'Events'] as const;
 export type SettingsTab = typeof SETTINGS_TABS[number];
+const SETTINGS_ICON: Record<SettingsTab, typeof Settings> = {
+  'General': Settings, 'Project page': FileText, 'Input tags': Tag, 'Access rights': Lock, 'Audience': Users,
+  'Messaging': Mail, 'Files': Paperclip, 'Events': CalendarDays
+};
 const SETTINGS_ABOUT: Record<SettingsTab, string> = {
   'General': 'The project title, its folder and its dates.',
   'Project page': 'What residents read on the project page: the image, the intro and the sections under it.',
@@ -394,13 +415,18 @@ const SETTINGS_ABOUT: Record<SettingsTab, string> = {
 export function ProjectSettings({project, tab, onTabChange, onClose}: {project: Project; tab: SettingsTab | null;
   onTabChange: (tab: SettingsTab) => void; onClose: () => void}) {
   return (
-    <Modal title="Project settings" size="wide" isOpen={tab !== null} onOpenChange={o => { if (!o) onClose(); }}>
+    // Modal's "With side tabs": a fixed height, an unpadded body, the vertical Tabs as a side list beside the panel.
+    <Modal title="Project settings" size="wide" height="fixed" padBody={false} isOpen={tab !== null}
+      onOpenChange={o => { if (!o) onClose(); }} footer={<Button size={32} slot="close">Save</Button>}>
       <Tabs orientation="vertical" selectedKey={tab ?? 'General'} onSelectionChange={k => onTabChange(k as SettingsTab)}
-        aria-label="Project settings">
-        <TabList aria-label="Project settings">
-          {SETTINGS_TABS.map(t => <Tab key={t} id={t}>{t}</Tab>)}
+        className="bo-phase-settings">
+        <TabList aria-label="Project settings" className="bo-phase-settings-list">
+          {SETTINGS_TABS.map(t => {
+            const Icon = SETTINGS_ICON[t];
+            return <Tab key={t} id={t}><Icon aria-hidden size={16} strokeWidth={1.75} />{t}</Tab>;
+          })}
         </TabList>
-        <TabPanels>
+        <TabPanels className="bo-phase-settings-panel">
           {SETTINGS_TABS.map(t => (
             <TabPanel key={t} id={t}>
               <div className="bo-phase-stack">

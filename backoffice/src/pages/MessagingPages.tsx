@@ -26,8 +26,15 @@ const MESSAGING_CRUMB = [{key: 'messaging', label: 'Messaging', href: '#/messagi
 const n = (v: number) => v.toLocaleString('en');
 const toast = (title: string, description?: string) => queue.add({title, description}, {timeout: 5000});
 
-/** The custom emails, with the ones sent here on top: they outlive a change of route, until a reload. */
-export const emailStore: {emails: CustomEmail[]} = {emails: [...CUSTOM_EMAILS]};
+/**
+ * The custom emails, with the ones sent here on top, and the last "sent" confirmation: they outlive a change of
+ * route, until a reload.
+ */
+export const emailStore: {emails: CustomEmail[]; sent?: string} = {emails: [...CUSTOM_EMAILS]};
+
+/** The "sent" confirmation's text (the Banner's Success story). */
+export const sentText = (subject: string, recipients: number) =>
+  `Your email “${subject}” was sent to ${n(recipients)} recipients.`;
 
 // ── New email (the prototype's compose card: header, fields, footer of actions) ──
 
@@ -43,8 +50,9 @@ export function EmailComposer() {
     const email: CustomEmail = {id: `new-${emailStore.emails.length + 1}`, subject: subject.trim() || 'Untitled email', status, to, body,
       date: status === 'Sent' ? '29 Oct 2026, just now' : 'Edited 29 Oct 2026', ...(status === 'Sent' ? {opened: 0, clicked: 0} : {})};
     emailStore.emails = [email, ...emailStore.emails];
-    toast(status === 'Sent' ? 'Email sent' : 'Draft saved',
-      status === 'Sent' ? `“${email.subject}” is on its way to ${n(GROUP_SIZES[to])} recipients.` : email.subject);
+    // Sent: the list shows a success Banner; a saved draft gets the toast.
+    if (status === 'Sent') emailStore.sent = sentText(email.subject, GROUP_SIZES[to] ?? 0);
+    else toast('Draft saved', email.subject);
     navigate('/messaging');
   };
   return (

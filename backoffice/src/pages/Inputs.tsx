@@ -18,7 +18,7 @@ import {Badge} from '../../../src/components/gv/Badge';
 import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {NewDot} from '../../../src/components/gv/NewDot';
 import {IconButton} from '../../../src/components/gv/IconButton';
-import {Modal} from '../../../src/components/gv/Modal';
+import {AlertDialog} from '../../../src/components/gv/AlertDialog';
 import {PanelSection} from '../../../src/patterns/PanelSection';
 import {SelectionBar, type SelectionAction} from '../../../src/patterns/SelectionBar';
 import {ChevronDown, ChevronLeft, ChevronRight, CircleCheck, Download, Trash2, TriangleAlert, User, X} from 'lucide-react';
@@ -277,13 +277,10 @@ export function Inputs() {
           {preview && <InputPreview key={preview.id} input={preview} onChange={change} onClose={() => setOpen(null)} />}
         </div>
       </div>
-      <Modal title="Delete these inputs?" isOpen={confirmDelete} onOpenChange={setConfirmDelete}
-        footer={<>
-          <Button variant="secondary" slot="close">Cancel</Button>
-          <Button variant="primary" onPress={deleteSelected}>Delete {selected.size === 1 ? 'input' : `${selected.size} inputs`}</Button>
-        </>}>
+      <AlertDialog tone="danger" title="Delete these inputs?" isOpen={confirmDelete} onOpenChange={setConfirmDelete}
+        confirmLabel={`Delete ${selected.size === 1 ? 'input' : `${selected.size} inputs`}`} onConfirm={deleteSelected}>
         <p>{selected.size === 1 ? 'The selected input' : `The ${selected.size} selected inputs`} and their comments will be deleted. This cannot be undone.</p>
-      </Modal>
+      </AlertDialog>
       <ToastRegion />
     </Page>
   );

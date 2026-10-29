@@ -368,3 +368,9 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-phase-manage-lead { flex: 1; min-width: 0; display: flex; align-items: center; gap: var(--gv-space-8); }
 .bo-phase-manage-toolbar .react-aria-SearchField { width: 220px; }
 .bo-phase-manage-nowrap { white-space: nowrap; }
+/* ── Feedback: project settings side tabs, phase status ── */
+/* Modal's "With side tabs" story: the list and the panel each scroll on their own inside the fixed-height body. */
+.bo-phase-settings { display: flex; width: 100%; min-height: 0; }
+.bo-phase-settings-list { flex: 0 0 200px; padding: var(--gv-space-16) var(--gv-space-12); overflow-y: auto; border-inline-end: 1px solid var(--gv-border-row); }
+.bo-phase-settings-panel { flex: 1 1 auto; min-width: 0; overflow-y: auto; padding: var(--gv-space-20) var(--gv-space-24); }
+.bo-phase-status { margin-block-end: var(--gv-space-8); }

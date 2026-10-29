@@ -85,6 +85,7 @@ test('Create email opens the composer: sender, recipients, subject, message; Sen
   await page.locator('.react-aria-Toast').getByRole('button', {name: 'Close'}).click(); // it sits over the footer
   await page.getByRole('button', {name: 'Send now'}).click();
   await expect(page).toHaveURL(/#\/messaging$/);
+  await expect(page.locator('.gv-banner[data-tone="success"]')).toContainText('Your email “Autumn clean-up day” was sent to');
   await expect(page.getByRole('grid', {name: 'Custom emails'}).getByRole('row', {name: /Autumn clean-up day/})).toContainText('Sent');
 });
 
@@ -135,7 +136,12 @@ test('the draft composer saves, previews and sends the draft into the list', asy
   await saved.getByRole('button', {name: 'Send a preview'}).click();
   await expect(toasts(page).filter({hasText: 'Preview sent'})).toBeVisible();
   await saved.getByRole('button', {name: 'Send now'}).click();
-  await expect(toasts(page).filter({hasText: 'Email sent'})).toBeVisible();
+  // Sent: a success Banner on the list (the Banner's Success story), until it is dismissed.
+  const sent = page.locator('.gv-banner[data-tone="success"]');
+  await expect(sent).toHaveText(/^Your email “Bike parking: mark your street” was sent to [\d,]+ recipients\.$/);
+  await expect(toasts(page).filter({hasText: 'Email sent'})).toHaveCount(0);
+  await sent.getByRole('button', {name: 'Dismiss'}).click();
+  await expect(sent).toHaveCount(0);
   await expect(table.getByRole('row', {name: /Bike parking: mark your street/})).toContainText('Sent');
   await expect(saved).toHaveCount(0);
 });
@@ -149,7 +155,8 @@ test('a row menu duplicates an email, and deletes a draft after asking', async (
   await expect(table.getByRole('row', {name: /Copy of Library opening hours/})).toContainText('Draft');
   await table.getByRole('button', {name: /^Actions for Market Square/}).click();
   await page.getByRole('menuitem', {name: 'Delete'}).click();
-  const confirm = page.getByRole('dialog', {name: 'Delete this draft?'});
+  const confirm = page.getByRole('alertdialog', {name: 'Delete this draft?'});
+  await expect(confirm.getByRole('button', {name: 'Cancel'})).toBeFocused();
   await confirm.getByRole('button', {name: 'Delete draft'}).click();
   await expect(confirm).toHaveCount(0);
   await expect(table.getByRole('row', {name: /Market Square/})).toHaveCount(0);

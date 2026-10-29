@@ -20,6 +20,7 @@ import {Avatar} from '../../../src/components/gv/Avatar';
 import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {Badge} from '../../../src/components/gv/Badge';
 import {Modal} from '../../../src/components/gv/Modal';
+import {AlertDialog} from '../../../src/components/gv/AlertDialog';
 import {Card} from '../../../src/components/gv/Card';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {FilterChips} from '../../../src/patterns/FilterChips';
@@ -253,13 +254,10 @@ function MoveModal({project, folders, onClose, onMove}: {project: Project; folde
 
 function DeleteModal({project, onClose, onDelete}: {project: Project; onClose: () => void; onDelete: () => void}) {
   return (
-    <Modal title="Delete this project?" isOpen onOpenChange={o => { if (!o) onClose(); }}
-      footer={<>
-        <Button variant="secondary" slot="close">Cancel</Button>
-        <Button variant="primary" onPress={onDelete}>Delete project</Button>
-      </>}>
+    <AlertDialog tone="danger" title="Delete this project?" confirmLabel="Delete project" isOpen
+      onOpenChange={o => { if (!o) onClose(); }} onConfirm={onDelete}>
       <p>{project.title} and everything collected in it will be deleted. This cannot be undone.</p>
-    </Modal>
+    </AlertDialog>
   );
 }
 

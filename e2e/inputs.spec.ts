@@ -112,7 +112,7 @@ test('checking rows shows a bulk bar: change status, assign, delete', async ({pa
   await expect(page.getByRole('button', {name: /Manager C.*Assignee for More trees on Elm Lane/})).toBeVisible();
   // Delete asks first; Cancel keeps the inputs, Delete removes them.
   await bar.getByRole('button', {name: 'Delete', exact: true}).click();
-  const confirm = page.getByRole('dialog', {name: 'Delete these inputs?'});
+  const confirm = page.getByRole('alertdialog', {name: 'Delete these inputs?'});
   await expect(confirm).toContainText('The 2 selected inputs');
   await confirm.getByRole('button', {name: 'Cancel'}).click();
   await expect(confirm).toHaveCount(0);

@@ -20,11 +20,11 @@ import {StatTile} from '../../../src/components/gv/StatTile';
 import {Banner} from '../../../src/components/gv/Banner';
 import {Divider} from '../../../src/components/gv/Divider';
 import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Modal} from '../../../src/components/gv/Modal';
+import {AlertDialog} from '../../../src/components/gv/AlertDialog';
 import {AUTOMATED, GROUP_SIZES, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
-import {emailStore} from './MessagingPages';
+import {emailStore, sentText} from './MessagingPages';
 import {SectionHeading} from '../SectionHeading';
 
 const n = (v: number) => v.toLocaleString('en');
@@ -124,6 +124,9 @@ function CustomEmails() {
   const [emails, setEmails] = useEmails();
   const [draftId, setDraftId] = useState(emails.find(e => e.status === 'Draft' && e.body)?.id);
   const [deleting, setDeleting] = useState<CustomEmail | null>(null);
+  // The "sent" confirmation stays on the list (a success Banner) until dismissed: the composer's route leaves it here too.
+  const [sent, setSent] = useState(emailStore.sent);
+  const confirmSent = (text?: string) => setSent(emailStore.sent = text);
   const draft = emails.find(e => e.id === draftId && e.status !== 'Sent');
   const update = (id: string, patch: Partial<CustomEmail>) => setEmails(list => list.map(e => (e.id === id ? {...e, ...patch} : e)));
   const onAction = (e: CustomEmail, a: RowAction) => {
@@ -149,7 +152,7 @@ function CustomEmails() {
     if (!draft) return;
     update(draft.id, {...patch, status: 'Sent', date: '29 Oct 2026, just now', opened: 0, clicked: 0});
     const to = patch.to ?? draft.to;
-    toast('Email sent', `“${patch.subject}” is on its way to ${n(GROUP_SIZES[to] ?? 0)} recipients.`);
+    confirmSent(sentText(patch.subject ?? draft.subject, GROUP_SIZES[to] ?? 0));
     setDraftId(undefined);
   };
   const remove = () => {
@@ -165,18 +168,16 @@ function CustomEmails() {
         <Button variant="primary" size={32} onPress={() => navigate('/messaging/emails/custom/new')}><Plus aria-hidden size={16} />Create email</Button>
       </div>
       <div className="bo-messaging-stack">
+        {sent && <Banner tone="success" onDismiss={() => confirmSent(undefined)}>{sent}</Banner>}
         <CustomEmailTable emails={emails} onAction={onAction} />
         {draft
           ? <DraftComposer key={draft.id} email={draft} onSave={save} onSend={send} />
           : <p className="bo-note">Choose Edit on a draft to open it here.</p>}
       </div>
-      <Modal title="Delete this draft?" isOpen={deleting !== null} onOpenChange={o => { if (!o) setDeleting(null); }}
-        footer={<>
-          <Button variant="secondary" slot="close">Cancel</Button>
-          <Button variant="primary" onPress={remove}>Delete draft</Button>
-        </>}>
+      <AlertDialog tone="danger" title="Delete this draft?" confirmLabel="Delete draft" isOpen={deleting !== null}
+        onOpenChange={o => { if (!o) setDeleting(null); }} onConfirm={remove}>
         <p>{deleting?.subject} will be deleted. This cannot be undone.</p>
-      </Modal>
+      </AlertDialog>
     </>
   );
 }

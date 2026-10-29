@@ -190,8 +190,18 @@ test('a group has its own page: its members, Edit Group to rename it, Delete Gro
   await modal.getByRole('textbox', {name: 'Name of the group'}).fill('Youth council');
   await modal.getByRole('button', {name: 'Save group'}).click();
   await expect(page.getByRole('grid', {name: 'Youth council'})).toBeVisible();
-  await page.getByRole('button', {name: 'Delete Group'}).click();
-  await page.getByRole('dialog', {name: 'Delete Group'}).getByRole('button', {name: 'Delete'}).click();
+  // Delete Group confirms in an Alert dialog: no ×, focus on Cancel, Esc cancels; then Delete group deletes.
+  const deleteGroup = page.getByRole('button', {name: 'Delete Group'});
+  await deleteGroup.click();
+  const confirm = page.getByRole('alertdialog', {name: 'Delete this group?'});
+  await expect(confirm).toBeVisible();
+  await expect(confirm.getByRole('button', {name: 'Cancel'})).toBeFocused();
+  await expect(confirm.getByRole('button', {name: 'Close'})).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await expect(confirm).toHaveCount(0);
+  await expect(page.getByRole('grid', {name: 'Youth council'})).toBeVisible();
+  await deleteGroup.click();
+  await confirm.getByRole('button', {name: 'Delete group'}).click();
   await expect(page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Youth council/})).toHaveCount(0);
   await expect(page.getByRole('grid', {name: 'Registered users'})).toBeVisible();
 });
@@ -253,7 +263,7 @@ test('a row menu answers: admin rights toggle, add to group, block and delete as
 
   await options('Resident H').click();
   await page.getByRole('menuitem', {name: 'Block user'}).click();
-  const block = page.getByRole('dialog', {name: 'Block this user?'});
+  const block = page.getByRole('alertdialog', {name: 'Block this user?'});
   await block.getByRole('button', {name: 'Cancel'}).click();
   await expect(grid.getByRole('row', {name: /Resident H/})).toBeVisible();
   await options('Resident H').click();
@@ -266,7 +276,16 @@ test('a row menu answers: admin rights toggle, add to group, block and delete as
   await page.getByRole('listbox', {name: 'Users'}).getByRole('option', {name: /^Registered users/}).click();
   await options('Resident K').click();
   await page.getByRole('menuitem', {name: 'Delete user'}).click();
-  await page.getByRole('dialog', {name: 'Delete this user?'}).getByRole('button', {name: 'Delete user'}).click();
+  // An Alert dialog: focus starts on Cancel, no ×, Esc cancels and keeps the user.
+  const remove = page.getByRole('alertdialog', {name: 'Delete this user?'});
+  await expect(remove.getByRole('button', {name: 'Cancel'})).toBeFocused();
+  await expect(remove.getByRole('button', {name: 'Close'})).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await expect(remove).toHaveCount(0);
+  await expect(grid.getByRole('row', {name: /Resident K/})).toBeVisible();
+  await options('Resident K').click();
+  await page.getByRole('menuitem', {name: 'Delete user'}).click();
+  await remove.getByRole('button', {name: 'Delete user'}).click();
   await expect(toast(page).filter({hasText: 'Resident K is deleted'})).toBeVisible();
   await expect(page.getByRole('grid', {name: 'Registered users'}).getByRole('row')).toHaveCount(11); // header + ten
 });

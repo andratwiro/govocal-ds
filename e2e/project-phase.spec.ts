@@ -152,3 +152,35 @@ test('Build: the checklist and phase cards open', async ({page}) => {
   await setup.getByRole('button', {name: /Idea form/}).click();
   await expect(page.getByRole('dialog', {name: 'Idea form'})).toBeVisible();
 });
+
+test('Build: the phase status is a compact Banner, neutral before and after, success while live', async ({page}) => {
+  const strip = (page: Page) => page.getByRole('complementary', {name: 'Setup'}).locator('.gv-banner--compact');
+  for (const [phase, tone, text] of [
+    ['p2', 'neutral', 'EndedClosed on 21 Sep'],
+    ['p4', 'success', 'LiveEnds on 16 Nov'],
+    ['p5', 'neutral', 'Not startedStarts on 17 Nov']
+  ] as const) {
+    await page.goto(`/backoffice/#/projects/green-corridors/phases/${phase}/build`);
+    await expect(strip(page)).toHaveAttribute('role', 'status');
+    await expect(strip(page)).toHaveAttribute('data-tone', tone);
+    await expect(strip(page)).toHaveText(text);
+  }
+});
+
+test('Project settings: a fixed-height Modal with a vertical side list of tabs', async ({page}) => {
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
+  await page.getByRole('complementary', {name: 'Setup'}).getByRole('button', {name: 'Project settings'}).click();
+  const dialog = page.getByRole('dialog', {name: 'Project settings'});
+  await expect(dialog).toHaveAttribute('data-height', 'fixed');
+  const tabs = dialog.getByRole('tablist', {name: 'Project settings'});
+  await expect(tabs).toHaveAttribute('aria-orientation', 'vertical');
+  await expect(tabs.getByRole('tab')).toHaveCount(8);
+  // The side list sits beside the panel, not above it.
+  const list = await tabs.boundingBox();
+  const panel = await dialog.getByRole('tabpanel').boundingBox();
+  expect(panel!.x).toBeGreaterThanOrEqual(list!.x + list!.width - 1);
+  await tabs.getByRole('tab', {name: 'Access rights'}).click();
+  await expect(dialog.getByRole('tabpanel', {name: 'Access rights'})).toBeVisible();
+  await dialog.getByRole('button', {name: 'Save'}).click();
+  await expect(dialog).toHaveCount(0);
+});

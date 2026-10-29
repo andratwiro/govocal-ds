@@ -142,7 +142,7 @@ test('the header menus: View hides and shows the columns, Share invites, status 
   // A published project, one week in: the next step is to archive it, after a confirmation.
   await page.getByRole('button', {name: 'Live: change status'}).click();
   await page.getByRole('menuitem', {name: 'Archive project'}).click();
-  const confirm = page.getByRole('dialog', {name: 'Archive project?'});
+  const confirm = page.getByRole('alertdialog', {name: 'Archive project?'});
   await confirm.getByRole('button', {name: 'Archive project'}).click();
   await expect(page.getByRole('button', {name: 'Archived: change status'})).toBeVisible();
 });
