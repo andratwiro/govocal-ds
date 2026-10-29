@@ -46,6 +46,10 @@ radius and borders come from the part's props and the tokens.
   their own `gv-…` class) in `src/components/className.ts` do this.
 - A part that must not be restyled (`Coachmark`), or that renders no element of its own (triggers, an item's content),
   takes no `className`: TypeScript refuses it rather than dropping it.
+- Inside the system the same holds between parts: a stylesheet selects only its own block (`tests/own-block.test.mjs`).
+  A part that needs to place a child passes it a class of its own (List header gives each cell
+  `gv-list-header__cell`); one that needs a child to look different asks for a prop or a documented custom property.
+  Today's reach-ins are listed in the test, and the list only shrinks.
 
 ## The convention
 

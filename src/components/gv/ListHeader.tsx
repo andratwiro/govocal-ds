@@ -76,6 +76,7 @@ export function ListHeader({columns, onSort, onAddColumn, selectAll, hasLeadSlot
         {columns.map(column => (
           <ListHeaderCell
             key={column.key}
+            className="gv-list-header__cell"
             kind={column.kind}
             isStatic={column.isStatic}
             isSorted={column.isSorted}
