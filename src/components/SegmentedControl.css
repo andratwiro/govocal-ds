@@ -4,7 +4,7 @@
 .segmented-control {
   display: flex;
   width: fit-content;
-  border-radius: 9999px;
+  border-radius: var(--gv-radius-full);
 
   .react-aria-SelectionIndicator {
     position: absolute;
@@ -16,16 +16,16 @@
     transition-property: translate, width;
     transition-duration: var(--gv-motion-duration-medium);
     transition-timing-function: var(--gv-motion-easing-move);
-    border-radius: 9999px;
+    border-radius: var(--gv-radius-full);
   }
 
   .segmented-control-item {
     all: unset;
     display: block;
     color: var(--gray-1200);
-    font: var(--font-size) var(--gv-font-family);
-    font-weight: 500;
-    height: var(--spacing-8);
+    font: var(--gv-type-ui-strong);
+    letter-spacing: var(--gv-type-ui-strong-tracking);
+    height: var(--gv-size-control-32);
     outline: none;
     padding: 0 var(--spacing-3);
     position: relative;

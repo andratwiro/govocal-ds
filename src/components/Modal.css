@@ -41,7 +41,7 @@
   }
 
   .react-aria-TextField {
-    margin-bottom: 8px;
+    margin-bottom: var(--gv-space-8);
   }
 }
 

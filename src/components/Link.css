@@ -7,7 +7,7 @@
   display: inline;
   color: var(--gv-text-accent);
   font-family: var(--gv-font-family);
-  font-weight: 500;
+  font-weight: var(--gv-type-body-strong-weight);
   text-decoration: none;
   cursor: pointer;
   outline: none;

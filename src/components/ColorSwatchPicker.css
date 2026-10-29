@@ -2,14 +2,14 @@
 
 .react-aria-ColorSwatchPicker {
   display: flex;
-  gap: 8px;
+  gap: var(--gv-space-8);
   flex-wrap: wrap;
 }
 
 .react-aria-ColorSwatchPickerItem {
   position: relative;
   outline: none;
-  border-radius: 9999px;
+  border-radius: var(--gv-radius-full);
   width: fit-content;
   forced-color-adjust: none;
   -webkit-tap-highlight-color: transparent;

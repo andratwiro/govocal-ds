@@ -22,7 +22,7 @@
 .react-aria-Toast {
   position: relative;
   width: auto;
-  max-width: min(400px, calc(100vw - 32px));
+  max-width: min(400px, calc(100vw - var(--gv-space-32)));
   box-sizing: border-box;
   display: flex;
   align-items: flex-start;
@@ -31,7 +31,7 @@
      (green at 30 % on white), no shadow. */
   background: linear-gradient(var(--gv-surface-live), var(--gv-surface-live)) var(--gv-surface-panel);
   border: 1px solid color-mix(in srgb, var(--gv-color-green-400) 30%, var(--gv-surface-panel));
-  padding: 13px var(--gv-space-16);
+  padding: var(--gv-space-12) var(--gv-space-16);
   border-radius: var(--gv-radius-12);
   box-shadow: none;
   outline: none;
@@ -43,22 +43,22 @@
     outline-offset: 2px;
   }
 
-  /* .pj-toast__ic: an 18 circle, green-400, a white 11 check, on the title's first line. */
+  /* .pj-toast__ic: an 18 circle, green-400, a white 12 check (the prototype's 11), on the title's first line. */
   .toast-icon {
     flex: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 18px;
-    height: 18px;
-    margin-top: 3px;
+    width: var(--gv-size-icon-18);
+    height: var(--gv-size-icon-18);
+    margin-top: var(--gv-space-3);
     border-radius: var(--gv-radius-full);
     background: var(--gv-color-green-400);
     color: var(--gv-icon-inverse);
 
     > svg {
-      width: 11px;
-      height: 11px;
+      width: var(--gv-size-icon-12);
+      height: var(--gv-size-icon-12);
     }
   }
 
@@ -91,7 +91,7 @@
       align-self: flex-start;
       display: inline-flex;
       align-items: center;
-      height: 28px;
+      height: var(--gv-size-control-28);
       margin-top: var(--gv-space-11);
       padding: 0 var(--gv-space-12);
       border: 1px solid color-mix(in srgb, var(--gv-color-green-400) 30%, var(--gv-surface-panel));
@@ -117,20 +117,21 @@
     }
   }
 
-  /* × : 24, radius 6, 10 from the top and 12 from the end; dark green over slate, darker on hover. */
+  /* × : 24 with a 16 icon (the prototype's 15), radius 6, 9 from the top and 12 from the end; dark green over
+     slate, darker on hover. */
   .react-aria-Button[slot='close'] {
     flex: 0 0 auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin: -3px -4px 0 0;
+    margin: calc(-1 * var(--gv-space-3)) calc(-1 * var(--gv-space-4)) 0 0;
     background: none;
     border: none;
     box-shadow: none;
     appearance: none;
     border-radius: var(--gv-radius-6);
-    height: var(--gv-space-24);
-    width: var(--gv-space-24);
+    height: var(--gv-size-control-24);
+    width: var(--gv-size-control-24);
     min-width: 0;
     color: color-mix(in srgb, var(--gv-text-live) 55%, var(--gv-color-slate-500));
     padding: 0;
@@ -138,8 +139,8 @@
     -webkit-tap-highlight-color: transparent;
 
     svg {
-      width: 15px;
-      height: 15px;
+      width: var(--gv-size-icon-16);
+      height: var(--gv-size-icon-16);
     }
 
     &[data-hovered],

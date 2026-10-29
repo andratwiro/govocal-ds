@@ -10,7 +10,7 @@
   font: var(--gv-type-ui);
   letter-spacing: var(--gv-type-ui-tracking);
   height: auto;
-  max-height: calc(100% - 32px);
+  max-height: calc(100% - var(--gv-space-32));
   width: calc(100% - var(--spacing-3));
   max-width: 800px;
   margin: var(--spacing-2);
@@ -55,14 +55,14 @@
 
   &[data-swipe-direction='bottom'] .sheet-handle,
   &[data-swipe-direction='vertical'] .sheet-handle {
-    top: 12px;
+    top: var(--gv-space-12);
     left: 50%;
     transform: translateX(-50%);
     width: 80px;
     height: 6px;
   }
   &[data-swipe-direction='top'] .sheet-handle {
-    bottom: 12px;
+    bottom: var(--gv-space-12);
     left: 50%;
     transform: translateX(-50%);
     width: 80px;
@@ -70,14 +70,14 @@
   }
   &[data-swipe-direction='left'] .sheet-handle,
   &[data-swipe-direction='horizontal'] .sheet-handle {
-    right: 12px;
+    right: var(--gv-space-12);
     top: 50%;
     transform: translateY(-50%);
     height: 80px;
     width: 6px;
   }
   &[data-swipe-direction='right'] .sheet-handle {
-    left: 12px;
+    left: var(--gv-space-12);
     top: 50%;
     transform: translateY(-50%);
     height: 80px;

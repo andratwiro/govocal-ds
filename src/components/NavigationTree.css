@@ -40,7 +40,7 @@
   display: flex;
   position: relative;
   align-items: center;
-  min-height: 32px;
+  min-height: var(--gv-size-control-32);
   border-radius: var(--radius);
   box-sizing: border-box;
   outline: none;
@@ -61,7 +61,7 @@
     display: none;
     content: '';
     position: absolute;
-    inset-inline-start: 2px;
+    inset-inline-start: var(--gv-space-2);
     top: 50%;
     transform: translateY(-50%);
     background: var(--gv-icon-quiet);
@@ -123,16 +123,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--spacing-6);
-    height: var(--spacing-6);
+    width: var(--gv-size-control-24);
+    height: var(--gv-size-control-24);
     border-radius: var(--gv-radius-6);
     color: var(--gv-icon-quiet);
     cursor: default;
     -webkit-tap-highlight-color: transparent;
 
     svg {
-      width: var(--spacing-4);
-      height: var(--spacing-4);
+      width: var(--gv-size-icon-16);
+      height: var(--gv-size-icon-16);
       rotate: 0deg;
       transition: rotate var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
     }

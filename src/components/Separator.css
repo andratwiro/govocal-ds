@@ -10,7 +10,7 @@
 
   &[aria-orientation='vertical'] {
     width: 1px;
-    min-height: 32px;
+    min-height: var(--gv-size-control-32);
     height: 100%;
   }
 }

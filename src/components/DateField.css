@@ -37,7 +37,7 @@
 }
 
 .react-aria-DateSegment {
-  padding: 0 1px;
+  padding: 0 var(--gv-space-1);
   border-radius: var(--gv-radius-4);
   font-variant-numeric: tabular-nums;
   text-align: end;

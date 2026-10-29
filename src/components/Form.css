@@ -13,8 +13,8 @@
 .react-aria-Form [role='alert'] {
   border: 2px solid var(--invalid-color);
   background: var(--overlay-background);
-  border-radius: 6px;
-  padding: 12px;
+  border-radius: var(--gv-radius-6);
+  padding: var(--gv-space-12);
   max-width: 250px;
   outline: none;
 
@@ -74,8 +74,8 @@
   border-radius: var(--gv-radius-6);
   border: none;
   box-shadow: none;
-  margin-left: calc(-1 * var(--spacing-8) + 4px);
-  height: calc(100% - 8px);
+  margin-left: calc(var(--gv-space-4) - var(--spacing-8));
+  height: calc(100% - var(--gv-space-8));
   aspect-ratio: 1/1;
   padding: 0;
   display: flex;
@@ -88,8 +88,8 @@
   -webkit-tap-highlight-color: transparent;
 
   svg {
-    width: var(--spacing-4);
-    height: var(--spacing-4);
+    width: var(--gv-size-icon-16);
+    height: var(--gv-size-icon-16);
   }
 
   &:where([data-hovered], [data-pressed]) {

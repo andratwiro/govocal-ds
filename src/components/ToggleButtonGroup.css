@@ -17,7 +17,7 @@
     --button-color: var(--gv-surface-panel);
     --button-text: var(--gv-text-secondary);
     height: auto;
-    min-height: 28px;
+    min-height: var(--gv-size-control-28);
     padding: var(--gv-space-6) var(--gv-space-11);
     font: var(--gv-type-small);
     letter-spacing: var(--gv-type-small-tracking);

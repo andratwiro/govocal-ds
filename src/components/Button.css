@@ -13,7 +13,7 @@
   letter-spacing: var(--gv-type-ui-strong-tracking);
   margin: 0;
   border-radius: var(--gv-radius-8);
-  height: 36px;
+  height: var(--gv-size-control-36);
   padding: 0 var(--gv-space-12);
   gap: var(--gv-space-6);
   text-decoration: none;
@@ -31,7 +31,7 @@
   -webkit-tap-highlight-color: transparent;
 
   &[data-size='32'] {
-    height: 32px;
+    height: var(--gv-size-control-32);
     padding: 0 var(--gv-space-16);
     gap: var(--gv-space-8);
   }
@@ -108,8 +108,8 @@
 
   /* Icons: 16, drawn at Figma's stroke (1.17 at 16 = 1.75 on Lucide's 24 grid). */
   > svg {
-    width: 16px;
-    height: 16px;
+    width: var(--gv-size-icon-16);
+    height: var(--gv-size-icon-16);
     stroke-width: 1.75;
   }
 
@@ -120,12 +120,12 @@
   /* Icon-only: square with the same radius 8 as Figma's Icon button and the prototype's
      `.btn-icon` (neither draws a round button). */
   &[data-icon-only] {
-    width: 36px;
+    width: var(--gv-size-control-36);
     flex-shrink: 0;
     padding: 0;
 
     &[data-size='32'] {
-      width: 32px;
+      width: var(--gv-size-control-32);
     }
   }
 

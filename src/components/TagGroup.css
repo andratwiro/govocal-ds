@@ -83,7 +83,7 @@
     outline: none;
     border-radius: 100%;
     aspect-ratio: 1/1;
-    height: calc(100% - 4px);
+    height: calc(100% - var(--gv-space-4));
     width: auto;
     min-width: 0;
     display: flex;
@@ -95,8 +95,8 @@
     -webkit-tap-highlight-color: transparent;
 
     svg {
-      width: 12px;
-      height: 12px;
+      width: var(--gv-size-icon-12);
+      height: var(--gv-size-icon-12);
     }
 
     &:where([data-hovered], [data-pressed]) {

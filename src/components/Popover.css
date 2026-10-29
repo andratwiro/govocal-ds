@@ -41,18 +41,18 @@
   }
 
   &[data-placement='top'] {
-    --origin: translateY(8px);
+    --origin: translateY(var(--gv-space-8));
 
     &:has(.react-aria-OverlayArrow) {
-      margin-bottom: 6px;
+      margin-bottom: var(--gv-space-6);
     }
   }
 
   &[data-placement='bottom'] {
-    --origin: translateY(-8px);
+    --origin: translateY(calc(-1 * var(--gv-space-8)));
 
     &:has(.react-aria-OverlayArrow) {
-      margin-top: 6px;
+      margin-top: var(--gv-space-6);
     }
 
     .react-aria-OverlayArrow svg {
@@ -61,10 +61,10 @@
   }
 
   &[data-placement='right'] {
-    --origin: translateX(-8px);
+    --origin: translateX(calc(-1 * var(--gv-space-8)));
 
     &:has(.react-aria-OverlayArrow) {
-      margin-left: 6px;
+      margin-left: var(--gv-space-6);
     }
 
     .react-aria-OverlayArrow svg {
@@ -73,10 +73,10 @@
   }
 
   &[data-placement='left'] {
-    --origin: translateX(8px);
+    --origin: translateX(var(--gv-space-8));
 
     &:has(.react-aria-OverlayArrow) {
-      margin-right: 6px;
+      margin-right: var(--gv-space-6);
     }
 
     .react-aria-OverlayArrow svg {

@@ -51,8 +51,8 @@
 
     svg {
       flex: none;
-      width: 14px;
-      height: 14px;
+      width: var(--gv-size-icon-14);
+      height: var(--gv-size-icon-14);
       color: var(--gv-icon-strong);
       rotate: 0deg;
       transition: rotate var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);

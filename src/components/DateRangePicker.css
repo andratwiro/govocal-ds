@@ -48,11 +48,11 @@
   }
 
   [slot='start'] ~ span {
-    padding: 0 4px;
+    padding: 0 var(--gv-space-4);
   }
 
   [slot='end'] {
-    margin-right: 1.75rem;
+    margin-right: var(--gv-space-28);
     flex: 1;
   }
 
@@ -64,7 +64,7 @@
     box-shadow: none;
     background: none;
     height: auto;
-    line-height: normal;
+    line-height: var(--gv-type-ui-line);
     &[data-focus-within] {
       outline: unset;
     }

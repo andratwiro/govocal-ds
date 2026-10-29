@@ -83,7 +83,7 @@
     &::after {
       content: '';
       position: absolute;
-      inset: 3px;
+      inset: var(--gv-space-3);
       border-radius: inherit;
       background: transparent;
       transition: background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
