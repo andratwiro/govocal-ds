@@ -35,7 +35,8 @@
   .react-aria-Input {
     grid-area: input;
     width: 100%;
-    padding: 0 var(--spacing-8) 0 34px;
+    /* The icon's start margin, the icon, then 8. */
+    padding: 0 var(--gv-space-32) 0 calc(var(--gv-space-10) + var(--gv-space-16) + var(--gv-space-8));
 
     &::-webkit-search-cancel-button,
     &::-webkit-search-decoration {
@@ -103,7 +104,7 @@
   .react-aria-Input {
     min-height: var(--gv-space-28);
     height: var(--gv-space-28);
-    padding-inline-start: 30px;
+    padding-inline-start: calc(var(--gv-space-8) + var(--gv-space-14) + var(--gv-space-8));
   }
 
   .clear-button {
