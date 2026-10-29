@@ -1,11 +1,14 @@
 import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router';
-import {Eye} from 'lucide-react';
+import {Eye, FileQuestion} from 'lucide-react';
 import {Button} from '../../../src/components/Button';
 import {TextField} from '../../../src/components/TextField';
 import {RadioGroup, Radio} from '../../../src/components/RadioGroup';
 import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {Card} from '../../../src/components/gv/Card';
+import {ToastRegion, queue} from '../../../src/components/Toast';
+import {Panel} from '../../../src/components/gv/Panel';
+import {Banner} from '../../../src/components/gv/Banner';
+import {EmptyState} from '../../../src/components/gv/EmptyState';
 import {Divider} from '../../../src/components/gv/Divider';
 import {SectionToggle} from '../../../src/patterns/SectionToggle';
 import {CUSTOM_PAGE_SECTIONS, HOME_SECTIONS, MENU_ENTRIES, NAV_NAMES, PAGE_INTRO, PAGE_META, type PageSection} from '../data-pages-menu';
@@ -17,13 +20,11 @@ import {Page} from './Page';
 // its view. Shallow, as the real admin's routes under /pages-menu.
 const CRUMB = [{key: 'pages-menu', label: 'Pages & menu', href: '#/pages-menu'}];
 
-/** Save and what happened, under what it saves. */
-function SaveRow({label, isDisabled, done, onSave}: {label: string; isDisabled: boolean; done: string; onSave: () => void}) {
+/** Save, which turns off until something changes again; the save says so in a Toast. */
+function SaveButton({label, isDisabled, done, onSave}: {label: string; isDisabled: boolean; done: string; onSave: () => void}) {
   return (
-    <div className="bo-pages-menu-save">
-      <Button variant="primary" isDisabled={isDisabled} onPress={onSave}>{label}</Button>
-      <span role="status" className="bo-note">{done}</span>
-    </div>
+    <Button variant="primary" size={32} isDisabled={isDisabled}
+      onPress={() => { onSave(); queue.add({title: done}, {timeout: 5000}); }}>{label}</Button>
   );
 }
 
@@ -47,48 +48,67 @@ const initial = (sections: PageSection[]) => Object.fromEntries(sections.map(s =
 export function HomepageBuilder() {
   const [on, setOn] = useState(() => initial(HOME_SECTIONS));
   const [dirty, setDirty] = useState(false);
-  const [done, setDone] = useState('');
   const shown = HOME_SECTIONS.filter(s => on[s.id]);
   return (
     <Page title="Homepage" crumbs={CRUMB} description="Turn the homepage's sections on and off. The preview follows.">
       <div className="bo-pages-menu-split">
-        <Card title="Sections" layout="stacked">
-          <div className="bo-pages-menu-body">
-            <p className="bo-note bo-pages-menu-intro">This page consists of the following sections. You can turn them on or off.</p>
-            <SectionList sections={HOME_SECTIONS} on={on} onChange={o => { setOn(o); setDirty(true); setDone(''); }} />
-            <SaveRow label="Save homepage" isDisabled={!dirty} done={done} onSave={() => { setDirty(false); setDone('Homepage saved'); }} />
-          </div>
-        </Card>
-        <Gap name="Homepage preview">
-          <ol className="bo-pages-menu-preview" aria-label="Homepage preview">
-            {shown.map(s => <li key={s.id} className="bo-note">{s.title}</li>)}
-          </ol>
-        </Gap>
+        <Panel title="Sections" count={`${shown.length} of ${HOME_SECTIONS.length} shown`}
+          description="This page consists of the following sections. You can turn them on or off."
+          footer={<SaveButton label="Save homepage" isDisabled={!dirty} done="Homepage saved" onSave={() => setDirty(false)} />}>
+          <SectionList sections={HOME_SECTIONS} on={on} onChange={o => { setOn(o); setDirty(true); }} />
+        </Panel>
+        <Panel title="Preview" description="The homepage's sections, top to bottom.">
+          <Gap name="Homepage preview">
+            <ol className="bo-pages-menu-preview" aria-label="Homepage preview">
+              {shown.map(s => <li key={s.id} className="bo-note">{s.title}</li>)}
+            </ol>
+          </Gap>
+        </Panel>
       </div>
+      <ToastRegion />
     </Page>
   );
 }
 
+/** A menu item or page that isn't there: the Empty state, with the way back. */
+function NotFound({title, what}: {title: string; what: string}) {
+  const navigate = useNavigate();
+  return (
+    <Page title={title} crumbs={CRUMB}>
+      <EmptyState size="page" icon={<FileQuestion size={24} />} title={`This ${what} does not exist`}
+        description="It may have been deleted. Pages & menu lists everything there is."
+        action={<Button variant="secondary" size={32} onPress={() => navigate('/pages-menu')}>Back to Pages & menu</Button>} />
+    </Page>
+  );
+}
+
+// One form per item: moving to another item's route starts afresh.
 export function NavbarItemEdit() {
   const {itemId = ''} = useParams();
+  return <NavbarItemForm key={itemId} itemId={itemId} />;
+}
+
+function NavbarItemForm({itemId}: {itemId: string}) {
   const item = MENU_ENTRIES.find(e => e.id === itemId);
   const [names, setNames] = useState<Record<string, string>>(() => ({en: item?.label ?? '', ...NAV_NAMES[itemId]}));
   const [dirty, setDirty] = useState(false);
-  const [done, setDone] = useState('');
-  if (!item) return <Page title="Menu item not found" crumbs={CRUMB}><p className="bo-note">This menu item does not exist.</p></Page>;
-  const missing = LOCALES.some(l => !names[l.id]?.trim());
+  if (!item) return <NotFound title="Menu item not found" what="menu item" />;
+  const missing = LOCALES.filter(l => !names[l.id]?.trim());
   return (
-    <Page title={item.label} crumbs={CRUMB} description="The name of this item in the navigation bar, in every platform language.">
-      <Card title="Name in navbar" layout="stacked">
+    <Page title={item.label} crumbs={CRUMB}>
+      <Panel title="Name in navbar" description="The name of this item in the navigation bar, in every platform language."
+        footer={<SaveButton label="Save page" isDisabled={!dirty} done="Page successfully saved" onSave={() => setDirty(false)} />}>
         <div className="bo-pages-menu-form">
+          {missing.length > 0 && <Banner tone="warning" title="Provide a title for all languages.">
+            Missing: {missing.map(l => l.label).join(', ')}. Residents using that language see the English name.
+          </Banner>}
           {LOCALES.map(l => (
             <TextField key={l.id} label={`Name in navbar (${l.label})`} value={names[l.id] ?? ''}
-              onChange={v => { setNames(n => ({...n, [l.id]: v})); setDirty(true); setDone(''); }} />
+              onChange={v => { setNames(n => ({...n, [l.id]: v})); setDirty(true); }} />
           ))}
-          {missing && <p className="bo-note">Provide a title for all languages.</p>}
-          <SaveRow label="Save page" isDisabled={!dirty} done={done} onSave={() => { setDirty(false); setDone('Page successfully saved'); }} />
         </div>
-      </Card>
+      </Panel>
+      <ToastRegion />
     </Page>
   );
 }
@@ -96,9 +116,13 @@ export function NavbarItemEdit() {
 const slugify = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
-/** Create custom page (no id) or edit one: Settings and Content tabs, one Save for both. */
+/** Create custom page (no id) or edit one: Settings and Content tabs, one Save for both, in the page head. */
 export function CustomPageEditor() {
   const {pageId} = useParams();
+  return <CustomPageForm key={pageId ?? 'new'} pageId={pageId} />;
+}
+
+function CustomPageForm({pageId}: {pageId?: string}) {
   const navigate = useNavigate();
   const page = pageId ? MENU_ENTRIES.find(e => e.id === pageId && e.kind === 'page') : undefined;
   const [title, setTitle] = useState(page?.label ?? '');
@@ -107,48 +131,49 @@ export function CustomPageEditor() {
   const [linked, setLinked] = useState('none');
   const [on, setOn] = useState(() => initial(CUSTOM_PAGE_SECTIONS));
   const [dirty, setDirty] = useState(false);
-  const [done, setDone] = useState('');
-  if (pageId && !page) return <Page title="Page not found" crumbs={CRUMB}><p className="bo-note">This custom page does not exist.</p></Page>;
-  const touch = () => { setDirty(true); setDone(''); };
+  if (pageId && !page) return <NotFound title="Page not found" what="custom page" />;
+  const touch = () => setDirty(true);
   const isNew = !page;
+  const shown = CUSTOM_PAGE_SECTIONS.filter(s => on[s.id]).length;
   return (
     <Page title={isNew ? 'Create custom page' : page.label} crumbs={CRUMB}
-      actions={!isNew && <Button variant="secondary" size={32} onPress={() => navigate(`/pages-menu/pages/${page.id}/view`)}>
-        <Eye aria-hidden size={16} />View page</Button>}>
+      actions={<span className="bo-pages-menu-actions">
+        {!isNew && <Button variant="secondary" size={32} onPress={() => navigate(`/pages-menu/pages/${page.id}/view`)}>
+          <Eye aria-hidden size={16} />View page</Button>}
+        <SaveButton label="Save custom page" isDisabled={!title.trim() || !dirty}
+          done={isNew ? 'Page successfully created' : 'Page successfully saved'} onSave={() => setDirty(false)} />
+      </span>}>
       <Tabs defaultSelectedKey="settings">
         <TabList aria-label="Custom page sections">
           <Tab id="settings">Settings</Tab>
           <Tab id="content">Content</Tab>
         </TabList>
         <TabPanels>
-        <TabPanel id="settings" className="react-aria-TabPanel bo-pages-menu-panel">
-          <Card title="Page settings" layout="stacked">
-            <div className="bo-pages-menu-form">
-              <TextField label="Title" isRequired placeholder="Enter a title" value={title}
-                onChange={v => { setTitle(v); if (!slugTouched) setSlug(slugify(v)); touch(); }} />
-              <TextField label="Slug" value={slug} description="Lowercase letters (a-z), numbers (0-9) and hyphens only."
-                onChange={v => { setSlug(v); setSlugTouched(true); touch(); }} />
-              <RadioGroup label="Linked items" description="Select which items and related events can be displayed on the page."
-                value={linked} onChange={v => { setLinked(v); touch(); }}>
-                <Radio value="none">None</Radio>
-                <Radio value="area">By area</Radio>
-                <Radio value="tags">By tag(s)</Radio>
-              </RadioGroup>
-            </div>
-          </Card>
-        </TabPanel>
-        <TabPanel id="content" className="react-aria-TabPanel bo-pages-menu-panel">
-          <Card title="Page content" layout="stacked">
-            <div className="bo-pages-menu-body">
-              <p className="bo-note bo-pages-menu-intro">This page consists of the following sections. You can turn them on or off.</p>
+          <TabPanel id="settings" className="react-aria-TabPanel bo-pages-menu-panel">
+            <Panel title="Page settings" description="The page's title, its address on the platform, and what it links to.">
+              <div className="bo-pages-menu-form">
+                <TextField label="Title" isRequired placeholder="Enter a title" value={title}
+                  onChange={v => { setTitle(v); if (!slugTouched) setSlug(slugify(v)); touch(); }} />
+                <TextField label="Slug" value={slug} description="Lowercase letters (a-z), numbers (0-9) and hyphens only."
+                  onChange={v => { setSlug(v); setSlugTouched(true); touch(); }} />
+                <RadioGroup label="Linked items" description="Select which items and related events can be displayed on the page."
+                  value={linked} onChange={v => { setLinked(v); touch(); }}>
+                  <Radio value="none">None</Radio>
+                  <Radio value="area">By area</Radio>
+                  <Radio value="tags">By tag(s)</Radio>
+                </RadioGroup>
+              </div>
+            </Panel>
+          </TabPanel>
+          <TabPanel id="content" className="react-aria-TabPanel bo-pages-menu-panel">
+            <Panel title="Page content" count={`${shown} of ${CUSTOM_PAGE_SECTIONS.length} shown`}
+              description="This page consists of the following sections. You can turn them on or off.">
               <SectionList sections={CUSTOM_PAGE_SECTIONS} on={on} onChange={o => { setOn(o); touch(); }} />
-            </div>
-          </Card>
-        </TabPanel>
+            </Panel>
+          </TabPanel>
         </TabPanels>
       </Tabs>
-      <SaveRow label="Save custom page" isDisabled={!title.trim() || !dirty} done={done}
-        onSave={() => { setDirty(false); setDone(isNew ? 'Page successfully created' : 'Page successfully saved'); }} />
+      <ToastRegion />
     </Page>
   );
 }
@@ -157,7 +182,7 @@ export function CustomPageEditor() {
 export function CustomPageView() {
   const {pageId = ''} = useParams();
   const page = MENU_ENTRIES.find(e => e.id === pageId && e.kind === 'page');
-  if (!page) return <Page title="Page not found" crumbs={CRUMB}><p className="bo-note">This custom page does not exist.</p></Page>;
+  if (!page) return <NotFound title="Page not found" what="custom page" />;
   return (
     <Page title={page.label} crumbs={[...CRUMB, {key: 'edit', label: 'Edit page', href: `#/pages-menu/pages/${page.id}`}]}
       description={`/pages/${PAGE_META[page.id].slug} on the platform`}>

@@ -69,3 +69,6 @@ export const PAGE_INTRO: Record<string, string> = {
   'your-input': 'What happens after you take part: who reads your input, when you hear back, and how decisions are made.',
   grants: 'Small grants for neighbourhood projects run by residents. Apply before the end of the year.'
 };
+
+/** The custom pages that exist at the start, in the order they were made. */
+export const PAGES_START = MENU_ENTRIES.filter(e => e.kind === 'page').map(e => e.id);

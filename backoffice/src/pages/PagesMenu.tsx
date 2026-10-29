@@ -1,154 +1,215 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router';
-import {ArrowUpDown, Eye, GripVertical, Lock, Pencil, Plus, Trash2} from 'lucide-react';
+import {ArrowDown, ArrowUp, Eye, FileText, GripVertical, Lock, Pencil, Plus, Trash2, X} from 'lucide-react';
 import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
 import {Button} from '../../../src/components/Button';
 import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
 import {Switch} from '../../../src/components/Switch';
-import {GridList, GridListItem} from '../../../src/components/GridList';
-import {Card} from '../../../src/components/gv/Card';
+import {ToastRegion, queue} from '../../../src/components/Toast';
+import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableOptions,
+  DataTableStack} from '../../../src/components/gv/DataTable';
+import {Panel} from '../../../src/components/gv/Panel';
 import {Badge} from '../../../src/components/gv/Badge';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
+import {Banner} from '../../../src/components/gv/Banner';
+import {EmptyState} from '../../../src/components/gv/EmptyState';
+import {AlertDialog} from '../../../src/components/gv/AlertDialog';
 import {IconButton} from '../../../src/components/gv/IconButton';
-import {Divider} from '../../../src/components/gv/Divider';
-import {MENU_ENTRIES, MENU_START, PAGE_META, type MenuEntry} from '../data-pages-menu';
+import {MENU_ENTRIES, MENU_START, PAGE_META, PAGES_START, type MenuEntry} from '../data-pages-menu';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
-import {SectionHeading} from '../SectionHeading';
 
 const entry = (id: string) => MENU_ENTRIES.find(e => e.id === id)!;
-const move = (list: string[], id: string, by: number) => {
-  const i = list.indexOf(id), j = i + by;
-  // Home stays first, as in the real admin.
-  if (j < 1 || j >= list.length) return list;
-  const next = [...list];
-  [next[i], next[j]] = [next[j], next[i]];
-  return next;
-};
+const icon = (Icon: typeof Plus) => <Icon aria-hidden size={16} />;
 
-type MenuProps = {menu: string[]; setMenu: (m: string[]) => void};
-
-// One navigation bar item, as the prototype's page outline row: a grip (a lock when pinned), the
-// label, then its actions at the end.
-function MenuRow({item, index, count, menu, setMenu}: MenuProps & {item: MenuEntry; index: number; count: number}) {
-  const pinned = item.kind === 'home';
-  const navigate = useNavigate();
-  return (
-    <GridListItem id={item.id} textValue={item.label}>
-      <div className="bo-pages-menu-row">
-        {pinned
-          ? <span className="bo-pages-menu-grip"><Lock aria-label="Always first" size={16} /></span>
-          : <Gap name="Drag-and-drop reordering" inline><span className="bo-pages-menu-grip"><GripVertical aria-hidden size={16} /></span></Gap>}
-        <span className="bo-pages-menu-label">{item.label}</span>
-        {item.kind !== 'page' && <Badge>Default</Badge>}
-        <span className="bo-push" />
-        <IconButton variant="bordered" aria-label={pinned ? 'Edit homepage' : `Edit ${item.label}`}
-          onPress={() => navigate(pinned ? '/pages-menu/homepage-builder' : `/pages-menu/navbar-items/edit/${item.id}`)}>
-          <Pencil aria-hidden size={16} />
-        </IconButton>
-        {!pinned && <>
-          <Button variant="quiet" size={32} aria-label={`Remove ${item.label} from menu`} onPress={() => setMenu(menu.filter(id => id !== item.id))}>Remove from menu</Button>
-          <MenuTrigger>
-            <IconButton aria-label={`Reorder ${item.label}`}><ArrowUpDown aria-hidden size={16} /></IconButton>
-            <Menu aria-label={`Reorder ${item.label}`} onAction={k => setMenu(move(menu, item.id, k === 'up' ? -1 : 1))}
-              disabledKeys={[...(index <= 1 ? ['up'] : []), ...(index === count - 1 ? ['down'] : [])]}>
-              <MenuItem id="up">Move up</MenuItem>
-              <MenuItem id="down">Move down</MenuItem>
-            </Menu>
-          </MenuTrigger>
-        </>}
-      </div>
-    </GridListItem>
-  );
+// The menu and the pages as changed here: they outlive a visit to an editor, until a reload, so an Undo pressed
+// after leaving the page still lands.
+const store = {menu: [...MENU_START], pages: [...PAGES_START]};
+function useStored<K extends keyof typeof store>(key: K) {
+  const [value, set] = useState(store[key]);
+  const update = (f: (v: string[]) => string[]) => set(store[key] = f(store[key]));
+  return [value, update] as const;
 }
 
-function MenuTab({menu, setMenu, pages}: MenuProps & {pages: string[]}) {
+/** Instant changes say so in a Toast, with Undo where they can be taken back (docs/DECISIONS.md). */
+const toast = (title: string, undo?: () => void) =>
+  queue.add({title, ...(undo && {action: 'Undo', onAction: undo})}, {timeout: 5000});
+
+type Update = (f: (v: string[]) => string[]) => void;
+
+/** The navigation bar: a Panel over a Data table, Home pinned first, the rest moved with the arrows. */
+function MenuTab({menu, setMenu, pages}: {menu: string[]; setMenu: Update; pages: string[]}) {
+  const navigate = useNavigate();
   const addable = MENU_ENTRIES.filter(e => !menu.includes(e.id) && (e.kind !== 'page' || pages.includes(e.id)));
   const items = menu.map(entry);
+  // Home stays first, as in the real admin.
+  const swap = (i: number, j: number) => setMenu(m => {
+    const next = [...m];
+    [next[i], next[j]] = [next[j], next[i]];
+    return next;
+  });
+  const remove = (item: MenuEntry) => {
+    const at = menu.indexOf(item.id);
+    setMenu(m => m.filter(id => id !== item.id));
+    toast(`${item.label} removed from the menu`, () => setMenu(m => [...m.slice(0, at), item.id, ...m.slice(at)]));
+  };
+  const add = (id: string) => {
+    setMenu(m => [...m, id]);
+    toast(`${entry(id).label} added to the menu`, () => setMenu(m => m.filter(x => x !== id)));
+  };
+  const edit = (item: MenuEntry) =>
+    navigate(item.kind === 'home' ? '/pages-menu/homepage-builder' : `/pages-menu/navbar-items/edit/${item.id}`);
   return (
-    <Card
-      layout="stacked"
-      title="Navigation bar"
+    <Panel title="Navigation bar" count={items.length} flush
+      description="Organise the menu that appears across your site. Add new items and drag to reorder."
       actions={
         <MenuTrigger>
-          <Button variant="primary" size={32} isDisabled={addable.length === 0}><Plus aria-hidden size={16} />New menu item</Button>
-          <Menu aria-label="New menu item" onAction={k => setMenu([...menu, String(k)])}>
-            {addable.map(e => <MenuItem key={e.id} id={e.id}>{e.label}</MenuItem>)}
+          <Button variant="primary" size={32} isDisabled={addable.length === 0}>{icon(Plus)}New menu item</Button>
+          <Menu aria-label="New menu item" onAction={k => add(String(k))}>
+            {addable.map(e => <MenuItem key={e.id} id={e.id} icon={icon(e.kind === 'page' ? FileText : Plus)}
+              description={e.kind === 'page' ? 'Custom page' : 'Platform page'}>{e.label}</MenuItem>)}
           </Menu>
         </MenuTrigger>
-      }>
-      <div className="bo-pages-menu-body">
-        <p className="bo-note bo-pages-menu-intro">Organise the menu that appears across your site. Add new items and drag to reorder.</p>
-        <GridList aria-label="Menu items" layout="stack" className="react-aria-GridList bo-pages-menu-list">
-          {items.map((item, i) => <MenuRow key={item.id} item={item} index={i} count={items.length} menu={menu} setMenu={setMenu} />)}
-        </GridList>
-      </div>
-    </Card>
+      }
+      footer={<GapLegend names={['drag-and-drop reordering (the arrows stand in)']} />}>
+      <DataTable aria-label="Menu items">
+        <DataTableHeader>
+          <DataTableColumn align="number">Position</DataTableColumn>
+          <DataTableColumn isRowHeader>Item</DataTableColumn>
+          <DataTableColumn>Type</DataTableColumn>
+          <DataTableColumn align="options" hideLabel>Move</DataTableColumn>
+          <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+        </DataTableHeader>
+        <DataTableBody>
+          {items.map((item, i) => {
+            const pinned = item.kind === 'home';
+            return (
+              <DataTableRow key={item.id} id={item.id}>
+                <DataTableCell align="number">{i + 1}</DataTableCell>
+                <DataTableCell textValue={item.label}>
+                  <span className="bo-pages-menu-item">
+                    {pinned
+                      ? <Lock aria-label="Always first" size={16} />
+                      : <Gap name="Drag-and-drop reordering" inline><GripVertical aria-hidden size={16} /></Gap>}
+                    {item.label}
+                  </span>
+                </DataTableCell>
+                <DataTableCell>{item.kind === 'page' ? <Badge variant="outlined">Custom page</Badge> : <Badge>Default</Badge>}</DataTableCell>
+                <DataTableCell align="options">
+                  {!pinned && <span className="bo-pages-menu-move">
+                    <IconButton aria-label={`Move ${item.label} up`} isDisabled={i <= 1} onPress={() => swap(i, i - 1)}>{icon(ArrowUp)}</IconButton>
+                    <IconButton aria-label={`Move ${item.label} down`} isDisabled={i === items.length - 1} onPress={() => swap(i, i + 1)}>{icon(ArrowDown)}</IconButton>
+                  </span>}
+                </DataTableCell>
+                <DataTableCell align="options">
+                  <DataTableOptions aria-label={`Options for ${item.label}`} onAction={k => k === 'edit' ? edit(item) : remove(item)}>
+                    <MenuItem id="edit" icon={icon(Pencil)}>{pinned ? 'Edit homepage' : 'Edit menu item'}</MenuItem>
+                    {!pinned && <MenuItem id="remove" icon={icon(X)}>Remove from menu</MenuItem>}
+                  </DataTableOptions>
+                </DataTableCell>
+              </DataTableRow>
+            );
+          })}
+        </DataTableBody>
+      </DataTable>
+    </Panel>
   );
 }
 
-function PagesTab({menu, setMenu, pages, setPages}: MenuProps & {pages: string[]; setPages: (p: string[]) => void}) {
+/** The custom pages: a Panel over a Data table, the menu switch in its row, delete confirmed first. */
+function PagesTab({menu, setMenu, pages, setPages}: {menu: string[]; setMenu: Update; pages: string[]; setPages: Update}) {
   const navigate = useNavigate();
+  const [deleting, setDeleting] = useState<MenuEntry | null>(null);
+  const showInMenu = (page: MenuEntry, on: boolean) => {
+    setMenu(m => on ? [...m, page.id] : m.filter(x => x !== page.id));
+    toast(on ? `${page.label} added to the menu` : `${page.label} removed from the menu`,
+      () => setMenu(m => on ? m.filter(x => x !== page.id) : [...m, page.id]));
+  };
+  const remove = (page: MenuEntry) => {
+    setPages(p => p.filter(x => x !== page.id));
+    setMenu(m => m.filter(x => x !== page.id));
+    setDeleting(null);
+    toast(`${page.label} deleted`);
+  };
+  const create = (variant: 'primary' | 'secondary') => (
+    <Button variant={variant} size={32} onPress={() => navigate('/pages-menu/pages/new')}>{icon(Plus)}New custom page</Button>
+  );
   return (
-    <Card
-      layout="stacked"
-      title="Custom pages"
-      actions={<Button variant="primary" size={32} onPress={() => navigate('/pages-menu/pages/new')}><Plus aria-hidden size={16} />New custom page</Button>}>
-      <div className="bo-pages-menu-body">
-        <p className="bo-note bo-pages-menu-intro">Every custom page you’ve built. Edit content, view, or delete a page.</p>
-        {pages.length === 0
-          ? <p className="bo-note">You haven’t created any custom pages yet.</p>
-          : <ul className="bo-pages-menu-pages" aria-label="Custom pages">
-            {pages.map((id, i) => {
-              const page = entry(id), meta = PAGE_META[id], inMenu = menu.includes(id);
-              return (
-                <li key={id} className="bo-pages-menu-page">
-                  {i > 0 && <Divider />}
-                  <div className="bo-pages-menu-row">
-                    <span className="bo-pages-menu-title">
-                      <span className="bo-pages-menu-label">{page.label}</span>
-                      <span className="bo-note">/pages/{meta.slug} · {meta.edited}</span>
-                    </span>
-                    <StatusBadge state={inMenu ? 'live' : 'draft'}>{inMenu ? 'In menu' : 'Not in menu'}</StatusBadge>
-                    <span className="bo-push" />
-                    <Switch isSelected={inMenu}
-                      onChange={on => setMenu(on ? [...menu, id] : menu.filter(m => m !== id))} aria-label={`Show ${page.label} in menu`}>Show in menu</Switch>
-                    <IconButton variant="bordered" aria-label={`Edit page: ${page.label}`} onPress={() => navigate(`/pages-menu/pages/${id}`)}><Pencil aria-hidden size={16} /></IconButton>
-                    <IconButton variant="bordered" aria-label={`View page: ${page.label}`} onPress={() => navigate(`/pages-menu/pages/${id}/view`)}><Eye aria-hidden size={16} /></IconButton>
-                    <IconButton variant="bordered" aria-label={`Delete page: ${page.label}`}
-                      onPress={() => { setPages(pages.filter(p => p !== id)); setMenu(menu.filter(m => m !== id)); }}>
-                      <Trash2 aria-hidden size={16} />
-                    </IconButton>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>}
-        <p className="bo-note">Terms and conditions, the privacy policy and the cookie policy are edited in Settings.</p>
-      </div>
-    </Card>
+    <div className="bo-pages-menu-stack">
+      <Panel title="Custom pages" count={pages.length} flush={pages.length > 0} actions={create('primary')}
+        description="Every custom page you’ve built. Edit content, view, or delete a page.">
+        {pages.length ? (
+          <DataTable aria-label="Custom pages">
+            <DataTableHeader>
+              <DataTableColumn isRowHeader>Page</DataTableColumn>
+              <DataTableColumn>Last edited</DataTableColumn>
+              <DataTableColumn>In menu</DataTableColumn>
+              <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
+            </DataTableHeader>
+            <DataTableBody>
+              {pages.map(id => {
+                const page = entry(id), meta = PAGE_META[id], inMenu = menu.includes(id);
+                return (
+                  <DataTableRow key={id} id={id}>
+                    <DataTableCell textValue={page.label}>
+                      <DataTableStack strong sub={`/pages/${meta.slug}`}>{page.label}</DataTableStack>
+                    </DataTableCell>
+                    <DataTableCell muted>{meta.edited}</DataTableCell>
+                    <DataTableCell>
+                      <Switch isSelected={inMenu} aria-label={`Show ${page.label} in menu`} onChange={on => showInMenu(page, on)}>
+                        {inMenu ? 'In menu' : 'Not in menu'}
+                      </Switch>
+                    </DataTableCell>
+                    <DataTableCell align="options">
+                      <DataTableOptions aria-label={`Options for page: ${page.label}`}
+                        onAction={k => k === 'edit' ? navigate(`/pages-menu/pages/${id}`)
+                          : k === 'view' ? navigate(`/pages-menu/pages/${id}/view`) : setDeleting(page)}>
+                        <MenuItem id="edit" icon={icon(Pencil)}>Edit page</MenuItem>
+                        <MenuItem id="view" icon={icon(Eye)}>View page</MenuItem>
+                        <MenuItem id="delete" icon={icon(Trash2)}>Delete page</MenuItem>
+                      </DataTableOptions>
+                    </DataTableCell>
+                  </DataTableRow>
+                );
+              })}
+            </DataTableBody>
+          </DataTable>
+        ) : (
+          <EmptyState size="panel" headingLevel={3} icon={<FileText size={24} />} title="You haven’t created any custom pages yet"
+            description="A custom page holds text, projects and events on one topic, and can be linked from the menu."
+            action={create('secondary')} />
+        )}
+      </Panel>
+      <Banner tone="info" linkLabel="Go to Settings" linkHref="#/settings">
+        Terms and conditions, the privacy policy and the cookie policy are edited in Settings.
+      </Banner>
+      <AlertDialog tone="danger" isOpen={!!deleting} onOpenChange={o => { if (!o) setDeleting(null); }} title="Delete page?"
+        confirmLabel="Delete page" onConfirm={() => { if (deleting) remove(deleting); }}>
+        <p>{deleting?.label} leaves the platform and the menu. Links to it stop working. This cannot be undone.</p>
+      </AlertDialog>
+    </div>
   );
 }
 
 export function PagesMenu() {
-  const [menu, setMenu] = useState(MENU_START);
-  const [pages, setPages] = useState(MENU_ENTRIES.filter(e => e.kind === 'page').map(e => e.id));
+  const [menu, setMenu] = useStored('menu');
+  const [pages, setPages] = useStored('pages');
   return (
     <Page title="Pages & menu" description="The navigation bar residents see on every page, and the custom pages it can link to.">
       <Tabs defaultSelectedKey="menu">
         <TabList aria-label="Pages & menu sections">
-          <Tab id="menu">Menu</Tab>
-          <Tab id="pages">Pages</Tab>
+          <Tab id="menu" count={menu.length}>Menu</Tab>
+          <Tab id="pages" count={pages.length}>Pages</Tab>
         </TabList>
         <TabPanels>
-        <TabPanel id="menu" className="react-aria-TabPanel bo-pages-menu-panel"><SectionHeading>Menu</SectionHeading><MenuTab menu={menu} setMenu={setMenu} pages={pages} /></TabPanel>
-        <TabPanel id="pages" className="react-aria-TabPanel bo-pages-menu-panel">
-          <SectionHeading>Pages</SectionHeading>
-          <PagesTab menu={menu} setMenu={setMenu} pages={pages} setPages={setPages} />
-        </TabPanel>
+          <TabPanel id="menu" className="react-aria-TabPanel bo-pages-menu-panel">
+            <MenuTab menu={menu} setMenu={setMenu} pages={pages} />
+          </TabPanel>
+          <TabPanel id="pages" className="react-aria-TabPanel bo-pages-menu-panel">
+            <PagesTab menu={menu} setMenu={setMenu} pages={pages} setPages={setPages} />
+          </TabPanel>
         </TabPanels>
       </Tabs>
-      <GapLegend names={['drag-and-drop reordering (Move up and Move down stand in)']} />
+      <ToastRegion />
     </Page>
   );
 }

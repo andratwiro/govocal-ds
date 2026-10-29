@@ -214,21 +214,13 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-inspiration-hub-phase { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-12); }
 /* ── Pages & menu ── */
 .bo-pages-menu-panel { padding-block-start: var(--gv-space-16); }
-.bo-pages-menu-body { display: grid; gap: var(--gv-space-12); }
-.bo-pages-menu-intro { margin: 0; }
-.bo-pages-menu-list { max-height: none; min-height: 0; padding: var(--gv-space-2); gap: var(--gv-space-8); }
-.bo-pages-menu-list[data-layout="stack"]:not([data-empty]) { grid-template-columns: minmax(0, 1fr); justify-content: stretch; }
-.bo-pages-menu-list .react-aria-GridListItem { max-width: none; padding: var(--gv-space-8) var(--gv-space-12); }
-.bo-pages-menu-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-12); min-height: 36px; }
-.bo-pages-menu-grip { display: inline-flex; color: var(--gv-text-meta); }
-.bo-pages-menu-title { display: grid; gap: var(--gv-space-2); min-width: min(100%, 320px); }
-.bo-pages-menu-pages { list-style: none; margin: 0; padding: 0; display: grid; }
-.bo-pages-menu-page { display: grid; }
-.bo-pages-menu-page .bo-pages-menu-row { padding-block: var(--gv-space-12); }
+.bo-pages-menu-stack { display: grid; gap: var(--gv-space-16); }
+.bo-pages-menu-item { display: inline-flex; align-items: center; gap: var(--gv-space-8); }
+.bo-pages-menu-actions { display: flex; align-items: center; gap: var(--gv-space-8); }
+.bo-pages-menu-move { display: inline-flex; align-items: center; gap: var(--gv-space-4); }
 .bo-pages-menu-sections { list-style: none; margin: 0; padding: 0; display: grid; }
-.bo-pages-menu-save { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-12); margin-block-start: var(--gv-space-16); }
-.bo-pages-menu-form { display: grid; gap: var(--gv-space-16); max-width: 540px; }
-.bo-pages-menu-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: var(--gv-space-16); align-items: start; }
+.bo-pages-menu-form { display: grid; gap: var(--gv-space-16); }
+.bo-pages-menu-split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gv-space-16); align-items: start; }
 .bo-pages-menu-preview { margin: 0; padding-inline-start: var(--gv-space-20); display: grid; gap: var(--gv-space-8); }
 
 /* ── Project overview ── */

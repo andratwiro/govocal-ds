@@ -75,6 +75,13 @@ list; change any line and the agent follows. Newest first within each section.
 - Create a report as two stacked Cards opening under the list (template as Choice cards, contents as checkbox cards) → **a wide Modal: title, the template as Choice cards with icons in a RadioGroup, the contents under their group headings, Length; Cancel and Create report in the foot** → a start screen is a dialog, as New project; the list stays where it was.
 - Delete removed a row silently, Duplicate added one silently → **Delete confirms in an Alert dialog, then a Toast with Undo; Duplicate a Toast with Undo; the row menu's icons in Menu's icon slot, Delete after a separator** → Projects' row actions.
 - No match as an empty table row ("No reports match your search.") → **the Empty state in the Panel body; an empty tab offers Create a report** → the shape every admin list uses.
+### Pages & menu
+
+- The navigation bar as a GridList of bordered rows with a "Reorder" menu (Move up / Move down) vs the Projects "Arrange projects" table with arrow buttons → **a Panel over a Data table, Position column, the grip as the drag-and-drop Gap, ↑/↓ Icon buttons; Edit and Remove from menu in the row's "…" menu** → one way to reorder a list; Home keeps a lock and only Edit homepage.
+- Custom pages as a hand-made list with an In menu / Not in menu Status badge beside a Show in menu switch → **a Data table, the Switch alone with the state as its label; Edit, View and Delete page in the "…" menu** → the badge said what the switch already showed.
+- Remove from menu, Show in menu and New menu item changed things silently; Delete page removed a page at once → **a Toast with Undo for the menu changes; Delete page confirms in an Alert dialog, then a Toast** → a deleted page breaks its links, so it asks.
+- Saves said as a status line beside the button (homepage, menu item names, custom page) → **a Toast; the forms are Panels with Save in the foot; the custom page's one Save sits in the page head beside View page** → it saves both tabs; one feedback channel.
+- "Provide a title for all languages" as a grey note → **a warning Banner naming the missing languages**; the terms and policies note → **an info Banner linking to Settings**; no custom pages → **an Empty state with New custom page**; an unknown item or page → **a page Empty state with the way back**.
 
 ## Building from the prototype review (29 Oct 2026)
 
