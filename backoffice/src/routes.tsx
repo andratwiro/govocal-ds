@@ -11,6 +11,7 @@ import {Messaging} from './pages/Messaging';
 import {Users} from './pages/Users';
 import {Tools} from './pages/Tools';
 import {Reporting} from './pages/Reporting';
+import {CommunityMonitor} from './pages/CommunityMonitor';
 
 export const router = createHashRouter([{
   path: '/', element: <Layout />, children: [
@@ -25,7 +26,8 @@ export const router = createHashRouter([{
     {path: 'projects/:projectId', element: <ProjectPhase />},
     {path: 'projects/:projectId/phases/:phaseId/:tab', element: <ProjectPhase />},
     {path: 'reporting', element: <Reporting />},
-    ...NAV.filter(n => !['dashboard', 'inputs', 'messaging', 'projects', 'reporting', 'settings', 'tools', 'users'].includes(n.id))
+    {path: 'community-monitor', element: <CommunityMonitor />},
+    ...NAV.filter(n => !['community-monitor', 'dashboard', 'inputs', 'messaging', 'projects', 'reporting', 'settings', 'tools', 'users'].includes(n.id))
       .map(n => ({path: n.id, element: <Placeholder item={n} />}))
   ]
 }]);
