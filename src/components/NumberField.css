@@ -1,8 +1,48 @@
 @import './theme.css';
 @import './TextField.css';
 
+/* Side label (Proposal requirements, Voting Min / Max, the Limited likes count): the label and the
+   field sit on one line instead of stacking. */
+.gv-number-field-wrap[data-label-position='side'] {
+  display: flex;
+
+  .react-aria-NumberField {
+    display: flex;
+    align-items: center;
+    gap: var(--gv-space-8);
+  }
+
+  .react-aria-Label {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+}
+
 .react-aria-NumberField {
   color: var(--text-color);
+
+  /* The field + its prefix (e.g. "€", budget / voting min-max): one relative box so the prefix can
+     sit inside the input's own left padding, no border of its own. */
+  .react-aria-NumberField-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+
+  .react-aria-NumberField-prefix {
+    position: absolute;
+    inset-inline-start: var(--spacing-3);
+    z-index: 2;
+    font: var(--gv-type-ui);
+    letter-spacing: var(--gv-type-ui-tracking);
+    color: var(--gv-text-secondary);
+    pointer-events: none;
+  }
+
+  .react-aria-NumberField-field[data-has-prefix] .react-aria-Input {
+    padding-inline-start: calc(var(--spacing-3) + 14px);
+  }
 
   .react-aria-Group {
     display: flex;
