@@ -1,29 +1,38 @@
 @import '../components/theme.css';
 
-/* Prototype #phase-panel .pj-ba: 48 tall, 12 inline padding, hairline border, radius 8, small text and a chevron. */
+/* Prototype #phase-panel .pj-ba: 48 tall, 12 inline padding, hairline border, radius 8, small text and a chevron.
+   The Insights panel's rows (.pjsec__h--nav) put the action's icon where the chevron sits; a running action turns
+   the row into its own progress (.pj-ba.is-working: a ring), then a check (.is-done, the primary tint). */
 .gv-action-row {
   box-sizing: border-box;
   display: flex;
   align-items: center;
   gap: var(--gv-space-8);
   inline-size: 100%;
-  min-block-size: var(--gv-space-48);
+  min-block-size: 48px;
+  margin: 0;
   padding: var(--gv-space-8) var(--gv-space-12);
   border: 1px solid var(--gv-border-subtle);
   border-radius: var(--gv-radius-8);
   background: var(--gv-surface-panel);
   color: var(--gv-text-primary);
+  font: inherit;
+  text-align: start;
   text-decoration: none;
   cursor: pointer;
   outline: none;
   -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
+    border-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 }
 
-.gv-action-row[data-hovered] {
+.gv-action-row[data-hovered],
+.gv-action-row[data-pressed] {
   background: var(--gv-surface-toolbar);
 }
 
-.gv-action-row[data-hovered] .gv-action-row__chevron {
+.gv-action-row[data-hovered] :is(.gv-action-row__chevron, .gv-action-row__icon) {
   color: var(--gv-icon-primary);
 }
 
@@ -32,11 +41,41 @@
   outline-offset: 1px;
 }
 
-.gv-action-row__label {
+.gv-action-row[data-disabled] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.gv-action-row[data-state='working'] {
+  cursor: default;
+}
+
+/* Done: the prototype's primary accent, a hairline in the brand colour and a tinted tile. */
+.gv-action-row[data-state='done'] {
+  border-color: color-mix(in srgb, var(--gv-action-primary) 30%, transparent);
+}
+
+.gv-action-row__text {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  gap: var(--gv-space-2);
   min-inline-size: 0;
+}
+
+.gv-action-row__label {
   font: var(--gv-type-small);
   letter-spacing: var(--gv-type-small-tracking);
+}
+
+.gv-action-row[data-state='done'] .gv-action-row__label {
+  font-weight: var(--gv-type-small-strong-weight);
+}
+
+.gv-action-row__description {
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
 }
 
 .gv-action-row__badge {
@@ -44,13 +83,106 @@
   font: var(--gv-type-small-strong);
   letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-accent);
+  font-variant-numeric: tabular-nums;
 }
 
-.gv-action-row__chevron {
+.gv-action-row__chevron,
+.gv-action-row__icon {
   flex: none;
   color: var(--gv-icon-quiet);
+  transition: color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+}
+
+.gv-action-row__icon {
+  display: inline-flex;
+  color: var(--gv-icon-default);
+
+  > svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 [dir='rtl'] .gv-action-row__chevron {
   transform: scaleX(-1);
+}
+
+/* The 28 leading slot: the ring while it runs, the check tile when done. */
+.gv-action-row__lead {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--gv-radius-7);
+}
+
+.gv-action-row__tick {
+  background: color-mix(in srgb, var(--gv-action-primary) 12%, transparent);
+  color: var(--gv-action-primary);
+}
+
+.gv-action-row__ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.gv-action-row__ring circle {
+  fill: none;
+  stroke-width: 3px;
+}
+
+.gv-action-row__ring-track {
+  stroke: var(--gv-border-card);
+}
+
+.gv-action-row__ring-fill {
+  stroke: var(--gv-action-primary);
+  stroke-linecap: round;
+  transition: stroke-dashoffset var(--gv-motion-duration-slow) var(--gv-motion-easing-move);
+}
+
+/* No value yet: a quarter of the ring turns. */
+.gv-action-row__ring svg[data-indeterminate] {
+  animation: gv-action-row-turn var(--gv-motion-duration-loop) var(--gv-motion-easing-move) infinite;
+}
+
+@keyframes gv-action-row-turn {
+  from {
+    transform: rotate(-90deg);
+  }
+  to {
+    transform: rotate(270deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gv-action-row__ring svg[data-indeterminate] {
+    animation: none;
+  }
+}
+
+/* "With menu": the menu opens under the row, as wide as it. */
+.gv-action-row__popover {
+  min-width: var(--trigger-width);
+}
+
+.gv-action-row-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* An empty list's line ("All caught up. Nothing left to suggest."), in place of the rows. */
+.gv-action-row-empty {
+  margin: 0;
+  padding: var(--gv-space-4) var(--gv-space-8) var(--gv-space-8);
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
 }
