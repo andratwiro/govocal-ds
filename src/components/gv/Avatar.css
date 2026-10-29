@@ -16,6 +16,7 @@
   font: var(--gv-type-small-strong);
   letter-spacing: var(--gv-type-small-strong-tracking);
   overflow: hidden;
+  position: relative;
 
   &[data-size='24'] {
     width: 24px;
@@ -34,6 +35,22 @@
     background: none;
     border: 1px dashed var(--gv-border-control);
   }
+}
+
+/* A photo covers the circle, over the initials it falls back to (they show while it loads or if it fails). Under a
+   photo the circle is the light pill grey with dark initials: readable while it loads, no dark fringe at its edge. */
+.gv-avatar[data-photo] {
+  background: var(--gv-surface-pill);
+  color: var(--gv-text-pill);
+}
+
+.gv-avatar__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
 }
 
 /* Avatar group: overlapping 24 avatars, 6 over the one before, then a count ("215 participants"). */

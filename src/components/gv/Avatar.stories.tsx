@@ -1,4 +1,5 @@
 import {Avatar} from './Avatar';
+import {PORTRAITS} from './story-images';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof Avatar> = {
@@ -17,10 +18,12 @@ const meta: Meta<typeof Avatar> = {
 export default meta;
 type Story = StoryFn<typeof Avatar>;
 
-/** Figma's Avatar (28, filled); the 24 and 16 sizes and the unassigned ring are Not in Figma (the prototype's). */
+/** Figma's Avatar (28, filled); the photo, the 24 and 16 sizes and the unassigned ring are Not in Figma (the
+ * prototype's). */
 export const AllVariants: Story = () => (
   <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
     <Avatar initials="S" aria-label="Assigned to Sam" />
+    <Avatar initials="RE" src={PORTRAITS[1]} aria-label="Resident E" />
     <Avatar initials="JL" size={24} aria-label="Assigned to Jo Lee" />
     <Avatar initials="R" size={16} aria-label="Assigned to Riley Chen" />
     <Avatar unassigned aria-label="Unassigned" />
@@ -31,6 +34,18 @@ export const Filled: Story = () => <Avatar initials="S" aria-label="Assigned to 
 
 /** Not in Figma: the prototype's unassigned ring. */
 export const Unassigned: Story = () => <Avatar unassigned aria-label="Unassigned" />;
+
+/** Not in Figma: a photo (the prototype's Audience table). It covers the circle; the initials sit under it. */
+export const Image: Story = () => (
+  <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
+    {PORTRAITS.map((src, i) => <Avatar key={src} initials={['RA', 'RE', 'MB', 'AC'][i]} src={src} aria-label={['Resident A', 'Resident E', 'Manager B', 'Admin C'][i]} />)}
+    <Avatar initials="RA" src={PORTRAITS[0]} size={24} aria-label="Resident A" />
+  </div>
+);
+
+/** A photo that can't load (a broken or removed file) falls back to the person's initials. */
+export const ImageFails: Story = () => <Avatar initials="RD" src="missing-photo.jpg" aria-label="Resident D" />;
+ImageFails.storyName = 'Image fails';
 
 /** The header's people stack: each avatar 6 over the one before (prototype `.pj-avstack`). */
 export const Stack: Story = () => (

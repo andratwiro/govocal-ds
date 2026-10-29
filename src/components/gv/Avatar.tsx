@@ -1,9 +1,15 @@
-import type {ReactNode} from 'react';
+'use client';
+import {useState, type ReactNode} from 'react';
 import './Avatar.css';
 
 export interface AvatarProps {
-  /** Initials to show (1–2 characters), e.g. "S" for "Sam". */
+  /** Initials to show (1–2 characters), e.g. "S" for "Sam". Also what shows while a photo loads or if it fails. */
   initials?: string;
+  /**
+   * A photo of the person (Not in Figma; the prototype's Audience table). It covers the circle; if it can't load,
+   * the initials show instead.
+   */
+  src?: string;
   /**
    * The avatar's size. Figma specs only 28; 16/24 are the prototype's
    * smaller stacks (assignee chips, comment avatars), carried over for parity.
@@ -22,16 +28,24 @@ export interface AvatarProps {
   'aria-label'?: string;
 }
 
-/** A small round avatar: initials on a filled circle, or an empty/unassigned ring. Display-only. */
-export function Avatar({initials, size, unassigned, 'aria-label': ariaLabel}: AvatarProps) {
+/**
+ * A small round avatar: initials on a filled circle, a photo over them, or an empty/unassigned ring. Display-only:
+ * the photo is decorative (`alt=""`); the avatar's `aria-label`, or the name beside it, says who it is.
+ */
+export function Avatar({initials, src, size, unassigned, 'aria-label': ariaLabel}: AvatarProps) {
+  // The photo that failed, so a new `src` gets its own try.
+  const [failed, setFailed] = useState<string>();
+  const photo = !unassigned && !!src && failed !== src;
   return (
     <span
       className="gv-avatar"
       data-size={size || 28}
       data-unassigned={unassigned || undefined}
+      data-photo={photo || undefined}
       role={ariaLabel ? 'img' : undefined}
       aria-label={ariaLabel}>
       {!unassigned && initials}
+      {photo && <img className="gv-avatar__photo" src={src} alt="" onError={() => setFailed(src)} />}
     </span>
   );
 }
