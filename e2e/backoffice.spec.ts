@@ -13,9 +13,11 @@ test('every nav item opens a page with its title and no console errors', async (
   expect(errors).toEqual([]);
 });
 
-test('a project opens on its first phase with Build, Manage and Insights', async ({page}) => {
+test('a project opens on its overview; a phase opens with Build, Manage and Insights', async ({page}) => {
   await page.goto('/backoffice/#/projects');
   await page.getByRole('link', {name: /Green Corridors/}).click();
+  await expect(page).toHaveURL(/#\/projects\/green-corridors$/);
+  await page.getByRole('link', {name: /Community vote/}).first().click();
   await expect(page.getByRole('radiogroup', {name: 'Phase view'}).or(page.getByRole('tablist', {name: 'Phase view'}))).toBeVisible();
 });
 

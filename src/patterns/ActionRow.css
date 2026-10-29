@@ -1,0 +1,56 @@
+@import '../components/theme.css';
+
+/* Prototype #phase-panel .pj-ba: 48 tall, 12 inline padding, hairline border, radius 8, small text and a chevron. */
+.gv-action-row {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  inline-size: 100%;
+  min-block-size: var(--gv-space-48);
+  padding: var(--gv-space-8) var(--gv-space-12);
+  border: 1px solid var(--gv-border-subtle);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-panel);
+  color: var(--gv-text-primary);
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gv-action-row[data-hovered] {
+  background: var(--gv-surface-toolbar);
+}
+
+.gv-action-row[data-hovered] .gv-action-row__chevron {
+  color: var(--gv-icon-primary);
+}
+
+.gv-action-row[data-focus-visible] {
+  outline: 2px solid var(--gv-border-selected);
+  outline-offset: 1px;
+}
+
+.gv-action-row__label {
+  flex: 1;
+  min-inline-size: 0;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+}
+
+.gv-action-row__badge {
+  flex: none;
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-accent);
+}
+
+.gv-action-row__chevron {
+  flex: none;
+  color: var(--gv-icon-quiet);
+}
+
+[dir='rtl'] .gv-action-row__chevron {
+  transform: scaleX(-1);
+}

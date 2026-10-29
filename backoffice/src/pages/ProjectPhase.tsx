@@ -10,15 +10,16 @@ import {Header} from '../../../src/components/gv/Header';
 import {IconButton} from '../../../src/components/gv/IconButton';
 import {ListHeaderCell} from '../../../src/components/gv/ListHeaderCell';
 import {RailHeader} from '../../../src/components/gv/RailHeader';
-import {RailPhase} from '../../../src/components/gv/RailPhase';
 import {RailSectionLabel} from '../../../src/components/gv/RailSectionLabel';
 import {SegmentedControl, Segment} from '../../../src/components/gv/SegmentedControl';
 import {SetupCard} from '../../../src/components/gv/SetupCard';
 import {StatRow} from '../../../src/components/gv/StatRow';
 import {Status} from '../../../src/components/gv/Status';
 import {TitleField} from '../../../src/components/gv/TitleField';
+import {PhaseTimeline} from '../../../src/patterns/PhaseTimeline';
 import {Gap} from '../Gap';
 import {INPUTS, ME, PROJECTS, type Phase, type Project} from '../data';
+import {timeline} from '../data-project';
 
 // The phase screen, from the Figma frames "Project · Build" and "Ideation · Manage (data)" (Screens WIP):
 // a header bar (Header · mode switch · actions) over the Participation rail and the tab's panels.
@@ -42,7 +43,7 @@ export function ProjectPhase() {
       <h1 className="bo-visually-hidden">{project.title}</h1>
       <div className="bo-phase-bar">
         <Header level={phase.status === 'Live' ? 'phase-live' : 'phase-draft'} projectName={project.title} phaseName={phase.title}
-          projectHref="#/projects" onBack={() => navigate('/projects')} onTogglePanel={() => setRailOpen(o => !o)} />
+          projectHref={`#/projects/${project.id}`} onBack={() => navigate(`/projects/${project.id}`)} onTogglePanel={() => setRailOpen(o => !o)} />
         <SegmentedControl aria-label="Phase view" disallowEmptySelection selectedKeys={[view]}
           onSelectionChange={keys => { const next = [...keys][0]; if (next) navigate(phaseUrl(project, phase, next as Tab)); }}>
           {TABS.map(t => <Segment key={t} id={t}>{label(t)}</Segment>)}
@@ -73,15 +74,9 @@ function Rail({project, current, tab}: {project: Project; current: Phase; tab: T
       <RailHeader title="Participation" onAdd={() => {}} addLabel="Add a phase" />
       <nav aria-label="Phases" className="bo-phase-rail-section">
         <RailSectionLabel>Timeline</RailSectionLabel>
-        <ul className="bo-phase-rail-list">
-          {project.phases.map(p => (
-            <li key={p.id}>
-              <RailPhase title={p.title} status={p.status === 'Live' ? 'live' : 'upcoming'} current={p.id === current.id}
-                meta={`${p.status === 'Live' ? p.dates : 'Upcoming'} · ${p.method}`}
-                href={`#${phaseUrl(project, p, p.method === 'Ideation' || tab !== 'manage' ? tab : 'build')}`} />
-            </li>
-          ))}
-        </ul>
+        <div className="bo-project-rail-list">
+          <PhaseTimeline phases={timeline(project, p => `#${phaseUrl(project, p, p.method === 'Ideation' || tab !== 'manage' ? tab : 'build')}`, current.id)} />
+        </div>
       </nav>
       <Divider />
       <RailSectionLabel>Spotlight</RailSectionLabel>
@@ -92,7 +87,7 @@ function Rail({project, current, tab}: {project: Project; current: Phase; tab: T
 }
 
 // "Project · Build": the front-office preview on the stage, the setup checklist in the right panel.
-const CHECKLIST: {title: string; action: 'open' | 'expand'; body?: string}[] = [
+export const CHECKLIST: {title: string; action: 'open' | 'expand'; body?: string}[] = [
   {title: 'Settings', action: 'open'},
   {title: 'Edit project page', action: 'open'},
   {title: 'Set project card', action: 'expand', body: 'The card residents see on the homepage and in project lists: an image, a title and a one-line summary.'},

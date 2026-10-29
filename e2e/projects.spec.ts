@@ -25,7 +25,7 @@ test('rows use the gv Status, Avatar and icon button; New project opens its menu
   await page.goto('/backoffice/#/projects');
   const row = page.getByRole('row', {name: /Green Corridors for Larkvale/});
   await expect(row.getByRole('link', {name: 'Green Corridors for Larkvale'}))
-    .toHaveAttribute('href', '#/projects/green-corridors/phases/p1/build');
+    .toHaveAttribute('href', '#/projects/green-corridors');
   await expect(row.locator('.gv-status')).toHaveText('Published');
   await expect(row.locator('.gv-avatar')).toHaveText('A');
   await expect(page.getByRole('row', {name: /Harbour Plan 2030/}).locator('.gv-status')).toHaveText('Draft');

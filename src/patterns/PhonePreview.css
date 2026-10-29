@@ -1,0 +1,93 @@
+@import '../components/theme.css';
+
+/* Prototype #phone: a 360 x 720 device, 10 bezel, radius 44; the screen scrolls under the platform header. */
+.gv-phone {
+  box-sizing: border-box;
+  inline-size: 360px;
+  max-inline-size: 100%;
+  block-size: 720px;
+  max-block-size: 100%;
+  padding: var(--gv-space-10);
+  border-radius: 44px;
+  background: var(--gv-text-primary);
+  box-shadow: var(--gv-shadow-dialog);
+}
+
+.gv-phone__screen {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+  overflow: hidden;
+  border-radius: 34px;
+  background: var(--gv-surface-panel);
+  color: var(--gv-text-body);
+  font-family: var(--gv-font-family);
+}
+
+.gv-phone__content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-16);
+  padding: var(--gv-space-16) var(--gv-space-20) var(--gv-space-24);
+  font: var(--gv-type-body);
+  letter-spacing: var(--gv-type-body-tracking);
+}
+
+.gv-phone__content :is(h1, h2, h3, p) {
+  margin: 0;
+}
+
+.gv-phone__content :is(h1, h2) {
+  font: var(--gv-type-title);
+  letter-spacing: var(--gv-type-title-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-phone-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--gv-space-24) var(--gv-space-20) var(--gv-space-12);
+  border-block-end: 1px solid var(--gv-border-subtle);
+}
+
+.gv-phone-header__logo {
+  display: block;
+  inline-size: 88px;
+  block-size: var(--gv-space-24);
+  border-radius: var(--gv-radius-4);
+  background: var(--gv-surface-hover-strong);
+}
+
+.gv-phone-header__menu {
+  color: var(--gv-icon-primary);
+}
+
+.gv-phone-image {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  margin-inline: calc(-1 * var(--gv-space-20));
+  margin-block-start: calc(-1 * var(--gv-space-16));
+  background: var(--gv-surface-hover-strong);
+  color: var(--gv-icon-default);
+}
+
+.gv-avatar-stack {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-avatar-stack__faces {
+  display: inline-flex;
+}
+
+.gv-avatar-stack__faces > * + * {
+  margin-inline-start: calc(-1 * var(--gv-space-6));
+}

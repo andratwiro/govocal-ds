@@ -4,6 +4,7 @@ import {NAV} from './nav';
 import {Placeholder} from './pages/Placeholder';
 import {Projects} from './pages/Projects';
 import {ProjectPhase} from './pages/ProjectPhase';
+import {ProjectOverview} from './pages/ProjectOverview';
 import {Dashboard} from './pages/Dashboard';
 import {Inputs} from './pages/Inputs';
 import {Settings} from './pages/Settings';
@@ -26,7 +27,7 @@ export const router = createHashRouter([{
     {path: 'settings', element: <Settings />},
     {path: 'tools', element: <Tools />},
     {path: 'inspiration-hub', element: <InspirationHub />},
-    {path: 'projects/:projectId', element: <ProjectPhase />},
+    {path: 'projects/:projectId', element: <ProjectOverview />},
     {path: 'projects/:projectId/phases/:phaseId/:tab', element: <ProjectPhase />},
     {path: 'reporting', element: <Reporting />},
     {path: 'community-monitor', element: <CommunityMonitor />},

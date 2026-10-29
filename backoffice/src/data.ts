@@ -1,16 +1,24 @@
 export const METHODS = ['Information', 'Ideation', 'Survey', 'Voting', 'Proposals', 'Common ground',
   'Document annotation', 'Volunteering', 'Poll'] as const;
 export type Method = typeof METHODS[number];
-export type Phase = {id: string; title: string; method: Method; status: 'Draft' | 'Live'; dates: string};
+// Done: a phase that has ended. `count` is what it gathered ("312 ideas"); `fresh` how many of those are new.
+export type Phase = {id: string; title: string; method: Method; status: 'Draft' | 'Live' | 'Done'; dates: string;
+  count?: string; fresh?: number};
 export type Project = {id: string; title: string; status: 'Draft' | 'Live'; phases: Phase[];
   participants?: number; current?: string; timeLeft?: string; managers?: string[]; access?: string;
   start?: string; end?: string; folder?: string};
 
 // Invented data only: never real tenants, people or places.
 export const PROJECTS: Project[] = [
-  {id: 'green-corridors', title: 'Green Corridors for Larkvale', status: 'Live', phases: METHODS.map((method, i) => ({
-    id: `p${i + 1}`, title: `${method} phase`, method, status: i < 4 ? 'Live' : 'Draft',
-    dates: `${String(i * 2 + 1).padStart(2, '0')} Mar – ${String(i * 2 + 2).padStart(2, '0')} Mar 2027`}))},
+  {id: 'green-corridors', title: 'Green Corridors for Larkvale', status: 'Live', phases: [
+    {id: 'p1', title: 'Project background', method: 'Information', status: 'Done', dates: '10 to 30 Aug', count: '1,890 visits'},
+    {id: 'p2', title: 'Collect ideas', method: 'Ideation', status: 'Done', dates: '1 to 21 Sep', count: '312 ideas', fresh: 18},
+    {id: 'p3', title: 'Shortlist proposals', method: 'Proposals', status: 'Done', dates: '22 Sep to 18 Oct', count: '48 proposals'},
+    {id: 'p4', title: 'Community vote', method: 'Voting', status: 'Live', dates: '19 Oct to 16 Nov', count: '1,240 votes'},
+    {id: 'p5', title: 'Feedback survey', method: 'Survey', status: 'Draft', dates: '17 Nov to 7 Dec'},
+    {id: 'p6', title: 'Find common ground', method: 'Common ground', status: 'Draft', dates: '8 Dec to 11 Jan'},
+    {id: 'p7', title: 'Recruit volunteers', method: 'Volunteering', status: 'Draft', dates: '12 Jan to 8 Feb'}
+  ]},
   {id: 'harbour-plan', title: 'Harbour Plan 2030', status: 'Draft', phases: [
     {id: 'p1', title: 'Share ideas', method: 'Ideation', status: 'Draft', dates: '01 Apr – 30 Apr 2027'}]},
   {id: 'school-streets', title: 'Safer School Streets', status: 'Live', phases: [
@@ -27,7 +35,7 @@ export const PROJECTS: Project[] = [
 
 // Projects list columns, as in the real admin (invented values).
 const LIST: Record<string, Partial<Project>> = {
-  'green-corridors': {participants: 214, current: 'Ideation', timeLeft: '3 weeks left', managers: ['Manager A', 'Manager B'], access: 'Anyone', start: '01 Mar 2027', end: '18 Mar 2027'},
+  'green-corridors': {participants: 215, current: 'Voting', timeLeft: '3 weeks left', managers: ['Manager A', 'Manager B'], access: 'Anyone', start: '10 Aug 2026', end: '08 Feb 2027'},
   'harbour-plan': {participants: 0, current: 'Not started', managers: [], access: 'Selected groups', start: '01 Apr 2027', end: '30 Apr 2027'},
   'school-streets': {participants: 131, current: 'Voting', timeLeft: '5 days left', managers: ['Manager C'], access: 'Anyone', start: '10 Feb 2027', end: '10 Mar 2027'},
   'library-hours': {participants: 88, current: 'Survey', timeLeft: '2 weeks left', managers: ['Manager A'], access: 'Anyone', start: '01 May 2027', end: '31 May 2027'},

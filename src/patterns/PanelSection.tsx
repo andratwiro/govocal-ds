@@ -1,0 +1,50 @@
+'use client';
+import type {ReactNode} from 'react';
+import {Button, Disclosure, DisclosurePanel, Heading} from 'react-aria-components';
+import {ChevronDown} from 'lucide-react';
+import './PanelSection.css';
+
+export interface PanelSectionProps {
+  /** The section's name ("Next actions"). */
+  title: string;
+  /** A short note at the end of the header ("0 of 6 ready"). Not shown on a collapsible section. */
+  aside?: ReactNode;
+  /** Folds under its header, with a chevron at the end (prototype "Project details"). */
+  collapsible?: boolean;
+  defaultExpanded?: boolean;
+  /** Heading level of the title. @default 3 */
+  level?: 2 | 3 | 4;
+  children: ReactNode;
+}
+
+/**
+ * A section of a side panel (prototype `.pj-psec`): a small strong title, its body 16 below. Collapsible sections
+ * fold with a chevron at the end of the header. Not in Figma yet.
+ */
+export function PanelSection({title, aside, collapsible, defaultExpanded, level = 3, children}: PanelSectionProps) {
+  if (collapsible) {
+    return (
+      <Disclosure className="gv-panel-section" data-collapsible defaultExpanded={defaultExpanded}>
+        <Heading level={level} className="gv-panel-section__heading">
+          <Button slot="trigger" className="gv-panel-section__trigger">
+            <span className="gv-panel-section__title">{title}</span>
+            <ChevronDown className="gv-panel-section__chevron" aria-hidden size={16} />
+          </Button>
+        </Heading>
+        <DisclosurePanel className="gv-panel-section__panel">
+          <div className="gv-panel-section__body">{children}</div>
+        </DisclosurePanel>
+      </Disclosure>
+    );
+  }
+  const H = `h${level}` as const;
+  return (
+    <section className="gv-panel-section">
+      <div className="gv-panel-section__header">
+        <H className="gv-panel-section__heading gv-panel-section__title">{title}</H>
+        {aside != null && <span className="gv-panel-section__aside">{aside}</span>}
+      </div>
+      <div className="gv-panel-section__body">{children}</div>
+    </section>
+  );
+}

@@ -56,7 +56,7 @@ function ProjectTable() {
             <span className="bo-projects-name">
               <Gap name="Project thumbnail" inline><MapPin aria-hidden size={16} /></Gap>
               <span>
-                <Link href={`#/projects/${p.id}/phases/${p.phases[0].id}/build`}>{p.title}</Link>
+                <Link href={`#/projects/${p.id}`}>{p.title}</Link>
                 {p.folder && <span className="bo-note bo-projects-folder"><Folder aria-hidden size={12} />{p.folder}</span>}
               </span>
             </span>
