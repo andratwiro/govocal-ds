@@ -17,44 +17,41 @@
   position: relative;
   align-items: center;
   gap: var(--gv-space-8);
-  font: var(--gv-type-ui) var(--gv-font-family);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
   forced-color-adjust: none;
   -webkit-tap-highlight-color: transparent;
 
-  /* The prototype's toggle (augur-design.html .gv-toggle): 36x20 track, 2px padding, 16px knob,
-     off = slate-300 (-> --gv-control-toggle-off is near-white so we use the foundation
-     step the prototype actually paints the off-track with), on = dark neutral track. */
+  /* The prototype's one toggle (augur-design.html #one-toggle, 4 Oct): 36×20, padding 2, a 16 knob with no
+     shadow; off = the toggle-off grey (Figma's control/toggle-off), hovered a step darker; on = the near-black
+     neutral (Figma's control/toggle-on is slate-750: the prototype wins on look); disabled = the track at 50 %. */
   .track {
-    --height: 20px;
-    height: var(--height);
+    flex: none;
+    height: 20px;
     width: 36px;
     box-sizing: border-box;
     padding: 2px;
     border-radius: var(--gv-radius-full);
-    background: var(--gv-color-slate-300);
-    transition: background 200ms;
-    scale: 1;
+    background: var(--gv-control-toggle-off);
+    box-shadow: none;
+    transition: background-color 80ms ease-out;
 
     .handle {
       display: block;
       height: 16px;
       width: 16px;
-      aspect-ratio: 1;
       border-radius: var(--gv-radius-full);
       background: var(--gv-control-knob);
-      transition: all 200ms;
-      transform-origin: 0 50%;
+      box-shadow: none;
+      transition: transform 150ms cubic-bezier(0.165, 0.84, 0.44, 1);
       will-change: transform;
+      scale: 1;
     }
   }
 
-  &:hover .track {
-    background: var(--gv-color-slate-400);
-  }
-
-  &[data-pressed] .handle {
-    scale: 1.1 1;
+  &[data-hovered] .track {
+    background: var(--gv-border-radio);
   }
 
   &[data-invalid] .track {
@@ -62,23 +59,23 @@
   }
 
   &[data-selected] {
-    .track {
-      background: var(--gv-control-toggle-on);
-    }
-
-    &:hover .track {
-      background: var(--gv-control-toggle-on);
+    .track,
+    &[data-hovered] .track {
+      background: var(--gv-color-neutral-900);
     }
 
     .handle {
       transform: translateX(16px);
-      transform-origin: 16px 50%;
       background: var(--gv-control-knob);
 
       @media (forced-colors: active) {
         background: HighlightText;
       }
     }
+  }
+
+  &:dir(rtl)[data-selected] .handle {
+    transform: translateX(-16px);
   }
 
   &[data-focus-visible] .track {
@@ -88,17 +85,25 @@
 
   &[data-disabled] {
     color: var(--gv-text-quiet);
+    cursor: default;
 
     .track {
       opacity: 0.5;
     }
 
-    &:hover .track {
-      background: var(--gv-color-slate-300);
+    &[data-hovered] .track {
+      background: var(--gv-control-toggle-off);
     }
 
-    &[data-selected]:hover .track {
-      background: var(--gv-control-toggle-on);
+    &[data-selected][data-hovered] .track {
+      background: var(--gv-color-neutral-900);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .track,
+    .track .handle {
+      transition: none;
     }
   }
 }
