@@ -1,10 +1,50 @@
 @import './theme.css';
 
+/* The prototype's segmented switch (.pj-seg2): one 1px control-grey frame, radius 8, the buttons white and joined
+   by 1px dividers, Small text in the secondary grey at 6 11; the chosen one the near-black heading ink, white text. */
 .react-aria-ToggleButtonGroup {
-  display: flex;
+  display: inline-flex;
+  width: fit-content;
+  border: 1px solid var(--gv-border-control);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--gv-surface-panel);
 
   > .react-aria-ToggleButton {
     z-index: 1;
+    --button-border: transparent;
+    --button-border-size: 0px;
+    --button-color: var(--gv-surface-panel);
+    --button-text: var(--gv-text-secondary);
+    height: auto;
+    min-height: 28px;
+    padding: var(--gv-space-6) var(--gv-space-11);
+    font: var(--gv-type-small);
+    letter-spacing: var(--gv-type-small-tracking);
+
+    &[data-hovered] {
+      --button-color: var(--gv-surface-hover);
+      --button-text: var(--gv-text-primary);
+    }
+
+    &[data-selected] {
+      --button-color: var(--gv-color-neutral-900);
+      --button-text: var(--gv-text-inverse);
+    }
+
+    &[data-disabled] {
+      --button-color: var(--gv-surface-panel);
+      --button-text: var(--text-color-disabled);
+    }
+
+    &[data-focus-visible] {
+      outline-offset: -2px;
+    }
+
+    &:has(> span > svg:only-child) {
+      width: auto;
+      padding-inline: var(--gv-space-8);
+    }
 
     > span {
       transition: scale 200ms;
@@ -33,16 +73,10 @@
   flex-direction: row;
 
   > .react-aria-ToggleButton {
-    margin-inline-start: -1px;
     border-radius: 0;
 
-    &:first-child {
-      border-radius: var(--radius) 0 0 var(--radius);
-      margin-inline-start: 0;
-    }
-
-    &:last-child {
-      border-radius: 0 var(--radius) var(--radius) 0;
+    & + .react-aria-ToggleButton {
+      border-inline-start: 1px solid var(--gv-border-control);
     }
   }
 }
@@ -52,16 +86,10 @@
   width: fit-content;
 
   > .react-aria-ToggleButton {
-    margin-block-start: -1px;
     border-radius: 0;
 
-    &:first-child {
-      border-radius: var(--radius) var(--radius) 0 0;
-      margin-block-start: 0;
-    }
-
-    &:last-child {
-      border-radius: 0 0 var(--radius) var(--radius);
+    & + .react-aria-ToggleButton {
+      border-block-start: 1px solid var(--gv-border-control);
     }
   }
 }

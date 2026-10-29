@@ -1,18 +1,20 @@
 @import './theme.css';
 @import './utilities.css';
 
+/* A toggle button is a Button that stays down. On, it takes the prototype's chosen-segment fill (.pj-seg2 button.on:
+   the near-black heading ink, white text), the same dark the Switch uses when on, rather than the brand blue. */
 .react-aria-ToggleButton {
   border: none;
   forced-color-adjust: none;
   border-radius: var(--radius);
   appearance: none;
   vertical-align: middle;
-  font: var(--font-size) var(--gv-font-family);
-  font-weight: 500;
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
   text-align: center;
   margin: 0;
-  height: var(--spacing-8);
-  padding: 0 var(--spacing-3);
+  height: var(--spacing-9);
+  padding: 0 var(--spacing-4);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -32,12 +34,22 @@
   }
 
   &:has(> span > svg:only-child) {
-    width: var(--spacing-8);
+    width: var(--spacing-9);
     padding: 0;
-    border-radius: 9999px;
   }
 
   &[data-pressed] {
     scale: 0.95;
+  }
+
+  &[data-selected] {
+    --button-color: var(--gv-color-neutral-900);
+    --button-border: var(--gv-color-neutral-900);
+    --button-text: var(--gv-text-inverse);
+  }
+
+  &[data-selected][data-disabled] {
+    --button-color: var(--gv-border-control);
+    --button-border: var(--gv-border-control);
   }
 }
