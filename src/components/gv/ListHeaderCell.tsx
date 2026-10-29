@@ -46,7 +46,7 @@ export function ListHeaderCell({
         data-variant="add-column"
         onPress={onPress}
         aria-label={ariaLabel ?? 'Add column'}>
-        <Plus aria-hidden size={16} />
+        <Plus aria-hidden size={16} strokeWidth={1.75} />
       </Button>
     );
   }
@@ -69,7 +69,7 @@ export function ListHeaderCell({
       onPress={onPress}
       aria-pressed={sorted}>
       {children}
-      {sorted && <ArrowDown aria-hidden size={16} className="gv-list-header-cell__arrow" />}
+      {sorted && <ArrowDown aria-hidden size={16} strokeWidth={1.75} className="gv-list-header-cell__arrow" />}
     </Button>
   );
 }
