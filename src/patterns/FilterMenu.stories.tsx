@@ -8,16 +8,16 @@ import {FilterChips} from './FilterChips';
 // Invented values: the Manage tab's five facets, with how many ideas carry each value.
 const ic = (Icon: typeof Tag) => <Icon aria-hidden size={16} />;
 export const IDEA_FACETS: FilterFacet[] = [
-  {id: 'source', label: 'Source', icon: ic(Inbox), options: [{id: 'online', label: 'Online', count: 110}, {id: 'imported', label: 'Imported', count: 14}]},
-  {id: 'status', label: 'Status', icon: ic(CircleCheck), options: ['Proposed', 'Viewed', 'Under consideration', 'Accepted', 'Rejected', 'Implemented']
+  {id: 'source', label: 'Source', icon: ic(Inbox), items: [{id: 'online', label: 'Online', count: 110}, {id: 'imported', label: 'Imported', count: 14}]},
+  {id: 'status', label: 'Status', icon: ic(CircleCheck), items: ['Proposed', 'Viewed', 'Under consideration', 'Accepted', 'Rejected', 'Implemented']
     .map((s, i) => ({id: s, label: s, count: [31, 22, 20, 19, 17, 15][i]}))},
-  {id: 'assignee', label: 'Assignee', icon: ic(User), options: [
+  {id: 'assignee', label: 'Assignee', icon: ic(User), items: [
     {id: 'Unassigned', label: 'Unassigned', count: 48, icon: <Avatar size={16} isUnassigned />},
     ...['Manager A', 'Manager B', 'Manager C'].map((m, i) => ({id: m, label: m, count: [26, 25, 25][i], icon: <Avatar size={16} initials={m.slice(-1)} />}))
   ]},
-  {id: 'tags', label: 'Tags', icon: ic(Tag), options: ['Cycling', 'Environment', 'Public space', 'Transport', 'Safety', 'Housing', 'Culture']
+  {id: 'tags', label: 'Tags', icon: ic(Tag), items: ['Cycling', 'Environment', 'Public space', 'Transport', 'Safety', 'Housing', 'Culture']
     .map((t, i) => ({id: t, label: t, count: [14, 28, 40, 33, 30, 12, 24][i]}))},
-  {id: 'reply', label: 'Reply', icon: ic(MessageSquareText), options: [{id: 'awaiting', label: 'Awaiting reply', count: 40}, {id: 'replied', label: 'Replied', count: 84}]}
+  {id: 'reply', label: 'Reply', icon: ic(MessageSquareText), items: [{id: 'awaiting', label: 'Awaiting reply', count: 40}, {id: 'replied', label: 'Replied', count: 84}]}
 ];
 const ideas = (n: number) => `${n} ${n === 1 ? 'idea' : 'ideas'}`;
 

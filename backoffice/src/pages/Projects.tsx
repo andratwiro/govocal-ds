@@ -58,10 +58,10 @@ function projectFacets(projects: Project[], folders: FolderRow[]): FilterFacet[]
   const option = (facet: string) => (id: string) => ({id, label: id, count: countOf(projects, facet, id)});
   const managers = [...new Set(projects.flatMap(p => p.managers ?? []))].sort();
   return [
-    {id: 'visibility', label: 'Visibility', icon: <Eye aria-hidden size={16} />, options: ['Published', 'Draft'].map(option('visibility'))},
+    {id: 'visibility', label: 'Visibility', icon: <Eye aria-hidden size={16} />, items: ['Published', 'Draft'].map(option('visibility'))},
     {id: 'folder', label: 'Folder', icon: <Folder aria-hidden size={16} />,
-      options: [NO_FOLDER, ...folders.map(f => f.name)].map(option('folder'))},
-    {id: 'manager', label: 'Manager', icon: <UserRound aria-hidden size={16} />, options: [
+      items: [NO_FOLDER, ...folders.map(f => f.name)].map(option('folder'))},
+    {id: 'manager', label: 'Manager', icon: <UserRound aria-hidden size={16} />, items: [
       {...option('manager')(NO_MANAGER), icon: <Avatar size={16} isUnassigned />},
       ...managers.map(m => ({...option('manager')(m), icon: <Avatar size={16} initials={initial(m)} />}))
     ]}

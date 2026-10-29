@@ -20,10 +20,10 @@ const facetValues: Record<FacetId, (p: LibraryProject) => readonly string[]> = {
 const option = (facet: FacetId) => (id: string) =>
   ({id, label: id, count: LIBRARY.filter(p => facetValues[facet](p).includes(id)).length});
 const FACETS: FilterFacet[] = [
-  {id: 'method', label: 'Method', icon: <Lightbulb aria-hidden size={16} />, options: METHODS.map(option('method'))},
-  {id: 'country', label: 'Country', icon: <Globe aria-hidden size={16} />, options: COUNTRIES.map(option('country'))},
-  {id: 'population', label: 'Population', icon: <Users aria-hidden size={16} />, options: POPULATIONS.map(option('population'))},
-  {id: 'topic', label: 'Topic', icon: <Tag aria-hidden size={16} />, options: TOPICS.map(option('topic'))}
+  {id: 'method', label: 'Method', icon: <Lightbulb aria-hidden size={16} />, items: METHODS.map(option('method'))},
+  {id: 'country', label: 'Country', icon: <Globe aria-hidden size={16} />, items: COUNTRIES.map(option('country'))},
+  {id: 'population', label: 'Population', icon: <Users aria-hidden size={16} />, items: POPULATIONS.map(option('population'))},
+  {id: 'topic', label: 'Topic', icon: <Tag aria-hidden size={16} />, items: TOPICS.map(option('topic'))}
 ];
 const projectsWord = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
 // Every list pages (docs/DECISIONS.md): two rows of three cards.

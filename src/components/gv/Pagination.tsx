@@ -3,6 +3,7 @@ import {useEffect, useRef} from 'react';
 import {Button} from 'react-aria-components/Button';
 import {ChevronLeft, ChevronRight} from 'lucide-react';
 import {useLocale} from 'react-aria-components/I18nProvider';
+import {useControlledState} from '../useControlledState';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
 import './Pagination.css';
@@ -22,8 +23,10 @@ export function pageItems(page: number, pageCount: number): PageItem[] {
 }
 
 export interface PaginationProps extends PlacementProps {
-  /** The current page, from 1. */
-  page: number;
+  /** The current page, from 1 (controlled). */
+  page?: number;
+  /** The page shown first, when the pager keeps its own page. @default 1 */
+  defaultPage?: number;
   /** How many pages there are. */
   pageCount: number;
   /** Called with the page to go to. */
@@ -42,7 +45,8 @@ export interface PaginationProps extends PlacementProps {
  * ‹ and › are disabled at the ends, and when pressing one brings you to an end, focus moves to the current page
  * instead of being lost on a disabled button. Not in Figma yet.
  */
-export function Pagination({page, pageCount, onPageChange, 'aria-label': label = 'Pagination', className, style}: PaginationProps) {
+export function Pagination({page: pageProp, defaultPage = 1, pageCount, onPageChange, 'aria-label': label = 'Pagination', className, style}: PaginationProps) {
+  const [page, setPage] = useControlledState(pageProp, defaultPage, onPageChange);
   const count = Math.max(1, pageCount);
   const current = Math.min(Math.max(1, page), count);
   const nav = useRef<HTMLElement>(null);
@@ -58,7 +62,7 @@ export function Pagination({page, pageCount, onPageChange, 'aria-label': label =
 
   const go = (next: number) => {
     toCurrent.current = next === 1 || next === count;
-    onPageChange?.(next);
+    setPage(next);
   };
 
   return (
@@ -69,7 +73,7 @@ export function Pagination({page, pageCount, onPageChange, 'aria-label': label =
       </Button>
       {pageItems(current, count).map(item => typeof item === 'number' ? (
         <Button key={item} className="gv-pagination__page" aria-label={`Page ${item}`}
-          aria-current={item === current ? 'page' : undefined} onPress={() => item !== current && onPageChange?.(item)}>
+          aria-current={item === current ? 'page' : undefined} onPress={() => item !== current && setPage(item)}>
           {item}
         </Button>
       ) : (

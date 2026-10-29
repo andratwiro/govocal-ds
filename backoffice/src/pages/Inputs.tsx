@@ -99,7 +99,7 @@ function InputPanel({input, patch, onDelete}: {input: ManagedInput; patch: Patch
             </Select>
           </PropertyListItem>
           <PropertyListItem label="Tags">
-            <TagPicker aria-label="Tags" options={TAG_OPTIONS} selected={input.tags} selectionLabel={n => `${n} selected`}
+            <TagPicker aria-label="Tags" items={TAG_OPTIONS} value={input.tags} selectionLabel={n => `${n} selected`}
               onChange={tags => patch(input.id, {tags}, 'Tags changed')} />
           </PropertyListItem>
           <PropertyListItem label="Project">

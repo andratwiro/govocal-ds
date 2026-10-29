@@ -1,4 +1,4 @@
-import {useState, type ReactNode} from 'react';
+import type {ReactNode} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {TagPicker, type TagPickerProps} from './TagPicker';
 import type {OptionListItem} from './OptionList';
@@ -7,10 +7,10 @@ import type {OptionListItem} from './OptionList';
 const TAGS: OptionListItem[] = ['Cycling', 'Environment', 'Public space', 'Transport', 'Safety', 'Housing', 'Culture']
   .map(t => ({id: t, label: t}));
 
-type DemoProps = Omit<TagPickerProps, 'selected' | 'onChange' | 'aria-label' | 'options'> & {initial?: string[]; options?: OptionListItem[]};
-function Demo({initial = [], options = TAGS, ...props}: DemoProps) {
-  const [selected, setSelected] = useState<string[]>(initial);
-  return <TagPicker aria-label="Tags" options={options} selected={selected} onChange={setSelected} {...props} />;
+type DemoProps = Omit<TagPickerProps, 'aria-label' | 'items'> & {items?: OptionListItem[]};
+/** The picker keeps its own value from `defaultValue`. */
+function Demo({items = TAGS, ...props}: DemoProps) {
+  return <TagPicker aria-label="Tags" items={items} {...props} />;
 }
 
 /** A side panel's property row: the label on the left, the picker beside it. */
@@ -34,10 +34,10 @@ type Story = StoryObj<typeof TagPicker>;
 export const AllVariants: Story = {
   render: () => (
     <div style={{display: 'grid', gap: 16}}>
-      <Row label="Default"><Demo initial={['Cycling', 'Safety']} /></Row>
+      <Row label="Default"><Demo defaultValue={['Cycling', 'Safety']} /></Row>
       <Row label="Empty"><Demo /></Row>
-      <Row label="Many"><Demo initial={['Cycling', 'Environment', 'Public space', 'Transport', 'Safety', 'Housing']} /></Row>
-      <Row label="Disabled"><Demo initial={['Cycling', 'Safety']} isDisabled /></Row>
+      <Row label="Many"><Demo defaultValue={['Cycling', 'Environment', 'Public space', 'Transport', 'Safety', 'Housing']} /></Row>
+      <Row label="Disabled"><Demo defaultValue={['Cycling', 'Safety']} isDisabled /></Row>
     </div>
   )
 };
@@ -45,15 +45,15 @@ export const AllVariants: Story = {
 /** An input's tags. Tab reaches the tags (←→ between them, Delete or Backspace removes one), then Add tag; Enter or
  * Space opens the list with focus in its search, where ↑↓ move and Enter ticks while the list stays open; Esc empties
  * the search, then closes the list and gives focus back to Add tag. */
-export const Default: Story = {render: () => <Row label="Tags"><Demo initial={['Cycling', 'Safety']} /></Row>};
+export const Default: Story = {render: () => <Row label="Tags"><Demo defaultValue={['Cycling', 'Safety']} /></Row>};
 
 /** No tags yet: only Add tag. */
 export const Empty: Story = {render: () => <Row label="Tags"><Demo /></Row>};
 
 /** More tags than fit a line: they wrap, and Add tag goes under them. */
 export const Many: Story = {
-  render: () => <Row label="Tags"><Demo initial={['Cycling', 'Environment', 'Public space', 'Transport', 'Safety', 'Housing']} /></Row>
+  render: () => <Row label="Tags"><Demo defaultValue={['Cycling', 'Environment', 'Public space', 'Transport', 'Safety', 'Housing']} /></Row>
 };
 
 /** The tags without their ×, Add tag greyed. */
-export const Disabled: Story = {render: () => <Row label="Tags"><Demo initial={['Cycling', 'Safety']} isDisabled /></Row>};
+export const Disabled: Story = {render: () => <Row label="Tags"><Demo defaultValue={['Cycling', 'Safety']} isDisabled /></Row>};

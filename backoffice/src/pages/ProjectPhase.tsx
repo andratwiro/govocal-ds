@@ -136,7 +136,7 @@ function SetTopicTags() {
   return (
     <SetupStep kind="pick" title="Set topic tags" value={tags.length ? counted(tags.length, 'tag', 'tags') : undefined}
       isDone={tags.length > 0} picker={
-        <OptionList aria-label="Topic tags" options={TOPICS.map(t => ({id: t, label: t}))} selected={tags} onChange={setTags}
+        <OptionList aria-label="Topic tags" items={TOPICS.map(t => ({id: t, label: t}))} value={tags} onChange={setTags}
           placeholder="Search tags..." searchLabel="Search tags"
           selectionLabel={k => (k ? `${counted(k, 'tag', 'tags')} selected` : 'No tags selected')} />
       } />
@@ -258,11 +258,11 @@ function facetsFor(ideas: Idea[]): FilterFacet[] {
     icon: person ? <Avatar size={16} isUnassigned={v === 'Unassigned'} initials={v.slice(-1)} /> : undefined
   }));
   return [
-    {id: 'source', label: 'Source', icon: icon(Inbox), options: options('source', IDEA_SOURCES)},
-    {id: 'status', label: 'Status', icon: icon(CircleCheck), options: options('status', IDEA_STATUSES)},
-    {id: 'assignee', label: 'Assignee', icon: icon(User), options: options('assignee', IDEA_ASSIGNEES, true)},
-    {id: 'tags', label: 'Tags', icon: icon(Tag), options: options('tags', IDEA_TAGS)},
-    {id: 'reply', label: 'Reply', icon: icon(MessageSquareText), options: options('reply', IDEA_REPLIES)}
+    {id: 'source', label: 'Source', icon: icon(Inbox), items: options('source', IDEA_SOURCES)},
+    {id: 'status', label: 'Status', icon: icon(CircleCheck), items: options('status', IDEA_STATUSES)},
+    {id: 'assignee', label: 'Assignee', icon: icon(User), items: options('assignee', IDEA_ASSIGNEES, true)},
+    {id: 'tags', label: 'Tags', icon: icon(Tag), items: options('tags', IDEA_TAGS)},
+    {id: 'reply', label: 'Reply', icon: icon(MessageSquareText), items: options('reply', IDEA_REPLIES)}
   ];
 }
 
@@ -384,8 +384,8 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
   // searchable Option list, in a dialog popover; Copy to phase ticks several phases, then "Add phase".
   const actions: SelectionAction[] = [
     {id: 'status', label: 'Status', icon: icon(CircleCheck), menu: (
-      <OptionList aria-label="Status" selectionMode="single" searchable={false} selected={sharedStatus}
-        options={IDEA_STATUSES.map(st => ({id: st, label: st}))}
+      <OptionList aria-label="Status" selectionMode="single" isSearchable={false} value={sharedStatus}
+        items={IDEA_STATUSES.map(st => ({id: st, label: st}))}
         onChange={([st]) => st && edit(i => ({...i, status: st as IdeaStatus}))} />
     )},
     {id: 'assign', label: 'Assign', icon: icon(User), menu: (
@@ -399,8 +399,8 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
       // A dialog popover holds the search (as the Filter menu's long submenus do); isFlush keeps the starter
       // Dialog's padding off the Option list.
       <Dialog aria-label="Tags" isFlush>
-        <OptionList aria-label="Tags" searchable icon={icon(Tag)} selected={sharedTags} countLabel={ideasWord}
-          options={IDEA_TAGS.map(t => ({id: t, label: t, count: pickedIdeas.filter(i => i.tags.includes(t)).length}))}
+        <OptionList aria-label="Tags" isSearchable icon={icon(Tag)} value={sharedTags} countLabel={ideasWord}
+          items={IDEA_TAGS.map(t => ({id: t, label: t, count: pickedIdeas.filter(i => i.tags.includes(t)).length}))}
           selectionLabel={k => `${k} ${k === 1 ? 'tag' : 'tags'} on every selected idea`}
           onChange={next => {
             const on = new Set(next);

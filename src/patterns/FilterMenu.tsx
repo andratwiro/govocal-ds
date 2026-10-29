@@ -18,9 +18,10 @@ export interface FilterFacet {
   label: string;
   /** The facet's icon, in the menu, the chip and (unless an option has its own) in front of every option. */
   icon: ReactNode;
-  options: OptionListItem[];
-  /** A "Filter..." search over the options. @default more than five options */
-  searchable?: boolean;
+  /** The values it can take. */
+  items: OptionListItem[];
+  /** A "Filter..." search over the values. @default more than five */
+  isSearchable?: boolean;
 }
 
 /** The active filters: for each facet id, the ticked option ids. A facet with none is off. */
@@ -51,8 +52,8 @@ export interface FilterMenuProps extends PlacementProps {
 export function FilterMenu({facets, value, onChange, countLabel, 'aria-label': label = 'Filter', defaultOpen, className, style}: FilterMenuProps) {
   const on = activeFacets(facets, value).length;
   const options = (f: FilterFacet) => (
-    <OptionList aria-label={f.label} options={f.options} icon={f.icon} countLabel={countLabel}
-      searchable={f.searchable ?? f.options.length > 5} selected={value[f.id] ?? []}
+    <OptionList aria-label={f.label} items={f.items} icon={f.icon} countLabel={countLabel}
+      isSearchable={f.isSearchable ?? f.items.length > 5} value={value[f.id] ?? []}
       onChange={next => onChange({...value, [f.id]: next})} />
   );
   return (
@@ -75,7 +76,7 @@ export function FilterMenu({facets, value, onChange, countLabel, 'aria-label': l
                   {n > 0 && <span className="gv-filter-menu__count">{n}</span>}
                 </MenuItem>
                 {/* A long list gets its search: a dialog submenu holding the Autocomplete. A short one is a plain submenu. */}
-                {(f.searchable ?? f.options.length > 5) ? (
+                {(f.isSearchable ?? f.items.length > 5) ? (
                   <Dialog aria-label={f.label} className="gv-filter-menu__sub">{options(f)}</Dialog>
                 ) : options(f)}
               </SubmenuTrigger>

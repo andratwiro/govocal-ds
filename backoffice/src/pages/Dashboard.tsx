@@ -394,7 +394,7 @@ function ParticipationFeed() {
 
 const ACTION_FACET: FilterFacet = {
   id: 'action', label: 'Action', icon: <Zap aria-hidden size={16} />,
-  options: FEED_ACTIONS.map(a => ({id: a, label: a, count: MANAGEMENT_FEED.filter(m => m.action === a).length}))
+  items: FEED_ACTIONS.map(a => ({id: a, label: a, count: MANAGEMENT_FEED.filter(m => m.action === a).length}))
 };
 
 /** Management feed: who changed what (the real admin's Date / User / Item / Action table), as a list page: Panel,

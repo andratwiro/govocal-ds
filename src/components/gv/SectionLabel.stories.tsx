@@ -37,7 +37,7 @@ export const Default: Story = {
   args: {children: 'Timeline'}
 };
 
-/** `level` makes it a heading (here an h3) a screen reader can jump to; the look doesn't change. */
+/** `headingLevel` makes it a heading (here an h3) a screen reader can jump to; the look doesn't change. */
 export const AsAHeading: Story = {
   name: 'As a heading',
   args: {children: 'Phases', headingLevel: 3}

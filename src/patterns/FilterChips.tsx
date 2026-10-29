@@ -68,7 +68,7 @@ export function FilterChips({
           )}
           {on.map(f => {
             const ids = value[f.id];
-            const words = ids.map(id => f.options.find(o => o.id === id)?.label ?? id).join(', ');
+            const words = ids.map(id => f.items.find(o => o.id === id)?.label ?? id).join(', ');
             const op = ids.length > 1 ? 'is any of' : 'is';
             return (
               <Tag key={f.id} id={f.id} textValue={`${f.label} ${op} ${words}`} className="gv-filter-chip">

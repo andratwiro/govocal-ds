@@ -41,7 +41,7 @@ export function DemoAssignee({value, onChange}: {value: string; onChange: Change
 
 /** Tags: removable tags, then "Add tag" opening the project's tags (searchable past five). */
 export function DemoTags({value, onChange}: {value: string[]; onChange: (tags: string[]) => void}) {
-  return <TagPicker aria-label="Tags" options={TAGS.map(t => ({id: t, label: t}))} selected={value} onChange={onChange} />;
+  return <TagPicker aria-label="Tags" items={TAGS.map(t => ({id: t, label: t}))} value={value} onChange={onChange} />;
 }
 
 /** Phase: the phase's name, then "Copy to phase" opening the phases it can go to. */
