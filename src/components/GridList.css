@@ -91,7 +91,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-style: italic;
+    color: var(--gv-text-tertiary);
   }
 
   &[data-drop-target] {
@@ -112,6 +112,8 @@
   }
 }
 
+/* A grid item is a Figma Card (gv/Card, 14:879): 1px card-grey border, radius 8, panel fill, no shadow. Chosen =
+   the 2px selected-blue ring inside the edge. Title UI strong, description Small secondary. */
 .react-aria-GridListItem {
   display: flex;
   flex-direction: column;
@@ -119,12 +121,13 @@
   border-radius: var(--radius);
   outline: none;
   cursor: default;
-  color: var(--text-color);
-  font: var(--font-size) var(--gv-font-family);
+  color: var(--gv-text-primary);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   box-sizing: border-box;
-  padding-bottom: var(--spacing-4);
-  background: var(--overlay-background);
-  box-shadow: var(--gv-shadow-subtle);
+  padding-bottom: var(--spacing-3);
+  background: var(--gv-surface-panel);
+  border: 1px solid var(--gv-border-card);
   min-width: 0;
   max-width: 250px;
   overflow: clip;
@@ -139,6 +142,10 @@
     outline-offset: 2px;
   }
 
+  &[data-hovered] {
+    border-color: var(--gv-border-control-hover);
+  }
+
   &[data-pressed] {
     scale: 0.98;
   }
@@ -146,14 +153,12 @@
   &::after {
     content: '';
     position: absolute;
-    inset: 0;
+    inset: -1px;
     pointer-events: none;
     border-radius: inherit;
-    border: 2px solid var(--gv-color-neutral-0);
-    outline: 2px solid var(--gv-color-neutral-900);
-    outline-offset: -4px;
+    box-shadow: inset 0 0 0 2px var(--gv-border-selected);
     opacity: 0;
-    transition: opacity 200ms;
+    transition: opacity 150ms;
   }
 
   &[data-selected] {
@@ -176,34 +181,17 @@
     inset-inline-start: var(--spacing-4);
 
     .react-aria-CheckboxButton {
-      --focus-ring-color: var(--highlight-foreground);
-      --checkmark-color: var(--gv-color-neutral-0);
-
-      .indicator {
-        --indicator-border: var(--gv-color-neutral-900);
-
-        @media (forced-colors: active) {
-          --indicator-border: ButtonBorder;
-        }
-      }
-
-      &[data-selected] .indicator {
-        --indicator-background: var(--gv-color-neutral-900);
-        --indicator-shadow: transparent;
-
-        @media (forced-colors: active) {
-          --indicator-background: Highlight;
-          --checkmark-color: HighlightText;
-        }
-      }
-
       &::before {
         content: '';
         position: absolute;
-        inset: -4px;
+        inset: -3px;
         background: var(--gv-surface-panel);
-        box-shadow: var(--gv-shadow-dialog);
-        border-radius: var(--radius);
+        box-shadow: var(--gv-shadow-subtle);
+        border-radius: var(--gv-radius-6);
+      }
+
+      .indicator {
+        position: relative;
       }
     }
   }
@@ -219,18 +207,20 @@
   }
 
   .react-aria-Text {
-    padding: 0 var(--spacing-4);
+    padding: 0 var(--spacing-3);
     display: -webkit-box;
     overflow: hidden;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
 
     &:not([slot]) {
-      font-weight: 500;
+      font-weight: var(--gv-type-ui-strong-weight);
     }
 
     &[slot='description'] {
-      font-size: var(--font-size-sm);
+      font: var(--gv-type-small);
+      letter-spacing: var(--gv-type-small-tracking);
+      color: var(--gv-text-secondary);
     }
   }
 
@@ -243,7 +233,7 @@
     bottom: var(--spacing-2);
     inset-inline-end: var(--spacing-2);
     border-radius: var(--radius);
-    color: var(--text-color);
+    color: var(--gv-icon-default);
 
     &[data-focus-visible] {
       border-radius: 4px;
@@ -293,15 +283,11 @@
   position: sticky;
   z-index: 2;
   top: calc(var(--spacing-2) * -1);
-  font-size: var(--font-size-lg);
-  font-weight: 500;
-  background: var(--gray-100);
-  border: 0.5px solid var(--gray-400);
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-secondary);
+  background: var(--gv-surface-panel);
   cursor: default;
   user-select: none;
-  box-shadow:
-    inset 0px 1px 0px var(--gv-color-neutral-0),
-    inset 0px -4px 8px var(--gray-200);
-  border-radius: var(--radius);
-  padding: var(--spacing-1) var(--spacing-4);
+  padding: var(--gv-space-8) var(--gv-space-4) var(--gv-space-4);
 }
