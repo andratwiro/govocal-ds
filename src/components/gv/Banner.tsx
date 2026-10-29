@@ -20,11 +20,6 @@ export type BannerTone = keyof typeof TONE_ICON;
 
 export interface BannerProps extends PlacementProps {
   /**
-   * @deprecated use `tone` (+ `linkLabel` for a trailing link); kept so existing calls with
-   * `type="info-link"` still work.
-   */
-  type?: 'info' | 'info-link';
-  /**
    * Figma "Type": info (teal, a paragraph) plus the review's neutral (phase not started/ended),
    * warning (screening, content warnings), success (confirmations) and AI tones.
    *
@@ -37,10 +32,17 @@ export interface BannerProps extends PlacementProps {
   children?: ReactNode;
   /** Overrides the tone's default icon; `null` hides it. */
   icon?: ReactNode | null;
-  /** Info · link / AI: a link at the end of the message, e.g. "Go to project", "Open AI analysis". */
+  /** A link with the message, e.g. "Go to project", "Open AI analysis". */
   linkLabel?: string;
   linkHref?: string;
   onLinkPress?: () => void;
+  /**
+   * Where the link sits: `inline`, right after the words (Figma's Info · link); `trailing`, at the end of the row (the
+   * AI banner's "Open AI analysis").
+   *
+   * @default 'trailing'
+   */
+  linkPlacement?: 'inline' | 'trailing';
   /** A block action under the message, e.g. a "Review" button (the screening banner). */
   actions?: ReactNode;
   /** Shows a dismiss × in the corner and calls this when it's pressed. */
@@ -57,7 +59,6 @@ export interface BannerProps extends PlacementProps {
 
 /** A message box: icon + text, on a tone's tint (+ title, link, actions, dismiss). */
 export function Banner({
-  type,
   tone,
   title,
   children,
@@ -65,6 +66,7 @@ export function Banner({
   linkLabel,
   linkHref,
   onLinkPress,
+  linkPlacement = 'trailing',
   actions,
   onDismiss,
   dismissLabel = 'Dismiss',
@@ -73,7 +75,7 @@ export function Banner({
   style
 }: BannerProps) {
   const resolvedTone: BannerTone = tone ?? 'info';
-  const isLink = type === 'info-link';
+  const isInline = linkPlacement === 'inline';
   const ToneIcon = TONE_ICON[resolvedTone];
 
   if (density === 'compact') {
@@ -94,7 +96,7 @@ export function Banner({
           <p className="gv-banner__text">
             {title && <strong className="gv-banner__title">{title}</strong>}
             {children}
-            {isLink && linkLabel && (
+            {isInline && linkLabel && (
               <>
                 {' '}
                 <Link className="gv-banner__link" href={linkHref} onPress={onLinkPress}>
@@ -103,7 +105,7 @@ export function Banner({
               </>
             )}
           </p>
-          {!isLink && linkLabel && (
+          {!isInline && linkLabel && (
             <Link className="gv-banner__link gv-banner__link--trailing" href={linkHref} onPress={onLinkPress}>
               {linkLabel}
             </Link>

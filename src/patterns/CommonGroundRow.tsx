@@ -25,10 +25,6 @@ export interface CommonGroundRowProps extends PlacementProps {
   agreePercent: number;
   /** The Reactions column: agree + disagree + pass so far. */
   reactions?: number;
-  /** @deprecated The Likes column; use `likes`. */
-  reactionCount?: number | null;
-  /** @deprecated The Reactions column; use `reactions`. */
-  visibleCount?: number;
   /** A checkbox in the leading slot, as on `ListRow`. Not in Figma. */
   select?: ListRowSelect;
 }
@@ -46,14 +42,10 @@ export function CommonGroundRow({
   likes,
   agreePercent,
   reactions,
-  reactionCount,
-  visibleCount,
   select,
   className,
   style
 }: CommonGroundRowProps) {
-  const likeCount = likes !== undefined ? likes : reactionCount;
-  const reactionTotal = reactions ?? visibleCount;
   return (
     <div
       className={clsx('gv-list-row-cg', className)} style={style}
@@ -92,13 +84,13 @@ export function CommonGroundRow({
           )}
         </div>
         <div className="gv-list-row-cg__cell" data-num data-tone="secondary">
-          {likeCount == null ? <span className="gv-list-row-cg__none">–</span> : likeCount}
+          {likes == null ? <span className="gv-list-row-cg__none">–</span> : likes}
         </div>
         <div className="gv-list-row-cg__cell" data-num>
           {agreePercent}%
         </div>
         <div className="gv-list-row-cg__cell" data-num data-tone="secondary">
-          {reactionTotal}
+          {reactions}
         </div>
       </div>
     </div>
