@@ -1,0 +1,11 @@
+@import '../theme.css';
+@import '../utilities.css';
+
+.gv-new-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-state-notification);
+}
