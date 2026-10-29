@@ -18,6 +18,7 @@ const meta: Meta<typeof IconButton> = {
 export default meta;
 type Story = StoryFn<typeof IconButton>;
 
+/** Figma's three Style × Tone variants, then (Not in Figma) the prototype's 24 size and disabled. */
 export const AllVariants: Story = () => (
   <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
     <IconButton variant="ghost" tone="default" aria-label="Settings for Green Corridors for Riverside">
@@ -27,6 +28,12 @@ export const AllVariants: Story = () => (
       <ChevronDown aria-hidden size={16} />
     </IconButton>
     <IconButton variant="bordered" tone="strong" aria-label="Delete idea">
+      <Trash2 aria-hidden size={16} />
+    </IconButton>
+    <IconButton variant="bordered" tone="strong" size={24} aria-label="Delete idea (small)">
+      <Trash2 aria-hidden size={16} />
+    </IconButton>
+    <IconButton variant="bordered" tone="strong" isDisabled aria-label="Delete idea (disabled)">
       <Trash2 aria-hidden size={16} />
     </IconButton>
   </div>
@@ -50,6 +57,7 @@ export const BorderedStrong: Story = () => (
   </IconButton>
 );
 
+/** Not in Figma: the prototype's `.btn-icon--sm` for dense toolbars. */
 export const Small: Story = () => (
   <IconButton variant="bordered" tone="strong" size={24} aria-label="Delete idea">
     <Trash2 aria-hidden size={16} />

@@ -1,6 +1,11 @@
 @import '../theme.css';
 @import '../utilities.css';
 
+/*
+ * Icon button (Figma 13:269; the prototype's `.btn-icon`). 28 square, radius 8, icon 16 at Figma's
+ * stroke (1.17 at 16 = 1.75 on Lucide's 24 grid). Hover, from the prototype: ghost gets the hover
+ * fill, bordered the darker border, and both icons go to the primary (near-black) tone.
+ */
 .gv-icon-button {
   appearance: none;
   display: inline-flex;
@@ -33,6 +38,7 @@
   > svg {
     width: 16px;
     height: 16px;
+    stroke-width: 1.75;
   }
 
   &[data-tone='strong'] {
@@ -41,7 +47,7 @@
 
   &[data-variant='ghost'][data-hovered] {
     background: var(--gv-surface-hover);
-    color: var(--gv-icon-strong);
+    color: var(--gv-icon-primary);
   }
 
   &[data-variant='bordered'] {
@@ -51,11 +57,8 @@
     &[data-hovered] {
       border-color: var(--gv-border-control-hover);
       background: var(--gv-surface-panel);
+      color: var(--gv-icon-primary);
     }
-  }
-
-  &[data-pressed] {
-    scale: 0.95;
   }
 
   &[data-disabled] {
