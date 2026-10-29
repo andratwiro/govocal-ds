@@ -4,6 +4,28 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Maps (29 Oct 2026)
+
+Calls made while adding the Map (Components/Data display): an external review found maps uncovered, and the ideation phase's Manage tab shows ideas on one.
+
+- Map engine: the prototype draws MapLibre with OpenFreeMap's tiles, the platform uses ArcGIS → **a `MapEngine` interface (project, unproject, view, zoom, credits, events) behind the Map's `engine` prop; MapLibre + OpenFreeMap's positron style is the default (`maplibreEngine()`), imported on demand from `map/maplibre.ts`, the one file that names it** → pins, card, zoom buttons, overlays, legend and credits are the system's and know no engine, so the front-end team swaps in ArcGIS (MapView's toScreen, toMap, goTo) by writing one file; the engine and its stylesheet load only when a map draws (a lazy chunk, not in the main bundle).
+- The name `Map` shadows JavaScript's global Map in the file that imports it → **kept: `Map`**, as in the prototype and the platform; a file that needs both says `globalThis.Map` (Map.tsx does), and Lucide's map icon is imported as `MapIcon` → one name for a thing everywhere (NAMING principle 4).
+- Selection: `value` / `onChange` vs `selectedKey` / `onSelectionChange` → **`selectedKey` / `defaultSelectedKey` / `onSelectionChange(key | null)`** → the map is a single-select collection of pins, named as React Aria's (Tabs); the list beside it marks the same item with Data table's `openKey`.
+- `center` / `zoom` as a lock vs a starting view → **the first view, and a move when the page changes them; never held: people pan and zoom freely and `onViewChange` reports where they stopped; with no `center` the map fits its items** → a map that snaps back fights people; the configure screen's "Save zoom" reads `onViewChange`.
+- Pins as the engine's symbol layers vs elements over the canvas → **engine-free buttons over the canvas (`MapPin`), placed on every camera frame without a React render** → focusable, named by their label, painted with tokens, and the same on any engine.
+- 120 pins, 120 Tab stops → **one Tab stop for the pins (the last focused, else the open one, else the first in view); the arrow keys go to the nearest pin within 45° of that direction; Enter opens, Esc closes and keeps focus on the pin** → React Aria's composite pattern (one stop, arrows inside); arrows keep screen directions right to left, since a map is not mirrored. Tab order: the map canvas (arrows pan it), the pins, the zoom buttons, the credits.
+- Pin states → **default: a 14 dot in its tone (`tone`, the system's tone set) with a white ring; hot (hovered, or `hoveredKey` from a list): 18, near black (the prototype's); open: 18 in the selected accent with a wider ring; a cluster: a 28 disc with its count, pressing it zooms in** → the prototype's states, in tokens.
+- Clustering on vs off → **opt-in `isClustered`, off by default (the prototype at city zoom shows every pin); the open and the hot pin never fold** → cheap (a grid on the Mercator world, stable while panning), useful for a city-wide project, wrong when the list beside it needs every pin in view.
+- The prototype's info banner draws over the open card → **the card rises above the overlays** → it is what the person just asked to see.
+- A click on the ground with a card open: close the card or add an input → **close the card first; the next click adds (`onMapPress`)**, and Enter on the focused map adds at its centre → a click that dismisses must not also create; the keyboard needs a way to add.
+- The tiles' credits as the engine's HTML control vs the system's → **read as text (`parseCredits`: words and http(s) links only) and drawn by the Map, always visible at the bottom end** → the licence asks for it, and no markup from a tile server reaches the page.
+- The "N ideas without a location" note and a legend → **`MapOverlay` (a corner: top-start, top-end, bottom-start, bottom-end, mirrored right to left) holding a `MapChip` (a count, a button when it lists them) or a `MapLegend` (static pins with their words; no items = "No legend", as the configure screen)** → engine-free parts the page places; a Banner goes in an overlay as it is.
+- The Manage tab's list + map → **a story recipe, "In the Manage tab", on the Map entry; not a Pattern** → one page uses it so far (NAMING: a Pattern once two pages share it).
+- A pin under the pointer marking its row → **not drawn yet: Data table's rows take no hovered state from the page** → a follow-up for Data table (a `hoveredKey` beside `openKey`); the row → pin direction works (`hoveredKey`).
+- Sizes with no token → **the card's 280 width and the map's 240 least height stay raw, each with a note** → no layout size tokens yet (as Tile grid's widths).
+- Rotation and pitch → **off: a flat, north-up map** → the back office's maps are for placing inputs, and a turned map loses people.
+- Strings → **fixed English labels (Zoom in, Zoom out, the cluster's "N pins: zoom in", "The map can't be shown here.")** → as the other components' built-in words today.
+
 ## Composition contracts in code (29 Oct 2026, architecture review)
 
 Calls made while putting the review's invisible contracts into the parts themselves (rv-contracts).
