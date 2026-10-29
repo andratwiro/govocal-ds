@@ -1,31 +1,36 @@
 @import './theme.css';
 
+/* Tali's text/link button (augur-design.html .pj-textbtn / .btn--tertiary): quiet grey
+   text, no underline at rest, darkens on hover — never the default blue underlined link. */
 .react-aria-Link {
-  color: var(--link-color);
-  font-size: var(--font-size);
+  color: var(--gv-text-secondary);
+  font: var(--gv-type-ui) var(--gv-font-family);
+  font-weight: 500;
   transition-property: color, text-decoration-thickness;
   transition-duration: 200ms;
-  text-decoration: underline;
+  text-decoration: none;
   cursor: pointer;
   outline: none;
   position: relative;
-  border-radius: var(--radius-sm);
+  border-radius: var(--gv-radius-4);
   -webkit-tap-highlight-color: transparent;
 
   &[data-hovered] {
+    color: var(--gv-text-primary);
+    text-decoration: underline;
     text-decoration-thickness: 1.5px;
   }
 
   &[data-pressed] {
-    color: var(--link-color-pressed);
+    color: var(--gv-action-primary);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
+    outline: 2px solid var(--gv-border-selected);
   }
 
   &[data-disabled] {
     cursor: default;
-    color: var(--text-color-disabled);
+    color: var(--gv-text-quiet);
   }
 }

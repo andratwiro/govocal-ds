@@ -18,3 +18,12 @@ Example.args = {
   href: 'https://www.imdb.com/title/tt6348138/',
   target: '_blank'
 };
+
+export const AllStates: StoryFn<typeof Link> = () => (
+  <div style={{display: 'flex', gap: 24}}>
+    <Link href="#">See in the prototype</Link>
+    <Link href="#" isDisabled>
+      Make default
+    </Link>
+  </div>
+);
