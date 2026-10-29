@@ -105,8 +105,12 @@ export {
   Card, CardSwitch, CardRadioGroup, CardRadio, type CardPill, type CardMenuItem, type CardIconAction, type CardProps
 } from './components/gv/Card';
 export {Divider, type DividerProps} from './components/gv/Divider';
+export {Grid, GridItem, type GridProps, type GridItemProps} from './components/gv/Grid';
+export {Inline, type InlineProps} from './components/gv/Inline';
 export {PageHeader, type PageHeaderProps} from './components/gv/PageHeader';
 export {Panel, type PanelProps} from './components/gv/Panel';
+export {type PaddingProps, type Space} from './components/space';
+export {Stack, type StackProps} from './components/gv/Stack';
 export {TileGrid, type TileGridProps} from './components/gv/TileGrid';
 
 // Components / Navigation

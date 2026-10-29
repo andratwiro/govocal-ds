@@ -4,6 +4,30 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Compose without CSS (30 Oct 2026, benchmark gaps)
+
+Calls made while adding Stack, Inline and Grid (Components/Layout & containers) and the guards around them: the
+benchmark asks that a screen be composed from parts with no CSS of its own.
+
+- Grid beside Tile grid ("never two grids") → **two parts with one line between them: Tile grid is many like tiles in
+  as many equal columns as fit, wrapping to the width (`minTileWidth`); Grid is a page's distinct regions in columns you
+  name (`columns`, `areas`, Grid item's `area` and `columnSpan`), kept at every width. Grid has no auto-fit, Tile grid
+  no areas or spans** → the two answer different questions (how many fit vs where each region goes), as Amsterdam's
+  Grid (a fixed column grid with cells) and the back office's Stat tile rows show; one part doing both would need
+  modes that exclude each other. Each one's doc comment sends the other job to the other.
+- Spacing props as numbers (Grafana's multiplier, our `size={32}`) or names (Amsterdam's short list) → **the token's
+  step as a string: `gap="16"` is `--gv-space-16`; `gap={16}`, `gap={13}` and `gap="13px"` don't compile
+  (`tests/types/layout.tsx`)** → it names the token rather than a pixel count, so the scale stays closed, and the
+  type lists every step it takes.
+- Inline's wrap as a boolean (`isWrapping`, true by default) or a value → **`wrap: 'wrap' | 'nowrap'`, `wrap` by
+  default** → a boolean that is on by default reads as a negative to turn off (API rule 1); the value is CSS's word.
+- Layout props as inline styles or data attributes → **the TSX sets `--gv-stack-*` / `--gv-inline-*` / `--gv-grid-*`
+  from the props (each a `var(--gv-space-*)`) and the part's stylesheet reads them; alignment is a data attribute**
+  → seventeen steps times six props as attribute rules would be a stylesheet of lists; a token reference in a custom
+  property is still a token, and the caller's `style` merges after.
+- Grid on a narrow screen → **keeps its columns; tiles that should wrap are a Tile grid** → the back office is a
+  desktop admin; responsive areas wait for a page that needs them.
+
 ## Words, locale and edge cases (30 Oct 2026)
 
 Calls made while emptying the words guard's `TO_CONVERT` list, adding the Locale toolbar and the edge-case stories (benchmark-gaps plan, Task 6).

@@ -5,5 +5,5 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"], "types": ["node"],
     "paths": {"govocal-ds": ["./src/index.ts"], "govocal-ds/base": ["./src/base.ts"]}
   },
-  "include": ["src", "backoffice/src", ".storybook", "e2e"]
+  "include": ["src", "backoffice/src", ".storybook", "e2e", "tests/types"]
 }

@@ -34,6 +34,7 @@ export interface TileGridProps {
 /**
  * Tile grid: tiles in as many equal columns as fit, each at least `minTileWidth` wide, wrapping onto new rows, one
  * column on a narrow screen. Not in Figma: the back office's Stat tile rows, card galleries and side-by-side panels.
+ * Distinct regions placed in named columns (a list beside its detail) are a Grid; one column of parts a Stack.
  *
  * ```tsx
  * <TileGrid minTileWidth={160} density="compact">{stats.map(s => <StatTile key={s.id} {...s} />)}</TileGrid>

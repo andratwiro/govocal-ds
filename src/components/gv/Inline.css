@@ -1,0 +1,49 @@
+@import '../theme.css';
+
+/* Inline: a row of parts that wraps, `gap` apart, centred on each other. The gap and padding come in as spacing
+   tokens (`--gv-inline-*`, set by the TSX); no margin of its own, no paint. A list loses its bullets and indent. */
+.gv-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  box-sizing: border-box;
+  min-width: 0;
+  column-gap: var(--gv-inline-gap, 0);
+  row-gap: var(--gv-inline-row-gap, var(--gv-inline-gap, 0));
+  padding-block: var(--gv-inline-padding-block, 0);
+  padding-inline: var(--gv-inline-padding-inline, 0);
+  margin: 0;
+  list-style: none;
+
+  &[data-wrap='nowrap'] {
+    flex-wrap: nowrap;
+  }
+
+  &[data-align='start'] {
+    align-items: flex-start;
+  }
+
+  &[data-align='end'] {
+    align-items: flex-end;
+  }
+
+  &[data-align='stretch'] {
+    align-items: stretch;
+  }
+
+  &[data-align='baseline'] {
+    align-items: baseline;
+  }
+
+  &[data-justify='center'] {
+    justify-content: center;
+  }
+
+  &[data-justify='end'] {
+    justify-content: flex-end;
+  }
+
+  &[data-justify='space-between'] {
+    justify-content: space-between;
+  }
+}
