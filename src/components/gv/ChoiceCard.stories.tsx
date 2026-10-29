@@ -76,8 +76,7 @@ export const WithRevealedContent: Story = {
   )
 };
 
-/** The Create report checklist: checkbox tiles grouped under plain headings (Section label swaps in
- * once `pk-project` lands; `docs/NAMING.md`). */
+/** The Create report checklist: checkbox tiles grouped under Section labels ("Project context", "Phases"). */
 export const CheckboxGroupWithGroupHeadings: Story = {
   name: 'Checkbox group with group headings',
   render: () => (

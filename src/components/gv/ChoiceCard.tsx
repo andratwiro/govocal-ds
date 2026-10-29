@@ -2,6 +2,7 @@
 import type {ReactNode} from 'react';
 import {RadioField, RadioButton, type RadioFieldProps} from 'react-aria-components/RadioGroup';
 import {CheckboxField, CheckboxButton, type CheckboxFieldProps} from 'react-aria-components/Checkbox';
+import {SectionLabel} from './SectionLabel';
 import './ChoiceCard.css';
 
 interface ChoiceCardBody {
@@ -82,9 +83,9 @@ export function ChoiceCardCheckbox({media, children, description, revealed, ...p
 }
 
 /**
- * A plain heading above a group of choice cards ("Project context", "Phases" in the Create report
- * checklist). Not Section label: that pattern moves up only once `pk-project` lands.
+ * The label above a group of choice cards ("Project context", "Phases" in the Create report checklist): a Section label,
+ * sentence case.
  */
 export function ChoiceCardGroupHeading({children}: {children: ReactNode}) {
-  return <div className="gv-choice-card-group-heading">{children}</div>;
+  return <SectionLabel>{children}</SectionLabel>;
 }

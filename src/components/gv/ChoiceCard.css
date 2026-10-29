@@ -100,19 +100,6 @@
   padding: 0 var(--gv-space-16) var(--gv-space-14) calc(var(--gv-space-16) + var(--gv-size-icon-16) + var(--gv-space-12));
 }
 
-/* A plain heading over a group of cards (Create report's "Project context", "Phases", "Surveys",
-   "Files attached"). Section label swaps in once `pk-project` lands (docs/NAMING.md). */
-.gv-choice-card-group-heading {
-  font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
-  color: var(--gv-text-tertiary);
-  margin: var(--gv-space-4) 0 0;
-
-  &:first-child {
-    margin-top: 0;
-  }
-}
-
 /* The radio dot and checkbox mark: the same look as RadioGroup.css / Checkbox.css draw them, so a
    Choice card never carries a third style of dot or box. */
 .gv-choice-card__button--radio .indicator {
