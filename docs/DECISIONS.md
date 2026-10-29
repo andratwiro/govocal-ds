@@ -78,8 +78,6 @@ Calls made while emptying the words guard's `TO_CONVERT` list, adding the Locale
 - Locale switcher's `new Intl.DisplayNames([inLocale])` read as a fixed locale → **the guard flags an Intl formatter only when its locale argument holds a literal** → the names follow the locale the part is handed (React Aria's), which is what rule 11 asks.
 - Overview › Accessibility's scan date in `toLocaleString('en-GB')` → **kept** → it is a docs page, not a part: nothing imports it, its prose is English, and a host never renders it. The guard reads parts (`src/components`, `src/patterns`) only.
 
-
-
 ## Back office: the project lead's asks (30 Oct 2026)
 
 - Users: "Pagination on every admin table" (below, prototype review) vs the project lead's virtualised Users tab → **the Users list is one virtualised table (5,012 people, the twelve and 5,000 invented residents), no pages; the header's select-all ticks every row the list and search leave (`toKeySet`), the table as tall as its rows up to 70% of the window** → a real platform's users run to thousands; the Data table's "Virtualized" story is the recipe. The other admin lists keep their pages.
