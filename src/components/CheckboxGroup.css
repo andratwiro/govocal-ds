@@ -18,5 +18,7 @@
 
   &[data-orientation='horizontal'] .checkbox-items {
     flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--gv-space-20) var(--gv-space-24);
   }
 }

@@ -8,7 +8,7 @@
 
   [slot='description'],
   .react-aria-FieldError {
-    margin-left: calc(var(--spacing) * 6.5);
+    margin-inline-start: 23px;
   }
 
   &[data-disabled] [slot='description'] {
@@ -16,25 +16,31 @@
   }
 }
 
+/* One checkbox for the system: Figma's Checkbox (node 5:317, the gv Checkbox): a 15 box, radius 4, a 1px control
+   border on white; checked or mixed = the checked brand blue with a white mark; UI label 8 to the right. */
 .react-aria-CheckboxButton {
-  --checkmark-color: var(--highlight-foreground);
+  --checkmark-color: var(--gv-text-inverse);
 
   display: flex;
   /* This is needed so the HiddenInput is positioned correctly */
   position: relative;
   align-items: center;
-  gap: var(--spacing-2);
-  font: var(--font-size) var(--gv-font-family);
-  color: var(--text-color);
+  gap: var(--gv-space-8);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-primary);
   forced-color-adjust: none;
   -webkit-tap-highlight-color: transparent;
 
   .indicator {
-    width: calc(var(--spacing) * 4.5);
-    height: calc(var(--spacing) * 4.5);
+    width: var(--gv-space-15);
+    height: var(--gv-space-15);
     box-sizing: border-box;
-    border-radius: var(--radius-sm);
-    transition: all 200ms;
+    border: 1px solid var(--gv-border-control);
+    border-radius: var(--gv-radius-4);
+    background: var(--gv-surface-panel);
+    box-shadow: none;
+    transition: background-color 150ms, border-color 150ms;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -42,8 +48,8 @@
   }
 
   svg {
-    width: calc(100% - var(--spacing-2));
-    height: calc(100% - var(--spacing-2));
+    width: 11px;
+    height: 11px;
     fill: none;
     stroke: var(--checkmark-color);
     stroke-width: 3px;
@@ -51,11 +57,20 @@
     stroke-dashoffset: 66;
     stroke-linecap: round;
     stroke-linejoin: round;
-    transition: all 200ms;
+    transition: stroke-dashoffset 200ms;
+  }
+
+  &[data-hovered] .indicator {
+    border-color: var(--gv-border-control-hover);
   }
 
   &[data-selected],
   &[data-indeterminate] {
+    .indicator {
+      background: var(--gv-action-checked);
+      border-color: var(--gv-action-checked);
+    }
+
     svg {
       stroke-dashoffset: 44;
     }
@@ -68,8 +83,34 @@
     }
   }
 
+  &[data-invalid] .indicator {
+    border-color: var(--gv-state-notification);
+  }
+
+  &[data-focus-visible] .indicator {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
+  }
+
   &[data-disabled] {
     color: var(--text-color-disabled);
-    --checkmark-color: var(--text-color-disabled);
+
+    .indicator {
+      background: var(--gv-surface-app);
+      border-color: var(--gv-border-subtle);
+    }
+
+    &[data-selected] .indicator,
+    &[data-indeterminate] .indicator {
+      background: var(--gv-border-control);
+      border-color: var(--gv-border-control);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .indicator,
+    svg {
+      transition: none;
+    }
   }
 }
