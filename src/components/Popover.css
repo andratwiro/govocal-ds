@@ -1,20 +1,25 @@
 @import './theme.css';
 
+/* The prototype's dropdown container (augur-design.html #pj-dd-canon): white, 1px control border, radius 12,
+   padding 6 and the subtlest shadow (the prototype's two-layer "very minimal" shadow has no token; the subtle one
+   is the nearest). Menus and list boxes bring their own 6 padding, so their popovers have none. */
 .react-aria-Popover {
   --background-color: var(--overlay-background);
 
-  outline: 1px solid var(--overlay-border);
+  border: 1px solid var(--gv-border-control);
   box-sizing: border-box;
-  filter: drop-shadow(var(--popover-shadow));
+  box-shadow: var(--gv-shadow-subtle);
   border-radius: var(--radius-lg);
   background: var(--background-color);
   color: var(--text-color);
   transition:
-    transform 200ms,
-    opacity 200ms;
-  font: var(--font-size) var(--gv-font-family);
-  padding: 8px;
+    transform 140ms,
+    opacity 140ms;
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  padding: var(--gv-space-6);
   overflow: auto;
+  outline: none;
 
   &[data-trigger='MenuTrigger'],
   &[data-trigger='SubmenuTrigger'] {
@@ -24,7 +29,7 @@
   .react-aria-OverlayArrow svg {
     display: block;
     fill: var(--background-color);
-    stroke: var(--overlay-border);
+    stroke: var(--gv-border-control);
     paint-order: stroke;
     stroke-width: 2px;
   }

@@ -1,10 +1,16 @@
 @import './theme.css';
 
-/* The prototype's floating menu (augur-design.html .pj-menu / .pj-menu__item): white card, 4px
-   padding, 6px item radius, 9/11 item padding, hover = the page's surface-hover. */
+/* The prototype's one dropdown system (augur-design.html #pj-dd-canon, 8 and 14 Oct), measured on the Manage
+   filter: every menu shares the rhythm, only width and content change.
+   · Container (Popover.css): white, 1px control border, radius 12, padding 6, the subtlest shadow.
+   · Row: 32 tall, padding 0 8, 10 between icon and words, radius 8, UI 13/20 regular primary; hover the hover
+     surface; no gap between rows. Two-line row: padding 6 8, the name in UI, the description Small secondary.
+   · Leading icon 16 in the strong icon grey; chevron 16 quiet; check 16.
+   · Divider 1px, margin 6 4. Section label Small secondary, padding 8 8 4.
+   · Submenu: the same container, 4 from the menu, its first row on the line of the row that opens it. */
 .react-aria-Menu {
   margin: 0;
-  padding: var(--gv-space-4);
+  padding: var(--gv-space-6);
   list-style: none;
   min-height: 0;
   max-height: inherit;
@@ -14,20 +20,21 @@
   outline: none;
   border-radius: inherit;
   display: grid;
-  --check-width: 0;
-  grid-template-columns: var(--gv-space-12) var(--check-width) auto 1fr auto var(--gv-space-12);
+  --check-width: 0px;
+  grid-template-columns: var(--check-width) auto 1fr auto;
   grid-auto-rows: max-content;
 
-  &:has(> [data-selection-mode]) {
-    --check-width: var(--gv-space-24);
+  &:has(> [data-selection-mode], > .react-aria-MenuSection > [data-selection-mode]) {
+    --check-width: 26px;
   }
 
   &[data-empty] {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-style: italic;
     min-height: var(--gv-space-32);
+    font: var(--gv-type-ui);
+    color: var(--gv-text-tertiary);
   }
 }
 
@@ -35,37 +42,43 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 24px;
+  height: var(--gv-space-32);
   grid-column: 1 / -1;
 }
 
 .react-aria-MenuItem {
-  margin-inline: 0;
-  padding: 9px 11px;
-  border-radius: var(--gv-radius-6);
+  margin: 0;
+  min-height: var(--gv-space-32);
+  padding: 0 var(--gv-space-8);
+  box-sizing: border-box;
+  border-radius: var(--gv-radius-8);
   outline: none;
   cursor: default;
   color: var(--gv-text-primary);
-  font: var(--gv-type-ui) var(--gv-font-family);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   position: relative;
   display: grid;
-  grid-column-start: 1;
-  grid-column-end: -1;
+  grid-column: 1 / -1;
   grid-template-areas:
-    '. check icon label end .'
-    '. . . desc end .';
+    'check icon label end'
+    '. . desc end';
   grid-template-columns: subgrid;
   align-items: center;
+  align-content: center;
   forced-color-adjust: none;
   -webkit-tap-highlight-color: transparent;
+
+  &:has([slot='description']) {
+    padding-block: var(--gv-space-6);
+  }
 
   > svg:not(.lucide-check, .lucide-dot, .lucide-chevron-right) {
     grid-area: icon;
     width: var(--gv-space-16);
     height: var(--gv-space-16);
-    color: var(--gv-icon-default);
-    justify-self: center;
-    margin-inline-end: var(--gv-space-8);
+    color: var(--gv-icon-strong);
+    margin-inline-end: var(--gv-space-10);
   }
 
   &[data-open],
@@ -75,17 +88,18 @@
     color: var(--gv-text-primary);
   }
 
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: -2px;
+  }
+
   &[data-selection-mode] {
     .lucide-check,
     .lucide-dot {
       grid-area: check;
       width: var(--gv-space-16);
       height: var(--gv-space-16);
-      color: var(--gv-action-primary);
-    }
-
-    .lucide-check {
-      stroke-width: 3px;
+      color: var(--gv-action-checked);
     }
 
     .lucide-dot {
@@ -100,78 +114,68 @@
 
   &[data-disabled] {
     color: var(--gv-text-quiet);
+
+    > svg {
+      color: var(--gv-icon-quiet);
+    }
   }
 
   .react-aria-Text:not([slot]),
   [slot='label'] {
     grid-area: label;
-    font-weight: 500;
   }
 
   [slot='description'] {
-    font-size: 12px;
-    color: var(--gv-text-secondary);
     grid-area: desc;
+    font: var(--gv-type-small);
+    letter-spacing: var(--gv-type-small-tracking);
+    color: var(--gv-text-secondary);
   }
 
   kbd {
     grid-area: end;
     justify-self: end;
-    margin-inline-start: var(--gv-space-16);
-    font-family: var(--gv-font-family);
-    font-size: 12px;
+    margin-inline-start: var(--gv-space-10);
+    font: var(--gv-type-small);
+    color: var(--gv-text-tertiary);
     text-align: end;
-    background: var(--gv-surface-hover-strong);
-    border: 0.5px solid var(--gv-border-control);
-    padding: 0 var(--gv-space-4);
-    border-radius: var(--gv-radius-4);
-  }
-
-  &[data-focused] kbd {
-    background: var(--gv-surface-info);
-    border-color: var(--gv-surface-info);
   }
 
   .lucide-chevron-right {
     grid-area: end;
-    margin-left: var(--gv-space-4);
     justify-self: end;
+    margin-inline-start: var(--gv-space-10);
     width: var(--gv-space-16);
     height: var(--gv-space-16);
-    color: var(--gv-icon-default);
+    color: var(--gv-icon-quiet);
+
+    &:dir(rtl) {
+      transform: scaleX(-1);
+    }
   }
 }
 
 .react-aria-MenuSection {
   display: grid;
-  grid-column-start: 1;
-  grid-column-end: -1;
-  --check-width: 0;
-  grid-template-columns: var(--gv-space-12) var(--check-width) auto 1fr auto var(--gv-space-12);
-
-  &:has(> [data-selection-mode]) {
-    --check-width: var(--gv-space-24);
-  }
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
 
   .react-aria-Header {
-    grid-column-start: 1;
-    grid-column-end: -1;
-    font-size: 12px;
-    font-weight: 600;
-    font-variation-settings: initial;
-    padding: var(--gv-space-4) var(--gv-space-12);
-    color: var(--gv-text-tertiary);
+    grid-column: 1 / -1;
+    padding: var(--gv-space-8) var(--gv-space-8) var(--gv-space-4);
+    font: var(--gv-type-small);
+    letter-spacing: var(--gv-type-small-tracking);
+    color: var(--gv-text-secondary);
     cursor: default;
     user-select: none;
   }
 }
 
 .react-aria-Menu .react-aria-Separator {
-  grid-column-start: 1;
-  grid-column-end: -1;
-  margin: var(--gv-space-4) var(--gv-space-8);
+  grid-column: 1 / -1;
+  margin: var(--gv-space-6) var(--gv-space-4);
   border: 0;
-  border-top: 1px solid var(--gv-divider-default);
-  height: auto;
+  border-top: 1px solid var(--gv-border-card);
+  height: 0;
   width: auto;
 }

@@ -81,7 +81,8 @@ export function SubmenuTrigger(props: SubmenuTriggerProps) {
   return (
     <AriaSubmenuTrigger {...props}>
       {trigger}
-      <Popover hideArrow offset={-2} crossOffset={-4}>
+      {/* 4 from the menu (its 6 padding + 1 border + 4), the first row on the line of the row that opens it. */}
+      <Popover hideArrow offset={11} crossOffset={-7}>
         {menu}
       </Popover>
     </AriaSubmenuTrigger>
