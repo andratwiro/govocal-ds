@@ -1,4 +1,4 @@
-import {useId, type CSSProperties, type ReactNode} from 'react';
+import {useId, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode} from 'react';
 import './Chart.css';
 
 /**
@@ -52,6 +52,20 @@ export function describeChart(series: ChartSeries[], labels: string[]): string {
   return `Line chart${range}. ${series.map(s => describeSeries(s.label, s.values, labels) + '.').join(' ')}`;
 }
 
+
+/** One point in words, for the value card and the keyboard explorer: "23 Feb: Participants 0, Visitors 3". */
+export function describePoint(series: {label: string; values: number[]}[], labels: string[] | undefined, i: number): string {
+  const values = series.filter(s => s.values[i] != null).map(s => `${s.label} ${fmt(s.values[i])}`).join(', ');
+  return labels?.[i] ? `${labels[i]}: ${values}` : values;
+}
+
+/** The point nearest a place across the plot (0 at the start, 1 at the end). */
+export function nearestIndex(t: number, n: number): number {
+  return n > 1 ? Math.round(Math.min(1, Math.max(0, t)) * (n - 1)) : 0;
+}
+
+const cx = (...c: (string | false | null | undefined)[]) => c.filter(Boolean).join(' ');
+
 /* ───────────────────────────── Legend ───────────────────────────── */
 
 export interface ChartLegendItem {
@@ -64,20 +78,203 @@ export interface ChartLegendProps {
   /** `dot`: round 9px (line charts). `square`: 8px, radius 2 (Statements: agree / disagree / pass). */
   shape?: 'dot' | 'square';
   align?: 'center' | 'start';
+  /** The series picked out (its index): the other items dim, as their series do. */
+  highlighted?: number | null;
+  /**
+   * Hovering or focusing an item picks its series out (`index`), leaving gives `null`. When set, each item takes a
+   * tab stop so the keyboard reaches it too. LineChart's own `legend` wires it to the lines.
+   */
+  onHighlightChange?: (index: number | null) => void;
   className?: string;
 }
 
 /** The key under a chart: a swatch and a word per series. */
-export function ChartLegend({items, shape = 'dot', align = 'center', className}: ChartLegendProps) {
+export function ChartLegend({items, shape = 'dot', align = 'center', highlighted = null, onHighlightChange, className}: ChartLegendProps) {
+  const on = onHighlightChange;
   return (
-    <ul className={['gv-chart-legend', `gv-chart-legend--${shape}`, `gv-chart-legend--${align}`, className].filter(Boolean).join(' ')}>
+    <ul className={cx('gv-chart-legend', `gv-chart-legend--${shape}`, `gv-chart-legend--${align}`, className)}>
       {items.map((it, i) => (
-        <li key={i} className="gv-chart-legend__item">
+        <li
+          key={i}
+          className="gv-chart-legend__item"
+          data-dimmed={(highlighted != null && highlighted !== i) || undefined}
+          data-highlighted={highlighted === i || undefined}
+          tabIndex={on ? 0 : undefined}
+          onPointerEnter={on && (() => on(i))}
+          onPointerLeave={on && (() => on(null))}
+          onFocus={on && (() => on(i))}
+          onBlur={on && (() => on(null))}>
           <span className="gv-chart-legend__swatch" data-chart-color={it.color} aria-hidden />
           {it.label}
         </li>
       ))}
     </ul>
+  );
+}
+
+/* ───────────────────────────── Explorer: the hover and keyboard value card ─────────────────────────────
+   Not in Figma (its charts are static). The prototype's dashboards show a marker and a value card under the
+   pointer, and a back-office reader needs exact values, so every chart has them: the pointer picks the nearest
+   point; the keyboard reaches the same through one tab stop on the plot (a slider over the points: arrows step,
+   Home and End jump, Esc hides the card). The card is drawn for the eye only; the slider says the same words.
+   React Aria has no chart parts, and its hover and focus hooks live in a package this one doesn't depend on, so
+   these are plain pointer and key events; the focus ring is CSS :focus-visible. Chart coordinates are physical
+   (time runs left to right in every language), so the layers are placed with `left` and the arrows are physical. */
+
+interface ExploreSeries {
+  label: string;
+  color: ChartColor;
+  values: number[];
+}
+
+interface ChartStageProps {
+  className?: string;
+  style?: CSSProperties;
+  /** The drawing (an svg filling the stage). */
+  children: ReactNode;
+  interactive: boolean;
+  /** The slider's name ("Participants and Visitors values"). */
+  name: string;
+  series: ExploreSeries[];
+  /** One per point: the card's title and the start of the spoken value. */
+  labels?: string[];
+  n: number;
+  /** A point's place across the stage, 0–1. */
+  xAt: (i: number) => number;
+  /** A point's height in the stage, 0 (top) – 1 (bottom). */
+  yAt: (series: number, i: number) => number;
+  /** The series picked out from outside (a legend): its card row is strong, the others' dots dim. */
+  emphasis: number | null;
+  /** The line under the pointer (within 12px of it), or null. */
+  onHoverSeries?: (series: number | null) => void;
+  /** The point shown, or null when the card is hidden. */
+  onActiveChange?: (i: number | null) => void;
+}
+
+/** How close the pointer must come to a line to pick it out. */
+const LINE_REACH = 12;
+
+function ChartStage({className, style, children, interactive, name, series, labels, n, xAt, yAt, emphasis, onHoverSeries, onActiveChange}: ChartStageProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [index, setIndex] = useState(0);
+  /** Who shows the card: the pointer, the keyboard, or nobody. */
+  const [shown, setShown] = useState<'pointer' | 'keyboard' | null>(null);
+  const keyboard = useRef(false);
+
+  const show = (i: number, by: 'pointer' | 'keyboard') => {
+    setIndex(i);
+    setShown(by);
+    onActiveChange?.(i);
+  };
+  const hide = () => {
+    setShown(null);
+    onActiveChange?.(null);
+  };
+
+  const onPointer = (e: PointerEvent<HTMLDivElement>) => {
+    const box = ref.current?.getBoundingClientRect();
+    if (!box || !box.width || !n) return;
+    const t = (e.clientX - box.left) / box.width;
+    show(nearestIndex(t, n), 'pointer');
+    if (!onHoverSeries) return;
+    // The line under the pointer: each series' height at the pointer's x, between its two nearest points.
+    const p = Math.min(1, Math.max(0, t)) * Math.max(0, n - 1);
+    const i0 = Math.floor(p), i1 = Math.min(n - 1, Math.ceil(p));
+    let best: number | null = null, bestGap = LINE_REACH;
+    series.forEach((s, k) => {
+      if (s.values[i0] == null || s.values[i1] == null) return;
+      const y = (yAt(k, i0) + (yAt(k, i1) - yAt(k, i0)) * (p - i0)) * box.height;
+      const gap = Math.abs(e.clientY - box.top - y);
+      if (gap <= bestGap) { best = k; bestGap = gap; }
+    });
+    onHoverSeries(best);
+  };
+
+  const onLeave = () => {
+    onHoverSeries?.(null);
+    if (keyboard.current) setShown('keyboard');
+    else hide();
+  };
+
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    const step: Record<string, number> = {ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1};
+    if (e.key in step) show(Math.min(n - 1, Math.max(0, index + step[e.key])), 'keyboard');
+    else if (e.key === 'Home') show(0, 'keyboard');
+    else if (e.key === 'End') show(n - 1, 'keyboard');
+    else if (e.key === 'Escape' && shown) {
+      // Only a shown card takes Esc; with none, Esc goes on to close the dialog the chart sits in.
+      hide();
+      e.stopPropagation();
+    } else return;
+    e.preventDefault();
+  };
+
+  const x = xAt(index);
+  const text = describePoint(series, labels, index);
+  const picked = emphasis;
+
+  return (
+    <div
+      ref={ref}
+      className={cx('gv-chart-stage', className)}
+      style={style}
+      data-exploring={shown ?? undefined}
+      onPointerMove={interactive ? onPointer : undefined}
+      onPointerDown={interactive ? onPointer : undefined}
+      onPointerLeave={interactive ? onLeave : undefined}>
+      {children}
+      {interactive && shown && n > 0 && (
+        <>
+          <span className="gv-chart-guide" style={{left: `${x * 100}%`}} aria-hidden />
+          {series.map((s, k) =>
+            s.values[index] == null ? null : (
+              <span
+                key={k}
+                className="gv-chart-dot"
+                data-chart-color={s.color}
+                data-dimmed={(picked != null && picked !== k) || undefined}
+                style={{left: `${x * 100}%`, top: `${yAt(k, index) * 100}%`}}
+                aria-hidden
+              />
+            )
+          )}
+          <div className="gv-chart-card" data-side={x > 0.5 ? 'before' : 'after'} style={{left: `${x * 100}%`}} aria-hidden>
+            {labels?.[index] && <div className="gv-chart-card__title">{labels[index]}</div>}
+            {series.map((s, k) =>
+              s.values[index] == null ? null : (
+                <div key={k} className="gv-chart-card__row" data-highlighted={picked === k || undefined}>
+                  <span className="gv-chart-card__swatch" data-chart-color={s.color} />
+                  <span className="gv-chart-card__label">{s.label}</span>
+                  <span className="gv-chart-card__value">{fmt(s.values[index])}</span>
+                </div>
+              )
+            )}
+          </div>
+        </>
+      )}
+      {interactive && n > 0 && (
+        <div
+          className="gv-chart-explore"
+          role="slider"
+          tabIndex={0}
+          aria-label={name}
+          aria-orientation="horizontal"
+          aria-valuemin={1}
+          aria-valuemax={n}
+          aria-valuenow={index + 1}
+          aria-valuetext={text}
+          onKeyDown={onKeyDown}
+          onFocus={e => {
+            keyboard.current = e.currentTarget.matches(':focus-visible');
+            if (keyboard.current) show(index, 'keyboard');
+          }}
+          onBlur={() => {
+            keyboard.current = false;
+            hide();
+          }}
+        />
+      )}
+    </div>
   );
 }
 
@@ -94,6 +291,17 @@ export interface LineChartProps {
   height?: number;
   /** Draw the series legend under the chart (Dashboard card · Participation over time). */
   legend?: boolean;
+  /**
+   * The hover and keyboard value card (Not in Figma): a marker and the values at the nearest point; the plot is one
+   * tab stop, arrows step through the points. Off for a chart drawn only as a picture.
+   * @default true
+   */
+  interactive?: boolean;
+  /**
+   * A series picked out from outside the chart (its index), as a Legend row beside it does: the others dim.
+   * The chart's own legend and the pointer pick one out by themselves.
+   */
+  highlightedSeries?: number | null;
   /** Replaces the generated trend sentence. */
   'aria-label'?: string;
   className?: string;
@@ -102,7 +310,10 @@ export interface LineChartProps {
 const VB_W = 1000;
 
 /** Figma "Chart" · Line: gridded line chart with a y axis from 0 and dated x labels. Plain SVG. */
-export function LineChart({series, labels, max, height = 141, legend = false, className, ...rest}: LineChartProps) {
+export function LineChart({series, labels, max, height = 141, legend = false, interactive = true, highlightedSeries = null, className, ...rest}: LineChartProps) {
+  const [legendPick, setLegendPick] = useState<number | null>(null);
+  const [hovered, setHovered] = useState<number | null>(null);
+  const [active, setActive] = useState<number | null>(null);
   const dataMax = Math.max(0, ...series.flatMap(s => s.values));
   const scale = max != null ? {max, ticks: [0, 1, 2, 3, 4].map(i => +((i * max) / 4).toPrecision(12))} : niceScale(dataMax);
   const tones: ChartTone[] = series.map((s, i) => s.tone ?? (series.length === 1 ? 'secondary' : i === 0 ? 'primary' : 'secondary'));
@@ -110,34 +321,58 @@ export function LineChart({series, labels, max, height = 141, legend = false, cl
   const x = (i: number) => (n > 1 ? (i / (n - 1)) * VB_W : VB_W / 2);
   const y = (v: number) => height * (1 - v / (scale.max || 1));
   const label = rest['aria-label'] ?? describeChart(series, labels);
+  // Outside first (a Legend row beside the chart), then the chart's own legend, then the line under the pointer.
+  const picked = highlightedSeries ?? legendPick ?? hovered;
+  const colors = series.map((_, i) => toneColor(tones[i]));
 
   return (
-    <div className={['gv-line-chart', className].filter(Boolean).join(' ')} role="img" aria-label={label}>
+    <div className={cx('gv-line-chart', className)}>
       <div className="gv-line-chart__body" style={{'--plot-height': `${height}px`} as CSSProperties}>
-        <div className="gv-line-chart__y">
+        <div className="gv-line-chart__y" aria-hidden>
           {[...scale.ticks].reverse().map(t => <span key={t}>{fmt(t)}</span>)}
         </div>
-        <svg className="gv-line-chart__plot" viewBox={`0 0 ${VB_W} ${height}`} preserveAspectRatio="none" height={height} focusable="false">
-          {scale.ticks.map(t => (
-            <line key={t} className="gv-line-chart__grid" x1={0} x2={VB_W} y1={y(t)} y2={y(t)} vectorEffect="non-scaling-stroke" />
-          ))}
-          {series.map((s, i) => ({s, i})).reverse().map(({s, i}) => (
-            <polyline
-              key={i}
-              className="gv-line-chart__line"
-              data-chart-color={toneColor(tones[i])}
-              points={s.values.map((v, j) => `${x(j).toFixed(1)},${y(v).toFixed(1)}`).join(' ')}
-              vectorEffect="non-scaling-stroke"
-            />
-          ))}
-        </svg>
-        <div className="gv-line-chart__x">
+        <ChartStage
+          className="gv-line-chart__stage"
+          interactive={interactive}
+          name={`${series.map(s => s.label).join(' and ')} values`}
+          series={series.map((s, i) => ({label: s.label, color: colors[i], values: s.values}))}
+          labels={labels}
+          n={n}
+          xAt={i => x(i) / VB_W}
+          yAt={(k, i) => y(series[k].values[i]) / height}
+          emphasis={picked}
+          onHoverSeries={setHovered}
+          onActiveChange={setActive}>
+          <svg className="gv-line-chart__plot" viewBox={`0 0 ${VB_W} ${height}`} preserveAspectRatio="none" height={height} role="img" aria-label={label} focusable="false">
+            {scale.ticks.map(t => (
+              <line key={t} className="gv-line-chart__grid" x1={0} x2={VB_W} y1={y(t)} y2={y(t)} vectorEffect="non-scaling-stroke" />
+            ))}
+            {series.map((s, i) => ({s, i})).reverse().map(({s, i}) => (
+              <polyline
+                key={i}
+                className="gv-line-chart__line"
+                data-chart-color={colors[i]}
+                data-highlighted={picked === i || undefined}
+                data-dimmed={(picked != null && picked !== i) || undefined}
+                points={s.values.map((v, j) => `${x(j).toFixed(1)},${y(v).toFixed(1)}`).join(' ')}
+                vectorEffect="non-scaling-stroke"
+              />
+            ))}
+          </svg>
+        </ChartStage>
+        <div className="gv-line-chart__x" aria-hidden>
           {labels.map((l, i) => (
-            <span key={i} style={{left: `${(x(i) / VB_W) * 100}%`}}>{l}</span>
+            <span key={i} data-active={active === i || undefined} style={{left: `${(x(i) / VB_W) * 100}%`}}>{l}</span>
           ))}
         </div>
       </div>
-      {legend && <ChartLegend items={series.map((s, i) => ({label: s.label, color: toneColor(tones[i])}))} />}
+      {legend && (
+        <ChartLegend
+          items={series.map((s, i) => ({label: s.label, color: colors[i]}))}
+          highlighted={highlightedSeries ?? legendPick}
+          onHighlightChange={interactive ? setLegendPick : undefined}
+        />
+      )}
     </div>
   );
 }
@@ -146,9 +381,9 @@ export function LineChart({series, labels, max, height = 141, legend = false, cl
 
 export interface SparklineProps {
   values: number[];
-  /** What is counted ("Votes cast"): starts the spoken trend. */
+  /** What is counted ("Votes cast"): starts the spoken trend and names the value card's row. */
   label?: string;
-  /** Optional dates, one per value, so the spoken trend can name the peak. */
+  /** Optional dates, one per value, so the spoken trend can name the peak and the value card its date. */
   labels?: string[];
   /** Height in px. Figma: 110 (Votes over time); 34 fits under a Stat tile. */
   height?: number;
@@ -157,25 +392,33 @@ export interface SparklineProps {
   /** The soft fill under the line. */
   area?: boolean;
   tone?: ChartTone;
+  /**
+   * The hover and keyboard value card, as on LineChart. On when `labels` name the points (the card says when);
+   * off inside something pressable (a Stat card that opens a detail), where a second tab stop can't sit.
+   * @default labels != null
+   */
+  interactive?: boolean;
   /** Replaces the generated trend sentence. */
   'aria-label'?: string;
   className?: string;
 }
 
 /** Figma "Chart" · Sparkline: a bare trend line with a fading fill, no axes. Plain SVG. */
-export function Sparkline({values, label = 'Trend', labels, height = 110, grid = true, area = true, tone = 'primary', className, ...rest}: SparklineProps) {
+export function Sparkline({values, label = 'Trend', labels, height = 110, grid = true, area = true, tone = 'primary', interactive = labels != null, className, ...rest}: SparklineProps) {
   const id = 'gv-spark-' + useId().replace(/[^a-zA-Z0-9_-]/g, '');
+  const [hovered, setHovered] = useState<number | null>(null);
   const pad = Math.min(8, height / 10);
   const lo = Math.min(0, ...values), hi = Math.max(lo + 1, ...values);
   const n = values.length;
   const pts = values.map((v, i) => [n > 1 ? (i / (n - 1)) * VB_W : VB_W / 2, height - pad - ((v - lo) / (hi - lo)) * (height - pad * 2)]);
   const line = pts.map(([px, py], i) => `${i ? 'L' : 'M'}${px.toFixed(1)} ${py.toFixed(1)}`).join(' ');
   const words = rest['aria-label'] ?? describeSeries(label, values, labels);
+  const color = toneColor(tone);
 
-  return (
+  const svg = (
     <svg
-      className={['gv-sparkline', className].filter(Boolean).join(' ')}
-      data-chart-color={toneColor(tone)}
+      className={cx('gv-sparkline', !interactive && className)}
+      data-chart-color={color}
       viewBox={`0 0 ${VB_W} ${height}`}
       preserveAspectRatio="none"
       height={height}
@@ -194,7 +437,24 @@ export function Sparkline({values, label = 'Trend', labels, height = 110, grid =
         <line key={f} className="gv-sparkline__grid" x1={0} x2={VB_W} y1={height * f} y2={height * f} vectorEffect="non-scaling-stroke" />
       ))}
       {area && n > 1 && <path d={`${line} L${VB_W} ${height} L0 ${height} Z`} fill={`url(#${id})`} />}
-      {n > 0 && <path className="gv-sparkline__line" d={line} vectorEffect="non-scaling-stroke" />}
+      {n > 0 && <path className="gv-sparkline__line" data-highlighted={hovered === 0 || undefined} d={line} vectorEffect="non-scaling-stroke" />}
     </svg>
+  );
+  if (!interactive) return svg;
+
+  return (
+    <ChartStage
+      className={cx('gv-sparkline-stage', className)}
+      interactive
+      name={`${label} values`}
+      series={[{label, color, values}]}
+      labels={labels}
+      n={n}
+      xAt={i => pts[i][0] / VB_W}
+      yAt={(_, i) => pts[i][1] / height}
+      emphasis={null}
+      onHoverSeries={setHovered}>
+      {svg}
+    </ChartStage>
   );
 }
