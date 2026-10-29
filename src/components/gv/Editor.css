@@ -1,6 +1,10 @@
 @import '../theme.css';
 
+/* Figma: 444 wide, radius 10, border-control, the toolbar then a 74 body padded 9/11. The prototype's
+   description editor (.ph-wysiwyg) is the same, and while you type in it the border turns the selected
+   colour with a 3px ring around it. */
 .gv-editor {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -8,6 +12,11 @@
   border: 1px solid var(--gv-border-control);
   border-radius: var(--gv-radius-10);
   overflow: hidden;
+
+  &:focus-within {
+    border-color: var(--gv-border-selected);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--gv-border-selected) 10%, transparent);
+  }
 }
 
 .gv-editor__field {
@@ -15,18 +24,21 @@
   flex: 1;
 }
 
+/* Small type, as Figma's placeholder; the prototype gives the text a 20 line so paragraphs breathe. */
 .gv-editor__area {
+  box-sizing: border-box;
   flex: 1;
   min-height: 74px;
+  margin: 0;
   padding: var(--gv-space-9) var(--gv-space-11);
   border: none;
   outline: none;
   resize: none;
   background: transparent;
   font: var(--gv-type-small);
+  line-height: var(--gv-type-ui-line);
   letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-body);
-  font-family: var(--gv-font-family);
 }
 
 .gv-editor__area::placeholder {
