@@ -34,14 +34,42 @@ const meta: Meta<ToastStoryArgs> = {
     }
   },
   args: {
-    title: 'Files uploaded',
-    description: '3 files uploaded successfully.',
+    title: '"Green Corridors for Riverside" deleted',
+    description: '',
     buttonLabel: 'Show toast'
   }
 };
 
 export default meta;
 type Story = StoryObj<ToastStoryArgs>;
+
+export const AllStates: Story = {
+  render: () => (
+    <>
+      <MyToastRegion />
+      <div style={{display: 'flex', gap: 12}}>
+        <Button
+          onPress={() =>
+            queue.add({
+              title: 'Your project is live',
+              description: 'Public · anyone can take part.'
+            })
+          }>
+          Publish now
+        </Button>
+        <Button
+          onPress={() =>
+            queue.add({
+              title: '"Green Corridors for Riverside" deleted',
+              description: undefined
+            })
+          }>
+          Delete idea
+        </Button>
+      </div>
+    </>
+  )
+};
 
 export const Example: Story = {
   render: args => (
