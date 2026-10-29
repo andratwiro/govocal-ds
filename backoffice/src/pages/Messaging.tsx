@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {useNavigate} from 'react-router';
 import {Clock, Mail, MessageSquare, Pencil, Plus, Send, User} from 'lucide-react';
 import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
 import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableStack,
@@ -18,9 +19,11 @@ import {IconButton} from '../../../src/components/gv/IconButton';
 import {Kpi} from '../../../src/components/gv/Kpi';
 import {Banner} from '../../../src/components/gv/Banner';
 import {Divider} from '../../../src/components/gv/Divider';
-import {AUTOMATED, CUSTOM_EMAILS, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
+import {MyToastRegion} from '../../../src/components/Toast';
+import {AUTOMATED, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
+import {emailStore} from './MessagingPages';
 import {SectionHeading} from '../SectionHeading';
 
 const n = (v: number) => v.toLocaleString('en');
@@ -29,6 +32,7 @@ const pct = (v?: number) => (v == null ? '—' : `${v}%`);
 // ── Custom emails ──────────────────────────────────────────────────────────
 
 function CustomEmailTable({onEdit}: {onEdit: (id: string) => void}) {
+  const navigate = useNavigate();
   return (
     <DataTable aria-label="Custom emails">
       <DataTableHeader>
@@ -37,8 +41,9 @@ function CustomEmailTable({onEdit}: {onEdit: (id: string) => void}) {
         <DataTableColumn align="number">Opened</DataTableColumn><DataTableColumn align="number">Clicked</DataTableColumn>
         <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
       </DataTableHeader>
-      <DataTableBody>{CUSTOM_EMAILS.map(e => (
-        <DataTableRow key={e.id} id={e.id}>
+      <DataTableBody>{emailStore.emails.map(e => (
+        // A sent email opens its statistics; a draft opens from its menu.
+        <DataTableRow key={e.id} id={e.id} textValue={e.subject} href={e.status === 'Sent' ? `#/messaging/emails/custom/${e.id}` : undefined}>
           <DataTableCell>
             <DataTableStack strong sub={<>To: {e.to}{e.project && <> · Project: {e.project}</>}</>}>{e.subject}</DataTableStack>
           </DataTableCell>
@@ -47,7 +52,7 @@ function CustomEmailTable({onEdit}: {onEdit: (id: string) => void}) {
           <DataTableCell align="number">{pct(e.opened)}</DataTableCell>
           <DataTableCell align="number">{pct(e.clicked)}</DataTableCell>
           <DataTableCell align="options">
-            <DataTableOptions aria-label={`Actions for ${e.subject}`} onAction={k => k === 'edit' && onEdit(e.id)}>
+            <DataTableOptions aria-label={`Actions for ${e.subject}`} onAction={k => (k === 'edit' ? onEdit(e.id) : k === 'stats' && navigate(`/messaging/emails/custom/${e.id}`))}>
               {e.status === 'Sent'
                 ? <><MenuItem id="stats">Statistics</MenuItem><MenuItem id="copy">Duplicate</MenuItem></>
                 : <><MenuItem id="edit">Edit</MenuItem><MenuItem id="copy">Duplicate</MenuItem><MenuItem id="delete">Delete</MenuItem></>}
@@ -97,13 +102,14 @@ function DraftComposer({email}: {email: CustomEmail}) {
 }
 
 function CustomEmails() {
-  const [draftId, setDraftId] = useState(CUSTOM_EMAILS.find(e => e.status === 'Draft')!.id);
-  const draft = CUSTOM_EMAILS.find(e => e.id === draftId)!;
+  const navigate = useNavigate();
+  const [draftId, setDraftId] = useState(emailStore.emails.find(e => e.status === 'Draft' && e.body)!.id);
+  const draft = emailStore.emails.find(e => e.id === draftId)!;
   return (
     <>
       <div className="bo-messaging-intro">
         <p className="bo-note">Send out custom emails and check statistics.</p>
-        <Button variant="primary" size={32}><Plus aria-hidden size={16} />Create email</Button>
+        <Button variant="primary" size={32} onPress={() => navigate('/messaging/emails/custom/new')}><Plus aria-hidden size={16} />Create email</Button>
       </div>
       <div className="bo-messaging-stack">
         <CustomEmailTable onEdit={setDraftId} />
@@ -236,12 +242,13 @@ function AutomatedEmails() {
 // ── SMS ────────────────────────────────────────────────────────────────────
 
 function Sms() {
+  const navigate = useNavigate();
   const used = SMS_BALANCE.usedCampaigns + SMS_BALANCE.usedTests;
   return (
     <>
       <div className="bo-messaging-intro">
         <p className="bo-note">Send text messages to your participants.</p>
-        <Button variant="primary" size={32}><Plus aria-hidden size={16} />Create SMS</Button>
+        <Button variant="primary" size={32} onPress={() => navigate('/messaging/texting/new')}><Plus aria-hidden size={16} />Create SMS</Button>
       </div>
       <div className="bo-messaging-stack">
         <div className="bo-messaging-kpis">
@@ -283,6 +290,7 @@ export function Messaging() {
         </TabList>
         {CHANNELS.map(c => <TabPanel key={c.id} id={c.id}><SectionHeading>{c.label}</SectionHeading>{c.body}</TabPanel>)}
       </Tabs>
+      <MyToastRegion />
     </Page>
   );
 }

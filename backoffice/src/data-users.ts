@@ -43,3 +43,25 @@ export const GROUPS: {id: string; label: string; kind: 'smart' | 'manual'; membe
   {id: 'youth', label: 'Youth panel', kind: 'manual', members: ['u5', 'u8', 'u10']},
   {id: 'newsletter', label: 'Newsletter readers', kind: 'smart', members: ['u6']}
 ];
+
+/** What each person did on the platform, for their profile (invented). */
+export const PARTICIPATION: Record<string, {ideas: number; comments: number; votes: number; projects: number}> = {
+  u1: {ideas: 0, comments: 14, votes: 2, projects: 6}, u2: {ideas: 1, comments: 9, votes: 0, projects: 4},
+  u3: {ideas: 2, comments: 21, votes: 5, projects: 3}, u4: {ideas: 0, comments: 6, votes: 1, projects: 2},
+  u7: {ideas: 3, comments: 4, votes: 12, projects: 2}, u8: {ideas: 1, comments: 2, votes: 7, projects: 1},
+  u9: {ideas: 4, comments: 11, votes: 18, projects: 3}, u11: {ideas: 0, comments: 1, votes: 3, projects: 1},
+  u12: {ideas: 2, comments: 0, votes: 9, projects: 2}
+};
+
+export type Invitation = {id: string; email: string; invited: string; status: 'Pending' | 'Accepted'; role: Role};
+export const INVITATIONS: Invitation[] = [
+  {id: 'i1', email: 'invitee1@example.org', invited: 'October 20, 2026', status: 'Accepted', role: 'Registered user'},
+  {id: 'i2', email: 'invitee2@example.org', invited: 'October 20, 2026', status: 'Pending', role: 'Registered user'},
+  {id: 'i3', email: 'invitee3@example.org', invited: 'September 2, 2026', status: 'Accepted', role: 'Project manager'}
+];
+
+/** Seats in the plan: admins and managers each have their own count. */
+export const SEATS = {admins: 5, managers: 10};
+
+/** Smart group rules (the real admin's rule picker, shortened). */
+export const SMART_RULES = ['Email domain is', 'Is verified', 'Lives in area', 'Took part in project', 'Registered after'];

@@ -1,4 +1,5 @@
 import {useMemo, useRef, useState} from 'react';
+import {useNavigate, useParams} from 'react-router';
 import {ChevronLeft, ChevronRight, Copy, Download, Play, Plus, Share2, Sparkles} from 'lucide-react';
 import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
 import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
@@ -22,12 +23,16 @@ import {IconButton} from '../../../src/components/gv/IconButton';
 import {Banner} from '../../../src/components/gv/Banner';
 import {Checkbox} from '../../../src/components/gv/Checkbox';
 import {SegmentedControl, Segment} from '../../../src/components/gv/SegmentedControl';
+import {Modal} from '../../../src/components/gv/Modal';
+import {MyToastRegion, queue} from '../../../src/components/Toast';
 import {CONTENTS, DECK, REPORTS, SLIDES, type Report, type Slide} from '../data-reporting';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
 
 const n = (v: number) => v.toLocaleString('en');
 const modified = (d: number) => `Modified ${d} ${d === 1 ? 'day' : 'days'} ago`;
+
+const editorHref = (r: Report) => `#/reporting/report-builder/${r.id}/editor`;
 
 // ── Report list (the real admin's report builder page, laid out as the prototype's overview) ─────
 
@@ -52,7 +57,7 @@ function ReportTable({label, reports, onEdit, onDuplicate, onDelete}: {
       </DataTableHeader>
       <DataTableBody renderEmptyState={() => <DataTableEmpty>No reports match your search.</DataTableEmpty>}>
         {reports.map(r => (
-          <DataTableRow key={r.id} id={r.id}>
+          <DataTableRow key={r.id} id={r.id} textValue={r.title} href={editorHref(r)}>
             <DataTableCell>
               <span className="bo-reporting-title">
                 <span>{r.title}</span>
@@ -203,14 +208,44 @@ function SlideBody({slide}: {slide: Slide}) {
   }
 }
 
+function SlideCard({slide, i, count, title}: {slide: Slide; i: number; count: number; title: string}) {
+  return (
+    <article aria-label={`Slide ${i + 1}: ${slide.title}`} className="bo-reporting-slide">
+      <p className="bo-note">{DECK.brand}</p>
+      <h3 className="bo-section-title">{slide.title}</h3>
+      <div className="bo-reporting-slide-body"><SlideBody slide={slide} /></div>
+      <p className="bo-note bo-reporting-slide-foot"><span>{title}</span><span>{i + 1} / {count}</span></p>
+    </article>
+  );
+}
+
+/** Present: the deck from its first slide, one at a time, in a wide modal. */
+function Presenter({slides, title, onClose}: {slides: Slide[]; title: string; onClose: () => void}) {
+  const [i, setI] = useState(0);
+  return (
+    <Modal title={`Presenting: ${title}`} size="wide" isOpen onOpenChange={open => !open && onClose()} closeLabel="Stop presenting">
+      <div className="bo-reporting-present">
+        <Gap name="Slide stage"><SlideCard slide={slides[i]} i={i} count={slides.length} title={title} /></Gap>
+        <div className="bo-reporting-nav">
+          <IconButton variant="bordered" aria-label="Previous slide" isDisabled={i === 0} onPress={() => setI(i - 1)}><ChevronLeft aria-hidden size={16} /></IconButton>
+          <span className="bo-note" aria-live="polite">{i + 1} / {slides.length}</span>
+          <IconButton variant="bordered" aria-label="Next slide" isDisabled={i === slides.length - 1} onPress={() => setI(i + 1)}><ChevronRight aria-hidden size={16} /></IconButton>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
 function DeckBuilder({title, ai}: {title: string; ai: boolean}) {
   const slides = ai ? SLIDES : SLIDES.slice(0, 4);
   const [current, setCurrent] = useState(slides[2].id);
   const i = Math.max(0, slides.findIndex(s => s.id === current));
   const slide = slides[i];
   const go = (d: number) => setCurrent(slides[Math.min(slides.length - 1, Math.max(0, i + d))].id);
+  const [presenting, setPresenting] = useState(false);
   return (
     <div className="bo-reporting-deckwrap">
+      {presenting && <Presenter slides={slides} title={title} onClose={() => setPresenting(false)} />}
       {ai && (
         <div className="bo-reporting-aibar">
           <Banner>
@@ -235,19 +270,12 @@ function DeckBuilder({title, ai}: {title: string; ai: boolean}) {
           <Button variant="quiet" size={32}><Plus aria-hidden size={16} />Add slide</Button>
         </div>
         <div className="bo-reporting-center">
-          <Gap name="Slide stage">
-            <article aria-label={`Slide ${i + 1}: ${slide.title}`} className="bo-reporting-slide">
-              <p className="bo-note">{DECK.brand}</p>
-              <h3 className="bo-section-title">{slide.title}</h3>
-              <div className="bo-reporting-slide-body"><SlideBody slide={slide} /></div>
-              <p className="bo-note bo-reporting-slide-foot"><span>{title}</span><span>{i + 1} / {slides.length}</span></p>
-            </article>
-          </Gap>
+          <Gap name="Slide stage"><SlideCard slide={slide} i={i} count={slides.length} title={title} /></Gap>
           <div className="bo-reporting-nav">
             <IconButton variant="bordered" aria-label="Previous slide" isDisabled={i === 0} onPress={() => go(-1)}><ChevronLeft aria-hidden size={16} /></IconButton>
             <span className="bo-note" aria-live="polite">{i + 1} / {slides.length}</span>
             <IconButton variant="bordered" aria-label="Next slide" isDisabled={i === slides.length - 1} onPress={() => go(1)}><ChevronRight aria-hidden size={16} /></IconButton>
-            <Button variant="secondary" size={32}><Play aria-hidden size={16} />Present</Button>
+            <Button variant="secondary" size={32} onPress={() => setPresenting(true)}><Play aria-hidden size={16} />Present</Button>
           </div>
         </div>
         <div className="bo-reporting-side">
@@ -268,8 +296,11 @@ function DeckBuilder({title, ai}: {title: string; ai: boolean}) {
             </div>
           </Card>
           <div className="bo-reporting-cta">
-            <Button variant="secondary" size={32}><Download aria-hidden size={16} />Export PDF</Button>
-            <Button variant="primary" size={32}>Save</Button>
+            <Button variant="secondary" size={32}
+              onPress={() => queue.add({title: 'Export started', description: `${title}.pdf`}, {timeout: 5000})}>
+              <Download aria-hidden size={16} />Export PDF</Button>
+            <Button variant="primary" size={32}
+              onPress={() => queue.add({title: 'Report saved', description: title}, {timeout: 5000})}>Save</Button>
           </div>
         </div>
       </div>
@@ -279,12 +310,12 @@ function DeckBuilder({title, ai}: {title: string; ai: boolean}) {
 
 type Open = {title: string; state: 'blank' | 'deck' | 'ai'};
 
-function Builder({open, setOpen}: {open: Open; setOpen: (o: Open) => void}) {
+function Builder({open, setOpen, hideTitle}: {open: Open; setOpen: (o: Open) => void; hideTitle?: boolean}) {
   return (
     <section aria-label={`Report builder: ${open.title}`} className="bo-reporting-builder">
       <div className="bo-reporting-head">
         <div className="bo-reporting-title">
-          <h2 className="bo-section-title">{open.title}</h2>
+          {!hideTitle && <h2 className="bo-section-title">{open.title}</h2>}
           <Status state="draft">Draft</Status>
         </div>
         {open.state !== 'blank' && (
@@ -304,17 +335,37 @@ function Builder({open, setOpen}: {open: Open; setOpen: (o: Open) => void}) {
   );
 }
 
+/** The report editor, on its own route as in the real admin (a row, or its Edit, opens it). */
+export function ReportEditor() {
+  const {reportId} = useParams();
+  const report = REPORTS.find(r => r.id === reportId);
+  const [open, setOpen] = useState<Open>({title: report?.title ?? 'Report not found', state: 'deck'});
+  return (
+    <Page title={open.title} crumbs={[{key: 'reporting', label: 'Reporting', href: '#/reporting'}]}>
+      {report ? (
+        <div className="bo-reporting-stack">
+          <GapLegend names={['Slide stage']} />
+          <Builder open={open} setOpen={setOpen} hideTitle />
+        </div>
+      ) : <p className="bo-note">This report does not exist.</p>}
+      <MyToastRegion />
+    </Page>
+  );
+}
+
 export function Reporting() {
+  const navigate = useNavigate();
   const [reports, setReports] = useState(REPORTS);
   const [open, setOpen] = useState<Open>({title: REPORTS[0].title, state: 'ai'});
   return (
     <Page title="Reporting" description="Customise your report and share it with internal stakeholders or the community as a web link or a PDF."
       actions={<Button variant="primary" size={32} onPress={() => setOpen({title: 'New report', state: 'blank'})}><Plus aria-hidden size={16} />Create a report</Button>}>
       <div className="bo-reporting-stack">
-        <ReportList reports={reports} setReports={setReports} onEdit={r => setOpen({title: r.title, state: 'deck'})} />
+        <ReportList reports={reports} setReports={setReports} onEdit={r => navigate(editorHref(r).slice(1))} />
         <GapLegend names={['Slide stage']} />
         <Builder open={open} setOpen={setOpen} />
       </div>
+      <MyToastRegion />
     </Page>
   );
 }

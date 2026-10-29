@@ -1,4 +1,5 @@
 import {test, expect} from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 test('messaging follows the real admin: custom emails, automated emails and SMS tabs', async ({page}) => {
   await page.goto('/backoffice/#/messaging');
@@ -64,4 +65,53 @@ test('messaging names what the system still lacks', async ({page}) => {
   await page.getByRole('button', {name: 'Edit Comment on your input'}).click();
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
   expect(gaps).toEqual(expect.arrayContaining(['Email preview']));
+});
+
+// ── The first clicks (shallow: each control leads somewhere visible) ─────────
+
+test('Create email opens the composer: sender, recipients, subject, message; Send now returns to the list', async ({page}) => {
+  await page.goto('/backoffice/#/messaging');
+  await page.getByRole('button', {name: 'Create email'}).click();
+  await expect(page).toHaveURL(/#\/messaging\/emails\/custom\/new$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'New email'})).toBeVisible();
+  for (const f of ['From', 'Replies should go to', 'Subject']) await expect(page.getByRole('textbox', {name: f, exact: true})).toBeVisible();
+  await expect(page.getByRole('button', {name: /To$/})).toBeVisible();
+  await expect(page.getByRole('textbox', {name: 'Email message'})).toBeVisible();
+  await page.getByRole('textbox', {name: 'Subject', exact: true}).fill('Autumn clean-up day');
+  await page.getByRole('button', {name: 'Send a preview'}).click();
+  await expect(page.locator('.react-aria-Toast').first()).toContainText('Preview sent');
+  await page.locator('.react-aria-Toast').getByRole('button', {name: 'Close'}).click(); // it sits over the footer
+  await page.getByRole('button', {name: 'Send now'}).click();
+  await expect(page).toHaveURL(/#\/messaging$/);
+  await expect(page.getByRole('grid', {name: 'Custom emails'}).getByRole('row', {name: /Autumn clean-up day/})).toContainText('Sent');
+});
+
+test('a sent email row opens its statistics: recipients, opened, clicked, and who got it', async ({page}) => {
+  await page.goto('/backoffice/#/messaging');
+  await page.getByRole('grid', {name: 'Custom emails'}).getByRole('row', {name: /Library opening hours: the results/}).getByText('Sent').click();
+  await expect(page).toHaveURL(/#\/messaging\/emails\/custom\/e4$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'Library opening hours: the results'})).toBeVisible();
+  for (const k of ['Recipients', 'Delivered', 'Opened', 'Clicked']) await expect(page.getByText(k, {exact: true}).first()).toBeVisible();
+  const grid = page.getByRole('grid', {name: 'Recipients'});
+  for (const c of ['Recipient', 'Status']) await expect(grid.getByRole('columnheader', {name: c})).toBeVisible();
+  const {violations} = await new AxeBuilder({page}).include('.bo-page')
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+  expect(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`)).toEqual([]);
+  await page.getByRole('navigation', {name: 'Breadcrumbs'}).getByRole('link', {name: 'Messaging'}).click();
+  await expect(page).toHaveURL(/#\/messaging$/);
+});
+
+test('Create SMS opens the SMS composer with a character count and a phone preview', async ({page}) => {
+  await page.goto('/backoffice/#/messaging');
+  await page.getByRole('tab', {name: 'SMS'}).click();
+  await page.getByRole('button', {name: 'Create SMS'}).click();
+  await expect(page).toHaveURL(/#\/messaging\/texting\/new$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'New SMS'})).toBeVisible();
+  await page.getByRole('textbox', {name: 'Message'}).fill('The library is open late on Thursday.');
+  await expect(page.getByText('37 / 160 characters · 1 SMS per recipient')).toBeVisible();
+  await expect(page.getByRole('group', {name: 'SMS preview'})).toContainText('The library is open late');
+  await page.getByRole('button', {name: 'Send test SMS'}).click();
+  await expect(page.locator('.react-aria-Toast').first()).toContainText('Test SMS sent');
+  const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
+  expect(gaps).toEqual(['SMS bubble']);
 });

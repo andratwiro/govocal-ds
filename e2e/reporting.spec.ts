@@ -76,3 +76,26 @@ test('reporting names what the system still lacks', async ({page}) => {
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
   expect(gaps).toEqual(expect.arrayContaining(['Slide stage']));
 });
+
+// ── The first clicks (shallow) ──────────────────────────────────────────────
+
+test('a report row opens the report editor: Present, Export PDF and Save each answer', async ({page}) => {
+  await page.goto('/backoffice/#/reporting');
+  await page.getByRole('grid', {name: 'All reports'}).getByRole('row', {name: /Bike lanes survey results/}).getByText(/Modified/).click();
+  await expect(page).toHaveURL(/#\/reporting\/report-builder\/r2\/editor$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'Bike lanes survey results'})).toBeVisible();
+  const builder = page.getByRole('region', {name: 'Report builder: Bike lanes survey results'});
+  await expect(builder.getByRole('listbox', {name: 'Slides'})).toBeVisible();
+  await builder.getByRole('button', {name: 'Present'}).click();
+  const show = page.getByRole('dialog', {name: 'Presenting: Bike lanes survey results'});
+  await expect(show.getByRole('article')).toBeVisible();
+  await show.getByRole('button', {name: 'Next slide'}).click();
+  await page.keyboard.press('Escape');
+  await expect(show).toHaveCount(0);
+  await builder.getByRole('button', {name: 'Export PDF'}).click();
+  await expect(page.locator('.react-aria-Toast').first()).toContainText('Bike lanes survey results.pdf');
+  await builder.getByRole('button', {name: 'Save'}).click();
+  await expect(page.locator('.react-aria-Toast').filter({hasText: 'Report saved'})).toBeVisible();
+  await page.getByRole('navigation', {name: 'Breadcrumbs'}).getByRole('link', {name: 'Reporting'}).click();
+  await expect(page).toHaveURL(/#\/reporting$/);
+});

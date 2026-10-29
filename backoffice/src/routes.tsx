@@ -17,6 +17,9 @@ import {InspirationHub} from './pages/InspirationHub';
 import {PagesMenu} from './pages/PagesMenu';
 import {Platform} from './pages/Platform';
 import {EsriIntegration, McpAuthorizations, PowerBi, PublicApiTokens, Webhooks, Widget} from './pages/ToolsPages';
+import {SeatsOverview, UserInvitations, UserProfile} from './pages/UsersPages';
+import {EmailComposer, EmailStats, SmsComposer} from './pages/MessagingPages';
+import {ReportEditor} from './pages/Reporting';
 import {CustomPageEditor, CustomPageView, HomepageBuilder, NavbarItemEdit} from './pages/PagesMenuPages';
 
 export const router = createHashRouter([{
@@ -47,6 +50,15 @@ export const router = createHashRouter([{
     {path: 'pages-menu/pages/new', element: <CustomPageEditor key="new" />},
     {path: 'pages-menu/pages/:pageId', element: <CustomPageEditor />},
     {path: 'pages-menu/pages/:pageId/view', element: <CustomPageView />},
+    // The first clicks of Users, Messaging and Reporting, at the real admin's paths.
+    {path: 'users/groups/:groupId', element: <Users />},
+    {path: 'users/invitations', element: <UserInvitations />},
+    {path: 'users/seats', element: <SeatsOverview />},
+    {path: 'users/:userId', element: <UserProfile />},
+    {path: 'messaging/emails/custom/new', element: <EmailComposer />},
+    {path: 'messaging/emails/custom/:emailId', element: <EmailStats />},
+    {path: 'messaging/texting/new', element: <SmsComposer />},
+    {path: 'reporting/report-builder/:reportId/editor', element: <ReportEditor />},
     ...NAV.filter(n => !['community-monitor', 'dashboard', 'inputs', 'inspiration-hub', 'messaging', 'pages-menu', 'projects', 'reporting', 'settings', 'tools', 'users'].includes(n.id))
       .map(n => ({path: n.id, element: <Placeholder item={n} />}))
   ]

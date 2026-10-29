@@ -72,3 +72,18 @@ export const SMS: SmsCampaign[] = [
   {id: 's3', label: 'Market Square walk', body: 'Walk the square with us on Saturday at 10:00.', status: 'Draft', date: 'Edited 28 Oct 2026'},
   {id: 's4', label: 'Harbour Plan ideas phase', body: 'Share your ideas for the harbour front from Monday.', status: 'Draft', date: 'Edited 27 Oct 2026'}
 ];
+
+/** How many people each recipient group holds (invented). */
+export const GROUP_SIZES: Record<string, number> = {
+  'All users': 2184, 'Residents of the north district': 612, 'Youth panel': 148, 'Followers of Harbour Plan 2030': 341
+};
+
+/** A sample of who received a sent email, for its statistics page. */
+export const RECIPIENTS: {id: string; name: string; email: string; status: 'Clicked' | 'Opened' | 'Delivered' | 'Bounced'}[] = [
+  {id: 'r1', name: 'Resident A', email: 'resident1@example.org', status: 'Clicked'},
+  {id: 'r2', name: 'Resident B', email: 'resident2@example.org', status: 'Opened'},
+  {id: 'r3', name: 'Resident C', email: 'resident3@example.org', status: 'Opened'},
+  {id: 'r4', name: 'Resident D', email: 'resident4@example.org', status: 'Delivered'},
+  {id: 'r5', name: 'Resident E', email: 'resident5@example.org', status: 'Delivered'},
+  {id: 'r6', name: 'Resident F', email: 'resident6@example.org', status: 'Bounced'}
+];

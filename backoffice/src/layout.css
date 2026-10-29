@@ -324,3 +324,21 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-platform { padding: var(--gv-space-24) var(--gv-space-32); }
 .bo-platform .bo-page { display: grid; justify-items: start; gap: var(--gv-space-12); max-width: 640px; }
 .bo-platform .bo-page-header { margin: 0; }
+
+/* ── First clicks: Users, Messaging, Reporting ── */
+.bo-users-kinds { display: grid; gap: var(--gv-space-12); }
+.bo-users-kinds > .react-aria-Button { justify-content: flex-start; height: auto; padding-block: var(--gv-space-12); text-align: start; }
+.bo-users-kind { display: grid; gap: var(--gv-space-2); }
+.bo-users-form { display: grid; gap: var(--gv-space-16); max-width: 640px; }
+.bo-users-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--gv-space-16); }
+.bo-users-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-8); }
+.bo-users-panel { padding-block-start: var(--gv-space-16); }
+.bo-users-stack { display: grid; gap: var(--gv-space-16); }
+.bo-users-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--gv-space-12); }
+.bo-users-profile { display: flex; align-items: flex-start; gap: var(--gv-space-16); }
+.bo-users-facts { display: grid; grid-template-columns: auto 1fr; gap: var(--gv-space-8) var(--gv-space-16); margin: 0; }
+.bo-users-facts dd { margin: 0; }
+.bo-messaging-scroll { overflow-x: auto; }
+.bo-messaging-sms { display: grid; gap: var(--gv-space-4); padding: var(--gv-space-12); }
+.bo-messaging-sms p { margin: 0; }
+.bo-reporting-present { display: grid; gap: var(--gv-space-12); }

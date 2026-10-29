@@ -124,3 +124,103 @@ test('the users table passes axe (WCAG 2.2 AA)', async ({page}) => {
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
   expect(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`)).toEqual([]);
 });
+
+// ── The first clicks (shallow: each control leads somewhere visible) ─────────
+
+const toast = (page: import('@playwright/test').Page) => page.locator('.react-aria-Toast');
+const axeOn = async (page: import('@playwright/test').Page, selector: string) => {
+  const {violations} = await new AxeBuilder({page}).include(selector)
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+  return violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`);
+};
+
+test('Invite users opens the invitations page: invite by email, then the list of all invitations', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  await page.getByRole('button', {name: 'Invite users'}).click();
+  await expect(page).toHaveURL(/#\/users\/invitations$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'Invitations'})).toBeVisible();
+  const tabs = page.getByRole('tablist', {name: 'Invitations'});
+  await expect(tabs.getByRole('tab', {name: 'Invite users'})).toHaveAttribute('aria-selected', 'true');
+  await expect(tabs.getByRole('tab', {name: 'All invitations'})).toBeVisible();
+  await page.getByRole('textbox', {name: 'Email addresses'}).fill('new1@example.org, new2@example.org');
+  for (const f of ['Role', 'Add to a group']) await expect(page.getByRole('button', {name: new RegExp(f)}).first()).toBeVisible();
+  await page.getByRole('textbox', {name: 'Invitation message'}).fill('Join us on the platform.');
+  expect(await axeOn(page, '.bo-page')).toEqual([]);
+  await page.getByRole('button', {name: 'Send invites'}).click();
+  await expect(toast(page).first()).toContainText('2 invitations sent');
+  await tabs.getByRole('tab', {name: 'All invitations'}).click();
+  const grid = page.getByRole('grid', {name: 'All invitations'});
+  for (const c of ['Email', 'Invited', 'Status']) await expect(grid.getByRole('columnheader', {name: c})).toBeVisible();
+  await expect(grid.getByRole('row', {name: /new2@example.org/})).toContainText('Pending');
+  await page.getByRole('button', {name: 'Export all invitations'}).click();
+  await expect(toast(page).first()).toContainText('Export started');
+});
+
+test('Add a new group: choose normal or smart, name it, and it joins the list with its own page', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  await page.getByRole('button', {name: 'Add a new group'}).click();
+  const modal = page.getByRole('dialog', {name: 'Add a new group'});
+  await expect(modal.getByRole('button', {name: /Create a normal group/})).toBeVisible();
+  await expect(modal.getByRole('button', {name: /Create a smart group/})).toBeVisible();
+  expect(await axeOn(page, '.gv-modal')).toEqual([]);
+  await modal.getByRole('button', {name: /Create a smart group/}).click();
+  await modal.getByRole('textbox', {name: 'Name of the group'}).fill('Cyclists');
+  await expect(modal.getByRole('button', {name: /Rule/})).toBeVisible();
+  await modal.getByRole('button', {name: 'Save group'}).click();
+  await expect(modal).toHaveCount(0);
+  await expect(page).toHaveURL(/#\/users\/groups\/[\w-]+$/);
+  await expect(page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Cyclists/})).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('grid', {name: 'Cyclists'})).toBeVisible();
+  await expect(toast(page).first()).toContainText('Group created');
+});
+
+test('a group has its own page: its members, Edit Group to rename it, Delete Group with a confirmation', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  await page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Youth panel/}).click();
+  await expect(page).toHaveURL(/#\/users\/groups\/youth$/);
+  await expect(page.getByRole('grid', {name: 'Youth panel'}).getByRole('row')).toHaveCount(4);
+  await page.getByRole('button', {name: 'Edit Group'}).click();
+  const modal = page.getByRole('dialog', {name: 'Edit Group'});
+  await modal.getByRole('textbox', {name: 'Name of the group'}).fill('Youth council');
+  await modal.getByRole('button', {name: 'Save group'}).click();
+  await expect(page.getByRole('grid', {name: 'Youth council'})).toBeVisible();
+  await page.getByRole('button', {name: 'Delete Group'}).click();
+  await page.getByRole('dialog', {name: 'Delete Group'}).getByRole('button', {name: 'Delete'}).click();
+  await expect(page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Youth council/})).toHaveCount(0);
+  await expect(page.getByRole('grid', {name: 'Registered users'})).toBeVisible();
+});
+
+test('Seats overview shows seats used and available, with the admins and managers', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  await page.getByRole('button', {name: 'Seats overview'}).click();
+  await expect(page).toHaveURL(/#\/users\/seats$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'Seats overview'})).toBeVisible();
+  for (const k of ['Admin seats used', 'Admin seats available', 'Manager seats used', 'Manager seats available']) {
+    await expect(page.getByText(k, {exact: true})).toBeVisible();
+  }
+  await expect(page.getByRole('grid', {name: 'Admins'}).getByRole('row')).toHaveCount(3);
+  await expect(page.getByRole('grid', {name: 'Managers'}).getByRole('row', {name: /Manager C/})).toBeVisible();
+  expect(await axeOn(page, '.bo-page')).toEqual([]);
+  await page.getByRole('link', {name: 'Users'}).first().click();
+  await expect(page).toHaveURL(/#\/users$/);
+});
+
+test('User insights leads to the users dashboard', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  await page.getByRole('button', {name: 'User insights'}).click();
+  await expect(page).toHaveURL(/#\/dashboard\/users$/);
+});
+
+test('a row opens the user profile: name, email, role, joined and participation', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  await page.getByRole('row', {name: /Manager C/}).getByText('Project manager').click();
+  await expect(page).toHaveURL(/#\/users\/u3$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'Manager C'})).toBeVisible();
+  await expect(page.getByText('user3@example.org')).toBeVisible();
+  await expect(page.getByText('June 12, 2025')).toBeVisible();
+  const done = page.getByRole('region', {name: 'Participation'});
+  for (const k of ['Ideas', 'Comments', 'Votes', 'Projects']) await expect(done.getByText(k, {exact: true})).toBeVisible();
+  expect(await axeOn(page, '.bo-page')).toEqual([]);
+  await page.getByRole('button', {name: 'Make platform admin'}).click();
+  await expect(toast(page).first()).toContainText('Manager C is now a platform admin');
+});
