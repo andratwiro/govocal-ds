@@ -1,8 +1,11 @@
 @import './theme.css';
 @import './utilities.css';
 
+/* The prototype's list table (govocal-bo.css .gv-bo-table, Figma's List header / List row): a card-grey 1px frame,
+   radius 8; the header Small strong in the secondary grey over a 1px card-grey line, no column dividers; rows UI
+   primary, 12 tall padding, a hairline between them, the hover surface on hover, a 5 % brand tint when chosen. */
 .react-aria-Table {
-  border: 0.5px solid var(--border-color);
+  border: 1px solid var(--gv-border-card);
   border-radius: var(--radius);
   background: var(--overlay-background);
   overflow: clip;
@@ -12,7 +15,8 @@
   width: 100%;
   word-break: break-word;
   forced-color-adjust: none;
-  font: var(--font-size) var(--gv-font-family);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
 
   div& {
     padding: 0;
@@ -33,15 +37,15 @@
   }
 
   .react-aria-TableHeader {
-    color: var(--text-color);
+    color: var(--gv-text-secondary);
   }
 
   .react-aria-TableBody {
-    padding: var(--spacing-1);
+    padding: 0;
 
     &[data-empty] {
       text-align: center;
-      font-style: italic;
+      color: var(--gv-text-tertiary);
     }
   }
 }
@@ -65,30 +69,17 @@
     outline-offset: -2px;
   }
 
-  &[data-pressed] {
-    background: var(--gray-100);
+  &[data-hovered] {
+    background: var(--gv-surface-hover);
   }
 
-  &:nth-child(2n) {
-    background: var(--gray-100);
-    &[data-pressed] {
-      background: var(--gray-200);
-    }
+  &[data-pressed] {
+    background: var(--gv-surface-hover-strong);
   }
 
   &[data-selected] {
-    background: var(--highlight-background);
-    color: var(--highlight-foreground);
-    --focus-ring-color: var(--highlight-foreground);
-
-    &[data-focus-visible],
-    .react-aria-Cell[data-focus-visible] {
-      outline-offset: -4px;
-    }
-
-    &[data-pressed] {
-      background: var(--highlight-background-pressed);
-    }
+    background: color-mix(in srgb, var(--gv-border-selected) 5%, var(--gv-surface-panel));
+    color: var(--gv-text-primary);
   }
 
   &[data-disabled] {
@@ -137,7 +128,7 @@
 
 .react-aria-Cell,
 .react-aria-Column {
-  padding: var(--spacing-2);
+  padding: var(--gv-space-12);
   text-align: left;
   outline: none;
   box-sizing: border-box;
@@ -169,31 +160,25 @@
   --button-shadow: transparent;
   --button-border-size: 0px;
   cursor: default;
-  border-bottom: 0.5px solid var(--border-color);
-  border-inline-end: 0.5px solid var(--border-color);
+  padding-block: var(--gv-space-8);
+  border-bottom: 1px solid var(--gv-border-card);
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-secondary);
   position: relative;
   z-index: calc(sibling-count() - sibling-index());
 
-  &:last-child {
-    border-inline-end: none;
-  }
-
-  &[data-pressed] {
-    background: var(--gray-200);
+  &[data-hovered]:has(.sort-indicator) {
+    color: var(--gv-text-primary);
   }
 
   &[data-sort-direction] {
-    --button-color: var(--tint-600);
-
-    &[data-pressed] {
-      background: var(--tint-200);
-    }
+    color: var(--gv-text-primary);
   }
 
   .column-header {
     display: flex;
     align-items: center;
-    font-weight: 600;
   }
 
   .column-name {
@@ -228,7 +213,7 @@
 .react-aria-ColumnResizer {
   width: 1px;
   border-radius: var(--radius-sm);
-  background-color: var(--gray-500);
+  background-color: var(--gv-border-control);
   padding: 0 var(--spacing-2);
   translate: var(--spacing-4) 0;
   height: 32px;
@@ -264,13 +249,10 @@
 
 .react-aria-Cell {
   transform: translateZ(0);
-  --border-color: var(--gray-300);
+  --border-color: var(--gv-border-row);
+  color: var(--gv-text-primary);
   tr:not(:last-child) & {
-    border-bottom: 0.5px solid var(--border-color);
-  }
-
-  [data-selected]:has(+ [data-selected]) & {
-    --border-color: var(--gv-color-neutral-0);
+    border-bottom: 1px solid var(--border-color);
   }
 
   @media (forced-colors: active) {
@@ -280,7 +262,7 @@
   &[data-tree-column] {
     --chevron-placeholder: var(--spacing-5);
     padding-inline-start: calc(
-      var(--spacing-2) + (var(--table-row-level) - 1) * var(--spacing-4) +
+      var(--gv-space-12) + (var(--table-row-level) - 1) * var(--spacing-4) +
         var(--chevron-placeholder)
     );
 
@@ -316,19 +298,11 @@
   translate: calc(68px + (var(--table-row-level) - 1) * var(--spacing-4)) 0;
 }
 
-.react-aria-Row .react-aria-CheckboxButton {
-  --checkmark-color: var(--highlight-background);
-  &[data-selected] .indicator {
-    --indicator-color: var(--highlight-foreground);
-    --indicator-shadow: transparent;
-  }
-}
-
 .react-aria-ResizableTableContainer {
   width: 100%;
   overflow: auto;
   position: relative;
-  border: 0.5px solid var(--border-color);
+  border: 1px solid var(--gv-border-card);
   border-radius: var(--radius);
   background: var(--overlay-background);
 
@@ -367,6 +341,6 @@
 }
 
 .react-aria-TableFooter {
-  font-weight: bold;
-  background: var(--gray-200);
+  font: var(--gv-type-ui-strong);
+  background: var(--gv-surface-app);
 }
