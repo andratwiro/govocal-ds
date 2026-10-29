@@ -381,7 +381,7 @@ function ParticipationFeed() {
                   {show === 'new'
                     ? <Button variant="quiet" size={32} aria-label={`Mark as viewed: ${f.content}`}
                       onPress={() => markViewed([f.id])}><Eye aria-hidden size={16} /> Mark as viewed</Button>
-                    : <StatusBadge state="live">Viewed</StatusBadge>}
+                    : <StatusBadge status="live">Viewed</StatusBadge>}
                 </DataTableCell>
               </DataTableRow>
             ))}

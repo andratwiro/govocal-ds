@@ -19,11 +19,11 @@ type Story = StoryFn<typeof StatusBadge>;
 
 export const AllVariants: Story = () => (
   <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
-    <StatusBadge state="draft">Draft</StatusBadge>
-    <StatusBadge state="live">Live</StatusBadge>
+    <StatusBadge status="draft">Draft</StatusBadge>
+    <StatusBadge status="live">Live</StatusBadge>
   </div>
 );
 
-export const Draft: Story = () => <StatusBadge state="draft">Draft</StatusBadge>;
+export const Draft: Story = () => <StatusBadge status="draft">Draft</StatusBadge>;
 
-export const Live: Story = () => <StatusBadge state="live">Live</StatusBadge>;
+export const Live: Story = () => <StatusBadge status="live">Live</StatusBadge>;

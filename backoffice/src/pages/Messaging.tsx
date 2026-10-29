@@ -55,7 +55,7 @@ function CustomEmailTable({emails, onAction, onCreate}: {
           <DataTableCell>
             <DataTableStack strong sub={<>To: {e.to}{e.project && <> · Project: {e.project}</>}</>}>{e.subject}</DataTableStack>
           </DataTableCell>
-          <DataTableCell><StatusBadge state={e.status === 'Sent' ? 'live' : 'draft'}>{e.status}</StatusBadge></DataTableCell>
+          <DataTableCell><StatusBadge status={e.status === 'Sent' ? 'live' : 'draft'}>{e.status}</StatusBadge></DataTableCell>
           <DataTableCell><span className="bo-messaging-nowrap">{e.date}</span></DataTableCell>
           <DataTableCell align="number">{pct(e.opened)}</DataTableCell>
           <DataTableCell align="number">{pct(e.clicked)}</DataTableCell>

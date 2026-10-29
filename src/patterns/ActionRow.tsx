@@ -32,7 +32,7 @@ export interface ActionRowProps extends PlacementProps {
    *
    * @default 'idle'
    */
-  state?: 'idle' | 'working' | 'done';
+  status?: 'idle' | 'working' | 'done';
   /** `working`: how far along, 0–100; leave it out for a ring that turns. */
   progress?: number;
   /** Greyed and inert: an action that can't run yet. */
@@ -58,7 +58,7 @@ export function ActionRow({
   badge,
   href,
   onPress,
-  state = 'idle',
+  status = 'idle',
   progress,
   isDisabled,
   menu,
@@ -66,8 +66,8 @@ export function ActionRow({
   className,
   style
 }: ActionRowProps) {
-  const working = state === 'working';
-  const done = state === 'done';
+  const working = status === 'working';
+  const done = status === 'done';
   const label = typeof children === 'string' ? children : undefined;
 
   const body = (
@@ -118,7 +118,7 @@ export function ActionRow({
   if (working) {
     // Nothing to press while it runs: a plain group that says it's busy, the ring reporting its progress.
     return (
-      <div className={clsx('gv-action-row', className)} style={style} data-state="working" role="group" aria-disabled="true" aria-busy="true">
+      <div className={clsx('gv-action-row', className)} style={style} data-status="working" role="group" aria-disabled="true" aria-busy="true">
         {body}
       </div>
     );
@@ -127,7 +127,7 @@ export function ActionRow({
   if (menu != null) {
     return (
       <MenuTrigger>
-        <Button className={clsx('gv-action-row', className)} style={style} data-state={state} isDisabled={isDisabled}>
+        <Button className={clsx('gv-action-row', className)} style={style} data-status={status} isDisabled={isDisabled}>
           {body}
         </Button>
         <Popover showArrow={false} placement="bottom start" offset={6} className="gv-action-row__popover">
@@ -138,7 +138,7 @@ export function ActionRow({
   }
 
   return (
-    <Link className={clsx('gv-action-row', className)} style={style} data-state={state} href={href} onPress={onPress} isDisabled={isDisabled}>
+    <Link className={clsx('gv-action-row', className)} style={style} data-status={status} href={href} onPress={onPress} isDisabled={isDisabled}>
       {body}
     </Link>
   );

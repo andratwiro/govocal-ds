@@ -139,7 +139,7 @@ export function Webhooks() {
                 <Cell>{h.url}</Cell>
                 <Cell><span className="bo-tools-pills">{h.events.map(e => <Badge key={e}>{e}</Badge>)}</span></Cell>
                 <Cell>{h.project}</Cell>
-                <Cell><StatusBadge state={h.enabled ? 'live' : 'draft'}>{h.enabled ? 'Enabled' : 'Off'}</StatusBadge></Cell>
+                <Cell><StatusBadge status={h.enabled ? 'live' : 'draft'}>{h.enabled ? 'Enabled' : 'Off'}</StatusBadge></Cell>
                 <Cell>
                   <span className="bo-tools-row">
                     <IconButton aria-label={`Edit webhook: ${h.name}`} onPress={() => setEditing(h)}><Pencil aria-hidden size={16} /></IconButton>

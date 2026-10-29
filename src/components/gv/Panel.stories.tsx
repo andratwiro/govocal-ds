@@ -66,7 +66,7 @@ function Emails() {
           <div style={{flex: 1, display: 'grid', gap: 4}}>
             <span style={{font: 'var(--gv-type-ui-strong)'}}>{e.title}</span>
             <span style={{display: 'flex', alignItems: 'center', gap: 8, font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>
-              <StatusBadge state={e.state}>{e.words}</StatusBadge>{e.meta}
+              <StatusBadge status={e.state}>{e.words}</StatusBadge>{e.meta}
             </span>
           </div>
           <Button variant="secondary" size={32}>

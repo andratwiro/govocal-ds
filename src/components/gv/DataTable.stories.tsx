@@ -353,7 +353,7 @@ export const ProjectsListCells: Story = {
               <DataTableCell><DataTableAssignee name={p.manager} size={28} emptyLabel="Not assigned" /></DataTableCell>
               <DataTableCell>
                 <DataTableStack sub={p.who}>
-                  <StatusBadge state={p.published ? 'live' : 'draft'}>{p.published ? 'Published' : 'Draft'}</StatusBadge>
+                  <StatusBadge status={p.published ? 'live' : 'draft'}>{p.published ? 'Published' : 'Draft'}</StatusBadge>
                 </DataTableStack>
               </DataTableCell>
               <DataTableCell align="options">

@@ -28,7 +28,7 @@ export function SectionToggle({title, description, isSelected, onChange, isDisab
         <span className="gv-section-toggle__title">{title}</span>
         {description && <span className="gv-section-toggle__description">{description}</span>}
       </span>
-      <StatusBadge state={isSelected ? 'live' : 'draft'}>{isSelected ? 'Shown on page' : 'Not shown on page'}</StatusBadge>
+      <StatusBadge status={isSelected ? 'live' : 'draft'}>{isSelected ? 'Shown on page' : 'Not shown on page'}</StatusBadge>
       <Switch aria-label={`Show ${title}`} isSelected={isSelected} onChange={onChange} isDisabled={isDisabled}>
         <span className="gv-section-toggle__switch-label">Show</span>
       </Switch>

@@ -70,7 +70,7 @@ export function ProjectOverview() {
         </MenuTrigger>
         <MenuTrigger>
           <Button variant="quiet" size={32} hasMenu isIconOnly={false} aria-label={`${live ? 'Live' : status}: change status`}>
-            <StatusBadge state={live ? 'live' : 'draft'}>{live ? '● Live' : status}</StatusBadge>
+            <StatusBadge status={live ? 'live' : 'draft'}>{live ? '● Live' : status}</StatusBadge>
           </Button>
           <Menu aria-label="Project status" onAction={() => setConfirm(next.to)}>
             <MenuItem id={next.to}>{next.label}</MenuItem>

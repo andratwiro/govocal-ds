@@ -88,7 +88,7 @@ function InvitationTable({invitations}: {invitations: Invitation[]}) {
                 <DataTableCell>{i.email}</DataTableCell>
                 <DataTableCell><span className="bo-users-nowrap">{i.role}</span></DataTableCell>
                 <DataTableCell><span className="bo-users-nowrap">{i.invited}</span></DataTableCell>
-                <DataTableCell><StatusBadge state={i.status === 'Accepted' ? 'live' : 'draft'}>{i.status}</StatusBadge></DataTableCell>
+                <DataTableCell><StatusBadge status={i.status === 'Accepted' ? 'live' : 'draft'}>{i.status}</StatusBadge></DataTableCell>
               </DataTableRow>
             ))}
           </DataTableBody>

@@ -73,14 +73,14 @@
 /* Project level: the current crumb sits in a 22-tall box (1/5 padding, radius 6) where a rename
    lives. The prototype (`.pj-bc__cur`) pulls the box back by its own padding, so the words sit 5
    from the chevron like every other gap and the whole trail is Figma's 170.9 wide. */
-.gv-breadcrumb[data-level='project'] .gv-breadcrumb-current {
+.gv-breadcrumb[data-variant='default'] .gv-breadcrumb-current {
   padding: var(--gv-space-1) var(--gv-space-5);
   margin: calc(-1 * var(--gv-space-1)) calc(-1 * var(--gv-space-5));
   border-radius: var(--gv-radius-6);
 }
 
 /* Phase level: the project name truncates first (prototype, max 200); the phase name stays whole. */
-.gv-breadcrumb[data-level='phase'] {
+.gv-breadcrumb[data-variant='editor'] {
   .gv-breadcrumb-link {
     max-width: 200px;
     padding-inline-start: var(--gv-space-4);

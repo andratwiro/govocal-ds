@@ -188,7 +188,7 @@ function ReportModal({report, onClose}: {report: Report | null; onClose: () => v
         <div className="bo-community-monitor-modal">
           <PropertyList aria-label="About this report">
             <PropertyListItem label="Status">
-              <StatusBadge state={report.published ? 'live' : 'draft'}>{report.published ? 'Published' : 'Draft'}</StatusBadge>
+              <StatusBadge status={report.published ? 'live' : 'draft'}>{report.published ? 'Published' : 'Draft'}</StatusBadge>
             </PropertyListItem>
             <PropertyListItem label="Quarter">{report.quarter}</PropertyListItem>
             <PropertyListItem label="Updated">{report.updated}</PropertyListItem>
@@ -276,7 +276,7 @@ function Reports() {
               <DataTableRow key={r.id} id={r.id} textValue={r.title} onAction={() => setOpen(r)}>
                 <DataTableCell><DataTableStack strong sub={`Updated ${r.updated}`}>{r.title}</DataTableStack></DataTableCell>
                 <DataTableCell>{r.quarter}</DataTableCell>
-                <DataTableCell><StatusBadge state={r.published ? 'live' : 'draft'}>{r.published ? 'Published' : 'Draft'}</StatusBadge></DataTableCell>
+                <DataTableCell><StatusBadge status={r.published ? 'live' : 'draft'}>{r.published ? 'Published' : 'Draft'}</StatusBadge></DataTableCell>
                 <DataTableCell align="options">
                   <DataTableOptions aria-label={`Actions for ${r.title}`} onAction={k => onAction(r, String(k))}>
                     <MenuItem id="open">Open</MenuItem>

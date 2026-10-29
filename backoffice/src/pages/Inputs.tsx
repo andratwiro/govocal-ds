@@ -297,7 +297,7 @@ export function Inputs() {
                         </span>
                       </DataTableStack>
                     </DataTableCell>
-                    <DataTableCell textValue={i.status}><StatusBadge state={statusState(i.status)}>{i.status}</StatusBadge></DataTableCell>
+                    <DataTableCell textValue={i.status}><StatusBadge status={statusState(i.status)}>{i.status}</StatusBadge></DataTableCell>
                     <DataTableCell textValue={i.assignee}>
                       <AssigneeSelect input={i} label={`Assignee for ${i.title}`}
                         onChange={(id, p) => patch(id, p, p.assignee === 'Unassigned' ? 'Input unassigned' : `Assigned to ${p.assignee}`)} />

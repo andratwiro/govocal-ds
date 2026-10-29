@@ -15,18 +15,18 @@ type Story = StoryObj<typeof ReviewStatus>;
 export const AllVariants: Story = {
   render: () => (
     <div style={{display: 'flex', gap: 24, alignItems: 'center'}}>
-      <ReviewStatus state="to-review" />
-      <ReviewStatus state="to-set" />
-      <ReviewStatus state="reviewed" />
+      <ReviewStatus status="to-review" />
+      <ReviewStatus status="to-set" />
+      <ReviewStatus status="reviewed" />
     </div>
   )
 };
 
 /** Review status (Figma's one variant) */
-export const ToReview: Story = {name: 'To review', args: {state: 'to-review'}};
+export const ToReview: Story = {name: 'To review', args: {status: 'to-review'}};
 
 /** Not in Figma (the prototype's `.rv--todo` "To set"): a decision with no value yet. */
-export const ToSet: Story = {name: 'To set', args: {state: 'to-set'}};
+export const ToSet: Story = {name: 'To set', args: {status: 'to-set'}};
 
 /** Not in Figma (the prototype's `.rv--done`): after the admin visited the card. */
-export const Reviewed: Story = {args: {state: 'reviewed'}};
+export const Reviewed: Story = {args: {status: 'reviewed'}};

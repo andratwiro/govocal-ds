@@ -21,18 +21,22 @@ export interface BreadcrumbItem {
 }
 
 export interface BreadcrumbsProps extends Omit<RACBreadcrumbsProps<object>, 'children'>, PlacementProps {
-  /** Figma `Level`: Project is the flat "Projects / Current" trail; Phase · Draft/Live adds the
-   * phase-editor chrome (panel toggle, back arrow, divider, status pill). */
-  level?: 'project' | 'phase';
-  /** Only used when level="phase": the phase's live state, draws the trailing Status badge. */
-  phaseState?: 'draft' | 'live';
+  /**
+   * `default`: the flat "Projects › Current" trail (Figma `Level=Project`). `editor`: an editor's chrome around a
+   * slashed trail, a panel toggle, a back arrow and the trailing Status badge (Figma `Level=Phase · Draft/Live`).
+   *
+   * @default 'default'
+   */
+  variant?: 'default' | 'editor';
+  /** `editor` only: what the trailing Status badge says. @default 'draft' */
+  status?: 'draft' | 'live';
   items: BreadcrumbItem[];
-  /** Phase level only: handlers for the leading chrome buttons. */
+  /** `editor` only: handlers for the leading chrome buttons. */
   onTogglePanel?: () => void;
   onBack?: () => void;
-  /** Phase level only: the panel toggle's accessible name. @default 'Toggle panel' */
+  /** `editor` only: the panel toggle's accessible name. @default 'Toggle panel' */
   togglePanelLabel?: string;
-  /** Phase level only: the back arrow's accessible name. @default 'Back' */
+  /** `editor` only: the back arrow's accessible name. @default 'Back' */
   backLabel?: string;
 }
 
@@ -42,8 +46,8 @@ export interface BreadcrumbsProps extends Omit<RACBreadcrumbsProps<object>, 'chi
  * as Figma's instances do. The last crumb is the current page (`aria-current="page"`).
  */
 export function Breadcrumbs({
-  level = 'project',
-  phaseState = 'draft',
+  variant = 'default',
+  status = 'draft',
   items,
   onTogglePanel,
   onBack,
@@ -55,8 +59,8 @@ export function Breadcrumbs({
 }: BreadcrumbsProps) {
   const last = items.length - 1;
   return (
-    <div className={clsx('gv-breadcrumb', className)} style={style} data-level={level}>
-      {level === 'phase' && (
+    <div className={clsx('gv-breadcrumb', className)} style={style} data-variant={variant}>
+      {variant === 'editor' && (
         <>
           <IconButton onPress={onTogglePanel} aria-label={togglePanelLabel}>
             <PanelLeft aria-hidden />
@@ -77,7 +81,7 @@ export function Breadcrumbs({
               {item.label}
             </Link>
             {i !== last &&
-              (level === 'project' ? (
+              (variant === 'default' ? (
                 <ChevronRight size={16} aria-hidden="true" className="gv-breadcrumb-sep-icon" />
               ) : (
                 <span className="gv-breadcrumb-sep-slash" aria-hidden="true">
@@ -87,7 +91,7 @@ export function Breadcrumbs({
           </RACBreadcrumb>
         ))}
       </RACBreadcrumbs>
-      {level === 'phase' && <StatusBadge state={phaseState}>{phaseState === 'live' ? 'Live' : 'Draft'}</StatusBadge>}
+      {variant === 'editor' && <StatusBadge status={status}>{status === 'live' ? 'Live' : 'Draft'}</StatusBadge>}
     </div>
   );
 }

@@ -44,7 +44,7 @@ export function ProjectPhase() {
     <div className="bo-phase" data-rail={railOpen ? 'open' : 'closed'}>
       <h1 className="bo-visually-hidden">{project.title}</h1>
       <div className="bo-phase-bar">
-        <ProjectHeader level={phase.status === 'Draft' ? 'phase-draft' : 'phase-live'} projectName={project.title} phaseName={phase.title}
+        <ProjectHeader level="phase" status={phase.status === 'Draft' ? 'draft' : 'live'} projectName={project.title} phaseName={phase.title}
           projectHref={`#/projects/${project.id}`} onBack={() => navigate(`/projects/${project.id}`)} onTogglePanel={() => setRailOpen(o => !o)} />
         <SegmentedControl aria-label="Phase view" disallowEmptySelection selectedKeys={[view]}
           onSelectionChange={keys => { const next = [...keys][0]; if (next) navigate(phaseUrl(project, phase, next as Tab)); }}>

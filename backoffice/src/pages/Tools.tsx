@@ -21,7 +21,7 @@ function ToolCard({tool}: {tool: Tool}) {
         </Gap>
         <div className="bo-tools-tags">
           <Badge>{tool.category}</Badge>
-          {tool.status && <StatusBadge state={tool.status.state}>{tool.status.label}</StatusBadge>}
+          {tool.status && <StatusBadge status={tool.status.state}>{tool.status.label}</StatusBadge>}
           {tool.locked && <Badge icon={<Lock aria-hidden size={14} />}>Not in your plan</Badge>}
         </div>
         <p className="bo-tools-text">{tool.description}</p>

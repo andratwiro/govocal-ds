@@ -105,7 +105,7 @@ function Managers({names}: {names?: string[]}) {
 
 const Visibility = ({p}: {p: Project}) => (
   <DataTableStack sub={p.access}>
-    <StatusBadge state={p.status === 'Live' ? 'live' : 'draft'}>{visibilityOf(p)}</StatusBadge>
+    <StatusBadge status={p.status === 'Live' ? 'live' : 'draft'}>{visibilityOf(p)}</StatusBadge>
   </DataTableStack>
 );
 
@@ -310,7 +310,7 @@ function GroupPanel<T extends {name: string; managers: string[]}>({title, descri
               <DataTableCell textValue={projectsWord(inside(r).length)}><Inside projects={inside(r)} /></DataTableCell>
               <DataTableCell><Managers names={r.managers} /></DataTableCell>
               {status && <DataTableCell>
-                <StatusBadge state={status(r) === 'Published' ? 'live' : 'draft'}>{status(r)}</StatusBadge>
+                <StatusBadge status={status(r) === 'Published' ? 'live' : 'draft'}>{status(r)}</StatusBadge>
               </DataTableCell>}
             </DataTableRow>
           ))}

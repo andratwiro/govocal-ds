@@ -9,7 +9,7 @@ export interface ReviewStatusProps extends PlacementProps {
    *
    * @default 'to-review'
    */
-  state?: 'to-review' | 'to-set' | 'reviewed';
+  status?: 'to-review' | 'to-set' | 'reviewed';
 }
 
 const LABEL = {'to-review': 'To review', 'to-set': 'To set', reviewed: 'Reviewed'} as const;
@@ -42,11 +42,11 @@ function Done() {
 }
 
 /** The small word at the end of a card's header that says whether the admin has looked at it. */
-export function ReviewStatus({state = 'to-review', className, style}: ReviewStatusProps) {
+export function ReviewStatus({status = 'to-review', className, style}: ReviewStatusProps) {
   return (
-    <span className={clsx('gv-review-notice', className)} style={style} data-state={state}>
-      {state === 'reviewed' ? <Done /> : <Todo />}
-      <span>{LABEL[state]}</span>
+    <span className={clsx('gv-review-notice', className)} style={style} data-status={status}>
+      {status === 'reviewed' ? <Done /> : <Todo />}
+      <span>{LABEL[status]}</span>
     </span>
   );
 }

@@ -102,7 +102,7 @@ function PagesTab({menu, setMenu, pages, setPages}: MenuProps & {pages: string[]
                       <span className="bo-pages-menu-label">{page.label}</span>
                       <span className="bo-note">/pages/{meta.slug} · {meta.edited}</span>
                     </span>
-                    <StatusBadge state={inMenu ? 'live' : 'draft'}>{inMenu ? 'In menu' : 'Not in menu'}</StatusBadge>
+                    <StatusBadge status={inMenu ? 'live' : 'draft'}>{inMenu ? 'In menu' : 'Not in menu'}</StatusBadge>
                     <span className="bo-push" />
                     <Switch isSelected={inMenu}
                       onChange={on => setMenu(on ? [...menu, id] : menu.filter(m => m !== id))} aria-label={`Show ${page.label} in menu`}>Show in menu</Switch>

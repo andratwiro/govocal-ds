@@ -16,7 +16,7 @@ async function report(page: Page, within: string) {
 
 test('Action row: working is busy and inert; a menu row opens its menu by keyboard', async ({page}) => {
   await page.goto(story('patterns-project-page-action-row--working'));
-  const working = page.locator('.gv-action-row[data-state="working"]');
+  const working = page.locator('.gv-action-row[data-status="working"]');
   await expect(working).toHaveAttribute('aria-disabled', 'true');
   await expect(working).toHaveAttribute('aria-busy', 'true');
   await expect(working.getByRole('progressbar')).toBeVisible();
