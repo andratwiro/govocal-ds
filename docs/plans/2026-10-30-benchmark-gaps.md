@@ -7,36 +7,41 @@
 `docs/research/storybook-benchmark/report.md`, then this plan. Execute it overnight in the order under *If time runs
 short*, following *Global constraints* in every subagent brief, and leave the morning report described at the end."
 
-**Already in flight (the steward, 29 Oct 23:15).** Builders running tonight land these on `main` through the
-steward; don't build them twice, build on them once merged:
-- **Task 6, locale and strings:** branch `strings`. Every fixed word becomes a `labels` prop with English defaults (API
-  rule 11, "Words"). Numbers and dates follow React Aria's locale, never `en-GB`. A guard test, and a locale toolbar
-  in Storybook.
-- **Task 5, Base:** branch `structure`.
-  - Base gets an intro page ("primitives: prefer Components"), a line on every Base docs page, and sorts last.
+**State at handover (the steward, 30 Oct ~00:30).** These landed on `main` tonight. Re-measure them in Task 0 and
+build on them; don't build them twice.
+- **Words and locales** (Task 6, most of it):
+  - API rule 11, "Words": a part's own words are `labels` with English defaults (`XLabels` / `xLabels`). Numbers and
+    dates follow React Aria's locale.
+  - `tests/words.test.mjs` is the guard. Its `TO_CONVERT` list names the parts that landed later and still carry
+    English: Map view, the multilingual fields, the long-list loading row.
+- **Structure** (Task 5, Base):
+  - Base is primitives: an intro page, one line on every Base docs page, last in the sidebar.
   - The 17 dead starter parts are deleted.
-  - Link, Radio group and Checkbox group are promoted.
-  - Tables & lists and Text groups.
-  - A guard against one stylesheet reaching into another's classes.
-- **Tasks 4, 5 and 7 (part):** branch `docs-wave`.
-  - `AGENTS.md`, `CLAUDE.md`, `.mcp.json`, `README.md` ("Start here" per audience), `CONTRIBUTING.md`, `llms.txt`.
-  - A truthful manifest.
-  - `docs/CONSUMING.md` plus an Overview "For developers" page: what it is and isn't, copy vs package, the CSS scoping
-    caveat, providers, a react-hook-form recipe.
-  - A form-validation recipe story.
-  - The Storybook pages "Start here", "Questions for developers" and "AI assistance" are still to build, on top of
-    these.
-- **Landed since 8bd57e5:**
-  - multilingual fields (`19582a8`);
-  - Map view (`f699c3c`);
-  - a virtualised Data table with load-more (`af60b0c`).
-- **Building now, from the back office's deep dive of the live prototypes:**
-  - AI assistant parts (chat thread, message, progress, prompt composer, suggestions, item chip, Assistant panel,
-    Activity feed);
-  - report parts (report type tokens, Page stage + Zoom bar, Block frame, inline rich text, StatTile plain, Figure,
-    Quote, Sortable list);
-  - next: project screens (one setup row, header, rail, workspace layout, phone preview) and a batch of small fixes,
-    including doc comments for the 19 undocumented components.
+  - Link, Radio group and Checkbox group are Components.
+  - New groups: Tables & lists, and Text.
+  - Fixtures live in `src/stories/`.
+  - `npm run css:scope`: Base CSS selects `gv-base-*` classes, never global `react-aria-*` ones.
+  - `tests/own-block.test.mjs`: no stylesheet reaches into another part beyond a shrinking list.
+- **Agent and developer docs** (parts of Tasks 4, 5 and 7):
+  - `AGENTS.md`, `CLAUDE.md` and `.mcp.json`.
+  - A truthful components manifest.
+  - `README.md` (start here, per audience) and `CONTRIBUTING.md`.
+  - `docs/CONSUMING.md`, plus Overview › For developers: what it is and isn't, copy or package, the CSS caveat,
+    providers, a react-hook-form recipe.
+  - `public/llms.txt`.
+  - Patterns › Recipes › Form validation.
+- **New parts:**
+  - Multilingual text field, Multilingual rich text editor and Locale switcher, plus the Title field's language
+    button.
+  - Map view: the engine behind `MapEngine`, MapLibre by default, loaded on demand.
+  - Data table `isVirtualized`, with `rowLines` and `onLoadMore`.
+- **Started, not finished: two `wip/*` branches on origin.** They are unreviewed. Start from them or ignore them:
+  - `wip/ai-parts`: ItemChip, ChatMessage, ChatProgress, a started PromptComposer.
+  - `wip/report-parts`: one commit, the report type tokens.
+
+The tasks below carry what is still open from tonight, each marked **(from the steward)**. Task 8 holds the parts the
+live prototypes need (the back office's own deep dive). The back-office agent's notes, `notes/deep-dive/`, are its
+spec.
 
 **Goal:** by morning, close the gaps between this Storybook and the benchmark panel
 ([report](../research/storybook-benchmark/report.md)) that matter most to its two readers: the designer who will run
@@ -113,6 +118,18 @@ Put all of these in every subagent brief.
 ### Task 0: baseline (≈15 min)
 
 - [ ] Pull, run every check, and re-measure the baseline table.
+- [ ] **(from the steward) Fix the e2e failures the handover merges left; main is red until these are done.**
+  - `e2e/data-table-virtual.spec.ts:62` expects "5000 selected". The count is now locale-formatted, "5,000 selected",
+    which is correct: update the test.
+  - `e2e/form-validation.spec.ts:89` still says `test.fail(...)`, but the Text field bug it records was fixed in
+    8bd57e5. Remove the `test.fail` line and its comment.
+  - `e2e/motion.spec.ts:52`: the Modal's class is now `react-aria-Modal gv-base-modal` (`npm run css:scope`). Update
+    the expected `part`, or match on the first class.
+  - **A real break:** the story Tables & lists › Data table › "In a panel" crashes with "undefined is not a function".
+    `MANAGE_IDEAS.filter(METRICS[m].test)` in `src/components/gv/DataTable.stories.tsx` (`total`) gets an undefined
+    `test`. Check `METRICS` / `Metric` in `src/stories/data/ideas.tsx` after the strings and structure merges.
+    `e2e/table.spec.ts:53` fails on it. The story smoke test should have caught it, so check why it didn't.
+  - `e2e/project-overview.spec.ts:246` (the Option list's Esc) flaked once under load and passed on a rerun: Task 8b.
 - [ ] Create `docs/plans/2026-10-30-benchmark-gaps-report.md`, the morning report, with the table. Fill it in as you go.
 
 ### Task 1: the component page (≈1 h)
@@ -176,6 +193,9 @@ Rubric D3; the strongest proof for developers.
 
 - [ ] Add layout parts: Stack (vertical), Inline (horizontal, wrap, align) and Grid (columns, areas). Their `gap` and
   padding props take spacing token names only.
+  - **(from the steward)** Tile grid (`minTileWidth`, `layout`, `density`) and Page header already exist under
+    Layout & containers. Grid absorbs Tile grid or sits beside it with a clear line between them: decide and log it.
+    Never two grids.
   - Add a typecheck-only file where `gap="13px"` and `gap={13}` fail to compile (`// @ts-expect-error`).
   - Each gets a page as in Task 1.
   - Benchmarks: Grafana's Stack, Amsterdam's Grid.
@@ -197,6 +217,15 @@ report.
 
 Rubric V1–V4. These pages lay out the developers' calls; they make none of them.
 
+**(from the steward)** `docs/CONSUMING.md` and Overview › For developers already exist. They cover what it is and
+isn't, copy or package, the CSS scoping caveat, providers and a react-hook-form recipe. Build these pages on them:
+link, don't repeat. The architecture review's open developer calls belong on Questions for developers:
+- cascade layers (`@layer gv.tokens, gv.base, gv.components, gv.patterns`, with the host's reset in a lower layer);
+- `theme.css`'s `:root` rules moved to an opt-in `global.css`;
+- splitting tsconfig into lib, node and app;
+- Prettier and ESLint (react-hooks only);
+- branch protection and auto-merge (already in docs/OPEN-DECISIONS.md).
+
 - [ ] **Overview/Who owns what:**
   - Design owns the tokens, the components and their API, the stories, the docs and the components' tests.
   - Developers own data, state, routing, translation plumbing, performance, their build and the adoption decision.
@@ -216,7 +245,8 @@ Rubric V1–V4. These pages lay out the developers' calls; they make none of the
   one line, "Behaviour from React Aria's …", as B.C. Gov does.
 - [ ] **Seam stories**, each labelled "who wires what", each with a play function:
   - a router link (React Aria's `RouterProvider` with a stand-in navigate);
-  - a field wired to a stand-in form library (ref and name reach the input);
+  - a field wired to a stand-in form library (ref and name reach the input). Patterns › Recipes › Form validation is
+    the start;
   - strings from a stand-in translate function;
   - a table driven from loading to error to data.
 
@@ -226,7 +256,7 @@ Rubric V1–V4. These pages lay out the developers' calls; they make none of the
 
 Rubric D5, D2 and D8.
 
-- [ ] **Overview/Start here**, with two paths:
+- [ ] **Overview/Start here**, with two paths. `README.md` already has the per-audience start; the page mirrors it:
   - for designers: how to read a page, how to propose and land a change through an agent, where decisions live;
   - for developers: the entry points from `docs/API.md`, the className rule, how to rerun the checks, and what's theirs
     (Task 4).
@@ -244,10 +274,9 @@ Rubric D5, D2 and D8.
   - Start honest: nothing is stable until a developer has reviewed its API. A Not in Figma part can still be a
     candidate.
   - Tag every part `status:<stage>` and show the tag on its page and in the sidebar.
-- [ ] Sidebar:
-  - Explain Base where it sits: starter parts, used only when nothing in Components does the job, as `docs/API.md`
-    says.
-  - Keep test-only entries out of the public tree.
+- [x] Sidebar: explain Base where it sits. Done on 30 Oct: the Base intro page, a line on every Base docs page, Base
+  last.
+- [ ] Sidebar: keep test-only entries out of the public tree.
 - [ ] A small copy check over docs pages: it flags Title Case headings and words from the word list's avoid column.
 
 **Accept:** every page is linked from Welcome; every part carries a status tag in `index.json`; the copy check passes.
@@ -256,12 +285,26 @@ Rubric D5, D2 and D8.
 
 Rubric D2 and D4.
 
-- [ ] **Locale:**
-  - LegendRow, DashboardCard and Chart format numbers by the locale (React Aria's `useLocale` with `Intl`), never `en-GB`.
-  - CommentThread's "Delete", and any other visible literal in a Component or Pattern, becomes a prop with a default.
-  - A guard test finds visible string literals in the parts' JSX, with a short allow-list where one is justified.
+- [x] **Locale** (landed 30 Oct; see API rule 11):
+  - numbers and dates in the React Aria locale;
+  - every part's words as `labels`;
+  - `tests/words.test.mjs`.
+- [ ] **(from the steward) Empty `TO_CONVERT` in `tests/words.test.mjs`.** The parts that landed after the words work
+  still say English:
+  - Map view: the zoom and legend names, the "can't be shown" line, the cluster's label.
+  - Locale switcher and Multilingual text field: "Language", "of … languages filled". Locale switcher's
+    `Intl.DisplayNames([inLocale])` is fine once the check reads it as handed in.
+  - Data table: `loadingLabel`, which becomes a `labels` key.
+
+  Remove each entry as it moves.
+- [ ] **(from the steward) A Storybook Locale toolbar.** A `locale` global (en-GB, nl-BE, fr-BE, de-DE, es-CL,
+  ar-SA) wraps every story in `I18nProvider`, so a Dutch or German viewer sees their numbers and dates.
+  - Keep Direction's "Right to left" meaning Arabic, so old `globals=direction:rtl` links still work.
+  - The words stay English: a story shows another language through `labels`.
+  - An untested draft existed. Build it fresh in `.storybook/preview.tsx`.
 - [ ] **Edge-case stories.** Benchmarks: Carbon's empty states, AgDS's data loading.
-  - Data table: 0, 1 and 1,000 rows; loading; error; no permission (Empty state's four kinds).
+  - Data table: 0, 1 and 1,000 rows; loading; error; no permission (Empty state's four kinds). The virtualised 5,000
+    rows and the load-more stories already exist.
   - Long translated labels (German) and Arabic on Text field, Select, Button, Tabs and Side panel.
   - First load against refresh, where they differ.
 
@@ -280,18 +323,99 @@ Rubric D7 and D9.
   - Its output goes on the Checks page.
 - [ ] **Provenance** on every page: built by agents from Figma, from the prototype, or from neither; reviewed by a
   person (role and date) or "not yet"; known limits. Honest by default.
-- [ ] **Overview/AI assistance:**
+- [ ] **Overview/AI assistance**, built on `AGENTS.md`, `.mcp.json`, `public/llms.txt` and the manifest (all landed):
   - How an agent should use the system: the entry points, `docs/COMPONENTS.md`, the manifest URL, never inventing props
     or tokens, reading a page's "When not to use".
   - Say plainly that the MCP server needs a running Storybook. A hosted endpoint is a later call.
 - [ ] **Prop descriptions:** none left empty among the props the `govocal-ds` entry point declares itself. Props
   inherited from React Aria may link to its docs.
+  - **(from the steward and the deep dive §6)** 19 components have no doc comment, so their docs/COMPONENTS.md line is
+    name-only; a test lists them.
+  - Sharpen BarRow (ranking), SegmentedControl (view switch), CommentThread (replies) and Switch.
+- [ ] **(from the steward) A cold-agent trial.** A fresh agent, given only `AGENTS.md`, builds one back-office screen.
+  Fix the docs wherever it stumbles, and list the stumbles in the morning report.
 
 **Accept:** the break-it demo shows four reds, and `npm run check` passes.
 
+### Task 8: the parts the live prototypes need (from the steward and the back office's deep dive)
+
+The back office's deep dive of the live prototypes (`notes/deep-dive/for-steward.md`, `project/REPORT.md`,
+`report/REPORT.md`, `report-audit.md`) is the spec. The prototypes are public: `govocal.augur.page/ux-ui-audit/design/`
+and `govocal.augur.page/future-analytics/prototypes/folder-report-revamp/`.
+
+Every part follows the same contract:
+- rule 11 `labels`, tokens only, the Task 1 page;
+- stories for every state;
+- an e2e by role with axe reported;
+- the barrel and `npm run components:index`;
+- one DECISIONS line per call.
+
+- [ ] **8a. The project lead's asks, pages only (≈30 min each; working recipes exist):**
+  - **The Users tab, virtualised.** The recipe is Tables & lists › Data table › "Virtualized".
+    - Drop the paging. Select all means every row in view: `toKeySet(keys, rows.map(r => r.id))`.
+    - The table needs a height from its container.
+    - Rows need `dependencies` for any handler a cell reads.
+    - Generate an invented tail of about 5,000 people after the twelve.
+    - Rewrite the paging tests in `e2e/users.spec.ts`.
+  - **The ideation Manage tab, List / Map.** The recipe is Data display › Map view › "In the Manage tab".
+    - A List / Map segmented control.
+    - The map beside a one-column list.
+    - The map's `value` is the open idea, `hoveredKey` the hovered row. Rows need `onRowAction`, or their hover never
+      fires.
+    - Ideas gain an invented `place`. A chip counts the ideas without one.
+  - **Multilingual fields at their call sites:**
+    - the Settings platform name;
+    - the phase title and description (the Title field with a `LocaleSwitcher kind="menu"`, then a Multilingual rich
+      text editor);
+    - project, event and phase titles;
+    - the new project, the custom page title, the group name;
+    - the report block heading (`showLocaleSwitcher={false}`, `locale` from the page's Select).
+- [ ] **8b. Small fixes** (deep dive §5):
+  - Tooltip never opens on the first, programmatic focus.
+  - Side nav gets a hidden state that the header toggle opens.
+  - Tree gets a flush look and a trailing page-number slot.
+  - Choice card takes thumbnail-only media.
+  - Panel gets a borderless look.
+  - Option list's Esc flake.
+  - Toast blocks clicks for about 200 ms after Undo.
+  - Colour swatch is too big in a table cell.
+  - File list's Delete is a Link.
+  - Modal gets a description slot.
+  - Project header gets an archived state.
+  - Phase timeline passes `onDelete`.
+  - Rich text editor passes through `lang`, `dir`, `isInvalid`, a description and `isDisabled`. Then the Multilingual
+    rich text editor drops its CSS direction override and its own alert, and gains a disabled state.
+- [ ] **8c. The AI assistant**, Components/AI (report §3; start from `wip/ai-parts` or ignore it):
+  - ItemChip, ChatMessage, ChatProgress, PromptComposer, PromptSuggestions and ChatThread;
+  - the Pattern AssistantPanel (on, off/upsell, empty report, generating, scoped to a block);
+  - the Activity feed (version history; it shares ItemChip);
+  - Side panel's head-less inline mode, head icon and 15px title.
+- [ ] **8d. The report** (report §4; `wip/report-parts` holds the report type tokens):
+  - a sheet surface token;
+  - Page stage and Zoom bar;
+  - Block frame (hover, selected, toolbar, pinned, AI-made, insert line);
+  - Rich text toolbar's floating variant with the block-type segment, and Rich text editor's inline mode;
+  - Stat tile's plain look;
+  - Figure and Quote;
+  - Sortable list (React Aria drag and drop with keyboard reordering: the critique's skipped hard screen).
+- [ ] **8e. The project screens** (project §3):
+  - **One setup row.** Card's row, Setup step and Action row become one part with optional status, pills, a trailing
+    control and a body. Open: pills hidden and a square chevron. Reviewed: tinted pills. The title never truncates.
+  - Badge `isSelected`.
+  - Review status: Reviewed as a green check-circle.
+  - Stat card: a flat sparkline that absorbs Stat tile's sparkline.
+  - Project header: the project's status pill, a `tabs` prop, an unread dot per tab, Save → saving → Back to project.
+  - Rail phase: an `event` kind, an Events section, and the panel toggle on every screen.
+  - Workspace layout.
+  - Phone preview: a logo header, a sticky countdown footer, a stage toolbar and a caption. Plus Phone phase card.
+  - Access popover and Method card.
+
+**Accept:** each part green with its page; the back office uses it where the deep dive found the gap.
+
 ## If time runs short
 
-Order: the task numbers, 0 to 7, with Task 2 doing Data display, Forms and Overlays first.
+Order: the task numbers, 0 to 8, with Task 2 doing Data display, Forms and Overlays first. Task 8a is the project
+lead's own asks with working recipes: fit it in early. 8b's fixes are cheap and can ride along with Task 2.
 - The component page comes first because it is both the designer's bible and what the agents' manifest reads.
 - Composing a screen without CSS is the strongest proof for developers.
 - The developers' page is the alignment.
@@ -308,6 +432,9 @@ Stop any task cleanly at a green commit rather than start the next half-done.
 - **Contrast pairs as token data, a hosted MCP endpoint, a published package, CI gates:** later calls. They appear as
   questions on Task 4's page.
 - **Scoring the panel and this Storybook:** that's the re-audit after the review, not the builder's job.
+- **The folder renames** (`src/components/gv/` → `src/components/`, the starter → `src/base/`; the architecture
+  review's move 3). One codemod in week 1, after a quiet day: about 1,000 import lines move. It is safe whenever nothing
+  outside imports a path, and the entry points already guarantee that.
 - **Anything outside this repo.**
 
 ## Morning report
@@ -318,3 +445,22 @@ Put it in `docs/plans/2026-10-30-benchmark-gaps-report.md`, in this order:
 3. Decisions logged (links into `docs/DECISIONS.md`) and questions added to `docs/OPEN-DECISIONS.md`.
 4. What was skipped or reverted, and why.
 5. The three things a reviewer should look at first.
+6. **(from the steward)** The architecture review's grades, re-graded with evidence. The 29 Oct "before" grades:
+
+   | Area | 29 Oct | Why then |
+   |---|---|---|
+   | Structure | C | the folders contradicted the tree, Base was 39 % dead, the list kit was split over four groups |
+   | Tests | C+ | strong guards, but 69 % guarded the demo; no story smoke test; one failing test |
+   | Build | D+ | push-to-main with no typecheck and no gate; a placeholder a11y step; a 35 % red rate; no Node pin |
+   | Code | B− | 2,782 dead lines, three table systems, story code as large as component code, Vite-only code |
+   | Types | B+ | strict, 2 `any`; one project for browser, Node and tests; configs unchecked |
+   | CSS | C+ | no layers, global `.react-aria-*` selectors, 13 files reaching into others, `:root` side effects |
+   | Docs | D | no README, CONTRIBUTING, consumption guide or AGENTS.md; some claims false |
+
+   Since then, 29–30 Oct:
+   - CI runs typecheck, tests, build, e2e and a sharded a11y scan before any deploy, plus a story smoke test over every
+     story.
+   - Base: 17 dead parts are gone; Base CSS is scoped; the reach-in guard is on.
+   - Docs: README, CONTRIBUTING, CONSUMING, AGENTS and llms.txt.
+   - API: one public entry and one prop convention; tokens: one name grammar.
+
