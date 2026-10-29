@@ -1,0 +1,23 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import {WordList} from './WordList';
+
+<Meta title="Foundations/Word list" />
+
+{/* The words come from src/foundations/words.json; tests/copy.test.mjs flags their Avoid column in docs pages. */}
+
+# Word list
+
+The platform's own words, as the back office uses them, so every screen and every docs page says the same thing the
+same way. Each word names the file in this repo that shows it in use. A word in the **Avoid** column is one we don't
+use for it: the copy check (`tests/copy.test.mjs`) flags it in docs pages.
+
+How to write around these words: [Voice and tone](?path=/docs/foundations-voice-and-tone--docs).
+
+<WordList />
+
+## Adding a word
+
+Add a line to `src/foundations/words.json`: the word, what it means here, the words to avoid, and the file that shows
+it in use. Only what the repo shows goes in: a meaning nobody can point to is a question for the designer, not a line.
+Platform names keep their capitals where the back office gives them (Input manager, Community monitor, Platform admin);
+everything else is lower case.

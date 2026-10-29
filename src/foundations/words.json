@@ -1,0 +1,31 @@
+{
+  "$comment": "Foundations › Word list and tests/copy.test.mjs read this file. `use` says what the word means as the back office uses it, `where` names the repo file that shows it, `avoid` lists words docs pages and screens don't use for it (the copy check flags them in docs pages). Facts come from the repo only.",
+  "words": [
+    {"term": "project", "use": "The thing an admin sets up and residents take part in. It has a title, a status (draft or live) and one or more phases.", "where": "backoffice/src/data.ts (Project)", "avoid": []},
+    {"term": "folder", "use": "A group of projects with its own folder managers.", "where": "backoffice/src/data-users.ts (Folder manager), backoffice/src/data-projects.ts", "avoid": []},
+    {"term": "space", "use": "A group of projects across folders, the admin's newer view, with its own space managers.", "where": "backoffice/src/data-projects.ts, backoffice/src/data-users.ts (Space manager)", "avoid": []},
+    {"term": "phase", "use": "One step of a project's timeline, with dates and one participation method. A phase is draft, live or done (ended).", "where": "backoffice/src/data.ts (Phase)", "avoid": []},
+    {"term": "participation method", "use": "What residents do in a phase: Information, Ideation, Survey, Voting, Proposals, Common ground, Document annotation, Volunteering or Poll. Say \"method\" for short.", "where": "backoffice/src/data.ts (METHODS)", "avoid": []},
+    {"term": "input", "use": "What a resident posts in a phase, whatever the method: an idea, a proposal. The Input manager lists them all.", "where": "backoffice/src/data-inputs.ts, backoffice/src/nav.ts (Input manager)", "avoid": ["submission"]},
+    {"term": "idea", "use": "An input in an ideation phase.", "where": "backoffice/src/data-project.ts (Phase screen · Manage)", "avoid": []},
+    {"term": "proposal", "use": "An input in a proposals phase; it needs a number of votes to pass its threshold.", "where": "backoffice/src/data-project.ts (a proposals phase's proposals)", "avoid": []},
+    {"term": "comment", "use": "A resident's reply under an input. The team's own notes are internal comments.", "where": "backoffice/src/data-inputs.ts (thread, internal)", "avoid": []},
+    {"term": "official update", "use": "What the team posts on an input to say what happens next.", "where": "backoffice/src/data-inputs.ts (updates), src/patterns/OfficialUpdate.tsx", "avoid": []},
+    {"term": "resident", "use": "A person who lives in the place and may take part. The invented people in the demo are Resident A, Resident B…", "where": "backoffice/src/data.ts, backoffice/src/data-community-monitor.ts", "avoid": ["citizen", "citizens"]},
+    {"term": "participant", "use": "A resident who has taken part in a project or phase; the count on dashboards and reports.", "where": "backoffice/src/data-report.ts, backoffice/src/data-project.ts", "avoid": []},
+    {"term": "visitor", "use": "Someone who opened a phase; counted beside its participants.", "where": "backoffice/src/data-project.ts (PARTICIPATION_WEEKS)", "avoid": []},
+    {"term": "user", "use": "Anyone with an account, as the Users page lists them, with a role: Platform admin, Space manager, Folder manager, Project manager or Registered user.", "where": "backoffice/src/data-users.ts (Role)", "avoid": []},
+    {"term": "admin", "use": "Short for Platform admin, the role that manages the whole platform.", "where": "backoffice/src/data-users.ts", "avoid": ["superadmin"]},
+    {"term": "group", "use": "A set of users, used to choose who can take part or who gets a message.", "where": "backoffice/src/data-messaging.ts (GROUPS), backoffice/src/data-community-monitor.ts (Residents in specific groups)", "avoid": []},
+    {"term": "tag", "use": "A theme a project or input is filed under, so residents can find it.", "where": "backoffice/src/data-settings.ts, backoffice/src/data-inputs.ts", "avoid": []},
+    {"term": "area", "use": "A part of the place a project is about; a project can have none or all.", "where": "backoffice/src/data-project.ts (Set area), src/patterns/SetupStep.stories.tsx", "avoid": []},
+    {"term": "publish", "use": "Make a draft project live, so residents can see it.", "where": "docs/DECISIONS.md (Project header: Publish ▾ / ● Live ▾)", "avoid": []},
+    {"term": "delete", "use": "Gone for good: a user, an input, a tag. It asks first, then offers Undo.", "where": "backoffice/src/pages/Users.tsx, docs/DECISIONS.md (Delete confirms in an Alert dialog)", "avoid": []},
+    {"term": "remove", "use": "Take something out of a place it sits in, while it still exists: from a group, a role.", "where": "backoffice/src/pages/Users.tsx (Remove from group)", "avoid": []},
+    {"term": "sign in, sign out", "use": "Start and end a session.", "where": "backoffice/src/Layout.tsx (Sign out), src/patterns/ParticipantActionRow.tsx (Sign-in required)", "avoid": ["log in", "log out", "login"]},
+    {"term": "email", "use": "The message and the address, one word.", "where": "backoffice/src/data-users.ts", "avoid": ["e-mail"]},
+    {"term": "report", "use": "A page of results built from blocks, read in order and shared.", "where": "backoffice/src/data-report.ts", "avoid": []},
+    {"term": "saved, created", "use": "A confirmation says what happened in plain past tense: \"Page saved\".", "where": "Voice and tone, \"Confirmations\"", "avoid": ["successfully"]},
+    {"term": "a link's words", "use": "Say where the link goes: \"Open the Input manager\".", "where": "Voice and tone, \"Buttons and links\"", "avoid": ["click here"]}
+  ]
+}

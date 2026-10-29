@@ -43,8 +43,8 @@ is written, it says so.
   `(count, formatted) => string`, so the host's ICU plurals apply. Numbers, dates and direction follow React Aria's
   locale (`AppProvider`'s `locale`). The platform's `react-intl` messages plug in as they are.
 - **A form library.** No form state, no schema. Fields take React Aria's validation (`isRequired`, `validate`,
-  `isInvalid`, `errorMessage`, `validationBehavior`) and work with react-hook-form (the recipe below) or plain
-  `<form>` submission. A recipe story shows every field's invalid state: Patterns › Recipes › Form validation.
+  `isInvalid`, `errorMessage`, `validationBehavior`) and work with react-hook-form (the recipe below) or a plain
+  `<form>` that submits. A recipe story shows every field's invalid state: Patterns › Recipes › Form validation.
 - **Every hard screen.** What exists and what doesn't:
 
   | Screen | In the system |

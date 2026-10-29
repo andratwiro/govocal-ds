@@ -1,0 +1,81 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Voice and tone" />
+
+{/* Benchmarks: Vibe's UX writing handbook, Grafana's voice and tone, GOV.UK's button labels. The rules follow
+    docs/API.md rule 11 (every word arrives as a prop) and the back office's own copy. */}
+
+# Voice and tone
+
+The back office is a tool people use for hours, often in a language that isn't their first. The words should get out
+of the way: short, plain, and the same every time. The platform's own words are on the
+[Word list](?path=/docs/foundations-word-list--docs).
+
+## Voice
+
+- **Plain.** Short words, short sentences. Write "use", not "utilise"; "about", not "regarding".
+- **Direct.** Talk to the person: "You can change this later". Say what will happen, not how it works inside.
+- **Calm.** No exclamation marks, no jokes in errors, no blame. Something went wrong; say what and what to do.
+- **Specific.** Name the thing: "Delete this phase?", not "Are you sure?".
+
+## Sentence case, always
+
+Headings, buttons, menu items, tabs, labels and column headers start with a capital and carry on in lower case:
+"Add a phase", "Last active", "Who can take part". Only names keep their capitals: Go Vocal, a page the back office
+names (Input manager, Community monitor), a person's name. The copy check flags Title Case headings in docs pages.
+
+## Buttons and links
+
+- **A button starts with a verb** and says what happens: "Publish project", "Add phase", "Send test email". One or two
+  words when the context is clear ("Save", "Cancel"), never a sentence.
+- **The same action, the same word** everywhere: Delete for gone for good, Remove for taking out of a group (see the
+  Word list).
+- **A link says where it goes**, so it still makes sense read on its own: "Open the Input manager", not a bare "here".
+- **The main action goes last** in a dialog's footer, Cancel before it.
+
+## Errors
+
+An error says what is wrong and how to fix it, in the field's own words, without blame:
+
+| Instead of | Write |
+|---|---|
+| Invalid input | Give the project a title. |
+| Error 500 | The ideas didn't load. Check your connection and try again. |
+| Field required | Pick a folder. |
+
+Put the message next to what it is about: under the field, in the panel that failed. A form moves focus to the first
+field to fix.
+
+## Empty states
+
+An empty state says what will be here and how it gets here, and offers the one next step if there is one: "No inputs
+yet" over "Inputs appear here when residents take part.". Tell nothing and no-results apart: "No ideas match these
+filters" with a way to clear them.
+
+## Confirmations
+
+- **Before**, for what can't be undone: ask with the thing's name and say what follows. "Delete this user? This can't be
+  undone." The button repeats the verb: "Delete", not "OK".
+- **After**, a toast in the past tense, with Undo where it can: "Idea archived". No adverb that says it worked
+  (the Word list has the one to avoid): the toast already says it.
+
+## Numbers, dates and lists
+
+Never write a number or a date by hand. The parts write them the way the reader's locale does (1,240 in English,
+1.240 in Dutch; 30 Oct 2026 or 30/10/2026), from `AppProvider`'s `locale`. A count in a sentence takes the number as
+the locale writes it, and the app's plural rules pick the words.
+
+## Every word arrives as a prop
+
+A part never translates and never builds a sentence out of pieces. Every word it shows comes from the page: its content
+as props (`title`, `label`, `placeholder`) and its own small words (Close, Next, "Loading more…") as `labels`, with
+English defaults (`docs/API.md`, rule 11). So:
+
+- **Never stitch words together.** "3 " + "ideas" + " selected" breaks in every language with another word order or
+  other plurals. Hand the part a whole phrase, or a function of the count: `(count, formatted) => string`.
+- **Don't put words in CSS or icons.** A word drawn by `::before` or baked into a picture can't be translated.
+- **Leave room.** German and Dutch run about a third longer than English; Arabic runs right to left. No fixed widths
+  around words.
+
+How an app passes its translations in: Patterns › Recipes ›
+[Integration seams](?path=/docs/patterns-recipes-integration-seams--docs), "Strings from a translate function".
