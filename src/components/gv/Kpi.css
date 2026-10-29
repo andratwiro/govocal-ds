@@ -1,11 +1,11 @@
 @import '../theme.css';
 
-/* Figma "KPI" (33:480) + prototype #pj-dash .pj-kpi: 16 padding, radius 8, hairline border, label over number. */
+/* Figma "KPI" (33:480) + prototype #pj-dash .pj-kpi: 16 padding, radius 8, hairline border, label over number.
+   Spacing follows the prototype: number 8 under the label, note 7 under the number. */
 .gv-kpi {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: var(--gv-space-8);
   min-inline-size: 0;
   padding: var(--gv-space-16);
   border: 1px solid var(--gv-border-subtle);
@@ -14,19 +14,24 @@
   font-family: var(--gv-font-family);
 }
 
+/* A long label wraps (the prototype's "Phase participants" takes two lines in a 145 tile); tiles in one grid row
+   stretch to the tallest. */
 .gv-kpi__label {
   font: var(--gv-type-body);
   letter-spacing: var(--gv-type-body-tracking);
   color: var(--gv-text-secondary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
+/* Stat type on a 28 line, as the prototype draws it (line-height 28px; Figma's Stat line is 32). Tabular figures, as
+   the prototype's .pj-kpi__v. */
 .gv-kpi__value {
+  margin-block-start: var(--gv-space-8);
   font: var(--gv-type-stat);
+  line-height: 1;
   letter-spacing: var(--gv-type-stat-tracking);
   color: var(--gv-text-primary);
+  font-variant-numeric: tabular-nums;
 }
 
 /* Type=Tall: same content, 8 more at the foot (Figma 102 vs 94). */
@@ -34,13 +39,9 @@
   padding-block-end: var(--gv-space-24);
 }
 
-/* Type=With note: the note hugs the number (Figma 110 high). */
-.gv-kpi--with-note {
-  gap: var(--gv-space-6);
-}
-
+/* Type=With note: the note 7 under the number (prototype .pj-kpi__d). */
 .gv-kpi__note {
-  margin-block-start: calc(-1 * var(--gv-space-4));
+  margin-block-start: var(--gv-space-7);
   font: var(--gv-type-small-strong);
   letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-secondary);
@@ -48,4 +49,5 @@
 
 .gv-kpi__slot {
   min-inline-size: 0;
+  margin-block-start: var(--gv-space-8);
 }

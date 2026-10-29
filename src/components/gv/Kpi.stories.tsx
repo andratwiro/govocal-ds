@@ -48,10 +48,13 @@ export const WithNote: Story = {
   parameters: figma('26-487')
 };
 
-/** A KPI band from "Green Corridors for Riverside": the prototype's six-up Insights row. */
+/**
+ * A KPI band from "Green Corridors for Riverside": the prototype's six-up Insights row, in its 764 column. Five fit
+ * in a row; a long label wraps and the tiles in that row stretch to match.
+ */
 export const Band: Story = {
   render: () => (
-    <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10, width: 960}}>
+    <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10, width: 764}}>
       <Kpi label="Visitors" value="1,284" />
       <Kpi label="Phase participants" value="873" />
       <Kpi label="Ideas" value="392" />
