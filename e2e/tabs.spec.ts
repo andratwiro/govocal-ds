@@ -7,6 +7,14 @@ async function open(page: Page, id: string) {
   await page.locator('#storybook-root > *').first().waitFor();
 }
 
+/** Axe's findings in `within`, reported (never failing the test). Storybook's a11y addon runs axe in the preview as the
+ * story renders; ours waits its turn ("Axe is already running"). */
+async function report(page: Page, within: string) {
+  let found: string[] = [];
+  await expect(async () => { found = await axeViolations(page, within); }).toPass();
+  a11yReport(found);
+}
+
 test('tabs: a count and a status dot are part of the tab name', async ({page}) => {
   await open(page, 'components-navigation-tabs--with-count');
   await expect(page.getByRole('tab', {name: 'All reports (18)'})).toHaveAttribute('aria-selected', 'true');
@@ -33,7 +41,7 @@ test('grouped side tabs: headings never take focus, arrows cross groups, the pan
   await expect(page.getByRole('group', {name: 'General information'})).toBeVisible();
   await page.keyboard.press('Tab');
   await expect(list.getByRole('option', {name: 'General information'})).not.toBeFocused();
-  a11yReport(await axeViolations(page, '#storybook-root'));
+  await report(page, '#storybook-root');
 });
 
 test('modal side tabs: grouped under Project and Inputs', async ({page}) => {

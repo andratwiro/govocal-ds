@@ -8,6 +8,14 @@ async function open(page: Page, id: string) {
   await page.locator('#storybook-root > *').first().waitFor();
 }
 
+/** Axe's findings in `within`, reported (never failing the test). Storybook's a11y addon runs axe in the preview as the
+ * story renders; ours waits its turn ("Axe is already running"). */
+async function report(page: Page, within: string) {
+  let found: string[] = [];
+  await expect(async () => { found = await axeViolations(page, within); }).toPass();
+  a11yReport(found);
+}
+
 // The charts' hover and keyboard value card (Not in Figma; the prototype's dashboards have it).
 
 test('line chart: the pointer shows the nearest point, its values and picks out the line under it', async ({page}) => {
@@ -54,7 +62,7 @@ test('line chart: one tab stop; arrows, Home and End walk the points, Esc hides 
   await expect(slider).toHaveAttribute('aria-valuetext', '16 Feb: Participants 1, Visitors 0');
   // The chart's trend sentence stays an image's name, outside the slider.
   await expect(page.getByRole('img', {name: /^Line chart, 16 Feb to 23 Mar\. Participants/})).toBeVisible();
-  a11yReport(await axeViolations(page, '#storybook-root'));
+  await report(page, '#storybook-root');
 });
 
 test('line chart: the legend picks a series out on hover and on focus', async ({page}) => {

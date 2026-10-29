@@ -7,12 +7,20 @@ async function open(page: Page, id: string) {
   await page.locator('#storybook-root > *').first().waitFor();
 }
 
+/** Axe's findings in `within`, reported (never failing the test). Storybook's a11y addon runs axe in the preview as the
+ * story renders; ours waits its turn ("Axe is already running"). */
+async function report(page: Page, within: string) {
+  let found: string[] = [];
+  await expect(async () => { found = await axeViolations(page, within); }).toPass();
+  a11yReport(found);
+}
+
 test('stat tile: a trend says its direction in words, not by colour alone', async ({page}) => {
   await open(page, 'components-data-display-stat-tile--with-trend');
   const trends = page.locator('.gv-kpi__trend');
   await expect(trends).toHaveText(['Up 12%, 7-day change', 'Down 8%, 7-day change', 'No change 0%, 7-day change']);
   await expect(trends.first().locator('svg')).toHaveAttribute('aria-hidden', 'true');
-  a11yReport(await axeViolations(page, '#storybook-root'));
+  await report(page, '#storybook-root');
 });
 
 test('stat tile: the info icon opens a Help popover by press and by keyboard', async ({page}) => {
