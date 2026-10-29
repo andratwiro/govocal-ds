@@ -51,16 +51,20 @@ export const Selected: Story = {
   )
 };
 
-/** A list row under the pointer marks its pin hot (near black, raised): hover the rows. */
+/**
+ * A list row under the pointer marks its pin hot (near black, raised): hover the rows; pressing one opens its card.
+ * React Aria reports a row's hover only when the row does something (here `onRowAction`), so the list opens the idea.
+ */
 export const Hovered: Story = {
   render: function Render() {
     const rows = NEAR_CENTRE.slice(0, 6);
     const [hot, setHot] = useState<Key | null>(rows[2].id);
+    const [open, setOpen] = useState<Key | null>(null);
     return (
       <div style={{display: 'grid', gridTemplateColumns: '1fr 280px', gap: 16, width: 1000, maxWidth: '100%', height: 520}}>
         <Map aria-label="Ideas on the map" items={MAP_PINS} center={MAP_CENTRE} zoom={14} hoveredKey={hot}
-          onHoverChange={setHot} renderCard={card} style={FULL} />
-        <DataTable aria-label="Ideas" density="compact">
+          onHoverChange={setHot} selectedKey={open} onSelectionChange={setOpen} renderCard={card} style={FULL} />
+        <DataTable aria-label="Ideas" density="compact" onRowAction={key => setOpen(k => (k === key ? null : key))} openKey={open}>
           <DataTableHeader>
             <DataTableColumn isRowHeader>Idea</DataTableColumn>
           </DataTableHeader>

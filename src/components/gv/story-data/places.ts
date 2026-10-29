@@ -18,8 +18,9 @@ export type IdeaPin = MapItem & {idea: MapIdea};
 /** The town centre the map opens on. */
 export const MAP_CENTRE = {lat: 52.0907, lng: 5.1214};
 
+// Ten streets and sixteen titles make 160 different titles, one per idea (a pin is named by its title).
 const STREETS = ['Wrenfield Avenue', 'Quillmoor Road', 'Tamsel Park', 'Brindle Street', 'Hollowbrook Square',
-  'Orchard Reach', 'the ring road', 'the river walk'];
+  'Orchard Reach', 'the ring road', 'the river walk', 'Fennick Lane', 'Marrow Green'];
 const TEMPLATES = [
   'Build a protected cycle lane on {p} instead of the painted line that stops halfway.',
   'Plant a row of trees along {p} so the pavement has shade in summer.',
