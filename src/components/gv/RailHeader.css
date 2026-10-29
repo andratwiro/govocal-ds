@@ -1,0 +1,47 @@
+@import '../theme.css';
+
+.gv-rail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-8);
+  width: 100%;
+}
+
+.gv-rail-header__title {
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-rail-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-3);
+}
+
+.gv-rail-header__icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--gv-space-28);
+  height: var(--gv-space-28);
+  border-radius: var(--gv-radius-8);
+  border: none;
+  background: transparent;
+  color: var(--gv-icon-strong);
+  cursor: pointer;
+}
+
+.gv-rail-header__icon-btn:hover {
+  background: var(--gv-surface-hover);
+}
+
+.gv-rail-header__icon-btn[data-pressed] {
+  background: var(--gv-surface-hover-strong);
+}
+
+.gv-rail-header__icon-btn:focus-visible {
+  outline: 2px solid var(--gv-border-selected);
+  outline-offset: 1px;
+}
