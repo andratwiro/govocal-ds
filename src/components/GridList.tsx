@@ -4,7 +4,6 @@ import {
   GridList as AriaGridList,
   GridListItem as AriaGridListItem,
   GridListLoadMoreItem as AriaGridListLoadMoreItem,
-  Text,
   GridListSection,
   GridListHeader,
   type GridListItemProps,
@@ -12,6 +11,7 @@ import {
   type GridListLoadMoreItemProps
 } from 'react-aria-components/GridList';
 import {Checkbox} from './Checkbox';
+import {Text} from './Content';
 import {GripVertical} from 'lucide-react';
 import {ProgressCircle} from './ProgressCircle';
 import './GridList.css';

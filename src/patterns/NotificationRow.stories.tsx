@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {Card} from '../components/gv/Card';
-import {NotificationEmail, NotificationList, NotificationRow} from './NotificationRow';
+import {NotificationEmail, NotificationRowList, NotificationRow} from './NotificationRow';
 
 const meta: Meta<typeof NotificationRow> = {
   title: 'Patterns/Build tab/Notification row',
@@ -30,10 +30,10 @@ const EMAILS = [
 export const AllVariants: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--gv-space-24)'}}>
-      <NotificationList>
+      <NotificationRowList>
         <NotificationRow who="User who commented" when="User replies to comment" onOpen={() => {}}>A reply on my comment</NotificationRow>
         <NotificationRow who="User who commented" when="Comment is deleted" defaultSelected={false}>Deletion of my comment</NotificationRow>
-      </NotificationList>
+      </NotificationRowList>
       <EmailOpenRender />
     </div>
   )
@@ -90,7 +90,7 @@ function InACardRender({emails = COMMON_GROUND}: {emails?: typeof EMAILS}) {
   const n = on.size;
   return (
     <Card title="Notifications" control="expand" pills={[{label: n ? `${n} ${n === 1 ? 'email' : 'emails'} on` : 'Off'}]}>
-      <NotificationList>
+      <NotificationRowList>
         {emails.map(e => (
           <NotificationRow
             key={e.id}
@@ -102,7 +102,7 @@ function InACardRender({emails = COMMON_GROUND}: {emails?: typeof EMAILS}) {
             {e.name}
           </NotificationRow>
         ))}
-      </NotificationList>
+      </NotificationRowList>
     </Card>
   );
 }
@@ -117,12 +117,12 @@ export const InACard: Story = {name: 'In a card', render: () => <InACardRender /
 export const IdeationEmails: Story = {
   name: 'Ideation emails',
   render: () => (
-    <NotificationList>
+    <NotificationRowList>
       {EMAILS.map(e => (
         <NotificationRow key={e.id} who={e.who} when={e.when} defaultSelected={e.on} onOpen={() => {}}>
           {e.name}
         </NotificationRow>
       ))}
-    </NotificationList>
+    </NotificationRowList>
   )
 };

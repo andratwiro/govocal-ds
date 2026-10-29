@@ -41,7 +41,7 @@ export function RangeCalendar<T extends DateValue>({
                 </Button>
               )}
             </header>
-            <CalendarGrid offset={{months: i}}>{date => <CalendarCell date={date} />}</CalendarGrid>
+            <CalendarGrid offset={{months: i}}>{date => <RangeCalendarCell date={date} />}</CalendarGrid>
           </div>
         ))}
       </div>
@@ -50,8 +50,8 @@ export function RangeCalendar<T extends DateValue>({
   );
 }
 
-export {CalendarGrid};
-export function CalendarCell(props: CalendarCellProps) {
+/** A day in the range calendar: the range's two ends are filled. */
+export function RangeCalendarCell(props: CalendarCellProps) {
   return (
     <AriaCalendarCell {...props}>
       {composeRenderProps(

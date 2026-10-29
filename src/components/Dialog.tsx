@@ -2,7 +2,6 @@
 import {
   Dialog as RACDialog,
   DialogTrigger as RACDialogTrigger,
-  Heading,
   type DialogProps,
   type DialogTriggerProps
 } from 'react-aria-components/Dialog';
@@ -16,4 +15,4 @@ export function DialogTrigger(props: DialogTriggerProps) {
   return <RACDialogTrigger {...props} />;
 }
 
-export {Heading};
+export {Heading} from './Content';

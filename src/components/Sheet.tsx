@@ -1,5 +1,6 @@
 'use client';
-import {type DialogProps, Heading} from 'react-aria-components/Dialog';
+import {type DialogProps} from 'react-aria-components/Dialog';
+import {Heading} from './Content';
 import {
   Sheet as RACSheet,
   SheetBackdrop,

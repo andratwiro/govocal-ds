@@ -24,11 +24,8 @@ export interface SegmentedControlProps extends ToggleButtonGroupProps {
 }
 
 /**
- * Segmented control (Figma node 14:883; prototype `.pj-hseg`).
- * Built on the starter's own primitives (ToggleButtonGroup + ToggleButton + SelectionIndicator,
- * the same ones `src/components/SegmentedControl.tsx` uses) rather than wrapping that file
- * directly: its hardcoded className/data-variant on the RAC elements leaves no way for a
- * consumer to repaint it with gv- classes.
+ * Segmented control (Figma node 14:883; prototype `.pj-hseg`): React Aria's ToggleButtonGroup, ToggleButton and
+ * SelectionIndicator, painted with gv- classes.
  */
 export function SegmentedControl({size = 'default', ...props}: SegmentedControlProps) {
   return <RACToggleButtonGroup {...props} className="gv-segmented-control" data-size={size} />;

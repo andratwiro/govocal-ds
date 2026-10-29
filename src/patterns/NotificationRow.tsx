@@ -83,8 +83,15 @@ export function NotificationRow({children, who, when, onOpen, isSelected, defaul
   );
 }
 
-/** The emails, one row each. */
-export function NotificationList({children, 'aria-label': ariaLabel = 'Emails'}: {children: ReactNode; 'aria-label'?: string}) {
+export interface NotificationRowListProps {
+  /** One `NotificationRow` per email. */
+  children: ReactNode;
+  /** Names the group. @default 'Emails' */
+  'aria-label'?: string;
+}
+
+/** The emails, one row each. (The app shell's bell list is `NotificationList`.) */
+export function NotificationRowList({children, 'aria-label': ariaLabel = 'Emails'}: NotificationRowListProps) {
   return (
     <div className="gv-notification-list" role="group" aria-label={ariaLabel}>
       {children}
