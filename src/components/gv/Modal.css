@@ -1,0 +1,115 @@
+@import '../theme.css';
+
+/* Tali's Modal (Figma 5:513): 420 wide, radius 14, panel fill, 1px border-subtle, the dialog shadow.
+   The starter Modal places it (overlay, centring, entrance); these rules only repaint the shell it draws. */
+.react-aria-Modal:has(> .gv-modal) {
+  max-width: 94vw;
+  border-radius: var(--gv-radius-14);
+  outline-color: var(--gv-border-subtle);
+  background: var(--gv-surface-panel);
+  box-shadow: var(--gv-shadow-dialog);
+  overflow: hidden;
+}
+
+.gv-modal {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 420px;
+  max-width: 100%;
+  max-height: min(640px, 88vh);
+  outline: none;
+  font-family: var(--gv-font-family);
+  color: var(--gv-text-body);
+
+  &[data-size='wide'] {
+    width: 866px;
+  }
+}
+
+/* Head: padding 16 24 12, gap 12, Body strong title, a hairline under it. */
+.gv-modal__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gv-space-12);
+  flex: none;
+  padding: var(--gv-space-16) var(--gv-space-24) var(--gv-space-12);
+  border-block-end: 1px solid var(--gv-border-row);
+}
+
+.gv-modal__title {
+  margin: 0;
+  padding-block-start: var(--gv-space-4);
+  font: var(--gv-type-body-strong);
+  letter-spacing: var(--gv-type-body-strong-tracking);
+  color: var(--gv-text-primary);
+}
+
+/* Close: 28, padding 4, radius 7, a 20 ×. */
+.gv-modal__close {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  padding: var(--gv-space-4);
+  margin-inline-end: calc(-1 * var(--gv-space-4));
+  border: none;
+  border-radius: var(--gv-radius-7);
+  background: transparent;
+  color: var(--gv-icon-default);
+  cursor: pointer;
+  outline: none;
+
+  &[data-hovered] {
+    background: var(--gv-surface-hover-strong);
+    color: var(--gv-icon-primary);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
+  }
+}
+
+/* Body: padding 16 24 24, scrolls when tall. */
+.gv-modal__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--gv-space-16) var(--gv-space-24) var(--gv-space-24);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+}
+
+/* Footer: padding 12 24, gap 8, buttons at the end, a 1px border-row on top. */
+.gv-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gv-space-8);
+  flex: none;
+  padding: var(--gv-space-12) var(--gv-space-24);
+  border-block-start: 1px solid var(--gv-border-row);
+}
+
+/* Stories only: the Attachments drop zone (Figma: toolbar fill, radius 10, padding 22 16, gap 8). Swap for G2's DropZone. */
+.gv-modal-story__drop {
+  width: 100%;
+  box-sizing: border-box;
+  flex-direction: column;
+  gap: var(--gv-space-8);
+  min-height: 94px;
+  padding: var(--gv-space-22) var(--gv-space-16);
+  border-radius: var(--gv-radius-10);
+  background: var(--gv-surface-toolbar);
+  color: var(--gv-text-secondary);
+  font: var(--gv-type-ui);
+
+  svg {
+    color: var(--gv-icon-default);
+  }
+}
