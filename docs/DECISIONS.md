@@ -25,6 +25,13 @@ benchmark asks that a screen be composed from parts with no CSS of its own.
   from the props (each a `var(--gv-space-*)`) and the part's stylesheet reads them; alignment is a data attribute**
   → seventeen steps times six props as attribute rules would be a stylesheet of lists; a token reference in a custom
   property is still a token, and the caller's `style` merges after.
+- "No outer margin" needs a line for what outer is → **the part's root: the element that takes the caller's
+  `className` (or, for a part that takes none, its first `gv-` block); a margin other than 0 on a rule whose subject
+  carries that class fails `tests/no-outer-margin.test.mjs`. A sub-part rooted on its parent's `__element` (Side
+  panel's sections and actions) is the parent's inside, and so is a parent spacing its children** → the page owns the
+  space around a part (a Stack's gap); the inside stays the part's. Two remain, listed in the test because removing
+  them changes the look: Coachmark's 12 to its trigger (React Aria places the overlay, so it never meets a page's
+  layout) and Phone preview's picture bleeding to the screen's edges.
 - Grid on a narrow screen → **keeps its columns; tiles that should wrap are a Tile grid** → the back office is a
   desktop admin; responsive areas wait for a page that needs them.
 

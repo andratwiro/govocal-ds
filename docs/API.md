@@ -50,6 +50,9 @@ radius and borders come from the part's props and the tokens.
   `react-aria-X`, so a host app's own React Aria elements are left as the app paints them. `npm run css:scope` writes
   both halves (the TSX class, the CSS selector) and is safe to re-run after a merge; `tests/css-scope.test.mjs` runs
   its `--check`. `react-aria-X` stays on every element for tests and queries.
+- No part sets a margin on its own root (the element that takes `className`): the space around a part belongs to the
+  page that places it, through a Stack's or Grid's `gap` or its own `className`. `tests/no-outer-margin.test.mjs`
+  guards it; its short list of exceptions only shrinks.
 - A part that must not be restyled (`Coachmark`), or that renders no element of its own (triggers, an item's content),
   takes no `className`: TypeScript refuses it rather than dropping it.
 - Inside the system the same holds between parts: a stylesheet selects only its own block (`tests/own-block.test.mjs`).

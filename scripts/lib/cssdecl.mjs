@@ -50,3 +50,42 @@ export function declarations(source) {
 
 /** The custom properties a stylesheet defines, by name. */
 export const definedIn = source => new Set(declarations(source).filter(d => d.prop.startsWith('--')).map(d => d.prop));
+
+/**
+ * A declaration's `selectors` chain as the full selectors it applies to: nesting resolved (`&` replaced by the
+ * parent, or a descendant of it), a list split on its commas, at-rules dropped.
+ */
+export function resolveSelectors(chain) {
+  let out = [''];
+  for (const prelude of chain) {
+    if (prelude.startsWith('@')) continue;
+    const parts = splitList(prelude);
+    out = out.flatMap(parent => parts.map(s => s.includes('&') ? s.replaceAll('&', parent) : parent ? `${parent} ${s}` : s));
+  }
+  return out.filter(Boolean);
+}
+
+/** A selector list split on its top-level commas (none inside `:is(…)` or `[…]`). */
+function splitList(list) {
+  const out = [];
+  let depth = 0, start = 0;
+  for (let i = 0; i < list.length; i++) {
+    const c = list[i];
+    if (c === '(' || c === '[') depth++;
+    else if (c === ')' || c === ']') depth--;
+    else if (c === ',' && !depth) { out.push(list.slice(start, i).trim()); start = i + 1; }
+  }
+  return [...out, list.slice(start).trim()];
+}
+
+/** The last compound of a selector, the element it styles: `.a > .b[data-x]:hover` → `.b[data-x]:hover`. */
+export function subject(selector) {
+  let depth = 0, cut = 0;
+  for (let i = 0; i < selector.length; i++) {
+    const c = selector[i];
+    if (c === '(' || c === '[') depth++;
+    else if (c === ')' || c === ']') depth--;
+    else if (!depth && /[\s>+~]/.test(c)) cut = i + 1;
+  }
+  return selector.slice(cut).trim();
+}
