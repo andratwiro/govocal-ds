@@ -1,0 +1,64 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import {DesignTokenDocBlock} from 'storybook-design-token';
+import usage from './usage.json';
+import {MotionDurationPreview} from './MotionPreview';
+
+<Meta title="Foundations/Motion" />
+
+{/* Each block at full height, like the other Foundations pages: the page scrolls, never a block inside it. */}
+export const uncapped = 100000;
+
+# Motion
+
+**Not in Figma.** Figma has no motion variables yet, so the motion tokens are written by hand in
+`tokens/motion.tokens.json` (DTCG `duration` and `cubicBezier`). `npm run tokens:build` merges them with the Figma
+tokens into `src/tokens.css`; `npm run tokens:pull` rewrites only the Figma files, so it never wipes them. When Figma
+gets motion variables, these move there.
+
+The values come from the prototype, whose hand-picked timings cluster around 0.12 s (hover), 0.15 to 0.2 s (small
+moves, menus, dialogs) and 0.3 s (panels, bars). Few tokens beat precise ones: pick the token whose use fits, never a
+number. A component names a duration and an easing together:
+
+```css
+transition: background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+animation: modal-zoom var(--gv-motion-duration-medium) var(--gv-motion-easing-enter);
+```
+
+## Duration
+
+Hover a row to play it. Right-click a row to see which components use it.
+
+<DesignTokenDocBlock categoryName="Motion duration @presenter Animation" viewType="table" usageMap={usage}
+  presenters={{Animation: MotionDurationPreview}} maxHeight={uncapped} pageSize={uncapped} showSearch={false} />
+
+## Easing
+
+<DesignTokenDocBlock categoryName="Motion easing @presenter Easing" viewType="table" usageMap={usage}
+  maxHeight={uncapped} pageSize={uncapped} showSearch={false} />
+
+## Choosing a pair
+
+- **Hover, press, focus** (a colour, background, border or fade), a chevron turning, a tooltip or menu appearing:
+  `fast` + `standard`.
+- **A popover, tooltip or coachmark** that one transition plays in and out: its duration + `standard`.
+- **An indicator or switch knob sliding**: `medium` + `move`. A tick drawing: `medium` + `standard`.
+- **A dialog** coming in: `medium` + `enter`; leaving: `fast` + `exit`.
+- **A panel opening, a tab panel resizing, a bar filling**: `slow` + `move`.
+- **A toast** coming in: `slow` + `enter`; going away: `medium` + `exit`.
+- **A skeleton pulsing, an indeterminate bar sweeping**: `loop` + `move`.
+
+An exit takes the step below its entrance: by then the person has moved on.
+
+## Reduced motion
+
+When the system asks for less motion (`prefers-reduced-motion: reduce`), `fast`, `medium` and `slow` resolve to
+`1ms` (one rule in `src/tokens.css`, from each token's `com.govocal.reducedMotion`). Every transition and animation
+built on them ends at once: nothing slides, zooms or fades, and no component writes a reduced-motion rule of its own
+for them.
+
+`1ms`, not `0` or `none`: React Aria keeps an overlay mounted while its exit animation runs and removes it when that
+animation finishes. A 1 ms animation still runs and finishes, so a Modal, Popover or Toast still closes.
+
+`loop` keeps its length, because a loop cut to 1 ms would flicker. A component that loops stops its animation under
+reduced motion (`animation: none`) and shows a still state instead: the skeleton rests, the indeterminate progress
+bar becomes a full, faint bar.

@@ -1,0 +1,55 @@
+/* The Motion page's duration preview: hover a row to play its token. No padding or margin: the docs table resets
+   both (and box-sizing), so a 32-tall row centres a 12-tall track, like the addon's own previews. */
+.gv-motion-preview {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: var(--gv-space-32);
+}
+
+.gv-motion-preview__track {
+  flex: 1;
+  height: var(--gv-space-12);
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-hover-strong);
+  overflow: hidden;
+}
+
+.gv-motion-preview__bar {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--gv-surface-brand-mark);
+  transform-origin: left center;
+  scale: 0 1;
+  transition: scale var(--gv-motion-preview-duration) var(--gv-motion-easing-standard);
+}
+
+tr:hover .gv-motion-preview__bar,
+.gv-motion-preview:hover .gv-motion-preview__bar {
+  scale: 1 1;
+}
+
+.gv-motion-preview[data-loop] .gv-motion-preview__bar {
+  scale: 1 1;
+  opacity: 0.35;
+  transition: none;
+}
+
+tr:hover .gv-motion-preview[data-loop] .gv-motion-preview__bar,
+.gv-motion-preview[data-loop]:hover .gv-motion-preview__bar {
+  animation: gv-motion-preview-pulse var(--gv-motion-preview-duration) var(--gv-motion-easing-move) infinite;
+}
+
+@keyframes gv-motion-preview-pulse {
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  tr:hover .gv-motion-preview[data-loop] .gv-motion-preview__bar,
+  .gv-motion-preview[data-loop]:hover .gv-motion-preview__bar {
+    animation: none;
+  }
+}
