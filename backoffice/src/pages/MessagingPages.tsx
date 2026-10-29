@@ -7,7 +7,7 @@ import {Button} from '../../../src/components/Button';
 import {TextField, TextArea} from '../../../src/components/TextField';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {Label} from '../../../src/components/Form';
-import {MyToastRegion, queue} from '../../../src/components/Toast';
+import {ToastRegion, queue} from '../../../src/components/Toast';
 import {Card} from '../../../src/components/gv/Card';
 import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
 import {Divider} from '../../../src/components/gv/Divider';
@@ -78,7 +78,7 @@ export function EmailComposer() {
           </div>
         </div>
       </Card>
-      <MyToastRegion />
+      <ToastRegion />
     </Page>
   );
 }
@@ -169,7 +169,7 @@ export function SmsComposer() {
           </Gap>
         </PhonePreview>
       </div>
-      <MyToastRegion />
+      <ToastRegion />
     </Page>
   );
 }

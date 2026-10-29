@@ -19,7 +19,7 @@ import {IconButton} from '../../../src/components/gv/IconButton';
 import {StatTile} from '../../../src/components/gv/StatTile';
 import {Banner} from '../../../src/components/gv/Banner';
 import {Divider} from '../../../src/components/gv/Divider';
-import {MyToastRegion, queue} from '../../../src/components/Toast';
+import {ToastRegion, queue} from '../../../src/components/Toast';
 import {Modal} from '../../../src/components/gv/Modal';
 import {AUTOMATED, GROUP_SIZES, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
 import {Gap, GapLegend} from '../Gap';
@@ -355,7 +355,7 @@ export function Messaging() {
           {CHANNELS.map(c => <TabPanel key={c.id} id={c.id}><SectionHeading>{c.label}</SectionHeading>{c.body}</TabPanel>)}
         </TabPanels>
       </Tabs>
-      <MyToastRegion />
+      <ToastRegion />
     </Page>
   );
 }

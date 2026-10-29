@@ -12,7 +12,7 @@ import {Checkbox} from '../../../src/components/gv/Checkbox';
 import {Modal} from '../../../src/components/gv/Modal';
 import {TextField} from '../../../src/components/TextField';
 import {Select, SelectItem} from '../../../src/components/Select';
-import {MyToastRegion, queue} from '../../../src/components/Toast';
+import {ToastRegion, queue} from '../../../src/components/Toast';
 import {SelectionBar, type SelectionAction} from '../../../src/patterns/SelectionBar';
 import {GROUPS, PEOPLE, SEGMENTS, SMART_RULES, type Person} from '../data-users';
 import {Gap, GapLegend} from '../Gap';
@@ -426,7 +426,7 @@ export function Users() {
       {(ask?.kind === 'block' || ask?.kind === 'delete') && (
         <ConfirmUserModal person={ask.person} kind={ask.kind} onClose={() => setAsk(null)} onConfirm={confirm} />
       )}
-      <MyToastRegion />
+      <ToastRegion />
     </Page>
   );
 }

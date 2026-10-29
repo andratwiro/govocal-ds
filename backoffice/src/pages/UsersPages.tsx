@@ -8,7 +8,7 @@ import {TextArea} from '../../../src/components/TextField';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {Button} from '../../../src/components/Button';
 import {Meter} from '../../../src/components/Meter';
-import {MyToastRegion, queue} from '../../../src/components/Toast';
+import {ToastRegion, queue} from '../../../src/components/Toast';
 import {Card} from '../../../src/components/gv/Card';
 import {StatTile} from '../../../src/components/gv/StatTile';
 import {Avatar} from '../../../src/components/gv/Avatar';
@@ -109,7 +109,7 @@ export function UserInvitations() {
         <TabPanel id="all"><SectionHeading>All invitations</SectionHeading><div className="bo-users-panel"><InvitationTable invitations={invitations} /></div></TabPanel>
         </TabPanels>
       </Tabs>
-      <MyToastRegion />
+      <ToastRegion />
     </Page>
   );
 }
@@ -207,7 +207,7 @@ export function UserProfile() {
           <StatTile label="Projects" value={done.projects} />
         </section>
       </div>
-      <MyToastRegion />
+      <ToastRegion />
     </Page>
   );
 }

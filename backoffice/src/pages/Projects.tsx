@@ -13,7 +13,7 @@ import {DateRangePicker} from '../../../src/components/DateRangePicker';
 import {DatePicker} from '../../../src/components/DatePicker';
 import {TextField, TextArea} from '../../../src/components/TextField';
 import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
-import {MyToastRegion, queue} from '../../../src/components/Toast';
+import {ToastRegion, queue} from '../../../src/components/Toast';
 import {Button} from '../../../src/components/Button';
 import {Link} from '../../../src/components/Link';
 import {Avatar} from '../../../src/components/gv/Avatar';
@@ -514,7 +514,7 @@ export function Projects() {
         setProjects(list => list.filter(p => p.id !== dialog.project.id));
         close();
       }} />}
-      <MyToastRegion />
+      <ToastRegion />
     </Page>
   );
 }

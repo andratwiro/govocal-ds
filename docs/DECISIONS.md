@@ -37,6 +37,18 @@ dashboards, Build tab).
 - Phone preview's Before · Open · Ended switch (two reviewers unsure) → **treated as demo tooling, not built** → other methods show a caption in that slot; the designer can say otherwise.
 - Build tab rows (notifications, participant actions, access, views) had no place in Patterns → **new place "Build tab"**, beside "Manage tab" → patterns grouped by place.
 
+**Built in the feedback package**
+- Phase status strip vs the full Banner → **`Banner compact`**, one row, no card padding → one message box, two
+  densities.
+- "Ended" phase status has no icon in the prototype → **the clock, neutral tone**, as Not started.
+- Alert dialog as a Modal variant vs its own component → **its own component** (no head row, no ×, an icon badge) →
+  Modal would need five props just to switch parts off.
+- Modal's side tabs grouped under overline labels ("Project", "Inputs") → **a flat list for now** → Tabs gains group
+  headings in the dashboards package.
+- Danger hover: no darker red token → **the fill brightens slightly**, as primary does.
+- Candidates for new Figma tokens: danger action (Button uses red-500), danger surface (Alert dialog's icon badge),
+  warning surface (Banner warning), neutral surface (Banner neutral uses the hover grey).
+
 **Prototype bugs found on the way** (not copied into the system):
 - Space and Folder search: an empty popover with no "No results" text, arrow keys don't move, no search icon.
 - Ideation Manage: with every column on, columns run into the "+" column; the count heading ignores the search.

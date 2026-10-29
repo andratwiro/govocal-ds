@@ -24,7 +24,7 @@ import {Banner} from '../../../src/components/gv/Banner';
 import {Checkbox} from '../../../src/components/gv/Checkbox';
 import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
 import {Modal} from '../../../src/components/gv/Modal';
-import {MyToastRegion, queue} from '../../../src/components/Toast';
+import {ToastRegion, queue} from '../../../src/components/Toast';
 import {CONTENTS, DECK, REPORTS, SLIDES, type Report, type Slide} from '../data-reporting';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
@@ -379,7 +379,7 @@ export function ReportEditor() {
           <Builder open={open} setOpen={setOpen} hideTitle />
         </div>
       ) : <p className="bo-note">This report does not exist.</p>}
-      <MyToastRegion />
+      <ToastRegion />
     </Page>
   );
 }
@@ -396,7 +396,7 @@ export function Reporting() {
         <GapLegend names={['Slide stage']} />
         <Builder open={open} setOpen={setOpen} />
       </div>
-      <MyToastRegion />
+      <ToastRegion />
     </Page>
   );
 }

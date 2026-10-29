@@ -1,9 +1,9 @@
 'use client';
 import {
-  UNSTABLE_ToastRegion as ToastRegion,
-  UNSTABLE_Toast as Toast,
+  UNSTABLE_ToastRegion as RACToastRegion,
+  UNSTABLE_Toast as RACToast,
   UNSTABLE_ToastQueue as ToastQueue,
-  UNSTABLE_ToastContent as ToastContent,
+  UNSTABLE_ToastContent as RACToastContent,
   type ToastProps,
   Text
 } from 'react-aria-components/Toast';
@@ -18,7 +18,7 @@ import {type CSSProperties, type ReactNode} from 'react';
  * What a toast shows. The prototype's `pjShowToast({title, body, action: 'Undo', onAction})` maps one to one:
  * `queue.add({title, body, action: 'Undo', onAction})`.
  */
-export interface MyToastContent {
+export interface ToastMessage {
   title: string;
   description?: string;
   /** The prototype's name for `description`; used when `description` is not given. */
@@ -33,7 +33,7 @@ export interface MyToastContent {
 }
 
 // This is a global toast queue, to be imported and called where ever you want to queue a toast via queue.add().
-export const queue = new ToastQueue<MyToastContent>({
+export const queue = new ToastQueue<ToastMessage>({
   // Wrap state updates in a CSS view transition.
   wrapUpdate(fn) {
     if ('startViewTransition' in document) {
@@ -49,21 +49,21 @@ export const queue = new ToastQueue<MyToastContent>({
   }
 });
 
-export function MyToastRegion() {
+export function ToastRegion() {
   return (
     // The ToastRegion should be rendered at the root of your app.
-    <ToastRegion queue={queue}>
+    <RACToastRegion queue={queue}>
       {({toast}) => {
         const {title, description, body, icon, action, onAction} = toast.content;
         const words = description ?? body;
         return (
-          <MyToast toast={toast} style={{viewTransitionName: toast.key} as CSSProperties}>
+          <Toast toast={toast} style={{viewTransitionName: toast.key} as CSSProperties}>
             {icon !== null && (
               <span className="toast-icon" aria-hidden="true">
                 {icon ?? <Check strokeWidth={2.6} />}
               </span>
             )}
-            <ToastContent>
+            <RACToastContent>
               <Text slot="title">{title}</Text>
               {words && <Text slot="description">{words}</Text>}
               {action && (
@@ -76,17 +76,17 @@ export function MyToastRegion() {
                   {action}
                 </RACButton>
               )}
-            </ToastContent>
+            </RACToastContent>
             <Button slot="close" aria-label="Close" variant="quiet">
               <X size={16} />
             </Button>
-          </MyToast>
+          </Toast>
         );
       }}
-    </ToastRegion>
+    </RACToastRegion>
   );
 }
 
-export function MyToast(props: ToastProps<MyToastContent>) {
-  return <Toast {...props} />;
+export function Toast(props: ToastProps<ToastMessage>) {
+  return <RACToast {...props} />;
 }

@@ -11,7 +11,7 @@ import {Switch} from '../../../src/components/Switch';
 import {ListBox, ListBoxItem} from '../../../src/components/ListBox';
 import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
 import {TextArea} from '../../../src/components/TextField';
-import {MyToastRegion, queue} from '../../../src/components/Toast';
+import {ToastRegion, queue} from '../../../src/components/Toast';
 import {Button} from '../../../src/components/Button';
 import {Link} from '../../../src/components/Link';
 import {Badge} from '../../../src/components/gv/Badge';
@@ -284,7 +284,7 @@ export function Inputs() {
         </>}>
         <p>{selected.size === 1 ? 'The selected input' : `The ${selected.size} selected inputs`} and their comments will be deleted. This cannot be undone.</p>
       </Modal>
-      <MyToastRegion />
+      <ToastRegion />
     </Page>
   );
 }

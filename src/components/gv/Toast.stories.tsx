@@ -1,5 +1,5 @@
 import {useEffect} from 'react';
-import {MyToastRegion, queue} from '../Toast';
+import {ToastRegion, queue} from '../Toast';
 import {Button} from '../Button';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
@@ -68,7 +68,7 @@ export const AllVariants: Story = {
     }, []);
     return (
       <>
-        <MyToastRegion />
+        <ToastRegion />
         <div style={{display: 'flex', gap: 12}}>
           <Button
             onPress={() =>
@@ -111,7 +111,7 @@ export const WithUndo: Story = {
       });
       return () => queue.close(key);
     }, []);
-    return <MyToastRegion />;
+    return <ToastRegion />;
   }
 };
 
@@ -123,7 +123,7 @@ export const Simple: Story = {
       const key = queue.add({title: 'Idea restored', icon: null});
       return () => queue.close(key);
     }, []);
-    return <MyToastRegion />;
+    return <ToastRegion />;
   }
 };
 
@@ -142,14 +142,14 @@ export const Stacked: Story = {
       ];
       return () => keys.forEach(key => queue.close(key));
     }, []);
-    return <MyToastRegion />;
+    return <ToastRegion />;
   }
 };
 
 export const Example: Story = {
   render: args => (
     <>
-      <MyToastRegion />
+      <ToastRegion />
       <Button
         onPress={() =>
           queue.add(
@@ -164,55 +164,13 @@ export const Example: Story = {
   parameters: {
     docs: {
       source: {
-        transform: () => {
-          return `
-const queue = new ToastQueue<MyToastContent>();
+        code: `import {ToastRegion, queue} from 'src/components/Toast';
 
-function MyToast(props: ToastProps<MyToastContent>) {
-  return <Toast {...props} />;
-}
+// Once per page, at its root:
+<ToastRegion />
 
-function MyToastRegion() {
-  return (
-    <ToastRegion queue={queue}>
-      {({toast}) => (
-        <MyToast toast={toast}>
-          {toast.content.icon !== null && (
-            <span className="toast-icon" aria-hidden="true">{toast.content.icon ?? <Check strokeWidth={2.6} />}</span>
-          )}
-          <ToastContent>
-            <Text slot="title">{toast.content.title}</Text>
-            {toast.content.description && (
-              <Text slot="description">{toast.content.description}</Text>
-            )}
-            {toast.content.action && (
-              <Button className="toast-action" onPress={() => {
-                queue.close(toast.key);
-                toast.content.onAction?.();
-              }}>
-                {toast.content.action}
-              </Button>
-            )}
-          </ToastContent>
-          <Button slot="close" aria-label="Close" variant="quiet">
-            <X size={16} />
-          </Button>
-        </MyToast>
-      )}
-    </ToastRegion>
-  );
-}
-
-<>
-  <MyToastRegion />
-  <Button onPress={() => queue.add(
-    {title: args.title, description: args.description, action: 'Undo', onAction: () => restore()},
-    args.timeout ? {timeout: args.timeout} : undefined
-  )}>
-    {args.buttonLabel}
-  </Button>
-</>`;
-        }
+// Anywhere after an action:
+queue.add({title: '"Green Corridors for Riverside" deleted', action: 'Undo', onAction: restore});`
       }
     }
   }

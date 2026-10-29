@@ -8,7 +8,7 @@ import {Meter} from '../../../src/components/Meter';
 import {Button} from '../../../src/components/Button';
 import {Link} from '../../../src/components/Link';
 import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
-import {MyToastRegion, queue} from '../../../src/components/Toast';
+import {ToastRegion, queue} from '../../../src/components/Toast';
 import {Table, TableHeader, Column, TableBody, Row, Cell} from '../../../src/components/Table';
 import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
 import {DashboardCard, DashboardBars, DashboardDemographic, type DashboardCardType} from '../../../src/components/gv/DashboardCard';
@@ -420,7 +420,7 @@ export function Dashboard() {
         <TabPanel id="management-feed"><SectionHeading>Management feed</SectionHeading><ManagementFeed /></TabPanel>
         </TabPanels>
       </Tabs>
-      <MyToastRegion />
+      <ToastRegion />
     </Page>
   );
 }

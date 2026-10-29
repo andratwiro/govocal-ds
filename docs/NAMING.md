@@ -51,11 +51,11 @@ Components              src/components/gv/
                         · Rich text toolbar button · Title field
   Layout & containers   Card · Divider
   Navigation            Breadcrumbs
-  Overlays              Coachmark · Modal
-  Status & feedback     Badge · Banner · New dot · Review status · Skeleton · Status badge
+  Overlays              Alert dialog · Coachmark · Help popover · Modal · Tooltip
+  Status & feedback     Badge · Banner · New dot · Review status · Skeleton · Status badge · Toast
 Patterns                src/patterns/
-  App shell             Help popover · Notification list · Side nav
-  Lists                 Filter chips · Filter menu · Filter options · Selection bar
+  App shell             Notification list · Side nav
+  Manage tab            Filter chips · Filter menu · Filter options · Selection bar
   Pages & menu          Section toggle
   Participation methods Common ground row · Proposals row · Vote progress · Volunteering row · Voting row
   Project page          Action row · Panel section · Phone preview · Project header · Setup step · Stat card
