@@ -47,3 +47,17 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-dashboard-stack { display: grid; gap: var(--gv-space-16); }
 .bo-dashboard-body { display: grid; gap: var(--gv-space-16); padding-block-start: var(--gv-space-4); }
 .bo-dashboard-rows { display: grid; gap: var(--gv-space-8); }
+
+/* ── Input manager ── */
+.bo-inputs-toolbar { align-items: center; }
+.bo-inputs-switch-label { display: inline-flex; align-items: center; gap: var(--gv-space-8); }
+.bo-inputs-body { display: grid; gap: var(--gv-space-16); }
+.bo-inputs-body .react-aria-TabPanel { overflow-x: auto; }
+.bo-inputs-list { display: grid; gap: var(--gv-space-12); min-width: 0; }
+.bo-inputs-list > .bo-note { margin: 0; }
+.bo-inputs-table { overflow-x: auto; }
+.bo-inputs-grid { min-width: 640px; }
+.bo-inputs-title { display: grid; justify-items: start; gap: var(--gv-space-4); }
+.bo-inputs-title-line { display: inline-flex; align-items: center; gap: var(--gv-space-6); }
+.bo-inputs-num { display: block; text-align: end; }
+.bo-inputs-published { display: inline-flex; align-items: center; gap: var(--gv-space-6); white-space: nowrap; }
