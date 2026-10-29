@@ -20,7 +20,7 @@
   color: var(--gv-text-primary);
 }
 .gv-legend-row[data-dimmed] {
-  opacity: 0.4;
+  opacity: var(--gv-opacity-dimmed);
 }
 
 .gv-legend-row__swatch {

@@ -32,7 +32,7 @@ tr:hover .gv-motion-preview__bar,
 
 .gv-motion-preview[data-loop] .gv-motion-preview__bar {
   scale: 1 1;
-  opacity: 0.35;
+  opacity: 0.35; /* raw: a docs page's preview, not UI */
   transition: none;
 }
 

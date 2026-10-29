@@ -147,6 +147,6 @@
 .gv-coachmark__x:focus-visible,
 .gv-coachmark__skip:focus-visible,
 .gv-coachmark__got:focus-visible {
-  outline: 2px solid var(--gv-text-inverse);
-  outline-offset: 2px;
+  outline: var(--gv-border-width-2) solid var(--gv-border-inverse);
+  outline-offset: var(--gv-focus-ring-offset);
 }

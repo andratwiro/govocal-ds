@@ -41,7 +41,7 @@
     opacity: 1;
   }
   50% {
-    opacity: 0.55;
+    opacity: 0.55; /* raw: the low point of the skeleton's pulse */
   }
 }
 

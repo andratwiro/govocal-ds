@@ -44,8 +44,8 @@
   -webkit-tap-highlight-color: transparent;
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-side-nav-icon-current);
-    outline-offset: -2px;
+    outline: var(--gv-border-width-2) solid var(--gv-side-nav-border-focused);
+    outline-offset: var(--gv-focus-ring-offset-inset);
   }
 }
 

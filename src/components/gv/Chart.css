@@ -50,7 +50,7 @@
   color: var(--gv-text-primary);
 }
 .gv-chart-legend__item[data-dimmed] {
-  opacity: 0.4;
+  opacity: var(--gv-opacity-dimmed);
 }
 .gv-chart-legend__swatch {
   flex: none;
@@ -128,7 +128,7 @@
   stroke-width: 3.35;
 }
 .gv-line-chart__line[data-dimmed] {
-  opacity: 0.25;
+  opacity: 0.25; /* raw: a thin line steps back further than a bar or a legend item to read as behind */
 }
 .gv-line-chart__x {
   grid-column: 2;
@@ -234,7 +234,7 @@
     opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 }
 .gv-chart-dot[data-dimmed] {
-  opacity: 0.25;
+  opacity: 0.25; /* raw: the dot of a line that steps back, as the line does */
 }
 
 /* The value card (prototype: the Audience chart's card): the date, then a swatch, label and value per series.

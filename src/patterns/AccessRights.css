@@ -35,7 +35,7 @@
   transition: opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 
   &[data-read-only] {
-    opacity: 0.62;
+    opacity: 0.62; /* raw: read-only rules, readable but quieter than ones that can be changed (not disabled) */
   }
 
   > .gv-section-label {

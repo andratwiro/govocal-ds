@@ -182,6 +182,11 @@
       "$type": "color",
       "$value": "{color.green.400}",
       "$description": "Side nav only (component tier): an icon in the accent green on the dark nav (the Support row)."
+    },
+    "border-focused": {
+      "$type": "color",
+      "$value": "{color.teal.400}",
+      "$description": "Side nav only (component tier): the keyboard focus ring on the dark nav, where border-focused would vanish. Drawn as var(--gv-border-width-2) solid, inset."
     }
   },
   "focus": {
@@ -221,7 +226,8 @@
   },
   "opacity": {
     "disabled": {"$type": "number", "$value": 0.45, "$description": "Anything that can't be used, drawn at 45% (docs/DECISIONS.md)."},
-    "dragging": {"$type": "number", "$value": 0.6, "$description": "A row or item while it is dragged."}
+    "dragging": {"$type": "number", "$value": 0.6, "$description": "A row or item while it is dragged."},
+    "dimmed": {"$type": "number", "$value": 0.4, "$description": "What steps back while another series is picked out: a legend item, a bar, a legend row."}
   },
   "layer": {
     "sticky": {"$type": "number", "$value": 10, "$description": "z-index of what sticks while its content scrolls: a table's header."},

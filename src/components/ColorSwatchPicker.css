@@ -30,7 +30,7 @@
   }
 
   &[data-disabled] {
-    opacity: 0.2;
+    opacity: 0.2; /* raw: colour picker chrome */
   }
 }
 

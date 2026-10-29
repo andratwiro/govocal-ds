@@ -164,6 +164,7 @@
   --gv-side-nav-icon: var(--gv-color-slate-300); /* Side nav only: an item's icon. */
   --gv-side-nav-icon-current: var(--gv-color-teal-400); /* Side nav only: the current item's icon. */
   --gv-side-nav-icon-accent: var(--gv-color-green-400); /* Side nav only (component tier): an icon in the accent green on the dark nav (the Support row). */
+  --gv-side-nav-border-focused: var(--gv-color-teal-400); /* Side nav only (component tier): the keyboard focus ring on the dark nav, where border-focused would vanish. Drawn as var(--gv-border-width-2) solid, inset. */
   /** @tokens-end */
 
   /** @tokens chart @presenter Color */
@@ -250,6 +251,7 @@
   /** @tokens Opacity @presenter Opacity */
   --gv-opacity-disabled: 0.45; /* Anything that can't be used, drawn at 45% (docs/DECISIONS.md). */
   --gv-opacity-dragging: 0.6; /* A row or item while it is dragged. */
+  --gv-opacity-dimmed: 0.4; /* What steps back while another series is picked out: a legend item, a bar, a legend row. */
   /** @tokens-end */
 
   --gv-layer-sticky: 10; /* z-index of what sticks while its content scrolls: a table's header. */

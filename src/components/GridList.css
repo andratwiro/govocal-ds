@@ -95,7 +95,7 @@
   }
 
   &[data-drop-target] {
-    outline: 2px solid var(--gv-border-selected);
+    outline: var(--gv-border-width-2) solid var(--gv-border-selected);
     outline-offset: -1px;
     background: var(--gv-surface-info);
   }
@@ -104,7 +104,7 @@
     display: none;
     &[data-drop-target] {
       display: block;
-      outline: 2px solid var(--gv-border-selected);
+      outline: var(--gv-border-width-2) solid var(--gv-border-selected);
       outline-offset: -1px;
       background: var(--gv-surface-info);
       border-radius: var(--gv-radius-8);
@@ -251,7 +251,7 @@
       inset: 0;
       border-radius: inherit;
       z-index: 5;
-      outline: 2px solid var(--gv-border-selected);
+      outline: var(--gv-border-width-2) solid var(--gv-border-selected);
       outline-offset: -2px;
       background: var(--gv-surface-info);
     }

@@ -55,7 +55,7 @@
 
       @media (prefers-reduced-motion: reduce) {
         width: 100%;
-        opacity: 0.4;
+        opacity: 0.4; /* raw: a still, faint full bar standing for the sweep under reduced motion */
         animation: none;
       }
     }

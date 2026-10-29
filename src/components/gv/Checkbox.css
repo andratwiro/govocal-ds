@@ -56,7 +56,7 @@
 }
 
 .gv-checkbox--quiet .react-aria-CheckboxButton {
-  opacity: 0.55;
+  opacity: 0.55; /* raw: the prototype's quiet select-all, dimmed until hovered or checked */
   transition: opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 
   &[data-hovered],

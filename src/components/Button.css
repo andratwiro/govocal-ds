@@ -113,7 +113,7 @@
   }
 
   > .react-aria-Button-chevron {
-    opacity: 0.75;
+    opacity: 0.75; /* raw: the chevron a step quieter than the label it follows */
   }
 
   /* Icon-only: square with the same radius 8 as Figma's Icon button and the prototype's

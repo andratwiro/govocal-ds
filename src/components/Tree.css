@@ -50,7 +50,7 @@
   }
 
   &[data-drop-target] {
-    outline: 2px solid var(--gv-border-selected);
+    outline: var(--gv-border-width-2) solid var(--gv-border-selected);
     outline-offset: -1px;
     background: var(--gv-surface-info);
   }
@@ -126,7 +126,7 @@
   }
 
   &[data-drop-target] {
-    outline: 2px solid var(--gv-border-selected);
+    outline: var(--gv-border-width-2) solid var(--gv-border-selected);
     background: var(--gv-surface-info);
   }
 

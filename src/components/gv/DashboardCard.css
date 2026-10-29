@@ -253,7 +253,7 @@
   transition: opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 }
 .gv-dashboard-demographic__bar > span[data-dimmed] {
-  opacity: 0.4;
+  opacity: var(--gv-opacity-dimmed);
 }
 .gv-dashboard-demographic__legend {
   display: flex;
