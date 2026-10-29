@@ -86,7 +86,7 @@ export const commentThreadLabels: CommentThreadLabels = {
 
 export interface ThreadComment {
   id: string;
-  /** Who wrote it, as people see it ("Priya S.", "Anonymous"). */
+  /** Who wrote it, as people see it ("Resident", "Anonymous"). */
   author: string;
   /** The avatar's letters. @default the author's first letter */
   initials?: string;

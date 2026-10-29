@@ -15,13 +15,13 @@ const TEAM = {author: 'Alex M.', initials: 'A'};
 export const COMMENTS: ThreadComment[] = [
   {id: 'c1', author: 'Nadia K.', time: '6 days ago', text: 'Could this also work for the east side of the park?',
     replies: [{id: 'c1r1', ...TEAM, time: '5 days ago', text: 'Good question: we are checking the east side with the parks team.'}]},
-  {id: 'c2', author: 'Priya S.', time: '4 days ago', text: 'I agree, the evening light there is really poor.'},
+  {id: 'c2', author: 'Resident', time: '4 days ago', text: 'I agree, the evening light there is really poor.'},
   {id: 'c3', author: 'Tom R.', time: '2 days ago', text: 'Not sure about this. The path is already crowded at weekends.'},
   {id: 'c4', author: 'Aina B.', time: 'Today', text: 'This is the most useful one on the list.', isNew: true}
 ];
 export const NEW_COMMENTS: ThreadComment[] = [
   {id: 'n1', author: 'Tom R.', time: '2 days ago', text: 'Not sure about this. The path is already crowded at weekends.'},
-  {id: 'n2', author: 'Priya S.', time: 'Today', text: 'Please keep the old trees when you build this.', isNew: true},
+  {id: 'n2', author: 'Resident', time: 'Today', text: 'Please keep the old trees when you build this.', isNew: true},
   {id: 'n3', author: 'Aina B.', time: 'Today', text: 'This is the most useful one on the list.', isNew: true}
 ];
 export const FLAGGED: ThreadComment[] = [

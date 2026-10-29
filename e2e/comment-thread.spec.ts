@@ -39,10 +39,10 @@ test('Post is off until there are words; ⌘/Ctrl + Enter posts', async ({page})
 test('Delete applies at once; Undo puts the comment back in its place', async ({page}) => {
   await page.goto(story('default'));
   const list = page.getByRole('list', {name: 'Comments'});
-  await page.getByRole('button', {name: "Delete Priya S.'s comment"}).click();
-  await expect(list).not.toContainText('Priya S.');
+  await page.getByRole('button', {name: "Delete Resident's comment"}).click();
+  await expect(list).not.toContainText('Resident');
   await page.getByRole('button', {name: 'Undo'}).click();
-  await expect(list.getByRole('article').nth(2)).toContainText('Priya S.');
+  await expect(list.getByRole('article').nth(2)).toContainText('Resident');
 });
 
 test('Dismiss warning removes the warning at once, with Undo', async ({page}) => {
