@@ -80,7 +80,7 @@ Reported, never fixed on their own: the back office follows the design as drawn 
 designer's call.
 
 - Chart axis labels, and the date in a chart's value card? — as drawn — see the Accessibility panel on `components-charts-chart--interactive`.
-- Section label's text? — as drawn — see `components-layout-containers-section-label--default`.
+- Section label's text? — as drawn — see `components-text-section-label--default`.
 - Participant action row's default grey and its "off" label? — as drawn — see `patterns-build-tab-participant-action-row--all-variants`.
 
 ## The token review: the designer's calls

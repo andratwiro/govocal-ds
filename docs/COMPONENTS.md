@@ -56,7 +56,6 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Divider** `Divider`: Divider (Figma node 5:303): a 1px hairline, horizontal or vertical. Stories: All Variants, Horizontal, Vertical.
 - **Page header** `PageHeader` (not in Figma): Page header: the top of a page, the breadcrumbs (on a sub-page), then the title with the page's actions at the end of its row, then a line about the page. Stories: Default, With Breadcrumbs, Title Only.
 - **Panel** `Panel` (not in Figma): The white frame a table or list sits in: a head with the title, an optional count Badge and description and trailing actions, over a hairline; an optional to… Stories: All Variants, Default, With Count And Description, With Actions, With Footer, With A Toolbar, In A Composer, Right To Left.
-- **Section label** `SectionLabel`: A quiet label over a group of rows: the rail's Timeline / Spotlight / Events, Insights' "Who is voting", the Create report checklist's "Project context" (Fig… Stories: All Variants, Default, As A Heading, With Icon.
 - **Tile grid** `TileGrid` (not in Figma): Tile grid: tiles in as many equal columns as fit, each at least `minTileWidth` wide, wrapping onto new rows, one column on a narrow screen. Stories: Stat Tiles, Gallery, Panels.
 
 ## Components / Navigation
@@ -91,6 +90,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Selection bar** `SelectionBar` (not in Figma): The bulk-action bar of a list with checkboxes: while rows are selected it reads "2 selected", then one secondary button per item and a × that clears the sele… Stories: One Selected, Many, With A Contextual Action, Empty, Users List, Right To Left.
 
 ## Components / Text
+- **Section label** `SectionLabel`: A quiet label over a group of rows: the rail's Timeline / Spotlight / Events, Insights' "Who is voting", the Create report checklist's "Project context" (Fig… Stories: All Variants, Default, As A Heading, With Icon.
 - **Text** `Text` (not in Figma): Text: words in one of the system's type styles and colours, `<Text kind="small" color="meta">Posted 2 days ago</Text>` or `<Text elementType="h2" kind="body"… Stories: All Variants, Colors, Heading And Paragraph, Playground.
 - **Visually hidden** `VisuallyHidden` (not in Figma): Visually hidden: content for screen readers only, kept in the page's reading order. Stories: Default, Focusable.
 

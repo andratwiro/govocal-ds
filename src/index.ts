@@ -91,7 +91,6 @@ export {
 export {Divider, type DividerProps} from './components/gv/Divider';
 export {PageHeader, type PageHeaderProps} from './components/gv/PageHeader';
 export {Panel, type PanelProps} from './components/gv/Panel';
-export {SectionLabel, type SectionLabelProps} from './components/gv/SectionLabel';
 export {TileGrid, type TileGridProps} from './components/gv/TileGrid';
 
 // Components / Navigation
@@ -148,6 +147,7 @@ export {
 
 // Components / Text. Text is the system's (React Aria's Text underneath, so it still fills a slot such as
 // slot="description"); Content.tsx's own Text stays the starter files' internal one.
+export {SectionLabel, type SectionLabelProps} from './components/gv/SectionLabel';
 export {Text, type TextProps, type TextKind, type TextColor} from './components/gv/Text';
 export {VisuallyHidden, type VisuallyHiddenProps} from './components/gv/VisuallyHidden';
 

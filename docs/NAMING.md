@@ -50,13 +50,13 @@ Components              src/components/gv/
   Forms                 Checkbox · Checkbox group · Choice card · Date range field · Drop zone · Number field · Option list
                         · Radio group · Required marker · Rich text editor · Rich text toolbar · Rich text toolbar button
                         · Search field · Select · Switch · Tag picker · Text field · Title field
-  Layout & containers   App provider · Card · Divider · Page header · Panel · Section label · Tile grid
+  Layout & containers   App provider · Card · Divider · Page header · Panel · Tile grid
   Navigation            Breadcrumbs · Link · Pagination · Tabs
   Overlays              Alert dialog · Coachmark · Help popover · Modal · Side panel · Tooltip
   Status & feedback     Badge · Banner · Empty state · New dot · Review status · Skeleton · Status badge · Toast
   Tables & lists        Data table · Filter chips · Filter menu · Selection bar · Table toolbar (the list page's kit;
                         Filter chips, Filter menu and Selection bar still live in src/patterns/)
-  Text                  Text · Visually hidden
+  Text                  Section label · Text · Visually hidden
 Patterns                src/patterns/
   App shell             Notification list · Side nav
   Build tab             Access rights · Form field summary (recipe) · Notification row · Participant action row
@@ -146,7 +146,7 @@ below). Rows without a rename say "same".
 | Setup card | Project page/Setup step | Components/Setup card | Patterns/Project page/Setup step | SetupCard → SetupStep | SetupStep.* |
 | Rail header | Project rail/Rail header | Components/Rail header | Patterns/Project rail/Rail header | RailHeader (same) | RailHeader.* |
 | Rail phase | Project rail/Rail phase | Components/Rail phase | Patterns/Project rail/Rail phase | RailPhase (same) | RailPhase.* |
-| Section label | Layout & containers/Section label | Components/Rail section label | Components/Layout & containers/Section label | RailSectionLabel → SectionLabel | src/patterns/RailSectionLabel.* → src/components/gv/SectionLabel.* |
+| Section label | Text/Section label | Components/Rail section label | Components/Text/Section label | RailSectionLabel → SectionLabel | src/patterns/RailSectionLabel.* → src/components/gv/SectionLabel.* |
 | List row · Common ground | Participation methods/Common ground row | Components/List row · Common ground | Patterns/Participation methods/Common ground row | ListRowCommonGround → CommonGroundRow | CommonGroundRow.* |
 | List row · Proposals | Participation methods/Proposals row | Components/List row · Proposals | Patterns/Participation methods/Proposals row | ListRowProposals → ProposalsRow | ProposalsRow.* |
 | List row · Voting | Participation methods/Voting row | Components/List row · Voting | Patterns/Participation methods/Voting row | ListRowVoting → VotingRow | VotingRow.* |
@@ -179,7 +179,7 @@ then by slash, so Components › Actions › Button is Storybook's `Components/A
 code and Figma can land in either order.
 
 - **Components** (32): a row per group, A–Z (Actions, Charts, Data display, Forms, Layout & containers, Navigation,
-  Overlays, Status & feedback), a text heading per row, components A–Z inside. No section or frame around them: the
+  Overlays, Status & feedback, Text), a text heading per row, components A–Z inside. No section or frame around them: the
   Assets panel groups by those too, which would add a level (Actions › Actions › Button).
 - **Patterns** (10): rows Participation methods, Project page, Project rail (App shell, Pages & menu: nothing drawn
   yet).
