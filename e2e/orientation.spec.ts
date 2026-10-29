@@ -37,7 +37,7 @@ test('the React Aria table has a row per part, Data table among them', async ({p
   await page.goto(docs('overview-what-comes-from-react-aria'));
   const row = page.getByRole('row').filter({hasText: 'Tables & lists › Data table'});
   await expect(row).toContainText('Table');
-  await expect(row).toContainText('data-table-virtual');
+  await expect(row).toContainText('Virtualizer');
 });
 
 test('the word list comes from its JSON, with an Avoid column', async ({page}) => {

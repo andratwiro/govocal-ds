@@ -1,6 +1,6 @@
 // Writes docs/REACT-ARIA.md: for each Storybook entry, what comes from React Aria (the parts whose behaviour it wires,
 // whether its props pass straight through, whether it formats by locale) and what survives a change of base library
-// (its CSS, its stories, the browser tests that open it by role). Read from the code, so it follows it: the parts a
+// (its CSS, its stories). Nothing here reads e2e/, so a new spec never makes it stale. Read from the code, so it follows it: the parts a
 // file imports from 'react-aria-components', followed through the system's own files it imports. Overview › What comes
 // from React Aria shows it. `npm run components:index` runs it; `--check` fails when the file is stale.
 import {existsSync, readFileSync, readdirSync, writeFileSync} from 'node:fs';
@@ -73,8 +73,6 @@ function passThrough(file, component) {
   return '';
 }
 
-const id = title => title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-const specs = readdirSync('e2e').filter(f => f.endsWith('.spec.ts')).map(f => [f, read(`e2e/${f}`)]);
 
 const rows = [];
 const skipped = []; // entries with no component file of their own (none today)
@@ -94,9 +92,8 @@ for (const f of readdirSync('src', {recursive: true}).filter(f => f.endsWith('.s
   const direct = [...parts].filter(([, via]) => !via).map(([p]) => p);
   const through = [...new Set([...parts].filter(([, via]) => via).map(([, via]) => via))];
   const stories = [...s.matchAll(/^export const [A-Z]\w*\s*:\s*Story\b/gm)].length;
-  const tests = specs.filter(([, text]) => text.includes(id(title))).map(([name]) => name.replace(/\.spec\.ts$/, ''));
   rows.push({title, component, direct, through, parts: [...parts.keys()], pass: passThrough(file, component), formats,
-    css: scan(file).css, stories, tests});
+    css: scan(file).css, stories});
 }
 
 const TIERS = ['Components', 'Patterns', 'Base'];
@@ -105,7 +102,7 @@ const code = xs => xs.map(x => `\`${x}\``).join(', ');
 const behaviour = r => !r.parts.length ? 'None: plain React and CSS' :
   [r.direct.length ? code(r.direct) : '', r.through.length ? `through ${code(r.through)}` : ''].filter(Boolean).join(' ');
 const line = r => `| ${r.title.split('/').slice(1).join(' › ')} | ${behaviour(r)} | ${r.pass ? code(r.pass.split(', ')) : '–'} | ` +
-  `${r.formats ? 'yes' : '–'} | ${r.css ? 'yes' : '–'} | ${r.stories} | ${r.tests.length ? r.tests.join(', ') : '–'} |`;
+  `${r.formats ? 'yes' : '–'} | ${r.css ? 'yes' : '–'} | ${r.stories} |`;
 
 const withRac = rows.filter(r => r.parts.length).length;
 const body = [
@@ -132,15 +129,15 @@ const body = [
   '',
   '- the tokens, and the part\'s **CSS** on them;',
   '- its **stories**, each a state to rebuild and compare;',
-  '- the **browser tests** that open it (`e2e/<name>.spec.ts`). They find elements by role and name, never by',
-  '  React Aria\'s classes, so they test the behaviour, not the library;',
+  '- the **browser tests** in `e2e/`: they find elements by role and name, never by React Aria\'s classes, so they test',
+  '  the behaviour, not the library;',
   '- its docs page.',
   '',
   ...TIERS.flatMap(t => {
     const list = rows.filter(r => r.title.startsWith(`${t}/`));
     return list.length ? [`## ${t}`, '',
-      '| Part | Behaviour from React Aria\'s … | Props straight through | Locale | CSS | Stories | Browser tests |',
-      '|---|---|---|---|---|---|---|', ...list.map(line), ''] : [];
+      '| Part | Behaviour from React Aria\'s … | Props straight through | Locale | CSS | Stories |',
+      '|---|---|---|---|---|---|', ...list.map(line), ''] : [];
   })
 ].join('\n');
 
