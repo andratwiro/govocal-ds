@@ -26,27 +26,27 @@ const ideation: ListHeaderColumn[] = [
 ];
 
 const commonGround: ListHeaderColumn[] = [
-  {key: 'statement', label: 'Statement', width: 404, square: true},
-  {key: 'assignee', label: 'Assignee', width: 88, square: true},
-  {key: 'likes', label: 'Likes', width: 56, variant: 'number'},
-  {key: 'agree', label: 'Agree', width: 72, variant: 'number', sorted: true},
-  {key: 'reactions', label: 'Reactions', width: 88, variant: 'number'}
+  {key: 'statement', label: 'Statement', width: 404, isStatic: true},
+  {key: 'assignee', label: 'Assignee', width: 88, isStatic: true},
+  {key: 'likes', label: 'Likes', width: 56, kind: 'number'},
+  {key: 'agree', label: 'Agree', width: 72, kind: 'number', isSorted: true},
+  {key: 'reactions', label: 'Reactions', width: 88, kind: 'number'}
 ];
 
 const proposals: ListHeaderColumn[] = [
-  {key: 'proposal', label: 'Proposal', width: 176, square: true},
-  {key: 'votes', label: 'Votes', width: 200, sorted: true},
-  {key: 'status', label: 'Status', width: 144, square: true},
-  {key: 'comments', label: 'Comments', width: 112, variant: 'number'},
-  {key: 'timeLeft', label: 'Time left', width: 104, square: true}
+  {key: 'proposal', label: 'Proposal', width: 176, isStatic: true},
+  {key: 'votes', label: 'Votes', width: 200, isSorted: true},
+  {key: 'status', label: 'Status', width: 144, isStatic: true},
+  {key: 'comments', label: 'Comments', width: 112, kind: 'number'},
+  {key: 'timeLeft', label: 'Time left', width: 104, isStatic: true}
 ];
 
 const voting: ListHeaderColumn[] = [
-  {key: 'option', label: 'Option', width: 264, square: true},
-  {key: 'votes', label: 'Votes', width: 200, sorted: true},
-  {key: 'online', label: 'Online', width: 80, variant: 'number'},
-  {key: 'offline', label: 'Offline', width: 80, variant: 'number'},
-  {key: 'comments', label: 'Comments', width: 112, variant: 'number'}
+  {key: 'option', label: 'Option', width: 264, isStatic: true},
+  {key: 'votes', label: 'Votes', width: 200, isSorted: true},
+  {key: 'online', label: 'Online', width: 80, kind: 'number'},
+  {key: 'offline', label: 'Offline', width: 80, kind: 'number'},
+  {key: 'comments', label: 'Comments', width: 112, kind: 'number'}
 ];
 
 const Label = ({children}: {children: React.ReactNode}) => (
@@ -58,19 +58,19 @@ export const AllVariants: Story = () => (
   <div style={{display: 'flex', flexDirection: 'column', gap: 32, width: 764}}>
     <div>
       <Label>Method · Ideation</Label>
-      <ListHeader method="ideation" columns={ideation} selectAll={{}} onAddColumn={() => {}} />
+      <ListHeader columns={ideation} selectAll={{}} onAddColumn={() => {}} />
     </div>
     <div>
       <Label>Method · Common ground</Label>
-      <ListHeader method="common-ground" columns={commonGround} selectAll={{}} />
+      <ListHeader columns={commonGround} selectAll={{}} />
     </div>
     <div>
       <Label>Method · Proposals</Label>
-      <ListHeader method="proposals" columns={proposals} />
+      <ListHeader columns={proposals} />
     </div>
     <div>
       <Label>Method · Voting</Label>
-      <ListHeader method="voting" columns={voting} />
+      <ListHeader columns={voting} />
     </div>
   </div>
 );
@@ -156,7 +156,7 @@ ManageTable.storyName = 'Manage table';
  * `ListHeader` and `ListRow` inside a selectable React Aria `Table`: the starter
  * `Table`/`TableHeader`/`Row` add the checkbox column when `selectionMode="multiple"`,
  * and handle focus, keyboard navigation and selection state. `ListHeader`/`ListRow` only
- * supply the look, as the single column's content (`leadSlot` keeps the header in line with
+ * supply the look, as the single column's content (`hasLeadSlot` keeps the header in line with
  * the row's empty checkbox slot). The starter Table keeps its own zebra and borders; the
  * prototype's look is `ManageTable`.
  */
@@ -167,7 +167,7 @@ export const InATable: Story = () => (
     style={{width: 764}}>
     <TableHeader>
       <Column isRowHeader>
-        <ListHeader columns={ideation} leadSlot onAddColumn={() => alert('Add column')} />
+        <ListHeader columns={ideation} hasLeadSlot onAddColumn={() => alert('Add column')} />
       </Column>
     </TableHeader>
     <TableBody>

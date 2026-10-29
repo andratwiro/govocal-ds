@@ -10,11 +10,11 @@ export interface ListHeaderColumn {
   key: string;
   label: string;
   /** @default 'label' */
-  variant?: 'label' | 'number';
+  kind?: 'label' | 'number';
   /** A static column (no sort affordance), e.g. Status. */
-  square?: boolean;
+  isStatic?: boolean;
   /** This column is the one the list is currently sorted by. */
-  sorted?: boolean;
+  isSorted?: boolean;
   /**
    * Fixed column width in px, matching Figma's spec per method. The first column always
    * takes the room the others leave (at least 160), as in Figma and the prototype.
@@ -32,8 +32,6 @@ export interface ListHeaderSelectAll {
 }
 
 export interface ListHeaderProps extends PlacementProps {
-  /** The input method this header belongs to (Figma `Method`), for the `AllVariants` story only. */
-  method?: 'ideation' | 'common-ground' | 'proposals' | 'voting';
   columns: ListHeaderColumn[];
   onSort?: (key: string) => void;
   /** Shows the trailing "Add column" cell, e.g. for the Ideation method. */
@@ -49,7 +47,7 @@ export interface ListHeaderProps extends PlacementProps {
    *
    * @default false
    */
-  leadSlot?: boolean;
+  hasLeadSlot?: boolean;
 }
 
 /** The CSS grid track list for a column set: the first column fills, the rest are fixed. */
@@ -59,10 +57,10 @@ export function listColumnsTemplate(columns: ListHeaderColumn[]) {
     .join(' ');
 }
 
-export function ListHeader({columns, onSort, onAddColumn, selectAll, leadSlot, className, style}: ListHeaderProps) {
+export function ListHeader({columns, onSort, onAddColumn, selectAll, hasLeadSlot, className, style}: ListHeaderProps) {
   return (
     <div className={clsx('gv-list-header', className)} style={style}>
-      {(selectAll || leadSlot) && (
+      {(selectAll || hasLeadSlot) && (
         <span className="gv-list-header__lead">
           {selectAll && (
             <Checkbox
@@ -78,16 +76,16 @@ export function ListHeader({columns, onSort, onAddColumn, selectAll, leadSlot, c
         {columns.map(column => (
           <ListHeaderCell
             key={column.key}
-            variant={column.variant}
-            square={column.square}
-            sorted={column.sorted}
+            kind={column.kind}
+            isStatic={column.isStatic}
+            isSorted={column.isSorted}
             onPress={onSort ? () => onSort(column.key) : undefined}>
             {column.label}
           </ListHeaderCell>
         ))}
       </div>
       <span className="gv-list-header__trail">
-        {onAddColumn && <ListHeaderCell variant="add-column" onPress={onAddColumn} />}
+        {onAddColumn && <ListHeaderCell kind="add-column" onPress={onAddColumn} />}
       </span>
     </div>
   );
