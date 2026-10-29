@@ -1,4 +1,5 @@
 import {StatementRow} from './StatementRow';
+import {LegendRow} from './LegendRow';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof StatementRow> = {
@@ -36,7 +37,10 @@ const ROWS = [
   {statement: 'The central lawn should stay exactly as it is.', a: 21, d: 67, p: 12}
 ];
 
-/** Ranked by agreement, as the prototype's Insights › Statements card shows them. The fourth wraps. */
+/**
+ * Ranked by agreement, as the prototype's Insights › Statements card shows them. The fourth wraps. Hover a row: its
+ * bar darkens a step and a card gives every share.
+ */
 export const AllVariants: Story = () => (
   <Frame>
     {ROWS.map(r => (
@@ -93,3 +97,44 @@ export const Narrow: Story = () => (
     ))}
   </Frame>
 );
+
+/**
+ * Four shares (the Manage panel's "Where people stand"): the bar alone (no `statement`), the three answers 2 apart
+ * and the rest of the track who hasn't seen it yet (`unseenPercent`). Legend rows with counts sit under it. Hover
+ * the bar for every share with its count.
+ */
+export const FourShares: Story = () => (
+  <div style={{display: 'flex', flexDirection: 'column', gap: 16, width: 510, paddingBlockStart: 120}}>
+    <StatementRow
+      agreePercent={3}
+      disagreePercent={14}
+      passPercent={2}
+      unseenPercent={81}
+      passLabel="Unsure"
+      counts={{agree: 21, disagree: 88, pass: 12, unseen: 519}}
+    />
+    <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
+      <LegendRow color="--gv-chart-agree" label="Agree" count={21} value="3%" />
+      <LegendRow color="--gv-chart-disagree" label="Disagree" count={88} value="14%" />
+      <LegendRow color="--gv-chart-pass" label="Unsure" count={12} value="2%" />
+      <LegendRow color="--gv-surface-pill" label="Not seen yet" count={519} value="81%" />
+    </div>
+  </div>
+);
+FourShares.storyName = 'Four shares';
+
+/** With `counts`, the hover card gives the people behind each share ("34 · 80%"); the row still prints the agree share. */
+export const WithCounts: Story = () => (
+  <Frame width={730}>
+    <div style={{blockSize: 96}} aria-hidden />
+    <StatementRow
+      statement="The park needs much more shade for hot days."
+      agreePercent={80}
+      disagreePercent={12}
+      passPercent={8}
+      summary="80% agree"
+      counts={{agree: 34, disagree: 5, pass: 3}}
+    />
+  </Frame>
+);
+WithCounts.storyName = 'With counts';

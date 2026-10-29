@@ -116,3 +116,14 @@ test('bar row: hover darkens the bar and shows the exact count and share; screen
   await open(page, 'components-charts-bar-row--without-value');
   await expect(page.locator('.gv-bar-row__value')).toHaveCount(0);
 });
+
+test('statement row: four shares, and a hover card with every share and its count', async ({page}) => {
+  await open(page, 'components-charts-statement-row--four-shares');
+  const bar = page.getByRole('img', {name: '21 agree (3%), 88 disagree (14%), 12 unsure (2%), 519 not seen yet (81%)'});
+  await expect(bar).toBeVisible();
+  await expect(bar.locator('.gv-statement-row__bar-segment')).toHaveCount(3);
+  const card = page.locator('.gv-statement-row__card');
+  await expect(card).toBeHidden();
+  await bar.hover();
+  await expect(card.locator('.gv-chart-card__row')).toHaveText(['Agree21 · 3%', 'Disagree88 · 14%', 'Unsure12 · 2%', 'Not seen yet519 · 81%']);
+});

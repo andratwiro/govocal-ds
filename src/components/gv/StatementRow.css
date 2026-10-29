@@ -30,6 +30,25 @@
   overflow: hidden;
 }
 
+/* The bar alone (the Manage panel's "Where people stand"): it takes the row, the summary (if any) after it. */
+.gv-statement-row[data-bar-only] .gv-statement-row__in {
+  grid-template-columns: minmax(0, 1fr) minmax(72px, max-content);
+}
+.gv-statement-row[data-bar-only] .gv-statement-row__in:not(:has(.gv-statement-row__value)) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Four shares (the Manage panel): the answers sit 2 apart; the rest of the track is who hasn't seen it yet. */
+.gv-statement-row[data-shares='4'] .gv-statement-row__bar {
+  gap: var(--gv-space-2);
+}
+
+/* The bar and, over it, the hover card. */
+.gv-statement-row__bar-wrap {
+  position: relative;
+  min-width: 0;
+}
+
 .gv-statement-row__bar-segment {
   display: block;
   height: 100%;
@@ -45,6 +64,41 @@
   &[data-kind='pass'] {
     background: var(--gv-chart-pass);
   }
+
+  transition: background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+}
+
+/* Hover (Not in Figma): each share darkens a step, mixed toward the primary text colour, and the card shows every
+   share (with its count, when given) centred 6 above the bar. */
+.gv-statement-row:hover .gv-statement-row__bar-segment {
+  &[data-kind='agree'] {
+    background: color-mix(in srgb, var(--gv-chart-agree) 75%, var(--gv-text-primary));
+  }
+
+  &[data-kind='disagree'] {
+    background: color-mix(in srgb, var(--gv-chart-disagree) 75%, var(--gv-text-primary));
+  }
+
+  &[data-kind='pass'] {
+    background: color-mix(in srgb, var(--gv-chart-pass) 75%, var(--gv-text-primary));
+  }
+}
+
+.gv-statement-row .gv-statement-row__card {
+  display: none;
+  inset-block-start: auto;
+  inset-block-end: calc(100% + var(--gv-space-6));
+  left: 50%;
+  translate: -50% 0;
+}
+
+.gv-statement-row:hover .gv-statement-row__card {
+  display: flex;
+}
+
+/* Not seen yet has no chart colour: its swatch is the track's grey. */
+.gv-statement-row__card .gv-chart-card__swatch[data-kind='unseen'] {
+  background: var(--gv-surface-pill);
 }
 
 .gv-statement-row__value {
