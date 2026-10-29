@@ -186,3 +186,35 @@ Keyboard.play = async ({canvasElement}) => {
   await userEvent.keyboard(' ');
   await expect(canvas.getByRole('status')).toHaveTextContent('Saved 2 times');
 };
+
+/**
+ * Long translated words, in a 280 column: a button grows with its label and never wraps or truncates it, so the third
+ * one here runs past the column's edge. Where a label may outgrow its place, give the button the row (`isFullWidth`)
+ * or shorter words. The page passes the words, the pending name too (`labels`).
+ */
+export const LongGermanLabels: Story = () => (
+  <div style={{display: 'grid', gap: 12, justifyItems: 'start', width: 280}}>
+    <Button variant="primary" onPress={() => {}}>Änderungen veröffentlichen</Button>
+    <Button variant="secondary" hasMenu onPress={() => {}}>Beteiligungsmethode auswählen</Button>
+    <Button variant="secondary" onPress={() => {}}>
+      <Plus aria-hidden size={16} />
+      Neues Bürgerbeteiligungsprojekt erstellen
+    </Button>
+    <Button variant="primary" isPending labels={{pending: 'Wird gespeichert...'}}>Speichern</Button>
+  </div>
+);
+LongGermanLabels.storyName = 'Long German labels';
+
+/** An Arabic interface: the icon leads on the right, the menu chevron ends on the left. */
+export const Arabic: Story = () => (
+  <div style={{display: 'flex', flexWrap: 'wrap', gap: 12}}>
+    <Button variant="primary" onPress={() => {}}>نشر</Button>
+    <Button variant="secondary" hasMenu onPress={() => {}}>اختر طريقة المشاركة</Button>
+    <Button variant="secondary" onPress={() => {}}>
+      <Plus aria-hidden size={16} />
+      مشروع جديد
+    </Button>
+    <Button variant="primary" isPending labels={{pending: 'جارٍ الحفظ...'}}>حفظ</Button>
+  </div>
+);
+Arabic.globals = {locale: 'ar-SA'};

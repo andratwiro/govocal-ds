@@ -401,3 +401,75 @@ export const Keyboard: Story = {
     await waitFor(() => expect(opener).toHaveFocus());
   }
 };
+
+const DE_QUICK: SidePanelAction[] = [
+  {id: 'edit', label: 'Bearbeiten', icon: <SquarePen aria-hidden size={16} />},
+  {id: 'view', label: 'Auf der Plattform ansehen', icon: <ExternalLink aria-hidden size={16} />},
+  {id: 'delete', label: 'Löschen', icon: <Trash2 aria-hidden size={16} />}
+];
+const AR_QUICK: SidePanelAction[] = [
+  {id: 'edit', label: 'تعديل', icon: <SquarePen aria-hidden size={16} />},
+  {id: 'view', label: 'عرض على المنصة', icon: <ExternalLink aria-hidden size={16} />},
+  {id: 'delete', label: 'حذف', icon: <Trash2 aria-hidden size={16} />}
+];
+
+/**
+ * Long translated words in a German interface (the Locale set to German, so the pager reads "1.042 von 1.284"): the
+ * context label ends in an ellipsis before the pager, the title and the text wrap, the property names keep their
+ * column. The panel's own words come in `labels`.
+ */
+export const LongGermanLabels: Story = {
+  name: 'Long German labels',
+  globals: {locale: 'de-DE'},
+  parameters: {layout: 'padded', docs: {story: {inline: true}}},
+  render: () => (
+    <div style={{height: 520, maxWidth: 560}}>
+      <SidePanel isInline label="Bürgerbeteiligungsverfahren zur Umgestaltung des Flussufers"
+        labels={{pager: 'Blättern', previous: 'Vorheriger Beitrag', next: 'Nächster Beitrag', close: 'Schließen',
+          position: (current, total) => `${current} von ${total}`}}
+        position={{current: 1042, total: 1284}} onPositionChange={() => {}}>
+        <SidePanelSection>
+          <SidePanelRecordHead title="Verkehrsberuhigungsmaßnahmen in der Wohnstraßennachbarschaft" author="Bewohnerin F"
+            date="24. Oktober 2026" labels={{postedBy: author => <>Gepostet von {author}</>}}
+            actions={<SidePanelActions items={DE_QUICK} labels={{quickActions: 'Schnellaktionen'}} />}>
+            Auf dem Spielplatz gibt es überhaupt keinen Schatten. Im Juli ist die Rutsche schon um elf Uhr morgens zu
+            heiß zum Anfassen.
+          </SidePanelRecordHead>
+        </SidePanelSection>
+        <SidePanelSection>
+          <PropertyList aria-label="Angaben">
+            <PropertyListItem label="Bearbeitungsstatus">Wird von der Gemeindeverwaltung geprüft</PropertyListItem>
+            <PropertyListItem label="Zuständige Sachbearbeiterin">Verwalterin B</PropertyListItem>
+          </PropertyList>
+        </SidePanelSection>
+      </SidePanel>
+    </div>
+  )
+};
+
+/** An Arabic interface: the context label on the right, × and the pager on the left, ‹ › swapped. */
+export const Arabic: Story = {
+  globals: {locale: 'ar-SA'},
+  parameters: {layout: 'padded', docs: {story: {inline: true}}},
+  render: () => (
+    <div style={{height: 480, maxWidth: 560}}>
+      <SidePanel isInline label="جمع الأفكار"
+        labels={{pager: 'التنقل', previous: 'الفكرة السابقة', next: 'الفكرة التالية', close: 'إغلاق',
+          position: (current, total) => `${current} من ${total}`}}
+        position={{current: 3, total: 124}} onPositionChange={() => {}}>
+        <SidePanelSection>
+          <SidePanelRecordHead author="نور أ." date="٢٤ أكتوبر ٢٠٢٦" labels={{postedBy: author => <>نشرها {author}</>}}
+            actions={<SidePanelActions items={AR_QUICK} labels={{quickActions: 'إجراءات سريعة'}} />}>
+            لا يوجد ظل في الملعب على الإطلاق. في يوليو تصبح الزحليقة حارة جدًا قبل الظهر.
+          </SidePanelRecordHead>
+        </SidePanelSection>
+        <SidePanelSection>
+          <PropertyList aria-label="التفاصيل">
+            <PropertyListItem label="الحالة">قيد الدراسة</PropertyListItem>
+            <PropertyListItem label="المسؤول">المديرة ب</PropertyListItem>
+          </PropertyList>
+        </SidePanelSection>
+      </SidePanel>
+    </div>
+  )
+};

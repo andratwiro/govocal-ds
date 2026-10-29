@@ -157,3 +157,42 @@ export const EmptySearch: Story = {
     await expect(await page.findByText('No results')).toBeVisible();
   }
 };
+
+// Invented German and Arabic statuses, as a host's i18n would hand them in.
+const DE_STATUSES = ['In Prüfung', 'Vorgeschlagen', 'Angesehen', 'Wird von der Gemeindeverwaltung geprüft', 'Angenommen',
+  'Abgelehnt', 'Umgesetzt'];
+const AR_STATUSES = ['قيد الفحص', 'مقترح', 'تمت المشاهدة', 'قيد الدراسة', 'مقبول', 'مرفوض', 'منفذ'];
+
+/**
+ * Long translated words: the field keeps its width and the chosen value ends in an ellipsis (the list shows it whole);
+ * the pill grows with its value. The page passes the words, the Select's own ones too (`labels`).
+ */
+export const LongGermanLabels: Story = {
+  name: 'Long German labels',
+  render: () => (
+    <div style={{display: 'grid', gap: 16, justifyItems: 'start'}}>
+      <Select label="Beteiligungsmöglichkeitsstatus" description="Teilnehmende sehen den Status beim Beitrag."
+        defaultValue={DE_STATUSES[3]} isSearchable labels={{placeholder: 'Suchen...', empty: 'Keine Ergebnisse'}}>
+        {DE_STATUSES.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
+      </Select>
+      <Select variant="pill" aria-label="Status" prefix="Status:" defaultValue={DE_STATUSES[3]}>
+        {DE_STATUSES.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
+      </Select>
+    </div>
+  )
+};
+
+/** An Arabic interface: the label and value start on the right, the chevron sits at the left end, the list mirrors. */
+export const Arabic: Story = {
+  globals: {locale: 'ar-SA'},
+  render: () => (
+    <div style={{display: 'grid', gap: 16, justifyItems: 'start'}}>
+      <Select label="الحالة" description="يرى المشاركون الحالة على الفكرة." defaultValue={AR_STATUSES[3]}>
+        {AR_STATUSES.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
+      </Select>
+      <Select variant="pill" aria-label="الحالة" prefix="الحالة:" defaultValue={AR_STATUSES[4]}>
+        {AR_STATUSES.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
+      </Select>
+    </div>
+  )
+};

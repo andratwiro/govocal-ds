@@ -49,6 +49,8 @@ question for each: add a Figma variable (code then names it), or keep the stand-
 - Badge: should a dropdown card's pill turn teal once it holds a value? — Card passes a plain pill — see `components-layout-containers-card--review-pill-dropdown`.
 - Breadcrumbs: rename the project from the breadcrumb? — not built — see `components-navigation-breadcrumbs--project`.
 - Card: should it turn "To review" into "Reviewed" by itself when a value is picked? — the page passes `review` — see `components-layout-containers-card--reviewed`.
+- Button: should a long label (German) wrap or truncate in a narrow column? — it never does (one line, 36 tall), so it runs past the column; the page gives it the row (`isFullWidth`) or shorter words — see `components-actions-button--long-german-labels`.
+- Banner: a danger tone, for "the list couldn't refresh"? — Banner has info, neutral, warning, success and AI; the refresh error uses warning — see `components-tables-lists-data-table--refresh-error`.
 - Card: pills before or after the header's icon actions? — before (the prototype's Causes card puts the pill last) — see `components-layout-containers-card--all-variants`.
 - Card: keep one variant per Figma "Type" value, or regroup them after the rename? — one per value — see `components-layout-containers-card--all-variants`.
 - Compact button: a size of Button rather than its own entry? — its own entry — see `components-actions-compact-button--all-variants`.

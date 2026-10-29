@@ -9,13 +9,21 @@ const stories = existsSync(index)
       .filter(e => e.type === 'story' && !e.title.startsWith('Overview'))
   : [];
 
+// The edge-case stories (empty, loading, error, no permission, 1 and 1,000 rows, long German and Arabic words) render
+// right to left too: a state a page meets must hold in Arabic as well.
+const EDGE = /--(empty.*|no-rows|no-results|one-row|thousand-rows|first-load|refreshing|load-error|refresh-error|no-permission|long-german-labels|arabic)$/;
+const runs = stories.flatMap(({id}) => [{id, globals: ''}, ...(EDGE.test(id) ? [{id, globals: 'direction:rtl'}] : [])]);
+
 test.describe.configure({mode: 'parallel'});
 test('the build has stories', () => expect(stories.length, 'run npm run build first').toBeGreaterThan(0));
-for (const {id} of stories) {
-  test(`renders ${id}`, async ({page}) => {
+test('the edge-case stories are there to render both ways', () => {
+  expect(stories.filter(s => EDGE.test(s.id)).length, 'run npm run build first').toBeGreaterThanOrEqual(19);
+});
+for (const {id, globals} of runs) {
+  test(`renders ${id}${globals ? ' right to left' : ''}`, async ({page}) => {
     const errors: string[] = [];
     page.on('pageerror', e => errors.push(e.message));
-    await page.goto(`/storybook/iframe.html?id=${id}&viewMode=story`);
+    await page.goto(`/storybook/iframe.html?id=${id}&viewMode=story${globals ? `&globals=${globals}` : ''}`);
     await page.waitForFunction(() => /sb-show-(main|errordisplay|nopreview)/.test(document.body.className));
     const failed = await page.evaluate(() => document.body.classList.contains('sb-show-errordisplay')
       ? document.querySelector('#error-message')?.textContent ?? 'error' : '');

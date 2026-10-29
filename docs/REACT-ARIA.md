@@ -29,7 +29,7 @@ what would survive a change of base library. It decides nothing: the base librar
 
 | Part | Behaviour from React Aria's … | Props straight through | Locale | CSS | Stories |
 |---|---|---|---|---|---|
-| Actions › Button | `Button` through `components/ProgressCircle` | `ButtonProps` | – | yes | 12 |
+| Actions › Button | `Button` through `components/ProgressCircle` | `ButtonProps` | – | yes | 14 |
 | Actions › Compact button | `Button` | `ButtonProps` | – | yes | 6 |
 | Actions › Icon button | `Button` | `ButtonProps` | – | yes | 7 |
 | Actions › Menu | `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger` through `components/Popover`, `components/ProgressCircle`, `components/Content` | – | – | yes | 7 |
@@ -73,10 +73,10 @@ what would survive a change of base library. It decides nothing: the base librar
 | Forms › Rich text toolbar | `Button`, `Toolbar` through `components/gv/RichTextToolbarButton` | – | – | yes | 2 |
 | Forms › Rich text toolbar button | `ToggleButton` | `ToggleButtonProps` | – | yes | 4 |
 | Forms › Search field | `Button`, `Input`, `SearchField` through `components/Form`, `components/Tooltip` | `SearchFieldProps` | – | yes | 8 |
-| Forms › Select | `Select`, `SelectValue`, `Autocomplete` through `components/Button`, `components/ListBox`, `components/Popover`, `components/SearchField` | – | yes | yes | 10 |
+| Forms › Select | `Select`, `SelectValue`, `Autocomplete` through `components/Button`, `components/ListBox`, `components/Popover`, `components/SearchField` | – | yes | yes | 12 |
 | Forms › Switch | `SwitchField`, `SwitchButton` through `components/Form` | `SwitchFieldProps` | – | yes | 6 |
 | Forms › Tag picker | `Button`, `Dialog`, `DialogTrigger`, `Tag`, `TagGroup`, `TagList` through `components/Button`, `components/Popover`, `components/gv/OptionList` | – | yes | yes | 5 |
-| Forms › Text field | `Input`, `TextField`, `TextArea`, `Group` through `components/Form` | `TextFieldProps` | yes | yes | 5 |
+| Forms › Text field | `Input`, `TextField`, `TextArea`, `Group` through `components/Form` | `TextFieldProps` | yes | yes | 7 |
 | Forms › Title field | `Input`, `TextField` through `components/Form`, `components/gv/LocaleSwitcher` | `TextFieldProps` | yes | yes | 6 |
 | Layout & containers › App provider | through `components/Toast` | – | – | – | 2 |
 | Layout & containers › Card | `Button`, `Disclosure`, `DisclosurePanel`, `Heading`, `Menu`, `MenuItem`, `MenuTrigger` through `components/Popover`, `components/Tooltip`, `components/RadioGroup`, `components/Switch` | – | – | yes | 30 |
@@ -90,12 +90,12 @@ what would survive a change of base library. It decides nothing: the base librar
 | Navigation › Breadcrumbs | `Breadcrumbs`, `Breadcrumb`, `Link` through `components/gv/IconButton` | `BreadcrumbsProps` | – | yes | 5 |
 | Navigation › Link | `Link` | `LinkProps` | – | yes | 2 |
 | Navigation › Pagination | `Button` | – | yes | yes | 8 |
-| Navigation › Tabs | `Tabs`, `TabList`, `Tab`, `TabPanels`, `TabPanel`, `SelectionIndicator`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `Header`, `VisuallyHidden` | – | yes | yes | 8 |
+| Navigation › Tabs | `Tabs`, `TabList`, `Tab`, `TabPanels`, `TabPanel`, `SelectionIndicator`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `Header`, `VisuallyHidden` | – | yes | yes | 10 |
 | Overlays › Alert dialog | `Heading`, `Dialog` through `components/Modal`, `components/Button`, `components/TextField` | – | yes | yes | 6 |
 | Overlays › Coachmark | `OverlayArrow`, `Popover` | `PopoverProps` | – | yes | 3 |
 | Overlays › Help popover | `Heading`, `Dialog`, `DialogTrigger` through `components/Popover`, `components/Button` | – | – | yes | 4 |
 | Overlays › Modal | `Button`, `Heading`, `Dialog` through `components/Modal` | – | – | yes | 9 |
-| Overlays › Side panel | `Dialog`, `Toolbar` through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 13 |
+| Overlays › Side panel | `Dialog`, `Toolbar` through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 15 |
 | Overlays › Tooltip | `OverlayArrow`, `Tooltip`, `TooltipTrigger` | `TooltipProps` | – | yes | 1 |
 | Status & feedback › Badge | `Button` | – | – | yes | 8 |
 | Status & feedback › Banner | `Link` through `components/gv/IconButton` | – | – | yes | 13 |
@@ -105,7 +105,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Status & feedback › Skeleton | None: plain React and CSS | – | – | yes | 5 |
 | Status & feedback › Status badge | None: plain React and CSS | – | – | yes | 3 |
 | Status & feedback › Toast | `UNSTABLE_ToastRegion`, `UNSTABLE_Toast`, `UNSTABLE_ToastQueue`, `UNSTABLE_ToastContent`, `Text`, `Button` through `components/Button` | – | – | yes | 6 |
-| Tables & lists › Data table | `Cell`, `Collection`, `Column`, `Row`, `Table`, `TableBody`, `TableHeader`, `TableLoadMoreItem`, `TableLayout`, `Virtualizer` through `components/gv/Checkbox`, `components/Menu` | `TableProps` | yes | yes | 21 |
+| Tables & lists › Data table | `Cell`, `Collection`, `Column`, `Row`, `Table`, `TableBody`, `TableHeader`, `TableLoadMoreItem`, `TableLayout`, `Virtualizer` through `components/gv/Checkbox`, `components/Menu` | `TableProps` | yes | yes | 30 |
 | Tables & lists › Filter chips | `Button`, `Tag`, `TagGroup`, `TagList` through `patterns/FilterMenu` | – | yes | yes | 8 |
 | Tables & lists › Filter menu | `MenuTrigger`, `Dialog` through `components/Menu`, `components/Separator`, `components/gv/IconButton`, `components/gv/OptionList` | – | yes | yes | 6 |
 | Tables & lists › Selection bar | `MenuTrigger`, `Toolbar` through `components/Button`, `components/Popover` | – | yes | yes | 7 |

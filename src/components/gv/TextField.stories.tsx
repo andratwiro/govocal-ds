@@ -62,3 +62,35 @@ export const ReadOnly: Story = {
   name: 'Read only',
   args: {label: 'Project URL', isReadOnly: true, defaultValue: 'green-corridors'}
 };
+
+/**
+ * Long translated words: German runs about a third longer than English and builds long compounds. The label wraps,
+ * the help text wraps beside the count and breaks a long compound rather than running under it, and the typed text
+ * scrolls inside the field. The page passes the words; the system never translates.
+ */
+export const LongGermanLabels: Story = {
+  name: 'Long German labels',
+  decorators: [Story => <div style={{width: 320}}><Story /></div>],
+  args: {
+    label: 'Einverständniserklärung zur Datenverarbeitung der Gemeindeverwaltung',
+    placeholder: 'Geben Sie Ihren vollständigen Namen einschließlich aller Vornamen ein',
+    description: 'Bürgerbeteiligungsplattformnutzungsbedingungen: Ihr Name erscheint neben Ihren Beiträgen.',
+    maxLength: 140,
+    showCounter: true,
+    defaultValue: 'Fahrradstraßenverbindung entlang des Flussufers'
+  }
+};
+
+/** An Arabic interface: the label, the text and the count run right to left, the count at the field's left end. */
+export const Arabic: Story = {
+  globals: {locale: 'ar-SA'},
+  decorators: [Story => <div style={{width: 320}}><Story /></div>],
+  args: {
+    label: 'الاسم الكامل',
+    placeholder: 'أدخل اسمك الكامل',
+    description: 'يظهر اسمك بجانب أفكارك وتعليقاتك.',
+    maxLength: 140,
+    showCounter: true,
+    defaultValue: 'مسارات للدراجات على طول النهر'
+  }
+};

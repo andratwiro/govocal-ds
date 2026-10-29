@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useRef, useState, type ReactNode} from 'react';
-import type {Key} from 'react-aria-components';
+import {useLocale, type Key} from 'react-aria-components';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {
@@ -27,8 +27,11 @@ import {NewDot} from './NewDot';
 import {Pagination} from './Pagination';
 import {Panel} from './Panel';
 import {StatusBadge} from './StatusBadge';
+import {EmptyState} from './EmptyState';
+import {Skeleton} from './Skeleton';
+import {Banner} from './Banner';
 import {TableToolbar, TableToolbarHeading} from './TableToolbar';
-import {ClipboardList, Download, Map as MapIcon, MapPin, Plus, TriangleAlert, UserPlus, Users} from 'lucide-react';
+import {ClipboardList, Download, Lock, Map as MapIcon, MapPin, Plus, SearchX, TriangleAlert, UserPlus, Users} from 'lucide-react';
 import {FilterMenu, type FilterValue} from '../../patterns/FilterMenu';
 import {FilterChips} from '../../patterns/FilterChips';
 import {SelectionBar} from '../../patterns/SelectionBar';
@@ -226,6 +229,161 @@ export const NumericColumns: Story = {
 export const RowOptions: Story = {name: 'Row options', render: () => <PeopleTable />};
 
 export const Empty: Story = {render: () => <PeopleTable empty selectable />};
+
+// ── Edge cases: what a list meets besides a page of rows (0, 1, 1,000; loading, error, no permission) ────────────
+// Carbon's empty states and AgDS's data loading are the benchmarks. The empty body takes an Empty state, one of four
+// kinds: nothing yet, nothing matches, it can't load, you may not see it. A first load has no rows to keep; a refresh
+// keeps them while it fetches, and a refresh that fails keeps them and says so above.
+
+function UsersTable({rows, empty, busy, pageSize}: {
+  rows: readonly ListPerson[];
+  empty?: ReactNode;
+  busy?: boolean;
+  pageSize?: number;
+}) {
+  const [page, setPage] = useState(1);
+  const shown = pageSize ? rows.slice((page - 1) * pageSize, page * pageSize) : rows;
+  const {locale} = useLocale();
+  const count = new Intl.NumberFormat(locale).format(rows.length);
+  return (
+    <div style={{maxWidth: 900}}>
+      <Panel title="Registered users" isFlush toolbar={<TableToolbar heading={`${count} ${rows.length === 1 ? 'user' : 'users'}`} />}
+        footer={pageSize && rows.length > pageSize
+          ? <Pagination page={page} pageCount={Math.ceil(rows.length / pageSize)} onPageChange={setPage} aria-label="User pages" />
+          : undefined}>
+        <div aria-busy={busy || undefined}>
+          <DataTable aria-label="Users">
+            <DataTableHeader>
+              <DataTableColumn id="name" isRowHeader>Name</DataTableColumn>
+              <DataTableColumn id="role">Role</DataTableColumn>
+              <DataTableColumn id="ideas" align="number">Ideas</DataTableColumn>
+              <DataTableColumn id="joined">Joined</DataTableColumn>
+              <DataTableColumn id="options" align="options" showLabel={false}>Options</DataTableColumn>
+            </DataTableHeader>
+            <DataTableBody items={shown} renderEmptyState={() => empty}>
+              {p => <DataTableRow id={p.id} textValue={p.name}><PersonCells person={p} /></DataTableRow>}
+            </DataTableBody>
+          </DataTable>
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
+const ONE_PERSON = inventPeople(1);
+const THOUSAND_PEOPLE = inventPeople(1000);
+const SOME_PEOPLE = inventPeople(6);
+
+/** No rows yet, the first kind: what will fill the list, and the one way to start it. */
+export const NoRows: Story = {
+  name: 'Empty · nothing yet',
+  render: () => (
+    <UsersTable rows={[]} empty={(
+      <EmptyState layout="panel" icon={<Users size={24} />} title="No registered users yet"
+        description="People appear here once they sign up on the platform."
+        actions={<Button variant="secondary">Invite people</Button>} />
+    )} />
+  )
+};
+
+/** Nothing matches the search or the filters, the second kind: the list isn't empty, the view is. One way back. */
+export const NoResults: Story = {
+  name: 'Empty · no results',
+  render: () => (
+    <UsersTable rows={[]} empty={(
+      <EmptyState layout="panel" icon={<SearchX size={24} />} title="No users match “Riverside”"
+        description="Check the spelling, or clear the filters to see everyone."
+        actions={<Button variant="secondary">Clear filters</Button>} />
+    )} />
+  )
+};
+
+/** One row: the count says "1 user", the header and the "…" column keep their widths. */
+export const OneRow: Story = {name: '1 row', render: () => <UsersTable rows={ONE_PERSON} />};
+
+/**
+ * 1,000 rows, 25 a page: the count says the whole list, the Pagination walks it. Past about 200 rows on one page, use
+ * `isVirtualized` instead (the "Virtualized · 5,000 people" story).
+ */
+export const ThousandRows: Story = {name: '1,000 rows', render: () => <UsersTable rows={THOUSAND_PEOPLE} pageSize={25} />};
+
+const LOADING_ROWS = Array.from({length: 5}, (_, i) => i);
+
+/**
+ * First load: nothing to show yet, so the rows are Skeleton placeholders in the table's own columns (it keeps its
+ * shape, nothing jumps when the rows arrive) and the table is `aria-busy`. The count waits for the rows.
+ */
+export const FirstLoad: Story = {
+  name: 'Loading · first load',
+  render: () => (
+    <div style={{maxWidth: 900}}>
+      <Panel title="Registered users" isFlush toolbar={<TableToolbar heading={<Skeleton width={72} />} />}>
+        <div aria-busy="true">
+          <DataTable aria-label="Users">
+            <DataTableHeader>
+              <DataTableColumn id="name" isRowHeader>Name</DataTableColumn>
+              <DataTableColumn id="role">Role</DataTableColumn>
+              <DataTableColumn id="ideas" align="number">Ideas</DataTableColumn>
+              <DataTableColumn id="joined">Joined</DataTableColumn>
+            </DataTableHeader>
+            <DataTableBody items={LOADING_ROWS.map(id => ({id}))}>
+              {row => (
+                <DataTableRow id={row.id} textValue="Loading">
+                  <DataTableCell><Skeleton width={`${56 + (row.id % 3) * 12}%`} /></DataTableCell>
+                  <DataTableCell><Skeleton width="64%" /></DataTableCell>
+                  <DataTableCell align="number"><Skeleton width={24} /></DataTableCell>
+                  <DataTableCell><Skeleton width="72%" /></DataTableCell>
+                </DataTableRow>
+              )}
+            </DataTableBody>
+          </DataTable>
+        </div>
+      </Panel>
+    </div>
+  )
+};
+
+/**
+ * Refresh: the rows stay where they are while the list fetches again (a filter changed, a save came back), and the
+ * table is `aria-busy`. No skeletons: replacing rows someone is reading with placeholders loses their place.
+ */
+export const Refreshing: Story = {name: 'Loading · refresh', render: () => <UsersTable rows={SOME_PEOPLE} busy />};
+
+/** The list can't load, the third kind: say what happened in plain words and offer to try again. */
+export const LoadError: Story = {
+  name: 'Error · first load',
+  render: () => (
+    <UsersTable rows={[]} empty={(
+      <EmptyState layout="panel" icon={<TriangleAlert size={24} />} title="The users couldn't load"
+        description="Something went wrong on our side. Your data is safe."
+        actions={<Button variant="secondary">Try again</Button>} />
+    )} />
+  )
+};
+
+/** A refresh that fails keeps the rows it had and says so above them, with a way to try again. */
+export const RefreshError: Story = {
+  name: 'Error · refresh',
+  render: () => (
+    <div style={{display: 'grid', gap: 12, maxWidth: 900}}>
+      <Banner tone="warning" title="The list couldn't refresh" linkLabel="Try again" onLinkPress={() => {}}>
+        These are the users as they were a minute ago.
+      </Banner>
+      <UsersTable rows={SOME_PEOPLE} />
+    </div>
+  )
+};
+
+/** You may not see this list, the fourth kind: say who can grant it. No rows, no count of what is hidden. */
+export const NoPermission: Story = {
+  name: 'No permission',
+  render: () => (
+    <UsersTable rows={[]} empty={(
+      <EmptyState layout="panel" icon={<Lock size={24} />} title="You can't see the registered users"
+        description="Only platform admins can see this list. Ask one to give you access." />
+    )} />
+  )
+};
 
 // ── Cells: thumbnails, assignees, tags, the Projects list ─────────────────────────────────────────
 const FEW = MANAGE_IDEAS.slice(0, 6);

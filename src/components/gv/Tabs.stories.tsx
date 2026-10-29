@@ -211,3 +211,62 @@ export const Keyboard: Story = {
     await expect(canvas.getByRole('tabpanel')).toHaveFocus();
   }
 };
+
+/**
+ * Long translated words in a German interface (the Locale set to German, so the counts read "1.284"), in a 400
+ * column: the tab row scrolls sideways once it outgrows the column (a tab never wraps or truncates), and a side list
+ * grows to its longest tab. The page passes the words, the status words too (`labels`).
+ */
+export const LongGermanLabels: Story = {
+  name: 'Long German labels',
+  globals: {locale: 'de-DE'},
+  render: () => (
+    <div style={{display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 32, width: 400}}>
+      <Tabs defaultSelectedKey="all">
+        <TabList aria-label="Berichte">
+          <Tab id="yours" count={11}>Ihre Berichte</Tab>
+          <Tab id="all" count={1284}>Alle Beteiligungsberichte</Tab>
+          <Tab id="progress" count={10}>Fortschrittsberichte</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel id="yours">{panel('Die 11 Berichte, die Sie erstellt haben.')}</TabPanel>
+          <TabPanel id="all">{panel('Jeder Bericht, den Ihr Team mit dem Berichtsgenerator erstellt hat.')}</TabPanel>
+          <TabPanel id="progress">{panel('Berichte, die einem Projekt Phase für Phase folgen.')}</TabPanel>
+        </TabPanels>
+      </Tabs>
+      <Tabs orientation="vertical" defaultSelectedKey="general">
+        <TabList aria-label="Einstellungen">
+          <Tab id="general">Allgemein</Tab>
+          <Tab id="access" status="danger" labels={{missing: 'fehlt'}}>Zugriffsberechtigungen und Sichtbarkeit</Tab>
+          <Tab id="notifications">Benachrichtigungseinstellungen</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel id="general">{panel('Name, Beschreibung und Titelbild des Projekts.')}</TabPanel>
+          <TabPanel id="access">{panel('Wer das Projekt sehen und daran teilnehmen kann.')}</TabPanel>
+          <TabPanel id="notifications">{panel('Wann Teilnehmende eine E-Mail erhalten.')}</TabPanel>
+        </TabPanels>
+      </Tabs>
+    </div>
+  )
+};
+
+/** An Arabic interface: the first tab on the right, ← and → swap, the counts in brackets mirror. */
+export const Arabic: Story = {
+  globals: {locale: 'ar-SA'},
+  render: () => (
+    <div style={{width: 480}}>
+      <Tabs defaultSelectedKey="all">
+        <TabList aria-label="التقارير">
+          <Tab id="yours" count={11}>تقاريرك</Tab>
+          <Tab id="all" count={18}>كل التقارير</Tab>
+          <Tab id="progress" count={10}>تقارير التقدم</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel id="yours">{panel('التقارير الأحد عشر التي أنشأتها.')}</TabPanel>
+          <TabPanel id="all">{panel('كل تقرير أنشأه فريقك.')}</TabPanel>
+          <TabPanel id="progress">{panel('تقارير تتابع المشروع مرحلة بمرحلة.')}</TabPanel>
+        </TabPanels>
+      </Tabs>
+    </div>
+  )
+};
