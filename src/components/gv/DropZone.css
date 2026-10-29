@@ -53,16 +53,36 @@
   }
 }
 
+/* Compact (the prototype's `.gv-dropzone`: Add a cause, Add input, Event image): one left-aligned
+   row, icon beside a two-line label, 14/16 padding instead of the default zone's 22/16 centred one. */
+.gv-drop-zone[data-size='compact'] .gv-drop-zone-trigger {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--gv-space-12);
+  padding: var(--gv-space-14) var(--gv-space-16);
+  text-align: start;
+}
+
 /* upload/20 (Figma; the prototype renders it at 20 too), at Figma's 1.75 stroke on Lucide's 24 grid. */
 .gv-drop-zone-icon {
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
   stroke-width: 1.75;
   color: var(--gv-icon-default);
 }
 
 .gv-drop-zone-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
   font: var(--gv-type-ui);
   letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-secondary);
+}
+
+.gv-drop-zone-hint {
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-tertiary);
 }

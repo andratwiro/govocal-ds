@@ -41,3 +41,15 @@ export const CustomLabel: Story = {
   args: {children: 'Drop your cover image here, or browse', acceptedFileTypes: ['image/*']},
   decorators: [Story => <div style={{width: 370}}><Story /></div>]
 };
+
+/** The prototype's `.gv-dropzone` (Add a cause, Add input, Event image): one row, a hint line under
+ * the label. */
+export const Compact: Story = {
+  args: {
+    size: 'compact',
+    children: 'Drag an image here, or browse',
+    hint: 'PNG or JPG · max 5 MB',
+    acceptedFileTypes: ['image/png', 'image/jpeg']
+  },
+  decorators: [Story => <div style={{width: 370}}><Story /></div>]
+};
