@@ -18,6 +18,7 @@ const meta: Meta<typeof CompactButton> = {
 export default meta;
 type Story = StoryFn<typeof CompactButton>;
 
+/** Figma's Secondary, Primary and Primary · icon; then disabled (Figma has none, the prototype dims to .45). */
 export const AllVariants: Story = () => (
   <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
     <CompactButton variant="secondary" onPress={() => {}}>
@@ -28,6 +29,9 @@ export const AllVariants: Story = () => (
     </CompactButton>
     <CompactButton variant="primary" icon={<Plus aria-hidden size={16} />} onPress={() => {}}>
       Add a report
+    </CompactButton>
+    <CompactButton variant="secondary" isDisabled>
+      Add
     </CompactButton>
   </div>
 );
