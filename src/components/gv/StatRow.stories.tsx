@@ -1,3 +1,5 @@
+import {useState} from 'react';
+import {expect, userEvent, within} from 'storybook/test';
 import {StatRow} from './StatRow';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
@@ -74,3 +76,33 @@ export const Selected: Story = () => (
     <StatRow label="New comments" value="33" onPress={() => {}} />
   </div>
 );
+
+/** The keyboard: Tab moves from row to row (a static row is skipped), Enter presses the focused one, here turning its
+ * filter on (`isSelected`, read as the current item). */
+export const Keyboard: Story = () => {
+  const [on, setOn] = useState<string | null>(null);
+  const rows = [['Waiting for a reply', '40'], ['Unassigned', '48']];
+  return (
+    <div style={{display: 'flex', flexDirection: 'column', width: 292}}>
+      <StatRow label="Total ideas" value="124" isStatic />
+      {rows.map(([label, value]) => (
+        <StatRow key={label} label={label} value={value} isSelected={on === label}
+          onPress={() => setOn(o => (o === label ? null : label))} />
+      ))}
+    </div>
+  );
+};
+Keyboard.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  const waiting = canvas.getByRole('link', {name: /Waiting for a reply/});
+  const unassigned = canvas.getByRole('link', {name: /Unassigned/});
+  await userEvent.tab();
+  await expect(waiting).toHaveFocus();
+  await userEvent.keyboard('{Enter}');
+  await expect(waiting).toHaveAttribute('aria-current', 'true');
+  await userEvent.tab();
+  await expect(unassigned).toHaveFocus();
+  await userEvent.keyboard('{Enter}');
+  await expect(unassigned).toHaveAttribute('aria-current', 'true');
+  await expect(waiting).not.toHaveAttribute('aria-current');
+};

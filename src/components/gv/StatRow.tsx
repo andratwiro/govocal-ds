@@ -38,6 +38,11 @@ export interface StatRowProps extends PlacementProps {
   onPress?: RACLinkProps['onPress'];
 }
 
+/**
+ * A labelled number that leads somewhere (Figma "Stat row"): a label over a big number, a chevron at the end, and a
+ * dot when there is something new, such as "Waiting for a reply · 40" in a phase's Manage tab. Static, it is plain
+ * display.
+ */
 export function StatRow({label, value, isNew = false, isStatic = false, isSelected = false, href, onPress, className, style}: StatRowProps) {
   const content = (
     <>

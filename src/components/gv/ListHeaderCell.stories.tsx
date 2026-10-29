@@ -1,3 +1,5 @@
+import {useState} from 'react';
+import {expect, userEvent, within} from 'storybook/test';
 import {ListHeaderCell} from './ListHeaderCell';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
@@ -62,3 +64,31 @@ export const LabelSorted: Story = () => (
   </ListHeaderCell>
 );
 LabelSorted.storyName = 'Label · sorted';
+
+/** The keyboard: a static cell takes no focus; Tab reaches a sortable cell and the add-column cell, and Enter or Space
+ * presses them. */
+export const Keyboard: Story = () => {
+  const [sorts, setSorts] = useState(0);
+  const [added, setAdded] = useState(0);
+  return (
+    <div style={{display: 'flex', gap: 24, alignItems: 'center'}}>
+      <ListHeaderCell kind="label" isStatic>Statement</ListHeaderCell>
+      <ListHeaderCell kind="number" onPress={() => setSorts(n => n + 1)}>Likes</ListHeaderCell>
+      <ListHeaderCell kind="add-column" onPress={() => setAdded(n => n + 1)} />
+      <span role="status">{`Sorted ${sorts}, added ${added}`}</span>
+    </div>
+  );
+};
+Keyboard.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  await userEvent.tab();
+  await expect(canvas.getByRole('button', {name: 'Likes'})).toHaveFocus();
+  await userEvent.keyboard('{Enter}');
+  await expect(canvas.getByRole('status')).toHaveTextContent('Sorted 1, added 0');
+  await userEvent.keyboard(' ');
+  await expect(canvas.getByRole('status')).toHaveTextContent('Sorted 2, added 0');
+  await userEvent.tab();
+  await expect(canvas.getByRole('button', {name: 'Add column'})).toHaveFocus();
+  await userEvent.keyboard('{Enter}');
+  await expect(canvas.getByRole('status')).toHaveTextContent('Sorted 2, added 1');
+};

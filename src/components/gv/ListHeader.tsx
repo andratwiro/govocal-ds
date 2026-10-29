@@ -71,6 +71,11 @@ export function listColumnsTemplate(columns: ListHeaderColumn[]) {
     .join(' ');
 }
 
+/**
+ * The column heads over a Go Vocal method's list of rows (Figma "List header", one `Method` per column set): a
+ * select-all checkbox, the column labels, sortable or static, and an "Add column" button at the end. Pair it with
+ * `ListRow` or a method's row pattern; both keep the same 28px lead and trail slots, so the columns line up.
+ */
 export function ListHeader({columns, onSort, onAddColumn, selectAll, hasLeadSlot, labels, className, style}: ListHeaderProps) {
   const l = mergeLabels(listHeaderLabels, labels);
   return (

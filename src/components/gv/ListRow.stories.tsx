@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {expect, userEvent, within} from 'storybook/test';
 import {ListRow} from './ListRow';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
@@ -87,4 +88,42 @@ export const Selectable: Story = () => {
       ))}
     </Frame>
   );
+};
+
+/** The keyboard: Tab moves from one row's checkbox to the next (each shows when focused), Space ticks it. */
+export const Keyboard: Story = () => {
+  const [picked, setPicked] = useState<Set<string>>(new Set());
+  const titles = ['Add charging points for e-bikes on the ring road', 'Create a safe school route'];
+  return (
+    <Frame>
+      {titles.map(title => (
+        <ListRow key={title} title={title} status="Proposed" select={{
+          isSelected: picked.has(title),
+          'aria-label': `Select: ${title}`,
+          onChange: on => setPicked(p => {
+            const n = new Set(p);
+            if (on) n.add(title);
+            else n.delete(title);
+            return n;
+          })
+        }} />
+      ))}
+    </Frame>
+  );
+};
+Keyboard.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  const first = canvas.getByRole('checkbox', {name: 'Select: Add charging points for e-bikes on the ring road'});
+  const second = canvas.getByRole('checkbox', {name: 'Select: Create a safe school route'});
+  await userEvent.tab();
+  await expect(first).toHaveFocus();
+  await userEvent.keyboard(' ');
+  await expect(first).toBeChecked();
+  await userEvent.tab();
+  await expect(second).toHaveFocus();
+  await expect(second).not.toBeChecked();
+  await userEvent.keyboard(' ');
+  await expect(second).toBeChecked();
+  await userEvent.keyboard(' ');
+  await expect(second).not.toBeChecked();
 };

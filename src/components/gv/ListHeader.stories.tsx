@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {ListHeader, type ListHeaderColumn} from './ListHeader';
 import {ListRow} from './ListRow';
 import {Table, TableHeader, TableBody, Column, Row, Cell} from '../Table';
+import {expect, userEvent, within} from 'storybook/test';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof ListHeader> = {
@@ -203,3 +204,32 @@ export const InATable: Story = () => (
   </Table>
 );
 InATable.storyName = 'In a table';
+
+/** The keyboard: Tab reaches the select-all checkbox, then each sortable column (static ones are skipped); Space
+ * ticks the checkbox, Enter or Space on a column sorts by it. */
+export const Keyboard: Story = () => {
+  const [sortedBy, setSortedBy] = useState('agree');
+  const [all, setAll] = useState(false);
+  const columns = commonGround.map(c => ({...c, isSorted: c.key === sortedBy}));
+  return (
+    <div style={{width: 764}}>
+      <ListHeader columns={columns} onSort={setSortedBy} selectAll={{isSelected: all, onChange: setAll}} />
+      <p role="status">Sorted by {columns.find(c => c.isSorted)?.label}</p>
+    </div>
+  );
+};
+Keyboard.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  await userEvent.tab();
+  await expect(canvas.getByRole('checkbox', {name: 'Select all'})).toHaveFocus();
+  await userEvent.keyboard(' ');
+  await expect(canvas.getByRole('checkbox', {name: 'Select all'})).toBeChecked();
+  await userEvent.tab();
+  await expect(canvas.getByRole('button', {name: 'Likes'})).toHaveFocus();
+  await userEvent.keyboard('{Enter}');
+  await expect(canvas.getByRole('status')).toHaveTextContent('Sorted by Likes');
+  await userEvent.tab();
+  await expect(canvas.getByRole('button', {name: 'Agree'})).toHaveFocus();
+  await userEvent.keyboard(' ');
+  await expect(canvas.getByRole('status')).toHaveTextContent('Sorted by Agree');
+};

@@ -46,6 +46,10 @@ export interface ListHeaderCellProps extends PlacementProps {
   labels?: Partial<ListHeaderCellLabels>;
 }
 
+/**
+ * One column head in a List header (Figma "List header cell"): a label or number column that sorts the list when
+ * pressed, a static label, or the trailing "Add column" button. Bold with a down arrow when the list is sorted by it.
+ */
 export function ListHeaderCell({
   kind = 'label',
   isStatic = false,

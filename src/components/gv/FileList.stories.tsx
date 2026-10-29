@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {DialogTrigger} from 'react-aria-components';
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {Button} from '../Button';
 import {FileList, type FileListItemData} from './FileList';
 import {DropZone} from './DropZone';
@@ -81,4 +82,28 @@ export const InADialog: Story = {
     </DialogTrigger>
   ),
   parameters: {docs: {story: {inline: false, iframeHeight: 520}}}
+};
+
+/** The keyboard: Tab reaches the list on its first row, ↓ and ↑ move between rows, → and ← move between a row's
+ * links, Enter follows the focused link (here Delete). */
+export const Keyboard: Story = {
+  render: function Keyboard() {
+    const [items, setItems] = useState(files);
+    return <FileList aria-label="Attachments" items={items} onDelete={item => setItems(items.filter(f => f.id !== item.id))} />;
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('row', {name: /consultation-summary\.pdf/})).toHaveFocus();
+    await userEvent.keyboard('{ArrowDown}');
+    const row = canvas.getByRole('row', {name: /street\.webp/});
+    await expect(row).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect(within(row).getByRole('link', {name: 'View'})).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect(within(row).getByRole('link', {name: 'Delete'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(canvas.queryByRole('row', {name: /street\.webp/})).toBeNull());
+    await expect(canvas.getAllByRole('row')).toHaveLength(2);
+  }
 };

@@ -40,15 +40,15 @@ what would survive a change of base library. It decides nothing: the base librar
 | Charts › Legend row | None: plain React and CSS | – | yes | yes | 4 |
 | Charts › Statement row | None: plain React and CSS | – | yes | yes | 6 |
 | Data display › Avatar | None: plain React and CSS | – | – | yes | 6 |
-| Data display › File list | `GridList`, `GridListItem` through `components/Link` | – | – | yes | 5 |
+| Data display › File list | `GridList`, `GridListItem` through `components/Link` | – | – | yes | 6 |
 | Data display › Illustration | None: plain React and CSS | – | – | yes | 10 |
-| Data display › List header | through `components/gv/Checkbox` | – | – | yes | 7 |
-| Data display › List header cell | `Button` | – | – | yes | 7 |
-| Data display › List row | through `components/gv/Checkbox` | – | – | yes | 5 |
+| Data display › List header | through `components/gv/Checkbox` | – | – | yes | 8 |
+| Data display › List header cell | `Button` | – | – | yes | 8 |
+| Data display › List row | through `components/gv/Checkbox` | – | – | yes | 6 |
 | Data display › Map view | `Button` | – | yes | yes | 10 |
 | Data display › Property list | `VisuallyHidden` | – | – | yes | 3 |
 | Data display › Reaction counts | `VisuallyHidden` | – | yes | yes | 4 |
-| Data display › Stat row | `Link` | – | – | yes | 6 |
+| Data display › Stat row | `Link` | – | – | yes | 7 |
 | Data display › Stat tile | `VisuallyHidden` through `components/gv/HelpPopover` | – | – | yes | 9 |
 | Forms › Checkbox | through `components/Checkbox` | `CheckboxFieldProps` | – | yes | 8 |
 | Forms › Checkbox group | `CheckboxGroup` through `components/Form` | `CheckboxGroupProps` | – | yes | 2 |
