@@ -18,8 +18,9 @@ test('type to confirm: the confirm button stays disabled until the exact text is
 });
 
 test('destructive: focus starts on Cancel, no ×, Esc cancels and returns focus to the trigger', async ({page}) => {
-  await page.goto(story('components-overlays-alert-dialog--destructive'));
-  const trigger = page.getByRole('button', {name: 'Destructive'});
+  // AllVariants' triggers start closed, so opening one here is a real click (focus has somewhere to restore to).
+  await page.goto(story('components-overlays-alert-dialog--all-variants'));
+  const trigger = page.getByRole('button', {name: 'Destructive', exact: true});
   await trigger.click();
   const dialog = page.getByRole('alertdialog', {name: 'Delete this group?'});
   await expect(dialog).toBeVisible();
@@ -32,8 +33,6 @@ test('destructive: focus starts on Cancel, no ×, Esc cancels and returns focus 
 
 test('with impact list: a row per consequence, tone icon then title then description', async ({page}) => {
   await page.goto(story('components-overlays-alert-dialog--with-impact-list'));
-  const trigger = page.getByRole('button', {name: 'With impact list'});
-  await trigger.click();
   const dialog = page.getByRole('alertdialog', {name: 'Edit form'});
   const rows = dialog.getByRole('listitem');
   await expect(rows).toHaveCount(3);
