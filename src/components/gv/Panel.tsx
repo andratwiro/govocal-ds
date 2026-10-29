@@ -19,6 +19,11 @@ export interface PanelProps {
   description?: ReactNode;
   /** The head's trailing actions, e.g. a primary "Create email" Button. */
   actions?: ReactNode;
+  /**
+   * A row between the head and a flush body, 20 in like the head: a `TableToolbar` (count, search, filters) and its
+   * filter chips, over the table they drive (the prototype's Audience card).
+   */
+  toolbar?: ReactNode;
   /** The foot, under a hairline: a Pagination, or Cancel / Send. Its content sits at the end. */
   footer?: ReactNode;
   /**
@@ -33,11 +38,13 @@ export interface PanelProps {
 
 /**
  * The white frame a table or list sits in (the prototype's Audience table card, Messaging panel and composer): a
- * head with the title, an optional count Badge and description and trailing actions, over a hairline; the body;
- * an optional foot. A `section` named by its heading. For a bare table without a head, Data table's `framed` is
+ * head with the title, an optional count Badge and description and trailing actions, over a hairline; an optional
+ * toolbar row; the body; an optional foot. A `section` named by its heading. For a bare table without a head, Data table's `framed` is
  * enough. Not in Figma yet.
  */
-export function Panel({title, headingLevel = 2, count, description, actions, footer, flush, children, className}: PanelProps) {
+export function Panel({
+  title, headingLevel = 2, count, description, actions, toolbar, footer, flush, children, className
+}: PanelProps) {
   const id = useId();
   const {locale} = useLocale();
   const shown = useMemo(() => typeof count === 'number' ? new Intl.NumberFormat(locale).format(count) : count, [count, locale]);
@@ -54,6 +61,7 @@ export function Panel({title, headingLevel = 2, count, description, actions, foo
         </div>
         {actions && <div className="gv-panel__actions">{actions}</div>}
       </header>
+      {toolbar && <div className="gv-panel__toolbar">{toolbar}</div>}
       <div className="gv-panel__body" data-flush={flush || undefined}>{children}</div>
       {footer && <footer className="gv-panel__foot">{footer}</footer>}
     </section>

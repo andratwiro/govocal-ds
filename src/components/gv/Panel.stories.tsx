@@ -3,6 +3,8 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 import {ExternalLink, Plus, SquarePen} from 'lucide-react';
 import {Panel} from './Panel';
 import {Pagination} from './Pagination';
+import {TableToolbar} from './TableToolbar';
+import {SearchField} from '../SearchField';
 import {DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTablePerson, DataTableRow} from './DataTable';
 import {StatusBadge} from './StatusBadge';
 import {Button} from '../Button';
@@ -26,7 +28,9 @@ const PEOPLE = [
   {id: 'c', name: 'Admin C', initials: 'AC', email: 'user3@example.org', role: 'Platform admin', joined: '24 September 2025'}
 ];
 
-function Participants() {
+function Participants({query = ''}: {query?: string}) {
+  const q = query.trim().toLowerCase();
+  const people = PEOPLE.filter(p => !q || `${p.name} ${p.email}`.toLowerCase().includes(q));
   return (
     <DataTable aria-label="All participants">
       <DataTableHeader>
@@ -35,9 +39,9 @@ function Participants() {
         <DataTableColumn>Joined</DataTableColumn>
       </DataTableHeader>
       <DataTableBody>
-        {PEOPLE.map((p, i) => (
+        {people.map(p => (
           <DataTableRow key={p.id} id={p.id} textValue={p.name}>
-            <DataTableCell><DataTablePerson name={p.name} initials={p.initials} src={PORTRAITS[i]} sub={p.email} /></DataTableCell>
+            <DataTableCell><DataTablePerson name={p.name} initials={p.initials} src={PORTRAITS[PEOPLE.indexOf(p)]} sub={p.email} /></DataTableCell>
             <DataTableCell>{p.role}</DataTableCell>
             <DataTableCell>{p.joined}</DataTableCell>
           </DataTableRow>
@@ -149,6 +153,31 @@ export const WithActions: Story = {
 export const WithFooter: Story = {
   name: 'With footer',
   render: () => <div style={{maxWidth: 900}}><PagedParticipants /></div>
+};
+
+function SearchableParticipants() {
+  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState('');
+  return (
+    <Panel title="All participants" count={2184} description="Everyone who has taken part in this project." flush
+      toolbar={(
+        <TableToolbar aria-label="Participant tools">
+          <SearchField aria-label="Search participants" placeholder="Search by name or email" value={query} onChange={setQuery} />
+        </TableToolbar>
+      )}
+      footer={<Pagination page={page} pageCount={8} onPageChange={setPage} aria-label="Participant pages" />}>
+      <Participants query={query} />
+    </Panel>
+  );
+}
+
+/**
+ * The Audience card whole: a toolbar row between the head and the table (here the search, 20 in like the head), the
+ * table flush, the Pagination in the foot.
+ */
+export const WithAToolbar: Story = {
+  name: 'With a toolbar',
+  render: () => <div style={{maxWidth: 900}}><SearchableParticipants /></div>
 };
 
 /** The email composer: the form in the body, Cancel and Send in the foot. */

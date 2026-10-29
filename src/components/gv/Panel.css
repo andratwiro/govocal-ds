@@ -3,7 +3,7 @@
 /*
  * Panel (the prototype's `.aud-tablecard` / `.pj-msg__panel`): white, a 1px card border, radius 12. The head is 16 20
  * with a hairline under it: the title (Title type) and its count Badge 8 apart, the description 3 under it, the
- * actions at the end. The body is 20 in, or flush for a table. The foot is 12 20 over a lighter hairline, its content
+ * actions at the end. An optional toolbar row follows. The body is 20 in, or flush for a table. The foot is 12 20 over a lighter hairline, its content
  * at the end.
  */
 .gv-panel {
@@ -54,6 +54,13 @@
   align-items: center;
   flex: none;
   gap: var(--gv-space-8);
+}
+
+/* The toolbar row (the prototype's `.aud-tablecard__tools`): 14 20 12, its rows 8 apart (toolbar, then chips). */
+.gv-panel__toolbar {
+  display: grid;
+  gap: var(--gv-space-8);
+  padding: var(--gv-space-14) var(--gv-space-20) var(--gv-space-12);
 }
 
 .gv-panel__body {
