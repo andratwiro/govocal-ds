@@ -1,49 +1,109 @@
 @import '../theme.css';
 
+/*
+ * Figma "List row" (Ideation): 28 | cells 708 | 28, cells 9 above and below, a row hairline.
+ * The prototype's Manage table (.pj-inputrow-line) agrees: the cells sit on the first line
+ * of the title, the title wraps to three lines, the warning sits at the end of the title cell.
+ */
 .gv-list-row {
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  padding-inline-end: var(--gv-space-28);
+  border-bottom: 1px solid var(--gv-border-row);
+
+  &[data-selectable]:hover {
+    background: var(--gv-surface-hover);
+  }
+
+  &[data-selected],
+  &[data-selected]:hover {
+    background: color-mix(in srgb, var(--gv-action-checked) 10%, transparent);
+  }
+}
+
+/* The checkbox slot: hidden until the row is hovered, focused or checked (prototype). */
+.gv-list-row__lead {
+  flex: 0 0 28px;
   display: flex;
   align-items: center;
-  width: 100%;
-  min-height: 56px;
-  padding: var(--gv-space-9) var(--gv-space-28);
-  gap: var(--gv-space-16);
-  border-bottom: 1px solid var(--gv-border-row);
+  justify-content: center;
+  height: 38px;
+
+  > .gv-checkbox {
+    opacity: 0;
+  }
+}
+
+.gv-list-row:hover .gv-list-row__lead > .gv-checkbox,
+.gv-list-row__lead > .gv-checkbox:focus-within,
+.gv-list-row[data-selected] .gv-list-row__lead > .gv-checkbox {
+  opacity: 1;
+}
+
+.gv-list-row__cells {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) 136px;
+  align-items: start;
+  padding-block: var(--gv-space-9);
 }
 
 .gv-list-row__title-cell {
   display: flex;
-  align-items: center;
-  gap: var(--gv-space-12);
-  flex: 1;
+  align-items: flex-start;
+  gap: var(--gv-space-8);
   min-width: 0;
+  padding: 0 var(--gv-space-16) 0 var(--gv-space-8);
 }
 
 .gv-list-row__thumbnail {
   width: 32px;
   height: 32px;
   flex-shrink: 0;
+  margin-inline-end: var(--gv-space-4);
   border-radius: var(--gv-radius-6);
   background: var(--gv-surface-hover);
   object-fit: cover;
 }
 
 .gv-list-row__title {
+  flex: 1;
+  min-width: 0;
   font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
   overflow: hidden;
-  text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
+/* Figma "Marks": a 14 frame holding the 16 triangle-alert, on the title's first line. */
+.gv-list-row__marks {
+  flex: none;
+  display: inline-flex;
+  gap: var(--gv-space-6);
+  width: 14px;
+  height: 14px;
+  margin-top: var(--gv-space-3);
+  overflow: visible;
+}
+
 .gv-list-row__warning {
-  flex-shrink: 0;
+  flex: none;
+  margin: -1px;
   color: var(--gv-icon-warning);
 }
 
+/* Figma pads it 0 8; the text may run into the right 8 (the prototype clips at the cell's edge,
+   not its content), so a long label like "Under consideration" stays on one line. */
 .gv-list-row__status-cell {
-  flex: 0 0 136px;
+  min-width: 0;
+  padding: 0 0 0 var(--gv-space-8);
   font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-secondary);
 }
