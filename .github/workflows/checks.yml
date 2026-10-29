@@ -1,0 +1,25 @@
+name: Checks
+# The gate for a pull request into main: the same checks as the deploy, minus the accessibility scan (minutes, and
+# never blocking) and the publish. Branch protection requires the job below by its name, "checks".
+on:
+  pull_request: {branches: [main]}
+  workflow_dispatch:
+permissions: {contents: read}
+# A newer push to the same pull request replaces the running check: only the latest commit can merge.
+concurrency: {group: 'checks-${{ github.ref }}', cancel-in-progress: true}
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: {node-version-file: .nvmrc, cache: npm}
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright test
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with: {name: playwright-report, path: playwright-report, retention-days: 14}
