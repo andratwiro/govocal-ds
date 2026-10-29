@@ -1,10 +1,12 @@
 import {useMemo, useState, type ComponentProps} from 'react';
 import {useNavigate} from 'react-router';
-import {ArrowDown, ArrowUp, Calendar, ChevronDown, ChevronLeft, ChevronRight, Eye, FileText, Folder, FolderPlus,
-  GripVertical, LayoutGrid, MapPin, Orbit, Plus, UserRound, Users} from 'lucide-react';
+import {ArrowDown, ArrowUp, Asterisk, Calendar, ChartColumn, ChevronDown, ChevronLeft, ChevronRight, ClipboardList, Eye,
+  FileText, Folder, FolderPlus, GripVertical, Info, LayoutGrid, Lightbulb, MapPin, Orbit, Plus, UserRound, Users, Vote}
+  from 'lucide-react';
 import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableOptions,
-  DataTableEmpty}
+  DataTableEmpty, DataTableAssignee, DataTableStack, DataTableThumbnail}
   from '../../../src/components/gv/DataTable';
+import {Pagination} from '../../../src/components/gv/Pagination';
 import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {SearchField} from '../../../src/components/SearchField';
@@ -44,6 +46,19 @@ type Space = (typeof SPACES)[number];
 const KNOWN = new Set(PROJECTS.map(p => p.id)); // projects that have an overview screen
 const NO_FOLDER = 'No folder';
 const NO_MANAGER = 'Not assigned';
+// Every admin table pages (docs/DECISIONS.md): six projects a page.
+const PAGE_SIZE = 6;
+
+// The project's tile: its first phase's method as an icon; deciding methods (votes, polls) on the blue tile.
+const METHOD_ICONS: Record<string, typeof MapPin> = {
+  Information: Info, Ideation: MapPin, Proposals: Lightbulb, Voting: Vote, Poll: ChartColumn, Survey: ClipboardList,
+  'Document annotation': FileText, Volunteering: Users, 'Common ground': Users
+};
+function ProjectTile({p}: {p: Project}) {
+  const method = p.phases[0]?.method ?? '';
+  const Icon = METHOD_ICONS[method] ?? MapPin;
+  return <DataTableThumbnail icon={<Icon aria-hidden />} tone={method === 'Voting' || method === 'Poll' ? 'blue' : 'teal'} />;
+}
 
 // The Filter menu's facets: each project carries one value per facet (a manager per name); a facet keeps the
 // projects with any of its ticked values, and facets add up.
@@ -79,24 +94,23 @@ const draft = (title: string, folder?: string): Project => ({
   access: 'Admins and managers', start: '—', folder
 });
 
+// The first manager as the table's assignee cell; DataTableAssignee holds one person, so the others are a "+N"
+// after it, named on hover and to screen readers.
 function Managers({names}: {names?: string[]}) {
-  if (!names?.length) {
-    return <span className="bo-projects-person"><Avatar unassigned /><span className="bo-note">Not assigned</span></span>;
-  }
-  const [first, ...rest] = names;
+  const [first, ...rest] = names ?? [];
   return (
-    <span className="bo-projects-person" title={names.join(', ')}>
-      <Avatar initials={initial(first)} />
-      <span>{first}{rest.length > 0 && <span className="bo-note"> +{rest.length}</span>}</span>
+    <span className="bo-projects-person" title={names?.length ? names.join(', ') : undefined}>
+      <DataTableAssignee name={first} emptyLabel={NO_MANAGER} size={28} />
+      {rest.length > 0 && <span className="bo-note"><span aria-hidden>+{rest.length}</span>
+        <span className="bo-visually-hidden">and {rest.join(', ')}</span></span>}
     </span>
   );
 }
 
 const Visibility = ({p}: {p: Project}) => (
-  <span className="bo-projects-visibility">
+  <DataTableStack sub={p.access}>
     <StatusBadge state={p.status === 'Live' ? 'live' : 'draft'}>{p.status === 'Live' ? 'Published' : 'Draft'}</StatusBadge>
-    <span className="bo-note">{p.access}</span>
-  </span>
+  </DataTableStack>
 );
 
 type RowAction = 'duplicate' | 'move' | 'delete';
@@ -107,7 +121,7 @@ function ProjectTable({rows, onRowAction}: {rows: Project[]; onRowAction: (p: Pr
     <DataTable aria-label="Projects" framed>
       <DataTableHeader>
         <DataTableColumn isRowHeader>Project</DataTableColumn>
-        <DataTableColumn><span className="bo-projects-icon-head"><Users aria-hidden size={16} /><span className="bo-visually-hidden">Participants</span></span></DataTableColumn>
+        <DataTableColumn align="number"><span className="bo-projects-icon-head"><Users aria-hidden size={16} /><span className="bo-visually-hidden">Participants</span></span></DataTableColumn>
         <DataTableColumn>Phase</DataTableColumn><DataTableColumn>Managers</DataTableColumn><DataTableColumn>Visibility</DataTableColumn>
         <DataTableColumn>Start</DataTableColumn><DataTableColumn>End</DataTableColumn>
         <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
@@ -116,16 +130,13 @@ function ProjectTable({rows, onRowAction}: {rows: Project[]; onRowAction: (p: Pr
         // A row opens its project's overview, as the real admin's rows do (new drafts have no overview here yet).
         <DataTableRow key={p.id} id={p.id} onAction={KNOWN.has(p.id) ? () => navigate(`/projects/${p.id}`) : undefined}>
           <DataTableCell textValue={p.title}>
-            <span className="bo-projects-name">
-              <Gap name="Project thumbnail" inline><MapPin aria-hidden size={16} /></Gap>
-              <span>
-                {KNOWN.has(p.id) ? <Link href={`#/projects/${p.id}`}>{p.title}</Link> : <span>{p.title}</span>}
-                {p.folder && <span className="bo-note bo-projects-folder"><Folder aria-hidden size={12} />{p.folder}</span>}
-              </span>
-            </span>
+            <DataTableStack leading={<ProjectTile p={p} />}
+              sub={p.folder && <span className="bo-projects-folder"><Folder aria-hidden size={12} />{p.folder}</span>}>
+              {KNOWN.has(p.id) ? <Link href={`#/projects/${p.id}`}>{p.title}</Link> : p.title}
+            </DataTableStack>
           </DataTableCell>
-          <DataTableCell><span className="bo-projects-nowrap">{p.participants}</span></DataTableCell>
-          <DataTableCell>{p.current}{p.timeLeft && <div className="bo-note">{p.timeLeft}</div>}</DataTableCell>
+          <DataTableCell align="number">{p.participants}</DataTableCell>
+          <DataTableCell><DataTableStack sub={p.timeLeft}>{p.current}</DataTableStack></DataTableCell>
           <DataTableCell><Managers names={p.managers} /></DataTableCell>
           <DataTableCell><Visibility p={p} /></DataTableCell>
           <DataTableCell><span className="bo-projects-nowrap">{p.start}</span></DataTableCell>
@@ -143,8 +154,10 @@ function ProjectTable({rows, onRowAction}: {rows: Project[]; onRowAction: (p: Pr
   );
 }
 
-const folderItems = (folders: FolderRow[]) =>
-  [NO_FOLDER, ...folders.map(f => f.name)].map(f => <SelectItem key={f} id={f}>{f}</SelectItem>);
+const folderItems = (folders: FolderRow[], icon?: boolean) =>
+  [NO_FOLDER, ...folders.map(f => f.name)].map(f => (
+    <SelectItem key={f} id={f} icon={icon ? <Folder aria-hidden size={16} /> : undefined}>{f}</SelectItem>
+  ));
 
 /** From scratch, as in the prototype: a Space and a Folder, neither required; the project starts as a draft. */
 function ScratchModal({folders, spaces, onClose, onCreate}: {folders: FolderRow[]; spaces: Space[]; onClose: () => void;
@@ -157,11 +170,18 @@ function ScratchModal({folders, spaces, onClose, onCreate}: {folders: FolderRow[
         <Button variant="secondary" slot="close">Cancel</Button>
         <Button variant="primary" onPress={() => onCreate(folder === NO_FOLDER ? undefined : folder, space === 'none' ? undefined : space)}>Create project</Button>
       </>}>
+      {/* The prototype's two pills under the title (Select's "With search" and "With icons" stories). */}
       <div className="bo-projects-form">
-        <Select label="Space" selectedKey={space} onSelectionChange={k => setSpace(String(k))}>
-          {[<SelectItem key="none" id="none">No space</SelectItem>, ...spaces.map(s => <SelectItem key={s.name} id={s.name}>{s.name}</SelectItem>)]}
-        </Select>
-        <Select label="Folder" selectedKey={folder} onSelectionChange={k => setFolder(String(k))}>{folderItems(folders)}</Select>
+        <div className="bo-projects-pills">
+          <Select variant="pill" aria-label="Space" prefix="Space:" searchable searchPlaceholder="Search spaces"
+            selectedKey={space} onSelectionChange={k => setSpace(String(k))}>
+            {[{id: 'none', name: 'No space'}, ...spaces.map(s => ({id: s.name, name: s.name}))].map(s => (
+              <SelectItem key={s.id} id={s.id} icon={<Asterisk aria-hidden size={16} />}>{s.name}</SelectItem>
+            ))}
+          </Select>
+          <Select variant="pill" aria-label="Folder" prefix="Folder:" searchable searchPlaceholder="Search folders"
+            selectedKey={folder} onSelectionChange={k => setFolder(String(k))}>{folderItems(folders, true)}</Select>
+        </div>
         <p className="bo-note">Both are optional. The project opens as an untitled draft: name it from its overview.</p>
       </div>
     </Modal>
@@ -399,7 +419,10 @@ export function Projects() {
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState(SORTS[0]);
   const [pending, setPending] = useState(false);
+  const [page, setPage] = useState(1);
   const close = () => setDialog(null);
+  // A new search, sort, filter or date range starts again from the first page.
+  const fresh = <T,>(set: (v: T) => void) => (v: T) => { set(v); setPage(1); };
 
   const rows = useMemo(() => {
     // The date range keeps the projects running at some point in it (a project with no dates yet never matches).
@@ -420,6 +443,9 @@ export function Projects() {
     }
   }, [projects, query, sort, pending, range, filters]);
   const facets = useMemo(() => projectFacets(projects, folders), [projects, folders]);
+  const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  const current = Math.min(page, pageCount);
+  const shown = rows.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
 
   const add = (p: Project, after?: string) => setProjects(list => {
     if (!after) return [p, ...list];
@@ -469,22 +495,25 @@ export function Projects() {
               </Tab>
             ))}
           </TabList>
-          <SearchField aria-label="Search projects" placeholder="Search projects" value={query} onChange={setQuery} />
+          <SearchField aria-label="Search projects" placeholder="Search projects" value={query} onChange={fresh(setQuery)} />
         </div>
         <TabPanels>
         <TabPanel id="Projects">
           <div className="bo-filters bo-projects-filters">
-            <Select aria-label="Sort" selectedKey={sort} onSelectionChange={k => setSort(String(k))}>
+            <Select aria-label="Sort" selectedKey={sort} onSelectionChange={k => fresh(setSort)(String(k))}>
               {SORTS.map(s => <SelectItem key={s} id={s}>{s}</SelectItem>)}
             </Select>
-            <ToggleButton isSelected={pending} onChange={setPending}>Pending approval</ToggleButton>
-            <DateRangePicker aria-label="Dates" value={range} onChange={setRange} />
-            <FilterMenu aria-label="Filter projects" facets={facets} value={filters} onChange={setFilters} countLabel={projectsWord} />
+            <ToggleButton isSelected={pending} onChange={fresh(setPending)}>Pending approval</ToggleButton>
+            <DateRangePicker aria-label="Dates" value={range} onChange={fresh(setRange)} />
+            <FilterMenu aria-label="Filter projects" facets={facets} value={filters} onChange={fresh(setFilters)} countLabel={projectsWord} />
           </div>
-          <FilterChips aria-label="Active filters" facets={facets} value={filters} onChange={setFilters} />
-          <GapLegend names={['Project thumbnail']} />
-          <ProjectTable rows={rows} onRowAction={onRowAction} />
-          <p className="bo-note bo-projects-foot">All projects have been loaded</p>
+          <FilterChips aria-label="Active filters" facets={facets} value={filters} onChange={fresh(setFilters)} />
+          <ProjectTable rows={shown} onRowAction={onRowAction} />
+          {/* Numbered pages in place of "Scroll down to load more" (docs/DECISIONS.md). */}
+          <div className="bo-projects-foot">
+            <span className="bo-note">{projectsWord(rows.length)}</span>
+            <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Project pages" />
+          </div>
         </TabPanel>
         <TabPanel id="Folders"><FoldersView folders={folders} projects={projects} /></TabPanel>
         <TabPanel id="Spaces"><SpacesView projects={projects} spaces={spaces} /></TabPanel>

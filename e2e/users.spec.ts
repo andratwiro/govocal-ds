@@ -22,12 +22,61 @@ test('users follows the real admin: segments, groups, a selectable user table', 
   for (const c of ['Name', 'Role', 'Last active', 'Joined', 'Options']) {
     await expect(grid.getByRole('columnheader', {name: c})).toBeVisible();
   }
-  await expect(grid.getByRole('row')).toHaveCount(13); // header + twelve people
+  // Every admin table pages (docs/DECISIONS.md): ten of the twelve people on the first page.
+  await expect(grid.getByRole('row')).toHaveCount(11);
 });
 
-test('the Card counts the list; rows use the gv Avatar and icon button; a row has its options menu', async ({page}) => {
+// The list sits in a Panel (Panel's "With a toolbar" story): the title and description in the head, the toolbar row
+// (the count, Export all, the search), the table flush, the Pagination in the foot.
+test('the list is a Panel: head, toolbar with the count and search, the table, Pagination in the foot', async ({page}) => {
   await page.goto('/backoffice/#/users');
-  await expect(page.getByRole('heading', {level: 3, name: 'Registered users'}).locator('..').getByText('12', {exact: true})).toBeVisible();
+  const panel = page.getByRole('region', {name: 'Registered users'});
+  await expect(panel).toHaveClass(/gv-panel/);
+  await expect(panel.getByRole('heading', {level: 2, name: 'Registered users'})).toBeVisible();
+  await expect(panel.locator('.gv-panel__description')).toContainText('Get an overview of all the people');
+  const toolbar = panel.locator('.gv-panel__toolbar');
+  await expect(toolbar.getByRole('heading', {level: 3, name: '12 users'})).toBeVisible();
+  await expect(toolbar.getByRole('searchbox', {name: 'Search users'})).toBeVisible();
+  await expect(toolbar.getByRole('button', {name: 'Export all'})).toBeVisible();
+  await expect(panel.locator('.gv-panel__body').getByRole('grid', {name: 'Registered users'})).toBeVisible();
+  await expect(panel.locator('.gv-panel__foot').getByRole('navigation', {name: 'User pages'})).toBeVisible();
+  a11yReport(await axeOn(page, '.gv-panel'));
+  // The one count follows the search.
+  await toolbar.getByRole('searchbox', {name: 'Search users'}).fill('admin');
+  await expect(toolbar.getByRole('heading', {level: 3, name: '2 users'})).toBeVisible();
+  // A group's page carries Edit Group and Delete Group in the head.
+  await page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Youth panel/}).click();
+  const group = page.getByRole('region', {name: 'Youth panel'});
+  await expect(group.locator('.gv-panel__actions').getByRole('button', {name: 'Edit Group'})).toBeVisible();
+  await expect(group.locator('.gv-panel__actions').getByRole('button', {name: 'Delete Group'})).toBeVisible();
+});
+
+test('Pagination moves through the users; the header select-all ticks the page shown', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  const grid = page.getByRole('grid', {name: 'Registered users'});
+  const pager = page.getByRole('navigation', {name: 'User pages'});
+  await expect(pager.getByRole('button', {name: 'Page 1'})).toHaveAttribute('aria-current', 'page');
+  await pager.getByRole('button', {name: 'Page 2'}).click();
+  await expect(pager.getByRole('button', {name: 'Page 2'})).toHaveAttribute('aria-current', 'page');
+  await expect(grid.getByRole('row')).toHaveCount(3); // header + Admin B and Resident L
+  await expect(grid.getByRole('row', {name: /Admin B/})).toBeVisible();
+  await expect(grid.getByRole('row', {name: /Resident E/})).toHaveCount(0);
+  await grid.getByRole('columnheader').getByRole('checkbox').click({force: true});
+  await expect(page.getByText('2 selected')).toBeVisible();
+  // A tick on another page stays: page 1 adds to it.
+  await pager.getByRole('button', {name: 'Page 1'}).click();
+  await grid.getByRole('row', {name: /Resident E/}).locator('.gv-checkbox .indicator').click();
+  await expect(page.getByText('3 selected')).toBeVisible();
+  await page.getByRole('button', {name: 'Clear selection'}).click();
+  // A new search goes back to the first page.
+  await pager.getByRole('button', {name: 'Page 2'}).click();
+  await page.getByRole('searchbox', {name: 'Search users'}).fill('resident');
+  await expect(pager.getByRole('button', {name: 'Page 1'})).toHaveAttribute('aria-current', 'page');
+});
+
+test('the Panel counts the list; rows use the gv Avatar and icon button; a row has its options menu', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  await expect(page.getByRole('heading', {level: 3, name: '12 users'})).toBeVisible();
   const row = page.getByRole('row', {name: /Admin A/});
   await expect(row.locator('.gv-avatar')).toHaveText('AA');
   await expect(row.getByText('user1@example.org')).toBeVisible();
@@ -40,12 +89,16 @@ test('the Card counts the list; rows use the gv Avatar and icon button; a row ha
   }
 });
 
-test('the Select checkbox picks every row and shows the selection actions', async ({page}) => {
+// docs/DECISIONS.md: select-all lives in the header only; the toolbar's "Select" checkbox is gone.
+test('the header select-all picks every row of the page and shows the selection actions', async ({page}) => {
   await page.goto('/backoffice/#/users');
-  await page.getByText('Select', {exact: true}).click();
+  await expect(page.getByText('Select', {exact: true})).toHaveCount(0);
   const grid = page.getByRole('grid', {name: 'Registered users'});
+  await grid.getByRole('columnheader').getByRole('checkbox').click({force: true});
   await expect(grid.getByRole('row').nth(1)).toHaveAttribute('aria-selected', 'true');
-  await expect(page.getByText('12 selected')).toBeVisible();
+  await expect(page.getByText('10 selected')).toBeVisible();
+  // The Selection bar takes the count's place in the toolbar.
+  await expect(page.getByRole('heading', {name: '12 users'})).toHaveCount(0);
   await expect(page.getByRole('button', {name: 'Add to group'})).toBeVisible();
   await expect(page.getByRole('button', {name: 'Export selected'})).toBeVisible();
 });
@@ -101,8 +154,9 @@ test('the table is the gv DataTable: Joined sort toggles, a row selects, one sel
   await expect(joined).toHaveAttribute('aria-sort', 'descending');
   await expect(grid.getByRole('row').nth(1)).toContainText('Admin A');
 
-  // One "select all": the toolbar's Select checkbox; the header's checkbox column stays empty.
-  await expect(grid.getByRole('columnheader').getByRole('checkbox')).toHaveCount(0);
+  // One "select all": the header's checkbox (docs/DECISIONS.md).
+  await expect(grid.getByRole('columnheader').getByRole('checkbox')).toHaveCount(1);
+  await expect(page.getByRole('checkbox', {name: /Select all users/})).toHaveCount(0);
   const row = grid.getByRole('row', {name: /Resident E/});
   await row.locator('.gv-checkbox .indicator').click();
   await expect(row).toHaveAttribute('aria-selected', 'true');

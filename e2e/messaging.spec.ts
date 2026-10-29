@@ -1,7 +1,7 @@
 import {test, expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {headingJumps} from './headings';
-import {a11yReport} from './axe';
+import {a11yReport, axeViolations} from './axe';
 
 test('messaging follows the real admin: custom emails, automated emails and SMS tabs', async ({page}) => {
   await page.goto('/backoffice/#/messaging');
@@ -33,6 +33,33 @@ test('custom emails list sent, scheduled and draft emails, and a draft opens in 
   await page.getByRole('button', {name: /^Actions for Market Square/}).click();
   await page.getByRole('menuitem', {name: 'Edit'}).click();
   await expect(page.getByRole('region', {name: 'Draft: Market Square: join the walk on Saturday'})).toBeVisible();
+});
+
+// The list and the composer each sit in a Panel (Panel's "With actions" and "In a composer" stories).
+test('custom emails: the list Panel carries Create email and its pages; the composer Panel has Cancel and Send in its foot', async ({page}) => {
+  await page.goto('/backoffice/#/messaging');
+  const list = page.getByRole('region', {name: 'Custom emails', exact: true});
+  await expect(list).toHaveClass(/gv-panel/);
+  await expect(list.getByRole('heading', {level: 3, name: 'Custom emails'})).toBeVisible();
+  await expect(list.locator('.gv-panel__description')).toHaveText('Send out custom emails and check statistics.');
+  await expect(list.locator('.gv-panel__actions').getByRole('button', {name: 'Create email'})).toBeVisible();
+  await expect(list.locator('.gv-panel__body').getByRole('grid', {name: 'Custom emails'})).toBeVisible();
+  const pager = list.locator('.gv-panel__foot').getByRole('navigation', {name: 'Email pages'});
+  await expect(pager.getByRole('button', {name: 'Page 1'})).toHaveAttribute('aria-current', 'page');
+  const draft = page.getByRole('region', {name: 'Draft: Bike parking survey: tell us where'});
+  await expect(draft).toHaveClass(/gv-panel/);
+  await expect(draft.getByRole('heading', {level: 3, name: 'Draft: Bike parking survey: tell us where'})).toBeVisible();
+  const foot = draft.locator('.gv-panel__foot');
+  for (const b of ['Cancel', 'Save as draft', 'Send a preview', 'Send now']) await expect(foot.getByRole('button', {name: b})).toBeVisible();
+  await expect(draft.locator('.gv-panel__body').getByRole('textbox', {name: 'Subject'})).toBeVisible();
+  a11yReport(await axeViolations(page, '.bo-messaging-lists'));
+  // Cancel closes the composer and keeps the draft as it was.
+  await draft.getByRole('textbox', {name: 'Subject'}).fill('Not kept');
+  await foot.getByRole('button', {name: 'Cancel'}).click();
+  await expect(draft).toHaveCount(0);
+  await expect(page.getByText('Choose Edit on a draft to open it here.')).toBeVisible();
+  await expect(page.getByRole('grid', {name: 'Custom emails'}).getByRole('row', {name: /Bike parking survey/})).toContainText('Draft');
+  await expect(page.getByRole('row', {name: /Not kept/})).toHaveCount(0);
 });
 
 test('automated emails are grouped by recipient, switch on and off, and an on email opens its editor', async ({page}) => {
@@ -79,6 +106,12 @@ test('Create email opens the composer: sender, recipients, subject, message; Sen
   for (const f of ['From', 'Replies should go to', 'Subject']) await expect(page.getByRole('textbox', {name: f, exact: true})).toBeVisible();
   await expect(page.getByRole('button', {name: /To$/})).toBeVisible();
   await expect(page.getByRole('textbox', {name: 'Email message'})).toBeVisible();
+  // The composer is a Panel: the form in its body, Cancel, Save as draft, Send a preview and Send now in its foot.
+  const composer = page.getByRole('region', {name: 'Write a message and choose who gets it'});
+  await expect(composer).toHaveClass(/gv-panel/);
+  for (const b of ['Cancel', 'Save as draft', 'Send a preview', 'Send now']) {
+    await expect(composer.locator('.gv-panel__foot').getByRole('button', {name: b})).toBeVisible();
+  }
   await page.getByRole('textbox', {name: 'Subject', exact: true}).fill('Autumn clean-up day');
   await page.getByRole('button', {name: 'Send a preview'}).click();
   await expect(page.locator('.react-aria-Toast').first()).toContainText('Preview sent');

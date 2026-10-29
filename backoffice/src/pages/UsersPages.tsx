@@ -10,12 +10,16 @@ import {Button} from '../../../src/components/Button';
 import {Meter} from '../../../src/components/Meter';
 import {ToastRegion, queue} from '../../../src/components/Toast';
 import {Card} from '../../../src/components/gv/Card';
+import {Panel} from '../../../src/components/gv/Panel';
+import {Pagination} from '../../../src/components/gv/Pagination';
+import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
+import {SearchField} from '../../../src/components/SearchField';
 import {StatTile} from '../../../src/components/gv/StatTile';
 import {Avatar} from '../../../src/components/gv/Avatar';
 import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {Banner} from '../../../src/components/gv/Banner';
 import {GROUPS, INVITATIONS, PARTICIPATION, SEATS, type Invitation, type Person, type Role} from '../data-users';
-import {date, initials, peopleStore} from './Users';
+import {date, initials, PAGE_SIZE, peopleStore} from './Users';
 import {SectionHeading} from '../SectionHeading';
 import {Page} from './Page';
 
@@ -23,6 +27,14 @@ import {Page} from './Page';
 const USERS_CRUMB = [{key: 'users', label: 'Users', href: '#/users'}];
 const ROLES: Role[] = ['Registered user', 'Platform admin', 'Project manager', 'Folder manager'];
 const toast = (title: string, description?: string) => queue.add({title, description}, {timeout: 5000});
+
+/** The page of a list to show, and how many pages it has (every admin table pages: docs/DECISIONS.md). */
+function usePage<T>(list: T[]) {
+  const [page, setPage] = useState(1);
+  const pageCount = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+  const current = Math.min(page, pageCount);
+  return {page: current, pageCount, setPage, shown: list.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE)};
+}
 
 // ── Invitations ──────────────────────────────────────────────────────────────
 
@@ -58,10 +70,22 @@ function InviteForm({onSend}: {onSend: (emails: string[], role: Role) => void}) 
 }
 
 function InvitationTable({invitations}: {invitations: Invitation[]}) {
+  const [query, setQuery] = useState('');
+  const found = invitations.filter(i => i.email.toLowerCase().includes(query.trim().toLowerCase()));
+  const {page, pageCount, setPage, shown} = usePage(found);
+  // One count, in the toolbar, following the search (docs/DECISIONS.md).
   return (
-    <Card tone="manage" title="All invitations" pills={[{label: String(invitations.length)}]}
+    <Panel title="All invitations" headingLevel={3} flush
       actions={<Button variant="quiet" size={32} onPress={() => toast('Export started', 'invitations.xlsx')}>
-        <Download aria-hidden size={16} />Export all invitations</Button>}>
+        <Download aria-hidden size={16} />Export all invitations</Button>}
+      toolbar={(
+        <TableToolbar aria-label="Invitation tools"
+          heading={`${found.length} ${found.length === 1 ? 'invitation' : 'invitations'}`} headingLevel={4}>
+          <SearchField aria-label="Search invitations" placeholder="Search by email" value={query}
+            onChange={q => { setQuery(q); setPage(1); }} />
+        </TableToolbar>
+      )}
+      footer={<Pagination page={page} pageCount={pageCount} onPageChange={setPage} aria-label="Invitation pages" />}>
       <div className="bo-users-scroll">
         <DataTable aria-label="All invitations">
           <DataTableHeader>
@@ -70,8 +94,8 @@ function InvitationTable({invitations}: {invitations: Invitation[]}) {
             <DataTableColumn>Invited</DataTableColumn>
             <DataTableColumn>Status</DataTableColumn>
           </DataTableHeader>
-          <DataTableBody renderEmptyState={() => <DataTableEmpty>No invitations yet.</DataTableEmpty>}>
-            {invitations.map(i => (
+          <DataTableBody renderEmptyState={() => <DataTableEmpty>{query ? 'No invitations match.' : 'No invitations yet.'}</DataTableEmpty>}>
+            {shown.map(i => (
               <DataTableRow key={i.id} id={i.id} textValue={i.email}>
                 <DataTableCell>{i.email}</DataTableCell>
                 <DataTableCell><span className="bo-users-nowrap">{i.role}</span></DataTableCell>
@@ -82,7 +106,7 @@ function InvitationTable({invitations}: {invitations: Invitation[]}) {
           </DataTableBody>
         </DataTable>
       </div>
-    </Card>
+    </Panel>
   );
 }
 
@@ -115,8 +139,10 @@ export function UserInvitations() {
 // ── Seats overview ───────────────────────────────────────────────────────────
 
 function PeopleTable({label, people}: {label: string; people: Person[]}) {
+  const {page, pageCount, setPage, shown} = usePage(people);
   return (
-    <Card tone="manage" title={label} pills={[{label: String(people.length)}]}>
+    <Panel title={label} headingLevel={3} count={people.length} flush
+      footer={<Pagination page={page} pageCount={pageCount} onPageChange={setPage} aria-label={`${label} pages`} />}>
       <div className="bo-users-scroll">
         <DataTable aria-label={label}>
           <DataTableHeader>
@@ -125,7 +151,7 @@ function PeopleTable({label, people}: {label: string; people: Person[]}) {
             <DataTableColumn>Joined</DataTableColumn>
           </DataTableHeader>
           <DataTableBody>
-            {people.map(p => (
+            {shown.map(p => (
               <DataTableRow key={p.id} id={p.id} textValue={p.name} href={`#/users/${p.id}`}>
                 <DataTableCell><DataTablePerson name={p.name} initials={initials(p.name)} sub={p.email} /></DataTableCell>
                 <DataTableCell><span className="bo-users-nowrap">{p.role}</span></DataTableCell>
@@ -135,7 +161,7 @@ function PeopleTable({label, people}: {label: string; people: Person[]}) {
           </DataTableBody>
         </DataTable>
       </div>
-    </Card>
+    </Panel>
   );
 }
 

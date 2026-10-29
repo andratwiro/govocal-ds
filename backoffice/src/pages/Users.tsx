@@ -8,10 +8,11 @@ import {SearchField} from '../../../src/components/SearchField';
 import {Menu, MenuItem} from '../../../src/components/Menu';
 import {Button} from '../../../src/components/Button';
 import {Card, CardRadio, CardRadioGroup} from '../../../src/components/gv/Card';
-import {Checkbox} from '../../../src/components/gv/Checkbox';
 import {Modal} from '../../../src/components/gv/Modal';
 import {AlertDialog} from '../../../src/components/gv/AlertDialog';
 import {Pagination} from '../../../src/components/gv/Pagination';
+import {Panel} from '../../../src/components/gv/Panel';
+import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
 import {TextField} from '../../../src/components/TextField';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {ToastRegion, queue} from '../../../src/components/Toast';
@@ -24,6 +25,10 @@ import {Page} from './Page';
 type TableProps = ComponentProps<typeof DataTable>;
 type Selection = Parameters<NonNullable<TableProps['onSelectionChange']>>[0];
 type Sort = {column: 'name' | 'lastActive' | 'joined'; direction: 'ascending' | 'descending'};
+
+// Every admin table pages (docs/DECISIONS.md).
+export const PAGE_SIZE = 10;
+export const usersWord = (n: number) => `${n} ${n === 1 ? 'user' : 'users'}`;
 
 const DESCRIPTION = 'Get an overview of all the people and organisations that registered on the platform. ' +
   'Add a selection of users to Manual groups or Smart groups.';
@@ -148,6 +153,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<Selection>(new Set());
   const [sort, setSort] = useState<Sort>({column: 'joined', direction: 'descending'});
+  const [page, setPage] = useState(1);
   const all = inView(view, groups, people);
   const rows = useMemo(() => {
     const q = query.toLowerCase();
@@ -155,12 +161,19 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
     const sign = sort.direction === 'descending' ? -1 : 1;
     return found.sort((a, b) => sign * compare(a, b, sort.column));
   }, [all, query, sort]);
+  const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  const current = Math.min(page, pageCount);
+  const shown = rows.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
+  const search = (q: string) => { setQuery(q); setPage(1); };
   // The prototype's sortable headers: pressing the sorted one flips it; a new column starts A-Z for names and
   // newest first for dates.
   const onSort = ({column, direction}: {column: string | number; direction: Sort['direction']}) =>
     setSort(s => s.column === column ? {column: s.column, direction}
       : {column: column as Sort['column'], direction: column === 'name' ? 'ascending' : 'descending'});
-  const ids = selected === 'all' ? rows.map(r => r.id) : rows.filter(r => selected.has(r.id)).map(r => r.id);
+  // The header's select-all ticks the page shown (a known page, docs/DECISIONS.md); ticks on other pages stay.
+  const ids = selected === 'all' ? shown.map(r => r.id) : rows.filter(r => selected.has(r.id)).map(r => r.id);
+  const onSelect = (keys: Selection) =>
+    setSelected(keys === 'all' ? new Set([...ids, ...shown.map(r => r.id)]) : keys);
   const count = ids.length;
   const exportUsers = (n: number) => toast('Export started', `${n === 1 ? '1 user' : `${n} users`} in users.xlsx`);
 
@@ -173,45 +186,41 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
     {id: 'export', label: 'Export selected', icon: <Download aria-hidden size={16} />}
   ];
 
-  // The Select checkbox picks every row; once some are picked it stands alone (named for screen readers) and the
-  // selection bar beside it says how many.
+  // The toolbar row (the Data table's "In a panel" story): the count, which follows the search, gives way to the
+  // Selection bar while rows are ticked; the export and the search stay put at the end.
   const toolbar = (
-    <div className="bo-users-toolbar">
-      <Checkbox isSelected={count > 0 && count === rows.length} isIndeterminate={count > 0 && count < rows.length}
-        aria-label={count > 0 ? 'Select all users' : undefined}
-        onChange={on => setSelected(on ? new Set(rows.map(r => r.id)) : new Set())}>
-        {count === 0 && 'Select'}
-      </Checkbox>
+    <TableToolbar aria-label="User tools" start={(
       <SelectionBar count={count} actions={actions} onAction={id => id === 'export' && exportUsers(count)}
-        onClear={() => setSelected(new Set())} />
-      <span className="bo-push" />
-      {count === 0 && <Button variant="quiet" size={32} onPress={() => exportUsers(all.length)}><Download aria-hidden size={16} />Export all</Button>}
-      <SearchField aria-label="Search users" placeholder="Search" value={query} onChange={setQuery} />
-    </div>
+        onClear={() => setSelected(new Set())}>
+        <TableToolbarHeading>{usersWord(rows.length)}</TableToolbarHeading>
+      </SelectionBar>
+    )}>
+      <Button variant="quiet" size={32} onPress={() => exportUsers(all.length)}><Download aria-hidden size={16} />Export all</Button>
+      <SearchField aria-label="Search users" placeholder="Search" value={query} onChange={search} />
+    </TableToolbar>
   );
 
   return (
-    <Card tone="manage" title={title} pills={[{label: String(all.length)}]} actions={group && (
-      <span className="bo-users-actions">
-        <Button variant="quiet" size={32} onPress={onEditGroup}><Pencil aria-hidden size={16} />Edit Group</Button>
-        <Button variant="quiet" tone="danger" size={32} onPress={onDeleteGroup}><Trash2 aria-hidden size={16} />Delete Group</Button>
-      </span>
-    )}>
-      <div className="bo-users-body">
-        {view === 'all' && <p className="bo-note">{DESCRIPTION}</p>}
-        {toolbar}
+    <Panel title={title} description={view === 'all' ? DESCRIPTION : undefined} flush toolbar={toolbar}
+      actions={group && (
+        <>
+          <Button variant="quiet" size={32} onPress={onEditGroup}><Pencil aria-hidden size={16} />Edit Group</Button>
+          <Button variant="quiet" tone="danger" size={32} onPress={onDeleteGroup}><Trash2 aria-hidden size={16} />Delete Group</Button>
+        </>
+      )}
+      footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="User pages" />}>
         <div className="bo-users-scroll">
-        <DataTable aria-label={title} selectionMode="multiple" selectedKeys={selected} onSelectionChange={setSelected}
+        <DataTable aria-label={title} selectionMode="multiple" selectedKeys={selected} onSelectionChange={onSelect}
           sortDescriptor={sort} onSortChange={onSort}>
-          {/* The toolbar's Select checkbox is the one select-all, so the header's check column stays empty. */}
-          <DataTableHeader selectAll={false}>
+          {/* The header's check column is the one select-all (docs/DECISIONS.md): no toolbar "Select" checkbox. */}
+          <DataTableHeader>
             <DataTableColumn id="name" isRowHeader allowsSorting>Name</DataTableColumn>
             <DataTableColumn id="role">Role</DataTableColumn>
             <DataTableColumn id="lastActive" allowsSorting>Last active</DataTableColumn>
             <DataTableColumn id="joined" allowsSorting>Joined</DataTableColumn>
             <DataTableColumn id="options" align="options">Options</DataTableColumn>
           </DataTableHeader>
-          <DataTableBody renderEmptyState={() => <DataTableEmpty>No users here.</DataTableEmpty>}>{rows.map(p => (
+          <DataTableBody renderEmptyState={() => <DataTableEmpty>No users here.</DataTableEmpty>}>{shown.map(p => (
             <DataTableRow key={p.id} id={p.id} textValue={p.name} href={`#/users/${p.id}`}>
               <DataTableCell>
                 <DataTablePerson name={p.name} initials={initials(p.name)}
@@ -229,9 +238,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
           </DataTableBody>
         </DataTable>
         </div>
-        <Pagination page={1} pageCount={1} aria-label="User pages" />
-      </div>
-    </Card>
+    </Panel>
   );
 }
 

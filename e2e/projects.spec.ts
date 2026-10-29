@@ -14,7 +14,30 @@ test('projects follows the real admin: views, filters, a full project table', as
   for (const c of ['Project', 'Participants', 'Phase', 'Managers', 'Visibility', 'Start', 'End']) {
     await expect(table.getByRole('columnheader', {name: c})).toBeVisible();
   }
-  await expect(table.getByRole('row')).toHaveCount(9); // header + eight projects
+  // Every admin table pages (docs/DECISIONS.md): six of the eight projects on the first page.
+  await expect(table.getByRole('row')).toHaveCount(7);
+  await expect(page.getByRole('navigation', {name: 'Project pages'})).toBeVisible();
+  await expect(page.getByText('8 projects', {exact: true})).toBeVisible();
+  await expect(page.getByText('All projects have been loaded')).toHaveCount(0);
+});
+
+test('Pagination moves through the projects; a search starts again from the first page', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  const pager = page.getByRole('navigation', {name: 'Project pages'});
+  await expect(pager.getByRole('button', {name: 'Page 1'})).toHaveAttribute('aria-current', 'page');
+  await expect(pager.getByRole('button', {name: 'Previous page'})).toBeDisabled();
+  await expect(bodyRows(page).first()).toContainText('Green Corridors for Larkvale');
+  await pager.getByRole('button', {name: 'Next page'}).click();
+  await expect(pager.getByRole('button', {name: 'Page 2'})).toHaveAttribute('aria-current', 'page');
+  await expect(pager.getByRole('button', {name: 'Next page'})).toBeDisabled();
+  await expect(bodyRows(page)).toHaveCount(2);
+  await expect(bodyRows(page).first()).toContainText('Clean air week');
+  await expect(page.getByRole('row', {name: /Green Corridors/})).toHaveCount(0);
+  await pager.getByRole('button', {name: 'Page 1'}).click();
+  await expect(bodyRows(page)).toHaveCount(6);
+  await pager.getByRole('button', {name: 'Page 2'}).click();
+  await page.getByRole('searchbox', {name: 'Search projects'}).fill('a');
+  await expect(pager.getByRole('button', {name: 'Page 1'})).toHaveAttribute('aria-current', 'page');
 });
 
 test('a row has its actions menu', async ({page}) => {
@@ -23,15 +46,22 @@ test('a row has its actions menu', async ({page}) => {
   await expect(page.getByRole('menuitem', {name: 'Duplicate'})).toBeVisible();
 });
 
-test('rows use the gv Status, Avatar and icon button; New project opens its menu', async ({page}) => {
+test('rows use the Data table cells, Status badge and icon button; New project opens its menu', async ({page}) => {
   await page.goto('/backoffice/#/projects');
   const row = page.getByRole('row', {name: /Green Corridors for Larkvale/});
   await expect(row.getByRole('link', {name: 'Green Corridors for Larkvale'}))
     .toHaveAttribute('href', '#/projects/green-corridors');
+  // The project's tile (DataTableThumbnail) leads its name (DataTableStack); the manager is a DataTableAssignee.
+  await expect(row.locator('.gv-data-table__person .gv-data-table__tile svg')).toBeVisible();
+  await expect(row.locator('.gv-data-table__assignee')).toContainText('Manager A');
+  await expect(row.locator('.gv-data-table__assignee .gv-avatar')).toHaveText('MA');
+  await expect(row).toContainText('+1');
   await expect(row.locator('.gv-status')).toHaveText('Published');
-  await expect(row.locator('.gv-avatar')).toHaveText('A');
+  await expect(page.getByRole('row', {name: /Library opening hours/}).locator('.gv-data-table__sub'))
+    .toContainText(['Neighbourhood services', '2 weeks left', 'Anyone']);
   await expect(page.getByRole('row', {name: /Harbour Plan 2030/}).locator('.gv-status')).toHaveText('Draft');
   await expect(page.getByRole('row', {name: /Harbour Plan 2030/}).locator('.gv-avatar[data-unassigned]')).toBeVisible();
+  await expect(page.getByRole('row', {name: /Harbour Plan 2030/}).locator('.gv-data-table__assignee')).toHaveText('Not assigned');
   await expect(page.getByRole('button', {name: 'Actions for Harbour Plan 2030'})).toHaveClass(/gv-icon-button/);
   await expect(page.getByRole('tab', {name: 'Spaces', exact: true}).locator('.gv-pill')).toHaveText('New');
   await page.getByRole('button', {name: 'New project'}).click();
@@ -42,9 +72,9 @@ test('rows use the gv Status, Avatar and icon button; New project opens its menu
 test('projects names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/projects');
   const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
-  // Avatar, Status badge, Icon button and Badge now exist in src/components/gv; the project thumbnail is missing.
+  // The project thumbnail is the Data table's DataTableThumbnail now.
   // Arrange projects reorders with buttons until the system has drag and drop.
-  expect(gaps).toEqual(['Project thumbnail']);
+  expect(gaps).toEqual([]);
   await page.getByRole('tab', {name: 'Arrange projects'}).click();
   await expect(page.locator('[data-gap="Drag-and-drop reordering"]').first()).toBeVisible();
   // The Calendar lists the month's projects where the real admin draws a timeline; templates have no image yet.
@@ -73,16 +103,51 @@ test('New project → From scratch asks for a space and folder, then adds an unt
   await page.getByRole('menuitem', {name: 'From scratch'}).click();
   const modal = page.getByRole('dialog', {name: 'New project'});
   await expect(modal.getByRole('button', {name: /Space/})).toBeVisible();
+  // Select's pills (the "With search" and "With icons" stories): "✱ Space: No space ▾" and "Folder: No folder ▾".
+  await expect(modal.locator('.react-aria-Select[data-variant="pill"]')).toHaveCount(2);
+  await expect(modal.getByRole('button', {name: /Space/})).toContainText('Space:');
   await axe(page, '.gv-modal');
   await modal.getByRole('button', {name: /Folder/}).click();
+  const search = page.getByRole('searchbox', {name: 'Search folders'});
+  await expect(search).toBeFocused();
+  await expect(page.getByRole('option')).toHaveCount(3);
+  await search.fill('neigh');
+  await expect(page.getByRole('option')).toHaveCount(1);
   await page.getByRole('option', {name: 'Neighbourhood services'}).click();
+  await expect(modal.getByRole('button', {name: /Folder/})).toContainText('Neighbourhood services');
   await modal.getByRole('button', {name: 'Create project'}).click();
   await expect(modal).toHaveCount(0);
   const row = page.getByRole('row', {name: /Untitled project/});
   await expect(row.locator('.gv-status')).toHaveText('Draft');
   await expect(row).toContainText('Neighbourhood services');
   await expect(page.getByText('Project created')).toBeVisible();
-  await expect(bodyRows(page)).toHaveCount(9);
+  await expect(page.getByText('9 projects', {exact: true})).toBeVisible();
+  await expect(bodyRows(page)).toHaveCount(6);
+});
+
+test('New project\'s Space pill searches its spaces from the keyboard: type, ↓, Enter chooses', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  await page.getByRole('button', {name: 'New project'}).click();
+  await page.getByRole('menuitem', {name: 'From scratch'}).click();
+  const modal = page.getByRole('dialog', {name: 'New project'});
+  const space = modal.getByRole('button', {name: /Space/});
+  await space.focus();
+  await page.keyboard.press('Enter');
+  const search = page.getByRole('searchbox', {name: 'Search spaces'});
+  await expect(search).toBeFocused();
+  await expect(page.getByRole('option')).toHaveCount(4); // No space + three
+  await page.keyboard.type('school');
+  await expect(page.getByRole('option')).toHaveCount(1);
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect(search).toHaveCount(0);
+  await expect(space).toContainText('Schools and youth');
+  await expect(space).toBeFocused();
+  await space.click();
+  await page.getByRole('searchbox', {name: 'Search spaces'}).fill('zzz');
+  await expect(page.getByText('No results')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(space).toContainText('Schools and youth');
 });
 
 test('Use a template opens the gallery; Use template asks for a title, then adds the draft', async ({page}) => {
@@ -124,7 +189,7 @@ test('row actions duplicate, move to a folder and delete on the list', async ({p
   await page.getByRole('button', {name: 'Actions for Harbour Plan 2030'}).click();
   await page.getByRole('menuitem', {name: 'Duplicate'}).click();
   await expect(page.getByRole('row', {name: /Copy of Harbour Plan 2030/})).toBeVisible();
-  await expect(bodyRows(page)).toHaveCount(9);
+  await expect(page.getByText('9 projects', {exact: true})).toBeVisible();
   await expect(page.getByText('Project duplicated')).toBeVisible();
 
   await page.getByRole('button', {name: 'Actions for Harbour Plan 2030', exact: true}).click();
@@ -135,13 +200,16 @@ test('row actions duplicate, move to a folder and delete on the list', async ({p
   await move.getByRole('button', {name: 'Move', exact: true}).click();
   await expect(page.getByRole('row', {name: /^Harbour Plan 2030/})).toContainText('Neighbourhood services');
 
+  // Clean air week is on the second page now.
+  await page.getByRole('navigation', {name: 'Project pages'}).getByRole('button', {name: 'Page 2'}).click();
   await page.getByRole('button', {name: 'Actions for Clean air week'}).click();
   await page.getByRole('menuitem', {name: 'Delete'}).click();
   const confirm = page.getByRole('alertdialog', {name: 'Delete this project?'});
   await expect(confirm.getByRole('button', {name: 'Cancel'})).toBeFocused();
   await confirm.getByRole('button', {name: 'Delete project'}).click();
   await expect(page.getByRole('row', {name: /Clean air week/})).toHaveCount(0);
-  await expect(bodyRows(page)).toHaveCount(8);
+  await expect(bodyRows(page)).toHaveCount(2);
+  await expect(page.getByText('8 projects', {exact: true})).toBeVisible();
 });
 
 test('search, sort and pending approval change the list', async ({page}) => {
@@ -180,7 +248,7 @@ test('Folders, Spaces, Calendar and Arrange projects tabs show their views', asy
 
 test('the Dates range keeps the projects running in it', async ({page}) => {
   await page.goto('/backoffice/#/projects');
-  await expect(bodyRows(page)).toHaveCount(8);
+  await expect(bodyRows(page)).toHaveCount(6);
   const dates = page.getByRole('group', {name: 'Dates'});
   await dates.getByRole('spinbutton').first().click();
   await page.keyboard.type('01012027');
@@ -225,7 +293,30 @@ test('the Filter menu adds a filter as a chip, which narrows the list and can be
   await expect(bodyRows(page)).toHaveCount(2); // the two projects without a manager
   await page.getByRole('button', {name: 'Clear', exact: true}).click();
   await expect(chips).toHaveCount(0);
-  await expect(bodyRows(page)).toHaveCount(8);
+  await expect(page.getByText('8 projects', {exact: true})).toBeVisible();
+});
+
+// docs/DECISIONS.md: in a pick-several list Enter ticks and the list stays open; Esc closes.
+test('the Filter menu ticks with Enter and stays open; Esc closes', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  const filter = page.getByRole('button', {name: /^Filter projects/});
+  await filter.focus();
+  await page.keyboard.press('Enter');
+  const menu = page.getByRole('menu', {name: 'Filter projects'});
+  await expect(menu).toBeVisible();
+  await menu.getByRole('menuitem', {name: /^Visibility/}).focus();
+  await page.keyboard.press('ArrowRight');
+  const draft = page.getByRole('menuitemcheckbox', {name: /^Draft/});
+  await expect(page.getByRole('menuitemcheckbox', {name: /^Published/})).toBeFocused();
+  await page.keyboard.press('ArrowDown');
+  await expect(draft).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(draft).toHaveAttribute('aria-checked', 'true');
+  await expect(draft).toBeVisible();
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('Escape');
+  await expect(menu).toHaveCount(0);
+  await expect(bodyRows(page)).toHaveCount(2);
 });
 
 test('From scratch keeps the chosen Space on the new draft', async ({page}) => {

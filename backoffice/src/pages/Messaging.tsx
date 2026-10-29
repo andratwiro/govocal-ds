@@ -11,6 +11,8 @@ import {TextField} from '../../../src/components/TextField';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {Label} from '../../../src/components/Form';
 import {Card} from '../../../src/components/gv/Card';
+import {Panel} from '../../../src/components/gv/Panel';
+import {Pagination} from '../../../src/components/gv/Pagination';
 import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {Badge} from '../../../src/components/gv/Badge';
 import {ListRow} from '../../../src/components/gv/ListRow';
@@ -42,8 +44,21 @@ function useEmails() {
 
 type RowAction = 'stats' | 'edit' | 'copy' | 'delete';
 
-function CustomEmailTable({emails, onAction}: {emails: CustomEmail[]; onAction: (e: CustomEmail, a: RowAction) => void}) {
+// Every admin table pages (docs/DECISIONS.md).
+const PAGE_SIZE = 10;
+
+/** The list's Panel (Panel's "With actions" story): Create email at the head's end, the table flush, its pages below. */
+function CustomEmailTable({emails, onAction, onCreate}: {
+  emails: CustomEmail[]; onAction: (e: CustomEmail, a: RowAction) => void; onCreate: () => void;
+}) {
+  const [page, setPage] = useState(1);
+  const pageCount = Math.max(1, Math.ceil(emails.length / PAGE_SIZE));
+  const current = Math.min(page, pageCount);
   return (
+    <Panel title="Custom emails" headingLevel={3} description="Send out custom emails and check statistics." flush
+      actions={<Button variant="primary" size={32} onPress={onCreate}><Plus aria-hidden size={16} />Create email</Button>}
+      footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Email pages" />}>
+    <div className="bo-messaging-scroll">
     <DataTable aria-label="Custom emails">
       <DataTableHeader>
         <DataTableColumn isRowHeader>Subject</DataTableColumn>
@@ -51,7 +66,7 @@ function CustomEmailTable({emails, onAction}: {emails: CustomEmail[]; onAction: 
         <DataTableColumn align="number">Opened</DataTableColumn><DataTableColumn align="number">Clicked</DataTableColumn>
         <DataTableColumn align="options" hideLabel>Actions</DataTableColumn>
       </DataTableHeader>
-      <DataTableBody>{emails.map(e => (
+      <DataTableBody>{emails.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE).map(e => (
         // A sent email opens its statistics; a draft opens from its menu.
         <DataTableRow key={e.id} id={e.id} textValue={e.subject} href={e.status === 'Sent' ? `#/messaging/emails/custom/${e.id}` : undefined}>
           <DataTableCell>
@@ -71,12 +86,15 @@ function CustomEmailTable({emails, onAction}: {emails: CustomEmail[]; onAction: 
         </DataTableRow>))}
       </DataTableBody>
     </DataTable>
+    </div>
+    </Panel>
   );
 }
 
 /** The draft being written: sender and recipients, then subject and message (the real admin's campaign form). */
-function DraftComposer({email, onSave, onSend}: {
+function DraftComposer({email, onSave, onSend, onCancel}: {
   email: CustomEmail; onSave: (patch: Partial<CustomEmail>) => void; onSend: (patch: Partial<CustomEmail>) => void;
+  onCancel: () => void;
 }) {
   const [to, setTo] = useState(email.to);
   const [subject, setSubject] = useState(email.subject);
@@ -85,10 +103,19 @@ function DraftComposer({email, onSave, onSend}: {
   const [italic, setItalic] = useState(false);
   const [list, setList] = useState(false);
   const label = `Draft: ${email.subject}`;
+  const patch = () => ({to, subject: subject.trim() || 'Untitled email', body});
+  // The composer's Panel (Panel's "In a composer" story): the form in the body, Cancel and Send in the foot. The
+  // Panel is the region, named by its title.
   return (
-    <section aria-label={label} className="bo-messaging-section">
-      <Card tone="manage" title={label} summary={email.status === 'Scheduled' ? `Scheduled for ${email.date}` : email.date}>
-        <div className="bo-messaging-form">
+    <Panel title={label} headingLevel={3} description={email.status === 'Scheduled' ? `Scheduled for ${email.date}` : email.date}
+      footer={<>
+        <Button variant="secondary" size={32} onPress={onCancel}>Cancel</Button>
+        <Button variant="quiet" size={32} onPress={() => onSave(patch())}>Save as draft</Button>
+        <Button variant="secondary" size={32} onPress={() => toast('Preview sent', `To ${SENDER.replyTo}`)}>
+          <Mail aria-hidden size={16} />Send a preview</Button>
+        <Button variant="primary" size={32} onPress={() => onSend(patch())}><Send aria-hidden size={16} />Send now</Button>
+      </>}>
+        <div className="bo-messaging-fields">
           <div className="bo-messaging-pair">
             <TextField label="From" defaultValue={SENDER.from} />
             <TextField label="Replies should go to" defaultValue={SENDER.replyTo} />
@@ -103,17 +130,8 @@ function DraftComposer({email, onSave, onSend}: {
             <RichTextEditor aria-label="Email message" placeholder="Write your message" value={body} onChange={setBody}
               bold={bold} onBoldChange={setBold} italic={italic} onItalicChange={setItalic} list={list} onListChange={setList} />
           </div>
-          <div className="bo-messaging-buttons">
-            <Button variant="quiet" size={32} onPress={() => onSave({to, subject: subject.trim() || 'Untitled email', body})}>Save as draft</Button>
-            <span className="bo-push" />
-            <Button variant="secondary" size={32} onPress={() => toast('Preview sent', `To ${SENDER.replyTo}`)}>
-              <Mail aria-hidden size={16} />Send a preview</Button>
-            <Button variant="primary" size={32} onPress={() => onSend({to, subject: subject.trim() || 'Untitled email', body})}>
-              <Send aria-hidden size={16} />Send now</Button>
-          </div>
         </div>
-      </Card>
-    </section>
+    </Panel>
   );
 }
 
@@ -163,15 +181,11 @@ function CustomEmails() {
   };
   return (
     <>
-      <div className="bo-messaging-intro">
-        <p className="bo-note">Send out custom emails and check statistics.</p>
-        <Button variant="primary" size={32} onPress={() => navigate('/messaging/emails/custom/new')}><Plus aria-hidden size={16} />Create email</Button>
-      </div>
-      <div className="bo-messaging-stack">
+      <div className="bo-messaging-stack bo-messaging-lists">
         {sent && <Banner tone="success" onDismiss={() => confirmSent(undefined)}>{sent}</Banner>}
-        <CustomEmailTable emails={emails} onAction={onAction} />
+        <CustomEmailTable emails={emails} onAction={onAction} onCreate={() => navigate('/messaging/emails/custom/new')} />
         {draft
-          ? <DraftComposer key={draft.id} email={draft} onSave={save} onSend={send} />
+          ? <DraftComposer key={draft.id} email={draft} onSave={save} onSend={send} onCancel={() => setDraftId(undefined)} />
           : <p className="bo-note">Choose Edit on a draft to open it here.</p>}
       </div>
       <AlertDialog tone="danger" title="Delete this draft?" confirmLabel="Delete draft" isOpen={deleting !== null}

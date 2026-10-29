@@ -9,6 +9,7 @@ import {Select, SelectItem} from '../../../src/components/Select';
 import {Label} from '../../../src/components/Form';
 import {ToastRegion, queue} from '../../../src/components/Toast';
 import {Card} from '../../../src/components/gv/Card';
+import {Panel} from '../../../src/components/gv/Panel';
 import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
 import {Divider} from '../../../src/components/gv/Divider';
 import {StatTile} from '../../../src/components/gv/StatTile';
@@ -36,7 +37,7 @@ export const emailStore: {emails: CustomEmail[]; sent?: string} = {emails: [...C
 export const sentText = (subject: string, recipients: number) =>
   `Your email “${subject}” was sent to ${n(recipients)} recipients.`;
 
-// ── New email (the prototype's compose card: header, fields, footer of actions) ──
+// ── New email (the prototype's compose card: header, fields, footer of actions; Panel's "In a composer" story) ──
 
 export function EmailComposer() {
   const navigate = useNavigate();
@@ -58,8 +59,15 @@ export function EmailComposer() {
   return (
     <Page title="New email" crumbs={MESSAGING_CRUMB}>
       <SectionHeading>Message and recipients</SectionHeading>
-      <Card tone="manage" layout="stacked" title="Write a message and choose who gets it">
-        <div className="bo-messaging-form">
+      <Panel title="Write a message and choose who gets it" headingLevel={3}
+        footer={<>
+          <Button variant="secondary" size={32} onPress={() => navigate('/messaging')}>Cancel</Button>
+          <Button variant="quiet" size={32} onPress={() => save('Draft')}>Save as draft</Button>
+          <Button variant="secondary" size={32} onPress={() => toast('Preview sent', `To ${SENDER.replyTo}`)}>
+            <Mail aria-hidden size={16} />Send a preview</Button>
+          <Button variant="primary" size={32} onPress={() => save('Sent')}><Send aria-hidden size={16} />Send now</Button>
+        </>}>
+        <div className="bo-messaging-fields">
           <div className="bo-messaging-pair">
             <TextField label="From" defaultValue={SENDER.from} />
             <TextField label="Replies should go to" defaultValue={SENDER.replyTo} />
@@ -75,17 +83,8 @@ export function EmailComposer() {
             <RichTextEditor aria-label="Email message" placeholder="Write your message" value={body} onChange={setBody}
               bold={bold} onBoldChange={setBold} italic={italic} onItalicChange={setItalic} list={list} onListChange={setList} />
           </div>
-          <Divider />
-          <div className="bo-messaging-buttons">
-            <Button variant="quiet" size={32} onPress={() => navigate('/messaging')}>Cancel</Button>
-            <Button variant="quiet" size={32} onPress={() => save('Draft')}>Save as draft</Button>
-            <span className="bo-push" />
-            <Button variant="secondary" size={32} onPress={() => toast('Preview sent', `To ${SENDER.replyTo}`)}>
-              <Mail aria-hidden size={16} />Send a preview</Button>
-            <Button variant="primary" size={32} onPress={() => save('Sent')}><Send aria-hidden size={16} />Send now</Button>
-          </div>
         </div>
-      </Card>
+      </Panel>
       <ToastRegion />
     </Page>
   );
