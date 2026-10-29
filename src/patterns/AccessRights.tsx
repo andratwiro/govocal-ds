@@ -14,6 +14,8 @@ import {AlertDialog} from '../components/gv/AlertDialog';
 import {ChoiceCard} from '../components/gv/ChoiceCard';
 import {Modal} from '../components/gv/Modal';
 import {SectionLabel} from '../components/gv/SectionLabel';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './AccessRights.css';
 
 export type AccessWho = 'anyone' | 'signin' | 'admins';
@@ -54,7 +56,7 @@ function useValue<T>(value: T | undefined, defaultValue: T, onChange?: (v: T) =>
   ] as const;
 }
 
-export interface AccessRightsProps {
+export interface AccessRightsProps extends PlacementProps {
   /** Set for this phase (editable), or following the platform's defaults (read-only until Override). */
   isOverriding?: boolean;
   defaultOverriding?: boolean;
@@ -96,7 +98,9 @@ export function AccessRights({
   groups = ['All participants (no group restriction)'],
   onPlatformDefaults,
   onCustomizeError,
-  defaultExpandedKeys = ['security', 'groups']
+  defaultExpandedKeys = ['security', 'groups'],
+  className,
+  style
 }: AccessRightsProps) {
   const [overriding, setOverriding] = useValue(isOverriding, defaultOverriding, onOverridingChange);
   const [who, setWho] = useValue(whoProp, defaultWho, onWhoChange);
@@ -120,7 +124,7 @@ export function AccessRights({
     return () => cancelAnimationFrame(frame);
   }, [overriding]);
   return (
-    <div ref={root} className="gv-access-rights" data-overriding={overriding || undefined}>
+    <div ref={root} className={clsx('gv-access-rights', className)} style={style} data-overriding={overriding || undefined}>
       <div className="gv-access-rights__head">
         {overriding ? (
           <span className="gv-access-rights__status">Overriding platform defaults</span>
@@ -147,7 +151,7 @@ export function AccessRights({
           value={who}
           onChange={v => setWho(v as AccessWho)}
           isReadOnly={readOnly}
-          className="react-aria-RadioGroup gv-access-rights__who">
+          className="gv-access-rights__who">
           {options.map(key => (
             <ChoiceCard key={key} value={key} media={WHO[key].icon} description={WHO[key].description}>
               {WHO[key].label}

@@ -13,6 +13,7 @@ import {Calendar} from './Calendar';
 import {Popover} from './Popover';
 import {Calendar as CalendarIcon} from 'lucide-react';
 import './DatePicker.css';
+import {keepClass} from './className';
 
 export interface DatePickerProps<T extends DateValue> extends AriaDatePickerProps<T> {
   label?: string;
@@ -27,7 +28,7 @@ export function DatePicker<T extends DateValue>({
   ...props
 }: DatePickerProps<T>) {
   return (
-    <AriaDatePicker {...props}>
+    <AriaDatePicker {...props} className={keepClass(props.className)}>
       <Label>{label}</Label>
       <Group className="react-aria-Group inset">
         <DateInput>{segment => <DateSegment segment={segment} />}</DateInput>

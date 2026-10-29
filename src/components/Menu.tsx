@@ -7,9 +7,8 @@ import {
   MenuSection as AriaMenuSection,
   MenuTrigger as AriaMenuTrigger,
   SubmenuTrigger as AriaSubmenuTrigger,
-  Header,
-  Separator,
-  Keyboard,
+  Separator as AriaSeparator,
+  type SeparatorProps,
   type MenuItemProps as AriaMenuItemProps,
   type MenuLoadMoreItemProps,
   type MenuProps,
@@ -19,9 +18,11 @@ import {
 } from 'react-aria-components/Menu';
 import {Popover, type PopoverProps} from './Popover';
 import {ProgressCircle} from './ProgressCircle';
-import {Text} from './Content';
+import {Text, Header, Keyboard} from './Content';
 import React, {type ReactNode} from 'react';
 import './Menu.css';
+import {keepClass} from './className';
+import clsx from 'clsx';
 
 export interface MenuTriggerOwnProps extends MenuTriggerProps {
   /** Where the menu opens against its trigger. @default 'bottom start' */
@@ -48,12 +49,12 @@ export function MenuTrigger({placement, ...props}: MenuTriggerOwnProps) {
  * draws it. Not in Figma yet.
  */
 export function Menu<T>(props: MenuProps<T>) {
-  return <AriaMenu {...props}>{props.children}</AriaMenu>;
+  return <AriaMenu {...props} className={keepClass(props.className)}>{props.children}</AriaMenu>;
 }
 
 export function MenuLoadMoreItem(props: MenuLoadMoreItemProps) {
   return (
-    <AriaMenuLoadMoreItem {...props}>
+    <AriaMenuLoadMoreItem {...props} className={clsx('react-aria-MenuLoadingIndicator', props.className)}>
       <ProgressCircle isIndeterminate aria-label="Loading more..." />
     </AriaMenuLoadMoreItem>
   );
@@ -73,7 +74,7 @@ export function MenuItem({icon, description, badge, ...props}: MenuItemProps) {
   let textValue =
     props.textValue || (typeof props.children === 'string' ? props.children : undefined);
   return (
-    <AriaMenuItem {...props} textValue={textValue}>
+    <AriaMenuItem {...props} className={keepClass(props.className)} textValue={textValue}>
       {({hasSubmenu, isSelected, selectionMode}) => (
         <>
           {selectionMode === 'multiple' && (
@@ -101,7 +102,7 @@ export function MenuItem({icon, description, badge, ...props}: MenuItemProps) {
 }
 
 export function MenuSection<T>(props: MenuSectionProps<T>) {
-  return <AriaMenuSection {...props} />;
+  return <AriaMenuSection {...props} className={clsx('react-aria-MenuSection', props.className)} />;
 }
 
 export function SubmenuTrigger(props: SubmenuTriggerProps) {
@@ -120,4 +121,9 @@ export function SubmenuTrigger(props: SubmenuTriggerProps) {
   );
 }
 
-export {Text, Header, Separator, Keyboard};
+/** A line between a menu's groups of items. Outside a menu, the line between blocks is a Divider. */
+export function Separator(props: SeparatorProps) {
+  return <AriaSeparator {...props} className={clsx('react-aria-Separator', props.className)} />;
+}
+
+export {Text, Header, Keyboard};

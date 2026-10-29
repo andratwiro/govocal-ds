@@ -2,7 +2,7 @@
 import {type ReactNode, useState} from 'react';
 import {Heading} from 'react-aria-components';
 import {TriangleAlert, CircleMinus, CircleAlert, CircleCheck, type LucideIcon} from 'lucide-react';
-import {Dialog} from '../Dialog';
+import {Dialog} from 'react-aria-components/Dialog';
 import {Modal as StarterModal} from '../Modal';
 import {Button} from '../Button';
 import {TextField} from '../TextField';

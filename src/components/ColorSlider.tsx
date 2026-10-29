@@ -8,6 +8,7 @@ import {
 import {Label} from './Form';
 import {ColorThumb} from './ColorThumb';
 import './ColorSlider.css';
+import {keepClass} from './className';
 
 export interface ColorSliderProps extends AriaColorSliderProps {
   label?: string;
@@ -15,7 +16,7 @@ export interface ColorSliderProps extends AriaColorSliderProps {
 
 export function ColorSlider({label, ...props}: ColorSliderProps) {
   return (
-    <AriaColorSlider {...props}>
+    <AriaColorSlider {...props} className={keepClass(props.className)}>
       <Label>{label}</Label>
       <SliderOutput />
       <SliderTrack

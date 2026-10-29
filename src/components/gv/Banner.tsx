@@ -3,6 +3,8 @@ import type {ReactNode} from 'react';
 import {Link} from 'react-aria-components';
 import {Info, Clock, TriangleAlert, CircleCheck, Sparkles, X} from 'lucide-react';
 import {IconButton} from './IconButton';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './Banner.css';
 
 /** The tone's default icon; `icon={null}` hides it, any other node overrides it. */
@@ -16,7 +18,7 @@ const TONE_ICON = {
 
 export type BannerTone = keyof typeof TONE_ICON;
 
-export interface BannerProps {
+export interface BannerProps extends PlacementProps {
   /**
    * @deprecated use `tone` (+ `linkLabel` for a trailing link); kept so existing calls with
    * `type="info-link"` still work.
@@ -64,7 +66,9 @@ export function Banner({
   action,
   onDismiss,
   dismissLabel = 'Dismiss',
-  compact = false
+  compact = false,
+  className,
+  style
 }: BannerProps) {
   const resolvedTone: BannerTone = tone ?? 'info';
   const isLink = type === 'info-link';
@@ -72,7 +76,7 @@ export function Banner({
 
   if (compact) {
     return (
-      <div className="gv-banner gv-banner--compact" data-tone={resolvedTone} role="status">
+      <div className={clsx('gv-banner gv-banner--compact', className)} style={style} data-tone={resolvedTone} role="status">
         {icon !== null && <span className="gv-banner__icon">{icon ?? <ToneIcon aria-hidden size={16} strokeWidth={1.75} />}</span>}
         {title && <span className="gv-banner__strip-title">{title}</span>}
         {children && <span className="gv-banner__strip-meta">{children}</span>}
@@ -81,7 +85,7 @@ export function Banner({
   }
 
   return (
-    <div className="gv-banner" data-tone={resolvedTone} role="note">
+    <div className={clsx('gv-banner', className)} style={style} data-tone={resolvedTone} role="note">
       {icon !== null && <span className="gv-banner__icon">{icon ?? <ToneIcon aria-hidden size={16} strokeWidth={1.75} />}</span>}
       <div className="gv-banner__content">
         <div className="gv-banner__row">

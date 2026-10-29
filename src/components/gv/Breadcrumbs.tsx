@@ -8,6 +8,8 @@ import {
 import {ChevronRight, PanelLeft, ArrowLeft} from 'lucide-react';
 import {IconButton} from './IconButton';
 import {StatusBadge} from './StatusBadge';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './Breadcrumbs.css';
 
 export interface BreadcrumbItem {
@@ -18,7 +20,7 @@ export interface BreadcrumbItem {
   onPress?: () => void;
 }
 
-export interface BreadcrumbsProps extends Omit<RACBreadcrumbsProps<object>, 'children'> {
+export interface BreadcrumbsProps extends Omit<RACBreadcrumbsProps<object>, 'children'>, PlacementProps {
   /** Figma `Level`: Project is the flat "Projects / Current" trail; Phase · Draft/Live adds the
    * phase-editor chrome (panel toggle, back arrow, divider, status pill). */
   level?: 'project' | 'phase';
@@ -47,11 +49,13 @@ export function Breadcrumbs({
   onBack,
   togglePanelLabel = 'Toggle panel',
   backLabel = 'Back',
+  className,
+  style,
   ...rest
 }: BreadcrumbsProps) {
   const last = items.length - 1;
   return (
-    <div className="gv-breadcrumb" data-level={level}>
+    <div className={clsx('gv-breadcrumb', className)} style={style} data-level={level}>
       {level === 'phase' && (
         <>
           <IconButton onPress={onTogglePanel} aria-label={togglePanelLabel}>

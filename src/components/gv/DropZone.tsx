@@ -4,9 +4,11 @@ import {FileTrigger} from 'react-aria-components/FileTrigger';
 import {Button} from 'react-aria-components/Button';
 import {Upload} from 'lucide-react';
 import type {ReactNode} from 'react';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './DropZone.css';
 
-export interface DropZoneProps extends RACDropZoneProps {
+export interface DropZoneProps extends Omit<RACDropZoneProps, 'className' | 'style'>, PlacementProps {
   /** Mime types FileTrigger accepts, e.g. ['image/*']. */
   acceptedFileTypes?: ReadonlyArray<string>;
   allowsMultiple?: boolean;
@@ -37,10 +39,12 @@ export function DropZone({
   children,
   hint,
   size = 'default',
+  className,
+  style,
   ...props
 }: DropZoneProps) {
   return (
-    <RACDropZone {...props} className="gv-drop-zone" data-size={size}>
+    <RACDropZone {...props} className={clsx('gv-drop-zone', className)} style={style} data-size={size}>
       <FileTrigger acceptedFileTypes={acceptedFileTypes} allowsMultiple={allowsMultiple} onSelect={onSelect}>
         <Button className="gv-drop-zone-trigger" isDisabled={props.isDisabled}>
           <Upload aria-hidden="true" className="gv-drop-zone-icon" />

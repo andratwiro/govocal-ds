@@ -1,10 +1,12 @@
 'use client';
 import type {CSSProperties, ReactNode} from 'react';
 import {VisuallyHidden} from 'react-aria-components/VisuallyHidden';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './Chart.css';
 import './BarRow.css';
 
-export interface BarRowProps {
+export interface BarRowProps extends PlacementProps {
   /** The row's label (e.g. a status name). */
   label: ReactNode;
   /**
@@ -37,12 +39,12 @@ export interface BarRowProps {
 }
 
 /** Figma "Bar row": a label, a thin bar and its value. Hover darkens the bar; a `detail` card gives the exact numbers. */
-export function BarRow({label, percent, value, barColor = '--gv-chart-bar', labelLines = 1, detail}: BarRowProps) {
+export function BarRow({label, percent, value, barColor = '--gv-chart-bar', labelLines = 1, detail, className, style}: BarRowProps) {
   const isEmpty = percent === undefined;
   const share = Math.max(0, Math.min(100, percent ?? 0));
 
   return (
-    <div className="gv-bar-row" data-empty={isEmpty || undefined} data-lines={labelLines === 2 ? 2 : undefined}>
+    <div className={clsx('gv-bar-row', className)} style={style} data-empty={isEmpty || undefined} data-lines={labelLines === 2 ? 2 : undefined}>
       <div className="gv-bar-row__label">
         {label}
         {detail && !isEmpty && <VisuallyHidden>, {detail}</VisuallyHidden>}

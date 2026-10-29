@@ -1,8 +1,10 @@
 import type {ReactNode} from 'react';
 import {VisuallyHidden} from 'react-aria-components';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './PropertyList.css';
 
-export interface PropertyListProps {
+export interface PropertyListProps extends PlacementProps {
   /** One `PropertyListItem` per property. */
   children: ReactNode;
   /** Names the list when the page has no heading for it, e.g. "Idea details". */
@@ -15,15 +17,15 @@ export interface PropertyListProps {
  * screen reader reads each label with its value. Values are anything: text, a number, a Select, tags, a link.
  * Not in Figma as a component.
  */
-export function PropertyList({children, 'aria-label': ariaLabel}: PropertyListProps) {
+export function PropertyList({children, 'aria-label': ariaLabel, className, style}: PropertyListProps) {
   return (
-    <dl className="gv-property-list" aria-label={ariaLabel}>
+    <dl className={clsx('gv-property-list', className)} style={style} aria-label={ariaLabel}>
       {children}
     </dl>
   );
 }
 
-export interface PropertyListItemProps {
+export interface PropertyListItemProps extends PlacementProps {
   /** The property's name, e.g. "Status". */
   label: string;
   /** Its value. Left out (or empty), the row shows "–", read as `emptyLabel`. */
@@ -35,9 +37,9 @@ export interface PropertyListItemProps {
 const isEmpty = (v: ReactNode) => v === undefined || v === null || v === false || v === '';
 
 /** One row of a Property list: its label and its value. */
-export function PropertyListItem({label, children, emptyLabel = 'Not set'}: PropertyListItemProps) {
+export function PropertyListItem({label, children, emptyLabel = 'Not set', className, style}: PropertyListItemProps) {
   return (
-    <div className="gv-property-list__item">
+    <div className={clsx('gv-property-list__item', className)} style={style}>
       <dt className="gv-property-list__label">{label}</dt>
       <dd className="gv-property-list__value">
         {isEmpty(children) ? (

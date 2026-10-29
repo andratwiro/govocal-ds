@@ -4,9 +4,11 @@ import {Button, Dialog, DialogTrigger, Disclosure, DisclosurePanel, Heading, Men
 import {ChevronDown, ChevronRight} from 'lucide-react';
 import {Popover} from '../components/Popover';
 import {Badge} from '../components/gv/Badge';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './SetupStep.css';
 
-export interface SetupStepProps {
+export interface SetupStepProps extends PlacementProps {
   /**
    * Figma "Action": Open leads somewhere else (chevron →); Expand opens the card in place (chevron ⌄). Not in Figma:
    * Pick opens a picker in a popover under the card (chevron ⌄), the prototype's Set area and Set topic tags.
@@ -68,7 +70,9 @@ export function SetupStep({
   onExpandedChange,
   value,
   picker,
-  pickerType = 'dialog'
+  pickerType = 'dialog',
+  className,
+  style
 }: SetupStepProps) {
   const label = (
     <>
@@ -82,7 +86,7 @@ export function SetupStep({
   );
   if (action === 'open') {
     return (
-      <div className="gv-setup-card" data-action="open" data-done={isDone || undefined}>
+      <div className={clsx('gv-setup-card', className)} style={style} data-action="open" data-done={isDone || undefined}>
         <Button className="gv-setup-card__header" onPress={onPress}>
           {label}
           <span className="gv-setup-card__chevron" aria-hidden>
@@ -103,10 +107,10 @@ export function SetupStep({
     );
     // The popover hangs under the card, as wide as it.
     const popover = (content: ReactNode) => (
-      <Popover placement="bottom start" hideArrow className="react-aria-Popover gv-setup-card__popover">{content}</Popover>
+      <Popover placement="bottom start" hideArrow className="gv-setup-card__popover">{content}</Popover>
     );
     return (
-      <div className="gv-setup-card" data-action="pick" data-done={isDone || undefined}>
+      <div className={clsx('gv-setup-card', className)} style={style} data-action="pick" data-done={isDone || undefined}>
         {pickerType === 'menu' ? (
           <MenuTrigger>{header}{popover(picker)}</MenuTrigger>
         ) : (
@@ -117,7 +121,7 @@ export function SetupStep({
   }
   return (
     <Disclosure
-      className="gv-setup-card"
+      className={clsx('gv-setup-card', className)} style={style}
       data-action="expand"
       data-done={isDone || undefined}
       defaultExpanded={defaultExpanded}

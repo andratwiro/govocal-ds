@@ -79,7 +79,7 @@ function MenuTab({menu, setMenu, pages}: MenuProps & {pages: string[]}) {
       }>
       <div className="bo-pages-menu-body">
         <p className="bo-note bo-pages-menu-intro">Organise the menu that appears across your site. Add new items and drag to reorder.</p>
-        <GridList aria-label="Menu items" layout="stack" className="react-aria-GridList bo-pages-menu-list">
+        <GridList aria-label="Menu items" layout="stack" className="bo-pages-menu-list">
           {items.map((item, i) => <MenuRow key={item.id} item={item} index={i} count={items.length} menu={menu} setMenu={setMenu} />)}
         </GridList>
       </div>

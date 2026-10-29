@@ -334,7 +334,7 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 /* Pages */
 .bo-report-canvas { min-height: 0; min-width: 0; display: grid; }
 .bo-report-canvas > .bo-gap { min-height: 0; grid-template-rows: auto auto minmax(0, 1fr); }
-.bo-report-pagebar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--gv-space-8); }
+.bo-report-pagebar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--gv-space-8); width: auto; }
 .bo-report-stage { min-height: 0; overflow: auto; }
 .bo-report-sheets { display: grid; justify-items: center; gap: var(--gv-space-48); padding: var(--gv-space-16); }
 .bo-report-sheets[data-zoom="50"] { zoom: 50%; }

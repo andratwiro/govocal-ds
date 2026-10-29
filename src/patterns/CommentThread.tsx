@@ -9,6 +9,8 @@ import {TriangleAlert, X} from 'lucide-react';
 // The composer's field is the system field (its look from TextField.css), named by an aria-label: the system TextArea
 // always draws a visible label.
 import '../components/TextField.css';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './CommentThread.css';
 
 export interface ThreadComment {
@@ -37,7 +39,7 @@ export interface ThreadTarget {
   replyTo?: string;
 }
 
-export interface CommentThreadProps {
+export interface CommentThreadProps extends PlacementProps {
   /** The public comments, oldest first. */
   comments: ThreadComment[];
   /** The team's internal conversation. Given, the thread shows two tabs, Comments (n) and Internal conversation (n);
@@ -76,7 +78,9 @@ export function CommentThread({
   me,
   onPost,
   onDelete,
-  onDismissWarning
+  onDismissWarning,
+  className,
+  style
 }: CommentThreadProps) {
   const pane = (which: ThreadTab, list: ThreadComment[]) => (
     <ThreadPane key={which} tab={which} list={list} me={me} onPost={onPost} onDelete={onDelete}
@@ -84,14 +88,14 @@ export function CommentThread({
   );
   if (!internal) {
     return (
-      <div className="gv-comment-thread">
+      <div className={clsx('gv-comment-thread', className)} style={style}>
         <h3 className="gv-comment-thread__title">Comments ({count(comments)})</h3>
         {pane('comments', comments)}
       </div>
     );
   }
   return (
-    <Tabs className="react-aria-Tabs gv-comment-thread" selectedKey={tab} defaultSelectedKey={defaultTab}
+    <Tabs className={clsx('react-aria-Tabs gv-comment-thread', className)} style={style} selectedKey={tab} defaultSelectedKey={defaultTab}
       onSelectionChange={k => onTabChange?.(k as ThreadTab)}>
       <TabList aria-label="Conversation" className="react-aria-TabList gv-comment-thread__tabs">
         <Tab id="comments">Comments ({count(comments)})</Tab>
@@ -189,7 +193,7 @@ function CommentRow({comment: c, isReply, onReply, onDelete, onDismissWarning}: 
   );
 }
 
-export interface CommentComposerProps {
+export interface CommentComposerProps extends PlacementProps {
   /** The writer's avatar letters. */
   me: string;
   /** Posting to the internal conversation: its own placeholder. */
@@ -203,7 +207,7 @@ export interface CommentComposerProps {
 
 /** The team's composer: their avatar, a field that grows with the words, and Post (on until there are words).
  * ⌘/Ctrl + Enter posts; Enter starts a new line. */
-export function CommentComposer({me, internal, replyTo, onCancelReply, onPost, fieldRef}: CommentComposerProps) {
+export function CommentComposer({me, internal, replyTo, onCancelReply, onPost, fieldRef, className, style}: CommentComposerProps) {
   const [text, setText] = useState('');
   const post = () => {
     if (!text.trim()) return;
@@ -219,7 +223,7 @@ export function CommentComposer({me, internal, replyTo, onCancelReply, onPost, f
   const placeholder = internal ? 'This comment is not visible to regular users'
     : replyTo ? `Reply to ${replyTo}` : 'Reply as the project team';
   return (
-    <div className="gv-comment-thread__composer">
+    <div className={clsx('gv-comment-thread__composer', className)} style={style}>
       {replyTo && (
         <p className="gv-comment-thread__replying">
           Replying to {replyTo}

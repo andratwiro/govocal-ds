@@ -17,9 +17,11 @@ import {ChevronRight, GripVertical} from 'lucide-react';
 import {Checkbox} from './Checkbox';
 import {ProgressCircle} from './ProgressCircle';
 import './Tree.css';
+import {keepClass} from './className';
+import clsx from 'clsx';
 
 export function Tree<T>(props: TreeProps<T>) {
-  return <AriaTree {...props} />;
+  return <AriaTree {...props} className={keepClass(props.className)} />;
 }
 
 export function TreeItemContent(
@@ -54,7 +56,7 @@ export interface TreeItemProps extends Partial<AriaTreeItemProps> {
 export function TreeItem(props: TreeItemProps) {
   let textValue = typeof props.title === 'string' ? props.title : '';
   return (
-    <AriaTreeItem textValue={textValue} {...props}>
+    <AriaTreeItem textValue={textValue} {...props} className={keepClass(props.className)}>
       {props.title != null ? (
         <>
           <TreeItemContent>{props.title}</TreeItemContent>
@@ -69,16 +71,16 @@ export function TreeItem(props: TreeItemProps) {
 
 export function TreeLoadMoreItem(props: TreeLoadMoreItemProps) {
   return (
-    <AriaTreeLoadMoreItem {...props}>
+    <AriaTreeLoadMoreItem {...props} className={keepClass(props.className)}>
       <ProgressCircle isIndeterminate aria-label="Loading more..." />
     </AriaTreeLoadMoreItem>
   );
 }
 
 export function TreeSection(props: React.ComponentProps<typeof AriaTreeSection>) {
-  return <AriaTreeSection {...props} />;
+  return <AriaTreeSection {...props} className={clsx('react-aria-TreeSection', props.className)} />;
 }
 
 export function TreeHeader(props: React.ComponentProps<typeof AriaTreeHeader>) {
-  return <AriaTreeHeader {...props} />;
+  return <AriaTreeHeader {...props} className={clsx('react-aria-TreeHeader', props.className)} />;
 }

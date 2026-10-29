@@ -11,6 +11,7 @@ import {composeRenderProps} from 'react-aria-components/composeRenderProps';
 import {Label, FieldError, Description} from './Form';
 import './RadioGroup.css';
 import './utilities.css';
+import {keepClass} from './className';
 
 export interface RadioGroupProps extends Omit<AriaRadioGroupProps, 'children'> {
   children?: React.ReactNode;
@@ -27,7 +28,7 @@ export function RadioGroup({
   ...props
 }: RadioGroupProps) {
   return (
-    <AriaRadioGroup {...props}>
+    <AriaRadioGroup {...props} className={keepClass(props.className)}>
       <Label>{label}</Label>
       <div className="radio-items">{children}</div>
       {description && <Description>{description}</Description>}
@@ -42,7 +43,7 @@ export interface RadioProps extends RadioFieldProps {
 
 export function Radio(props: RadioProps) {
   return (
-    <RadioField {...props}>
+    <RadioField {...props} className={keepClass(props.className)}>
       <RadioButton>
         {composeRenderProps(props.children, children => (
           <>

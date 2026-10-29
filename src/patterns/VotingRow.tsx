@@ -1,9 +1,11 @@
 'use client';
 import {TriangleAlert} from 'lucide-react';
 import {VoteProgress} from './VoteProgress';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './VotingRow.css';
 
-export interface VotingRowProps {
+export interface VotingRowProps extends PlacementProps {
   title: string;
   thumbnail?: string;
   /** Shows the warning mark next to the title. */
@@ -35,12 +37,14 @@ export function VotingRow({
   onlineCount,
   offlineCount,
   commentCount,
-  newCommentCount
+  newCommentCount,
+  className,
+  style
 }: VotingRowProps) {
   // Vote progress scales the bar by the leading option's count: recover it from this row's relative fill.
   const maxCount = fillPercent > 0 ? Math.round((voteCount * 100) / fillPercent) : Math.max(voteCount, 1);
   return (
-    <div className="gv-list-row-voting">
+    <div className={clsx('gv-list-row-voting', className)} style={style}>
       <div className="gv-list-row-voting__cells">
         <div className="gv-list-row-voting__title-cell">
           {thumbnail && <img className="gv-list-row-voting__thumbnail" src={thumbnail} alt="" aria-hidden />}

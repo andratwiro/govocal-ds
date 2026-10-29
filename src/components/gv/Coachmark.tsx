@@ -7,7 +7,7 @@ import type {RefObject} from 'react';
 import './Coachmark.css';
 
 export interface CoachmarkProps
-  extends Omit<AriaPopoverProps, 'children' | 'className'> {
+  extends Omit<AriaPopoverProps, 'children' | 'className' | 'style'> {
   /** The element the coachmark points at. */
   triggerRef: RefObject<Element | null>;
   title: string;

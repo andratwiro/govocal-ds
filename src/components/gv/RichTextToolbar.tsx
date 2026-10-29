@@ -2,9 +2,11 @@
 import {Button, Toolbar} from 'react-aria-components';
 import {Bold, Italic, List, Link as LinkIcon, Image, SquarePlay} from 'lucide-react';
 import {RichTextToolbarButton} from './RichTextToolbarButton';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './RichTextToolbar.css';
 
-export interface RichTextToolbarProps {
+export interface RichTextToolbarProps extends PlacementProps {
   bold?: boolean;
   onBoldChange?: (v: boolean) => void;
   italic?: boolean;
@@ -31,10 +33,12 @@ export function RichTextToolbar({
   onListChange,
   onLink,
   onImage,
-  onVideo
+  onVideo,
+  className,
+  style
 }: RichTextToolbarProps) {
   return (
-    <Toolbar aria-label="Formatting" className="gv-editor-toolbar">
+    <Toolbar aria-label="Formatting" className={clsx('gv-editor-toolbar', className)} style={style}>
       <RichTextToolbarButton aria-label="Bold" isSelected={bold} onChange={onBoldChange}>
         <Bold aria-hidden size={14} strokeWidth={1.75} />
       </RichTextToolbarButton>

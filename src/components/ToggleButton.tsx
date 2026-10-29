@@ -5,6 +5,7 @@ import {
   type ToggleButtonProps as RACToggleButtonProps
 } from 'react-aria-components/ToggleButton';
 import './ToggleButton.css';
+import {keepClass} from './className';
 
 interface ToggleButtonProps extends RACToggleButtonProps {
   /**
@@ -19,7 +20,7 @@ export function ToggleButton(props: ToggleButtonProps) {
   return (
     <RACToggleButton
       {...props}
-      className="react-aria-ToggleButton button-base"
+      className={keepClass(props.className, 'button-base')}
       data-variant={props.variant || 'primary'}>
       {composeRenderProps(props.children, children => (
         <span>{children}</span>

@@ -1,9 +1,11 @@
 'use client';
 import type {ReactNode} from 'react';
 import {Illustration, type IllustrationName} from './Illustration';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './EmptyState.css';
 
-export interface EmptyStateProps {
+export interface EmptyStateProps extends PlacementProps {
   /** What isn't there yet, in a few words: "No inputs yet", "Ideas will appear here". */
   title: ReactNode;
   /** When it will appear, or what to do about it. One or two sentences. */
@@ -30,7 +32,6 @@ export interface EmptyStateProps {
    * @default 3
    */
   headingLevel?: 2 | 3 | 4 | 5 | 6 | 'none';
-  className?: string;
 }
 
 const ART_WIDTH = {page: 160, panel: 96} as const;
@@ -48,12 +49,14 @@ export function EmptyState({
   size = 'page',
   framed,
   headingLevel = 3,
-  className
+  className,
+  style
 }: EmptyStateProps) {
   const Title = headingLevel === 'none' ? 'p' : (`h${headingLevel}` as const);
   return (
     <div
-      className={['gv-empty-state', className].filter(Boolean).join(' ')}
+      className={clsx('gv-empty-state', className)}
+      style={style}
       data-size={size}
       data-framed={framed || undefined}>
       {illustration ? (

@@ -6,6 +6,8 @@ import {BarRow} from './BarRow';
 import {LegendRow} from './LegendRow';
 import {ReactionCounts, type ReactionCountsProps} from './ReactionCounts';
 import {StatementRow} from './StatementRow';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './Chart.css';
 import './DashboardCard.css';
 
@@ -103,9 +105,11 @@ export interface DashboardStatement {
 }
 
 /** Statements (Common Ground): each statement with its agree / disagree / pass bar and "% agree". */
-export function DashboardStatements({items}: {items: DashboardStatement[]}) {
+export interface DashboardStatementsProps extends PlacementProps {items: DashboardStatement[]}
+
+export function DashboardStatements({items, className, style}: DashboardStatementsProps) {
   return (
-    <ul className="gv-dashboard-statements">
+    <ul className={clsx('gv-dashboard-statements', className)} style={style}>
       {items.map((s, i) => {
         const total = s.agree + s.disagree + s.pass || 1;
         const share = (v: number) => Math.max(0, Math.min(100, (v / total) * 100));
@@ -135,9 +139,11 @@ export interface DashboardBar {
 }
 
 /** Status breakdown: one Bar row per status (label, thin track, "percent · count"). */
-export function DashboardBars({items}: {items: DashboardBar[]}) {
+export interface DashboardBarsProps extends PlacementProps {items: DashboardBar[]}
+
+export function DashboardBars({items, className, style}: DashboardBarsProps) {
   return (
-    <ul className="gv-dashboard-bars">
+    <ul className={clsx('gv-dashboard-bars', className)} style={style}>
       {items.map((b, i) => (
         <li key={i}>
           <BarRow
@@ -158,11 +164,13 @@ export interface DashboardRankingItem {
 }
 
 /** Live ranking: options by votes, with rank, share bar (the leader in green) and count. */
-export function DashboardRanking({items, unit = 'votes'}: {items: DashboardRankingItem[]; unit?: string}) {
+export interface DashboardRankingProps extends PlacementProps {items: DashboardRankingItem[]; unit?: string}
+
+export function DashboardRanking({items, unit = 'votes', className, style}: DashboardRankingProps) {
   const total = items.reduce((s, o) => s + o.votes, 0) || 1;
   const ranked = [...items].sort((x, y) => y.votes - x.votes);
   return (
-    <ol className="gv-dashboard-ranking">
+    <ol className={clsx('gv-dashboard-ranking', className)} style={style}>
       {ranked.map((o, i) => {
         const share = Math.round((o.votes / total) * 100);
         return (
@@ -192,9 +200,11 @@ export interface DashboardTopic {
 }
 
 /** Topic breakdown: rows that open a topic view (React Aria Buttons with a chevron). */
-export function DashboardTopics({items, onAction}: {items: DashboardTopic[]; onAction?: (id: Key) => void}) {
+export interface DashboardTopicsProps extends PlacementProps {items: DashboardTopic[]; onAction?: (id: Key) => void}
+
+export function DashboardTopics({items, onAction, className, style}: DashboardTopicsProps) {
   return (
-    <div className="gv-dashboard-topics">
+    <div className={clsx('gv-dashboard-topics', className)} style={style}>
       {items.map(t => (
         <Button key={t.id} className="gv-dashboard-topics__row" onPress={() => onAction?.(t.id)}>
           <span className="gv-dashboard-topics__label">{t.label}</span>
@@ -228,9 +238,11 @@ export interface DashboardListItem {
  * List (Most liked): the inputs that got the most traction, each its title, who and when, its reactions and its
  * status. Rows 11 apart over a hairline (prototype `.pj-mlrow`). Not in Figma.
  */
-export function DashboardList({items}: {items: DashboardListItem[]}) {
+export interface DashboardListProps extends PlacementProps {items: DashboardListItem[]}
+
+export function DashboardList({items, className, style}: DashboardListProps) {
   return (
-    <ul className="gv-dashboard-list">
+    <ul className={clsx('gv-dashboard-list', className)} style={style}>
       {items.map(it => (
         <li key={it.id} className="gv-dashboard-list__row">
           <div className="gv-dashboard-list__main">
@@ -253,11 +265,13 @@ export function DashboardList({items}: {items: DashboardListItem[]}) {
  * Demographic · age / commute: a labelled stacked bar over its legend rows. Hovering or focusing a row (or hovering a
  * segment) picks that share out: the other segments and rows dim (Not in Figma).
  */
-export function DashboardDemographic({label, items}: {label: ReactNode; items: DashboardDemographicItem[]}) {
+export interface DashboardDemographicProps extends PlacementProps {label: ReactNode; items: DashboardDemographicItem[]}
+
+export function DashboardDemographic({label, items, className, style}: DashboardDemographicProps) {
   const id = useId();
   const [picked, setPicked] = useState<number | null>(null);
   return (
-    <div className="gv-dashboard-demographic">
+    <div className={clsx('gv-dashboard-demographic', className)} style={style}>
       <div id={id} className="gv-dashboard-demographic__label">{label}</div>
       <div className="gv-dashboard-demographic__bar" aria-hidden>
         {items.map((it, i) => (

@@ -2,11 +2,14 @@
 import type {ReactNode} from 'react';
 import {Button, Heading} from 'react-aria-components';
 import {X} from 'lucide-react';
-import {Dialog} from '../Dialog';
+import {Dialog} from 'react-aria-components/Dialog';
 import {Modal as StarterModal} from '../Modal';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './Modal.css';
 
-export interface ModalProps {
+/** `className` and `style` place the dialog box (a width, a margin); they never paint it. */
+export interface ModalProps extends PlacementProps {
   /** The title in the head, e.g. "Attachments". */
   title: string;
   /** The body. */
@@ -55,11 +58,13 @@ export function Modal({
   defaultOpen,
   onOpenChange,
   isDismissable = true,
-  closeLabel = 'Close'
+  closeLabel = 'Close',
+  className,
+  style
 }: ModalProps) {
   return (
     <StarterModal isOpen={isOpen} defaultOpen={defaultOpen} onOpenChange={onOpenChange} isDismissable={isDismissable}>
-      <Dialog className="gv-modal" data-size={size} data-height={height}>
+      <Dialog className={clsx('gv-modal', className)} style={style} data-size={size} data-height={height}>
         <div className="gv-modal__head">
           <Heading slot="title" className="gv-modal__title">
             {title}

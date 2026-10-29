@@ -10,9 +10,11 @@ import {composeRenderProps} from 'react-aria-components/composeRenderProps';
 import type {ReactNode} from 'react';
 import {Tooltip, TooltipTrigger} from '../Tooltip';
 import {NewDot} from './NewDot';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './SegmentedControl.css';
 
-export interface SegmentedControlProps extends ToggleButtonGroupProps {
+export interface SegmentedControlProps extends Omit<ToggleButtonGroupProps, 'className' | 'style'>, PlacementProps {
   /**
    * `default` is Figma's Segmented control (the Build / Manage / Insights tabs, 36 tall).
    * `small` is the range switch in a dashboard card's header (Figma Dashboard card · Votes over
@@ -27,11 +29,11 @@ export interface SegmentedControlProps extends ToggleButtonGroupProps {
  * Segmented control (Figma node 14:883; prototype `.pj-hseg`): React Aria's ToggleButtonGroup, ToggleButton and
  * SelectionIndicator, painted with gv- classes.
  */
-export function SegmentedControl({size = 'default', ...props}: SegmentedControlProps) {
-  return <RACToggleButtonGroup {...props} className="gv-segmented-control" data-size={size} />;
+export function SegmentedControl({size = 'default', className, style, ...props}: SegmentedControlProps) {
+  return <RACToggleButtonGroup {...props} className={clsx('gv-segmented-control', className)} style={style} data-size={size} />;
 }
 
-export interface SegmentedControlItemProps extends ToggleButtonProps {
+export interface SegmentedControlItemProps extends Omit<ToggleButtonProps, 'className' | 'style'>, PlacementProps {
   /** The label; an icon (`aria-hidden`, 16, or 14 in `small`) may come first ("List", "Map"). */
   children?: ReactNode;
   /** Shows the New dot in the segment's top-right corner (Figma `Segmented control item` State=Unread). */
@@ -44,9 +46,9 @@ export interface SegmentedControlItemProps extends ToggleButtonProps {
 }
 
 /** Segmented control item (Figma node 14:882): one segment of the control. */
-export function SegmentedControlItem({children, isUnread, tooltip, ...props}: SegmentedControlItemProps) {
+export function SegmentedControlItem({children, isUnread, tooltip, className, style, ...props}: SegmentedControlItemProps) {
   const segment = (
-    <ToggleButton {...props} className="gv-segment" data-unread={isUnread || undefined}>
+    <ToggleButton {...props} className={clsx('gv-segment', className)} style={style} data-unread={isUnread || undefined}>
       {composeRenderProps(children, resolvedChildren => (
         <>
           <SelectionIndicator className="gv-segment-indicator" data-selected />

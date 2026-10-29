@@ -4,11 +4,13 @@ import type {ReactNode} from 'react';
 import {Trash2} from 'lucide-react';
 import {IconButton} from '../components/gv/IconButton';
 import {Tooltip, TooltipTrigger} from '../components/Tooltip';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './RailPhase.css';
 
 export type RailPhaseStatus = 'upcoming' | 'live' | 'completed';
 
-export interface RailPhaseProps {
+export interface RailPhaseProps extends PlacementProps {
   /** The phase name, e.g. "Collect ideas". */
   title: ReactNode;
   /**
@@ -70,11 +72,13 @@ export function RailPhase({
   current,
   onPress,
   onDelete,
-  deleteLabel = typeof title === 'string' ? `Delete ${title}` : 'Delete phase'
+  deleteLabel = typeof title === 'string' ? `Delete ${title}` : 'Delete phase',
+  className,
+  style
 }: RailPhaseProps) {
   return (
     <div
-      className="gv-rail-phase"
+      className={clsx('gv-rail-phase', className)} style={style}
       data-status={status}
       data-current={current || undefined}
       data-deletable={onDelete ? true : undefined}>

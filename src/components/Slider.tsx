@@ -9,6 +9,7 @@ import {
 } from 'react-aria-components/Slider';
 import {Label} from './Form';
 import './Slider.css';
+import {keepClass} from './className';
 
 export interface SliderProps<T> extends AriaSliderProps<T> {
   /** Label for the slider. */
@@ -30,7 +31,7 @@ export function Slider<T extends number | number[]>({
   ...props
 }: SliderProps<T>) {
   return (
-    <AriaSlider {...props}>
+    <AriaSlider {...props} className={keepClass(props.className)}>
       {label && <Label>{label}</Label>}
       <SliderOutput />
       <SliderTrack>

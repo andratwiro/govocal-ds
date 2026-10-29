@@ -7,10 +7,12 @@ import {Plus, X} from 'lucide-react';
 import {Button} from '../Button';
 import {Popover} from '../Popover';
 import {OptionList, type OptionListItem} from './OptionList';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './Badge.css';
 import './TagPicker.css';
 
-export interface TagPickerProps {
+export interface TagPickerProps extends PlacementProps {
   /** Names the tags and the list that adds them, e.g. "Tags". The page shows its own label beside the picker. */
   'aria-label': string;
   /** Every tag that can be chosen. */
@@ -34,7 +36,7 @@ export interface TagPickerProps {
  * are React Aria's TagGroup drawn as the removable Badge. Not in Figma yet.
  */
 export function TagPicker({'aria-label': label, options, selected, onChange, addLabel = 'Add tag',
-  placeholder = 'Search tags...', selectionLabel, isDisabled}: TagPickerProps) {
+  placeholder = 'Search tags...', selectionLabel, isDisabled, className, style}: TagPickerProps) {
   const chosen = selected.map(id => options.find(o => o.id === id)).filter((o): o is OptionListItem => !!o);
   const root = useRef<HTMLDivElement>(null);
   const remove = (keys: Set<unknown>) => {
@@ -50,7 +52,7 @@ export function TagPicker({'aria-label': label, options, selected, onChange, add
     });
   };
   return (
-    <div className="gv-tag-picker" ref={root}>
+    <div className={clsx('gv-tag-picker', className)} style={style} ref={root}>
       {chosen.length > 0 && (
         <TagGroup aria-label={label} className="gv-tag-picker__group" onRemove={isDisabled ? undefined : remove}>
           <TagList items={chosen} className="gv-tag-picker__list">
@@ -76,7 +78,7 @@ export function TagPicker({'aria-label': label, options, selected, onChange, add
         <Button variant="quiet" size={32} isDisabled={isDisabled}>
           <Plus aria-hidden />{addLabel}
         </Button>
-        <Popover placement="bottom start" hideArrow className="react-aria-Popover gv-tag-picker__popover">
+        <Popover placement="bottom start" hideArrow className="gv-tag-picker__popover">
           <Dialog aria-label={label} className="gv-tag-picker__dialog">
             <OptionList aria-label={label} options={options} selected={selected} onChange={onChange}
               placeholder={placeholder} searchLabel={placeholder.replace(/(\.\.\.|…)$/, '')} selectionLabel={selectionLabel} />

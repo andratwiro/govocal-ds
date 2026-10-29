@@ -6,6 +6,8 @@ import {Switch} from '../components/Switch';
 import {TextField} from '../components/TextField';
 import {IconButton} from '../components/gv/IconButton';
 import {RichTextEditor} from '../components/gv/RichTextEditor';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './NotificationRow.css';
 
 /** On or off, controlled or not. */
@@ -43,7 +45,7 @@ function Meta({who, when}: {who: ReactNode; when: ReactNode}) {
   );
 }
 
-export interface NotificationRowProps extends OnOff {
+export interface NotificationRowProps extends OnOff, PlacementProps {
   /** The email's name ("A reply on my comment"). */
   children: string;
   /** Who it goes to ("User who commented"). */
@@ -58,7 +60,7 @@ export interface NotificationRowProps extends OnOff {
  * One email in a phase's Notifications card (prototype `.pjacc2.pjnf`): a switch, then the email's name with who it
  * goes to and what sends it, and a chevron to its page. Off, the name greys and the row opens nothing. Not in Figma.
  */
-export function NotificationRow({children, who, when, onOpen, isSelected, defaultSelected = true, onChange}: NotificationRowProps) {
+export function NotificationRow({children, who, when, onOpen, isSelected, defaultSelected = true, onChange, className, style}: NotificationRowProps) {
   const [on, setOn] = useOnOff(isSelected, defaultSelected, onChange);
   const label = (
     <>
@@ -67,7 +69,7 @@ export function NotificationRow({children, who, when, onOpen, isSelected, defaul
     </>
   );
   return (
-    <div className="gv-notification-row" data-off={!on || undefined}>
+    <div className={clsx('gv-notification-row', className)} style={style} data-off={!on || undefined}>
       <Switch aria-label={children} isSelected={on} onChange={setOn}>
         {null}
       </Switch>
@@ -83,7 +85,7 @@ export function NotificationRow({children, who, when, onOpen, isSelected, defaul
   );
 }
 
-export interface NotificationRowListProps {
+export interface NotificationRowListProps extends PlacementProps {
   /** One `NotificationRow` per email. */
   children: ReactNode;
   /** Names the group. @default 'Emails' */
@@ -91,15 +93,15 @@ export interface NotificationRowListProps {
 }
 
 /** The emails, one row each. (The app shell's bell list is `NotificationList`.) */
-export function NotificationRowList({children, 'aria-label': ariaLabel = 'Emails'}: NotificationRowListProps) {
+export function NotificationRowList({children, 'aria-label': ariaLabel = 'Emails', className, style}: NotificationRowListProps) {
   return (
-    <div className="gv-notification-list" role="group" aria-label={ariaLabel}>
+    <div className={clsx('gv-notification-list', className)} style={style} role="group" aria-label={ariaLabel}>
       {children}
     </div>
   );
 }
 
-export interface NotificationEmailProps extends OnOff {
+export interface NotificationEmailProps extends OnOff, PlacementProps {
   /** The email's name: the page's title. */
   name: string;
   who: ReactNode;
@@ -135,12 +137,14 @@ export function NotificationEmail({
   buttonText,
   isSelected,
   defaultSelected = true,
-  onChange
+  onChange,
+  className,
+  style
 }: NotificationEmailProps) {
   const [on, setOn] = useOnOff(isSelected, defaultSelected, onChange);
   const [intro, setIntro] = useState(introduction);
   return (
-    <section className="gv-notification-email" aria-label={name}>
+    <section className={clsx('gv-notification-email', className)} style={style} aria-label={name}>
       <div className="gv-notification-email__head">
         <IconButton aria-label={backLabel} onPress={onBack}>
           <ArrowLeft aria-hidden />

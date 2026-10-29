@@ -3,9 +3,11 @@ import {X} from 'lucide-react';
 import {Button} from 'react-aria-components/Button';
 import {Tag, TagGroup, TagList} from 'react-aria-components/TagGroup';
 import {activeFacets, type FilterFacet, type FilterValue} from './FilterMenu';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './FilterChips.css';
 
-export interface FilterChipsProps {
+export interface FilterChipsProps extends PlacementProps {
   facets: FilterFacet[];
   value: FilterValue;
   onChange: (value: FilterValue) => void;
@@ -33,7 +35,9 @@ const METRIC = '__metric';
  * yet.
  */
 export function FilterChips({
-  facets, value, onChange, showClear = true, metric, onMetricRemove, 'aria-label': label = 'Active filters'
+  facets, value, onChange, showClear = true, metric, onMetricRemove, 'aria-label': label = 'Active filters',
+  className,
+  style
 }: FilterChipsProps) {
   const on = activeFacets(facets, value);
   if (on.length === 0 && !metric) return null;
@@ -51,7 +55,7 @@ export function FilterChips({
     if (on.length) onChange({});
   };
   return (
-    <div className="gv-filter-chips">
+    <div className={clsx('gv-filter-chips', className)} style={style}>
       <TagGroup aria-label={label} onRemove={keys => remove(keys)} className="gv-filter-chips__group">
         <TagList className="gv-filter-chips__list">
           {metric && (

@@ -8,6 +8,7 @@ import {
 import {Label, FieldError, Description} from './Form';
 import {DateInput, DateSegment} from './DateField';
 import './TimeField.css';
+import {keepClass} from './className';
 
 export interface TimeFieldProps<T extends TimeValue> extends AriaTimeFieldProps<T> {
   label?: string;
@@ -22,7 +23,7 @@ export function TimeField<T extends TimeValue>({
   ...props
 }: TimeFieldProps<T>) {
   return (
-    <AriaTimeField {...props}>
+    <AriaTimeField {...props} className={keepClass(props.className)}>
       <Label>{label}</Label>
       <DateInput>{segment => <DateSegment segment={segment} />}</DateInput>
       {description && <Description>{description}</Description>}

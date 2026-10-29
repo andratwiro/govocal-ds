@@ -12,6 +12,11 @@
   letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
 
+  /* isFlush: the content brings its own edges (an Option list in a popover). */
+  &[data-flush] {
+    padding: 0;
+  }
+
   .react-aria-Heading[slot='title'] {
     margin-top: 0;
     margin-bottom: var(--gv-space-12);

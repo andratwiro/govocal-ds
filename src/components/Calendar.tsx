@@ -13,6 +13,8 @@ import {Text} from './Content';
 import {ChevronLeft, ChevronRight} from 'lucide-react';
 import {Button} from './Button';
 import './Calendar.css';
+import {keepClass} from './className';
+import clsx from 'clsx';
 
 export interface CalendarProps<T extends DateValue> extends AriaCalendarProps<T> {
   errorMessage?: string;
@@ -21,7 +23,7 @@ export interface CalendarProps<T extends DateValue> extends AriaCalendarProps<T>
 export function Calendar<T extends DateValue>({errorMessage, ...props}: CalendarProps<T>) {
   let months = props.visibleDuration?.months || 1;
   return (
-    <AriaCalendar {...props}>
+    <AriaCalendar {...props} className={keepClass(props.className)}>
       <div className="months">
         {Array.from({length: months}, (_, i) => (
           <div key={i} className="month">
@@ -51,12 +53,12 @@ export function CalendarCell(props: CalendarCellProps) {
   return (
     <AriaCalendarCell
       {...props}
-      className="react-aria-CalendarCell button-base"
+      className={keepClass(props.className, 'button-base')}
       data-variant="quiet"
     />
   );
 }
 
 export function CalendarGrid(props: CalendarGridProps) {
-  return <AriaCalendarGrid {...props} />;
+  return <AriaCalendarGrid {...props} className={clsx('react-aria-CalendarGrid', props.className)} />;
 }

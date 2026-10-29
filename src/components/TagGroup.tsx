@@ -12,6 +12,8 @@ import {Description, Label} from './Form';
 import {Text} from './Content';
 import {X} from 'lucide-react';
 import './TagGroup.css';
+import {keepClass} from './className';
+import clsx from 'clsx';
 
 export interface TagGroupProps<T>
   extends
@@ -32,7 +34,7 @@ export function TagGroup<T>({
   ...props
 }: TagGroupProps<T>) {
   return (
-    <AriaTagGroup {...props}>
+    <AriaTagGroup {...props} className={clsx('react-aria-TagGroup', props.className)}>
       {label && <Label>{label}</Label>}
       <TagList items={items} renderEmptyState={renderEmptyState}>
         {children}
@@ -51,7 +53,7 @@ export function Tag({
 }) {
   let textValue = typeof children === 'string' ? children : undefined;
   return (
-    <AriaTag textValue={textValue} {...props} className="react-aria-Tag button-base">
+    <AriaTag textValue={textValue} {...props} className={keepClass(props.className, 'button-base')}>
       {({allowsRemoving}) => (
         <>
           {children}

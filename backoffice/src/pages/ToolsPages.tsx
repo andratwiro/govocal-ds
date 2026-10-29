@@ -49,7 +49,7 @@ export function PublicApiTokens() {
       description={<DocsNote lead="Manage your API tokens for the public API." docs="API documentation"
         about="The API documentation lists every endpoint, how to sign a request with a token, and the rate limits." />}
       actions={<Button variant="primary" size={32} onPress={() => setOpen(true)}><Plus aria-hidden size={16} />Create new token</Button>}>
-      <Table aria-label="Public API tokens" className="react-aria-Table bo-tools-table">
+      <Table aria-label="Public API tokens" className="bo-tools-table">
         <TableHeader>
           <Column isRowHeader>Name</Column><Column>Created</Column><Column>Last used</Column>
           <Column><span className="bo-tools-sr">Actions</span></Column>
@@ -139,7 +139,7 @@ export function Webhooks() {
         docs="webhook documentation" about="The webhook documentation shows the payload of each event and how to check a request's signature with the secret token." />}
       actions={<Button variant="primary" size={32} onPress={() => setEditing('new')}><Plus aria-hidden size={16} />Create webhook</Button>}>
       <div className="bo-tools-scroll">
-        <Table aria-label="Webhooks" className="react-aria-Table bo-tools-table">
+        <Table aria-label="Webhooks" className="bo-tools-table">
           <TableHeader>
             <Column isRowHeader>Name</Column><Column>URL</Column><Column>Events</Column><Column>Project</Column>
             <Column>Enabled</Column><Column><span className="bo-tools-sr">Actions</span></Column>
@@ -219,7 +219,7 @@ export function McpAuthorizations() {
   return (
     <Page title="MCP authorizations" crumbs={TOOLS_CRUMB}
       description="View and manage client authorizations for your MCP (Model Context Protocol) integrations.">
-      <Table aria-label="MCP authorizations" className="react-aria-Table bo-tools-table">
+      <Table aria-label="MCP authorizations" className="bo-tools-table">
         <TableHeader>
           <Column isRowHeader>Client name</Column><Column>Client ID</Column><Column><span className="bo-tools-sr">Actions</span></Column>
         </TableHeader>

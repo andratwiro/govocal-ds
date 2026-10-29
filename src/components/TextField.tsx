@@ -11,6 +11,7 @@ import {Label, FieldError, Description} from './Form';
 import './TextField.css';
 import {useState, type ReactNode} from 'react';
 import type React from 'react';
+import {keepClass} from './className';
 
 export interface TextFieldProps<T = HTMLInputElement> extends AriaTextFieldProps {
   label?: string;
@@ -54,6 +55,7 @@ export function TextField({
   return (
     <AriaTextField
       {...props}
+      className={keepClass(props.className)}
       value={value}
       defaultValue={defaultValue}
       maxLength={maxLength}
@@ -93,7 +95,7 @@ export function TextArea({
   ...props
 }: TextFieldProps<HTMLTextAreaElement>) {
   return (
-    <AriaTextField {...props}>
+    <AriaTextField {...props} className={keepClass(props.className)}>
       <Label>{label}</Label>
       <AriaTextArea
         ref={inputRef}

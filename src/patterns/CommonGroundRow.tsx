@@ -2,9 +2,11 @@
 import {TriangleAlert} from 'lucide-react';
 import {Checkbox} from '../components/gv/Checkbox';
 import type {ListRowSelect} from '../components/gv/ListRow';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './CommonGroundRow.css';
 
-export interface CommonGroundRowProps {
+export interface CommonGroundRowProps extends PlacementProps {
   /** The Common Ground statement text. */
   statement: string;
   /** Shows the "New" accent label at the end of the statement cell. */
@@ -46,13 +48,15 @@ export function CommonGroundRow({
   reactions,
   reactionCount,
   visibleCount,
-  select
+  select,
+  className,
+  style
 }: CommonGroundRowProps) {
   const likeCount = likes !== undefined ? likes : reactionCount;
   const reactionTotal = reactions ?? visibleCount;
   return (
     <div
-      className="gv-list-row-cg"
+      className={clsx('gv-list-row-cg', className)} style={style}
       data-selectable={select ? true : undefined}
       data-selected={select?.isSelected || undefined}>
       <span className="gv-list-row-cg__lead">

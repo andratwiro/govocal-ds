@@ -2,12 +2,15 @@
 import type {ReactNode} from 'react';
 import {Button} from 'react-aria-components/Button';
 import {Heading} from 'react-aria-components/Heading';
-// The starter DisclosureHeader puts its chevron first; the prototype's sits at the end, so the trigger is our own.
-import {Disclosure, DisclosurePanel} from '../components/Disclosure';
+// React Aria's own Disclosure: the starter's paints its header and panel (its chevron first; the prototype's sits at
+// the end), so the trigger and the panel are this section's.
+import {Disclosure, DisclosurePanel} from 'react-aria-components/Disclosure';
 import {ChevronDown} from 'lucide-react';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './PanelSection.css';
 
-export interface PanelSectionProps {
+export interface PanelSectionProps extends PlacementProps {
   /** The section's name ("Next actions"). */
   title: string;
   /** A short note at the end of the header ("0 of 6 ready"). Not shown on a collapsible section. */
@@ -24,10 +27,10 @@ export interface PanelSectionProps {
  * A section of a side panel (prototype `.pj-psec`): a small strong title, its body 16 below. Collapsible sections
  * fold with a chevron at the end of the header. Not in Figma yet.
  */
-export function PanelSection({title, aside, collapsible, defaultExpanded, level = 3, children}: PanelSectionProps) {
+export function PanelSection({title, aside, collapsible, defaultExpanded, level = 3, children, className, style}: PanelSectionProps) {
   if (collapsible) {
     return (
-      <Disclosure className="gv-panel-section" data-collapsible defaultExpanded={defaultExpanded}>
+      <Disclosure className={clsx('gv-panel-section', className)} style={style} data-collapsible defaultExpanded={defaultExpanded}>
         <Heading level={level} className="gv-panel-section__heading">
           <Button slot="trigger" className="gv-panel-section__trigger">
             <span className="gv-panel-section__title">{title}</span>
@@ -42,7 +45,7 @@ export function PanelSection({title, aside, collapsible, defaultExpanded, level 
   }
   const H = `h${level}` as const;
   return (
-    <section className="gv-panel-section">
+    <section className={clsx('gv-panel-section', className)} style={style}>
       <div className="gv-panel-section__header">
         <H className="gv-panel-section__heading gv-panel-section__title">{title}</H>
         {aside != null && <span className="gv-panel-section__aside">{aside}</span>}

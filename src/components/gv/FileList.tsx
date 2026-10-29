@@ -1,7 +1,7 @@
 'use client';
 import {Paperclip} from 'lucide-react';
 import type {ReactNode} from 'react';
-import {GridList, GridListItem} from '../GridList';
+import {GridList, GridListItem} from 'react-aria-components/GridList';
 import {Link} from '../Link';
 import './FileList.css';
 

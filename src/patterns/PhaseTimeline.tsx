@@ -1,4 +1,6 @@
 import {RailPhase} from './RailPhase';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './PhaseTimeline.css';
 
 export type TimelineState = 'done' | 'in-progress' | 'upcoming';
@@ -21,7 +23,7 @@ export interface TimelinePhase {
   current?: boolean;
 }
 
-export interface PhaseTimelineProps {
+export interface PhaseTimelineProps extends PlacementProps {
   phases: TimelinePhase[];
 }
 
@@ -32,9 +34,9 @@ const DOT = {done: 'completed', 'in-progress': 'live', upcoming: 'upcoming'} as 
  * The Participation rail's timeline (prototype `#proj-rail .pj-stepper`): Rail phase rows in a list. Rail phase
  * draws the guide line through the dots, the count chip, "N new" and the coloured state word. Not in Figma yet.
  */
-export function PhaseTimeline({phases}: PhaseTimelineProps) {
+export function PhaseTimeline({phases, className, style}: PhaseTimelineProps) {
   return (
-    <ul className="gv-phase-timeline">
+    <ul className={clsx('gv-phase-timeline', className)} style={style}>
       {phases.map(p => (
         <li key={p.id}>
           <RailPhase status={DOT[p.state]} current={p.current} href={p.href} title={p.title}

@@ -17,6 +17,8 @@ import {
 import {ChevronRight} from 'lucide-react';
 import React from 'react';
 import './NavigationTree.css';
+import {keepClass} from './className';
+import clsx from 'clsx';
 
 const RenderLinkContext = React.createContext<LinkProps['render'] | undefined>(undefined);
 
@@ -26,7 +28,7 @@ export function NavigationTree<T>({
 }: NavigationTreeProps<T> & {renderLink?: LinkProps['render']}) {
   return (
     <RenderLinkContext.Provider value={renderLink}>
-      <AriaNavigationTree {...props} />
+      <AriaNavigationTree {...props} className={keepClass(props.className)} />
     </RenderLinkContext.Provider>
   );
 }
@@ -50,18 +52,18 @@ export function NavigationTreeItemContent(props: {children?: React.ReactNode}) {
 }
 
 export function NavigationTreeItem(props: AriaNavigationTreeItemProps) {
-  return <AriaNavigationTreeItem {...props} />;
+  return <AriaNavigationTreeItem {...props} className={keepClass(props.className)} />;
 }
 
 export function NavigationTreeSection<T extends object>(props: NavigationTreeSectionProps<T>) {
-  return <AriaNavigationTreeSection {...props} />;
+  return <AriaNavigationTreeSection {...props} className={clsx('react-aria-NavigationTreeSection', props.className)} />;
 }
 
 export function NavigationTreeHeader(props: NavigationTreeHeaderProps) {
-  return <AriaNavigationTreeHeader {...props} />;
+  return <AriaNavigationTreeHeader {...props} className={clsx('react-aria-NavigationTreeHeader', props.className)} />;
 }
 
 export function NavigationTreeItemLink({render: renderProp, ...props}: LinkProps) {
   const contextRender = React.useContext(RenderLinkContext);
-  return <Link render={renderProp ?? contextRender} {...props} />;
+  return <Link render={renderProp ?? contextRender} {...props} className={keepClass(props.className)} />;
 }

@@ -1,6 +1,8 @@
 'use client';
 import {Checkbox} from './Checkbox';
 import {ListHeaderCell} from './ListHeaderCell';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './ListHeader.css';
 
 export interface ListHeaderColumn {
@@ -29,7 +31,7 @@ export interface ListHeaderSelectAll {
   'aria-label'?: string;
 }
 
-export interface ListHeaderProps {
+export interface ListHeaderProps extends PlacementProps {
   /** The input method this header belongs to (Figma `Method`), for the `AllVariants` story only. */
   method?: 'ideation' | 'common-ground' | 'proposals' | 'voting';
   columns: ListHeaderColumn[];
@@ -48,7 +50,6 @@ export interface ListHeaderProps {
    * @default false
    */
   leadSlot?: boolean;
-  className?: string;
 }
 
 /** The CSS grid track list for a column set: the first column fills, the rest are fixed. */
@@ -58,9 +59,9 @@ export function listColumnsTemplate(columns: ListHeaderColumn[]) {
     .join(' ');
 }
 
-export function ListHeader({columns, onSort, onAddColumn, selectAll, leadSlot, className}: ListHeaderProps) {
+export function ListHeader({columns, onSort, onAddColumn, selectAll, leadSlot, className, style}: ListHeaderProps) {
   return (
-    <div className={`gv-list-header${className ? ` ${className}` : ''}`}>
+    <div className={clsx('gv-list-header', className)} style={style}>
       {(selectAll || leadSlot) && (
         <span className="gv-list-header__lead">
           {selectAll && (

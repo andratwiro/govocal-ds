@@ -3,9 +3,11 @@ import type {ReactNode} from 'react';
 import {Button} from 'react-aria-components/Button';
 import {ChevronRight} from 'lucide-react';
 import {Sparkline} from '../components/gv/Chart';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './StatCard.css';
 
-export interface StatCardProps {
+export interface StatCardProps extends PlacementProps {
   /** What is counted ("Participants"). */
   label: string;
   /** The number, already formatted ("215"). */
@@ -22,7 +24,7 @@ export interface StatCardProps {
  * A stat with its sparkline (prototype `.pj-aud`, "Collecting now"): label over a number, the Sparkline, a caption,
  * and a chevron when it opens a detail. Not in Figma yet.
  */
-export function StatCard({label, value, series, caption, onPress}: StatCardProps) {
+export function StatCard({label, value, series, caption, onPress, className, style}: StatCardProps) {
   const body = (
     <>
       <span className="gv-stat-card__head">
@@ -37,6 +39,6 @@ export function StatCard({label, value, series, caption, onPress}: StatCardProps
     </>
   );
   return onPress
-    ? <Button className="gv-stat-card" data-pressable onPress={onPress}>{body}</Button>
-    : <div className="gv-stat-card" role="group" aria-label={label}>{body}</div>;
+    ? <Button className={clsx('gv-stat-card', className)} style={style} data-pressable onPress={onPress}>{body}</Button>
+    : <div className={clsx('gv-stat-card', className)} style={style} role="group" aria-label={label}>{body}</div>;
 }

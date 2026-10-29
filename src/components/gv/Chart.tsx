@@ -1,5 +1,6 @@
 import {useId, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode} from 'react';
 import './Chart.css';
+import type {PlacementProps} from '../className';
 
 /**
  * The chart palette, one name per `--gv-chart-*` token. Anything that draws data (lines, bars,
@@ -73,7 +74,7 @@ export interface ChartLegendItem {
   color: ChartColor;
 }
 
-export interface ChartLegendProps {
+export interface ChartLegendProps extends PlacementProps {
   items: ChartLegendItem[];
   /** `dot`: round 9px (line charts). `square`: 8px, radius 2 (Statements: agree / disagree / pass). */
   shape?: 'dot' | 'square';
@@ -85,14 +86,13 @@ export interface ChartLegendProps {
    * tab stop so the keyboard reaches it too. LineChart's own `legend` wires it to the lines.
    */
   onHighlightChange?: (index: number | null) => void;
-  className?: string;
 }
 
 /** The key under a chart: a swatch and a word per series. */
-export function ChartLegend({items, shape = 'dot', align = 'center', highlighted = null, onHighlightChange, className}: ChartLegendProps) {
+export function ChartLegend({items, shape = 'dot', align = 'center', highlighted = null, onHighlightChange, className, style}: ChartLegendProps) {
   const on = onHighlightChange;
   return (
-    <ul className={cx('gv-chart-legend', `gv-chart-legend--${shape}`, `gv-chart-legend--${align}`, className)}>
+    <ul className={cx('gv-chart-legend', `gv-chart-legend--${shape}`, `gv-chart-legend--${align}`, className)} style={style}>
       {items.map((it, i) => (
         <li
           key={i}
@@ -280,7 +280,7 @@ function ChartStage({className, style, children, interactive, name, series, labe
 
 /* ───────────────────────────── Line chart ───────────────────────────── */
 
-export interface LineChartProps {
+export interface LineChartProps extends PlacementProps {
   /** One or two series (Figma: Line · 1 series, Line · 2 series), one value per label. */
   series: ChartSeries[];
   /** The x axis, one label per value ("16 Feb"). */
@@ -304,13 +304,12 @@ export interface LineChartProps {
   highlightedSeries?: number | null;
   /** Replaces the generated trend sentence. */
   'aria-label'?: string;
-  className?: string;
 }
 
 const VB_W = 1000;
 
 /** Figma "Chart" · Line: gridded line chart with a y axis from 0 and dated x labels. Plain SVG. */
-export function LineChart({series, labels, max, height = 141, legend = false, interactive = true, highlightedSeries = null, className, ...rest}: LineChartProps) {
+export function LineChart({series, labels, max, height = 141, legend = false, interactive = true, highlightedSeries = null, className, style, ...rest}: LineChartProps) {
   const [legendPick, setLegendPick] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
   const [active, setActive] = useState<number | null>(null);
@@ -326,7 +325,7 @@ export function LineChart({series, labels, max, height = 141, legend = false, in
   const colors = series.map((_, i) => toneColor(tones[i]));
 
   return (
-    <div className={cx('gv-line-chart', className)}>
+    <div className={cx('gv-line-chart', className)} style={style}>
       <div className="gv-line-chart__body" style={{'--plot-height': `${height}px`} as CSSProperties}>
         <div className="gv-line-chart__y" aria-hidden>
           {[...scale.ticks].reverse().map(t => <span key={t}>{fmt(t)}</span>)}
@@ -379,7 +378,7 @@ export function LineChart({series, labels, max, height = 141, legend = false, in
 
 /* ───────────────────────────── Sparkline ───────────────────────────── */
 
-export interface SparklineProps {
+export interface SparklineProps extends PlacementProps {
   values: number[];
   /** What is counted ("Votes cast"): starts the spoken trend and names the value card's row. */
   label?: string;
@@ -400,11 +399,10 @@ export interface SparklineProps {
   interactive?: boolean;
   /** Replaces the generated trend sentence. */
   'aria-label'?: string;
-  className?: string;
 }
 
 /** Figma "Chart" · Sparkline: a bare trend line with a fading fill, no axes. Plain SVG. */
-export function Sparkline({values, label = 'Trend', labels, height = 110, grid = true, area = true, tone = 'primary', interactive = labels != null, className, ...rest}: SparklineProps) {
+export function Sparkline({values, label = 'Trend', labels, height = 110, grid = true, area = true, tone = 'primary', interactive = labels != null, className, style, ...rest}: SparklineProps) {
   const id = 'gv-spark-' + useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const [hovered, setHovered] = useState<number | null>(null);
   const pad = Math.min(8, height / 10);
@@ -418,6 +416,7 @@ export function Sparkline({values, label = 'Trend', labels, height = 110, grid =
   const svg = (
     <svg
       className={cx('gv-sparkline', !interactive && className)}
+      style={interactive ? undefined : style}
       data-chart-color={color}
       viewBox={`0 0 ${VB_W} ${height}`}
       preserveAspectRatio="none"
@@ -445,6 +444,7 @@ export function Sparkline({values, label = 'Trend', labels, height = 110, grid =
   return (
     <ChartStage
       className={cx('gv-sparkline-stage', className)}
+      style={style}
       interactive
       name={`${label} values`}
       series={[{label, color, values}]}

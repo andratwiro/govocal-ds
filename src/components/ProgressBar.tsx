@@ -5,6 +5,7 @@ import {
 } from 'react-aria-components/ProgressBar';
 import {Label} from './Form';
 import './ProgressBar.css';
+import {keepClass} from './className';
 
 export interface ProgressBarProps extends AriaProgressBarProps {
   label?: string;
@@ -12,7 +13,7 @@ export interface ProgressBarProps extends AriaProgressBarProps {
 
 export function ProgressBar({label, ...props}: ProgressBarProps) {
   return (
-    <AriaProgressBar {...props}>
+    <AriaProgressBar {...props} className={keepClass(props.className)}>
       {({percentage, valueText, isIndeterminate}) => (
         <>
           <Label>{label}</Label>

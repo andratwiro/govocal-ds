@@ -1,8 +1,11 @@
 'use client';
 import {ProgressBar, type ProgressBarProps} from 'react-aria-components/ProgressBar';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './VoteProgress.css';
 
-interface VoteProgressBase extends Omit<ProgressBarProps, 'children' | 'value' | 'minValue' | 'maxValue'> {
+interface VoteProgressBase
+  extends Omit<ProgressBarProps, 'children' | 'value' | 'minValue' | 'maxValue' | 'className' | 'style'>, PlacementProps {
   /** Accessible label; not shown visually (the count is the visible label). */
   label: string;
 }
@@ -28,18 +31,18 @@ export interface VoteProgressCountProps extends VoteProgressBase {
 export type VoteProgressProps = VoteProgressThresholdProps | VoteProgressCountProps;
 
 export function VoteProgress(props: VoteProgressProps) {
-  const {label, variant} = props;
-
-  if (variant === 'threshold') {
-    const {count, threshold} = props;
+  if (props.variant === 'threshold') {
+    const {variant, label, count, threshold, className, style, ...rest} = props;
     const percent = threshold > 0 ? Math.min(100, (count / threshold) * 100) : 0;
     return (
       <ProgressBar
+        {...rest}
         aria-label={label}
         value={count}
         minValue={0}
         maxValue={threshold}
-        className="gv-vote-progress gv-vote-progress--threshold">
+        className={clsx('gv-vote-progress gv-vote-progress--threshold', className)}
+        style={style}>
         <span className="gv-vote-progress__count">{count}</span>
         <span className="gv-vote-progress__of">/ {threshold}</span>
         <span className="gv-vote-progress__track">
@@ -53,15 +56,17 @@ export function VoteProgress(props: VoteProgressProps) {
     );
   }
 
-  const {count, maxCount, newCount} = props;
+  const {variant, label, count, maxCount, newCount, className, style, ...rest} = props;
   const percent = maxCount > 0 ? Math.min(100, (count / maxCount) * 100) : 0;
   return (
     <ProgressBar
+      {...rest}
       aria-label={label}
       value={count}
       minValue={0}
       maxValue={maxCount}
-      className="gv-vote-progress gv-vote-progress--count">
+      className={clsx('gv-vote-progress gv-vote-progress--count', className)}
+      style={style}>
       <span className="gv-vote-progress__count">{count}</span>
       <span className="gv-vote-progress__track">
         <span className="gv-vote-progress__fill" style={{width: `${percent}%`}} />

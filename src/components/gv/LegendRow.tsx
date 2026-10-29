@@ -1,7 +1,9 @@
 import type {ReactNode} from 'react';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './LegendRow.css';
 
-export interface LegendRowProps {
+export interface LegendRowProps extends PlacementProps {
   /** The legend swatch's colour, as a `--gv-chart-*` token name. */
   color: string;
   /** The series' label (e.g. an age bracket). */
@@ -25,10 +27,10 @@ export interface LegendRowProps {
 }
 
 /** A swatch, a label and its value: the key under a stacked bar or beside a chart (Figma "Legend row"). */
-export function LegendRow({color, label, value, count, highlighted, dimmed, onHighlightChange: on}: LegendRowProps) {
+export function LegendRow({color, label, value, count, highlighted, dimmed, onHighlightChange: on, className, style}: LegendRowProps) {
   return (
     <div
-      className="gv-legend-row"
+      className={clsx('gv-legend-row', className)} style={style}
       data-highlighted={highlighted || undefined}
       data-dimmed={dimmed || undefined}
       tabIndex={on ? 0 : undefined}

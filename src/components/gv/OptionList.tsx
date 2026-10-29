@@ -5,6 +5,8 @@ import {OverlayTriggerStateContext} from 'react-aria-components/Dialog';
 import {Menu, MenuItem, Text} from '../Menu';
 import {SearchField} from '../SearchField';
 import {Button} from '../Button';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './OptionList.css';
 
 export interface OptionListItem {
@@ -16,7 +18,7 @@ export interface OptionListItem {
   count?: number;
 }
 
-export interface OptionListProps {
+export interface OptionListProps extends PlacementProps {
   /** Names the list, e.g. "Tags". */
   'aria-label': string;
   options: OptionListItem[];
@@ -59,7 +61,7 @@ export interface OptionListProps {
  */
 export function OptionList({'aria-label': label, options, selected, onChange, selectionMode = 'multiple', icon,
   countLabel = String, searchable = options.length > 5, placeholder = 'Filter...', searchLabel,
-  emptyLabel = 'No results', selectionLabel, onDone}: OptionListProps) {
+  emptyLabel = 'No results', selectionLabel, onDone, className, style}: OptionListProps) {
   const {contains} = useFilter({sensitivity: 'base'});
   const [query, setQuery] = useState('');
   const overlay = useContext(OverlayTriggerStateContext);
@@ -81,7 +83,7 @@ export function OptionList({'aria-label': label, options, selected, onChange, se
     if (selectionMode === 'single') overlay?.close();
   };
   const list = (
-    <Menu aria-label={label} className="react-aria-Menu gv-option-list__list" items={options}
+    <Menu aria-label={label} className="gv-option-list__list" items={options}
       selectionMode={selectionMode} selectedKeys={selected} escapeKeyBehavior="none"
       disallowEmptySelection={selectionMode === 'single'}
       // React Aria closes a menu on Enter even when picking several; in a search Space types, so Enter must tick
@@ -90,7 +92,7 @@ export function OptionList({'aria-label': label, options, selected, onChange, se
       onSelectionChange={keys => choose(keys === 'all' ? options.map(o => o.id) : [...keys].map(String))}
       renderEmptyState={() => emptyLabel}>
       {o => (
-        <MenuItem id={o.id} textValue={o.label} icon={o.icon ?? icon} className="react-aria-MenuItem gv-option-list__item">
+        <MenuItem id={o.id} textValue={o.label} icon={o.icon ?? icon} className="gv-option-list__item">
           <Text slot="label" className="gv-option-list__label">
             <span className="gv-option-list__name">{o.label}</span>
             {o.count != null && <span className="gv-option-list__count">{countLabel(o.count)}</span>}
@@ -100,11 +102,11 @@ export function OptionList({'aria-label': label, options, selected, onChange, se
     </Menu>
   );
   return (
-    <div className="gv-option-list" onKeyDownCapture={searchable ? onEscape : undefined}>
+    <div className={clsx('gv-option-list', className)} style={style} onKeyDownCapture={searchable ? onEscape : undefined}>
       {searchable ? (
         <Autocomplete filter={contains} inputValue={query} onInputChange={setQuery}>
           <SearchField aria-label={searchLabel ?? `Filter ${label.toLowerCase()}`} placeholder={placeholder} autoFocus
-            className="react-aria-SearchField gv-option-list__search" />
+            className="gv-option-list__search" />
           {list}
         </Autocomplete>
       ) : list}

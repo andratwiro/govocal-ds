@@ -2,9 +2,11 @@
 import {PanelLeft, Plus} from 'lucide-react';
 import type {ReactNode} from 'react';
 import {IconButton} from '../components/gv/IconButton';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './RailHeader.css';
 
-export interface RailHeaderProps {
+export interface RailHeaderProps extends PlacementProps {
   /** Section title, e.g. "Participation". */
   title: ReactNode;
   /** Called when the add (+) action is pressed. Omit to hide the action. */
@@ -29,10 +31,12 @@ export function RailHeader({
   onAdd,
   addLabel = 'Add',
   onTogglePanel,
-  togglePanelLabel = 'Hide panel'
+  togglePanelLabel = 'Hide panel',
+  className,
+  style
 }: RailHeaderProps) {
   return (
-    <div className="gv-rail-header">
+    <div className={clsx('gv-rail-header', className)} style={style}>
       <div className="gv-rail-header__title">{title}</div>
       {(onAdd || onTogglePanel) && (
         <div className="gv-rail-header__actions">

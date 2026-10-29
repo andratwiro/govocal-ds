@@ -211,7 +211,7 @@ function Management() {
       <div className="bo-dashboard-cards">
         <div className="bo-dashboard-stack">
           <DashCard title="Input status" type="status-breakdown" footer={(
-            <Link href="#/inputs" className="react-aria-Link bo-dashboard-more">Go to Input Manager <ArrowRight aria-hidden size={16} /></Link>
+            <Link href="#/inputs" className="bo-dashboard-more">Go to Input Manager <ArrowRight aria-hidden size={16} /></Link>
           )}>
             <Meter label="Feedback given" value={s.feedbackGiven} />
             <DashboardBars items={STATUS_BREAKDOWN.map(b => ({label: b.label, percent: (b.count / total) * 100, count: b.count, color: b.color}))} />

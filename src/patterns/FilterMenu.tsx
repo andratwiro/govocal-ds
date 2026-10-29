@@ -7,6 +7,8 @@ import {Menu, MenuItem, Separator, SubmenuTrigger} from '../components/Menu';
 import {Popover} from '../components/Popover';
 import {IconButton} from '../components/gv/IconButton';
 import {OptionList, type OptionListItem} from '../components/gv/OptionList';
+import type {PlacementProps} from '../components/className';
+import clsx from 'clsx';
 import './FilterMenu.css';
 
 /** One thing a list can be filtered by ("Tags"), with the values it can take. */
@@ -26,7 +28,7 @@ export type FilterValue = Record<string, readonly string[]>;
 /** The facets that have at least one value ticked. */
 export const activeFacets = (facets: FilterFacet[], value: FilterValue) => facets.filter(f => value[f.id]?.length);
 
-export interface FilterMenuProps {
+export interface FilterMenuProps extends PlacementProps {
   facets: FilterFacet[];
   value: FilterValue;
   onChange: (value: FilterValue) => void;
@@ -45,7 +47,7 @@ export interface FilterMenuProps {
  * is on. Ticking an option keeps the menus open. React Aria's MenuTrigger, Menu and SubmenuTrigger underneath.
  * Pair it with `FilterChips` on the same `value` so the two stay in sync. Not in Figma yet.
  */
-export function FilterMenu({facets, value, onChange, countLabel, 'aria-label': label = 'Filter', defaultOpen}: FilterMenuProps) {
+export function FilterMenu({facets, value, onChange, countLabel, 'aria-label': label = 'Filter', defaultOpen, className, style}: FilterMenuProps) {
   const on = activeFacets(facets, value).length;
   const options = (f: FilterFacet) => (
     <OptionList aria-label={f.label} options={f.options} icon={f.icon} countLabel={countLabel}
@@ -54,13 +56,13 @@ export function FilterMenu({facets, value, onChange, countLabel, 'aria-label': l
   );
   return (
     <AriaMenuTrigger defaultOpen={defaultOpen}>
-      <span className="gv-filter-menu__trigger" data-active={on > 0 || undefined}>
+      <span className={clsx('gv-filter-menu__trigger', className)} style={style} data-active={on > 0 || undefined}>
         <IconButton variant="bordered" tone="strong" aria-label={on ? `${label} (${on} on)` : label}>
           <Funnel aria-hidden size={16} />
         </IconButton>
       </span>
       <Popover placement="bottom end" hideArrow>
-        <Menu aria-label={label} className="react-aria-Menu gv-filter-menu"
+        <Menu aria-label={label} className="gv-filter-menu"
           onAction={key => { if (key === 'clear-all') onChange({}); }}>
           {facets.map(f => {
             const n = value[f.id]?.length ?? 0;

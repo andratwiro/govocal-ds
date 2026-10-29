@@ -1,9 +1,11 @@
 'use client';
 import {TriangleAlert} from 'lucide-react';
 import {VoteProgress} from './VoteProgress';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './ProposalsRow.css';
 
-export interface ProposalsRowProps {
+export interface ProposalsRowProps extends PlacementProps {
   title: string;
   thumbnail?: string;
   /** Shows the warning mark next to the title. */
@@ -36,10 +38,12 @@ export function ProposalsRow({
   commentCount,
   newCommentCount,
   daysLeft,
-  closed
+  closed,
+  className,
+  style
 }: ProposalsRowProps) {
   return (
-    <div className="gv-list-row-proposals">
+    <div className={clsx('gv-list-row-proposals', className)} style={style}>
       <div className="gv-list-row-proposals__cells">
         <div className="gv-list-row-proposals__title-cell">
           {thumbnail && (

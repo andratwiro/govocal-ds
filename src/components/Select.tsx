@@ -16,6 +16,7 @@ import {SearchField} from './SearchField';
 import {Label, FieldError, Description} from './Form';
 import clsx from 'clsx';
 import './Select.css';
+import {keepClass} from './className';
 
 export interface SelectProps<T, M extends 'single' | 'multiple'> extends Omit<
   AriaSelectProps<T, M>,
@@ -84,7 +85,7 @@ export function Select<T, M extends 'single' | 'multiple' = 'single'>({
     </SelectListBox>
   );
   return (
-    <AriaSelect {...props} data-variant={variant} data-size={height}>
+    <AriaSelect {...props} className={keepClass(props.className)} data-variant={variant} data-size={height}>
       {label && <Label>{label}</Label>}
       <Button variant={variant === 'field' ? 'secondary' : 'quiet'} size={height === 36 ? 36 : 32}>
         {icon && <span className="gv-select-icon" aria-hidden>{icon}</span>}
@@ -101,7 +102,7 @@ export function Select<T, M extends 'single' | 'multiple' = 'single'>({
             <div className="select-search">
               <SearchField aria-label={searchLabel ?? (searchPlaceholder === 'Search...' ? `Search ${name.toLowerCase()}`
                 : searchPlaceholder.replace(/(\.\.\.|…)$/, ''))} placeholder={searchPlaceholder}
-                autoFocus className="react-aria-SearchField select-search__field" />
+                autoFocus className="select-search__field" />
               {list}
             </div>
           </Autocomplete>

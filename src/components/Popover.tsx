@@ -4,8 +4,8 @@ import {
   Popover as AriaPopover,
   type PopoverProps as AriaPopoverProps
 } from 'react-aria-components/Popover';
-import clsx from 'clsx';
 import './Popover.css';
+import {keepClass} from './className';
 
 export interface PopoverProps extends Omit<AriaPopoverProps, 'children'> {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ export interface PopoverProps extends Omit<AriaPopoverProps, 'children'> {
 
 export function Popover({children, hideArrow, ...props}: PopoverProps) {
   return (
-    <AriaPopover {...props} className={clsx('react-aria-Popover', props.className)}>
+    <AriaPopover {...props} className={keepClass(props.className)}>
       {({trigger}) => (
         <>
           {!hideArrow && trigger !== 'MenuTrigger' && trigger !== 'SubmenuTrigger' && (

@@ -8,6 +8,8 @@ import {Popover} from '../components/Popover';
 import {Breadcrumbs} from '../components/gv/Breadcrumbs';
 import {IconButton} from '../components/gv/IconButton';
 import {SegmentedControl, SegmentedControlItem} from '../components/gv/SegmentedControl';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './ProjectHeader.css';
 
 export interface ProjectHeaderMode {
@@ -17,7 +19,8 @@ export interface ProjectHeaderMode {
   isDisabled?: boolean;
 }
 
-export interface ProjectHeaderProps {
+/** `className` and `style` place the header (the bar, or the crumb frame without one); they never paint it. */
+export interface ProjectHeaderProps extends PlacementProps {
   /**
    * Figma "Level": the project page, or a phase inside it (draft or live).
    *
@@ -104,11 +107,14 @@ export function ProjectHeader({
   onSave,
   publishState,
   publishMenu,
-  shareMenu
+  shareMenu,
+  className,
+  style
 }: ProjectHeaderProps) {
   const isProject = level === 'project';
+  const isBar = modes != null || people != null || onSave != null || publishState != null || shareMenu != null;
   const crumbs = (
-    <nav className="gv-header" data-level={level} aria-label="Breadcrumb">
+    <nav className={clsx('gv-header', !isBar && className)} style={isBar ? undefined : style} data-level={level} aria-label="Breadcrumb">
       {isProject && onTogglePanel && (
         <>
           <IconButton onPress={onTogglePanel} aria-label="Show or hide project setup">
@@ -142,7 +148,6 @@ export function ProjectHeader({
     </nav>
   );
 
-  const isBar = modes != null || people != null || onSave != null || publishState != null || shareMenu != null;
   if (!isBar) return crumbs;
 
   const save = (
@@ -177,7 +182,7 @@ export function ProjectHeader({
     );
 
   return (
-    <div className="gv-project-header" data-level={level}>
+    <div className={clsx('gv-project-header', className)} style={style} data-level={level}>
       {crumbs}
       {!isProject && modes != null ? (
         <SegmentedControl

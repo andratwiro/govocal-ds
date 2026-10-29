@@ -10,18 +10,21 @@ import {ColorSlider} from './ColorSlider';
 import {ColorArea} from './ColorArea';
 import {ColorField} from './ColorField';
 import {Popover} from './Popover';
+import clsx from 'clsx';
+import type {PlacementProps} from './className';
 import './ColorPicker.css';
 
-export interface ColorPickerProps extends Omit<AriaColorPickerProps, 'children'> {
+/** `className` and `style` place the picker's swatch button; they never paint it. */
+export interface ColorPickerProps extends Omit<AriaColorPickerProps, 'children'>, PlacementProps {
   label?: string;
   children?: React.ReactNode;
 }
 
-export function ColorPicker({label, children, ...props}: ColorPickerProps) {
+export function ColorPicker({label, children, className, style, ...props}: ColorPickerProps) {
   return (
     <AriaColorPicker {...props}>
       <DialogTrigger>
-        <Button className="color-picker">
+        <Button className={clsx('color-picker', className)} style={style}>
           <ColorSwatch />
           <span>{label}</span>
         </Button>

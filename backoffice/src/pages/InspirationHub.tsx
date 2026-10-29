@@ -71,7 +71,7 @@ function ProjectCard({project, highlighted, copied, onCopy, onOpen}: {project: L
   return (
     <Card
       layout="stacked"
-      title={<Link onPress={onOpen} className="react-aria-Link bo-inspiration-hub-title">{project.title}</Link>}
+      title={<Link onPress={onOpen} className="bo-inspiration-hub-title">{project.title}</Link>}
       actions={<IconButton aria-label={`Preview: ${project.title}`} onPress={onOpen}><ExternalLink aria-hidden size={16} /></IconButton>}>
       <div className="bo-inspiration-hub-body">
         <Gap name="Project image" inline>

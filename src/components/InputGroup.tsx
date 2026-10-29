@@ -5,6 +5,7 @@ import {InputContext} from 'react-aria-components/Input';
 import {Label} from './Form';
 import {useId} from 'react';
 import './InputGroup.css';
+import {keepClass} from './className';
 
 interface InputGroupProps extends GroupProps {
   label?: string;
@@ -19,7 +20,7 @@ export function InputGroup(props: InputGroupProps) {
           {props.label}
         </Label>
       )}
-      <Group {...props} aria-labelledby={id} className="react-aria-Group inset">
+      <Group {...props} aria-labelledby={id} className={keepClass(props.className, 'inset')}>
         {composeRenderProps(props.children, (children, renderProps) => (
           <InputContext.Provider value={{disabled: renderProps.isDisabled}}>
             {children}

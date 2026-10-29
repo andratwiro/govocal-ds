@@ -1,8 +1,10 @@
 'use client';
 import type {ReactNode} from 'react';
 import {Button} from '../components/Button';
-import {Link} from '../components/Link';
+import {Link} from 'react-aria-components/Link';
 import {NewDot} from '../components/gv/NewDot';
+import clsx from 'clsx';
+import type {PlacementProps} from '../components/className';
 import './NotificationList.css';
 
 export interface NotificationItem {
@@ -18,7 +20,7 @@ export interface NotificationItem {
   icon?: ReactNode;
 }
 
-export interface NotificationListProps {
+export interface NotificationListProps extends PlacementProps {
   /** @default 'Notifications' */
   title?: string;
   items: NotificationItem[];
@@ -33,9 +35,9 @@ export interface NotificationListProps {
  * a title with "Mark all as read", then one row per notification, newest first, unread ones
  * bolder and with a red dot. Put it in a Popover + Dialog. Not in Figma yet.
  */
-export function NotificationList({title = 'Notifications', items, onMarkAllRead, emptyText = "You don't have any notifications yet"}: NotificationListProps) {
+export function NotificationList({title = 'Notifications', items, onMarkAllRead, emptyText = "You don't have any notifications yet", className, style}: NotificationListProps) {
   return (
-    <div className="gv-notification-list">
+    <div className={clsx('gv-notification-list', className)} style={style}>
       <div className="gv-notification-list__head">
         <h2 className="gv-notification-list__title">{title}</h2>
         {onMarkAllRead && <Button variant="quiet" size={32} onPress={onMarkAllRead}>Mark all as read</Button>}

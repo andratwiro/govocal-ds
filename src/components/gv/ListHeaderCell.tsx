@@ -1,9 +1,11 @@
 'use client';
 import {Button} from 'react-aria-components/Button';
 import {Plus, ArrowDown} from 'lucide-react';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './ListHeaderCell.css';
 
-export interface ListHeaderCellProps {
+export interface ListHeaderCellProps extends PlacementProps {
   /**
    * Label cells align their text left; Number cells align right (Figma's `Type`).
    *
@@ -37,12 +39,14 @@ export function ListHeaderCell({
   sorted = false,
   children,
   onPress,
-  'aria-label': ariaLabel
+  'aria-label': ariaLabel,
+  className,
+  style
 }: ListHeaderCellProps) {
   if (variant === 'add-column') {
     return (
       <Button
-        className="gv-list-header-cell"
+        className={clsx('gv-list-header-cell', className)} style={style}
         data-variant="add-column"
         onPress={onPress}
         aria-label={ariaLabel ?? 'Add column'}>
@@ -55,7 +59,7 @@ export function ListHeaderCell({
 
   if (isSquare) {
     return (
-      <span className="gv-list-header-cell" data-variant={variant} data-square>
+      <span className={clsx('gv-list-header-cell', className)} style={style} data-variant={variant} data-square>
         {children}
       </span>
     );
@@ -63,7 +67,7 @@ export function ListHeaderCell({
 
   return (
     <Button
-      className="gv-list-header-cell"
+      className={clsx('gv-list-header-cell', className)} style={style}
       data-variant={variant}
       data-sorted={sorted || undefined}
       onPress={onPress}

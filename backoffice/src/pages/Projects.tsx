@@ -232,7 +232,7 @@ function TemplateGallery({onClose, onUse}: {onClose: () => void; onUse: (templat
           <SearchField aria-label="Search the templates" placeholder="Search the templates" value={query} onChange={setQuery} />
         </div>
         {list.length ? (
-          <RadioGroup aria-label="Templates" className="react-aria-RadioGroup bo-projects-templates" value={chosen}
+          <RadioGroup aria-label="Templates" className="bo-projects-templates" value={chosen}
             onChange={setChosen}>
             {list.map(t => (
               <ChoiceCard key={t.title} value={t.title} media={methodTile(t.method)} description={t.summary}>{t.title}</ChoiceCard>

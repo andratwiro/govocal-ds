@@ -3,6 +3,8 @@ import {useEffect, useRef} from 'react';
 import {Button} from 'react-aria-components/Button';
 import {ChevronLeft, ChevronRight} from 'lucide-react';
 import {useLocale} from 'react-aria-components/I18nProvider';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './Pagination.css';
 
 export type PageItem = number | 'start-ellipsis' | 'end-ellipsis';
@@ -19,7 +21,7 @@ export function pageItems(page: number, pageCount: number): PageItem[] {
   return [1, 'start-ellipsis', page - 1, page, page + 1, 'end-ellipsis', count];
 }
 
-export interface PaginationProps {
+export interface PaginationProps extends PlacementProps {
   /** The current page, from 1. */
   page: number;
   /** How many pages there are. */
@@ -40,7 +42,7 @@ export interface PaginationProps {
  * ‹ and › are disabled at the ends, and when pressing one brings you to an end, focus moves to the current page
  * instead of being lost on a disabled button. Not in Figma yet.
  */
-export function Pagination({page, pageCount, onPageChange, 'aria-label': label = 'Pagination'}: PaginationProps) {
+export function Pagination({page, pageCount, onPageChange, 'aria-label': label = 'Pagination', className, style}: PaginationProps) {
   const count = Math.max(1, pageCount);
   const current = Math.min(Math.max(1, page), count);
   const nav = useRef<HTMLElement>(null);
@@ -60,7 +62,7 @@ export function Pagination({page, pageCount, onPageChange, 'aria-label': label =
   };
 
   return (
-    <nav ref={nav} aria-label={label} className="gv-pagination">
+    <nav ref={nav} aria-label={label} className={clsx('gv-pagination', className)} style={style}>
       <Button className="gv-pagination__step" aria-label="Previous page" isDisabled={current === 1}
         onPress={() => go(current - 1)}>
         <Back aria-hidden size={16} />

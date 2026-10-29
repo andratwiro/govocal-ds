@@ -207,7 +207,7 @@
     flex-shrink: 0;
   }
 
-  .react-aria-Text {
+  > .react-aria-Text {
     padding: 0 var(--spacing-3);
     display: -webkit-box;
     overflow: hidden;

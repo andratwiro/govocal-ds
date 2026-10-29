@@ -1,9 +1,11 @@
 'use client';
 import {MessageCircle, ThumbsDown, ThumbsUp, type LucideIcon} from 'lucide-react';
 import {useLocale, VisuallyHidden} from 'react-aria-components';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './ReactionCounts.css';
 
-export interface ReactionCountsProps {
+export interface ReactionCountsProps extends PlacementProps {
   /** Likes (the thumb up). */
   likes: number;
   /** Dislikes (the thumb down). Left out where the phase doesn't allow disliking. */
@@ -12,7 +14,7 @@ export interface ReactionCountsProps {
   comments?: number;
 }
 
-const COUNTS: {key: keyof ReactionCountsProps; icon: LucideIcon; one: string; many: string}[] = [
+const COUNTS: {key: 'likes' | 'dislikes' | 'comments'; icon: LucideIcon; one: string; many: string}[] = [
   {key: 'likes', icon: ThumbsUp, one: 'like', many: 'likes'},
   {key: 'dislikes', icon: ThumbsDown, one: 'dislike', many: 'dislikes'},
   {key: 'comments', icon: MessageCircle, one: 'comment', many: 'comments'}
@@ -23,11 +25,11 @@ const COUNTS: {key: keyof ReactionCountsProps; icon: LucideIcon; one: string; ma
  * `.pj-react` in the side panel and `.pj-mlrow__st` on Most liked). Display-only: each count is read with its word
  * ("128 likes"), the icons are hidden. Numbers follow the locale. Not in Figma.
  */
-export function ReactionCounts(props: ReactionCountsProps) {
+export function ReactionCounts({className, style, ...props}: ReactionCountsProps) {
   const {locale} = useLocale();
   const format = new Intl.NumberFormat(locale);
   return (
-    <span className="gv-reaction-counts">
+    <span className={clsx('gv-reaction-counts', className)} style={style}>
       {COUNTS.filter(c => props[c.key] !== undefined).map(({key, icon: Icon, one, many}) => {
         const n = props[key] as number;
         return (

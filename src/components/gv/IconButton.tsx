@@ -1,8 +1,10 @@
 'use client';
 import {Button as RACButton, type ButtonProps as RACButtonProps} from 'react-aria-components/Button';
+import clsx from 'clsx';
+import type {PlacementProps} from '../className';
 import './IconButton.css';
 
-export interface IconButtonProps extends Omit<RACButtonProps, 'children'> {
+export interface IconButtonProps extends Omit<RACButtonProps, 'children' | 'className' | 'style'>, PlacementProps {
   /**
    * The button's chrome (Figma "Style").
    *
@@ -31,11 +33,12 @@ export interface IconButtonProps extends Omit<RACButtonProps, 'children'> {
 }
 
 export function IconButton(props: IconButtonProps) {
-  const {variant, tone, size, children, ...rest} = props;
+  const {variant, tone, size, children, className, style, ...rest} = props;
   return (
     <RACButton
       {...rest}
-      className="gv-icon-button"
+      className={clsx('gv-icon-button', className)}
+      style={style}
       data-variant={variant || 'ghost'}
       data-tone={tone || 'default'}
       data-size={size || 28}>

@@ -13,6 +13,7 @@ import {Label, FieldError} from './Form';
 import {RangeCalendar} from './RangeCalendar';
 import {Calendar as CalendarIcon} from 'lucide-react';
 import './DateRangePicker.css';
+import {keepClass} from './className';
 
 export interface DateRangePickerProps<T extends DateValue> extends AriaDateRangePickerProps<T> {
   label?: string;
@@ -27,7 +28,7 @@ export function DateRangePicker<T extends DateValue>({
   ...props
 }: DateRangePickerProps<T>) {
   return (
-    <AriaDateRangePicker {...props}>
+    <AriaDateRangePicker {...props} className={keepClass(props.className)}>
       <Label>{label}</Label>
       <Group className="react-aria-Group inset">
         <div className="date-fields">

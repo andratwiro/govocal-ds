@@ -549,7 +549,7 @@ function Library({onAdd, onClose}: {onAdd: (kind: BlockKind) => void; onClose: (
             <Tooltip placement="bottom">Back to the report outline</Tooltip>
           </TooltipTrigger>
         )}>
-        <GridList aria-label="Widgets" layout="grid" className="react-aria-GridList bo-report-library"
+        <GridList aria-label="Widgets" layout="grid" className="bo-report-library"
           onAction={k => onAdd(String(k).split(':')[1] as BlockKind)}>
           {LIBRARY.map(g => (
             <GridListSection key={g.group}>
