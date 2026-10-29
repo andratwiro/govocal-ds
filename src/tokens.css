@@ -118,7 +118,7 @@
   --gv-chart-green: var(--gv-color-green-400);
   --gv-chart-olive: var(--gv-color-olive-500);
   --gv-chart-terracotta: var(--gv-color-orange-500);
-  --gv-space-0: 1px;
+  --gv-space-0: 0px;
   --gv-space-1: 1px;
   --gv-space-2: 2px;
   --gv-space-3: 3px;

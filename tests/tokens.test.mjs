@@ -19,6 +19,8 @@ const page = {type: 'CANVAS', name: 'Foundations', children: [{type: 'FRAME', na
   {type: 'FRAME', name: 'space/14', children: [text('space/14', 'space/14'),
     {type: 'RECTANGLE', name: 'Bar', absoluteBoundingBox: {width: 14, height: 12},
       boundVariables: {size: {x: {type: 'VARIABLE_ALIAS', id: 'VariableID:1:100'}}}}]},
+  {type: 'FRAME', name: 'space/0', children: [text('space/0', 'space/0'),
+    {type: 'RECTANGLE', name: 'Bar', absoluteBoundingBox: {width: 1, height: 12}}]},
   {type: 'FRAME', name: 'radius/full', children: [{type: 'RECTANGLE', name: 'Shape', cornerRadius: 999,
     boundVariables: {rectangleCornerRadii: {RECTANGLE_TOP_LEFT_CORNER_RADIUS: {type: 'VARIABLE_ALIAS', id: 'VariableID:1:119'}}}},
     text('radius/full', 'radius/full')]},
@@ -40,6 +42,8 @@ describe('parseFoundations', () => {
     expect(tokens.type['stat-small'].$value).toMatchObject({fontFamily: 'Public Sans', fontWeight: 500,
       fontSize: {value: 20, unit: 'px'}, lineHeight: 1.2});
     expect(tokens.space['14'].$value).toEqual({value: 14, unit: 'px'});
+    // Figma can't draw a 0-wide bar, so space/0 is drawn 1px wide: the name wins.
+    expect(tokens.space['0'].$value).toEqual({value: 0, unit: 'px'});
     expect(tokens.radius.full.$value).toEqual({value: 9999, unit: 'px'});
     expect(tokens.shadow.dialog.$value[0]).toMatchObject({offsetY: {value: 24, unit: 'px'}, blur: {value: 60, unit: 'px'}});
   });

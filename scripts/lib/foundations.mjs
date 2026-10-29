@@ -34,7 +34,9 @@ export function parseFoundations(page) {
       const id = rect('Swatch').boundVariables?.fills?.[0]?.id;
       if (id) variableIds[id] = `--gv-${group}-${role}`;
     } else if ((m = n.name.match(/^space\/(\d+)$/)) && rect('Bar')) {
-      tokens.space[m[1]] = {$type: 'dimension', $value: px(rect('Bar').absoluteBoundingBox.width)};
+      // Figma can't draw a 0-wide bar (space/0 is drawn 1px), so the name wins for 0.
+      const width = m[1] === '0' ? 0 : rect('Bar').absoluteBoundingBox.width;
+      tokens.space[m[1]] = {$type: 'dimension', $value: px(width)};
       const id = rect('Bar').boundVariables?.size?.x?.id;
       if (id) variableIds[id] = `--gv-space-${m[1]}`;
     } else if ((m = n.name.match(/^radius\/(\d+|full)$/)) && rect('Shape')) {
