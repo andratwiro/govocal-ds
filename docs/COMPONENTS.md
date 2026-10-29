@@ -124,7 +124,7 @@ then open that entry's stories file for the usage. Import paths and props: docs/
 - **Select** `Select` (not in Figma): Pick one value (or several) from a list in a popover: React Aria's Select, its options the dropdown rows (a 16 icon or avatar, a description line, a check at… Stories: All Variants, Field, Pill, Quiet, With Search, With Icons, With Avatars, With Descriptions, Disabled, Empty Search.
 - **Switch** `Switch` Stories: All Variants, With Description, With Revealed Fields, With Badge, Disabled.
 - **Tag picker** `TagPicker` (not in Figma): The tags on an item, each removable, then "+ Add tag", which opens the Option list (several, searchable) in a popover. ←→ move between the tags, Delete or Ba… Stories: All Variants, Default, Empty, Many, Disabled.
-- **Text field** `TextField` Stories: Default, With Prefix, With Counter, Read Only.
+- **Text field** `TextField` Stories: Default, With Prefix, With Counter, With Counter And Help, Read Only.
 - **Title field** `TitleField`: Title field (Figma node 4:123): the big project/page name input at the top of an editor. Stories: All Variants, Empty, Required, Filled, Invalid, Multilingual.
 
 ## Components / Text

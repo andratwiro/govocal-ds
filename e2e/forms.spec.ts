@@ -66,3 +66,13 @@ test('Choice card: revealed content shows only while its tile is chosen', async 
   await page.getByText('Budget allocation', {exact: true}).click();
   await expect(page.getByRole('textbox', {name: 'Minimum'})).toBeVisible();
 });
+
+test('Text field: help beside the counter takes the row, not one word a line', async ({page}) => {
+  await page.goto(story('components-forms-text-field--with-counter-and-help'));
+  const help = page.getByText('One sentence participants can agree or disagree with.');
+  await expect(help).toBeVisible();
+  const box = await help.boundingBox();
+  const row = await page.locator('.gv-text-field-foot').boundingBox();
+  // The help fills the row but for the counter (a word wide before: `contain: inline-size` in a flex row).
+  expect(box!.width).toBeGreaterThan(row!.width * 0.6);
+});

@@ -95,6 +95,12 @@
   &:empty {
     display: none;
   }
+
+  /* Help and error take the row's width beside the counter: Form.css gives them `contain: inline-size`, which in a
+     flex row left them a word wide. */
+  & > :is(.field-description, .react-aria-FieldError) {
+    flex: 1 1 0;
+  }
 }
 
 .gv-text-field-counter {

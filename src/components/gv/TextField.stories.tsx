@@ -46,6 +46,18 @@ export const WithCounter: Story = {
   }
 };
 
+/** Help text beside the count: the help takes the row, the count keeps its end. */
+export const WithCounterAndHelp: Story = {
+  name: 'With counter and help',
+  args: {
+    label: 'Statement',
+    maxLength: 140,
+    showCounter: true,
+    description: 'One sentence participants can agree or disagree with.',
+    defaultValue: 'More cycle paths along the river.'
+  }
+};
+
 export const ReadOnly: Story = {
   name: 'Read only',
   args: {label: 'Project URL', isReadOnly: true, defaultValue: 'green-corridors'}

@@ -39,12 +39,6 @@
   justify-content: flex-end;
 }
 
-/* Help and error take the foot's width beside the counter: Form.css gives them `contain: inline-size`, which in the
-   foot's flex row left them a word wide. */
-.gv-multilingual-field .gv-text-field-foot > :is(.field-description, .react-aria-FieldError) {
-  flex: 1 1 0;
-}
-
 /* The rich text editor's error and help, outside a React Aria field: the field's own look (Form.css). */
 .gv-multilingual-field__error {
   display: block;
