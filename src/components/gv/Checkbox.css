@@ -1,40 +1,68 @@
 @import '../theme.css';
 
 /*
- * Checkbox (Figma node 5:317, 15x15 box, radius 4, panel fill + control border).
- * The prototype's checked state (`.gv-checkbox input:checked + .box`) fills with its link/brand
- * colour; nearest token is --gv-action-checked (same brand-650 step as --gv-border-selected).
+ * Checkbox (Figma node 5:317: a 15x15 box, radius 4, panel fill + control border, the whole
+ * component at 0.6 opacity). The prototype's list checkboxes (`.pj-intable .gv-checkbox`) add the
+ * rest: an 11px check, a near-black border on hover, and the header select-all dimmed (.55) until
+ * hovered or checked, which is `isQuiet` here. Checked fill: the prototype uses its link blue
+ * (`--gv-bo-link`), which has no token; --gv-action-checked is Figma's own "checked" colour.
  */
 .gv-checkbox {
   --checkmark-color: var(--gv-text-inverse);
 
+  /* The starter's .indicator draws its 1px ring as an inset shadow from these two variables;
+     setting them (rather than adding a border) keeps the ring single and the invalid red working. */
   .react-aria-CheckboxButton {
     .indicator {
+      --indicator-background: var(--gv-surface-panel);
+      --indicator-border: var(--gv-border-control);
       width: var(--gv-space-15);
       height: var(--gv-space-15);
       border-radius: var(--gv-radius-4);
-      border: 1px solid var(--gv-border-control);
-      background: var(--gv-surface-panel);
+      scale: none;
+    }
+
+    svg {
+      width: 11px;
+      height: 11px;
+    }
+
+    &[data-hovered] .indicator {
+      --indicator-border: var(--gv-icon-primary);
     }
 
     &[data-selected],
     &[data-indeterminate] {
       .indicator {
-        background: var(--gv-action-checked);
-        border-color: var(--gv-action-checked);
+        --indicator-background: var(--gv-action-checked);
+        --indicator-border: var(--gv-action-checked);
       }
     }
 
-    &[data-disabled] {
-      .indicator {
-        background: var(--gv-surface-app);
-        border-color: var(--gv-border-subtle);
-      }
+    &[data-invalid] .indicator {
+      --indicator-border: var(--invalid-color);
+    }
+
+    &[data-disabled] .indicator {
+      background: var(--gv-surface-app);
+      box-shadow: inset 0 0 0 1px var(--gv-border-subtle);
     }
 
     &[data-focus-visible] .indicator {
       outline: 2px solid var(--gv-border-selected);
       outline-offset: 2px;
     }
+  }
+}
+
+.gv-checkbox--quiet .react-aria-CheckboxButton {
+  opacity: 0.55;
+  transition: opacity 0.15s;
+
+  &[data-hovered],
+  &[data-focus-visible],
+  &[data-selected],
+  &[data-indeterminate] {
+    opacity: 1;
   }
 }

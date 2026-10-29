@@ -17,6 +17,7 @@ const meta: Meta<typeof Checkbox> = {
 export default meta;
 type Story = StoryObj<typeof Checkbox>;
 
+/** Unchecked, checked, indeterminate and disabled (Figma draws only the box; the states are the prototype's), then Figma's quiet select-all. */
 export const AllVariants: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
@@ -27,6 +28,7 @@ export const AllVariants: Story = {
       <Checkbox isDisabled defaultSelected>
         Allow anonymous submissions
       </Checkbox>
+      <Checkbox isQuiet aria-label="Select all ideas" />
     </div>
   )
 };
@@ -49,6 +51,11 @@ export const WithDescription: Story = {
       Allow participants to co-sponsor proposals
     </Checkbox>
   )
+};
+
+/** Figma's Checkbox as drawn: dimmed until hovered or checked, for a list header's select-all. */
+export const Quiet: Story = {
+  render: () => <Checkbox isQuiet aria-label="Select all ideas" />
 };
 
 export const Disabled: Story = {
