@@ -221,6 +221,21 @@ export function DataTable({
     return () => watch.disconnect();
   }, []);
 
+  // React Aria moves focus on Page Up / Down and Home / End but leaves the browser's own action on (1.22, a table
+  // without selection-follows-focus), so the page jumped a second time, past the row it had just brought into view.
+  // The table keeps those keys, except in a text field.
+  useEffect(() => {
+    const table = ref.current;
+    if (!table) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (!SCROLL_KEYS.has(e.key) || e.defaultPrevented) return;
+      if (e.target instanceof Element && e.target.closest(TEXT_FIELD)) return;
+      e.preventDefault();
+    };
+    table.addEventListener('keydown', onKeyDown);
+    return () => table.removeEventListener('keydown', onKeyDown);
+  }, []);
+
   const select = (next: Selection) => {
     const from = origin.current;
     origin.current = null;
@@ -249,6 +264,11 @@ export function DataTable({
     </DataTableContext.Provider>
   );
 }
+
+/** Keys whose browser action scrolls: the table moves focus on them instead. */
+const SCROLL_KEYS = new Set(['PageUp', 'PageDown', 'Home', 'End']);
+/** Where those keys move a caret, not focus. */
+const TEXT_FIELD = 'input:not([type="checkbox"]):not([type="radio"]), textarea, select, [contenteditable]:not([contenteditable="false"])';
 
 export interface DataTableHeaderProps<T> extends Omit<AriaTableHeaderProps<T>, 'className'> {
   /**
