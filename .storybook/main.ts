@@ -43,8 +43,8 @@ const config: StorybookConfig = {
       shouldExtractLiteralValuesFromEnum: true,
       shouldRemoveUndefinedFromOptional: true,
       // Never story data: the plugin stamps displayName and __docgenInfo on every export with a doc comment, so a
-      // data object gains two keys (Object.keys(METRICS) broke Data table's "In a panel"). e2e/stories.spec.ts catches it.
-      exclude: ['**/*.stories.tsx', '**/story-data/**'],
+      // data object (src/stories/) gains two keys (Object.keys(METRICS) broke Data table's "In a panel"). e2e/stories.spec.ts catches it.
+      exclude: ['**/*.stories.tsx', '**/src/stories/**'],
       propFilter: prop => !prop.parent || !/node_modules/.test(prop.parent.fileName) ||
         (REACT_ARIA_PROPS.has(prop.name) && !/@deprecated/.test(prop.description))
     }

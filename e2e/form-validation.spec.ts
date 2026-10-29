@@ -83,11 +83,7 @@ test('Form validation: every field shows its invalid state and message', async (
   a11yReport(await axeViolations(page, '.react-aria-Form'));
 });
 
-// Reported, not fixed here (the recipe owns no component CSS): Text field puts its message in a flex row
-// (.gv-text-field-foot, src/components/TextField.css) where Form.css's `contain: inline-size` leaves it 0 wide, so it
-// wraps one word per line. Once that is fixed, this test passes and its test.fail() line goes.
 test('Text field: its error message runs as wide as the field', async ({page}) => {
-  test.fail(true, 'src/components/TextField.css: the message in .gv-text-field-foot is 0 wide');
   await page.goto(story('all-invalid'));
   const field = await page.getByRole('textbox', {name: 'Title', exact: true}).boundingBox();
   const message = await page.getByText('Give the project a title.').boundingBox();

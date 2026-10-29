@@ -62,7 +62,7 @@ test('the keyboard walks every row: ↓, Page Down, End and Home move focus, and
 test('the header box ticks all 5,000, and toKeySet turns "all" into 5,000 keys', async ({page}) => {
   await page.goto(story);
   await table(page).getByRole('columnheader').first().locator('.gv-checkbox').click();
-  await expect(page.getByText('5000 selected')).toBeVisible();
+  await expect(page.getByText('5,000 selected')).toBeVisible();
   await page.getByRole('button', {name: 'Export'}).click();
   await expect(page.getByRole('status').filter({hasText: 'Export:'})).toHaveText('Export: 5,000 users');
   // A row drawn only now, far down the list, is ticked too.

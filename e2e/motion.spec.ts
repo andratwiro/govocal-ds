@@ -17,7 +17,7 @@ const recordOverlayAnimations = (page: Page) => page.addInitScript(() => {
     for (const state of ['entering', 'exiting']) {
       if (!el.hasAttribute(`data-${state}`) || !/react-aria-Modal/.test(el.className)) continue;
       const style = getComputedStyle(el);
-      seen.push({state, part: el.className, name: style.animationName, duration: style.animationDuration});
+      seen.push({state, part: el.className.split(' ')[0], name: style.animationName, duration: style.animationDuration});
     }
   };
   new MutationObserver(records => {
