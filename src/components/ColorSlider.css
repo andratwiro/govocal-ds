@@ -15,7 +15,7 @@
   .react-aria-SliderOutput {
     grid-area: output;
     text-align: end;
-    font: var(--font-size) var(--gv-font-family);
+    font: var(--gv-type-ui);
     color: var(--text-color);
   }
 
