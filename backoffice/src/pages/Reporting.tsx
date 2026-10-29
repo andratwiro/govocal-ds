@@ -1,21 +1,11 @@
 import {useMemo, useRef, useState} from 'react';
 import {useNavigate} from 'react-router';
 import {Plus} from 'lucide-react';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
-  DataTableOptions} from '../../../src/components/gv/DataTable';
-import {MenuItem} from '../../../src/components/Menu';
-import {SearchField} from '../../../src/components/SearchField';
-import {Button} from '../../../src/components/Button';
-import {TextField} from '../../../src/components/TextField';
-import {Card} from '../../../src/components/gv/Card';
-import {ChoiceCard, ChoiceCardCheckbox, ChoiceCardGroupHeading} from '../../../src/components/gv/ChoiceCard';
-import {RadioGroup} from '../../../src/components/RadioGroup';
-import {CheckboxGroup} from '../../../src/components/CheckboxGroup';
-import {Badge} from '../../../src/components/gv/Badge';
-import {Banner} from '../../../src/components/gv/Banner';
-import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
-import {ToastRegion} from '../../../src/components/Toast';
+import {Badge, Banner, Button, Card, ChoiceCard, ChoiceCardCheckbox, ChoiceCardGroupHeading, DataTable, DataTableBody,
+  DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader, DataTableOptions, DataTableRow, MenuItem,
+  SearchField, SegmentedControl, SegmentedControlItem, Tab, TabList, TabPanel, TabPanels, Tabs, TextField,
+  ToastRegion} from 'govocal-ds';
+import {CheckboxGroup, RadioGroup} from 'govocal-ds/base';
 import {CONTENTS, CONTENT_GROUPS, REPORTS, type Report} from '../data-reporting';
 import {Page} from './Page';
 import {SectionHeading} from '../SectionHeading';

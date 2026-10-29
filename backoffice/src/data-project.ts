@@ -1,7 +1,4 @@
-import type {TimelinePhase} from '../../src/patterns/PhaseTimeline';
-import type {ThreadComment} from '../../src/patterns/CommentThread';
-import type {PostedUpdate} from '../../src/patterns/OfficialUpdate';
-import type {FileListItemData} from '../../src/components/gv/FileList';
+import type {FileListItemData, PostedUpdate, ThreadComment, TimelinePhase} from 'govocal-ds';
 import type {Phase, Project} from './data';
 
 // Project overview (#/projects/:id), after the prototype's live project screen. Invented data only.

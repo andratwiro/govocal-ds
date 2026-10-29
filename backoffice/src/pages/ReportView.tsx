@@ -3,38 +3,14 @@ import {useLocation, useParams} from 'react-router';
 import {ArrowDown, ArrowUp, Bold, CalendarDays, ChartBar, ChartColumn, ChartLine, Clock, Copy, Download, FileText,
   Hash, Heading, Italic, Languages, Lightbulb, List, ListOrdered, Map as MapIcon, Minus, MoveVertical, Plus, Quote,
   SeparatorHorizontal, Send, Sparkles, Trash2, Type, X, ZoomIn, ZoomOut, Folder, LayoutGrid, FileType} from 'lucide-react';
-import {Button} from '../../../src/components/Button';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {Switch} from '../../../src/components/Switch';
-import {TextField, TextArea} from '../../../src/components/TextField';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {Tree, TreeItem, TreeItemContent} from '../../../src/components/Tree';
-import {Toolbar} from '../../../src/components/Toolbar';
-import {Tooltip, TooltipTrigger} from '../../../src/components/Tooltip';
-import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
-import {GridList, GridListItem, GridListSection, GridListHeader, Text} from '../../../src/components/GridList';
-import {DisclosureGroup} from '../../../src/components/DisclosureGroup';
-import {Disclosure, DisclosureHeader, DisclosurePanel} from '../../../src/components/Disclosure';
-import {RadioGroup} from '../../../src/components/RadioGroup';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Panel} from '../../../src/components/gv/Panel';
-import {SidePanel, SidePanelSection} from '../../../src/components/gv/SidePanel';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {StatTile} from '../../../src/components/gv/StatTile';
-import {BarRow} from '../../../src/components/gv/BarRow';
-import {LineChart, ChartLegend, type ChartColor, type ChartLegendItem} from '../../../src/components/gv/Chart';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell} from '../../../src/components/gv/DataTable';
-import {PropertyList, PropertyListItem} from '../../../src/components/gv/PropertyList';
-import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
-import {ChoiceCard} from '../../../src/components/gv/ChoiceCard';
-import {Banner} from '../../../src/components/gv/Banner';
-import {Badge} from '../../../src/components/gv/Badge';
-import {Avatar} from '../../../src/components/gv/Avatar';
-import {Divider} from '../../../src/components/gv/Divider';
-import {Modal} from '../../../src/components/gv/Modal';
-import {Skeleton} from '../../../src/components/gv/Skeleton';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {RichTextToolbarButton} from '../../../src/components/gv/RichTextToolbarButton';
+import {Avatar, Badge, Banner, BarRow, Button, type ChartColor, ChartLegend, type ChartLegendItem, ChoiceCard,
+  DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableRow, Divider, EmptyState,
+  IconButton, LineChart, Menu, MenuItem, MenuTrigger, Modal, Panel, PropertyList, PropertyListItem, queue,
+  RichTextToolbarButton, SegmentedControl, SegmentedControlItem, Select, SelectItem, SidePanel, SidePanelSection,
+  Skeleton, StatTile, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Text, TextArea, TextField, ToastRegion, Tooltip,
+  TooltipTrigger} from 'govocal-ds';
+import {Disclosure, DisclosureGroup, DisclosureHeader, DisclosurePanel, GridList, GridListHeader, GridListItem,
+  GridListSection, RadioGroup, Toolbar, Tree, TreeItem, TreeItemContent} from 'govocal-ds/base';
 import {REPORTS} from '../data-reporting';
 import {HISTORY, INSIGHTS, LANGUAGES, LIBRARY, REPORT, SNAPSHOT, SOURCES, SUGGESTIONS, TEMPLATE, type Block,
   type BlockKind, type Figure, type FigureWords, type HistoryEntry, type Lang, type SourceNode} from '../data-report';

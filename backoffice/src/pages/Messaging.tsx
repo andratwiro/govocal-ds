@@ -1,28 +1,11 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router';
 import {Clock, Mail, MessageSquare, Pencil, Plus, Send, User} from 'lucide-react';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableStack,
-  DataTableOptions} from '../../../src/components/gv/DataTable';
-import {MenuItem} from '../../../src/components/Menu';
-import {Button} from '../../../src/components/Button';
-import {Switch} from '../../../src/components/Switch';
-import {TextField} from '../../../src/components/TextField';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {Label} from '../../../src/components/Form';
-import {Card} from '../../../src/components/gv/Card';
-import {Panel} from '../../../src/components/gv/Panel';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {Badge} from '../../../src/components/gv/Badge';
-import {ListRow} from '../../../src/components/gv/ListRow';
-import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {StatTile} from '../../../src/components/gv/StatTile';
-import {Banner} from '../../../src/components/gv/Banner';
-import {Divider} from '../../../src/components/gv/Divider';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
+import {AlertDialog, Badge, Banner, Button, Card, DataTable, DataTableBody, DataTableCell, DataTableColumn,
+  DataTableHeader, DataTableOptions, DataTableRow, DataTableStack, Divider, IconButton, ListRow, MenuItem, Pagination,
+  Panel, queue, RichTextEditor, Select, SelectItem, StatTile, StatusBadge, Switch, Tab, TabList, TabPanel, TabPanels,
+  Tabs, TextField, ToastRegion} from 'govocal-ds';
+import {Label} from 'govocal-ds/base';
 import {AUTOMATED, GROUP_SIZES, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';

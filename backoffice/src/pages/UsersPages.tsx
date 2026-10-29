@@ -1,23 +1,11 @@
 import {useState} from 'react';
 import {useParams} from 'react-router';
 import {Download, Send, ShieldCheck} from 'lucide-react';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
-  DataTablePerson} from '../../../src/components/gv/DataTable';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {TextArea} from '../../../src/components/TextField';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {Button} from '../../../src/components/Button';
-import {Meter} from '../../../src/components/Meter';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Card} from '../../../src/components/gv/Card';
-import {Panel} from '../../../src/components/gv/Panel';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
-import {SearchField} from '../../../src/components/SearchField';
-import {StatTile} from '../../../src/components/gv/StatTile';
-import {Avatar} from '../../../src/components/gv/Avatar';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {Banner} from '../../../src/components/gv/Banner';
+import {Avatar, Banner, Button, Card, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty,
+  DataTableHeader, DataTablePerson, DataTableRow, Pagination, Panel, queue, SearchField, Select, SelectItem, StatTile,
+  StatusBadge, Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, TextArea,
+  ToastRegion} from 'govocal-ds';
+import {Meter} from 'govocal-ds/base';
 import {GROUPS, INVITATIONS, PARTICIPATION, SEATS, type Invitation, type Person, type Role} from '../data-users';
 import {date, initials, PAGE_SIZE, peopleStore} from './Users';
 import {SectionHeading} from '../SectionHeading';

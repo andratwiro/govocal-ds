@@ -1,7 +1,6 @@
 // Input manager: what the shared INPUTS lack for the first clicks (invented data only).
 import {INPUTS} from './data';
-import type {ThreadComment} from '../../src/patterns/CommentThread';
-import type {PostedUpdate} from '../../src/patterns/OfficialUpdate';
+import type {PostedUpdate, ThreadComment} from 'govocal-ds';
 
 export const TOPICS = ['Mobility', 'Nature and green spaces', 'Public space', 'Services'] as const;
 

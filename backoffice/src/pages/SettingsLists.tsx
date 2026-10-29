@@ -1,16 +1,8 @@
 import {useState} from 'react';
 import {ArrowLeft, Pencil, Plus} from 'lucide-react';
-import {Button} from '../../../src/components/Button';
-import {TextField, TextArea} from '../../../src/components/TextField';
-import {ColorField} from '../../../src/components/ColorField';
-import {ColorSwatch} from '../../../src/components/ColorSwatch';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {Card} from '../../../src/components/gv/Card';
-import {Divider} from '../../../src/components/gv/Divider';
-import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {Modal} from '../../../src/components/gv/Modal';
-import {Badge} from '../../../src/components/gv/Badge';
+import {Badge, Button, Card, Divider, IconButton, Modal, RichTextEditor, Select, SelectItem, TextArea,
+  TextField} from 'govocal-ds';
+import {ColorField, ColorSwatch} from 'govocal-ds/base';
 import {AREAS, INPUT_STATUS_CATEGORIES, INPUT_STATUSES, PLATFORM_TAGS, POLICIES, PROPOSAL_STATUS_CATEGORIES,
   PROPOSAL_STATUSES, type SettingsItem} from '../data-settings';
 

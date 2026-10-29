@@ -1,34 +1,13 @@
 import {useMemo, useState, type ReactNode} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {ArrowRight, CalendarDays, Download, Eye, FolderOpen, Zap} from 'lucide-react';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {SearchField} from '../../../src/components/SearchField';
-import {Meter} from '../../../src/components/Meter';
-import {Button} from '../../../src/components/Button';
-import {Link} from '../../../src/components/Link';
-import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
-  DataTableStack, DataTableText} from '../../../src/components/gv/DataTable';
-import {Panel} from '../../../src/components/gv/Panel';
-import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {DateRangeField} from '../../../src/components/gv/DateRangeField';
-import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
-import {DashboardCard, DashboardBars, DashboardDemographic, type DashboardCardType} from '../../../src/components/gv/DashboardCard';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {StatTile} from '../../../src/components/gv/StatTile';
-import {ChartLegend, LineChart, Sparkline} from '../../../src/components/gv/Chart';
-import {BarRow} from '../../../src/components/gv/BarRow';
-import {StatRow} from '../../../src/components/gv/StatRow';
-import {Badge} from '../../../src/components/gv/Badge';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {Banner} from '../../../src/components/gv/Banner';
-import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
-import {FilterChips} from '../../../src/patterns/FilterChips';
-import {SelectionBar} from '../../../src/patterns/SelectionBar';
+import {Badge, Banner, BarRow, Button, ChartLegend, DashboardBars, DashboardCard, type DashboardCardType,
+  DashboardDemographic, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader,
+  DataTableRow, DataTableStack, DataTableText, DateRangeField, EmptyState, FilterChips, type FilterFacet, FilterMenu,
+  type FilterValue, IconButton, LineChart, Menu, MenuItem, MenuTrigger, Pagination, Panel, queue, SearchField,
+  SegmentedControl, SegmentedControlItem, Select, SelectionBar, SelectItem, Sparkline, StatRow, StatTile, StatusBadge,
+  Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, ToastRegion} from 'govocal-ds';
+import {Link, Meter} from 'govocal-ds/base';
 import {DASHBOARD, PROJECTS} from '../data';
 import {MONTHS, PER_TAG, STATUS_BREAKDOWN, EMAILS, INVITATIONS, EVENTS, ADOPTION, DATE_PRESETS, METRICS, PROJECT_METRICS,
   TAG_METRICS, USERS, VISITORS, REPRESENTATION, PARTICIPATION_FEED, MANAGEMENT_FEED, FEED_ACTIONS,

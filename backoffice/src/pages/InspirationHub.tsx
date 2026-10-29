@@ -1,23 +1,9 @@
 import {useMemo, useState} from 'react';
 import {BadgeCheck, Check, Copy, ExternalLink, Globe, Lightbulb, SearchX, Sparkles, Tag, Users} from 'lucide-react';
-import {Button} from '../../../src/components/Button';
-import {Link} from '../../../src/components/Link';
-import {SearchField} from '../../../src/components/SearchField';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Modal} from '../../../src/components/gv/Modal';
-import {Avatar} from '../../../src/components/gv/Avatar';
-import {Banner} from '../../../src/components/gv/Banner';
-import {Card} from '../../../src/components/gv/Card';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {Badge} from '../../../src/components/gv/Badge';
-import {Panel} from '../../../src/components/gv/Panel';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {TableToolbar} from '../../../src/components/gv/TableToolbar';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {PropertyList, PropertyListItem} from '../../../src/components/gv/PropertyList';
-import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
-import {FilterChips} from '../../../src/patterns/FilterChips';
+import {Avatar, Badge, Banner, Button, Card, EmptyState, FilterChips, type FilterFacet, FilterMenu, type FilterValue,
+  IconButton, Modal, Pagination, Panel, PropertyList, PropertyListItem, queue, SearchField, Select, SelectItem,
+  TableToolbar, ToastRegion} from 'govocal-ds';
+import {Link} from 'govocal-ds/base';
 import {COUNTRIES, LIBRARY, METHODS, PHASE_TITLES, POPULATIONS, SORTS, TOPICS, type Country, type LibraryProject} from '../data-inspiration-hub';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';

@@ -1,6 +1,5 @@
-import {Button} from '../../../src/components/Button';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell}
-  from '../../../src/components/gv/DataTable';
+import {Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
+  DataTableRow} from 'govocal-ds';
 import {INPUTS, USERS} from '../data';
 import type {NavItem} from '../nav';
 import {Page} from './Page';

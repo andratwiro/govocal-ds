@@ -1,23 +1,9 @@
 import {useState} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router';
 import {ChevronUp, Eye, Info, Link, PanelLeft, Plus, Settings, UserPlus} from 'lucide-react';
-import {Button} from '../../../src/components/Button';
-import {Menu, MenuItem, MenuTrigger, Separator} from '../../../src/components/Menu';
-import {TextField} from '../../../src/components/TextField';
-import {Modal} from '../../../src/components/gv/Modal';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {Avatar, AvatarGroup} from '../../../src/components/gv/Avatar';
-import {Divider} from '../../../src/components/gv/Divider';
-import {ProjectHeader} from '../../../src/patterns/ProjectHeader';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {RailHeader} from '../../../src/patterns/RailHeader';
-import {SectionLabel} from '../../../src/components/gv/SectionLabel';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {ActionRow} from '../../../src/patterns/ActionRow';
-import {PanelSection} from '../../../src/patterns/PanelSection';
-import {PhaseTimeline} from '../../../src/patterns/PhaseTimeline';
-import {PhonePreview, PhoneHeader, PhoneImage} from '../../../src/patterns/PhonePreview';
-import {StatCard} from '../../../src/patterns/StatCard';
+import {ActionRow, AlertDialog, Avatar, AvatarGroup, Button, Divider, IconButton, Menu, MenuItem, MenuTrigger, Modal,
+  PanelSection, PhaseTimeline, PhoneHeader, PhoneImage, PhonePreview, ProjectHeader, RailHeader, SectionLabel,
+  Separator, StatCard, StatusBadge, TextField} from 'govocal-ds';
 import {ME, PROJECTS, type Project} from '../data';
 import {NO_OVERVIEW, OVERVIEWS, addedTimeline, timeline, type NewPhase, type Overview} from '../data-project';
 import {AddPhase, CHECKLIST, CHECKLIST_TAB, CardStub, ChecklistStep, ProjectSettings, type SettingsTab} from './ProjectPhase';

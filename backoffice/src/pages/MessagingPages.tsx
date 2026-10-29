@@ -1,21 +1,10 @@
 import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {Mail, Send, Smartphone} from 'lucide-react';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell,
-  DataTablePerson} from '../../../src/components/gv/DataTable';
-import {Button} from '../../../src/components/Button';
-import {TextField, TextArea} from '../../../src/components/TextField';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {Label} from '../../../src/components/Form';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Card} from '../../../src/components/gv/Card';
-import {Panel} from '../../../src/components/gv/Panel';
-import {RichTextEditor} from '../../../src/components/gv/RichTextEditor';
-import {Divider} from '../../../src/components/gv/Divider';
-import {StatTile} from '../../../src/components/gv/StatTile';
-import {Badge} from '../../../src/components/gv/Badge';
-import {Banner} from '../../../src/components/gv/Banner';
-import {PhonePreview} from '../../../src/patterns/PhonePreview';
+import {Badge, Banner, Button, Card, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
+  DataTablePerson, DataTableRow, Divider, Panel, PhonePreview, queue, RichTextEditor, Select, SelectItem, StatTile,
+  TextArea, TextField, ToastRegion} from 'govocal-ds';
+import {Label} from 'govocal-ds/base';
 import {CUSTOM_EMAILS, GROUP_SIZES, GROUPS, RECIPIENTS, SENDER, type CustomEmail} from '../data-messaging';
 import {Gap} from '../Gap';
 import {Page} from './Page';

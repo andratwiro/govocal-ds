@@ -1,20 +1,8 @@
 import {useState} from 'react';
 import {Pencil, Plus, Trash2} from 'lucide-react';
-import {Button} from '../../../src/components/Button';
-import {TextField, TextArea} from '../../../src/components/TextField';
-import {NumberField} from '../../../src/components/NumberField';
-import {Switch} from '../../../src/components/Switch';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {CheckboxGroup} from '../../../src/components/CheckboxGroup';
-import {Table, TableHeader, Column, TableBody, Row, Cell} from '../../../src/components/Table';
-import {Card} from '../../../src/components/gv/Card';
-import {Checkbox} from '../../../src/components/gv/Checkbox';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {Modal} from '../../../src/components/gv/Modal';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {Badge} from '../../../src/components/gv/Badge';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {HelpPopover} from '../../../src/components/gv/HelpPopover';
+import {AlertDialog, Badge, Button, Card, Checkbox, HelpPopover, IconButton, Modal, NumberField, Select, SelectItem,
+  StatusBadge, Switch, TextArea, TextField} from 'govocal-ds';
+import {Cell, CheckboxGroup, Column, Row, Table, TableBody, TableHeader} from 'govocal-ds/base';
 import {API_TOKENS, MCP_CLIENTS, POWER_BI_TEMPLATES, WEBHOOK_EVENTS, WEBHOOK_PROJECTS, WEBHOOKS,
   type ApiToken, type WebhookItem} from '../data-tools';
 import {Gap} from '../Gap';

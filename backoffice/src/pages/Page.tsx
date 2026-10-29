@@ -1,5 +1,5 @@
 import type {ReactNode} from 'react';
-import {Breadcrumbs, type BreadcrumbItem} from '../../../src/components/gv/Breadcrumbs';
+import {type BreadcrumbItem, Breadcrumbs} from 'govocal-ds';
 
 /** A back-office page: the title, its actions and a line about it. A sub-page adds the trail back to its parent. */
 export function Page({title, description, actions, crumbs, children}: {

@@ -3,34 +3,12 @@ import {useNavigate} from 'react-router';
 import {ArrowDown, ArrowUp, Calendar, Asterisk, ChartColumn, ChevronDown, ChevronLeft, ChevronRight, ClipboardList, Eye,
   FileText, Folder, FolderPlus, GripVertical, Info, LayoutGrid, Lightbulb, MapPin, Orbit, Plus, UserRound, Users, Vote}
   from 'lucide-react';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableOptions,
-  DataTableEmpty, DataTableAssignee, DataTableStack, DataTableThumbnail}
-  from '../../../src/components/gv/DataTable';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {Panel} from '../../../src/components/gv/Panel';
-import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {ChoiceCard} from '../../../src/components/gv/ChoiceCard';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {SearchField} from '../../../src/components/SearchField';
-import {RadioGroup} from '../../../src/components/RadioGroup';
-import {ToggleButton} from '../../../src/components/ToggleButton';
-import {DateRangePicker} from '../../../src/components/DateRangePicker';
-import {DatePicker} from '../../../src/components/DatePicker';
-import {TextField, TextArea} from '../../../src/components/TextField';
-import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Button} from '../../../src/components/Button';
-import {Link} from '../../../src/components/Link';
-import {Avatar} from '../../../src/components/gv/Avatar';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {Badge} from '../../../src/components/gv/Badge';
-import {Modal} from '../../../src/components/gv/Modal';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {FilterChips} from '../../../src/patterns/FilterChips';
-import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
+import {AlertDialog, Avatar, Badge, Button, ChoiceCard, DataTable, DataTableAssignee, DataTableBody, DataTableCell,
+  DataTableColumn, DataTableEmpty, DataTableHeader, DataTableOptions, DataTableRow, DataTableStack, DataTableThumbnail,
+  EmptyState, FilterChips, type FilterFacet, FilterMenu, type FilterValue, IconButton, Menu, MenuItem, MenuTrigger,
+  Modal, Pagination, Panel, queue, SearchField, Select, SelectItem, StatusBadge, Tab, TableToolbar, TableToolbarHeading,
+  TabList, TabPanel, TabPanels, Tabs, TextArea, TextField, ToastRegion} from 'govocal-ds';
+import {DatePicker, DateRangePicker, Link, RadioGroup, ToggleButton} from 'govocal-ds/base';
 import {PROJECTS, type Project} from '../data';
 import {CALENDAR_START, FOLDERS, PENDING, SPACES, TEMPLATES, type Folder as FolderRow} from '../data-projects';
 import {Gap, GapLegend} from '../Gap';

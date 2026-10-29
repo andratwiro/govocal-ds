@@ -1,22 +1,11 @@
 import {useMemo, useState, type ComponentProps, type ReactNode} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {ChartColumn, Download, Mail, Pencil, Plus, ShieldCheck, Trash2, Users as UsersIcon, Zap} from 'lucide-react';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
-  DataTablePerson, DataTableStack, DataTableOptions} from '../../../src/components/gv/DataTable';
-import {ListBox, ListBoxItem} from '../../../src/components/ListBox';
-import {SearchField} from '../../../src/components/SearchField';
-import {Menu, MenuItem} from '../../../src/components/Menu';
-import {Button} from '../../../src/components/Button';
-import {Card, CardRadio, CardRadioGroup} from '../../../src/components/gv/Card';
-import {Modal} from '../../../src/components/gv/Modal';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {Panel} from '../../../src/components/gv/Panel';
-import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
-import {TextField} from '../../../src/components/TextField';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {SelectionBar, type SelectionAction} from '../../../src/patterns/SelectionBar';
+import {AlertDialog, Button, Card, CardRadio, CardRadioGroup, DataTable, DataTableBody, DataTableCell, DataTableColumn,
+  DataTableEmpty, DataTableHeader, DataTableOptions, DataTablePerson, DataTableRow, DataTableStack, Menu, MenuItem,
+  Modal, Pagination, Panel, queue, SearchField, Select, type SelectionAction, SelectionBar, SelectItem, TableToolbar,
+  TableToolbarHeading, TextField, ToastRegion} from 'govocal-ds';
+import {ListBox, ListBoxItem} from 'govocal-ds/base';
 import {GROUPS, PEOPLE, SEGMENTS, SMART_RULES, type Person} from '../data-users';
 import {Gap} from '../Gap';
 import {Page} from './Page';

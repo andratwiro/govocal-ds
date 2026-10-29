@@ -1,34 +1,14 @@
 import {useEffect, useMemo, useState} from 'react';
 type Key = string | number;
 type Selection = 'all' | Set<Key>;
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
-  DataTableStack}
-  from '../../../src/components/gv/DataTable';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {SearchField} from '../../../src/components/SearchField';
-import {Switch} from '../../../src/components/Switch';
-import {ListBox, ListBoxItem} from '../../../src/components/ListBox';
-import {MenuTrigger, Menu, MenuItem, Separator} from '../../../src/components/Menu';
-import {Tooltip, TooltipTrigger} from '../../../src/components/Tooltip';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Link} from '../../../src/components/Link';
-import {Badge} from '../../../src/components/gv/Badge';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {NewDot} from '../../../src/components/gv/NewDot';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {Avatar} from '../../../src/components/gv/Avatar';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {TagPicker} from '../../../src/components/gv/TagPicker';
-import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
-import {SidePanel, SidePanelActions, SidePanelSection, type SidePanelAction} from '../../../src/components/gv/SidePanel';
-import {PropertyList, PropertyListItem} from '../../../src/components/gv/PropertyList';
-import {ReactionCounts} from '../../../src/components/gv/ReactionCounts';
-import {OfficialUpdate} from '../../../src/patterns/OfficialUpdate';
-import {CommentThread, type ThreadTab, type ThreadTarget} from '../../../src/patterns/CommentThread';
-import {SelectionBar, type SelectionAction} from '../../../src/patterns/SelectionBar';
+import {AlertDialog, Avatar, Badge, CommentThread, DataTable, DataTableBody, DataTableCell, DataTableColumn,
+  DataTableEmpty, DataTableHeader, DataTableRow, DataTableStack, IconButton, Menu, MenuItem, MenuTrigger, NewDot,
+  OfficialUpdate, Pagination, PropertyList, PropertyListItem, queue, ReactionCounts, SearchField, Select,
+  type SelectionAction, SelectionBar, SelectItem, Separator, SidePanel, type SidePanelAction, SidePanelActions,
+  SidePanelSection, StatusBadge, Switch, Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs,
+  TagPicker, type ThreadTab, type ThreadTarget, ToastRegion, Tooltip, TooltipTrigger} from 'govocal-ds';
+import {Link, ListBox, ListBoxItem} from 'govocal-ds/base';
 import {CircleCheck, Download, ExternalLink, SquarePen, Trash2, TriangleAlert, User} from 'lucide-react';
-import {Pagination} from '../../../src/components/gv/Pagination';
 import {ASSIGNEES, ME, PROJECTS, STATUSES} from '../data';
 import {MANAGED_INPUTS, PAGE_SIZE, TOPICS, type ManagedInput} from '../data-inputs';
 import {Page} from './Page';

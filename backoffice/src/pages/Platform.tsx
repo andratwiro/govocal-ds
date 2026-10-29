@@ -1,6 +1,6 @@
 import {useLocation} from 'react-router';
-import {Link} from '../../../src/components/Link';
-import {Banner} from '../../../src/components/gv/Banner';
+import {Banner} from 'govocal-ds';
+import {Link} from 'govocal-ds/base';
 
 // Where "To platform" (and the account menu) lead: a stand-in for the resident site, outside the back office.
 export function Platform() {

@@ -1,39 +1,11 @@
 import {useState, type ReactNode} from 'react';
 import {ArrowLeft, ArrowRight, Download, Eye, Plus, Upload, Pencil, FileText, ShieldCheck} from 'lucide-react';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {Button} from '../../../src/components/Button';
-import {NumberField} from '../../../src/components/NumberField';
-import {CheckboxGroup} from '../../../src/components/CheckboxGroup';
-import {TextField} from '../../../src/components/TextField';
-import {RadioGroup, Radio} from '../../../src/components/RadioGroup';
-import {Switch} from '../../../src/components/Switch';
-import {MenuItem} from '../../../src/components/Menu';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {Panel} from '../../../src/components/gv/Panel';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableStack,
-  DataTablePerson, DataTableOptions} from '../../../src/components/gv/DataTable';
-import {EmptyState} from '../../../src/components/gv/EmptyState';
-import {AlertDialog} from '../../../src/components/gv/AlertDialog';
-import {ChoiceCard} from '../../../src/components/gv/ChoiceCard';
-import {FileList} from '../../../src/components/gv/FileList';
-import {PropertyList, PropertyListItem} from '../../../src/components/gv/PropertyList';
-import {HelpPopover} from '../../../src/components/gv/HelpPopover';
-import {Avatar} from '../../../src/components/gv/Avatar';
-import {Modal} from '../../../src/components/gv/Modal';
-import {DropZone} from '../../../src/components/gv/DropZone';
-import {DashboardCard, DashboardDemographic} from '../../../src/components/gv/DashboardCard';
-import {StatTile} from '../../../src/components/gv/StatTile';
-import {LineChart, Sparkline} from '../../../src/components/gv/Chart';
-import {BarRow} from '../../../src/components/gv/BarRow';
-import {LegendRow} from '../../../src/components/gv/LegendRow';
-import {StatRow} from '../../../src/components/gv/StatRow';
-import {Checkbox} from '../../../src/components/gv/Checkbox';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {Badge} from '../../../src/components/gv/Badge';
-import {Banner} from '../../../src/components/gv/Banner';
-import {Divider} from '../../../src/components/gv/Divider';
+import {AlertDialog, Avatar, Badge, Banner, BarRow, Button, Checkbox, ChoiceCard, DashboardCard, DashboardDemographic,
+  DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableOptions, DataTablePerson,
+  DataTableRow, DataTableStack, Divider, DropZone, EmptyState, FileList, HelpPopover, LegendRow, LineChart, MenuItem,
+  Modal, NumberField, Pagination, Panel, PropertyList, PropertyListItem, queue, Select, SelectItem, Sparkline, StatRow,
+  StatTile, StatusBadge, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, TextField, ToastRegion} from 'govocal-ds';
+import {CheckboxGroup, Radio, RadioGroup} from 'govocal-ds/base';
 import {CANDIDATES, CATEGORIES, CURRENT, MANAGERS, POPUP_CONDITIONS, POPUP_SHOWN, QUARTERS, QUESTIONS, REPORTS, RESPONDENTS,
   SENTIMENT, SURVEY_ACCESS, WHO, type Report} from '../data-community-monitor';
 import {Page} from './Page';

@@ -1,16 +1,9 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router';
 import {ArrowUpDown, Eye, GripVertical, Lock, Pencil, Plus, Trash2} from 'lucide-react';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {Button} from '../../../src/components/Button';
-import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
-import {Switch} from '../../../src/components/Switch';
-import {GridList, GridListItem} from '../../../src/components/GridList';
-import {Card} from '../../../src/components/gv/Card';
-import {Badge} from '../../../src/components/gv/Badge';
-import {StatusBadge} from '../../../src/components/gv/StatusBadge';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {Divider} from '../../../src/components/gv/Divider';
+import {Badge, Button, Card, Divider, IconButton, Menu, MenuItem, MenuTrigger, StatusBadge, Switch, Tab, TabList,
+  TabPanel, TabPanels, Tabs} from 'govocal-ds';
+import {GridList, GridListItem} from 'govocal-ds/base';
 import {MENU_ENTRIES, MENU_START, PAGE_META, type MenuEntry} from '../data-pages-menu';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';

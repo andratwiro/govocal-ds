@@ -1,13 +1,8 @@
 import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {Eye} from 'lucide-react';
-import {Button} from '../../../src/components/Button';
-import {TextField} from '../../../src/components/TextField';
-import {RadioGroup, Radio} from '../../../src/components/RadioGroup';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {Card} from '../../../src/components/gv/Card';
-import {Divider} from '../../../src/components/gv/Divider';
-import {SectionToggle} from '../../../src/patterns/SectionToggle';
+import {Button, Card, Divider, SectionToggle, Tab, TabList, TabPanel, TabPanels, Tabs, TextField} from 'govocal-ds';
+import {Radio, RadioGroup} from 'govocal-ds/base';
 import {CUSTOM_PAGE_SECTIONS, HOME_SECTIONS, MENU_ENTRIES, NAV_NAMES, PAGE_INTRO, PAGE_META, type PageSection} from '../data-pages-menu';
 import {LOCALES} from '../data-settings';
 import {Gap} from '../Gap';

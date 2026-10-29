@@ -1,12 +1,9 @@
 import {useState} from 'react';
 import {Outlet, useLocation, useMatch} from 'react-router';
 import {Bell, BookOpen, Languages, LogOut, MessageSquare, FileChartColumn, Flag, Inbox, LifeBuoy, ScrollText, User, UserCheck, Users, Building2} from 'lucide-react';
-import {SideNav, SideNavGroup, SideNavHome, SideNavLink, SideNavButton} from '../../src/patterns/SideNav';
-import {NotificationList} from '../../src/patterns/NotificationList';
-import {MenuTrigger, Menu, MenuItem, SubmenuTrigger} from '../../src/components/Menu';
-import {DialogTrigger, Dialog} from '../../src/components/Dialog';
-import {Popover} from '../../src/components/Popover';
-import {Avatar} from '../../src/components/gv/Avatar';
+import {Avatar, Menu, MenuItem, MenuTrigger, NotificationList, SideNav, SideNavButton, SideNavGroup, SideNavHome,
+  SideNavLink, SubmenuTrigger} from 'govocal-ds';
+import {Dialog, DialogTrigger, Popover} from 'govocal-ds/base';
 import {NAV} from './nav';
 import {ME, INPUTS_NEEDING_FEEDBACK, UNREAD_NOTIFICATIONS, NOTIFICATIONS, LOCALES, SUPPORT_LINKS, type SidebarNotification} from './data-sidebar';
 

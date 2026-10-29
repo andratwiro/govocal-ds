@@ -2,48 +2,18 @@ import {useState, type Dispatch, type ReactNode, type SetStateAction} from 'reac
 import {Navigate, useNavigate, useParams} from 'react-router';
 import {CalendarDays, CircleCheck, Copy, Download, ExternalLink, FileText, Inbox, Lightbulb, Lock, Mail, MessageSquareText, Paperclip,
   MapPin, Plus, Settings, SquarePen, Tag, Trash2, TriangleAlert, Upload, User, Users} from 'lucide-react';
-import {Button} from '../../../src/components/Button';
-import {Form} from '../../../src/components/Form';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {Tab, TabList, TabPanel, TabPanels, Tabs} from '../../../src/components/Tabs';
-import {Tag as TagItem, TagGroup} from '../../../src/components/TagGroup';
-import {Menu, MenuItem, MenuSection, MenuTrigger, Separator, SubmenuTrigger} from '../../../src/components/Menu';
-import {Dialog} from '../../../src/components/Dialog';
-import {SearchField} from '../../../src/components/SearchField';
-import {TextField} from '../../../src/components/TextField';
-import {ToastRegion, queue} from '../../../src/components/Toast';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
-  DataTableText, DataTableAddColumn, DataTableAssignee, DataTableTags, DataTableThumbnail} from '../../../src/components/gv/DataTable';
-import {OptionList} from '../../../src/components/gv/OptionList';
-import {Pagination} from '../../../src/components/gv/Pagination';
-import {Panel} from '../../../src/components/gv/Panel';
-import {TableToolbar, TableToolbarHeading} from '../../../src/components/gv/TableToolbar';
+import {Avatar, Banner, BulkOfficialUpdate, Button, Card, CommentThread, DataTable, DataTableAddColumn,
+  DataTableAssignee, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader, DataTableRow,
+  DataTableTags, DataTableText, DataTableThumbnail, DateRangeField, Divider, DropZone, FileList, type FileListItemData,
+  FilterChips, type FilterFacet, FilterMenu, type FilterValue, IconButton, Menu, MenuItem, MenuSection, MenuTrigger,
+  Modal, OfficialUpdate, OptionList, Pagination, Panel, PhaseTimeline, type PostedUpdate, ProjectHeader, PropertyList,
+  PropertyListItem, queue, RailHeader, ReactionCounts, SearchField, SectionLabel, SegmentedControl,
+  SegmentedControlItem, Select, type SelectionAction, SelectionBar, SelectItem, Separator, SetupStep, SidePanel,
+  SidePanelActions, SidePanelDecision, SidePanelSection, StatRow, SubmenuTrigger, Tab, TableToolbar,
+  TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, TextField, type ThreadComment, type ThreadTab,
+  type ThreadTarget, TitleField, ToastRegion} from 'govocal-ds';
+import {Dialog, Form, Tag as TagItem, TagGroup} from 'govocal-ds/base';
 import {PICTURES} from '../../../src/components/gv/story-images';
-import {Avatar} from '../../../src/components/gv/Avatar';
-import {Banner} from '../../../src/components/gv/Banner';
-import {Card} from '../../../src/components/gv/Card';
-import {DateRangeField} from '../../../src/components/gv/DateRangeField';
-import {Divider} from '../../../src/components/gv/Divider';
-import {DropZone} from '../../../src/components/gv/DropZone';
-import {FileList, type FileListItemData} from '../../../src/components/gv/FileList';
-import {ProjectHeader} from '../../../src/patterns/ProjectHeader';
-import {IconButton} from '../../../src/components/gv/IconButton';
-import {Modal} from '../../../src/components/gv/Modal';
-import {PropertyList, PropertyListItem} from '../../../src/components/gv/PropertyList';
-import {ReactionCounts} from '../../../src/components/gv/ReactionCounts';
-import {SidePanel, SidePanelActions, SidePanelDecision, SidePanelSection} from '../../../src/components/gv/SidePanel';
-import {RailHeader} from '../../../src/patterns/RailHeader';
-import {SectionLabel} from '../../../src/components/gv/SectionLabel';
-import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
-import {SetupStep} from '../../../src/patterns/SetupStep';
-import {StatRow} from '../../../src/components/gv/StatRow';
-import {TitleField} from '../../../src/components/gv/TitleField';
-import {FilterChips} from '../../../src/patterns/FilterChips';
-import {FilterMenu, type FilterFacet, type FilterValue} from '../../../src/patterns/FilterMenu';
-import {CommentThread, type ThreadComment, type ThreadTab, type ThreadTarget} from '../../../src/patterns/CommentThread';
-import {BulkOfficialUpdate, OfficialUpdate, type PostedUpdate} from '../../../src/patterns/OfficialUpdate';
-import {PhaseTimeline} from '../../../src/patterns/PhaseTimeline';
-import {SelectionBar, type SelectionAction} from '../../../src/patterns/SelectionBar';
 import {Gap} from '../Gap';
 import {ME, METHODS, PROJECTS, type Method, type Phase, type Project} from '../data';
 import {IDEAS, IDEA_ASSIGNEES, IDEA_REPLIES, IDEA_SOURCES, IDEA_STATUSES, IDEA_TAGS, AREAS, TOPICS, PHASE_FILES, SCREENING_PHASES, TEAM, addedTimeline,

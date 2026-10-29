@@ -1,19 +1,7 @@
 import {useId, useState, type ReactNode} from 'react';
-import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
-import {TextField, TextArea} from '../../../src/components/TextField';
-import {NumberField} from '../../../src/components/NumberField';
-import {ColorField} from '../../../src/components/ColorField';
-import {Select, SelectItem} from '../../../src/components/Select';
-import {Switch} from '../../../src/components/Switch';
-import {RadioGroup, Radio} from '../../../src/components/RadioGroup';
-import {CheckboxGroup} from '../../../src/components/CheckboxGroup';
-import {Button} from '../../../src/components/Button';
-import {Card} from '../../../src/components/gv/Card';
-import {Checkbox} from '../../../src/components/gv/Checkbox';
-import {Divider} from '../../../src/components/gv/Divider';
-import {DropZone} from '../../../src/components/gv/DropZone';
-import {SegmentedControl, SegmentedControlItem} from '../../../src/components/gv/SegmentedControl';
-import {TitleField} from '../../../src/components/gv/TitleField';
+import {Button, Card, Checkbox, Divider, DropZone, NumberField, SegmentedControl, SegmentedControlItem, Select,
+  SelectItem, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, TextArea, TextField, TitleField} from 'govocal-ds';
+import {CheckboxGroup, ColorField, Radio, RadioGroup} from 'govocal-ds/base';
 import {APPROVERS, LOCALES, PLATFORM_NAME} from '../data-settings';
 import {AreasTab, PoliciesTab, StatusesTab, TagsTab} from './SettingsLists';
 import {Page} from './Page';
