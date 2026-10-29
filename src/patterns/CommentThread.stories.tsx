@@ -169,7 +169,7 @@ export const InASidePanel: Story = {
   render: () => (
     <div style={{padding: 24, background: 'var(--gv-surface-app)'}}>
       <div style={{width: 560, height: 860}}>
-        <SidePanel isInline label="Collect ideas" itemName="idea" position={{current: 3, total: 124}}>
+        <SidePanel isInline label="Collect ideas" labels={{previous: 'Previous idea', next: 'Next idea'}} position={{current: 3, total: 124}}>
           <SidePanelSection>
             <SidePanelRecordHead author="Hana M." date="26 October 2026" actions={(
               <SidePanelActions items={[

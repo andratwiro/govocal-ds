@@ -15,6 +15,7 @@ import {
 import {Checkbox} from './Checkbox';
 import {GripVertical} from 'lucide-react';
 import {ProgressCircle} from './ProgressCircle';
+import {loadMoreLabels, mergeLabels, type LoadMoreLabels} from './labels';
 import './GridList.css';
 import clsx from 'clsx';
 import {keepClass} from './className';
@@ -54,10 +55,11 @@ export function GridListItem({
   );
 }
 
-export function GridListLoadMoreItem(props: GridListLoadMoreItemProps) {
+/** The spinner a GridList shows while its next page loads; its name is `labels.loading` (`loadMoreLabels`). */
+export function GridListLoadMoreItem({labels, ...props}: GridListLoadMoreItemProps & {labels?: Partial<LoadMoreLabels>}) {
   return (
     <AriaGridListLoadMoreItem {...props} className={clsx('react-aria-GridListLoadingIndicator', props.className)}>
-      <ProgressCircle isIndeterminate aria-label="Loading more..." />
+      <ProgressCircle isIndeterminate aria-label={mergeLabels(loadMoreLabels, labels).loading} />
     </AriaGridListLoadMoreItem>
   );
 }

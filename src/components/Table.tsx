@@ -25,6 +25,7 @@ import {Group} from 'react-aria-components/Group';
 import {composeRenderProps} from 'react-aria-components/composeRenderProps';
 import {Checkbox} from './Checkbox';
 import {ProgressCircle} from './ProgressCircle';
+import {loadMoreLabels, mergeLabels, type LoadMoreLabels} from './labels';
 import {ChevronUp, ChevronDown, GripVertical, ChevronRight} from 'lucide-react';
 import './Table.css';
 import {keepClass} from './className';
@@ -142,11 +143,12 @@ export function Cell(props: CellProps) {
   );
 }
 
-export function TableLoadMoreItem(props: TableLoadMoreItemProps) {
+/** The spinner a Table shows while its next page loads; its name is `labels.loading` (`loadMoreLabels`). */
+export function TableLoadMoreItem({labels, ...props}: TableLoadMoreItemProps & {labels?: Partial<LoadMoreLabels>}) {
   return (
     <AriaTableLoadMoreItem {...props} className={clsx('react-aria-TableLoadingIndicator', props.className)}>
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-        <ProgressCircle isIndeterminate aria-label="Loading more..." />
+        <ProgressCircle isIndeterminate aria-label={mergeLabels(loadMoreLabels, labels).loading} />
       </div>
     </AriaTableLoadMoreItem>
   );

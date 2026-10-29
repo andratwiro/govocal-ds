@@ -178,7 +178,7 @@ function SetTopicTags({onChange}: {onChange?: () => void}) {
     <SetupStep kind="pick" title="Set topic tags" value={tags.length ? counted(tags.length, 'tag', 'tags') : undefined}
       isDone={tags.length > 0} picker={
         <OptionList aria-label="Topic tags" items={TOPICS.map(t => ({id: t, label: t}))} value={tags} onChange={t => { setTags(t); onChange?.(); }}
-          placeholder="Search tags..." searchLabel="Search tags"
+          placeholder="Search tags..." labels={{search: () => 'Search tags'}}
           selectionLabel={k => (k ? `${counted(k, 'tag', 'tags')} selected` : 'No tags selected')} />
       } />
   );
@@ -720,7 +720,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
           </DataTableBody>
         </DataTable>
       </Panel>
-      <SidePanel label={phase.title} itemName="idea" isOpen={!!idea} onOpenChange={o => !o && setOpen(null)}
+      <SidePanel label={phase.title} labels={{previous: 'Previous idea', next: 'Next idea'}} isOpen={!!idea} onOpenChange={o => !o && setOpen(null)}
         position={at >= 0 ? {current: at + 1, total: shown.length} : undefined}
         onPositionChange={openAt}
         returnFocus={() => (open ? rowOf(open) : null)}>
@@ -968,7 +968,7 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
         <StatTile label="Participation rate" value="30.1%" />
       </div>
       <DashboardCard kind="participation-over-time" title="Participation over time">
-        <LineChart showLegend labels={INSIGHT_WEEKS} series={[
+        <LineChart showLegend xAxis={INSIGHT_WEEKS} series={[
           {label: 'Participants', values: PARTICIPATION_WEEKS.participants}, {label: 'Visitors', values: PARTICIPATION_WEEKS.visitors}
         ]} />
       </DashboardCard>
@@ -1002,7 +1002,7 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
     body = <>
       <div className="bo-phase-tiles"><StatTile label="Visitors" value={phase.count?.split(' ')[0] ?? '0'} /></div>
       <DashboardCard kind="visitors-over-time" title="Visitors over time">
-        <LineChart labels={INSIGHT_WEEKS} series={[{label: 'Visitors', values: PARTICIPATION_WEEKS.visitors}]} />
+        <LineChart xAxis={INSIGHT_WEEKS} series={[{label: 'Visitors', values: PARTICIPATION_WEEKS.visitors}]} />
       </DashboardCard>
     </>;
   }

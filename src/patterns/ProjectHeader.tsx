@@ -143,8 +143,7 @@ export function ProjectHeader({
           ]}
           onTogglePanel={onTogglePanel}
           onBack={onBack}
-          togglePanelLabel="Show or hide the timeline"
-          backLabel={`Back to ${projectName}`}
+          labels={{togglePanel: 'Show or hide the timeline', back: `Back to ${projectName}`}}
         />
       )}
     </nav>

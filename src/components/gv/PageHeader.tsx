@@ -1,7 +1,17 @@
 'use client';
 import type {CSSProperties, ReactNode} from 'react';
 import {clsx} from 'clsx';
+import {mergeLabels} from '../labels';
 import './PageHeader.css';
+
+/** The words Page header says itself (docs/API.md rule 11). */
+export interface PageHeaderLabels {
+  /** The name of the `nav` around the breadcrumbs. */
+  breadcrumbs: string;
+}
+
+/** Page header's English words; a page passes its own over them with `labels`. */
+export const pageHeaderLabels: PageHeaderLabels = {breadcrumbs: 'Breadcrumbs'};
 
 export interface PageHeaderProps {
   /** The page's title: Title type, the page's first heading. */
@@ -13,10 +23,10 @@ export interface PageHeaderProps {
   /** The page's actions, at the end of the title's row: a primary Button, a Menu button. */
   actions?: ReactNode;
   /** The trail back to the parent pages, above the title: a `Breadcrumbs`. It is put in a `nav` named by
-   * `breadcrumbsLabel`. */
+   * `labels.breadcrumbs`. */
   breadcrumbs?: ReactNode;
-  /** @default 'Breadcrumbs' */
-  breadcrumbsLabel?: string;
+  /** Its own words (the breadcrumbs' `nav` name), over `pageHeaderLabels`. */
+  labels?: Partial<PageHeaderLabels>;
   /** Places the header (its margin below, a grid area); never paints it. */
   className?: string;
   style?: CSSProperties;
@@ -34,12 +44,12 @@ export interface PageHeaderProps {
  * ```
  */
 export function PageHeader({
-  title, headingLevel = 1, description, actions, breadcrumbs, breadcrumbsLabel = 'Breadcrumbs', className, style
+  title, headingLevel = 1, description, actions, breadcrumbs, labels, className, style
 }: PageHeaderProps) {
   const Heading = `h${headingLevel}` as const;
   return (
     <header className={clsx('gv-page-header', className)} style={style}>
-      {breadcrumbs != null && <nav aria-label={breadcrumbsLabel} className="gv-page-header__breadcrumbs">{breadcrumbs}</nav>}
+      {breadcrumbs != null && <nav aria-label={mergeLabels(pageHeaderLabels, labels).breadcrumbs} className="gv-page-header__breadcrumbs">{breadcrumbs}</nav>}
       <div className="gv-page-header__row">
         <Heading className="gv-page-header__title">{title}</Heading>
         {actions != null && <div className="gv-page-header__actions">{actions}</div>}

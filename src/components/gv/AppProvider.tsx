@@ -2,7 +2,7 @@
 import type {ComponentProps, ReactNode} from 'react';
 import {I18nProvider, RouterProvider} from 'react-aria-components';
 import {LucideProvider} from 'lucide-react';
-import {ToastRegion, ToastRegionContext} from '../Toast';
+import {ToastRegion, ToastRegionContext, type ToastRegionLabels} from '../Toast';
 
 type RouterProps = ComponentProps<typeof RouterProvider>;
 
@@ -21,6 +21,12 @@ export interface AppProviderProps {
   navigate?: RouterProps['navigate'];
   /** Turns a router path into the `href` the browser sees (react-router's `useHref`), with `navigate`. */
   useHref?: RouterProps['useHref'];
+  /**
+   * The words of the toasts it draws (their ×), over `toastRegionLabels`. The system never translates: every part
+   * takes its words as props and `labels` (docs/API.md rule 11); `locale` only sets how numbers, dates and lists are
+   * written and which way parts lay out.
+   */
+  labels?: Partial<ToastRegionLabels>;
 }
 
 /**
@@ -39,11 +45,11 @@ export interface AppProviderProps {
  *
  * A `ToastRegion` a page still renders inside it draws nothing, so pages can drop theirs one at a time.
  */
-export function AppProvider({children, locale, navigate, useHref}: AppProviderProps) {
+export function AppProvider({children, locale, navigate, useHref, labels}: AppProviderProps) {
   let app = (
     <LucideProvider strokeWidth={1.75}>
       <ToastRegionContext.Provider value>{children}</ToastRegionContext.Provider>
-      <ToastRegion />
+      <ToastRegion labels={labels} />
     </LucideProvider>
   );
   if (navigate) app = <RouterProvider navigate={navigate} useHref={useHref}>{app}</RouterProvider>;

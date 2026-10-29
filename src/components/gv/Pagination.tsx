@@ -7,7 +7,26 @@ import {useNumberFormatter} from '../format';
 import {useControlledState} from '../useControlledState';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {mergeLabels} from '../labels';
 import './Pagination.css';
+
+/** The words Pagination says itself (docs/API.md rule 11). */
+export interface PaginationLabels {
+  /** The landmark's name when no `aria-label` is given. */
+  pagination: string;
+  previous: string;
+  next: string;
+  /** Each page button's name, given its number, then as the locale writes it. */
+  page: (page: number, formatted: string) => string;
+}
+
+/** Pagination's English words; a page passes its own over them with `labels`. */
+export const paginationLabels: PaginationLabels = {
+  pagination: 'Pagination',
+  previous: 'Previous page',
+  next: 'Next page',
+  page: (page, n) => `Page ${n}`
+};
 
 export type PageItem = number | 'start-ellipsis' | 'end-ellipsis';
 
@@ -35,9 +54,11 @@ export interface PaginationProps extends PlacementProps {
   /**
    * Names the navigation landmark; give each pager on a page its own ("Ideas pages").
    *
-   * @default 'Pagination'
+   * @default `labels.pagination` ("Pagination")
    */
   'aria-label'?: string;
+  /** Its own words (‹, ›, "Page N"), over `paginationLabels`. */
+  labels?: Partial<PaginationLabels>;
 }
 
 /**
@@ -46,7 +67,8 @@ export interface PaginationProps extends PlacementProps {
  * ‹ and › are disabled at the ends, and when pressing one brings you to an end, focus moves to the current page
  * instead of being lost on a disabled button. Not in Figma yet.
  */
-export function Pagination({page: pageProp, defaultPage = 1, pageCount, onPageChange, 'aria-label': label = 'Pagination', className, style}: PaginationProps) {
+export function Pagination({page: pageProp, defaultPage = 1, pageCount, onPageChange, 'aria-label': label, labels, className, style}: PaginationProps) {
+  const l = mergeLabels(paginationLabels, labels);
   const [page, setPage] = useControlledState(pageProp, defaultPage, onPageChange);
   const count = Math.max(1, pageCount);
   const current = Math.min(Math.max(1, page), count);
@@ -68,20 +90,20 @@ export function Pagination({page: pageProp, defaultPage = 1, pageCount, onPageCh
   };
 
   return (
-    <nav ref={nav} aria-label={label} className={clsx('gv-pagination', className)} style={style}>
-      <Button className="gv-pagination__step" aria-label="Previous page" isDisabled={current === 1}
+    <nav ref={nav} aria-label={label ?? l.pagination} className={clsx('gv-pagination', className)} style={style}>
+      <Button className="gv-pagination__step" aria-label={l.previous} isDisabled={current === 1}
         onPress={() => go(current - 1)}>
         <Back aria-hidden size={16} />
       </Button>
       {pageItems(current, count).map(item => typeof item === 'number' ? (
-        <Button key={item} className="gv-pagination__page" aria-label={`Page ${item}`}
+        <Button key={item} className="gv-pagination__page" aria-label={l.page(item, number.format(item))}
           aria-current={item === current ? 'page' : undefined} onPress={() => item !== current && setPage(item)}>
           {number.format(item)}
         </Button>
       ) : (
         <span key={item} className="gv-pagination__gap" aria-hidden>…</span>
       ))}
-      <Button className="gv-pagination__step" aria-label="Next page" isDisabled={current === count}
+      <Button className="gv-pagination__step" aria-label={l.next} isDisabled={current === count}
         onPress={() => go(current + 1)}>
         <Forward aria-hidden size={16} />
       </Button>

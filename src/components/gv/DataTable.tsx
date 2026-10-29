@@ -24,6 +24,8 @@ import {Avatar} from './Avatar';
 import {Badge} from './Badge';
 import {IconButton} from './IconButton';
 import {Menu, MenuTrigger} from '../Menu';
+import {useListFormatter} from '../format';
+import {mergeLabels} from '../labels';
 import './DataTable.css';
 
 /**
@@ -250,6 +252,15 @@ export function DataTable({
   );
 }
 
+/** The words Data table header says itself (docs/API.md rule 11): its check and add columns' names. */
+export interface DataTableHeaderLabels {
+  selection: string;
+  addColumn: string;
+}
+
+/** Data table header's English words; a page passes its own over them with `labels`. */
+export const dataTableHeaderLabels: DataTableHeaderLabels = {selection: 'Selection', addColumn: 'Add column'};
+
 export interface DataTableHeaderProps<T> extends Omit<AriaTableHeaderProps<T>, 'className'> {
   /**
    * In a multiple-selection table, the header's check column carries a "select all" checkbox. Turn it off when the
@@ -258,23 +269,26 @@ export interface DataTableHeaderProps<T> extends Omit<AriaTableHeaderProps<T>, '
    * @default true
    */
   showSelectAll?: boolean;
+  /** Its own words (the check and add columns' names), over `dataTableHeaderLabels`. */
+  labels?: Partial<DataTableHeaderLabels>;
 }
 
-export function DataTableHeader<T extends object>({columns, children, showSelectAll = true, ...props}: DataTableHeaderProps<T>) {
+export function DataTableHeader<T extends object>({columns, children, showSelectAll = true, labels, ...props}: DataTableHeaderProps<T>) {
+  const l = mergeLabels(dataTableHeaderLabels, labels);
   const {selectionMode} = useTableOptions();
   const {addColumn, showChecksOnHover} = useContext(DataTableContext);
   return (
     <AriaTableHeader {...props} className="gv-data-table__header">
       {selectionMode !== 'none' && (
-        <AriaColumn className="gv-data-table__column gv-data-table__check" textValue="Selection">
+        <AriaColumn className="gv-data-table__column gv-data-table__check" textValue={l.selection}>
           {selectionMode === 'multiple' && showSelectAll
             ? <Checkbox slot="selection" isQuiet={showChecksOnHover} />
-            : <span className="gv-data-table__hidden">Selection</span>}
+            : <span className="gv-data-table__hidden">{l.selection}</span>}
         </AriaColumn>
       )}
       <Collection items={columns}>{children}</Collection>
       {addColumn ? (
-        <AriaColumn className="gv-data-table__column gv-data-table__add" textValue="Add column">{addColumn}</AriaColumn>
+        <AriaColumn className="gv-data-table__column gv-data-table__add" textValue={l.addColumn}>{addColumn}</AriaColumn>
       ) : null}
     </AriaTableHeader>
   );
@@ -473,6 +487,15 @@ export function DataTableThumbnail({src, icon, color = 'teal', alt = '', classNa
   return <span className={clsx('gv-data-table__tile', className)} style={style} data-color={color} aria-hidden>{icon}</span>;
 }
 
+/** The words Data table assignee says itself (docs/API.md rule 11). */
+export interface DataTableAssigneeLabels {
+  /** What nobody reads, when no `emptyLabel` is given. */
+  unassigned: string;
+}
+
+/** Data table assignee's English words; a page passes its own over them with `labels`. */
+export const dataTableAssigneeLabels: DataTableAssigneeLabels = {unassigned: 'Unassigned'};
+
 export interface DataTableAssigneeProps extends Placement {
   /** Who it is assigned to (an invented name in stories). Leave it out for nobody. */
   name?: string;
@@ -480,8 +503,10 @@ export interface DataTableAssigneeProps extends Placement {
   initials?: string;
   /** A photo for the Avatar. */
   src?: string;
-  /** What nobody reads. @default 'Unassigned' */
+  /** What nobody reads, in this cell. @default `labels.unassigned` */
   emptyLabel?: string;
+  /** Its own words, over `dataTableAssigneeLabels`. */
+  labels?: Partial<DataTableAssigneeLabels>;
   /** The avatar's size: 24 in a dense table, 28 in a roomy one. @default 24 */
   size?: 24 | 28;
 }
@@ -490,37 +515,49 @@ export interface DataTableAssigneeProps extends Placement {
  * An assignee cell: Avatar and name, or the dashed empty ring and "Unassigned" in quieter text (the prototype's
  * Manage assignee and Projects list manager).
  */
-export function DataTableAssignee({name, initials, src, emptyLabel = 'Unassigned', size = 24, className, style}: DataTableAssigneeProps) {
+export function DataTableAssignee({name, initials, src, emptyLabel, labels, size = 24, className, style}: DataTableAssigneeProps) {
   const letters = initials ?? name?.split(/\s+/).slice(0, size === 28 ? 2 : 1).map(w => w[0]).join('').toUpperCase();
   return (
     <span className={clsx('gv-data-table__assignee', className)} style={style} data-empty={name ? undefined : true}>
       <Avatar size={size} initials={letters} src={src} isUnassigned={!name} />
-      <span className="gv-data-table__assignee-name">{name ?? emptyLabel}</span>
+      <span className="gv-data-table__assignee-name">{name ?? emptyLabel ?? mergeLabels(dataTableAssigneeLabels, labels).unassigned}</span>
     </span>
   );
 }
+
+/** The words Data table tags says itself (docs/API.md rule 11). */
+export interface DataTableTagsLabels {
+  /** What "+N" reads, given the hidden tags' names, joined as the locale lists them. */
+  more: (names: string) => string;
+}
+
+/** Data table tags' English words; a page passes its own over them with `labels`. */
+export const dataTableTagsLabels: DataTableTagsLabels = {more: names => `and ${names}`};
 
 export interface DataTableTagsProps extends Placement {
   /** The tags' names. */
   items: readonly string[];
   /** How many to show before "+N". @default 2 */
   max?: number;
+  /** Its own words (what "+N" reads), over `dataTableTagsLabels`. */
+  labels?: Partial<DataTableTagsLabels>;
 }
 
 /**
  * A tags cell: the first few as Badges (each clipped at 96px), then "+N" for the rest, which names them on hover and
  * to screen readers.
  */
-export function DataTableTags({items, max = 2, className, style}: DataTableTagsProps) {
+export function DataTableTags({items, max = 2, labels, className, style}: DataTableTagsProps) {
   const shown = items.slice(0, max);
   const rest = items.slice(max);
+  const names = useListFormatter({type: 'unit', style: 'short'}).format(rest);
   return (
     <span className={clsx('gv-data-table__tags', className)} style={style}>
       {shown.map(t => <Badge key={t} variant="outlined">{t}</Badge>)}
       {rest.length > 0 && (
-        <span className="gv-data-table__more" title={rest.join(', ')}>
+        <span className="gv-data-table__more" title={names}>
           <span aria-hidden><Badge variant="outlined">+{rest.length}</Badge></span>
-          <span className="gv-data-table__hidden">and {rest.join(', ')}</span>
+          <span className="gv-data-table__hidden">{mergeLabels(dataTableTagsLabels, labels).more(names)}</span>
         </span>
       )}
     </span>
@@ -546,6 +583,15 @@ export function DataTableOptions({'aria-label': label, children, onAction}: Data
   );
 }
 
+/** The words Data table add column says itself (docs/API.md rule 11). */
+export interface DataTableAddColumnLabels {
+  /** The "+" and its menu's name, when no `aria-label` is given. */
+  addColumn: string;
+}
+
+/** Data table add column's English words; a page passes its own over them with `labels`. */
+export const dataTableAddColumnLabels: DataTableAddColumnLabels = {addColumn: 'Add column'};
+
 export interface DataTableAddColumnProps {
   /** The columns that can be added: starter `MenuItem`s (e.g. with `selectionMode` checkmarks). */
   children: ReactNode;
@@ -553,14 +599,17 @@ export interface DataTableAddColumnProps {
   /** Menu selection, to show which optional columns are on. */
   selectedKeys?: Iterable<Key>;
   onSelectionChange?: (keys: Set<Key>) => void;
-  /** @default 'Add column' */
+  /** @default `labels.addColumn` ("Add column") */
   'aria-label'?: string;
+  /** Its own words, over `dataTableAddColumnLabels`. */
+  labels?: Partial<DataTableAddColumnLabels>;
 }
 
 /** The header's "+" (the prototype's Manage table): a ghost gv IconButton opening a menu of columns to add. Takes no
  * class: the header places it. */
 export function DataTableAddColumn({children, onAction, selectedKeys, onSelectionChange,
-  'aria-label': label = 'Add column'}: DataTableAddColumnProps) {
+  'aria-label': ariaLabel, labels}: DataTableAddColumnProps) {
+  const label = ariaLabel ?? mergeLabels(dataTableAddColumnLabels, labels).addColumn;
   return (
     <MenuTrigger>
       <IconButton aria-label={label}><Plus aria-hidden size={16} /></IconButton>

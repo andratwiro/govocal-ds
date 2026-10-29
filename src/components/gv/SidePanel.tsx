@@ -8,7 +8,29 @@ import {useNumberFormatter} from '../format';
 import {ChevronLeft, ChevronRight, X} from 'lucide-react';
 import {IconButton} from './IconButton';
 import {Tooltip, TooltipTrigger} from '../Tooltip';
+import {mergeLabels} from '../labels';
 import './SidePanel.css';
+
+/** The words Side panel says itself (docs/API.md rule 11): its pager's and ×'s. */
+export interface SidePanelLabels {
+  /** The pager toolbar's name. */
+  pager: string;
+  /** The pager's buttons, named for what a record is ("Previous idea", "Next idea"). */
+  previous: string;
+  next: string;
+  /** The pager's place, given both numbers as the locale writes them ("3 of 124"). */
+  position: (current: string, total: string) => string;
+  close: string;
+}
+
+/** Side panel's English words; a page passes its own over them with `labels`. */
+export const sidePanelLabels: SidePanelLabels = {
+  pager: 'Pager',
+  previous: 'Previous record',
+  next: 'Next record',
+  position: (current, total) => `${current} of ${total}`,
+  close: 'Close'
+};
 
 export interface SidePanelPosition {
   /** The open record's place in the list, from 1. */
@@ -31,8 +53,6 @@ export interface SidePanelProps {
   position?: SidePanelPosition;
   /** Called with the record to show when ‹ or › is pressed. ‹ is off on the first record, › on the last. */
   onPositionChange?: (current: number) => void;
-  /** What a record is called, for the pager's button names ("Previous idea"). @default 'record' */
-  itemName?: string;
   /**
    * Whether the panel shows (controlled). A floating panel is a dialog: closed until the page opens it. An inline one
    * is a column of the page: shown unless the page says otherwise. Pair it with `onOpenChange`. Left out, × and Esc
@@ -62,8 +82,9 @@ export interface SidePanelProps {
    * @default 'default'
    */
   width?: 'default' | 'narrow';
-  /** The close button's accessible name. @default 'Close' */
-  closeLabel?: string;
+  /** Its own words (the pager's, ×'s), over `sidePanelLabels`. Name the pager's buttons for the record:
+   * `labels={{previous: 'Previous idea', next: 'Next idea'}}`. */
+  labels?: Partial<SidePanelLabels>;
   /** Places the panel (e.g. a grid area for an inline one); never paints it. */
   className?: string;
   style?: CSSProperties;
@@ -90,17 +111,17 @@ export function SidePanel({
   footer,
   position,
   onPositionChange,
-  itemName = 'record',
   isOpen: isOpenProp,
   defaultOpen,
   onOpenChange,
   returnFocus,
   isInline,
   width = 'default',
-  closeLabel = 'Close',
+  labels,
   className,
   style
 }: SidePanelProps) {
+  const l = mergeLabels(sidePanelLabels, labels);
   const [openState, setOpenState] = useState(defaultOpen ?? Boolean(isInline));
   const isOpen = isOpenProp ?? openState;
   const id = useId();
@@ -192,21 +213,21 @@ export function SidePanel({
         <div className="gv-side-panel__head">
           <span id={`${id}-label`} className="gv-side-panel__label">{label}</span>
           {position && (
-            <Toolbar aria-label="Pager" className="gv-side-panel__pager">
-              <IconButton id={`${id}-prev`} aria-label={`Previous ${itemName}`} emphasis="strong"
+            <Toolbar aria-label={l.pager} className="gv-side-panel__pager">
+              <IconButton id={`${id}-prev`} aria-label={l.previous} emphasis="strong"
                 isDisabled={position.current <= 1} onPress={() => go(position.current - 1)}>
                 <Back aria-hidden size={16} />
               </IconButton>
               <span className="gv-side-panel__position" aria-live="polite">
-                {number.format(position.current)} of {number.format(position.total)}
+                {l.position(number.format(position.current), number.format(position.total))}
               </span>
-              <IconButton id={`${id}-next`} aria-label={`Next ${itemName}`} emphasis="strong"
+              <IconButton id={`${id}-next`} aria-label={l.next} emphasis="strong"
                 isDisabled={position.current >= position.total} onPress={() => go(position.current + 1)}>
                 <Forward aria-hidden size={16} />
               </IconButton>
             </Toolbar>
           )}
-          <IconButton aria-label={closeLabel} emphasis="strong" onPress={close}>
+          <IconButton aria-label={l.close} emphasis="strong" onPress={close}>
             <X aria-hidden size={16} />
           </IconButton>
         </div>
@@ -239,6 +260,15 @@ export function SidePanelSection({title, headingLevel = 3, children, className, 
   );
 }
 
+/** The words Side panel record head says itself (docs/API.md rule 11). */
+export interface SidePanelRecordHeadLabels {
+  /** The author line, given the author (already styled). */
+  postedBy: (author: ReactNode) => ReactNode;
+}
+
+/** Side panel record head's English words; a page passes its own over them with `labels`. */
+export const sidePanelRecordHeadLabels: SidePanelRecordHeadLabels = {postedBy: author => <>Posted by {author}</>};
+
 export interface SidePanelRecordHeadProps {
   /** The record's words: text, or paragraphs (12 apart). Body, in the primary text colour. */
   children: ReactNode;
@@ -252,8 +282,8 @@ export interface SidePanelRecordHeadProps {
   authorRole?: ReactNode;
   /** When it was posted, formatted for the reader, e.g. "26 October 2026". 24 after the author. */
   date?: ReactNode;
-  /** The words before the author. @default 'Posted by' */
-  postedByLabel?: string;
+  /** Its own words ("Posted by <author>"), over `sidePanelRecordHeadLabels`. */
+  labels?: Partial<SidePanelRecordHeadLabels>;
   /** The row under the meta line: a `SidePanelActions` with the record's counts and quick actions. */
   actions?: ReactNode;
   /** Places the head; never paints it. */
@@ -274,8 +304,9 @@ export interface SidePanelRecordHeadProps {
  * ```
  */
 export function SidePanelRecordHead({
-  children, title, headingLevel = 2, author, authorRole, date, postedByLabel = 'Posted by', actions, className, style
+  children, title, headingLevel = 2, author, authorRole, date, labels, actions, className, style
 }: SidePanelRecordHeadProps) {
+  const l = mergeLabels(sidePanelRecordHeadLabels, labels);
   const Heading = `h${headingLevel}` as const;
   return (
     <div className={clsx('gv-side-panel__record', className)} style={style}>
@@ -285,7 +316,7 @@ export function SidePanelRecordHead({
         <p className="gv-side-panel__record-meta">
           {author != null && (
             <span>
-              {postedByLabel} <span className="gv-side-panel__record-author">{author}</span>
+              {l.postedBy(<span className="gv-side-panel__record-author">{author}</span>)}
               {authorRole != null && <> · {authorRole}</>}
             </span>
           )}
@@ -306,11 +337,22 @@ export interface SidePanelAction {
   onPress?: () => void;
 }
 
+/** The words Side panel actions says itself (docs/API.md rule 11). */
+export interface SidePanelActionsLabels {
+  /** The quick actions' toolbar name. */
+  quickActions: string;
+}
+
+/** Side panel actions' English words; a page passes its own over them with `labels`. */
+export const sidePanelActionsLabels: SidePanelActionsLabels = {quickActions: 'Quick actions'};
+
 export interface SidePanelActionsProps {
   /** The quick actions: square bordered icon buttons, each with its tooltip. */
   items: SidePanelAction[];
   /** What leads the row, e.g. the record's Reaction counts or its vote count. */
   children?: ReactNode;
+  /** Its own words (the toolbar's name), over `sidePanelActionsLabels`. */
+  labels?: Partial<SidePanelActionsLabels>;
   /** Places the row; never paints it. */
   className?: string;
   style?: CSSProperties;
@@ -318,11 +360,11 @@ export interface SidePanelActionsProps {
 
 /** The row under the record's words: its counts first, the quick actions (Edit, View on the site, Delete) at the
  * end, in a toolbar: Tab enters it once, the arrows move between the actions. */
-export function SidePanelActions({items, children, className, style}: SidePanelActionsProps) {
+export function SidePanelActions({items, children, labels, className, style}: SidePanelActionsProps) {
   return (
     <div className={clsx('gv-side-panel__actions', className)} style={style}>
       <div className="gv-side-panel__actions-lead">{children}</div>
-      <Toolbar aria-label="Quick actions" className="gv-side-panel__quick">
+      <Toolbar aria-label={mergeLabels(sidePanelActionsLabels, labels).quickActions} className="gv-side-panel__quick">
         {items.map(a => (
           <TooltipTrigger key={a.id}>
             <IconButton variant="bordered" emphasis="strong" aria-label={a.label} onPress={a.onPress}>{a.icon}</IconButton>

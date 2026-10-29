@@ -3,7 +3,17 @@ import {Button} from 'react-aria-components/Button';
 import {X} from 'lucide-react';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {mergeLabels} from '../labels';
 import './Badge.css';
+
+/** The words Badge says itself (docs/API.md rule 11). */
+export interface BadgeLabels {
+  /** The remove ×'s name, given the badge's words when they are text. */
+  remove: (name?: string) => string;
+}
+
+/** Badge's English words; a page passes its own over them with `labels`. */
+export const badgeLabels: BadgeLabels = {remove: name => (name ? `Remove ${name}` : 'Remove')};
 
 export interface BadgeProps extends PlacementProps {
   /** A small leading icon (Figma "Icon: Yes/No"), e.g. `<Lightbulb aria-hidden size={14} />`. */
@@ -22,13 +32,14 @@ export interface BadgeProps extends PlacementProps {
    * together are a `TagPicker`, which adds arrow keys between them and Backspace.
    */
   onRemove?: () => void;
-  /** Names the ×. @default "Remove <children>" when the children are text */
-  removeLabel?: string;
+  /** Its own words (the ×'s name: "Remove <children>"), over `badgeLabels`. */
+  labels?: Partial<BadgeLabels>;
 }
 
 /** A small rounded label, e.g. a content type, a status, a chosen value or a count. Display-only unless removable. */
-export function Badge({icon, children, variant = 'filled', onRemove, removeLabel, className, style}: BadgeProps) {
-  const name = removeLabel ?? (typeof children === 'string' || typeof children === 'number' ? `Remove ${children}` : 'Remove');
+export function Badge({icon, children, variant = 'filled', onRemove, labels, className, style}: BadgeProps) {
+  const name = mergeLabels(badgeLabels, labels)
+    .remove(typeof children === 'string' || typeof children === 'number' ? String(children) : undefined);
   return (
     <span className={clsx('gv-pill', className)} style={style} data-variant={onRemove ? 'outlined' : variant} data-removable={onRemove ? true : undefined}>
       {icon}

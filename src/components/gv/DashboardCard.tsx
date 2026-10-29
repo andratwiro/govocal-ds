@@ -4,11 +4,12 @@ import {ChevronRight} from 'lucide-react';
 import type {ChartColor} from './Chart';
 import {BarRow} from './BarRow';
 import {LegendRow} from './LegendRow';
-import {ReactionCounts, type ReactionCountsProps} from './ReactionCounts';
-import {StatementRow} from './StatementRow';
+import {ReactionCounts, type ReactionCountsLabels, type ReactionCountsProps} from './ReactionCounts';
+import {StatementRow, statementRowLabels, type StatementRowLabels} from './StatementRow';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
 import {useNumberFormatter, usePercentFormatter} from '../format';
+import {mergeLabels, type CountLabel} from '../labels';
 import './Chart.css';
 import './DashboardCard.css';
 
@@ -105,10 +106,24 @@ export interface DashboardStatement {
   pass: number;
 }
 
-/** Statements (Common Ground): each statement with its agree / disagree / pass bar and "% agree". */
-export interface DashboardStatementsProps extends PlacementProps {items: DashboardStatement[]}
+/** The words Dashboard statements says itself (docs/API.md rule 11), with the Statement row's, which it hands on. */
+export interface DashboardStatementsLabels extends StatementRowLabels {
+  /** Each row's caption, given the agree share as the locale writes it. */
+  summary: (agreePercent: string) => string;
+}
 
-export function DashboardStatements({items, className, style}: DashboardStatementsProps) {
+/** Dashboard statements' English words; a page passes its own over them with `labels`. */
+export const dashboardStatementsLabels: DashboardStatementsLabels = {...statementRowLabels, summary: percent => `${percent} agree`};
+
+/** Statements (Common Ground): each statement with its agree / disagree / pass bar and "% agree". */
+export interface DashboardStatementsProps extends PlacementProps {
+  items: DashboardStatement[];
+  /** Its own words ("% agree", the bar's), over `dashboardStatementsLabels`. */
+  labels?: Partial<DashboardStatementsLabels>;
+}
+
+export function DashboardStatements({items, labels, className, style}: DashboardStatementsProps) {
+  const l = mergeLabels(dashboardStatementsLabels, labels);
   const percent = usePercentFormatter();
   return (
     <ul className={clsx('gv-dashboard-statements', className)} style={style}>
@@ -122,7 +137,8 @@ export function DashboardStatements({items, className, style}: DashboardStatemen
               agreePercent={share(s.agree)}
               disagreePercent={share(s.disagree)}
               passPercent={share(s.pass)}
-              summary={`${percent(share(s.agree))} agree`}
+              summary={l.summary(percent(share(s.agree)))}
+              labels={l}
             />
           </li>
         );
@@ -164,18 +180,28 @@ export function DashboardBars({items, className, style}: DashboardBarsProps) {
 
 export interface DashboardRankingItem {
   title: ReactNode;
-  /** What it counts (votes on the Live ranking), in `unit`s. */
+  /** What it counts (votes on the Live ranking), said with `labels.count`. */
   count: number;
 }
+
+/** The words Dashboard ranking says itself (docs/API.md rule 11). */
+export interface DashboardRankingLabels {
+  /** Each option's count with its word ("124 votes"). */
+  count: CountLabel;
+}
+
+/** Dashboard ranking's English words; a page passes its own over them with `labels`. */
+export const dashboardRankingLabels: DashboardRankingLabels = {count: (count, n) => (count === 1 ? `${n} vote` : `${n} votes`)};
 
 /** Live ranking: options by their count, with rank, share bar (the leader in green) and count. */
 export interface DashboardRankingProps extends PlacementProps {
   items: DashboardRankingItem[];
-  /** The words after each count. @default 'votes' */
-  unit?: string;
+  /** Its own words (each count with its word), over `dashboardRankingLabels`. */
+  labels?: Partial<DashboardRankingLabels>;
 }
 
-export function DashboardRanking({items, unit = 'votes', className, style}: DashboardRankingProps) {
+export function DashboardRanking({items, labels, className, style}: DashboardRankingProps) {
+  const l = mergeLabels(dashboardRankingLabels, labels);
   const total = items.reduce((s, o) => s + o.count, 0) || 1;
   const ranked = [...items].sort((x, y) => y.count - x.count);
   const percent = usePercentFormatter();
@@ -186,7 +212,7 @@ export function DashboardRanking({items, unit = 'votes', className, style}: Dash
         const share = Math.round((o.count / total) * 100);
         return (
           <li key={i} className="gv-dashboard-ranking__row">
-            <span className="gv-dashboard-ranking__rank" aria-hidden>#{i + 1}</span>
+            <span className="gv-dashboard-ranking__rank" aria-hidden>#{number.format(i + 1)}</span>
             <div className="gv-dashboard-ranking__main">
               <span className="gv-dashboard-ranking__title">{o.title}</span>
               <span className="gv-dashboard-ranking__track" aria-hidden>
@@ -194,7 +220,7 @@ export function DashboardRanking({items, unit = 'votes', className, style}: Dash
               </span>
             </div>
             <span className="gv-dashboard-ranking__value">
-              {percent(share)}<small>{number.format(o.count)} {unit}</small>
+              {percent(share)}<small>{l.count(o.count, number.format(o.count))}</small>
             </span>
           </li>
         );
@@ -249,9 +275,13 @@ export interface DashboardListItem {
  * List (Most liked): the inputs that got the most traction, each its title, who and when, its reactions and its
  * status. Rows 11 apart over a hairline (prototype `.pj-mlrow`). Not in Figma.
  */
-export interface DashboardListProps extends PlacementProps {items: DashboardListItem[]}
+export interface DashboardListProps extends PlacementProps {
+  items: DashboardListItem[];
+  /** The reaction counts' words for every row (an item's own `reactions.labels` win), over `reactionCountsLabels`. */
+  labels?: Partial<ReactionCountsLabels>;
+}
 
-export function DashboardList({items, className, style}: DashboardListProps) {
+export function DashboardList({items, labels, className, style}: DashboardListProps) {
   return (
     <ul className={clsx('gv-dashboard-list', className)} style={style}>
       {items.map(it => (
@@ -261,7 +291,7 @@ export function DashboardList({items, className, style}: DashboardListProps) {
             {it.meta != null && <span className="gv-dashboard-list__meta">{it.meta}</span>}
             {it.reactions && (
               <span className="gv-dashboard-list__reactions">
-                <ReactionCounts {...it.reactions} />
+                <ReactionCounts labels={labels} {...it.reactions} />
               </span>
             )}
           </div>

@@ -1,6 +1,18 @@
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {mergeLabels} from '../labels';
 import './ReviewStatus.css';
+
+/** The words Review status says itself (docs/API.md rule 11): one per status. Card takes the same keys and hands
+ * them on. */
+export interface ReviewStatusLabels {
+  toReview: string;
+  toSet: string;
+  reviewed: string;
+}
+
+/** Review status's English words; a page passes its own over them with `labels`. */
+export const reviewStatusLabels: ReviewStatusLabels = {toReview: 'To review', toSet: 'To set', reviewed: 'Reviewed'};
 
 export interface ReviewStatusProps extends PlacementProps {
   /**
@@ -10,9 +22,11 @@ export interface ReviewStatusProps extends PlacementProps {
    * @default 'to-review'
    */
   status?: 'to-review' | 'to-set' | 'reviewed';
+  /** Its own words, over `reviewStatusLabels`. */
+  labels?: Partial<ReviewStatusLabels>;
 }
 
-const LABEL = {'to-review': 'To review', 'to-set': 'To set', reviewed: 'Reviewed'} as const;
+const KEY = {'to-review': 'toReview', 'to-set': 'toSet', reviewed: 'reviewed'} as const;
 
 /* Figma's circle-dashed/14 and the prototype's `.rv--todo` mark: a 12.5 ring, 1.5 stroke in a 16 box (drawn at 14),
    dashes 2.6 / 2.2. Lucide's CircleDashed has eight long dashes instead. */
@@ -42,11 +56,11 @@ function Done() {
 }
 
 /** The small word at the end of a card's header that says whether the admin has looked at it. */
-export function ReviewStatus({status = 'to-review', className, style}: ReviewStatusProps) {
+export function ReviewStatus({status = 'to-review', labels, className, style}: ReviewStatusProps) {
   return (
     <span className={clsx('gv-review-notice', className)} style={style} data-status={status}>
       {status === 'reviewed' ? <Done /> : <Todo />}
-      <span>{LABEL[status]}</span>
+      <span>{mergeLabels(reviewStatusLabels, labels)[KEY[status]]}</span>
     </span>
   );
 }

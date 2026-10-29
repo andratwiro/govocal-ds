@@ -54,7 +54,7 @@ export const AllVariants: Story = {
       <figure style={{margin: 0}}><Caption>With counts</Caption><Demo items={FEW_TAGS} icon={tag} countLabel={ideas} defaultValue={['Transport']} /></figure>
       <figure style={{margin: 0}}><Caption>With search</Caption><Demo items={TAGS} icon={tag} countLabel={ideas} defaultValue={['Cycling']} /></figure>
       <figure style={{margin: 0}}><Caption>With footer</Caption>
-        <Demo label="Topic tags" items={TOPICS} defaultValue={['Green spaces', 'Climate']} placeholder="Search tags..." searchLabel="Search tags"
+        <Demo label="Topic tags" items={TOPICS} defaultValue={['Green spaces', 'Climate']} placeholder="Search tags..." labels={{search: () => 'Search tags'}}
           selectionLabel={n => (n ? `${n} ${n === 1 ? 'tag' : 'tags'} selected` : 'No tags selected')} />
       </figure>
       <figure style={{margin: 0}}><Caption>Empty</Caption><Demo items={[]} emptyLabel="No tags yet" /></figure>
@@ -98,7 +98,7 @@ export const People: Story = {
 export const WithFooter: Story = {
   name: 'With footer',
   render: () => (
-    <Demo label="Topic tags" items={TOPICS} defaultValue={['Green spaces', 'Climate']} placeholder="Search tags..." searchLabel="Search tags"
+    <Demo label="Topic tags" items={TOPICS} defaultValue={['Green spaces', 'Climate']} placeholder="Search tags..." labels={{search: () => 'Search tags'}}
       selectionLabel={n => (n ? `${n} ${n === 1 ? 'tag' : 'tags'} selected` : 'No tags selected')} />
   )
 };

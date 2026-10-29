@@ -9,12 +9,24 @@ import {ChevronDown} from 'lucide-react';
 import {ProgressCircle} from './ProgressCircle';
 import './Button.css';
 import {keepClass} from './className';
+import {mergeLabels} from './labels';
+
+/** The words Button says itself (docs/API.md rule 11). */
+export interface ButtonLabels {
+  /** The spinner's name while `isPending`. */
+  pending: string;
+}
+
+/** Button's English words; a page passes its own over them with `labels`. */
+export const buttonLabels: ButtonLabels = {pending: 'Saving...'};
 
 /**
  * `className` and `style` place the button (grid area, margin, alignment); they never paint it. React Aria's
  * `react-aria-Button` class always stays.
  */
 export interface ButtonProps extends RACButtonProps {
+  /** Its own words (the pending spinner's name), over `buttonLabels`. */
+  labels?: Partial<ButtonLabels>;
   /**
    * The visual style of the button (Vanilla CSS implementation specific).
    *
@@ -76,7 +88,7 @@ function isIconOnlyChildren(children: ButtonProps['children']): boolean {
 }
 
 export function Button(props: ButtonProps) {
-  const {variant, size, hasMenu, isIconOnly, tone, isFullWidth, className, ...rest} = props;
+  const {variant, size, hasMenu, isIconOnly, tone, isFullWidth, labels, className, ...rest} = props;
   const resolvedIconOnly = isIconOnly ?? isIconOnlyChildren(props.children);
   return (
     <RACButton
@@ -91,7 +103,7 @@ export function Button(props: ButtonProps) {
         <>
           {!isPending && children}
           {!isPending && hasMenu && <ChevronDown aria-hidden size={16} className="react-aria-Button-chevron" />}
-          {isPending && <ProgressCircle aria-label="Saving..." isIndeterminate />}
+          {isPending && <ProgressCircle aria-label={mergeLabels(buttonLabels, labels).pending} isIndeterminate />}
         </>
       ))}
     </RACButton>

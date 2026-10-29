@@ -16,6 +16,7 @@ import {
 import {ChevronRight, GripVertical} from 'lucide-react';
 import {Checkbox} from './Checkbox';
 import {ProgressCircle} from './ProgressCircle';
+import {loadMoreLabels, mergeLabels, type LoadMoreLabels} from './labels';
 import './Tree.css';
 import {keepClass} from './className';
 import clsx from 'clsx';
@@ -69,10 +70,11 @@ export function TreeItem(props: TreeItemProps) {
   );
 }
 
-export function TreeLoadMoreItem(props: TreeLoadMoreItemProps) {
+/** The spinner a Tree shows while its next page loads; its name is `labels.loading` (`loadMoreLabels`). */
+export function TreeLoadMoreItem({labels, ...props}: TreeLoadMoreItemProps & {labels?: Partial<LoadMoreLabels>}) {
   return (
     <AriaTreeLoadMoreItem {...props} className={keepClass(props.className)}>
-      <ProgressCircle isIndeterminate aria-label="Loading more..." />
+      <ProgressCircle isIndeterminate aria-label={mergeLabels(loadMoreLabels, labels).loading} />
     </AriaTreeLoadMoreItem>
   );
 }

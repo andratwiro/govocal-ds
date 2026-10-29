@@ -18,9 +18,26 @@ import {Radio, RadioGroup, type RadioProps} from '../RadioGroup';
 import {Switch, type SwitchProps} from '../Switch';
 import {IconButton} from './IconButton';
 import {Badge} from './Badge';
-import {RequiredMarker} from './RequiredMarker';
-import {ReviewStatus, type ReviewStatusProps} from './ReviewStatus';
+import {RequiredMarker, type RequiredMarkerLabels} from './RequiredMarker';
+import {ReviewStatus, type ReviewStatusLabels, type ReviewStatusProps} from './ReviewStatus';
+import {mergeLabels} from '../labels';
 import './Card.css';
+
+/** The words Card says itself (docs/API.md rule 11): the → button's name, plus the Required marker's and the review
+ * status's words, which it hands on. */
+export interface CardLabels extends RequiredMarkerLabels, ReviewStatusLabels {
+  /** `control="open"`: the → button's name, given the title (empty when the title isn't plain text). */
+  open: (title: string) => string;
+}
+
+/** Card's English words; a page passes its own over them with `labels`. */
+export const cardLabels: CardLabels = {
+  open: title => `Open ${title}`.trim(),
+  required: 'Required',
+  toReview: 'To review',
+  toSet: 'To set',
+  reviewed: 'Reviewed'
+};
 
 export interface CardPill {
   label: string;
@@ -107,18 +124,26 @@ export interface CardProps {
   defaultExpanded?: boolean;
   isExpanded?: boolean;
   onExpandedChange?: (isExpanded: boolean) => void;
+  /** Its own words (the → button's name, Required, the review status), over `cardLabels`. */
+  labels?: Partial<CardLabels>;
   /** Places the card (a grid area, a width); never paints it. */
   className?: string;
   style?: CSSProperties;
 }
 
-function Status({isRequired, status, summary, pills}: Pick<CardProps, 'isRequired' | 'status' | 'summary' | 'pills'>) {
+function Status({
+  isRequired,
+  status,
+  summary,
+  pills,
+  labels
+}: Pick<CardProps, 'isRequired' | 'status' | 'summary' | 'pills'> & {labels: CardLabels}) {
   return (
     <>
-      {isRequired && <RequiredMarker placement="card" />}
+      {isRequired && <RequiredMarker placement="card" labels={labels} />}
       {status && (
         <span className="gv-card__review">
-          <ReviewStatus status={status} />
+          <ReviewStatus status={status} labels={labels} />
         </span>
       )}
       {summary && <span className="gv-card__summary">{summary}</span>}
@@ -191,12 +216,14 @@ export function Card({
   value,
   defaultValue,
   onChange,
+  labels,
   className,
   style
 }: CardProps) {
+  const l = mergeLabels(cardLabels, labels);
   const [innerKey, setInnerKey] = useState(defaultValue);
   const roomy = Boolean(actions) && layout === 'row';
-  const status = <Status isRequired={isRequired} status={reviewStatus} summary={summary} pills={pills} />;
+  const status = <Status isRequired={isRequired} status={reviewStatus} summary={summary} pills={pills} labels={l} />;
   const root = {
     className: clsx('gv-card', className),
     style,
@@ -220,6 +247,7 @@ export function Card({
                 status={reviewStatus}
                 summary={summary}
                 pills={pills ?? (chosen ? [{label: chosen.label, icon: chosen.icon}] : undefined)}
+                labels={l}
               />
               <span className="gv-card__chevron" aria-hidden>
                 <ChevronDown size={16} />
@@ -310,7 +338,7 @@ export function Card({
         {status}
         <Trailing iconActions={iconActions} actions={actions} />
         {control === 'open' && (
-          <IconButton aria-label={`Open ${typeof title === 'string' ? title : ''}`.trim()} onPress={onOpen}>
+          <IconButton aria-label={l.open(typeof title === 'string' ? title : '')} onPress={onOpen}>
             <ChevronRight aria-hidden size={16} />
           </IconButton>
         )}

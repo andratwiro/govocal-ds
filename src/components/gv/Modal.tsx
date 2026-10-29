@@ -6,7 +6,17 @@ import {Dialog} from 'react-aria-components/Dialog';
 import {Modal as StarterModal} from '../Modal';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {mergeLabels} from '../labels';
 import './Modal.css';
+
+/** The words Modal says itself (docs/API.md rule 11). */
+export interface ModalLabels {
+  /** The × button's name. */
+  close: string;
+}
+
+/** Modal's English words; a page passes its own over them with `labels`. */
+export const modalLabels: ModalLabels = {close: 'Close'};
 
 /** `className` and `style` place the dialog box (a width, a margin); they never paint it. */
 export interface ModalProps extends PlacementProps {
@@ -42,11 +52,12 @@ export interface ModalProps extends PlacementProps {
   onOpenChange?: (isOpen: boolean) => void;
   /** Close on a click outside. @default true */
   isDismissable?: boolean;
-  /** The close button's accessible name. @default 'Close' */
-  closeLabel?: string;
+  /** Its own words (the ×'s name), over `modalLabels`: `labels={{close: formatMessage(messages.close)}}`. */
+  labels?: Partial<ModalLabels>;
 }
 
-/** Modal: head (title + ×), a body, and a footer of buttons on the toolbar grey. Wraps the starter Modal + Dialog. */
+/** Modal: head (title + ×), a body, and a footer of buttons on the toolbar grey. Wraps the starter Modal + Dialog.
+ * Its one word, the ×'s name, is `labels.close`. */
 export function Modal({
   title,
   children,
@@ -58,7 +69,7 @@ export function Modal({
   defaultOpen,
   onOpenChange,
   isDismissable = true,
-  closeLabel = 'Close',
+  labels,
   className,
   style
 }: ModalProps) {
@@ -69,7 +80,7 @@ export function Modal({
           <Heading slot="title" className="gv-modal__title">
             {title}
           </Heading>
-          <Button slot="close" className="gv-modal__close" aria-label={closeLabel}>
+          <Button slot="close" className="gv-modal__close" aria-label={mergeLabels(modalLabels, labels).close}>
             <X aria-hidden size={20} strokeWidth={1.75} />
           </Button>
         </div>

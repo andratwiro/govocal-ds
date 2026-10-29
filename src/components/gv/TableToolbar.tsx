@@ -3,7 +3,17 @@ import type {KeyboardEvent, ReactNode} from 'react';
 import {Toolbar} from 'react-aria-components/Toolbar';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {mergeLabels} from '../labels';
 import './TableToolbar.css';
+
+/** The words Table toolbar says itself (docs/API.md rule 11). */
+export interface TableToolbarLabels {
+  /** The tools' toolbar name, when no `aria-label` is given. */
+  tools: string;
+}
+
+/** Table toolbar's English words; a page passes its own over them with `labels`. */
+export const tableToolbarLabels: TableToolbarLabels = {tools: 'Table tools'};
 
 export interface TableToolbarHeadingProps extends PlacementProps {
   /** The count, in words: "124 ideas". */
@@ -33,8 +43,10 @@ export interface TableToolbarProps extends PlacementProps {
   start?: ReactNode;
   /** The tools at the end: a collapsible Search field, the Filter menu, an export menu. */
   children?: ReactNode;
-  /** Names the tools. @default 'Table tools' */
+  /** Names this toolbar's tools. @default `labels.tools` */
   'aria-label'?: string;
+  /** Its own words, over `tableToolbarLabels`. */
+  labels?: Partial<TableToolbarLabels>;
 }
 
 // React Aria's Toolbar moves focus on ← and →, even from inside a text field. In the search field the arrows move
@@ -55,7 +67,7 @@ function keepCaret(e: KeyboardEvent) {
  * dot, an export menu), which never move. The tools are a React Aria Toolbar: Tab enters it once, ← → move between
  * tools, and inside the search field they move the caret until it reaches the edge. Not in Figma yet.
  */
-export function TableToolbar({heading, headingLevel, start, children, 'aria-label': label = 'Table tools', className, style}: TableToolbarProps) {
+export function TableToolbar({heading, headingLevel, start, children, 'aria-label': label, labels, className, style}: TableToolbarProps) {
   return (
     <div className={clsx('gv-table-toolbar', className)} style={style}>
       <div className="gv-table-toolbar__start">
@@ -63,7 +75,7 @@ export function TableToolbar({heading, headingLevel, start, children, 'aria-labe
       </div>
       {children && (
         <div className="gv-table-toolbar__end" onKeyDownCapture={keepCaret}>
-          <Toolbar aria-label={label} className="gv-table-toolbar__tools">{children}</Toolbar>
+          <Toolbar aria-label={label ?? mergeLabels(tableToolbarLabels, labels).tools} className="gv-table-toolbar__tools">{children}</Toolbar>
         </div>
       )}
     </div>

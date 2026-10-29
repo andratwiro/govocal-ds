@@ -14,6 +14,7 @@ import {Check} from 'lucide-react';
 import type {ReactNode} from 'react';
 import {Text} from './Content';
 import {ProgressCircle} from './ProgressCircle';
+import {loadMoreLabels, mergeLabels, type LoadMoreLabels} from './labels';
 import './ListBox.css';
 import {keepClass, ownClass} from './className';
 import clsx from 'clsx';
@@ -38,10 +39,11 @@ export function ListBoxSection<T>(props: ListBoxSectionProps<T>) {
   return <AriaListBoxSection {...props} className={clsx('react-aria-ListBoxSection', props.className)} />;
 }
 
-export function ListBoxLoadMoreItem(props: ListBoxLoadMoreItemProps) {
+/** The spinner a ListBox shows while its next page loads; its name is `labels.loading` (`loadMoreLabels`). */
+export function ListBoxLoadMoreItem({labels, ...props}: ListBoxLoadMoreItemProps & {labels?: Partial<LoadMoreLabels>}) {
   return (
     <AriaListBoxLoadMoreItem {...props} className={clsx('react-aria-ListBoxLoadingIndicator', props.className)}>
-      <ProgressCircle isIndeterminate aria-label="Loading more..." />
+      <ProgressCircle isIndeterminate aria-label={mergeLabels(loadMoreLabels, labels).loading} />
     </AriaListBoxLoadMoreItem>
   );
 }

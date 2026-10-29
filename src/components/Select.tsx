@@ -17,6 +17,28 @@ import {Label, FieldError, Description} from './Form';
 import clsx from 'clsx';
 import './Select.css';
 import {keepClass} from './className';
+import {mergeLabels} from './labels';
+
+/** The words Select says itself (docs/API.md rule 11), all in its search. */
+export interface SelectLabels {
+  /** The search's placeholder when no `searchPlaceholder` is given. */
+  placeholder: string;
+  /** The search's name, given the field's name (its label, else its `aria-label`, else `labels.options`). A
+   * `searchPlaceholder` without its dots names it instead, unless this is given. */
+  search: (field: string) => string;
+  /** What the list says when the search matches nothing, when no `emptyLabel` is given. */
+  empty: string;
+  /** The field's name for the search when it has neither a label nor an `aria-label`. */
+  options: string;
+}
+
+/** Select's English words; a page passes its own over them with `labels`. */
+export const selectLabels: SelectLabels = {
+  placeholder: 'Search...',
+  search: field => `Search ${field.toLowerCase()}`,
+  empty: 'No results',
+  options: 'options'
+};
 
 interface SelectBaseProps<T, M extends 'single' | 'multiple'> extends Omit<
   AriaSelectProps<T, M>,
@@ -33,12 +55,12 @@ interface SelectBaseProps<T, M extends 'single' | 'multiple'> extends Omit<
   prefix?: string;
   /** A search at the top of the list, the magnifier first: typing narrows it, ↑↓ still move through it. */
   isSearchable?: boolean;
-  /** @default 'Search...' */
+  /** This field's search hint ("Search spaces"); it names the search too, without its dots. @default `labels.placeholder` */
   searchPlaceholder?: string;
-  /** Names the search for screen readers. @default the placeholder without its dots, else "Search <label>" */
-  searchLabel?: string;
-  /** What the list says when the search matches nothing. @default 'No results' */
+  /** What this list says when the search matches nothing. @default `labels.empty` */
   emptyLabel?: string;
+  /** Its own words (the search's name and hint, No results), over `selectLabels`. */
+  labels?: Partial<SelectLabels>;
 }
 
 /**
@@ -70,17 +92,19 @@ export function Select<T, M extends 'single' | 'multiple' = 'single'>({
   icon,
   prefix,
   isSearchable,
-  searchPlaceholder = 'Search...',
-  searchLabel,
-  emptyLabel = 'No results',
+  searchPlaceholder,
+  emptyLabel,
+  labels,
   ...props
 }: SelectProps<T, M>) {
+  const l = mergeLabels(selectLabels, labels);
   const {contains} = useFilter({sensitivity: 'base'});
   const height = variant === 'pill' ? (size === 22 ? 22 : 28) : size === 36 || (!size && variant === 'field') ? 36 : 32;
-  const name = label ?? props['aria-label'] ?? 'options';
+  const name = label ?? props['aria-label'] ?? l.options;
+  const searchName = searchPlaceholder != null && !labels?.search ? searchPlaceholder.replace(/(\.\.\.|…)$/, '') : l.search(name);
   const list = (
     // Inside a search, React Aria would call the list "Suggestions"; it keeps the field's name.
-    <SelectListBox items={items} aria-label={isSearchable ? name : undefined} renderEmptyState={() => emptyLabel}>
+    <SelectListBox items={items} aria-label={isSearchable ? name : undefined} renderEmptyState={() => emptyLabel ?? l.empty}>
       {children}
     </SelectListBox>
   );
@@ -100,8 +124,7 @@ export function Select<T, M extends 'single' | 'multiple' = 'single'>({
         {isSearchable ? (
           <Autocomplete filter={contains}>
             <div className="select-search">
-              <SearchField aria-label={searchLabel ?? (searchPlaceholder === 'Search...' ? `Search ${name.toLowerCase()}`
-                : searchPlaceholder.replace(/(\.\.\.|…)$/, ''))} placeholder={searchPlaceholder}
+              <SearchField aria-label={searchName} placeholder={searchPlaceholder ?? l.placeholder}
                 autoFocus className="select-search__field" />
               {list}
             </div>

@@ -1,8 +1,28 @@
 import type {HTMLAttributes, ReactNode} from 'react';
 import {ArrowDown, ArrowRight, ArrowUp} from 'lucide-react';
 import {VisuallyHidden} from 'react-aria-components/VisuallyHidden';
-import {HelpPopover} from './HelpPopover';
+import {HelpPopover, type HelpPopoverLabels} from './HelpPopover';
+import {mergeLabels} from '../labels';
 import './StatTile.css';
+
+/** The words Stat tile says itself (docs/API.md rule 11), with the Help popover's, which it hands on. */
+export interface StatTileLabels extends HelpPopoverLabels {
+  /** The trend's direction, read before the change ("Up 12%, 7-day change"). */
+  up: string;
+  down: string;
+  flat: string;
+  /** The Help popover's heading when neither `infoTitle` nor a text `label` gives one. */
+  about: string;
+}
+
+/** Stat tile's English words; a page passes its own over them with `labels`. */
+export const statTileLabels: StatTileLabels = {
+  up: 'Up',
+  down: 'Down',
+  flat: 'No change',
+  about: 'About this number',
+  help: title => `Help: ${title}`
+};
 
 /** Figma "Stat tile" · Type. */
 export type StatTileLayout = 'default' | 'tall' | 'with-note';
@@ -42,26 +62,25 @@ export interface StatTileProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
   layout?: StatTileLayout;
   /** Optional slot under the value and note, e.g. a `Sparkline`. */
   children?: ReactNode;
+  /** Its own words (the trend's direction, the help icon's name), over `statTileLabels`. */
+  labels?: Partial<StatTileLabels>;
 }
 
-const TREND = {
-  up: {icon: ArrowUp, words: 'Up'},
-  down: {icon: ArrowDown, words: 'Down'},
-  flat: {icon: ArrowRight, words: 'No change'}
-} as const;
+const ARROW = {up: ArrowUp, down: ArrowDown, flat: ArrowRight} as const;
 
 /** A labelled number tile (Figma "Stat tile"; prototype `.pj-kpi`). Display only, but for its help icon. */
-export function StatTile({label, value, note, trend, info, infoTitle, layout, children, className, ...rest}: StatTileProps) {
+export function StatTile({label, value, note, trend, info, infoTitle, layout, children, labels, className, ...rest}: StatTileProps) {
+  const l = mergeLabels(statTileLabels, labels);
   const shape: StatTileLayout = layout ?? (note != null ? 'with-note' : 'default');
-  const Arrow = trend ? TREND[trend.direction].icon : null;
-  const title = infoTitle ?? (typeof label === 'string' ? label : 'About this number');
+  const Arrow = trend ? ARROW[trend.direction] : null;
+  const title = infoTitle ?? (typeof label === 'string' ? label : l.about);
   return (
     <div {...rest} className={['gv-kpi', `gv-kpi--${shape}`, className].filter(Boolean).join(' ')}>
       <div className="gv-kpi__label">
         {label}
         {info != null && (
           <span className="gv-kpi__info">
-            <HelpPopover title={title}>{info}</HelpPopover>
+            <HelpPopover title={title} labels={l}>{info}</HelpPopover>
           </span>
         )}
       </div>
@@ -69,7 +88,7 @@ export function StatTile({label, value, note, trend, info, infoTitle, layout, ch
       {trend && Arrow && (
         <div className="gv-kpi__trend" data-direction={trend.direction}>
           <Arrow aria-hidden size={14} strokeWidth={2} />
-          <VisuallyHidden>{TREND[trend.direction].words} </VisuallyHidden>
+          <VisuallyHidden>{l[trend.direction]} </VisuallyHidden>
           {trend.value != null && <span>{trend.value}</span>}
           {trend.label != null && (
             <>

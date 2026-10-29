@@ -6,12 +6,29 @@ import {Tag, TagGroup, TagList} from 'react-aria-components/TagGroup';
 import {Plus, X} from 'lucide-react';
 import {Button} from '../Button';
 import {Popover} from '../Popover';
-import {OptionList, type OptionListItem} from './OptionList';
+import {OptionList, optionListLabels, type OptionListItem, type OptionListLabels} from './OptionList';
 import {useControlledState} from '../useControlledState';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {mergeLabels} from '../labels';
 import './Badge.css';
 import './TagPicker.css';
+
+/** The words Tag picker says itself (docs/API.md rule 11), with the Option list's, which it hands on. */
+export interface TagPickerLabels extends OptionListLabels {
+  add: string;
+  /** A tag's × name, given the tag. */
+  remove: (tag: string) => string;
+}
+
+/** Tag picker's English words; a page passes its own over them with `labels`. */
+export const tagPickerLabels: TagPickerLabels = {
+  ...optionListLabels,
+  placeholder: 'Search tags...',
+  search: list => `Search ${list.toLowerCase()}`,
+  add: 'Add tag',
+  remove: tag => `Remove ${tag}`
+};
 
 export interface TagPickerProps extends PlacementProps {
   /** Names the tags and the list that adds them, e.g. "Tags". The page shows its own label beside the picker. */
@@ -23,14 +40,14 @@ export interface TagPickerProps extends PlacementProps {
   /** The tags chosen at first, when the picker keeps its own value. @default [] */
   defaultValue?: readonly string[];
   onChange?: (value: string[]) => void;
-  /** @default 'Add tag' */
-  addLabel?: string;
-  /** The search's placeholder in the list (shown past five tags). @default 'Search tags...' */
+  /** The search's placeholder in the list (shown past five tags). @default `labels.placeholder` ("Search tags...") */
   placeholder?: string;
   /** Adds the list's footer: how many are chosen, in these words, and Done. */
   selectionLabel?: (n: number) => string;
   /** The tags show without their ×, and nothing can be added. */
   isDisabled?: boolean;
+  /** Its own words (Add tag, each ×, the list's search, No results, Done), over `tagPickerLabels`. */
+  labels?: Partial<TagPickerLabels>;
 }
 
 /**
@@ -38,8 +55,9 @@ export interface TagPickerProps extends PlacementProps {
  * popover. ←→ move between the tags, Delete or Backspace removes the focused one, Tab goes on to Add tag. The tags
  * are React Aria's TagGroup drawn as the removable Badge. Not in Figma yet.
  */
-export function TagPicker({'aria-label': label, items, value, defaultValue = [], onChange, addLabel = 'Add tag',
-  placeholder = 'Search tags...', selectionLabel, isDisabled, className, style}: TagPickerProps) {
+export function TagPicker({'aria-label': label, items, value, defaultValue = [], onChange, placeholder, selectionLabel,
+  isDisabled, labels, className, style}: TagPickerProps) {
+  const l = mergeLabels(tagPickerLabels, labels);
   const [selected, setChosen] = useControlledState<readonly string[]>(value, defaultValue);
   const setSelected = (ids: string[]) => {
     setChosen(ids);
@@ -71,7 +89,7 @@ export function TagPicker({'aria-label': label, items, value, defaultValue = [],
                   <>
                     <span className="gv-pill__label">{o.label}</span>
                     {allowsRemoving && (
-                      <AriaButton slot="remove" className="gv-pill__remove" aria-label={`Remove ${o.label}`}>
+                      <AriaButton slot="remove" className="gv-pill__remove" aria-label={l.remove(o.label)}>
                         <X aria-hidden size={12} />
                       </AriaButton>
                     )}
@@ -84,12 +102,12 @@ export function TagPicker({'aria-label': label, items, value, defaultValue = [],
       )}
       <DialogTrigger>
         <Button variant="quiet" size={32} isDisabled={isDisabled}>
-          <Plus aria-hidden />{addLabel}
+          <Plus aria-hidden />{l.add}
         </Button>
         <Popover placement="bottom start" showArrow={false} className="gv-tag-picker__popover">
           <Dialog aria-label={label} className="gv-tag-picker__dialog">
             <OptionList aria-label={label} items={items} value={selected} onChange={setSelected}
-              placeholder={placeholder} searchLabel={placeholder.replace(/(\.\.\.|…)$/, '')} selectionLabel={selectionLabel} />
+              placeholder={placeholder} selectionLabel={selectionLabel} labels={l} />
           </Dialog>
         </Popover>
       </DialogTrigger>

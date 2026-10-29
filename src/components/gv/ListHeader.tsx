@@ -3,7 +3,19 @@ import {Checkbox} from './Checkbox';
 import {ListHeaderCell} from './ListHeaderCell';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import {mergeLabels} from '../labels';
 import './ListHeader.css';
+
+/** The words List header says itself (docs/API.md rule 11). It hands `addColumn` to its add-column cell. */
+export interface ListHeaderLabels {
+  /** The select-all checkbox's name, when its own `aria-label` isn't given. */
+  selectAll: string;
+  /** The add-column button's name. */
+  addColumn: string;
+}
+
+/** List header's English words; a page passes its own over them with `labels`. */
+export const listHeaderLabels: ListHeaderLabels = {selectAll: 'Select all', addColumn: 'Add column'};
 
 export interface ListHeaderColumn {
   /** A stable key, used when the list is sorted. */
@@ -27,7 +39,7 @@ export interface ListHeaderSelectAll {
   isSelected?: boolean;
   isIndeterminate?: boolean;
   onChange?: (isSelected: boolean) => void;
-  /** @default 'Select all' */
+  /** @default `labels.selectAll` */
   'aria-label'?: string;
 }
 
@@ -48,6 +60,8 @@ export interface ListHeaderProps extends PlacementProps {
    * @default false
    */
   hasLeadSlot?: boolean;
+  /** Its own words, over `listHeaderLabels`. */
+  labels?: Partial<ListHeaderLabels>;
 }
 
 /** The CSS grid track list for a column set: the first column fills, the rest are fixed. */
@@ -57,7 +71,8 @@ export function listColumnsTemplate(columns: ListHeaderColumn[]) {
     .join(' ');
 }
 
-export function ListHeader({columns, onSort, onAddColumn, selectAll, hasLeadSlot, className, style}: ListHeaderProps) {
+export function ListHeader({columns, onSort, onAddColumn, selectAll, hasLeadSlot, labels, className, style}: ListHeaderProps) {
+  const l = mergeLabels(listHeaderLabels, labels);
   return (
     <div className={clsx('gv-list-header', className)} style={style}>
       {(selectAll || hasLeadSlot) && (
@@ -67,7 +82,7 @@ export function ListHeader({columns, onSort, onAddColumn, selectAll, hasLeadSlot
               isSelected={selectAll.isSelected}
               isIndeterminate={selectAll.isIndeterminate}
               onChange={selectAll.onChange}
-              aria-label={selectAll['aria-label'] ?? 'Select all'}
+              aria-label={selectAll['aria-label'] ?? l.selectAll}
             />
           )}
         </span>
@@ -85,7 +100,7 @@ export function ListHeader({columns, onSort, onAddColumn, selectAll, hasLeadSlot
         ))}
       </div>
       <span className="gv-list-header__trail">
-        {onAddColumn && <ListHeaderCell kind="add-column" onPress={onAddColumn} />}
+        {onAddColumn && <ListHeaderCell kind="add-column" onPress={onAddColumn} aria-label={l.addColumn} />}
       </span>
     </div>
   );
