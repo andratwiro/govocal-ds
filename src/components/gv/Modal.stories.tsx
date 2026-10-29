@@ -5,7 +5,7 @@ import {Link as LinkIcon, Settings, Paperclip, Tag, Sparkles} from 'lucide-react
 import {Button} from '../Button';
 import {Radio, RadioGroup} from '../RadioGroup';
 import {TextField} from '../TextField';
-import {Tabs, TabList, Tab, TabPanels, TabPanel} from '../Tabs';
+import {GroupedTabs, GroupedTabList, GroupedTab, GroupedTabPanel, TabSection} from '../Tabs';
 import {Checkbox} from './Checkbox';
 import {DropZone} from './DropZone';
 import {Modal} from './Modal';
@@ -143,38 +143,49 @@ function InputManagerModal() {
   );
 }
 
-const settingsTabs = [
-  {id: 'general', icon: Settings, label: 'General information'},
-  {id: 'resources', icon: Paperclip, label: 'Resources'},
-  {id: 'tags', icon: Tag, label: 'Tags'},
-  {id: 'perspectives', icon: Sparkles, label: 'Perspectives'}
+const settingsGroups = [
+  {title: 'Project', tabs: [
+    {id: 'general', icon: Settings, label: 'General information'},
+    {id: 'resources', icon: Paperclip, label: 'Resources'}
+  ]},
+  {title: 'Inputs', tabs: [
+    {id: 'tags', icon: Tag, label: 'Tags'},
+    {id: 'perspectives', icon: Sparkles, label: 'Perspectives'}
+  ]}
 ];
 
-/** The prototype's Settings dialog: a fixed height (640) so the side list and the panel each scroll on their own. */
+/**
+ * The prototype's Settings dialog: a fixed height (640) so the side list and the panel each scroll on their own; the
+ * side list groups its tabs under "Project" and "Inputs" (Tabs' grouped side list).
+ */
 function SideTabsModal() {
   return (
-    <Modal title="Settings" height="fixed" padBody={false} footer={<Button slot="close">Save</Button>}>
-      <Tabs orientation="vertical" defaultSelectedKey="general" style={{display: 'flex', width: '100%', minHeight: 0}}>
-        <TabList
+    <Modal title="Settings" size="wide" height="fixed" padBody={false} footer={<Button slot="close">Save</Button>}>
+      <GroupedTabs defaultSelectedKey="general" style={{minHeight: 0}}>
+        <GroupedTabList
           aria-label="Settings"
-          items={settingsTabs}
-          style={{flex: '0 0 200px', padding: '16px 12px', overflowY: 'auto', borderInlineEnd: '1px solid var(--gv-border-row)'}}>
-          {tab => (
-            <Tab id={tab.id}>
-              <tab.icon aria-hidden size={16} strokeWidth={1.75} />
-              {tab.label}
-            </Tab>
-          )}
-        </TabList>
-        <TabPanels items={settingsTabs} style={{flex: '1 1 auto', minWidth: 0, overflowY: 'auto', padding: '20px 24px'}}>
-          {tab => (
-            <TabPanel id={tab.id}>
-              <p style={{margin: '0 0 12px', font: 'var(--gv-type-body-strong)', color: 'var(--gv-text-primary)'}}>{tab.label}</p>
+          style={{flex: '0 0 200px', padding: '8px', overflowY: 'auto', background: 'var(--gv-surface-toolbar)',
+            borderInlineEnd: '1px solid var(--gv-border-subtle)'}}>
+          {settingsGroups.map(group => (
+            <TabSection key={group.title} title={group.title}>
+              {group.tabs.map(tab => (
+                <GroupedTab key={tab.id} id={tab.id} textValue={tab.label}>
+                  <tab.icon aria-hidden size={16} strokeWidth={1.75} />
+                  {tab.label}
+                </GroupedTab>
+              ))}
+            </TabSection>
+          ))}
+        </GroupedTabList>
+        {settingsGroups.flatMap(group => group.tabs).map(tab => (
+          <GroupedTabPanel key={tab.id} id={tab.id} style={{overflowY: 'auto', padding: '24px'}}>
+            <div style={{display: 'flex', flexDirection: 'column', gap: 12}}>
+              <p style={{margin: 0, font: 'var(--gv-type-body-strong)', color: 'var(--gv-text-primary)'}}>{tab.label}</p>
               <TextField label="Project name" defaultValue="Untitled project" />
-            </TabPanel>
-          )}
-        </TabPanels>
-      </Tabs>
+            </div>
+          </GroupedTabPanel>
+        ))}
+      </GroupedTabs>
     </Modal>
   );
 }
@@ -285,10 +296,7 @@ export const Paged: Story = {
   render: () => <Open label="Paged"><PagedModal /></Open>
 };
 
-/**
- * The Settings dialog: a fixed height, `Tabs orientation="vertical"` as the side list (today's
- * Tabs; a later package adds grouped side-tab headings).
- */
+/** The Settings dialog: a fixed height, the side list grouped under "Project" and "Inputs" (`GroupedTabs`). */
 export const WithSideTabs: Story = {
   name: 'With side tabs',
   render: () => <Open label="With side tabs"><SideTabsModal /></Open>
