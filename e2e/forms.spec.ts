@@ -1,13 +1,7 @@
 import {test, expect} from '@playwright/test';
-import {axeViolations} from './axe';
+import {axeViolations, a11yReport} from './axe';
 const story = (id: string) => `/storybook/iframe.html?id=${id}&viewMode=story`;
 
-// This worktree hasn't seen main's `a11yReport` wrapper yet (never rebased, per the coordinator: carried at
-// merge). Report, not assert pass/fail: a violation here is a flag for the designer, not a build failure.
-async function a11y(page: import('@playwright/test').Page, within: string) {
-  const violations = await axeViolations(page, within);
-  if (violations.length) test.info().annotations.push({type: 'a11y', description: violations.join('; ')});
-}
 
 test('Date range field: an end before the start shows the invalid message in words', async ({page}) => {
   await page.goto(story('components-forms-date-range-field--start-and-end'));
@@ -21,7 +15,7 @@ test('Date range field: an end before the start shows the invalid message in wor
   const message = page.getByText("The end date can't be before the start date.");
   await expect(message).toBeVisible();
   await expect(end.getByRole('spinbutton').first()).toHaveAttribute('aria-invalid', 'true');
-  await a11y(page, '.gv-date-range-field');
+  a11yReport(await axeViolations(page, '.gv-date-range-field'));
 });
 
 test('Date range field: "Add end date" reveals the end picker, × removes it', async ({page}) => {
@@ -46,7 +40,7 @@ test('Choice card: arrow keys move the selection within a radio group', async ({
   await page.keyboard.press('ArrowDown');
   await expect(second).toBeChecked();
   await expect(second).toBeFocused();
-  await a11y(page, '[role="radiogroup"]');
+  a11yReport(await axeViolations(page, '[role="radiogroup"]'));
 });
 
 test('File list: Delete removes the row from the dialog', async ({page}) => {
@@ -58,7 +52,7 @@ test('File list: Delete removes the row from the dialog', async ({page}) => {
   // The other attachment and the Drop zone stay.
   await expect(page.getByRole('row', {name: /consultation-summary\.pdf/})).toBeVisible();
   await expect(page.getByRole('button', {name: 'Drop a file here or browse'})).toBeVisible();
-  await a11y(page, '.gv-modal');
+  a11yReport(await axeViolations(page, '.gv-modal'));
 });
 
 test('Choice card: revealed content shows only while its tile is chosen', async ({page}) => {

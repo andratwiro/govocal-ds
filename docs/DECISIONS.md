@@ -65,6 +65,15 @@ dashboards, Build tab).
 - Reply does nothing → **it points the composer at the comment ("Replying to …")**; replies go one level deep.
 - Candidates for new Figma tokens: warning surface and border (screening strip), radius 18, grey-50 block.
 
+**Built in the forms package**
+- Choice card's selected border → **2px drawn inside the tile** → the tile never changes size when chosen.
+- Choice card's revealed fields (Budget → Min/Max) → **beside the radio, not inside its label** → a label around
+  fields breaks clicking into them.
+- Date range field's time zone → **shown as text, no picker** → nothing in the prototype picks one; a picker is a later
+  entry if a Build tab needs it.
+- Text field prefix/suffix → **a border on the whole group**; Number field's "€" → **plain text inside the field** →
+  one glyph needs no seam, and Voting's Min/Max widths stay as measured.
+
 **Prototype bugs found on the way** (not copied into the system):
 - Space and Folder search: an empty popover with no "No results" text, arrow keys don't move, no search icon.
 - Ideation Manage: with every column on, columns run into the "+" column; the count heading ignores the search.

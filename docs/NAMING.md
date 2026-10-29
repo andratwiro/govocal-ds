@@ -45,10 +45,11 @@ Foundations             Colour · Typography · Spacing · Radius · Shadows · 
 Components              src/components/gv/
   Actions               Button · Compact button · Icon button · Segmented control (with Segmented control item)
   Charts                Bar row · Chart · Dashboard card · Legend row · Statement row
-  Data display          Avatar (with Avatar group) · Data table · List header · List header cell · List row · Stat row
-                        · Property list · Reaction counts · Stat tile
-  Forms                 Checkbox · Drop zone · Required marker · Rich text editor · Rich text toolbar
-                        · Rich text toolbar button · Title field
+  Data display          Avatar (with Avatar group) · Data table · File list · List header · List header cell · List row
+                        · Property list · Reaction counts · Stat row · Stat tile
+  Forms                 Checkbox · Choice card · Date range field · Drop zone · Number field · Required marker
+                        · Rich text editor · Rich text toolbar · Rich text toolbar button · Switch · Text field
+                        · Title field
   Layout & containers   Card · Divider
   Navigation            Breadcrumbs
   Overlays              Alert dialog · Coachmark · Help popover · Modal · Side panel · Tooltip
