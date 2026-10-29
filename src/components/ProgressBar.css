@@ -1,83 +1,78 @@
 @import './theme.css';
 @import './utilities.css';
 
+/* The prototype's progress bar (govocal-primitives .gv-progress, .pj-dprog__bar, .svc-progress): a 6px round track in
+   the pill grey, the fill the tenant teal, no frame, no stripes. The label is the field Label (UI strong); the value
+   sits on the same line in the secondary grey, tabular figures. Indeterminate: a third of the bar sweeps across. */
 .react-aria-ProgressBar {
   display: grid;
   grid-template-areas:
     'label value'
     'bar bar';
   grid-template-columns: 1fr auto;
+  row-gap: var(--gv-space-6);
   width: 250px;
-  color: var(--text-color);
-  font: var(--font-size) var(--gv-font-family);
+  color: var(--gv-text-primary);
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+
+  .react-aria-Label {
+    margin-bottom: 0;
+  }
 
   .value {
     grid-area: value;
+    color: var(--gv-text-secondary);
+    font-variant-numeric: tabular-nums;
   }
 
   .track {
     grid-area: bar;
     forced-color-adjust: none;
-    height: calc(var(--spacing-2) + 2px);
-    border-radius: 9999px;
+    height: 6px;
+    border-radius: var(--gv-radius-full);
+    background: var(--gv-surface-pill);
+    box-shadow: none;
     overflow: clip;
-    will-change: transform;
   }
 
   .fill {
-    background: linear-gradient(
-      to right,
-      var(--tint-600) 0px,
-      var(--tint-400) 20px,
-      var(--tint-600) 40px
-    );
-    background-size: 40px 100%;
-    height: calc(100% - 2px);
-    width: calc(var(--percent) - 2px);
-    margin: 1px 0 0 1px;
+    background: var(--gv-surface-brand-mark);
+    height: 100%;
+    width: var(--percent);
     border-radius: inherit;
-    animation: progress-fill 1s infinite linear;
-    box-shadow: 0 0 0 1px var(--tint-900);
+    transition: width 200ms;
 
     @media (prefers-reduced-motion: reduce) {
-      background: var(--highlight-background);
-      animation: none;
+      transition: none;
     }
 
     @media (forced-colors: active) {
-      background-image: none;
-      background-color: Highlight;
-      box-shadow: none;
+      background: Highlight;
     }
   }
 
   /* indeterminate */
   &:not([aria-valuenow]) {
     .fill {
-      --fill-dark: var(--tint-600);
-      --fill-light: var(--tint-200);
-      background-image: linear-gradient(
-        45deg,
-        var(--fill-dark) 0px 12px,
-        var(--fill-light) 15px 25px,
-        var(--fill-dark) 28px
-      );
-      animation-duration: 0.5s;
+      width: 33%;
+      animation: progress-sweep 1.2s infinite ease-in-out;
 
-      @media (forced-colors: active) {
-        --fill-dark: Highlight;
-        --fill-light: HighlightText;
+      @media (prefers-reduced-motion: reduce) {
+        width: 100%;
+        opacity: 0.4;
+        animation: none;
       }
     }
   }
 }
 
-@keyframes progress-fill {
+@keyframes progress-sweep {
   from {
-    background-position-x: 0;
+    translate: -100% 0;
   }
 
   to {
-    background-position-x: -40px;
+    translate: 300% 0;
   }
 }
