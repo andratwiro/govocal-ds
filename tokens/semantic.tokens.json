@@ -144,6 +144,11 @@
       "$value": "{color.navy.650}",
       "$description": "A brand icon: a check in a selected option, a selected menu item's tick, an active filter's icon."
     },
+    "accent": {
+      "$type": "color",
+      "$value": "{color.teal.500}",
+      "$description": "An accent mark: the spinner and the done ticks of a working assistant (Chat progress), the mark on what the assistant made."
+    },
     "disabled": {
       "$type": "color",
       "$value": "{color.slate.400}",
@@ -170,6 +175,11 @@
       "$type": "color",
       "$value": "{color.slate.100}",
       "$description": "The border of a control that can't be used."
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{color.teal.400}",
+      "$description": "The accent edge: an item a change added (an added Item chip), the edge of an assistant's entry in an Activity feed."
     },
     "focused": {
       "$type": "color",

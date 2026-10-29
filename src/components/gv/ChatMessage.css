@@ -1,0 +1,149 @@
+@import '../theme.css';
+
+/*
+ * Chat message (not in Figma; the report builder prototype's `.m`, `.m--me`, `.m-ctx`, `.m-saved`, `.m-acts`).
+ * Text UI 13/20, primary. Yours: a bubble at the end edge, max 84% wide, padding 8 12, the neutral tint, radius 14
+ * (the prototype's 16 has no token: the nearest), line breaks kept. The assistant's: plain text, bold at medium.
+ * The context line sits 6 above your bubble; the change line is Small secondary, 4 under the words; the actions 4
+ * under that, 2 apart. A new message rises 6 and fades in (medium, enter).
+ */
+.gv-chat-message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+  animation: gv-chat-message-in var(--gv-motion-duration-medium) var(--gv-motion-easing-enter) both;
+
+  &[data-from='you'] {
+    align-items: flex-end;
+  }
+}
+
+@keyframes gv-chat-message-in {
+  from {
+    opacity: 0;
+    translate: 0 var(--gv-space-6);
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.gv-chat-message__context {
+  display: flex;
+  justify-content: flex-end;
+  max-width: 84%;
+  margin-block-end: var(--gv-space-6);
+}
+
+.gv-chat-message__body {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gv-space-8);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.gv-chat-message[data-from='you'] .gv-chat-message__body {
+  max-width: 84%;
+  box-sizing: border-box;
+  padding: var(--gv-space-8) var(--gv-space-12);
+  border-radius: var(--gv-radius-14);
+  background: var(--gv-surface-neutral);
+  white-space: pre-wrap;
+}
+
+.gv-chat-message__words {
+  min-width: 0;
+  overflow-wrap: anywhere;
+
+  & strong,
+  & b {
+    font-weight: var(--gv-font-weight-medium);
+  }
+
+  & p {
+    margin: 0;
+  }
+
+  & p + p,
+  & p + ul,
+  & ul + p {
+    margin-block-start: var(--gv-space-8);
+  }
+
+  & ul {
+    margin: 0;
+    padding-inline-start: var(--gv-space-20);
+  }
+}
+
+.gv-chat-message__alert {
+  flex: none;
+  width: var(--gv-size-icon-16);
+  height: var(--gv-size-icon-16);
+  margin-block-start: var(--gv-space-2);
+  color: var(--gv-icon-danger);
+}
+
+/* Streaming: a 2px caret the height of a line, blinking with the loop; still under reduced motion. */
+.gv-chat-message__caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-inline-start: var(--gv-space-2);
+  vertical-align: text-bottom;
+  background: var(--gv-icon-primary);
+  animation: gv-chat-message-caret var(--gv-motion-duration-loop) var(--gv-motion-easing-standard) infinite;
+}
+
+@keyframes gv-chat-message-caret {
+  0%,
+  45% {
+    opacity: 1;
+  }
+
+  55%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.gv-chat-message__change {
+  margin: var(--gv-space-4) 0 0;
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+}
+
+.gv-chat-message__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-2);
+  margin-block-start: var(--gv-space-4);
+  margin-inline-start: calc(-1 * var(--gv-space-6));
+}
+
+.gv-chat-message[data-status='error'] .gv-chat-message__actions {
+  margin-inline-start: 0;
+  gap: var(--gv-space-8);
+}
+
+/* The choices: small buttons 8 apart, 10 under the words. */
+.gv-chat-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gv-space-8);
+  margin-block-start: var(--gv-space-10);
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gv-chat-message,
+  .gv-chat-message__caret {
+    animation: none;
+  }
+}
