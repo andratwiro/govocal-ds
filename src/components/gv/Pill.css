@@ -1,0 +1,26 @@
+@import '../theme.css';
+@import '../utilities.css';
+
+.gv-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-4);
+  height: 22px;
+  padding: 0 var(--gv-space-10);
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-pill);
+  color: var(--gv-text-pill);
+
+  > svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    color: var(--gv-icon-pill);
+  }
+}
+
+.gv-pill__label {
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
+  white-space: nowrap;
+}
