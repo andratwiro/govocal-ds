@@ -1,5 +1,7 @@
 @import '../theme.css';
 
+/* Figma "Cause row" (33:483) + prototype .pj-idearow (Volunteering · Manage): thumbnail, cause over its bar, count. */
+
 .gv-cause-row {
   display: flex;
   align-items: center;
@@ -7,11 +9,11 @@
   padding: var(--gv-space-12) var(--gv-space-8);
   width: 100%;
   box-sizing: border-box;
-  border-bottom: 1px solid var(--gv-border-row);
+  border-block-end: 1px solid var(--gv-border-row);
 }
 
 .gv-cause-row[data-last] {
-  border-bottom: none;
+  border-block-end: none;
 }
 
 .gv-cause-row__thumb {
@@ -53,7 +55,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding-bottom: var(--gv-space-8);
+  padding-block-end: var(--gv-space-8);
 }
 
 .gv-cause-row__bar {

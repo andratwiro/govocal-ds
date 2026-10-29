@@ -35,7 +35,7 @@ export function CauseRow({title, description, image, volunteerCount, percent, is
       </div>
       <div className="gv-cause-row__volunteers">
         <div className="gv-cause-row__count">{volunteerCount}</div>
-        <div className="gv-cause-row__word">volunteers</div>
+        <div className="gv-cause-row__word">{volunteerCount === 1 ? 'volunteer' : 'volunteers'}</div>
       </div>
     </div>
   );
