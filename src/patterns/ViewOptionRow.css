@@ -1,0 +1,116 @@
+@import '../components/theme.css';
+
+/* Prototype .imv-vr: switch | name (UI strong), words (Small, secondary), Make default; 12 apart, a hairline between
+   rows. The view that is always on keeps the switch's width with a check in it, so every name starts on one x. */
+.gv-view-option-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.gv-view-option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gv-space-12);
+  padding-block: var(--gv-space-12);
+  font-family: var(--gv-font-family);
+
+  & + & {
+    border-block-start: 1px solid var(--gv-border-row);
+  }
+
+  > .react-aria-SwitchField {
+    flex: none;
+    margin-block-start: var(--gv-space-2);
+  }
+}
+
+.gv-view-option__always {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  margin-block-start: var(--gv-space-2);
+  color: var(--gv-icon-info);
+}
+
+.gv-view-option__text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.gv-view-option__name {
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-view-option__description {
+  margin: var(--gv-space-3) 0 0;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+
+  .react-aria-Link {
+    color: inherit;
+    font-weight: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    &[data-hovered] {
+      color: var(--gv-text-primary);
+    }
+  }
+}
+
+/* The prototype's tertiary (Link's look) as a toggle: "Make default", or "✓ Default" once it is. */
+.gv-view-option__default {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+  min-height: 24px;
+  margin-block-start: var(--gv-space-8);
+  padding: 0;
+  border: 0;
+  border-radius: var(--gv-radius-4);
+  background: none;
+  color: var(--gv-text-accent);
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  cursor: pointer;
+  outline: none;
+  transition: color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  &[data-hovered] {
+    color: var(--gv-color-brand-900);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
+  }
+
+  &[data-selected] {
+    cursor: default;
+  }
+
+  > svg {
+    flex: none;
+  }
+}
+
+/* Map view's Configure map: the full width of the words, 8 under Make default. */
+.gv-view-option__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-8);
+  align-self: stretch;
+  margin-block-start: var(--gv-space-8);
+
+  > .react-aria-Button {
+    width: 100%;
+  }
+}
