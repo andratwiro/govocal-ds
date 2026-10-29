@@ -21,7 +21,7 @@ test('Project · Build shows the phase rail and setup cards', async ({page}) => 
 });
 test('Ideation · Manage lists inputs with selectable rows', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/manage');
-  const grid = page.getByRole('grid', {name: 'Inputs'});
+  const grid = page.getByRole('grid', {name: 'Ideas'});
   await expect(grid).toBeVisible();
   const first = grid.getByRole('rowgroup').last().getByRole('row').first();
   await first.getByRole('gridcell').first().locator('label').click();

@@ -4,7 +4,7 @@ import {Eye} from 'lucide-react';
 import {Button} from '../../../src/components/Button';
 import {TextField} from '../../../src/components/TextField';
 import {RadioGroup, Radio} from '../../../src/components/RadioGroup';
-import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
+import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
 import {Card} from '../../../src/components/gv/Card';
 import {Divider} from '../../../src/components/gv/Divider';
 import {SectionToggle} from '../../../src/patterns/SectionToggle';
@@ -120,6 +120,7 @@ export function CustomPageEditor() {
           <Tab id="settings">Settings</Tab>
           <Tab id="content">Content</Tab>
         </TabList>
+        <TabPanels>
         <TabPanel id="settings" className="react-aria-TabPanel bo-pages-menu-panel">
           <Card title="Page settings" layout="stacked">
             <div className="bo-pages-menu-form">
@@ -144,6 +145,7 @@ export function CustomPageEditor() {
             </div>
           </Card>
         </TabPanel>
+        </TabPanels>
       </Tabs>
       <SaveRow label="Save custom page" isDisabled={!title.trim() || !dirty} done={done}
         onSave={() => { setDirty(false); setDone(isNew ? 'Page successfully created' : 'Page successfully saved'); }} />

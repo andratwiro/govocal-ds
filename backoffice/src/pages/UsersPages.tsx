@@ -3,7 +3,7 @@ import {useParams} from 'react-router';
 import {Download, Send, ShieldCheck} from 'lucide-react';
 import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
   DataTablePerson} from '../../../src/components/gv/DataTable';
-import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
+import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
 import {TextArea} from '../../../src/components/TextField';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {Button} from '../../../src/components/Button';
@@ -104,8 +104,10 @@ export function UserInvitations() {
           <Tab id="invite">Invite users</Tab>
           <Tab id="all">All invitations</Tab>
         </TabList>
+        <TabPanels>
         <TabPanel id="invite"><SectionHeading>Invite users</SectionHeading><div className="bo-users-panel"><InviteForm onSend={send} /></div></TabPanel>
         <TabPanel id="all"><SectionHeading>All invitations</SectionHeading><div className="bo-users-panel"><InvitationTable invitations={invitations} /></div></TabPanel>
+        </TabPanels>
       </Tabs>
       <MyToastRegion />
     </Page>

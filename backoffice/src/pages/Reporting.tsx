@@ -1,7 +1,7 @@
 import {useMemo, useRef, useState} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {ChevronLeft, ChevronRight, Copy, Download, Play, Plus, Share2, Sparkles} from 'lucide-react';
-import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
+import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
 import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
   DataTableOptions} from '../../../src/components/gv/DataTable';
 import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
@@ -101,6 +101,7 @@ function ReportList({reports, setReports, onEdit}: {reports: Report[]; setReport
         <TabList aria-label="Reports">
           {TABS.map(t => <Tab key={t.id} id={t.id}>{`${t.label} (${reports.filter(t.keep).length})`}</Tab>)}
         </TabList>
+        <TabPanels>
         {TABS.map(t => (
           <TabPanel key={t.id} id={t.id}>
             <div className="bo-reporting-stack">
@@ -109,6 +110,7 @@ function ReportList({reports, setReports, onEdit}: {reports: Report[]; setReport
             </div>
           </TabPanel>
         ))}
+        </TabPanels>
       </Tabs>
     </section>
   );

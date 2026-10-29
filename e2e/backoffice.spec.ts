@@ -25,3 +25,13 @@ test('back office is noindex', async ({page}) => {
   await page.goto('/backoffice/');
   await expect(page.locator('meta[name=robots]')).toHaveAttribute('content', /noindex/);
 });
+
+// A tab panel fading out is positioned against its TabPanels; without one it floats over the whole page.
+test('switching tabs keeps the old panel inside its tab panels', async ({page}) => {
+  await page.goto('/backoffice/#/projects');
+  await page.getByRole('tab', {name: 'Folders'}).click();
+  const loose = await page.evaluate(() =>
+    [...document.querySelectorAll('.react-aria-TabPanel')].filter(p => !p.closest('.react-aria-TabPanels')).length);
+  expect(loose).toBe(0);
+  await expect(page.getByRole('grid', {name: 'Projects'})).toHaveCount(0);
+});

@@ -5,7 +5,7 @@ import {ArrowDown, ArrowUp, Calendar, ChevronDown, ChevronLeft, ChevronRight, Fi
 import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableOptions,
   DataTableEmpty}
   from '../../../src/components/gv/DataTable';
-import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
+import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {SearchField} from '../../../src/components/SearchField';
 import {ToggleButton} from '../../../src/components/ToggleButton';
@@ -450,6 +450,7 @@ export function Projects() {
           </TabList>
           <SearchField aria-label="Search projects" placeholder="Search projects" value={query} onChange={setQuery} />
         </div>
+        <TabPanels>
         <TabPanel id="Projects">
           <div className="bo-filters bo-projects-filters">
             <Select aria-label="Sort" selectedKey={sort} onSelectionChange={k => setSort(String(k))}>
@@ -488,6 +489,7 @@ export function Projects() {
           <GapLegend names={['Drag-and-drop reordering']} />
           <ArrangeView projects={projects} />
         </TabPanel>
+        </TabPanels>
       </Tabs>
 
       {dialog?.kind === 'scratch' && <ScratchModal folders={folders} spaces={spaces} onClose={close} onCreate={(f, sp) => create('Untitled project', f, sp)} />}

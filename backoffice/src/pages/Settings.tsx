@@ -1,5 +1,5 @@
 import {useId, useState, type ReactNode} from 'react';
-import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
+import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
 import {TextField, TextArea} from '../../../src/components/TextField';
 import {NumberField} from '../../../src/components/NumberField';
 import {ColorField} from '../../../src/components/ColorField';
@@ -224,6 +224,7 @@ export function Settings() {
     <Page title="Settings" description="Platform-wide settings for Larkvale participates.">
       <Tabs defaultSelectedKey="general">
         <TabList aria-label="Settings sections">{TABS.map(([id, label]) => <Tab key={id} id={id}>{label}</Tab>)}</TabList>
+        <TabPanels>
         <TabPanel id="general"><SectionHeading>General</SectionHeading><General /></TabPanel>
         <TabPanel id="branding"><SectionHeading>Branding</SectionHeading><Branding /></TabPanel>
         <TabPanel id="registration"><SectionHeading>Registration</SectionHeading><Registration /></TabPanel>
@@ -231,6 +232,7 @@ export function Settings() {
         <TabPanel id="areas"><SectionHeading>Areas</SectionHeading><AreasTab /></TabPanel>
         <TabPanel id="statuses"><SectionHeading>Statuses</SectionHeading><StatusesTab /></TabPanel>
         <TabPanel id="policies"><SectionHeading>Policies</SectionHeading><PoliciesTab /></TabPanel>
+        </TabPanels>
       </Tabs>
     </Page>
   );

@@ -1,7 +1,7 @@
 import {useState, type ReactNode} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {ArrowRight, Download, Eye} from 'lucide-react';
-import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
+import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {DateRangePicker} from '../../../src/components/DateRangePicker';
 import {Meter} from '../../../src/components/Meter';
@@ -406,6 +406,7 @@ export function Dashboard() {
       <Tabs selectedKey={section.slug}
         onSelectionChange={k => navigate(k === 'overview' ? '/dashboard' : `/dashboard/${String(k)}`)}>
         <TabList aria-label="Dashboard sections">{SECTIONS.map(s => <Tab key={s.slug} id={s.slug}>{s.label}</Tab>)}</TabList>
+        <TabPanels>
         <TabPanel id="overview">
           {filters}
           <People project={project} />
@@ -417,6 +418,7 @@ export function Dashboard() {
         <TabPanel id="representativeness"><SectionHeading>Representativeness</SectionHeading><RepresentativenessTab /></TabPanel>
         <TabPanel id="participation-feed"><SectionHeading>Participation feed</SectionHeading><ParticipationFeed /></TabPanel>
         <TabPanel id="management-feed"><SectionHeading>Management feed</SectionHeading><ManagementFeed /></TabPanel>
+        </TabPanels>
       </Tabs>
       <MyToastRegion />
     </Page>

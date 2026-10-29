@@ -4,7 +4,7 @@ type Selection = 'all' | Set<Key>;
 import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
   DataTableStack}
   from '../../../src/components/gv/DataTable';
-import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
+import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {SearchField} from '../../../src/components/SearchField';
 import {Switch} from '../../../src/components/Switch';
@@ -170,6 +170,7 @@ export function Inputs() {
           <TabList aria-label="Filter by">
             <Tab id="projects">Projects</Tab><Tab id="topics">Topics</Tab><Tab id="status">Status</Tab>
           </TabList>
+          <TabPanels>
           <TabPanel id="projects">
             <div className="bo-inputs-filter-panel">
               <ListBox aria-label="Projects" orientation="horizontal" selectionMode="single" disallowEmptySelection selectedKeys={[project]}
@@ -194,6 +195,7 @@ export function Inputs() {
               {STATUSES.map(s => <ListBoxItem key={s} id={s}>{s}</ListBoxItem>)}
             </ListBox>
           </TabPanel>
+          </TabPanels>
         </Tabs>
         <div className="bo-inputs-main">
           <div className="bo-inputs-list">

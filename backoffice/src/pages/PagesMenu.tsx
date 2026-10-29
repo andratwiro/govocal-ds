@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router';
 import {ArrowUpDown, Eye, GripVertical, Lock, Pencil, Plus, Trash2} from 'lucide-react';
-import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
+import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
 import {Button} from '../../../src/components/Button';
 import {MenuTrigger, Menu, MenuItem} from '../../../src/components/Menu';
 import {Switch} from '../../../src/components/Switch';
@@ -140,11 +140,13 @@ export function PagesMenu() {
           <Tab id="menu">Menu</Tab>
           <Tab id="pages">Pages</Tab>
         </TabList>
+        <TabPanels>
         <TabPanel id="menu" className="react-aria-TabPanel bo-pages-menu-panel"><SectionHeading>Menu</SectionHeading><MenuTab menu={menu} setMenu={setMenu} pages={pages} /></TabPanel>
         <TabPanel id="pages" className="react-aria-TabPanel bo-pages-menu-panel">
           <SectionHeading>Pages</SectionHeading>
           <PagesTab menu={menu} setMenu={setMenu} pages={pages} setPages={setPages} />
         </TabPanel>
+        </TabPanels>
       </Tabs>
       <GapLegend names={['drag-and-drop reordering (Move up and Move down stand in)']} />
     </Page>

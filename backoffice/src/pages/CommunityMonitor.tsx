@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {ArrowLeft, ArrowRight, Download, Eye, Plus, Upload, Pencil} from 'lucide-react';
-import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
+import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
 import {Select, SelectItem} from '../../../src/components/Select';
 import {Button} from '../../../src/components/Button';
 import {NumberField} from '../../../src/components/NumberField';
@@ -354,6 +354,7 @@ function Settings() {
       <TabList aria-label="Settings sections" className="react-aria-TabList bo-community-monitor-subtabs">
         {SETTINGS.map(t => <Tab key={t} id={t}>{t}</Tab>)}
       </TabList>
+      <TabPanels>
       <TabPanel id="Survey">
         <div className="bo-community-monitor-body">
           <Card title="Survey" summary={open ? 'Accepting answers' : 'Closed'}
@@ -417,6 +418,7 @@ function Settings() {
           </Card>
         </div>
       </TabPanel>
+      </TabPanels>
     </Tabs>
       <EditSurveyModal isOpen={modal === 'edit'} onOpenChange={shut} onSave={() => setSurveyNote('Survey saved')} />
       <ImportModal isOpen={modal === 'import'} onOpenChange={shut} onImport={f => setSurveyNote(`Importing ${f}`)} />
@@ -436,10 +438,12 @@ export function CommunityMonitor() {
     <Page title="Community monitor" actions={<QuarterPicker quarter={quarter} onChange={setQuarter} show={byQuarter} onViewSurvey={() => setSurvey(true)} />}>
       <Tabs selectedKey={section} onSelectionChange={k => setSection(String(k))}>
         <TabList aria-label="Community monitor sections">{SECTIONS.map(s => <Tab key={s} id={s}>{s}</Tab>)}</TabList>
+        <TabPanels>
         <TabPanel id="Live monitor"><LiveMonitor quarter={quarter} /></TabPanel>
         <TabPanel id="Participants"><Participants quarter={quarter} /></TabPanel>
         <TabPanel id="Reports"><SectionHeading>Reports</SectionHeading><Reports /></TabPanel>
         <TabPanel id="Settings"><SectionHeading>Settings</SectionHeading><Settings /></TabPanel>
+        </TabPanels>
       </Tabs>
       <SurveyModal isOpen={survey} onOpenChange={setSurvey} />
     </Page>

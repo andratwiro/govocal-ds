@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router';
 import {Clock, Mail, MessageSquare, Pencil, Plus, Send, User} from 'lucide-react';
-import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
+import {Tabs, TabList, Tab, TabPanel, TabPanels} from '../../../src/components/Tabs';
 import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableStack,
   DataTableOptions} from '../../../src/components/gv/DataTable';
 import {MenuItem} from '../../../src/components/Menu';
@@ -351,7 +351,9 @@ export function Messaging() {
             <Tab key={id} id={id}><span className="bo-messaging-tab"><Icon aria-hidden size={16} />{label}</span></Tab>
           ))}
         </TabList>
-        {CHANNELS.map(c => <TabPanel key={c.id} id={c.id}><SectionHeading>{c.label}</SectionHeading>{c.body}</TabPanel>)}
+        <TabPanels>
+          {CHANNELS.map(c => <TabPanel key={c.id} id={c.id}><SectionHeading>{c.label}</SectionHeading>{c.body}</TabPanel>)}
+        </TabPanels>
       </Tabs>
       <MyToastRegion />
     </Page>
