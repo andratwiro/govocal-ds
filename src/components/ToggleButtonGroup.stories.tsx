@@ -1,0 +1,23 @@
+import {ToggleButtonGroup} from './ToggleButtonGroup';
+import {ToggleButton} from './ToggleButton';
+import type {Meta, StoryFn} from '@storybook/react-vite';
+
+const meta: Meta<typeof ToggleButtonGroup> = {
+  component: ToggleButtonGroup,
+  parameters: {
+    layout: 'centered'
+  },
+  tags: ['autodocs']
+};
+
+export default meta;
+
+type Story = StoryFn<typeof ToggleButtonGroup>;
+
+export const Example: Story = args => (
+  <ToggleButtonGroup {...args}>
+    <ToggleButton id="left">Left</ToggleButton>
+    <ToggleButton id="center">Center</ToggleButton>
+    <ToggleButton id="right">Right</ToggleButton>
+  </ToggleButtonGroup>
+);

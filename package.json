@@ -1,0 +1,44 @@
+{
+  "name": "govocal-ds",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "tokens:pull": "node scripts/figma-pull.mjs",
+    "tokens:build": "node scripts/build-tokens.mjs",
+    "figma:spec": "node scripts/figma-spec.mjs",
+    "build:storybook": "storybook build -o dist/storybook --quiet",
+    "build:backoffice": "vite build --config backoffice/vite.config.ts",
+    "build:site": "node scripts/assemble-site.mjs",
+    "build": "npm run build:storybook && npm run build:backoffice && npm run build:site",
+    "a11y:scan": "node scripts/a11y-scan.mjs",
+    "test": "vitest run --passWithNoTests",
+    "test:e2e": "playwright test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.64.0",
+    "react": "18.3.1",
+    "react-aria-components": "^1.22.1",
+    "react-dom": "18.3.1",
+    "react-router": "^8.5.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.64.1",
+    "@storybook/addon-a11y": "10.6",
+    "@storybook/addon-docs": "10.6",
+    "@storybook/addon-mcp": "10.6",
+    "@storybook/react-vite": "10.6",
+    "@types/node": "^26.6.6",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^6.1.2",
+    "playwright": "^1.64.1",
+    "storybook": "10.6",
+    "typescript": "5.9",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}
