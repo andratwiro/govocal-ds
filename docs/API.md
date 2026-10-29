@@ -12,7 +12,7 @@ and Storybook's alias all read it):
 | Import | What it carries |
 | --- | --- |
 | `govocal-ds` | Every Component and Pattern with its props types; the content parts (`Heading`, `Text`, `Header`, `Keyboard`, `Separator`); `PlacementProps`; React Aria's value types (`Key`, `Selection`, `SortDescriptor`, `DateValue`, `TimeValue`, `RangeValue`). |
-| `govocal-ds/base` | Starter React Aria parts no Component covers yet (`Calendar`, `DatePicker`, `Table`, `Tree`, `Dialog`, `Popover`, `Link`, `Toolbar`, …). Use one only when `govocal-ds` has nothing for the job. |
+| `govocal-ds/base` | Primitives: starter React Aria parts no Component covers yet (`Calendar`, `DatePicker`, `Table`, `Tree`, `Dialog`, `Popover`, `Link`, `Toolbar`, …). Use one only when `govocal-ds` has nothing for the job. |
 | `govocal-ds/tokens.css` | The `--gv-*` tokens. Import once, at the app's root. Each part imports its own CSS. |
 
 ```tsx

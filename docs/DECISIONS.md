@@ -8,6 +8,7 @@ list; change any line and the agent follows. Newest first within each section.
 
 Calls made while reshaping the tree (the review's structure moves). Newest first.
 
+- Base hidden from the sidebar vs Base shown as a second menu of parts → **shown, last, as primitives: an Introduction page first, and the same one line on every Base entry's docs page (one `docs.page` in `.storybook/preview.tsx`, not a note per story file); docs/COMPONENTS.md lists Base last, each line marked `(primitive)`** → pages still need a few of them (dates, colour fields, list boxes, disclosures), so hiding them would send a designer to code to find them; the line tells them to reach for a Component first.
 - The review counted 22 dead starter parts; on today's main 5 of them are used (Separator through the barrel; Disclosure group, Toolbar and Tree by the Report view; the starter Segmented control was already gone) → **17 deleted: Breadcrumbs, Colour area, Colour picker, Colour slider, Colour swatch picker, Colour thumb, Colour wheel, Combo box, Command palette, Drop zone, Input group, Navigation tree, Progress bar, Sheet, Slider, Toggle button group, Token field; their `govocal-ds/base` exports go with them** → a part nothing reaches but its own story is a sidebar entry the product never uses. Old links open the docs of the entry that replaces it (Breadcrumbs, Segmented control, Side panel) or a page about Base.
 
 ## Composition contracts in code (29 Oct 2026, architecture review)

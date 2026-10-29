@@ -1,0 +1,38 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import {BaseNote} from '../overview/BaseNote';
+
+<Meta title="Base/Introduction" />
+
+{/* First in Base (storySort). The note is the same component every Base docs page shows (.storybook/DocsPage.tsx). */}
+
+# Base
+
+<BaseNote />
+
+Base is React Aria's starter, each part kept under React Aria's name and props and painted with the `--gv-*` tokens.
+The Components wrap these parts or replace them; a page reaches for a Component first. React Aria's documentation
+(react-aria.adobe.com) is the reference for a Base part's props.
+
+## Components first
+
+Each line: what a page needs → the Component to use (from `govocal-ds`) → the Base part it is built on or replaces.
+
+- A checkbox → Forms › Checkbox → Checkbox
+- A dialog → Overlays › Modal, Overlays › Alert dialog → Dialog, Modal
+- A table of records → Data display › Data table → Table
+- One choice from a list → Forms › Select, Forms › Option list, Actions › Menu → ListBox
+- A bubble beside a control → Overlays › Help popover, Overlays › Tooltip → Popover
+- A start and an end date → Forms › Date range field → DatePicker, DateRangePicker
+- One of a few options, side by side → Actions › Segmented control → ToggleButton
+
+Checkbox, Dialog, Modal and Table are hidden from the sidebar (tagged `covered`): a Component wraps or replaces each.
+Their pages still open from a link.
+
+## When a page truly needs one
+
+```tsx
+import {DatePicker, Popover} from 'govocal-ds/base';
+```
+
+Never a file path. A Base part that a second page needs is promoted to Components (docs/NAMING.md, "What becomes a
+component"); a Base part nothing uses is deleted.

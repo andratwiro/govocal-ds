@@ -65,7 +65,8 @@ Patterns                src/patterns/
   Project page          Action row · Panel section · Phone preview · Project header · Setup step · Stat card
   Project rail          Phase timeline · Rail header · Rail phase
 Back office             (empty: the whole-page stories DESIGN.md plans land here)
-Base                    src/components/: the React Aria starter, A–Z, React Aria's names (Calendar · CheckboxGroup ·
+Base                    Introduction first (what Base is), then src/components/: the React Aria starter, primitives the
+                        Components build on (not for pages), A–Z, React Aria's names (Calendar · CheckboxGroup ·
                         ColorField · … · Toolbar · Tree). Off the sidebar, tagged `covered`: Checkbox · Dialog · Modal
                         · Table (a Components entry wraps each; URLs still open). A starter part nothing uses but its
                         own story is deleted, not kept (29 Oct 2026: 17 went)

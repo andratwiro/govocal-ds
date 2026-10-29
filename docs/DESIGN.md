@@ -14,10 +14,12 @@ public URL:
   - **Foundations**: a page per topic, none with a box that scrolls inside the page: Colour, Typography, Spacing,
     Radius, Shadows (the tokens, with which components use each), Motion, Size (icons, controls, avatars), **Icons** (every icon the system uses,
     Storybook's own `IconGallery` doc block) and Illustrations.
-  - **Components**: React Aria primitives painted with the tokens.
+  - **Components**: generic parts built on React Aria and painted with the tokens; what pages use.
   - **Patterns**: compositions that repeat but aren't primitives (the phase timeline, a stat card with a sparkline, a
     next-action row). Same stories, states and accessibility check as components.
   - **Back office** stories: whole pages (the same pages as /backoffice).
+  - **Base**, last: React Aria's starter painted with the tokens, the primitives the Components build on. Pages don't
+    use them directly; when one truly needs a part no Component covers, it imports it from `govocal-ds/base`.
 - **/backoffice**: the whole Go Vocal back office, shallow: one page per nav item, invented data, built only from
   the components. Deeper screens borrow patterns from the Augur prototypes.
 
