@@ -100,7 +100,7 @@ function InputPanel({input, patch, onDelete}: {input: ManagedInput; patch: Patch
             <span>Posted by {input.author} · Registered user</span><span>{input.published}</span>
           </p>
         </div>
-        <SidePanelActions actions={quick}>
+        <SidePanelActions items={quick}>
           <ReactionCounts likes={input.likes} dislikes={input.dislikes} comments={input.comments} />
         </SidePanelActions>
       </SidePanelSection>

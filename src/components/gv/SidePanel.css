@@ -1,10 +1,12 @@
 @import '../theme.css';
 
 /* Side panel (the prototype's #pj-idrawer and its PANEL SPEC v2): floats 16 from the window's top, end and bottom
-   edges, 560 wide (never wider than the window less 32); a 1px card border, radius 14 (the prototype's 18 has no
-   token: the nearest), the panel fill and the dialog shadow. No scrim: the list behind stays usable. It slides in
-   24 from the end edge as it arrives. Inline, it fills its column in the page's flow and doesn't move. */
+   edges, 560 wide (`width="narrow"`: 440, the Input manager's preview column; never wider than the window less 32);
+   a 1px card border, radius 14 (the prototype's 18 has no token: the nearest), the panel fill and the dialog shadow.
+   No scrim: the list behind stays usable. It slides in 24 from the end edge as it arrives. Inline, it fills its
+   column in the page's flow, up to its width, and doesn't move. */
 .gv-side-panel {
+  --gv-side-panel-width: 560px;
   --gv-side-panel-shift: var(--gv-space-24);
   position: fixed;
   inset-block: var(--gv-space-16);
@@ -12,7 +14,7 @@
   z-index: 50;
   display: flex;
   box-sizing: border-box;
-  width: min(560px, calc(100vw - 2 * var(--gv-space-16)));
+  width: min(var(--gv-side-panel-width), calc(100vw - 2 * var(--gv-space-16)));
   border: 1px solid var(--gv-border-card);
   border-radius: var(--gv-radius-14);
   background: var(--gv-surface-panel);
@@ -21,6 +23,10 @@
   font-family: var(--gv-font-family);
   color: var(--gv-text-primary);
   animation: gv-side-panel-in var(--gv-motion-duration-slow) var(--gv-motion-easing-enter);
+
+  &[data-width="narrow"] {
+    --gv-side-panel-width: 440px;
+  }
 
   &:dir(rtl) {
     --gv-side-panel-shift: calc(-1 * var(--gv-space-24));
@@ -31,6 +37,7 @@
     inset: auto;
     z-index: auto;
     width: 100%;
+    max-inline-size: var(--gv-side-panel-width);
     height: 100%;
     box-shadow: none;
     animation: none;
@@ -130,6 +137,48 @@
   margin: 0 0 var(--gv-space-12);
   font: var(--gv-type-body-strong);
   letter-spacing: var(--gv-type-body-strong-tracking);
+  color: var(--gv-text-primary);
+}
+
+/* The record head (the drawer's head): an optional Body strong title 8 above the words; the words Body primary,
+   paragraphs 12 apart; "Posted by <author>" and the date Small secondary, 24 apart, 16 below the words, the name in
+   Small strong primary. */
+.gv-side-panel__record-title {
+  margin: 0 0 var(--gv-space-8);
+  font: var(--gv-type-body-strong);
+  letter-spacing: var(--gv-type-body-strong-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-side-panel__record-text {
+  font: var(--gv-type-body);
+  letter-spacing: var(--gv-type-body-tracking);
+  color: var(--gv-text-primary);
+  overflow-wrap: anywhere;
+
+  > p {
+    margin: 0;
+  }
+
+  > p + p {
+    margin-block-start: var(--gv-space-12);
+  }
+}
+
+.gv-side-panel__record-meta {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--gv-space-24);
+  row-gap: var(--gv-space-4);
+  margin: var(--gv-space-16) 0 0;
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-secondary);
+}
+
+.gv-side-panel__record-author {
+  font: var(--gv-type-small-strong);
+  letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-primary);
 }
 

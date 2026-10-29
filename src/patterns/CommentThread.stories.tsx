@@ -5,8 +5,7 @@ import {ToastRegion, queue} from '../components/Toast';
 import {PropertyList, PropertyListItem} from '../components/gv/PropertyList';
 import {DemoAssignee, DemoPhase, DemoStatus, DemoTags} from '../components/gv/PropertyList.stories';
 import {ReactionCounts} from '../components/gv/ReactionCounts';
-import {SidePanel, SidePanelActions, SidePanelSection} from '../components/gv/SidePanel';
-import {DemoRecordHead} from '../components/gv/SidePanel.stories';
+import {SidePanel, SidePanelActions, SidePanelRecordHead, SidePanelSection} from '../components/gv/SidePanel';
 import {CommentComposer, CommentThread, type ThreadComment, type ThreadTab, type ThreadTarget} from './CommentThread';
 import {DemoUpdates, FIRST_UPDATE} from './OfficialUpdate.stories';
 
@@ -172,16 +171,17 @@ export const InASidePanel: Story = {
       <div style={{width: 560, height: 860}}>
         <SidePanel isInline label="Collect ideas" itemName="idea" position={{current: 3, total: 124}}>
           <SidePanelSection>
-            <DemoRecordHead author="Hana M." date="26 October 2026"
-              text="Organise open-air cinema nights on Linden Avenue in summer. It would be a great way for neighbours to meet.">
-              <SidePanelActions actions={[
+            <SidePanelRecordHead author="Hana M." date="26 October 2026" actions={(
+              <SidePanelActions items={[
                 {id: 'edit', label: 'Edit', icon: <SquarePen aria-hidden size={16} />},
                 {id: 'view', label: 'View on the site', icon: <ExternalLink aria-hidden size={16} />},
                 {id: 'delete', label: 'Delete', icon: <Trash2 aria-hidden size={16} />}
               ]}>
                 <ReactionCounts likes={74} dislikes={5} comments={5} />
               </SidePanelActions>
-            </DemoRecordHead>
+            )}>
+              Organise open-air cinema nights on Linden Avenue in summer. It would be a great way for neighbours to meet.
+            </SidePanelRecordHead>
           </SidePanelSection>
           <SidePanelSection><PanelProperties /></SidePanelSection>
           <SidePanelSection><DemoUpdates initial={[FIRST_UPDATE]} /></SidePanelSection>

@@ -786,7 +786,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
                 <span>Posted by <strong>{idea.author}</strong></span>
                 <span>{idea.date}</span>
               </p>
-              <SidePanelActions actions={[
+              <SidePanelActions items={[
                 {id: 'edit', label: 'Edit', icon: icon(SquarePen)},
                 {id: 'view', label: 'View on the site', icon: icon(ExternalLink)},
                 {id: 'delete', label: 'Delete', icon: icon(Trash2), onPress: () => remove(idea.id)}

@@ -1,4 +1,4 @@
-import {useState, type ReactNode} from 'react';
+import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {Check, ExternalLink, SquarePen, Trash2} from 'lucide-react';
 import {Button} from '../Button';
@@ -7,7 +7,7 @@ import {DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeade
 import {PropertyList, PropertyListItem} from './PropertyList';
 import {DemoAssignee, DemoPhase, DemoStatus, DemoTags} from './PropertyList.stories';
 import {ReactionCounts} from './ReactionCounts';
-import {SidePanel, SidePanelActions, SidePanelDecision, SidePanelSection, type SidePanelAction} from './SidePanel';
+import {SidePanel, SidePanelActions, SidePanelDecision, SidePanelRecordHead, SidePanelSection, type SidePanelAction} from './SidePanel';
 
 // Invented ideas for the phase "Collect ideas": 124 of them, the texts taking turns.
 const TEXTS = [
@@ -63,20 +63,6 @@ const QUICK: SidePanelAction[] = [
 
 type Patch = (n: number, patch: Partial<DemoIdea>, toast: string) => void;
 
-/** The record's words, its author and date, then its counts and quick actions. */
-export function DemoRecordHead({text, author, date, children}: {text: ReactNode; author: string; date: string; children: ReactNode}) {
-  return (
-    <>
-      <div style={{font: 'var(--gv-type-body)', color: 'var(--gv-text-primary)'}}>{text}</div>
-      <p style={{display: 'flex', gap: 24, margin: '16px 0 0', font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>
-        <span>Posted by <span style={{fontWeight: 500, color: 'var(--gv-text-primary)'}}>{author}</span></span>
-        <span>{date}</span>
-      </p>
-      {children}
-    </>
-  );
-}
-
 /** One idea in the panel: the screening strip when it waits for approval, the idea, its counts and quick actions,
  * then its properties. Every change applies at once, with an Undo toast. */
 function IdeaBody({idea, patch}: {idea: DemoIdea; patch: Patch}) {
@@ -93,11 +79,11 @@ function IdeaBody({idea, patch}: {idea: DemoIdea; patch: Patch}) {
             </Button>
           </SidePanelDecision>
         )}
-        <DemoRecordHead text={idea.text} author={idea.author} date={idea.date}>
-          <SidePanelActions actions={QUICK}>
-            <ReactionCounts likes={idea.likes} dislikes={idea.dislikes} />
-          </SidePanelActions>
-        </DemoRecordHead>
+        <SidePanelRecordHead author={idea.author} date={idea.date} actions={(
+          <SidePanelActions items={QUICK}><ReactionCounts likes={idea.likes} dislikes={idea.dislikes} /></SidePanelActions>
+        )}>
+          {idea.text}
+        </SidePanelRecordHead>
       </SidePanelSection>
       <SidePanelSection>
         <PropertyList aria-label="Idea details">
@@ -137,7 +123,7 @@ const rowOf = (n: number) => document.querySelector<HTMLElement>(`[role="row"][d
 
 /** The Manage tab: the first page of ideas, and the side panel over its end edge. A row click (or Enter) shows that
  * idea in the panel; the pager walks the list; Esc or × closes it and puts focus back on the row. */
-function Manage({start = 3, footer}: {start?: number | null; footer?: boolean}) {
+function Manage({start = 3, footer, width}: {start?: number | null; footer?: boolean; width?: 'default' | 'narrow'}) {
   const [ideas, patch] = useIdeas();
   const [open, setOpen] = useState<number | null>(start);
   const idea = open ? ideas[open - 1] : null;
@@ -165,6 +151,7 @@ function Manage({start = 3, footer}: {start?: number | null; footer?: boolean}) 
       <SidePanel
         label="Collect ideas"
         itemName="idea"
+        width={width}
         isOpen={idea !== null}
         onOpenChange={o => !o && setOpen(null)}
         position={idea ? {current: idea.n, total: ideas.length} : undefined}
@@ -206,12 +193,11 @@ function LongBody({idea, patch}: {idea: DemoIdea; patch: Patch}) {
   return (
     <>
       <SidePanelSection>
-        <DemoRecordHead author={idea.author} date={idea.date}
-          text={LONG.map((p, i) => <p key={i} style={{margin: i ? '12px 0 0' : 0}}>{p}</p>)}>
-          <SidePanelActions actions={QUICK}>
-            <ReactionCounts likes={idea.likes} dislikes={idea.dislikes} />
-          </SidePanelActions>
-        </DemoRecordHead>
+        <SidePanelRecordHead author={idea.author} date={idea.date} actions={(
+          <SidePanelActions items={QUICK}><ReactionCounts likes={idea.likes} dislikes={idea.dislikes} /></SidePanelActions>
+        )}>
+          {LONG.map((p, i) => <p key={i}>{p}</p>)}
+        </SidePanelRecordHead>
       </SidePanelSection>
       <SidePanelSection>
         <PropertyList aria-label="Idea details">
@@ -251,7 +237,7 @@ function Inline({n}: {n: number}) {
 const meta: Meta<typeof SidePanel> = {
   title: 'Components/Overlays/Side panel',
   component: SidePanel,
-  subcomponents: {SidePanelSection, SidePanelActions, SidePanelDecision},
+  subcomponents: {SidePanelRecordHead, SidePanelActions, SidePanelSection, SidePanelDecision},
   tags: ['autodocs', 'not-in-figma'],
   excludeStories: /^(Demo[A-Z]\w*|[A-Z_]+)$/,
   parameters: {
@@ -298,5 +284,41 @@ export const Screening: Story = {render: () => <Manage start={8} />};
 /** Closed: the list alone. A row click opens the panel and focus moves into it. */
 export const Closed: Story = {render: () => <Manage start={null} />};
 
+/** `width="narrow"`: 440 instead of 560, for a preview that leaves more of the list in view. */
+export const Narrow: Story = {render: () => <Manage width="narrow" />};
+
 /** Right to left (Arabic): the panel floats at the left edge, the pager's arrows point the other way. */
 export const RightToLeft: Story = {name: 'Right to left', globals: {direction: 'rtl'}, render: () => <Manage />};
+
+/** The record head: an idea (its words, "Posted by" and the date) and an input, which has a title and says what its
+ * author is. Both end on their `actions` row: counts and quick actions. */
+export const RecordHead: Story = {
+  name: 'Record head',
+  parameters: {layout: 'padded', docs: {story: {inline: true}}},
+  render: () => (
+    <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 16, minWidth: 900}}>
+      <div style={{height: 300}}>
+        <SidePanel isInline label="Collect ideas" itemName="idea">
+          <SidePanelSection>
+            <SidePanelRecordHead author={IDEAS[2].author} date={IDEAS[2].date} actions={(
+              <SidePanelActions items={QUICK}><ReactionCounts likes={IDEAS[2].likes} dislikes={IDEAS[2].dislikes} /></SidePanelActions>
+            )}>
+              {IDEAS[2].text}
+            </SidePanelRecordHead>
+          </SidePanelSection>
+        </SidePanel>
+      </div>
+      <div style={{height: 300}}>
+        <SidePanel isInline label="Riverside park" itemName="input">
+          <SidePanelSection>
+            <SidePanelRecordHead title="Shade over the playground" author="Resident F" authorRole="Registered user"
+              date="24 October 2026"
+              actions={<SidePanelActions items={QUICK}><ReactionCounts likes={41} dislikes={2} comments={6} /></SidePanelActions>}>
+              The playground has no shade at all. In July the slide is too hot to touch by eleven in the morning.
+            </SidePanelRecordHead>
+          </SidePanelSection>
+        </SidePanel>
+      </div>
+    </div>
+  )
+};

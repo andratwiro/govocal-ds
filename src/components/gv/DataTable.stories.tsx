@@ -31,7 +31,7 @@ import {FilterMenu, type FilterValue} from '../../patterns/FilterMenu';
 import {FilterChips} from '../../patterns/FilterChips';
 import {SelectionBar} from '../../patterns/SelectionBar';
 import {StatCard} from '../../patterns/StatCard';
-import {SidePanel, SidePanelSection} from './SidePanel';
+import {SidePanel, SidePanelRecordHead, SidePanelSection} from './SidePanel';
 import {IDEA_FACETS} from '../../patterns/FilterMenu.stories';
 import {
   DISMISS_WARNINGS, ExportMenu, IDEA_ACTIONS, IDEAS as MANAGE_IDEAS, METRICS, filterIdeas, ideaCount,
@@ -634,7 +634,10 @@ function BulkAndOpen() {
         returnFocus={() => (open ? rowOf(open) : null)}>
         {idea && (
           <SidePanelSection>
-            <p style={{margin: 0, font: 'var(--gv-type-body)'}}>{idea.title}</p>
+            <SidePanelRecordHead author={idea.author}
+              date={new Date(idea.published).toLocaleDateString('en-GB', {day: 'numeric', month: 'long', year: 'numeric'})}>
+              {idea.title}
+            </SidePanelRecordHead>
           </SidePanelSection>
         )}
       </SidePanel>

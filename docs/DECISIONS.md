@@ -4,6 +4,14 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Composition contracts in code (29 Oct 2026, architecture review)
+
+Calls made while putting the review's invisible contracts into the parts themselves (rv-contracts).
+
+- Side panel open by default (`isOpen = true`) vs a dialog that is closed until opened → **floating: closed unless `isOpen` / `defaultOpen`; inline: shown** → a floating panel is an overlay (React Aria's overlays start closed); an inline one is a column of the page, which the page renders or not.
+- Side panel width hard-coded at 560 → **`width="default" | "narrow"` (560, 440)**, floating at that width, inline up to it → a width preset is `width` (as Modal); 440 is the Input manager's preview column. Its pager's `position` stays controlled-only (no `defaultPosition`): the page picks the record to show, so a pager walking by itself would move without its record.
+- Each page drew a record's words, "Posted by" and date by hand → **`SidePanelRecordHead`** (title as a heading, words, author and role, date, an `actions` slot for `SidePanelActions`) → the drawer head is the same on every record; `SidePanelActions` takes `items` (convention 8).
+
 ## Back office redesign on the current components (29 Oct 2026)
 
 **Dashboard**

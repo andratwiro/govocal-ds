@@ -33,10 +33,33 @@ test('opens with focus inside, from the keyboard', async ({page}) => {
   await page.keyboard.press('Escape');
   await expect(panel(page)).toHaveCount(0);
   expect(await focusedRow(page)).toBe('1');
+  // The table heard focus come back: the arrow keys move it (they didn't when focus came back inside React's commit).
   await page.keyboard.press('ArrowDown');
+  expect(await focusedRow(page)).toBe('2');
   await page.keyboard.press('Enter');
   await expect(panel(page)).toBeFocused();
   await expect(panel(page).getByText('2 of 124')).toBeVisible();
+});
+
+test('floating, it is 560 wide (narrow: 440) and never wider than the window less 32', async ({page}) => {
+  const width = async () => Math.round((await page.locator('.gv-side-panel').boundingBox())!.width);
+  await page.setViewportSize({width: 1440, height: 900});
+  await page.goto(story('default'));
+  await expect(panel(page)).toBeVisible();
+  expect(await width()).toBe(560);
+  await page.goto(story('narrow'));
+  await expect(panel(page)).toBeVisible();
+  expect(await width()).toBe(440);
+  await page.setViewportSize({width: 400, height: 800});
+  await expect.poll(width).toBe(368);
+});
+
+test('record head: the words, Posted by, a title as the first heading, the author\'s role', async ({page}) => {
+  await page.goto(story('record-head'));
+  await expect(page.getByRole('dialog')).toHaveCount(2);
+  await expect(page.getByText('Posted by').first()).toBeVisible();
+  await expect(page.getByRole('heading', {level: 2, name: 'Shade over the playground'})).toBeVisible();
+  await expect(page.getByText('Registered user')).toBeVisible();
 });
 
 test('Esc closes it and puts focus back on the open record\'s row', async ({page}) => {
