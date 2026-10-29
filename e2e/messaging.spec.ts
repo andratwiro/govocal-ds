@@ -26,9 +26,10 @@ test('custom emails list sent, scheduled and draft emails, and a draft opens in 
   await expect(draft.getByRole('button', {name: 'Send a preview'})).toBeVisible();
   await expect(draft.getByRole('button', {name: 'Send now'})).toBeVisible();
   // Choosing another draft from its row's menu loads it.
-  await page.getByRole('button', {name: /^Actions for Bike parking survey/}).click();
-  await page.getByRole('menuitem', {name: 'Edit'}).click();
   await expect(page.getByRole('region', {name: 'Draft: Bike parking survey: tell us where'})).toBeVisible();
+  await page.getByRole('button', {name: /^Actions for Market Square/}).click();
+  await page.getByRole('menuitem', {name: 'Edit'}).click();
+  await expect(page.getByRole('region', {name: 'Draft: Market Square: join the walk on Saturday'})).toBeVisible();
 });
 
 test('automated emails are grouped by recipient, switch on and off, and an on email opens its editor', async ({page}) => {

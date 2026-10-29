@@ -12,7 +12,7 @@ test('settings follows the real admin: seven tabs, General open on its five sect
     'User name display (for users with email confirmed only)', 'Project approval settings']) {
     await expect(page.getByRole('heading', {level: 3, name: h, exact: true})).toBeVisible();
   }
-  await expect(page.getByRole('textbox', {name: /Name of city or organization/})).toHaveValue('Riverside participates');
+  await expect(page.getByRole('textbox', {name: /Name of city or organization/})).toHaveValue('Larkvale participates');
   await expect(page.getByRole('group', {name: 'Languages'})).toBeVisible();
   await expect(page.getByRole('textbox', {name: 'Website'})).toBeVisible();
   await expect(page.getByRole('textbox', {name: 'Population'})).toBeVisible();
@@ -30,7 +30,7 @@ test('the platform name is multilingual: one value per platform language', async
   const locales = page.getByRole('radiogroup', {name: 'Language of the name'});
   for (const l of ['EN', 'NL-BE', 'FR-BE']) await expect(locales.getByRole('radio', {name: l})).toBeVisible();
   await locales.getByRole('radio', {name: 'FR-BE'}).click();
-  await expect(page.getByRole('textbox', {name: /Name of city or organization/})).toHaveValue('Riverside participe');
+  await expect(page.getByRole('textbox', {name: /Name of city or organization/})).toHaveValue('Larkvale participe');
   // Turning a language off removes its version of the name.
   await page.getByRole('group', {name: 'Languages'}).getByText('Français (Belgique)').click();
   await expect(locales.getByRole('radio', {name: 'FR-BE'})).toHaveCount(0);
@@ -40,7 +40,7 @@ test('save stays off until something changes', async ({page}) => {
   await page.goto('/backoffice/#/settings');
   const save = page.getByRole('button', {name: 'Save platform configuration'});
   await expect(save).toBeDisabled();
-  await page.getByRole('textbox', {name: 'Website'}).fill('https://riverside.example.org');
+  await page.getByRole('textbox', {name: 'Website'}).fill('https://larkvale.example.org');
   await expect(save).toBeEnabled();
   await save.click();
   await expect(page.getByText('Platform configuration saved')).toBeVisible();

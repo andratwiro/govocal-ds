@@ -7,10 +7,10 @@ export const LOCALES = [
 ];
 
 export const PLATFORM_NAME: Record<string, string> = {
-  en: 'Riverside participates',
-  'nl-BE': 'Riverside doet mee',
+  en: 'Larkvale participates',
+  'nl-BE': 'Larkvale doet mee',
   'nl-NL': '',
-  'fr-BE': 'Riverside participe'
+  'fr-BE': 'Larkvale participe'
 };
 
 export const APPROVERS = ['Manager A', 'Manager B', 'Manager C'];

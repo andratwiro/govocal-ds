@@ -16,6 +16,7 @@ import {SegmentedControl, Segment} from '../../../src/components/gv/SegmentedCon
 import {TitleField} from '../../../src/components/gv/TitleField';
 import {APPROVERS, LOCALES, PLATFORM_NAME, SETTINGS_LISTS} from '../data-settings';
 import {Page} from './Page';
+import {SectionHeading} from '../SectionHeading';
 
 const TABS = [['general', 'General'], ['branding', 'Branding'], ['registration', 'Registration'], ['tags', 'Tags'],
   ['areas', 'Areas'], ['statuses', 'Statuses'], ['policies', 'Policies']] as const;
@@ -175,7 +176,7 @@ function Registration() {
     <div className="bo-settings-stack">
       <Section title="Sign-up" help="What residents see and are asked when they create an account.">
         <div className="bo-settings-fields">
-          <TextArea label="Sign-up help text" defaultValue="Create an account to take part in Riverside's projects." />
+          <TextArea label="Sign-up help text" defaultValue="Create an account to take part in Larkvale's projects." />
           <Switch defaultSelected description="Residents confirm their email address with a six-digit code.">Confirm email address</Switch>
           <Switch description="Ask for first and last name when a resident signs up.">Ask for a full name</Switch>
         </div>
@@ -199,13 +200,13 @@ function ListTab({id}: {id: keyof typeof SETTINGS_LISTS}) {
 
 export function Settings() {
   return (
-    <Page title="Settings" description="Platform-wide settings for Riverside participates.">
+    <Page title="Settings" description="Platform-wide settings for Larkvale participates.">
       <Tabs defaultSelectedKey="general">
         <TabList aria-label="Settings sections">{TABS.map(([id, label]) => <Tab key={id} id={id}>{label}</Tab>)}</TabList>
-        <TabPanel id="general"><General /></TabPanel>
-        <TabPanel id="branding"><Branding /></TabPanel>
-        <TabPanel id="registration"><Registration /></TabPanel>
-        {(['tags', 'areas', 'statuses', 'policies'] as const).map(id => <TabPanel key={id} id={id}><ListTab id={id} /></TabPanel>)}
+        <TabPanel id="general"><SectionHeading>General</SectionHeading><General /></TabPanel>
+        <TabPanel id="branding"><SectionHeading>Branding</SectionHeading><Branding /></TabPanel>
+        <TabPanel id="registration"><SectionHeading>Registration</SectionHeading><Registration /></TabPanel>
+        {(['tags', 'areas', 'statuses', 'policies'] as const).map(id => <TabPanel key={id} id={id}><SectionHeading>{TABS.find(t => t[0] === id)![1]}</SectionHeading><ListTab id={id} /></TabPanel>)}
       </Tabs>
     </Page>
   );

@@ -8,6 +8,7 @@ import {IconButton} from '../../../src/components/gv/IconButton';
 import {TOOLS, type Tool} from '../data-tools';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
+import {SectionHeading} from '../SectionHeading';
 
 // The prototype's card gallery: art on top, then name, tags, description and the action.
 function ToolCard({tool}: {tool: Tool}) {
@@ -41,6 +42,7 @@ function ToolCard({tool}: {tool: Tool}) {
 export function Tools() {
   return (
     <Page title="Tools" description="Integrations, embeds and add-ons that work alongside the platform.">
+      <SectionHeading>All tools</SectionHeading>
       <ul className="bo-tools-grid" aria-label="Tools">
         {TOOLS.map(t => <li key={t.id} className="bo-tools-item"><ToolCard tool={t} /></li>)}
       </ul>

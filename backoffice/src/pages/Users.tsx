@@ -46,7 +46,7 @@ function inView(view: string): Person[] {
 function compare(a: Person, b: Person, column: string) {
   if (column === 'name') return a.name.localeCompare(b.name);
   // Never active sorts as the oldest activity.
-  if (column === 'lastActive') return (b.lastActive ?? Infinity) - (a.lastActive ?? Infinity);
+  if (column === 'lastActive') return (b.lastActive ?? Number.MAX_SAFE_INTEGER) - (a.lastActive ?? Number.MAX_SAFE_INTEGER);
   return a.joined.localeCompare(b.joined);
 }
 

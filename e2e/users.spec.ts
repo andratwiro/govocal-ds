@@ -66,11 +66,15 @@ test('segments, groups and search narrow the users', async ({page}) => {
   await expect(groups.getByRole('option', {name: /^Youth panel/})).toBeVisible();
 });
 
-test('sorting by name puts Admin A first', async ({page}) => {
+test('sorting by name orders the rows, and pressing again flips them', async ({page}) => {
   await page.goto('/backoffice/#/users');
   const grid = page.getByRole('grid', {name: 'Registered users'});
-  await grid.getByRole('columnheader', {name: 'Name'}).click();
+  await expect(grid.getByRole('row').nth(2)).toContainText('Resident E'); // default: joined, newest first
+  await grid.getByRole('columnheader', {name: 'Name'}).getByRole('button').click();
   await expect(grid.getByRole('row').nth(1)).toContainText('Admin A');
+  await expect(grid.getByRole('row').nth(2)).toContainText('Admin B');
+  await grid.getByRole('columnheader', {name: 'Name'}).getByRole('button').click();
+  await expect(grid.getByRole('row').nth(1)).toContainText('Resident L');
 });
 
 test('users names what the system still lacks', async ({page}) => {

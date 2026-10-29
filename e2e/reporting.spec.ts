@@ -38,7 +38,11 @@ test('progress reports explain who makes them; each row has edit, duplicate and 
 
 test('editing a report opens the slide deck builder (the prototype)', async ({page}) => {
   await page.goto('/backoffice/#/reporting');
-  const builder = page.getByRole('region', {name: /^Report builder:/});
+  await page.getByRole('button', {name: 'Create a report'}).click();
+  await page.getByRole('tab', {name: /^All reports/}).click();
+  await page.getByRole('button', {name: /^Actions for Bike lanes survey results/}).click();
+  await page.getByRole('menuitem', {name: 'Edit'}).click();
+  const builder = page.getByRole('region', {name: 'Report builder: Bike lanes survey results'});
   await expect(builder).toBeVisible();
   await expect(builder.getByRole('listbox', {name: 'Slides'})).toBeVisible();
   await expect(builder.getByRole('button', {name: 'Next slide'})).toBeVisible();

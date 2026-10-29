@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react';
+import {useMemo, useRef, useState} from 'react';
 import {ChevronLeft, ChevronRight, Copy, Download, MoreHorizontal, Play, Plus, Share2, Sparkles} from 'lucide-react';
 import {Tabs, TabList, Tab, TabPanel} from '../../../src/components/Tabs';
 import {Table, TableHeader, Column, TableBody, Row, Cell} from '../../../src/components/Table';
@@ -79,11 +79,12 @@ function ReportTable({label, reports, onEdit, onDuplicate, onDelete}: {
 }
 
 function ReportList({reports, setReports, onEdit}: {reports: Report[]; setReports: (f: (r: Report[]) => Report[]) => void; onEdit: (r: Report) => void}) {
+  const copies = useRef(0);
   const [query, setQuery] = useState('');
   const found = useMemo(() => reports.filter(r => r.title.toLowerCase().includes(query.trim().toLowerCase())), [reports, query]);
   const duplicate = (r: Report) => setReports(rs => {
     const i = rs.findIndex(x => x.id === r.id);
-    const copy: Report = {...r, id: `${r.id}-copy-${rs.length}`, title: `${r.title} (copy)`, created: '29/10/2026', modifiedDays: 0, owner: 'you', isNew: true};
+    const copy: Report = {...r, id: `${r.id}-copy-${++copies.current}`, title: `${r.title} (copy)`, created: '29/10/2026', modifiedDays: 0, owner: 'you', isNew: true};
     return [...rs.slice(0, i + 1), copy, ...rs.slice(i + 1)];
   });
   const remove = (r: Report) => setReports(rs => rs.filter(x => x.id !== r.id));
@@ -119,7 +120,7 @@ function BlankBuilder({onCreate}: {onCreate: (title: string, template: Template)
       <Card tone="manage" layout="stacked" title="Build your report">
         <div className="bo-reporting-form">
           <p className="bo-note">Turn a project's results into a slide deck you can share. Start from scratch, pick a template, or let Go Vocal AI draft it from your data.</p>
-          <TextField label="Report title" placeholder="Riverside park renewal: project report" value={title} onChange={setTitle} />
+          <TextField label="Report title" placeholder="Larkvale park renewal: project report" value={title} onChange={setTitle} />
           <CardRadioGroup aria-label="Report template" orientation="horizontal" value={template} onChange={v => setTemplate(v as Template)}>
             <CardRadio value="blank" description="Add slides one by one.">Start blank</CardRadio>
             <CardRadio value="template" description="Start from a ready structure.">Use a template</CardRadio>

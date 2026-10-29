@@ -8,7 +8,7 @@ export type Project = {id: string; title: string; status: 'Draft' | 'Live'; phas
 
 // Invented data only: never real tenants, people or places.
 export const PROJECTS: Project[] = [
-  {id: 'green-corridors', title: 'Green Corridors for Riverside', status: 'Live', phases: METHODS.map((method, i) => ({
+  {id: 'green-corridors', title: 'Green Corridors for Larkvale', status: 'Live', phases: METHODS.map((method, i) => ({
     id: `p${i + 1}`, title: `${method} phase`, method, status: i < 4 ? 'Live' : 'Draft',
     dates: `${String(i * 2 + 1).padStart(2, '0')} Mar – ${String(i * 2 + 2).padStart(2, '0')} Mar 2027`}))},
   {id: 'harbour-plan', title: 'Harbour Plan 2030', status: 'Draft', phases: [
@@ -68,7 +68,7 @@ export const DASHBOARD = {
     {label: 'Reactions', value: 4060, last30: 406, series: [120, 160, 210, 240, 300, 330, 380, 406]}
   ],
   perProject: [
-    {project: 'Green Corridors for Riverside', inputs: 214},
+    {project: 'Green Corridors for Larkvale', inputs: 214},
     {project: 'Safer School Streets', inputs: 131},
     {project: 'Harbour Plan 2030', inputs: 47}
   ],

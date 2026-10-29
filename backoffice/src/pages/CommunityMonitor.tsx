@@ -20,6 +20,7 @@ import {Divider} from '../../../src/components/gv/Divider';
 import {CATEGORIES, CURRENT, MANAGERS, POPUP_CONDITIONS, POPUP_SHOWN, QUARTERS, QUESTIONS, REPORTS, RESPONDENTS,
   SENTIMENT, WHO} from '../data-community-monitor';
 import {Page} from './Page';
+import {SectionHeading} from '../SectionHeading';
 
 const SECTIONS = ['Live monitor', 'Participants', 'Reports', 'Settings'];
 const n = (v: number) => v.toLocaleString('en');
@@ -242,8 +243,8 @@ export function CommunityMonitor() {
         <TabList aria-label="Community monitor sections">{SECTIONS.map(s => <Tab key={s} id={s}>{s}</Tab>)}</TabList>
         <TabPanel id="Live monitor"><LiveMonitor quarter={quarter} /></TabPanel>
         <TabPanel id="Participants"><Participants quarter={quarter} /></TabPanel>
-        <TabPanel id="Reports"><Reports /></TabPanel>
-        <TabPanel id="Settings"><Settings /></TabPanel>
+        <TabPanel id="Reports"><SectionHeading>Reports</SectionHeading><Reports /></TabPanel>
+        <TabPanel id="Settings"><SectionHeading>Settings</SectionHeading><Settings /></TabPanel>
       </Tabs>
     </Page>
   );

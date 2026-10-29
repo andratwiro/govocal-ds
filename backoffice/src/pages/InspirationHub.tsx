@@ -114,9 +114,11 @@ export function InspirationHub() {
           {COUNTRIES.map(c => <SelectItem key={c} id={c}>{c}</SelectItem>)}
         </Select>
       </div>
-      <ul className="bo-inspiration-hub-grid" aria-label="Highlighted projects">
-        {pinned.map(p => card(p, true))}
-      </ul>
+      {pinned.length ? (
+        <ul className="bo-inspiration-hub-grid" aria-label="Highlighted projects">
+          {pinned.map(p => card(p, true))}
+        </ul>
+      ) : <p className="bo-note">No projects are highlighted for this country yet.</p>}
 
       <div className="bo-inspiration-hub-head">
         <h2 className="bo-section-title" id="bo-inspiration-hub-all">All projects</h2>

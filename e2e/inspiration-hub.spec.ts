@@ -18,7 +18,7 @@ test('highlighted projects follow the chosen country', async ({page}) => {
   const pinned = page.getByRole('list', {name: 'Highlighted projects'}).getByRole('listitem');
   await expect(pinned).toHaveCount(2);
   await page.getByRole('button', {name: /Highlighted for$/}).click();
-  await page.getByRole('option', {name: 'Lakeland'}).click();
+  await page.getByRole('option', {name: 'Southmere'}).click();
   await expect(pinned).toHaveCount(1);
   await expect(pinned.first()).toContainText('Neighbourhood budget 2026');
 });
@@ -28,7 +28,7 @@ test('each card shows platform, participants and methods, and can be copied', as
   const all = page.getByRole('list', {name: 'All projects'}).getByRole('listitem');
   await expect(all).toHaveCount(8);
   const card = all.filter({has: page.getByRole('heading', {level: 3, name: 'Cycle lanes on the ring road'})});
-  await expect(card).toContainText('Millbrook');
+  await expect(card).toContainText('Quillbrook');
   await expect(card).toContainText('2,475');
   await expect(card).toContainText('Common ground');
   await expect(card.getByRole('button', {name: 'Preview: Cycle lanes on the ring road'})).toBeVisible();

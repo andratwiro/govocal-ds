@@ -14,7 +14,7 @@ export interface Report {
 }
 
 export const REPORTS: Report[] = [
-  {id: 'r1', title: 'Riverside park renewal: project report', created: '27/10/2026', modifiedDays: 1, owner: 'you', kind: 'report', isNew: true},
+  {id: 'r1', title: 'Larkvale park renewal: project report', created: '27/10/2026', modifiedDays: 1, owner: 'you', kind: 'report', isNew: true},
   {id: 'r2', title: 'Bike lanes survey results', created: '14/10/2026', modifiedDays: 9, owner: 'you', kind: 'report'},
   {id: 'r3', title: 'Third quarter progress', created: '02/10/2026', modifiedDays: 26, owner: 'team', kind: 'progress'},
   {id: 'r4', title: 'Library opening hours survey', created: '18/09/2026', modifiedDays: 41, owner: 'team', kind: 'report'},
@@ -51,7 +51,7 @@ export const CONTENTS = [
 ];
 
 export const DECK = {
-  brand: 'Riverside park renewal · Project report',
+  brand: 'Larkvale park renewal · Project report',
   kpis: [
     {label: 'Participants', value: '1,846', note: '+12% on the last project'},
     {label: 'Ideas', value: '312', note: 'Across 3 phases'},

@@ -20,6 +20,7 @@ import {Divider} from '../../../src/components/gv/Divider';
 import {AUTOMATED, CUSTOM_EMAILS, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
+import {SectionHeading} from '../SectionHeading';
 
 const n = (v: number) => v.toLocaleString('en');
 const pct = (v?: number) => (v == null ? '—' : `${v}%`);
@@ -284,7 +285,7 @@ export function Messaging() {
             <Tab key={id} id={id}><span className="bo-messaging-tab"><Icon aria-hidden size={16} />{label}</span></Tab>
           ))}
         </TabList>
-        {CHANNELS.map(c => <TabPanel key={c.id} id={c.id}>{c.body}</TabPanel>)}
+        {CHANNELS.map(c => <TabPanel key={c.id} id={c.id}><SectionHeading>{c.label}</SectionHeading>{c.body}</TabPanel>)}
       </Tabs>
     </Page>
   );

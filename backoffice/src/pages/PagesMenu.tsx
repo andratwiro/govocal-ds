@@ -13,6 +13,7 @@ import {Divider} from '../../../src/components/gv/Divider';
 import {MENU_ENTRIES, MENU_START, PAGE_META, type MenuEntry} from '../data-pages-menu';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
+import {SectionHeading} from '../SectionHeading';
 
 const entry = (id: string) => MENU_ENTRIES.find(e => e.id === id)!;
 const move = (list: string[], id: string, by: number) => {
@@ -43,7 +44,7 @@ function MenuRow({item, index, count, menu, setMenu}: MenuProps & {item: MenuEnt
           <Pencil aria-hidden size={16} />
         </IconButton>
         {!pinned && <>
-          <Button variant="quiet" size={32} onPress={() => setMenu(menu.filter(id => id !== item.id))}>Remove from menu</Button>
+          <Button variant="quiet" size={32} aria-label={`Remove ${item.label} from menu`} onPress={() => setMenu(menu.filter(id => id !== item.id))}>Remove from menu</Button>
           <MenuTrigger>
             <IconButton aria-label={`Reorder ${item.label}`}><ArrowUpDown aria-hidden size={16} /></IconButton>
             <Menu aria-label={`Reorder ${item.label}`} onAction={k => setMenu(move(menu, item.id, k === 'up' ? -1 : 1))}
@@ -107,7 +108,7 @@ function PagesTab({menu, setMenu, pages, setPages}: MenuProps & {pages: string[]
                     <Status state={inMenu ? 'live' : 'draft'}>{inMenu ? 'In menu' : 'Not in menu'}</Status>
                     <span className="bo-push" />
                     <Switch isSelected={inMenu}
-                      onChange={on => setMenu(on ? [...menu, id] : menu.filter(m => m !== id))}>Show in menu</Switch>
+                      onChange={on => setMenu(on ? [...menu, id] : menu.filter(m => m !== id))} aria-label={`Show ${page.label} in menu`}>Show in menu</Switch>
                     <IconButton variant="bordered" aria-label={`Edit page: ${page.label}`}><Pencil aria-hidden size={16} /></IconButton>
                     <IconButton variant="bordered" aria-label={`View page: ${page.label}`}><Eye aria-hidden size={16} /></IconButton>
                     <IconButton variant="bordered" aria-label={`Delete page: ${page.label}`}
@@ -135,8 +136,9 @@ export function PagesMenu() {
           <Tab id="menu">Menu</Tab>
           <Tab id="pages">Pages</Tab>
         </TabList>
-        <TabPanel id="menu" className="react-aria-TabPanel bo-pages-menu-panel"><MenuTab menu={menu} setMenu={setMenu} pages={pages} /></TabPanel>
+        <TabPanel id="menu" className="react-aria-TabPanel bo-pages-menu-panel"><SectionHeading>Menu</SectionHeading><MenuTab menu={menu} setMenu={setMenu} pages={pages} /></TabPanel>
         <TabPanel id="pages" className="react-aria-TabPanel bo-pages-menu-panel">
+          <SectionHeading>Pages</SectionHeading>
           <PagesTab menu={menu} setMenu={setMenu} pages={pages} setPages={setPages} />
         </TabPanel>
       </Tabs>

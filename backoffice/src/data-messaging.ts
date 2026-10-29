@@ -5,7 +5,7 @@ export type CustomEmail = {
   to: string; opened?: number; clicked?: number; body: string
 };
 
-export const SENDER = {from: 'Riverside participation team', replyTo: 'participation@example.org'};
+export const SENDER = {from: 'Larkvale participation team', replyTo: 'participation@example.org'};
 export const GROUPS = ['All users', 'Residents of the north district', 'Youth panel', 'Followers of Harbour Plan 2030'];
 
 export const CUSTOM_EMAILS: CustomEmail[] = [

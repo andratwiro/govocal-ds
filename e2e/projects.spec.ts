@@ -23,8 +23,8 @@ test('a row has its actions menu', async ({page}) => {
 
 test('rows use the gv Status, Avatar and icon button; New project opens its menu', async ({page}) => {
   await page.goto('/backoffice/#/projects');
-  const row = page.getByRole('row', {name: /Green Corridors for Riverside/});
-  await expect(row.getByRole('link', {name: 'Green Corridors for Riverside'}))
+  const row = page.getByRole('row', {name: /Green Corridors for Larkvale/});
+  await expect(row.getByRole('link', {name: 'Green Corridors for Larkvale'}))
     .toHaveAttribute('href', '#/projects/green-corridors/phases/p1/build');
   await expect(row.locator('.gv-status')).toHaveText('Published');
   await expect(row.locator('.gv-avatar')).toHaveText('A');

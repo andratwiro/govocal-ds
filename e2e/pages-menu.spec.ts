@@ -24,7 +24,7 @@ test('home is locked and opens the homepage editor; other items can be removed a
   const grid = page.getByRole('grid', {name: 'Menu items'});
   const home = grid.getByRole('row').first();
   await expect(home.getByRole('button', {name: 'Edit homepage'})).toBeVisible();
-  await expect(home.getByRole('button', {name: 'Remove from menu'})).toHaveCount(0);
+  await expect(home.getByRole('button', {name: /^Remove .* from menu$/})).toHaveCount(0);
 
   // Move FAQ above About.
   await grid.getByRole('row').filter({hasText: 'FAQ'}).getByRole('button', {name: 'Reorder FAQ'}).click();
@@ -32,7 +32,7 @@ test('home is locked and opens the homepage editor; other items can be removed a
   await expect(grid.getByRole('row').nth(4)).toContainText('FAQ');
 
   // Remove Events, then add it back from New menu item.
-  await grid.getByRole('row').filter({hasText: 'Events'}).getByRole('button', {name: 'Remove from menu'}).click();
+  await grid.getByRole('row').filter({hasText: 'Events'}).getByRole('button', {name: 'Remove Events from menu'}).click();
   await expect(grid.getByRole('row')).toHaveCount(MENU.length - 1);
   await page.getByRole('button', {name: 'New menu item'}).click();
   await page.getByRole('menuitem', {name: 'Events'}).click();
@@ -53,7 +53,7 @@ test('pages lists the custom pages; the switch puts a page in the menu', async (
   }
   const grants = list.getByRole('listitem').filter({hasText: 'Neighbourhood grants'});
   await expect(grants.getByText('Not in menu', {exact: true})).toBeVisible();
-  const sw = grants.getByRole('switch', {name: 'Show in menu'});
+  const sw = grants.getByRole('switch', {name: 'Show Neighbourhood grants in menu'});
   await expect(sw).not.toBeChecked();
   await sw.click({force: true});
   await expect(sw).toBeChecked();
