@@ -29,7 +29,7 @@ export interface ModalProps {
   closeLabel?: string;
 }
 
-/** Modal: head (title + ×), a body, and a footer of buttons over a hairline. Wraps the starter Modal + Dialog. */
+/** Modal: head (title + ×), a body, and a footer of buttons on the toolbar grey. Wraps the starter Modal + Dialog. */
 export function Modal({
   title,
   children,
@@ -49,7 +49,7 @@ export function Modal({
             {title}
           </Heading>
           <Button slot="close" className="gv-modal__close" aria-label={closeLabel}>
-            <X aria-hidden size={20} />
+            <X aria-hidden size={20} strokeWidth={1.75} />
           </Button>
         </div>
         <div className="gv-modal__body">{children}</div>

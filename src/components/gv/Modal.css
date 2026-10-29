@@ -1,11 +1,12 @@
 @import '../theme.css';
 
-/* Modal (Figma 5:513): 420 wide, radius 14, panel fill, 1px border-subtle, the dialog shadow.
+/* Modal (Figma 5:513; the prototype's .pj-modal shell, shared by its ~20 modals): 420 wide (Figma), radius 12 and
+   no border (the prototype; Figma draws 14 and a border-subtle hairline), panel fill, the dialog shadow.
    The starter Modal places it (overlay, centring, entrance); these rules only repaint the shell it draws. */
 .react-aria-Modal:has(> .gv-modal) {
   max-width: 94vw;
-  border-radius: var(--gv-radius-14);
-  outline-color: var(--gv-border-subtle);
+  border-radius: var(--gv-radius-12);
+  outline: none;
   background: var(--gv-surface-panel);
   box-shadow: var(--gv-shadow-dialog);
   overflow: hidden;
@@ -46,7 +47,7 @@
   color: var(--gv-text-primary);
 }
 
-/* Close: 28, padding 4, radius 7, a 20 ×. */
+/* Close: 28, padding 4, radius 7, a 20 × in icon-strong (the prototype's .pj-modal__x; Figma icon-default). */
 .gv-modal__close {
   appearance: none;
   display: inline-flex;
@@ -60,12 +61,12 @@
   border: none;
   border-radius: var(--gv-radius-7);
   background: transparent;
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-strong);
   cursor: pointer;
   outline: none;
 
   &[data-hovered] {
-    background: var(--gv-surface-hover-strong);
+    background: var(--gv-surface-hover);
     color: var(--gv-icon-primary);
   }
 
@@ -85,13 +86,15 @@
   letter-spacing: var(--gv-type-ui-tracking);
 }
 
-/* Footer: padding 12 24, gap 8, buttons at the end, a 1px border-row on top. */
+/* Footer: padding 12 24, buttons at the end, a 1px border-row on top. The prototype's .pj-modal__foot sets them
+   12 apart on the toolbar grey; Figma's single Done shows neither (gap 8, no fill). */
 .gv-modal__footer {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--gv-space-8);
+  gap: var(--gv-space-12);
   flex: none;
   padding: var(--gv-space-12) var(--gv-space-24);
   border-block-start: 1px solid var(--gv-border-row);
+  background: var(--gv-surface-toolbar);
 }

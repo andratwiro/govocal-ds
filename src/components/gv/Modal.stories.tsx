@@ -49,9 +49,9 @@ function AttachmentsModal() {
 }
 
 const people = [
-  ['Amira Haddad', 'amira.haddad@riverside.example', 'Can edit'],
-  ['Jonas Vermeer', 'jonas.vermeer@riverside.example', 'Can view'],
-  ['Priya Nair', 'priya.nair@riverside.example', 'Can edit']
+  ['Maren Holt', 'maren.holt@riverside.example', 'Can edit'],
+  ['Tobias Lind', 'tobias.lind@riverside.example', 'Can view'],
+  ['Sofia Brandt', 'sofia.brandt@riverside.example', 'Can edit']
 ];
 
 function ShareModal() {
