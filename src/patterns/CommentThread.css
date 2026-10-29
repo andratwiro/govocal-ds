@@ -14,7 +14,6 @@
 .gv-comment-thread__title {
   margin: 0 0 var(--gv-space-12);
   font: var(--gv-type-body-strong);
-  letter-spacing: var(--gv-type-body-strong-tracking);
 }
 
 .gv-comment-thread .gv-comment-thread__panel {
@@ -48,7 +47,7 @@
   border-radius: var(--gv-radius-8);
 
   &[data-new] {
-    background: var(--gv-surface-stage);
+    background: var(--gv-surface-tertiary);
   }
 }
 
@@ -69,11 +68,10 @@
   align-items: baseline;
   column-gap: var(--gv-space-8);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
 }
 
 .gv-comment-thread__author {
-  font-weight: var(--gv-type-small-strong-weight);
+  font-weight: var(--gv-font-weight-medium);
   color: var(--gv-text-primary);
 }
 
@@ -82,8 +80,8 @@
 }
 
 .gv-comment-thread__new {
-  font-weight: var(--gv-type-small-strong-weight);
-  color: var(--gv-text-accent);
+  font-weight: var(--gv-font-weight-medium);
+  color: var(--gv-text-brand);
 }
 
 /* The warning line: a 14 amber triangle and Small secondary words, 8 under the head. */
@@ -93,12 +91,11 @@
   gap: var(--gv-space-6);
   margin: var(--gv-space-8) 0 0;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 
   svg {
     flex: none;
-    margin-block-start: var(--gv-space-1);
+    margin-block-start: 1px;
     color: var(--gv-icon-warning);
   }
 }
@@ -106,7 +103,6 @@
 .gv-comment-thread__text {
   margin-block-start: var(--gv-space-4);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   overflow-wrap: anywhere;
 
   p {
@@ -131,7 +127,6 @@
   border-radius: var(--gv-radius-4);
   background: none;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
   cursor: pointer;
   outline: none;
@@ -142,15 +137,14 @@
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 }
 
 .gv-comment-thread__empty {
   margin: 0 0 var(--gv-space-16);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-secondary);
 }
 
@@ -168,7 +162,6 @@
   margin: 0;
   padding-inline-start: calc(var(--gv-space-28) + var(--gv-space-12));
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 }
 
@@ -182,16 +175,16 @@
   border: 0;
   border-radius: var(--gv-radius-4);
   background: none;
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-tertiary);
   cursor: pointer;
   outline: none;
 
   &[data-hovered] {
-    color: var(--gv-icon-strong);
+    color: var(--gv-icon-secondary);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
+    outline: var(--gv-focus-ring);
   }
 }
 

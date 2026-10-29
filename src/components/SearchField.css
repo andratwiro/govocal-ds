@@ -12,7 +12,7 @@
   grid-template-columns: 0px 1fr auto;
   align-items: center;
   width: auto;
-  color: var(--text-color);
+  color: var(--gv-text-primary);
 
   .lucide-search {
     grid-area: icon;
@@ -20,12 +20,12 @@
     width: var(--gv-space-16);
     height: var(--gv-space-16);
     margin-inline-start: var(--gv-space-10);
-    color: var(--gv-icon-default);
+    color: var(--gv-icon-tertiary);
     pointer-events: none;
   }
 
   &[data-disabled] .lucide-search {
-    color: var(--gv-icon-quiet);
+    color: var(--gv-icon-disabled);
   }
 
   .react-aria-Label {
@@ -55,23 +55,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--gv-icon-default);
+    color: var(--gv-icon-tertiary);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
 
     &[data-hovered],
     &[data-pressed] {
-      background: var(--gv-surface-hover-strong);
-      color: var(--gv-icon-strong);
+      background: var(--gv-surface-pressed);
+      color: var(--gv-icon-secondary);
     }
 
     &[data-focus-visible] {
-      outline: 2px solid var(--focus-ring-color);
+      outline: var(--gv-focus-ring);
       outline-offset: 0;
     }
 
     &[data-disabled] {
-      color: var(--gv-icon-quiet);
+      color: var(--gv-icon-disabled);
     }
   }
 
@@ -96,15 +96,15 @@
   }
 
   .lucide-search {
-    width: var(--gv-space-14);
-    height: var(--gv-space-14);
+    width: var(--gv-space-16);
+    height: var(--gv-space-16);
     margin-inline-start: var(--gv-space-8);
   }
 
   .react-aria-Input {
     min-height: var(--gv-space-28);
     height: var(--gv-space-28);
-    padding-inline-start: calc(var(--gv-space-8) + var(--gv-space-14) + var(--gv-space-8));
+    padding-inline-start: calc(var(--gv-space-8) + var(--gv-space-16) + var(--gv-space-8));
   }
 
   .clear-button {

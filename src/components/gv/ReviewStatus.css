@@ -7,7 +7,6 @@
   gap: var(--gv-space-4);
   flex: none;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   font-family: var(--gv-font-family);
   white-space: nowrap;
   color: var(--gv-text-tertiary);
@@ -16,18 +15,17 @@
 .gv-review-notice__icon {
   display: block;
   flex: none;
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-tertiary);
 }
 
 /* Reviewed has to catch the eye (the prototype, 22 Oct): green, medium, a filled 16 check, no chip. */
 .gv-review-notice[data-status='reviewed'] {
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
-  color: var(--gv-text-reviewed);
+  color: var(--gv-text-success);
 }
 
 .gv-review-notice__fill {
-  fill: var(--gv-icon-reviewed);
+  fill: var(--gv-icon-success);
 }
 
 .gv-review-notice__tick {

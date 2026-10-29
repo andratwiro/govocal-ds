@@ -1,9 +1,12 @@
-import {readFile, writeFile} from 'node:fs/promises';
+import {readFileSync} from 'node:fs';
+import {writeFile} from 'node:fs/promises';
 import {toCss} from './lib/css.mjs';
-import {mergeTokens} from './lib/merge.mjs';
-const read = async path => JSON.parse(await readFile(path, 'utf8'));
-// Figma's tokens (npm run tokens:pull writes them) + the hand-authored ones Figma has no variables for (Not in Figma).
-const tokens = mergeTokens(await read('tokens/foundations.tokens.json'), await read('tokens/motion.tokens.json'),
-  await read('tokens/size.tokens.json'));
+import {toJson} from './lib/json.mjs';
+import {loadTokens} from './lib/build.mjs';
+// Builds src/tokens.css and public/tokens.json (the same set as DTCG, published beside Storybook) from tokens/
+// (scripts/lib/build.mjs says which files, in which order).
+const tokens = loadTokens();
+const read = path => JSON.parse(readFileSync(path, 'utf8'));
 await writeFile('src/tokens.css', toCss(tokens));
-console.log('src/tokens.css written');
+await writeFile('public/tokens.json', JSON.stringify(toJson(tokens, read('tokens/variable-ids.json'), read('tokens/renames.json')), null, 2) + '\n');
+console.log('src/tokens.css and public/tokens.json written');

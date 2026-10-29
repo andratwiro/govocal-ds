@@ -9,8 +9,8 @@
   overflow: auto;
   padding: var(--gv-space-6);
   border: 1px solid var(--gv-border-control);
-  border-radius: var(--radius-lg);
-  background: var(--overlay-background);
+  border-radius: var(--gv-radius-12);
+  background: var(--gv-surface-panel);
   forced-color-adjust: none;
   outline: none;
   width: 250px;
@@ -25,13 +25,12 @@
 
   .react-aria-TreeHeader {
     font: var(--gv-type-small-strong);
-    letter-spacing: var(--gv-type-small-strong-tracking);
     padding: var(--gv-space-8) var(--gv-space-8) var(--gv-space-4);
     color: var(--gv-text-secondary);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
+    outline: var(--gv-focus-ring);
     outline-offset: -1px;
   }
 
@@ -43,25 +42,25 @@
   }
 
   &[data-selection-mode='multiple'] {
-    --checkbox-width: calc(var(--spacing) * 6.5);
+    --checkbox-width: calc(var(--gv-space-4) * 6.5);
   }
 
   &[data-allows-dragging] {
-    --drag-button-width: var(--spacing-6);
+    --drag-button-width: var(--gv-space-24);
   }
 
   &[data-drop-target] {
-    outline: 2px solid var(--highlight-background);
+    outline: var(--gv-border-width-2) solid var(--gv-border-selected);
     outline-offset: -1px;
-    background: var(--highlight-overlay);
+    background: var(--gv-surface-info);
   }
 
   .react-aria-DropIndicator {
     &[data-drop-target] {
-      outline: 1px solid var(--highlight-background);
+      outline: 1px solid var(--gv-border-selected);
       margin-left: calc(
-        var(--spacing-2) + var(--checkbox-width) + var(--drag-button-width) + var(--spacing-5) +
-          (var(--tree-item-level) - 1) * var(--spacing-4)
+        var(--gv-space-8) + var(--checkbox-width) + var(--drag-button-width) + var(--gv-space-20) +
+          (var(--tree-item-level) - 1) * var(--gv-space-16)
       );
     }
   }
@@ -70,41 +69,40 @@
 .react-aria-TreeItem {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: var(--gv-space-8);
   min-height: var(--gv-size-control-32);
   padding: var(--gv-space-4) var(--gv-space-4) var(--gv-space-4) var(--gv-space-8);
   box-sizing: border-box;
-  --padding: var(--spacing-4);
-  border-radius: var(--radius);
+  --padding: var(--gv-space-16);
+  border-radius: var(--gv-radius-8);
   outline: none;
   cursor: default;
   color: var(--gv-text-primary);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   position: relative;
   transform: translateZ(0);
   transition-property: background, color, border-radius;
   transition-duration: var(--gv-motion-duration-fast);
   transition-timing-function: var(--gv-motion-easing-standard);
   -webkit-tap-highlight-color: transparent;
-  --chevron-width: var(--spacing-5);
+  --chevron-width: var(--gv-space-20);
 
   &[data-has-child-items] {
     --chevron-width: 0px;
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
   }
 
   &[data-hovered] {
-    background: var(--gv-surface-hover);
+    background: var(--gv-surface-hovered);
   }
 
   &[data-pressed],
   &[data-selected] {
-    background: var(--gv-surface-hover-strong);
+    background: var(--gv-surface-pressed);
   }
 
   &[data-href] {
@@ -112,7 +110,7 @@
   }
 
   &[data-disabled] {
-    color: var(--text-color-disabled);
+    color: var(--gv-text-disabled);
   }
 
   .react-aria-Button:not([slot]) {
@@ -124,12 +122,12 @@
   }
 
   &[data-dragging] {
-    opacity: 0.6;
+    opacity: var(--gv-opacity-dragging);
   }
 
   &[data-drop-target] {
-    outline: 2px solid var(--highlight-background);
-    background: var(--highlight-overlay);
+    outline: var(--gv-border-width-2) solid var(--gv-border-selected);
+    background: var(--gv-surface-info);
   }
 
   .react-aria-Button[slot='chevron'] {
@@ -170,7 +168,7 @@
 
     &[data-focus-visible] {
       border-radius: var(--gv-radius-4);
-      outline: 2px solid var(--focus-ring-color);
+      outline: var(--gv-focus-ring);
     }
   }
 }

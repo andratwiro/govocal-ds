@@ -13,9 +13,8 @@
   justify-content: center;
   background: var(--gv-surface-backdrop);
   overflow: clip;
-  z-index: 100;
+  z-index: var(--gv-layer-overlay);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
 
   &[data-entering] {
     animation: modal-fade var(--gv-motion-duration-medium) var(--gv-motion-easing-enter);
@@ -29,10 +28,10 @@
 /* The shell is the Figma Modal's (5:513): radius 14, panel fill, a 1px subtle outline, the dialog shadow. */
 .react-aria-Modal {
   max-height: calc(var(--visual-viewport-height) * 0.9);
-  box-shadow: var(--gv-shadow-dialog);
-  border-radius: var(--radius-xl);
-  background: var(--overlay-background);
-  color: var(--text-color);
+  box-shadow: var(--gv-shadow-overlay);
+  border-radius: var(--gv-radius-14);
+  background: var(--gv-surface-panel);
+  color: var(--gv-text-primary);
   outline: 1px solid var(--gv-border-subtle);
   width: max-content;
   max-width: min(500px, 90vw);

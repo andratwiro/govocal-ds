@@ -62,7 +62,7 @@ function Emails() {
     <ul style={{listStyle: 'none', margin: 0, padding: 0}}>
       {EMAILS.map((e, i) => (
         <li key={e.title} style={{display: 'flex', alignItems: 'center', gap: 16, padding: '14px 20px',
-          borderTop: i ? '1px solid var(--gv-divider-default)' : undefined}}>
+          borderTop: i ? '1px solid var(--gv-border-subtle)' : undefined}}>
           <div style={{flex: 1, display: 'grid', gap: 4}}>
             <span style={{font: 'var(--gv-type-ui-strong)'}}>{e.title}</span>
             <span style={{display: 'flex', alignItems: 'center', gap: 8, font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>

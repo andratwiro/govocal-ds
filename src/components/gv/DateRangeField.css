@@ -9,7 +9,7 @@
 .gv-date-range-field {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
+  gap: var(--gv-space-8);
 }
 
 .gv-date-range-field__label {
@@ -17,12 +17,11 @@
   align-items: center;
   gap: var(--gv-space-6);
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   color: var(--gv-text-primary);
 }
 
 .gv-date-range-field[data-disabled] .gv-date-range-field__label {
-  color: var(--text-color-disabled);
+  color: var(--gv-text-disabled);
 }
 
 .gv-date-range-field__row {
@@ -38,20 +37,17 @@
 
 .gv-date-range-field__zone {
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-tertiary);
 }
 
 .gv-date-range-field__description {
   margin: 0;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 }
 
 .gv-date-range-field__error {
   margin: 0;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
-  color: var(--invalid-color);
+  color: var(--gv-text-danger);
 }

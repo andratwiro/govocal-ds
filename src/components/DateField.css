@@ -16,32 +16,31 @@
   height: var(--gv-size-control-36);
   width: fit-content;
   min-width: 150px;
-  padding: 0 var(--spacing-3);
-  border-radius: var(--radius);
+  padding: 0 var(--gv-space-12);
+  border-radius: var(--gv-radius-8);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
-  color: var(--field-text-color);
+  color: var(--gv-text-primary);
   white-space: nowrap;
   forced-color-adjust: none;
   cursor: text;
 
   &[data-focus-within] {
-    outline: 2px solid var(--focus-ring-color);
+    outline: var(--gv-focus-ring);
     outline-offset: -1px;
   }
 
   &[data-disabled] {
-    color: var(--text-color-disabled);
+    color: var(--gv-text-disabled);
     cursor: default;
   }
 }
 
 .react-aria-DateSegment {
-  padding: 0 var(--gv-space-1);
+  padding: 0 var(--gv-space-2);
   border-radius: var(--gv-radius-4);
   font-variant-numeric: tabular-nums;
   text-align: end;
-  color: var(--field-text-color);
+  color: var(--gv-text-primary);
   -webkit-tap-highlight-color: transparent;
 
   &[data-type='literal'] {
@@ -50,27 +49,27 @@
   }
 
   &[data-placeholder] {
-    color: var(--text-color-placeholder);
+    color: var(--gv-text-placeholder);
   }
 
   &:focus {
     color: var(--gv-text-inverse);
-    background: var(--gv-action-checked);
+    background: var(--gv-surface-selected-strong);
     outline: none;
     caret-color: transparent;
   }
 
   &[data-invalid] {
-    color: var(--gv-state-notification);
+    color: var(--gv-text-danger);
 
     &:focus {
-      background: var(--gv-state-notification);
+      background: var(--gv-surface-danger-strong);
       color: var(--gv-text-inverse);
     }
   }
 
   &[data-disabled] {
-    color: var(--text-color-disabled);
+    color: var(--gv-text-disabled);
     cursor: default;
   }
 }

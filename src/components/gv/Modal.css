@@ -8,7 +8,7 @@
   border-radius: var(--gv-radius-12);
   outline: none;
   background: var(--gv-surface-panel);
-  box-shadow: var(--gv-shadow-dialog);
+  box-shadow: var(--gv-shadow-overlay);
   overflow: hidden;
 }
 
@@ -49,11 +49,10 @@
   margin: 0;
   padding-block-start: var(--gv-space-4);
   font: var(--gv-type-body-strong);
-  letter-spacing: var(--gv-type-body-strong-tracking);
   color: var(--gv-text-primary);
 }
 
-/* Close: 28, padding 4, radius 7, a 20 × in icon-strong (the prototype's .pj-modal__x; Figma icon-default). */
+/* Close: 28, padding 4, radius 7 (8 on the ladder), a 20 × in icon-strong (the prototype's .pj-modal__x; Figma icon-default). */
 .gv-modal__close {
   appearance: none;
   display: inline-flex;
@@ -65,20 +64,20 @@
   padding: var(--gv-space-4);
   margin-inline-end: calc(-1 * var(--gv-space-4));
   border: none;
-  border-radius: var(--gv-radius-7);
+  border-radius: var(--gv-radius-8);
   background: transparent;
-  color: var(--gv-icon-strong);
+  color: var(--gv-icon-secondary);
   cursor: pointer;
   outline: none;
 
   &[data-hovered] {
-    background: var(--gv-surface-hover);
+    background: var(--gv-surface-hovered);
     color: var(--gv-icon-primary);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 }
 
@@ -89,7 +88,6 @@
   overflow-y: auto;
   padding: var(--gv-space-16) var(--gv-space-24) var(--gv-space-24);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
 }
 
 /* Side tabs: the body lays out its own list + panel (each scrolls on its own), no outer padding. */
@@ -109,5 +107,5 @@
   flex: none;
   padding: var(--gv-space-12) var(--gv-space-24);
   border-block-start: 1px solid var(--gv-border-row);
-  background: var(--gv-surface-toolbar);
+  background: var(--gv-surface-secondary);
 }

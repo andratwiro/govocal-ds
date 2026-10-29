@@ -4,19 +4,18 @@
    padding 6 and the subtlest shadow (the prototype's two-layer "very minimal" shadow has no token; the subtle one
    is the nearest). Menus and list boxes bring their own 6 padding, so their popovers have none. */
 .react-aria-Popover {
-  --background-color: var(--overlay-background);
+  --background-color: var(--gv-surface-panel);
 
   border: 1px solid var(--gv-border-control);
   box-sizing: border-box;
-  box-shadow: var(--gv-shadow-subtle);
-  border-radius: var(--radius-lg);
+  box-shadow: var(--gv-shadow-raised);
+  border-radius: var(--gv-radius-12);
   background: var(--background-color);
-  color: var(--text-color);
+  color: var(--gv-text-primary);
   transition:
     transform var(--gv-motion-duration-fast) var(--gv-motion-easing-standard),
     opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   padding: var(--gv-space-6);
   overflow: auto;
   outline: none;

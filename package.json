@@ -15,6 +15,7 @@
     "prestorybook": "node scripts/token-usage.mjs",
     "tokens:pull": "node scripts/figma-pull.mjs",
     "tokens:build": "node scripts/build-tokens.mjs",
+    "tokens:rename": "node scripts/rename-tokens.mjs",
     "tokens:usage": "node scripts/token-usage.mjs",
     "icons:in-use": "node scripts/icons-in-use.mjs",
     "components:index": "node scripts/component-index.mjs",

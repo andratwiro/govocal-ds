@@ -596,9 +596,9 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
       </Menu>
     )},
     {id: 'tags', label: 'Tags', icon: icon(Tag), menu: (
-      // A dialog popover holds the search (as the Filter menu's long submenus do); its own class keeps the starter
+      // A dialog popover holds the search (as the Filter menu's long submenus do); isFlush keeps the starter
       // Dialog's padding off the Option list.
-      <Dialog aria-label="Tags" className="bo-phase-picker">
+      <Dialog aria-label="Tags" isFlush>
         <OptionList aria-label="Tags" isSearchable icon={icon(Tag)} value={sharedTags} countLabel={ideasWord}
           items={IDEA_TAGS.map(t => ({id: t, label: t, count: pickedIdeas.filter(i => i.tags.includes(t)).length}))}
           selectionLabel={k => `${k} ${k === 1 ? 'tag' : 'tags'} on every selected idea`}

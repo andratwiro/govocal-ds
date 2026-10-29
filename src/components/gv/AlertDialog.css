@@ -10,7 +10,7 @@
   border-radius: var(--gv-radius-12);
   outline: none;
   background: var(--gv-surface-panel);
-  box-shadow: var(--gv-shadow-dialog);
+  box-shadow: var(--gv-shadow-overlay);
   overflow: hidden;
 }
 
@@ -26,8 +26,7 @@
   color: var(--gv-text-body);
 }
 
-/* Icon badge: 40, radius 10. No `--gv-surface-danger`/`--gv-icon-danger` tokens: a mix of
-   `--gv-color-red-500` on the panel, reported as a gap. */
+/* Icon badge: 40, radius 10; danger = icon-danger on the surface-danger tint. */
 .gv-alert-dialog__icon {
   display: inline-flex;
   align-items: center;
@@ -38,21 +37,19 @@
   border-radius: var(--gv-radius-10);
 
   &[data-tone='danger'] {
-    background: color-mix(in srgb, var(--gv-color-red-500) 12%, var(--gv-surface-panel));
-    color: var(--gv-color-red-500);
+    background: var(--gv-surface-danger);
+    color: var(--gv-icon-danger);
   }
 }
 
 .gv-alert-dialog__title {
   margin: 0 0 var(--gv-space-8);
   font: var(--gv-type-title);
-  letter-spacing: var(--gv-type-title-tracking);
   color: var(--gv-text-primary);
 }
 
 .gv-alert-dialog__body {
   font: var(--gv-type-body);
-  letter-spacing: var(--gv-type-body-tracking);
   color: var(--gv-text-secondary);
 }
 
@@ -77,11 +74,11 @@
 
 .gv-alert-dialog__impact-icon {
   flex: none;
-  margin-block-start: var(--gv-space-1);
+  margin-block-start: 1px;
 }
 
 .gv-alert-dialog__impact-row[data-tone='danger'] .gv-alert-dialog__impact-icon {
-  color: var(--gv-color-red-500);
+  color: var(--gv-icon-danger);
 }
 
 .gv-alert-dialog__impact-row[data-tone='warning'] .gv-alert-dialog__impact-icon {
@@ -89,13 +86,12 @@
 }
 
 .gv-alert-dialog__impact-row[data-tone='success'] .gv-alert-dialog__impact-icon {
-  color: var(--gv-text-reviewed);
+  color: var(--gv-text-success);
 }
 
 .gv-alert-dialog__impact-title {
   display: block;
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   color: var(--gv-text-primary);
 }
 
@@ -103,7 +99,6 @@
   display: block;
   margin-block-start: var(--gv-space-2);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 }
 
@@ -114,11 +109,10 @@
 .gv-alert-dialog__confirm-label {
   margin: 0 0 var(--gv-space-8);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-secondary);
 
   strong {
-    font-weight: var(--gv-type-ui-strong-weight);
+    font-weight: var(--gv-font-weight-medium);
     color: var(--gv-text-primary);
   }
 }

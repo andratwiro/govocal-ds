@@ -6,8 +6,8 @@
   display: flex;
   flex-direction: column;
   max-width: 100%;
-  color: var(--text-color);
-  gap: var(--spacing-1);
+  color: var(--gv-text-primary);
+  gap: var(--gv-space-4);
 
   /* The prototype's option lists (augur-design.html .pjc2-opts / .pjfc__row): 12 apart stacked; side by side
      24 apart, and 20 when a row wraps. */
@@ -36,13 +36,12 @@
     margin-top: var(--gv-space-2);
     margin-inline-start: var(--gv-space-24);
     font: var(--gv-type-small);
-    letter-spacing: var(--gv-type-small-tracking);
     color: var(--gv-text-tertiary);
     contain: none;
   }
 
   &[data-disabled] [slot='description'] {
-    color: var(--text-color-disabled);
+    color: var(--gv-text-disabled);
   }
 }
 
@@ -56,7 +55,6 @@
   align-items: flex-start;
   gap: var(--gv-space-8);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-color-slate-750);
   forced-color-adjust: none;
   -webkit-tap-highlight-color: transparent;
@@ -73,7 +71,7 @@
     flex-shrink: 0;
     margin-top: var(--gv-space-2);
     box-sizing: border-box;
-    border: 1px solid var(--gv-border-radio);
+    border: 1px solid var(--gv-border-strong);
     border-radius: var(--gv-radius-full);
     background: var(--gv-surface-panel);
     box-shadow: none;
@@ -83,7 +81,7 @@
     &::after {
       content: '';
       position: absolute;
-      inset: var(--gv-space-3);
+      inset: 3px;
       border-radius: inherit;
       background: transparent;
       transition: background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
@@ -91,7 +89,7 @@
   }
 
   &[data-hovered] .indicator {
-    border-color: var(--gv-border-control-hover);
+    border-color: var(--gv-border-control-hovered);
   }
 
   &[data-selected] {
@@ -107,17 +105,17 @@
   }
 
   &[data-focus-visible] .indicator {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 
   &[data-invalid] .indicator {
-    border-color: var(--gv-state-notification);
+    border-color: var(--gv-border-danger);
   }
 
   &[data-disabled] {
-    color: var(--gv-text-quiet);
-    --dot-color: var(--gv-text-quiet);
+    color: var(--gv-text-disabled);
+    --dot-color: var(--gv-text-disabled);
 
     .indicator {
       border-color: var(--gv-border-subtle);

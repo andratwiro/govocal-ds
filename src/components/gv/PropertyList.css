@@ -12,7 +12,6 @@
   align-items: baseline;
   margin: 0;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
 }
 
 .gv-property-list__item {

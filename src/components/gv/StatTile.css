@@ -18,7 +18,6 @@
    stretch to the tallest. */
 .gv-kpi__label {
   font: var(--gv-type-body);
-  letter-spacing: var(--gv-type-body-tracking);
   color: var(--gv-text-secondary);
   overflow-wrap: anywhere;
 }
@@ -37,7 +36,6 @@
   margin-block-start: var(--gv-space-8);
   font: var(--gv-type-stat);
   line-height: 1;
-  letter-spacing: var(--gv-type-stat-tracking);
   color: var(--gv-text-primary);
   font-variant-numeric: tabular-nums;
 }
@@ -49,9 +47,8 @@
 
 /* Type=With note: the note 7 under the number (prototype .pj-kpi__d). */
 .gv-kpi__note {
-  margin-block-start: var(--gv-space-7);
+  margin-block-start: var(--gv-space-8);
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-secondary);
 }
 
@@ -63,9 +60,8 @@
   align-items: center;
   flex-wrap: wrap;
   column-gap: var(--gv-space-4);
-  margin-block-start: var(--gv-space-7);
+  margin-block-start: var(--gv-space-8);
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   font-variant-numeric: tabular-nums;
 
   & > svg {
@@ -73,11 +69,11 @@
   }
 
   &[data-direction='up'] {
-    color: var(--gv-text-live);
+    color: var(--gv-text-success-strong);
   }
 
   &[data-direction='down'] {
-    color: var(--gv-state-notification);
+    color: var(--gv-text-danger);
   }
 
   &[data-direction='flat'] {

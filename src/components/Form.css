@@ -3,7 +3,7 @@
 .react-aria-Form {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-6);
+  gap: var(--gv-space-24);
 
   > .react-aria-Button {
     align-self: start;
@@ -11,16 +11,16 @@
 }
 
 .react-aria-Form [role='alert'] {
-  border: 2px solid var(--invalid-color);
-  background: var(--overlay-background);
+  border: 2px solid var(--gv-border-danger);
+  background: var(--gv-surface-panel);
   border-radius: var(--gv-radius-6);
   padding: var(--gv-space-12);
   max-width: 250px;
   outline: none;
 
   &:focus {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 
   h3 {
@@ -36,9 +36,8 @@
 .react-aria-Label {
   display: block;
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
-  color: var(--text-color);
-  margin-bottom: var(--spacing-2);
+  color: var(--gv-text-primary);
+  margin-bottom: var(--gv-space-8);
   cursor: default;
 }
 
@@ -46,18 +45,16 @@
 .react-aria-FieldError {
   display: block;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
-  color: var(--invalid-color);
-  margin-top: var(--spacing-1);
+  color: var(--gv-text-danger);
+  margin-top: var(--gv-space-4);
   contain: inline-size;
 }
 
 .field-description {
   display: block;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
-  margin-top: var(--spacing-1);
+  margin-top: var(--gv-space-4);
   contain: inline-size;
 
   [data-invalid] > & {
@@ -69,12 +66,12 @@
    the default icon grey, like the Select trigger's chevron; it greys in on hover. */
 .field-Button {
   background: transparent;
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-tertiary);
   forced-color-adjust: none;
   border-radius: var(--gv-radius-6);
   border: none;
   box-shadow: none;
-  margin-left: calc(var(--gv-space-4) - var(--spacing-8));
+  margin-left: calc(var(--gv-space-4) - var(--gv-space-32));
   height: calc(100% - var(--gv-space-8));
   aspect-ratio: 1/1;
   padding: 0;
@@ -93,8 +90,8 @@
   }
 
   &:where([data-hovered], [data-pressed]) {
-    background: var(--gv-surface-hover-strong);
-    color: var(--gv-icon-strong);
+    background: var(--gv-surface-pressed);
+    color: var(--gv-icon-secondary);
   }
 
   @media (forced-colors: active) {
@@ -103,12 +100,12 @@
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 
   &[data-disabled] {
     background: none;
-    color: var(--text-color-disabled);
+    color: var(--gv-text-disabled);
   }
 }

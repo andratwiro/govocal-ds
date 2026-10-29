@@ -13,14 +13,14 @@
 
 /* Linked to a chart (Not in Figma): hover or focus picks its series out, the other rows dim with their series. */
 .gv-legend-row[tabindex]:focus-visible {
-  outline: 2px solid var(--gv-border-selected);
-  outline-offset: 2px;
+  outline: var(--gv-focus-ring);
+  outline-offset: var(--gv-focus-ring-offset);
 }
 .gv-legend-row[data-highlighted] .gv-legend-row__label {
   color: var(--gv-text-primary);
 }
 .gv-legend-row[data-dimmed] {
-  opacity: 0.4;
+  opacity: var(--gv-opacity-dimmed);
 }
 
 .gv-legend-row__swatch {
@@ -34,7 +34,6 @@
   flex: 1 1 0;
   min-width: 0;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-body);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -47,7 +46,6 @@
   min-width: 40px;
   text-align: end;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-primary);
   font-variant-numeric: tabular-nums;
 }
@@ -57,7 +55,6 @@
   min-width: 40px;
   text-align: end;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
   font-variant-numeric: tabular-nums;
 }

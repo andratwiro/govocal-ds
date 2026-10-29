@@ -23,7 +23,7 @@ const tag = <Tag aria-hidden size={16} />;
 function Frame({children}: {children: ReactNode}) {
   return (
     <div style={{width: 'fit-content', border: '1px solid var(--gv-border-control)', borderRadius: 12,
-      background: 'var(--gv-surface-panel)', boxShadow: 'var(--gv-shadow-subtle)'}}>{children}</div>
+      background: 'var(--gv-surface-panel)', boxShadow: 'var(--gv-shadow-raised)'}}>{children}</div>
   );
 }
 

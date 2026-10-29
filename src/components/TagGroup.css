@@ -6,12 +6,12 @@
   display: flex;
   flex-direction: column;
   font: var(--gv-type-ui);
-  color: var(--text-color);
+  color: var(--gv-text-primary);
 
   [slot='errorMessage'] {
-    margin-top: var(--spacing-1);
+    margin-top: var(--gv-space-4);
     font: var(--gv-type-small);
-    color: var(--invalid-color);
+    color: var(--gv-text-danger);
   }
 }
 
@@ -27,7 +27,7 @@
   --button-color: var(--gv-surface-panel);
   --button-border: var(--gv-color-slate-500);
   --button-border-size: 0.5px;
-  --button-text: var(--gv-text-pill);
+  --button-text: var(--gv-text-neutral);
   text-shadow: none;
   forced-color-adjust: none;
   border-radius: var(--gv-radius-full);
@@ -35,11 +35,10 @@
   box-sizing: border-box;
   padding: 0 var(--gv-space-10);
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   cursor: default;
   display: flex;
   align-items: center;
-  gap: var(--spacing-1);
+  gap: var(--gv-space-4);
   transition-property: scale, background, border-color, box-shadow, text-shadow;
   transition-duration: var(--gv-motion-duration-fast);
   transition-timing-function: var(--gv-motion-easing-standard);
@@ -49,11 +48,11 @@
   -webkit-tap-highlight-color: transparent;
 
   &:has(.remove-button) {
-    padding-inline: var(--gv-space-10) var(--gv-space-3);
+    padding-inline: var(--gv-space-10) var(--gv-space-4);
   }
 
   &[data-hovered] {
-    --button-color: var(--gv-surface-hover);
+    --button-color: var(--gv-surface-hovered);
   }
 
   &[data-pressed] {
@@ -61,8 +60,8 @@
   }
 
   &[data-selected] {
-    --button-color: var(--gv-action-checked);
-    --button-border: var(--gv-action-checked);
+    --button-color: var(--gv-surface-selected-strong);
+    --button-border: var(--gv-border-selected);
     --button-text: var(--gv-text-inverse);
   }
 
@@ -77,7 +76,7 @@
     padding: 0;
     margin: 0;
     appearance: none;
-    color: var(--gv-icon-default);
+    color: var(--gv-icon-tertiary);
     font: inherit;
     transition: color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
     outline: none;
@@ -100,8 +99,8 @@
     }
 
     &:where([data-hovered], [data-pressed]) {
-      background: var(--gv-surface-hover-strong);
-      color: var(--gv-icon-strong);
+      background: var(--gv-surface-pressed);
+      color: var(--gv-icon-secondary);
     }
 
     @media (forced-colors: active) {
@@ -114,7 +113,7 @@
     }
 
     &[data-focus-visible] {
-      outline: 2px solid var(--focus-ring-color);
+      outline: var(--gv-focus-ring);
       outline-offset: -1px;
     }
   }

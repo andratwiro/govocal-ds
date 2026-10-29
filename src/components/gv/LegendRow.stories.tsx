@@ -43,7 +43,7 @@ export const CountAndPercent: Story = () => (
     <LegendRow color="--gv-chart-agree" label="Agree" count={21} value="3%" />
     <LegendRow color="--gv-chart-disagree" label="Disagree" count={88} value="14%" />
     <LegendRow color="--gv-chart-pass" label="Unsure" count={12} value="2%" />
-    <LegendRow color="--gv-surface-pill" label="Not seen yet" count={519} value="81%" />
+    <LegendRow color="--gv-surface-neutral" label="Not seen yet" count={519} value="81%" />
   </div>
 );
 CountAndPercent.storyName = 'Count and percent';

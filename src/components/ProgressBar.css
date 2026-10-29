@@ -14,7 +14,6 @@
   width: 250px;
   color: var(--gv-text-primary);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
 
   .react-aria-Label {
     margin-bottom: 0;
@@ -31,13 +30,13 @@
     forced-color-adjust: none;
     height: 6px;
     border-radius: var(--gv-radius-full);
-    background: var(--gv-surface-pill);
+    background: var(--gv-surface-neutral);
     box-shadow: none;
     overflow: clip;
   }
 
   .fill {
-    background: var(--gv-surface-brand-mark);
+    background: var(--gv-surface-accent-strong);
     height: 100%;
     width: var(--percent);
     border-radius: inherit;
@@ -56,7 +55,7 @@
 
       @media (prefers-reduced-motion: reduce) {
         width: 100%;
-        opacity: 0.4;
+        opacity: 0.4; /* raw: a still, faint full bar standing for the sweep under reduced motion */
         animation: none;
       }
     }

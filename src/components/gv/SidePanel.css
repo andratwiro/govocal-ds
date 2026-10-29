@@ -11,14 +11,14 @@
   position: fixed;
   inset-block: var(--gv-space-16);
   inset-inline-end: var(--gv-space-16);
-  z-index: 50;
+  z-index: var(--gv-layer-panel);
   display: flex;
   box-sizing: border-box;
   width: min(var(--gv-side-panel-width), calc(100vw - 2 * var(--gv-space-16)));
-  border: 1px solid var(--gv-border-card);
+  border: 1px solid var(--gv-border-default);
   border-radius: var(--gv-radius-14);
   background: var(--gv-surface-panel);
-  box-shadow: var(--gv-shadow-dialog);
+  box-shadow: var(--gv-shadow-overlay);
   overflow: hidden;
   font-family: var(--gv-font-family);
   color: var(--gv-text-primary);
@@ -72,9 +72,9 @@
   align-items: center;
   gap: var(--gv-space-8);
   flex: none;
-  padding-block: var(--gv-space-14);
-  padding-inline: var(--gv-space-24) var(--gv-space-18);
-  border-block-end: 1px solid var(--gv-divider-default);
+  padding-block: var(--gv-space-16);
+  padding-inline: var(--gv-space-24) var(--gv-space-16);
+  border-block-end: 1px solid var(--gv-border-subtle);
 }
 
 .gv-side-panel__label {
@@ -84,7 +84,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 }
 
@@ -99,7 +98,6 @@
 .gv-side-panel__position {
   padding: 0 var(--gv-space-4);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   font-variant-numeric: tabular-nums;
   color: var(--gv-text-secondary);
   white-space: nowrap;
@@ -112,7 +110,6 @@
   overflow-y: auto;
   padding: var(--gv-space-16) var(--gv-space-24) var(--gv-space-24);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
 }
 
 /* Footer: padding 16 24, a hairline on top, its content at the end. */
@@ -123,20 +120,19 @@
   gap: var(--gv-space-12);
   flex: none;
   padding: var(--gv-space-16) var(--gv-space-24);
-  border-block-start: 1px solid var(--gv-divider-strong);
+  border-block-start: 1px solid var(--gv-border-default);
 }
 
 /* Sections: 24 of air either side of a 1px hairline (the prototype's .pj-mdiv). */
 .gv-side-panel__section + .gv-side-panel__section {
   margin-block-start: var(--gv-space-24);
   padding-block-start: var(--gv-space-24);
-  border-block-start: 1px solid var(--gv-divider-strong);
+  border-block-start: 1px solid var(--gv-border-default);
 }
 
 .gv-side-panel__section-title {
   margin: 0 0 var(--gv-space-12);
   font: var(--gv-type-body-strong);
-  letter-spacing: var(--gv-type-body-strong-tracking);
   color: var(--gv-text-primary);
 }
 
@@ -146,13 +142,11 @@
 .gv-side-panel__record-title {
   margin: 0 0 var(--gv-space-8);
   font: var(--gv-type-body-strong);
-  letter-spacing: var(--gv-type-body-strong-tracking);
   color: var(--gv-text-primary);
 }
 
 .gv-side-panel__record-text {
   font: var(--gv-type-body);
-  letter-spacing: var(--gv-type-body-tracking);
   color: var(--gv-text-primary);
   overflow-wrap: anywhere;
 
@@ -172,13 +166,11 @@
   row-gap: var(--gv-space-4);
   margin: var(--gv-space-16) 0 0;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 }
 
 .gv-side-panel__record-author {
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-primary);
 }
 
@@ -213,14 +205,13 @@
   margin-block-end: var(--gv-space-16);
   padding: var(--gv-space-12);
   padding-inline-start: var(--gv-space-16);
-  border: 1px solid color-mix(in srgb, var(--gv-icon-warning) 30%, transparent);
+  border: 1px solid var(--gv-border-warning);
   border-radius: var(--gv-radius-12);
-  background: color-mix(in srgb, var(--gv-icon-warning) 9%, var(--gv-surface-panel));
+  background: var(--gv-surface-warning);
 }
 
 .gv-side-panel__decision-title {
   font: var(--gv-type-body-strong);
-  letter-spacing: var(--gv-type-body-strong-tracking);
   color: var(--gv-text-primary);
 }
 

@@ -5,7 +5,7 @@
    Override. */
 .gv-access-rights {
   overflow: hidden;
-  border: 1px solid var(--gv-border-card);
+  border: 1px solid var(--gv-border-default);
   border-radius: var(--gv-radius-14);
   background: var(--gv-surface-panel);
   font-family: var(--gv-font-family);
@@ -15,15 +15,14 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--gv-space-14);
+  gap: var(--gv-space-16);
   min-height: 32px;
   padding: var(--gv-space-16) var(--gv-space-20);
-  border-block-end: 1px solid var(--gv-border-card);
+  border-block-end: 1px solid var(--gv-border-default);
 }
 
 .gv-access-rights__status {
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
   white-space: nowrap;
 }
@@ -36,7 +35,7 @@
   transition: opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 
   &[data-read-only] {
-    opacity: 0.62;
+    opacity: 0.62; /* raw: read-only rules, readable but quieter than ones that can be changed (not disabled) */
   }
 
   > .gv-section-label {
@@ -67,12 +66,11 @@
   align-items: flex-start;
   gap: var(--gv-space-8);
   margin: var(--gv-space-4) 0 0;
-  padding: var(--gv-space-12) var(--gv-space-14);
+  padding: var(--gv-space-12) var(--gv-space-16);
   border-radius: var(--gv-radius-10);
-  background: var(--gv-surface-stage);
+  background: var(--gv-surface-tertiary);
   color: var(--gv-text-secondary);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
 
   > svg {
     flex: none;
@@ -83,14 +81,14 @@
 /* Require sign-in's settings (prototype .pj-cc): a bordered box, radius 12, sections split by a hairline. */
 .gv-access-rights__config {
   padding-inline: var(--gv-space-16);
-  border: 1px solid var(--gv-border-card);
+  border: 1px solid var(--gv-border-default);
   border-radius: var(--gv-radius-12);
 }
 
 .gv-access-rights__section + .gv-access-rights__section {
   margin-inline: calc(-1 * var(--gv-space-16));
   padding-inline: var(--gv-space-16);
-  border-block-start: 1px solid var(--gv-border-card);
+  border-block-start: 1px solid var(--gv-border-default);
 }
 
 .gv-access-rights__section-heading {
@@ -103,19 +101,18 @@
   align-items: center;
   gap: var(--gv-space-8);
   width: 100%;
-  padding: var(--gv-space-14) 0;
+  padding: var(--gv-space-16) 0;
   border: 0;
   background: none;
-  color: var(--gv-text-accent);
+  color: var(--gv-text-brand);
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   text-align: start;
   cursor: pointer;
   outline: none;
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
     border-radius: var(--gv-radius-4);
   }
 
@@ -157,26 +154,23 @@
 .gv-access-rights__toggle {
   .react-aria-SwitchButton {
     font: var(--gv-type-ui-strong);
-    letter-spacing: var(--gv-type-ui-strong-tracking);
   }
 
   [slot='description'] {
     max-width: 62ch;
     margin-inline-start: calc(var(--gv-size-control-36) + var(--gv-space-8));
     font: var(--gv-type-small);
-    letter-spacing: var(--gv-type-small-tracking);
     color: var(--gv-text-secondary);
   }
 }
 
 .gv-access-rights__toggle-icon {
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-tertiary);
 }
 
 .gv-access-rights__lead {
   margin: 0;
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-secondary);
 }
 

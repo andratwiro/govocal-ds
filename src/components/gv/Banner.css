@@ -16,19 +16,19 @@
 }
 
 .gv-banner[data-tone='neutral'] {
-  background: var(--gv-surface-hover);
+  background: var(--gv-surface-hovered);
 }
 
 .gv-banner[data-tone='warning'] {
-  background: color-mix(in srgb, var(--gv-color-amber-600) 14%, var(--gv-surface-panel));
+  background: var(--gv-surface-warning);
 }
 
 .gv-banner[data-tone='success'] {
-  background: var(--gv-surface-live);
+  background: var(--gv-surface-success);
 }
 
 .gv-banner[data-tone='ai'] {
-  background: var(--gv-surface-ai);
+  background: var(--gv-surface-info);
 }
 
 .gv-banner__icon {
@@ -54,7 +54,7 @@
 
 .gv-banner[data-tone='success'] .gv-banner__icon,
 .gv-banner[data-tone='success'] .gv-banner__title {
-  color: var(--gv-text-live);
+  color: var(--gv-text-success-strong);
 }
 
 .gv-banner[data-tone='ai'] .gv-banner__icon,
@@ -79,14 +79,12 @@
   min-width: 0;
   margin: 0;
   font: var(--gv-type-body);
-  letter-spacing: var(--gv-type-body-tracking);
   color: var(--gv-text-body);
 }
 
 .gv-banner[data-tone='ai'] .gv-banner__text,
 .gv-banner:has(.gv-banner__link--trailing) .gv-banner__text {
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
 }
 
@@ -94,7 +92,6 @@
   display: block;
   margin-block-end: var(--gv-space-4);
   font: var(--gv-type-body-strong);
-  letter-spacing: var(--gv-type-body-strong-tracking);
 }
 
 .gv-banner__link {
@@ -110,8 +107,8 @@
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 }
 
@@ -121,8 +118,7 @@
   align-items: center;
   gap: var(--gv-space-6);
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
-  color: var(--gv-text-accent);
+  color: var(--gv-text-link);
   text-decoration: none;
 
   &[data-hovered] {
@@ -154,7 +150,6 @@
 
 .gv-banner__strip-title {
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
 }
 
 .gv-banner--compact[data-tone='neutral'] .gv-banner__strip-title {
@@ -162,11 +157,10 @@
 }
 
 .gv-banner--compact[data-tone='success'] .gv-banner__strip-title {
-  color: var(--gv-text-live);
+  color: var(--gv-text-success-strong);
 }
 
 .gv-banner__strip-meta {
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-secondary);
 }

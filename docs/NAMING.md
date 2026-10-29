@@ -193,3 +193,65 @@ The checklist (the designer, alone, in order):
 `npm run figma:spec -- "<Name or Group/Name>"` looks a component up on the Components and Patterns pages by its last
 slash segment, so it finds a component before and after the rename (`Rail header`, `Project rail/Rail header`); a
 component renamed in code but not yet in Figma (`Status badge`) is not found until Figma follows.
+
+## Token names
+
+Every token is a CSS custom property, `--gv-` plus its DTCG path joined with `-` (`surface.brand-strong` →
+`--gv-surface-brand-strong`). A group is one segment and a name inside a group may hold dashes; the groups whose own
+name has a dash (`side-nav`, `border-width`) are listed in `scripts/lib/names.mjs`. Figma's name is the same path
+joined with `/` (`surface/brand-strong`). The whole set, with values, descriptions and Figma ids, is `public/tokens.json`
+(published as `dist/tokens.json`), built with `src/tokens.css` by `npm run tokens:build`: that file is the closed set
+to pick from.
+
+**Tiers**
+
+| Tier | Pattern | Who uses it |
+|---|---|---|
+| Primitive | `--gv-color-{hue}-{step}`, `--gv-color-alpha-{hue}-{percent}` | semantic tokens only (`tests/paint.test.mjs`) |
+| Scales | `--gv-space-{px}`, `--gv-radius-{px\|full}`, `--gv-size-{icon\|control\|avatar}-{px}`, `--gv-font-size-{px}`, `--gv-font-line-height-{px}`, `--gv-font-weight-{regular\|medium}`, `--gv-font-family`, `--gv-font-tracking`, `--gv-border-width-{px}`, `--gv-motion-{duration\|easing}-{role}`, `--gv-opacity-{role}`, `--gv-layer-{role}` | components |
+| Semantic | colour `--gv-{property}-{role}[-strong][-{state}]`; `--gv-type-{role}`; `--gv-shadow-{raised\|raised-strong\|overlay}`; `--gv-focus-ring[-offset[-inset]]` | components |
+| Component | `--gv-side-nav-{property}[-{state}]` | the side nav only: the one dark surface |
+
+**The colour grammar:** `--gv-{property}-{role}[-strong][-{state}]`.
+
+- property: `surface` (fills) · `text` · `icon` · `border` (borders, outlines, rings). `chart-*` is its own data-viz
+  namespace.
+- role, neutral ladders: text and icon `primary` · `secondary` · `tertiary` (icon also `quiet`); surface `app` ·
+  `panel` · `secondary` · `tertiary`; border `subtle` · `row` · `default` · `strong` · `control`.
+- role, intents: `neutral` · `brand` · `accent` · `info` · `success` · `warning` · `danger` · `selected` · `inverse`.
+- role, special: `body` · `placeholder` · `link` · `backdrop`.
+- emphasis: none (on a surface, the tint) or `strong` (the solid fill).
+- state: `hovered` · `pressed` · `selected` · `disabled` · `focused`, React Aria's words: `[data-pressed] { background:
+  var(--gv-surface-pressed) }`.
+
+Rules (`tests/token-names.test.mjs`):
+
+1. The property comes first. Where a `text-X` exists, an `icon-X` exists with the same value unless its description
+   says otherwise.
+2. No hue word outside `color-*` and `chart-*`; no component word outside the side nav's tier; no Go Vocal word
+   (`live`, `reviewed`) anywhere.
+3. Every token has a description (`$description`, or `tokens/descriptions.json` for the ones Figma pulls); it says
+   what the token is for, and tokens.css carries it as the line's comment.
+4. Two tokens of one property under ΔE 2 merge, or the guard's list says why they stay two.
+5. A new token needs a role no token covers, and is written where its tier lives: Figma's ones come from
+   `npm run tokens:pull`, the rest are **Not in Figma**, by hand in `tokens/semantic.tokens.json` (colour, focus,
+   opacity, layers, font), `tokens/size.tokens.json` or `tokens/motion.tokens.json`. When Figma gains one, it leaves the
+   hand-written file (the build refuses a path defined twice).
+
+**Scales:** named by their value. Spacing is base 4: `0 · 2 · 4 · 6 · 8 · 10 · 12 · 16 · 20 · 24 · 28 · 32 · 40 · 48
+· 56 · 64 · 104`; radius `2 · 4 · 6 · 8 · 10 · 12 · 14 · 22 · full`. A 1px or 3px offset on a position (`top`,
+`inset`, `translate`, a nudging `margin`) is written raw; padding, gap and radius never take one
+(`tests/tokens-only.test.mjs`).
+
+**Type:** a role sets everything, `font: var(--gv-type-<role>)`; a weight override is
+`font-weight: var(--gv-font-weight-medium)`, never a number. Letter spacing is `--gv-font-tracking`, once, on `:root`.
+
+**Named by Figma variable id.** `tokens/variable-ids.json` maps each Figma variable id to its CSS name, so the code can
+rename before Figma does and a pull keeps the code's name; `tokens/figma-report.json` lists where Figma's name still
+differs (the Foundations pages show it as "Figma: surface/stage (to rename)").
+
+**Renames:** `tokens/renames.json` is the map, `npm run tokens:rename` rewrites every stylesheet, story, page and e2e
+spec by it (`-- --check` says what would change), and it is idempotent: run it again on a newer branch and only the
+new uses move. There are no aliases: an old name is no token, and `tests/tokens-defined.test.mjs` fails on it with its
+replacement. A raw value that must stay (colour-picker chrome, a mask, a one-off opacity) carries
+`/* raw: why */` right after its declaration.

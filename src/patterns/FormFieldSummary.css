@@ -26,7 +26,6 @@
   padding-block: var(--gv-space-10);
   border-block-end: 1px solid var(--gv-border-row);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
 }
 
@@ -48,7 +47,6 @@
 .gv-form-summary__type {
   flex: none;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
   white-space: nowrap;
 }

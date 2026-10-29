@@ -1,8 +1,11 @@
 import {describe, it, expect} from 'vitest';
-import {readFileSync} from 'node:fs';
+import {readFileSync, existsSync} from 'node:fs';
 import {parseFoundations} from '../scripts/lib/foundations.mjs';
 import {toCss} from '../scripts/lib/css.mjs';
-import {mergeTokens} from '../scripts/lib/merge.mjs';
+import {mergeTokens, describe as describeTokens} from '../scripts/lib/merge.mjs';
+import {loadTokens} from '../scripts/lib/build.mjs';
+import {cssOf} from '../scripts/lib/names.mjs';
+import {toJson} from '../scripts/lib/json.mjs';
 import {parseIcons} from '../scripts/lib/icons.mjs';
 
 const text = (name, chars, style = {}) => ({type: 'TEXT', name, characters: chars, style});
@@ -18,7 +21,9 @@ const page = {type: 'CANVAS', name: 'Foundations', children: [{type: 'FRAME', na
       swatch('surface/live', 'alpha/green-12', {r: 0.031, g: 0.514, b: 0.227, a: 1}, 0.12, 'VariableID:10:4')]}]}]},
   {type: 'FRAME', name: 'Typography', children: [{type: 'FRAME', name: 'Stat small', children: [
     {type: 'FRAME', name: 'Label', children: [text('Stat small', 'Stat small'), text('20/24 Medium', '20/24 Medium')]},
-    text('sample', 'Small number tiles', {fontFamily: 'Public Sans', fontSize: 20, lineHeightPx: 24, fontWeight: 500, letterSpacing: 0})]}]},
+    {...text('sample', 'Small number tiles', {fontFamily: 'Public Sans', fontSize: 20, lineHeightPx: 24, fontWeight: 500, letterSpacing: 0}),
+      boundVariables: Object.fromEntries([['fontFamily', '1:141'], ['fontSize', '45:2'], ['lineHeight', '1:163'],
+        ['fontWeight', '1:167'], ['letterSpacing', '1:169']].map(([k, id]) => [k, [{type: 'VARIABLE_ALIAS', id: `VariableID:${id}`}]]))}]}]},
   {type: 'FRAME', name: 'space/14', children: [text('space/14', 'space/14'),
     {type: 'RECTANGLE', name: 'Bar', absoluteBoundingBox: {width: 14, height: 12},
       boundVariables: {size: {x: {type: 'VARIABLE_ALIAS', id: 'VariableID:1:100'}}}}]},
@@ -55,10 +60,73 @@ describe('parseFoundations', () => {
     expect(variableIds['VariableID:1:100']).toBe('--gv-space-14');
     expect(variableIds['VariableID:1:119']).toBe('--gv-radius-full');
   });
+  it('names nothing differently from Figma when the id map agrees, so the report is empty', () => {
+    expect(parseFoundations(page, {names: variableIds}).report).toEqual([]);
+  });
   it('refuses one primitive with two values', () => {
     const bad = structuredClone(page);
     bad.children[0].children[0].children[0].children[0].children[1].children[0].fills[0].color.r = 0.5;
     expect(() => parseFoundations(bad)).toThrow(/slate\/100/);
+  });
+});
+
+describe('parseFoundations names tokens by Figma variable id', () => {
+  const names = {'VariableID:1:38': '--gv-surface-app', 'VariableID:1:43': '--gv-surface-pressed',
+    'VariableID:10:4': '--gv-surface-success', 'VariableID:1:100': '--gv-space-14', 'VariableID:1:119': '--gv-radius-full'};
+  it('takes the name the id map gives, whatever the frame is called, and reports where Figma differs', () => {
+    const {tokens, report} = parseFoundations(page, {names});
+    expect(tokens.surface.pressed.$value).toBe('{color.slate.100}');
+    expect(tokens.surface['hover-strong']).toBeUndefined();
+    expect(report.map(r => r.text)).toEqual([
+      'Figma still calls VariableID:1:43 `surface/hover-strong`; code calls it `--gv-surface-pressed`',
+      'Figma still calls VariableID:10:4 `surface/live`; code calls it `--gv-surface-success`']);
+  });
+  it('gives an id the map lacks its frame name, adds it to the map and says so', () => {
+    const {tokens, variableIds, report} = parseFoundations(page, {names: {}});
+    expect(tokens.surface.live.$value).toBe('{color.alpha.green-12}');
+    expect(variableIds['VariableID:10:4']).toBe('--gv-surface-live');
+    expect(report.filter(r => r.kind === 'new')).toHaveLength(5);
+  });
+  it('drops a merged or dropped id (the target wins) and reports it until Figma deletes it', () => {
+    const renames = [
+      {from: '--gv-surface-pressed', to: '--gv-surface-app', figmaId: 'VariableID:1:43', merge: true, why: 'same value'},
+      {from: '--gv-space-14', drop: '14px', figmaId: 'VariableID:1:100', why: 'not on the scale'}];
+    const {tokens, report} = parseFoundations(page, {names, renames});
+    expect(Object.keys(tokens.surface)).toEqual(['app', 'success']);
+    expect(tokens.space['14']).toBeUndefined();
+    expect(report.map(r => r.text)).toEqual(expect.arrayContaining([
+      'Figma still has VariableID:1:43 `surface/hover-strong` (slate/100); code merged it into `--gv-surface-app` (same value)',
+      'Figma still has VariableID:1:100 `space/14`; code dropped it (not on the scale)']));
+  });
+  it('renames what has no variable id (primitives, shadows) by the rename map', () => {
+    const renames = [{from: '--gv-color-slate-100', to: '--gv-color-grey-100'}, {from: '--gv-shadow-dialog', to: '--gv-shadow-overlay'}];
+    const {tokens, report} = parseFoundations(page, {names, renames});
+    expect(tokens.color.grey['100'].$value.hex).toBe('#edeff0');
+    expect(tokens.surface.app.$value).toBe('{color.grey.100}');
+    expect(tokens.shadow.overlay.$value[0].blur).toEqual({value: 60, unit: 'px'});
+    expect(report.map(r => r.text)).toEqual(expect.arrayContaining([
+      'Figma still calls `slate/100`; code calls it `--gv-color-grey-100`',
+      'Figma still calls `shadow/dialog`; code calls it `--gv-shadow-overlay`']));
+  });
+  it('refuses two variables that would share one name unless one is marked a merge', () => {
+    expect(() => parseFoundations(page, {names: {...names, 'VariableID:1:43': '--gv-surface-app'}}))
+      .toThrow(/VariableID:1:38 and VariableID:1:43 are both named --gv-surface-app/);
+  });
+});
+
+// The cached Figma file (.cache/, linked from the main checkout; never downloaded by a test). CI has no cache: skipped.
+const cache = 'tokens/figma.config.json';
+const cacheFile = existsSync(cache) && `.cache/figma-${JSON.parse(readFileSync(cache, 'utf8')).fileKey}.json`;
+describe.skipIf(!cacheFile || !existsSync(cacheFile))('the cached Figma file', () => {
+  it('pulls to exactly the committed Figma token files and report (npm run tokens:pull -- --cached)', async () => {
+    const {page: pageOf, config} = await import('../scripts/lib/figma.mjs');
+    const file = JSON.parse(readFileSync(cacheFile, 'utf8'));
+    const read = path => JSON.parse(readFileSync(path, 'utf8'));
+    const renames = existsSync('tokens/renames.json') ? read('tokens/renames.json').renames : [];
+    const pulled = parseFoundations(pageOf(file, config.foundationsPage), {names: read('tokens/variable-ids.json'), renames});
+    expect(pulled.tokens).toEqual(read('tokens/foundations.tokens.json'));
+    expect(pulled.variableIds).toEqual(read('tokens/variable-ids.json'));
+    expect(pulled.report).toEqual(read('tokens/figma-report.json').report);
   });
 });
 
@@ -76,18 +144,57 @@ describe('toCss', () => {
   });
 });
 
+// The font primitives, hand-written (tokens/semantic.tokens.json) with the Figma ids the samples bind.
+const fontFile = {font: {
+  family: {$type: 'fontFamily', $value: ['Public Sans', 'system-ui', 'sans-serif'], $description: 'The face.'},
+  'size-20': {$type: 'dimension', $value: {value: 20, unit: 'px'}, $description: 'Stat small.'},
+  'line-height-24': {$type: 'dimension', $value: {value: 24, unit: 'px'}},
+  'weight-medium': {$type: 'fontWeight', $value: 500},
+  tracking: {$type: 'dimension', $value: {value: 0, unit: 'px'}}}};
+const fontIds = {'VariableID:1:141': '--gv-font-family', 'VariableID:45:2': '--gv-font-size-20',
+  'VariableID:1:163': '--gv-font-line-height-24', 'VariableID:1:167': '--gv-font-weight-medium', 'VariableID:1:169': '--gv-font-tracking'};
+
+describe('parseFoundations reads the font variables a type sample binds', () => {
+  it('writes each bound part as a reference to its font token, and the line height as DTCG\'s ratio', () => {
+    expect(parseFoundations(page, {names: fontIds}).tokens.type['stat-small'].$value).toEqual({fontFamily: '{font.family}',
+      fontSize: '{font.size-20}', lineHeight: 1.2, fontWeight: '{font.weight-medium}', letterSpacing: '{font.tracking}'});
+  });
+  it('keeps the drawn value of a part whose variable has no name', () => {
+    expect(parseFoundations(page).tokens.type['stat-small'].$value.fontSize).toEqual({value: 20, unit: 'px'});
+  });
+});
+
 describe('toCss annotations for storybook-design-token', () => {
   const css = toCss(parseFoundations(page).tokens);
   it('opens one annotated category per kind', () => {
+    const withFont = toCss(mergeTokens(parseFoundations(page).tokens, fontFile));
     for (const c of ['Colour primitives @presenter Color', 'surface @presenter Color', 'Space @presenter Spacing',
       'Radius @presenter BorderRadius', 'Font size @presenter FontSize', 'Line height @presenter LineHeight',
-      'Font weight @presenter FontWeight', 'Shadow @presenter Shadow'])
-      expect(css).toContain(`/** @tokens ${c} */`);
+      'Font weight @presenter FontWeight', 'Letter spacing @presenter LetterSpacing', 'Shadow @presenter Shadow'])
+      expect(withFont).toContain(`/** @tokens ${c} */`);
   });
-  it('splits type roles for the presenters', () => {
-    expect(css).toContain('--gv-type-stat-small-size: 20px;');
-    expect(css).toContain('--gv-type-stat-small-line: 24px;');
-    expect(css).toContain('--gv-type-stat-small-weight: 500;');
+  it('writes the font primitives, each with its description as the line comment', () => {
+    const withFont = toCss(mergeTokens(parseFoundations(page).tokens, fontFile));
+    expect(withFont).toContain('/** @tokens Font size @presenter FontSize */\n  --gv-font-size-20: 20px; /* Stat small. */');
+    expect(withFont).toContain('--gv-font-line-height-24: 24px;');
+    expect(withFont).toContain('--gv-font-weight-medium: 500;');
+    expect(withFont).toContain("--gv-font-family: 'Public Sans', system-ui, sans-serif; /* The face. */");
+    expect(withFont).toContain('/** @tokens Letter spacing @presenter LetterSpacing */\n  --gv-font-tracking: 0px;');
+  });
+  it('builds each role from the font primitives, by reference or by value', () => {
+    const fromRefs = toCss(mergeTokens(parseFoundations(page, {names: fontIds}).tokens, fontFile));
+    expect(fromRefs).toContain('--gv-type-stat-small: var(--gv-font-weight-medium) var(--gv-font-size-20)/var(--gv-font-line-height-24) var(--gv-font-family);');
+    // A role pulled without bound variables (literal parts) finds the same primitives by value.
+    expect(toCss(mergeTokens(parseFoundations(page).tokens, fontFile))).toContain(
+      '--gv-type-stat-small: var(--gv-font-weight-medium) var(--gv-font-size-20)/var(--gv-font-line-height-24) var(--gv-font-family);');
+  });
+  it('writes no per-role size, line, weight or tracking: an override takes a font primitive', () => {
+    expect(css).not.toMatch(/--gv-type-[a-z-]+-(size|line|weight|tracking):/);
+  });
+  it('refuses a role that tracks differently from --gv-font-tracking', () => {
+    const tokens = mergeTokens(parseFoundations(page).tokens, fontFile);
+    tokens.type['stat-small'].$value.letterSpacing = {value: 0.5, unit: 'px'};
+    expect(() => toCss(tokens)).toThrow(/type.stat-small tracks 0.5px/);
   });
 });
 
@@ -126,14 +233,44 @@ describe('mergeTokens', () => {
     expect(merged.$description).toBeUndefined();
     expect(figma.motion).toBeUndefined();
   });
-  it('refuses a group that both files define', () => {
-    expect(() => mergeTokens({...figma, motion: {}}, motionFile)).toThrow(/motion/);
+  it('merges by token path: a hand-written token joins a Figma group', () => {
+    const merged = mergeTokens(figma, {surface: {danger: {$type: 'color', $value: '{color.slate.100}'}}});
+    expect(Object.keys(merged.surface)).toEqual(['app', 'hover-strong', 'live', 'danger']);
+    expect(figma.surface.danger).toBeUndefined();
+  });
+  it('refuses a token path that two files define, naming it', () => {
+    expect(() => mergeTokens(figma, {surface: {app: {$type: 'color', $value: '{color.slate.100}'}}}))
+      .toThrow(/token "surface.app" is in two token files/);
+    expect(() => mergeTokens(figma, {surface: {app: {deeper: {$type: 'color', $value: '{x}'}}}})).toThrow(/surface.app/);
   });
   it('a Figma pull writes only the Figma files', () => {
     const pull = readFileSync('scripts/figma-pull.mjs', 'utf8');
-    expect(pull).not.toMatch(/motion|size\.tokens/);
-    expect(readFileSync('scripts/build-tokens.mjs', 'utf8')).toContain('tokens/motion.tokens.json');
-    expect(readFileSync('scripts/build-tokens.mjs', 'utf8')).toContain('tokens/size.tokens.json');
+    expect(pull).not.toMatch(/motion|size\.tokens|semantic\.tokens/);
+    const build = readFileSync('scripts/lib/build.mjs', 'utf8');
+    for (const f of ['motion', 'size', 'semantic']) expect(build).toContain(`tokens/${f}.tokens.json`);
+  });
+});
+
+describe('describe (tokens/descriptions.json)', () => {
+  const tree = () => ({surface: {app: {$type: 'color', $value: '{color.slate.100}'}},
+    color: {slate: {'50': {$type: 'color', $value: {}}, '100': {$type: 'color', $value: {}}}}});
+  const name = path => cssOf(...path);
+  it('lays a description on each token by CSS name, and a `-*` key on a whole ramp', () => {
+    const out = describeTokens(tree(), {'--gv-surface-app': 'The page.', '--gv-color-slate-*': 'Cool grey.',
+      '--gv-color-slate-50': 'The lightest.'}, name);
+    expect(out.surface.app.$description).toBe('The page.');
+    expect(out.color.slate['50'].$description).toBe('The lightest.');
+    expect(out.color.slate['100'].$description).toBe('Cool grey.');
+  });
+  it('refuses a name that is no token, and a token described twice', () => {
+    expect(() => describeTokens(tree(), {'--gv-surface-gone': 'x'}, name)).toThrow(/--gv-surface-gone/);
+    const t = tree(); t.surface.app.$description = 'Own.';
+    expect(() => describeTokens(t, {'--gv-surface-app': 'x'}, name)).toThrow(/--gv-surface-app has a \$description/);
+  });
+  it('leaves the tree it was given alone', () => {
+    const t = tree();
+    describeTokens(t, {'--gv-surface-app': 'x'}, name);
+    expect(t.surface.app.$description).toBeUndefined();
   });
 });
 
@@ -197,9 +334,60 @@ describe('toCss size', () => {
 });
 
 describe('src/tokens.css', () => {
-  it('is the build of the Figma file, the motion file and the size file (run npm run tokens:build)', () => {
-    const read = path => JSON.parse(readFileSync(path, 'utf8'));
-    expect(readFileSync('src/tokens.css', 'utf8')).toBe(toCss(mergeTokens(read('tokens/foundations.tokens.json'),
-      read('tokens/motion.tokens.json'), read('tokens/size.tokens.json'))));
+  it('is the build of the Figma file, the hand-written ones and the descriptions (run npm run tokens:build)', () => {
+    expect(readFileSync('src/tokens.css', 'utf8')).toBe(toCss(loadTokens()));
+  });
+  it('describes every token', () => {
+    const missing = [];
+    const walk = (node, path) => Object.entries(node).forEach(([k, v]) => {
+      if (k.startsWith('$') || typeof v !== 'object') return;
+      if ('$value' in v) { if (!v.$description?.trim()) missing.push(cssOf(...path, k)); } else walk(v, [...path, k]);
+    });
+    walk(loadTokens(), []);
+    expect(missing).toEqual([]);
+  });
+  it('every Figma id on a hand-written token is the one tokens/variable-ids.json gives that name', () => {
+    const ids = JSON.parse(readFileSync('tokens/variable-ids.json', 'utf8'));
+    const marked = [];
+    const walk = (node, path) => Object.entries(node).forEach(([k, v]) => {
+      if (k.startsWith('$') || typeof v !== 'object') return;
+      if ('$value' in v) { const id = v.$extensions?.['com.figma.variableId']; if (id) marked.push([id, `--gv-${[...path, k].join('-')}`]); }
+      else walk(v, [...path, k]);
+    });
+    for (const f of ['tokens/semantic.tokens.json', 'tokens/size.tokens.json']) walk(JSON.parse(readFileSync(f, 'utf8')), []);
+    expect(marked.length).toBeGreaterThan(10);
+    for (const [id, name] of marked) expect(ids[id], id).toBe(name);
+  });
+});
+
+describe('public/tokens.json (the set as DTCG, published beside Storybook)', () => {
+  const read = path => JSON.parse(readFileSync(path, 'utf8'));
+  it('keeps each token whole and adds its CSS name and its Figma id, the unmerged one first', () => {
+    const tokens = {color: {slate: {100: {$type: 'color', $value: '#eee', $description: 'Slate.'}}},
+      surface: {app: {$type: 'color', $value: '{color.slate.100}', $description: 'The page.'},
+        panel: {$type: 'color', $value: '{color.slate.100}', $description: 'A panel.', $extensions: {'com.figma.variableId': 'VariableID:9:9'}}},
+      motion: {duration: {fast: {$type: 'duration', $value: {value: 120, unit: 'ms'}, $description: 'Fast.',
+        $extensions: {'com.govocal.reducedMotion': {value: 1, unit: 'ms'}}}}}};
+    const out = toJson(tokens, {'VariableID:1:84': '--gv-surface-app', 'VariableID:1:38': '--gv-surface-app', 'VariableID:1:89': null},
+      {renames: [{from: '--gv-control-knob', to: '--gv-surface-app', merge: true, figmaId: 'VariableID:1:84'}]});
+    expect(out.surface.app).toEqual({$type: 'color', $value: '{color.slate.100}', $description: 'The page.',
+      $extensions: {'com.govocal.css': '--gv-surface-app', 'com.figma.variableId': 'VariableID:1:38'}});
+    expect(out.surface.panel.$extensions['com.figma.variableId']).toBe('VariableID:9:9');
+    expect(out.color.slate[100].$extensions).toEqual({'com.govocal.css': '--gv-color-slate-100'});
+    expect(out.motion.duration.fast.$extensions['com.govocal.reducedMotion']).toEqual({value: 1, unit: 'ms'});
+    expect(out.$description).toMatch(/DTCG/);
+  });
+  it('is the build of tokens/ (run npm run tokens:build)', () => {
+    expect(read('public/tokens.json')).toEqual(toJson(loadTokens(), read('tokens/variable-ids.json'), read('tokens/renames.json')));
+  });
+  it('holds every token tokens.css defines, each described', () => {
+    const css = new Set([...readFileSync('src/tokens.css', 'utf8').matchAll(/^\s*(--gv-[\w-]+):/gm)].map(m => m[1]));
+    const found = [];
+    const walk = node => Object.entries(node).forEach(([k, v]) => {
+      if (k.startsWith('$') || typeof v !== 'object') return;
+      if ('$value' in v) { found.push(v.$extensions['com.govocal.css']); expect(v.$description, k).toBeTruthy(); } else walk(v);
+    });
+    walk(read('public/tokens.json'));
+    expect(new Set(found)).toEqual(css);
   });
 });

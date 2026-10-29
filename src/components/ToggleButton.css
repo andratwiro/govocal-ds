@@ -6,15 +6,14 @@
 .react-aria-ToggleButton {
   border: none;
   forced-color-adjust: none;
-  border-radius: var(--radius);
+  border-radius: var(--gv-radius-8);
   appearance: none;
   vertical-align: middle;
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   text-align: center;
   margin: 0;
   height: var(--gv-size-control-36);
-  padding: 0 var(--spacing-4);
+  padding: 0 var(--gv-space-16);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -44,8 +43,8 @@
   }
 
   &[data-selected] {
-    --button-color: var(--gv-color-neutral-900);
-    --button-border: var(--gv-color-neutral-900);
+    --button-color: var(--gv-surface-inverse);
+    --button-border: var(--button-color);
     --button-text: var(--gv-text-inverse);
   }
 

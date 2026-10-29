@@ -6,7 +6,7 @@
   position: fixed;
   bottom: var(--gv-space-16);
   right: var(--gv-space-16);
-  z-index: 100;
+  z-index: var(--gv-layer-overlay);
   display: flex;
   flex-direction: column-reverse;
   gap: var(--gv-space-8);
@@ -14,8 +14,8 @@
   outline: none;
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 }
 
@@ -26,11 +26,11 @@
   box-sizing: border-box;
   display: flex;
   align-items: flex-start;
-  gap: var(--gv-space-11);
+  gap: var(--gv-space-12);
   /* .pj-toast--success: the live green tint laid on white (so nothing shows through), a mint hairline
      (green at 30 % on white), no shadow. */
-  background: linear-gradient(var(--gv-surface-live), var(--gv-surface-live)) var(--gv-surface-panel);
-  border: 1px solid color-mix(in srgb, var(--gv-color-green-400) 30%, var(--gv-surface-panel));
+  background: linear-gradient(var(--gv-surface-success), var(--gv-surface-success)) var(--gv-surface-panel);
+  border: 1px solid var(--gv-border-success);
   padding: var(--gv-space-12) var(--gv-space-16);
   border-radius: var(--gv-radius-12);
   box-shadow: none;
@@ -39,8 +39,8 @@
   view-transition-class: toast;
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 
   /* .pj-toast__ic: an 18 circle, green-400, a white 12 check (the prototype's 11), on the title's first line. */
@@ -51,9 +51,9 @@
     justify-content: center;
     width: var(--gv-size-icon-18);
     height: var(--gv-size-icon-18);
-    margin-top: var(--gv-space-3);
+    margin-top: 3px;
     border-radius: var(--gv-radius-full);
-    background: var(--gv-color-green-400);
+    background: var(--gv-surface-success-strong);
     color: var(--gv-icon-inverse);
 
     > svg {
@@ -67,22 +67,20 @@
     flex-direction: column;
     flex: 1 1 auto;
     min-width: 0;
-    padding-inline-end: var(--gv-space-14);
+    padding-inline-end: var(--gv-space-16);
 
     /* Title: Body strong on a 24 line, the dark green. */
     [slot='title'] {
       font: var(--gv-type-body-strong);
-      line-height: var(--gv-type-title-line);
-      letter-spacing: var(--gv-type-body-strong-tracking);
-      color: var(--gv-text-live);
+      line-height: var(--gv-font-line-height-24);
+      color: var(--gv-text-success-strong);
     }
 
     /* Body: UI, 3 under the title, the dark green two thirds into the slate. */
     [slot='description'] {
-      margin-top: var(--gv-space-3);
+      margin-top: 3px;
       font: var(--gv-type-ui);
-      letter-spacing: var(--gv-type-ui-tracking);
-      color: color-mix(in srgb, var(--gv-text-live) 66%, var(--gv-color-slate-750));
+      color: color-mix(in srgb, var(--gv-text-success-strong) 66%, var(--gv-color-slate-750));
     }
 
     /* .pj-toast__action (success): a 28-tall outlined text button, radius 8, the mint hairline. */
@@ -92,14 +90,13 @@
       display: inline-flex;
       align-items: center;
       height: var(--gv-size-control-28);
-      margin-top: var(--gv-space-11);
+      margin-top: var(--gv-space-12);
       padding: 0 var(--gv-space-12);
-      border: 1px solid color-mix(in srgb, var(--gv-color-green-400) 30%, var(--gv-surface-panel));
+      border: 1px solid var(--gv-border-success);
       border-radius: var(--gv-radius-8);
       background: transparent;
       font: var(--gv-type-ui-strong);
-      letter-spacing: var(--gv-type-ui-strong-tracking);
-      color: var(--gv-text-live);
+      color: var(--gv-text-success-strong);
       cursor: pointer;
       outline: none;
       -webkit-tap-highlight-color: transparent;
@@ -111,8 +108,8 @@
       }
 
       &[data-focus-visible] {
-        outline: 2px solid var(--gv-border-selected);
-        outline-offset: 2px;
+        outline: var(--gv-focus-ring);
+        outline-offset: var(--gv-focus-ring-offset);
       }
     }
   }
@@ -124,7 +121,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin: calc(-1 * var(--gv-space-3)) calc(-1 * var(--gv-space-4)) 0 0;
+    margin: -3px calc(-1 * var(--gv-space-4)) 0 0;
     background: none;
     border: none;
     box-shadow: none;
@@ -133,7 +130,7 @@
     height: var(--gv-size-control-24);
     width: var(--gv-size-control-24);
     min-width: 0;
-    color: color-mix(in srgb, var(--gv-text-live) 55%, var(--gv-color-slate-500));
+    color: color-mix(in srgb, var(--gv-text-success-strong) 55%, var(--gv-color-slate-500));
     padding: 0;
     outline: none;
     -webkit-tap-highlight-color: transparent;
@@ -146,12 +143,12 @@
     &[data-hovered],
     &[data-pressed] {
       background: color-mix(in srgb, var(--gv-color-green-400) 14%, var(--gv-surface-panel));
-      color: var(--gv-text-live);
+      color: var(--gv-text-success-strong);
     }
 
     &[data-focus-visible] {
-      outline: 2px solid var(--gv-border-selected);
-      outline-offset: 2px;
+      outline: var(--gv-focus-ring);
+      outline-offset: var(--gv-focus-ring-offset);
     }
   }
 }

@@ -1,5 +1,6 @@
 import {describe, it, expect} from 'vitest';
-import {readFileSync, readdirSync} from 'node:fs';
+import {readFileSync, readdirSync, existsSync} from 'node:fs';
+import {declarations} from '../scripts/lib/cssdecl.mjs';
 
 // Every stylesheet under src/ except the generated tokens.css, which is where the values live.
 const css = readdirSync('src', {recursive: true}).filter(f => f.endsWith('.css') && f !== 'tokens.css')
@@ -27,6 +28,15 @@ const familyOf = prop => {
   return null;
 };
 
+// Base 4 (the project lead's call, docs/DECISIONS.md "Token names"): the only space and radius steps. A step off these
+// is gone from tokens.css and fails here with the scale to pick from.
+export const SPACE = [0, 2, 4, 6, 8, 10, 12, 16, 20, 24, 28, 32, 40, 48, 56, 64, 104];
+export const RADIUS = [2, 4, 6, 8, 10, 12, 14, 22];
+// A position or offset (top, inset, a margin that nudges a mark onto a line) may take a raw 1px or 3px: an offset, not
+// spacing. Padding, gap and radius never do; strokes are 1, 1.5, 2 or 3px wherever they are (a box-shadow ring).
+const POSITION = /^(inset(-[a-z-]+)?|top|right|bottom|left|margin(-[a-z-]+)?)$/;
+const OFFSET = new Set([1, 3]);
+
 const GLOBAL = /^(inherit|initial|unset|revert|revert-layer)$/;
 // Units that follow the viewport or container, not a design value (the starter centres its modal with 50vw).
 const RELATIVE = /^(%|vw|vh|vi|vb|vmin|vmax|dvh|dvw|svh|svw|lvh|lvw|cqw|cqh|cqi|cqb|cqmin|cqmax)$/;
@@ -48,7 +58,7 @@ const layers = value => {
 
 // Why one value breaks the rule, or null. var(--x) is a token (or the starter's alias of one, checked where it
 // is defined); its fallback, if any, is read like any other value.
-export function rawValue(family, value) {
+export function rawValue(family, value, prop = '') {
   const v = value.replace(/var\(\s*--[\w-]+\s*/g, 'var(').replace(/!important/g, '').trim();
   const words = v.replace(/var\(/g, ' ').replace(/[(),/*+]/g, ' ').split(/\s+/).filter(Boolean);
   if (family === 'strict' || family === 'size' || family === 'line') {
@@ -73,6 +83,7 @@ export function rawValue(family, value) {
       if (n === 0 || RELATIVE.test(unit)) { if (depth === 0) lengths.push(0); continue; }
       if (!unit && calc > 0) continue;
       if (family === 'shadow' && unit === 'px' && STROKE.has(Math.abs(n)) && depth === 0) { lengths.push(n); continue; }
+      if (family === 'space' && unit === 'px' && OFFSET.has(Math.abs(n)) && POSITION.test(prop)) continue;
       return m[0];
     }
     // A shadow layer with a blur is a real shadow: it comes whole from a --gv-shadow-* token.
@@ -93,20 +104,104 @@ export function rawTokens(source) {
   for (const m of text.matchAll(/(--[\w-]+|[a-zA-Z-]+)\s*:\s*([^;{}]+)(?=[;}])/g)) {
     const [decl, prop, value] = m;
     const family = familyOf(prop);
-    if (!family || rawValue(family, value) === null) continue;
+    const off = [...value.matchAll(/--gv-(space|radius)-(\d+)(?![\w-])/g)]
+      .filter(([, scale, n]) => !(scale === 'space' ? SPACE : RADIUS).includes(Number(n)));
+    if (off.length) {
+      hits.push(`${text.slice(0, m.index).split('\n').length}: ${decl.replace(/\s+/g, ' ').trim()} (off base 4: ` +
+        `space ${SPACE.join('·')}, radius ${RADIUS.join('·')}·full)`);
+      continue;
+    }
+    if (!family || rawValue(family, value, prop) === null) continue;
     if (RAW_NOTE.test(source.slice(m.index + decl.length))) continue;
     hits.push(`${text.slice(0, m.index).split('\n').length}: ${decl.replace(/\s+/g, ' ').trim()}`);
   }
   return hits;
 }
 
+// Weight, focus rings, opacity and layers (tokens.md "Guard tests"): each declaration that reaches past its token, as
+// `line: prop: value (what to write)`. A `raw:` note after the declaration lets it through, as above.
+const FOCUS = /focus/i;
+const ON_DARK = /^var\(--gv-border-width-2\)\s+solid\s+var\(--gv-(border-inverse|side-nav-[\w-]+)\)$/;
+export function rawState(source) {
+  const hits = [];
+  for (const d of declarations(source)) {
+    if (RAW_NOTE.test(source.slice(d.end))) continue;
+    const v = d.value.replace(/\s+/g, ' ').trim();
+    const why = (() => {
+      if (/^(--font-weight(-|$)|font-weight$)/.test(d.prop))
+        return !GLOBAL.test(v) && !/^var\(--gv-font-weight-(regular|medium)\)$/.test(v) && 'var(--gv-font-weight-regular|medium)';
+      if (/^outline(-width)?$/.test(d.prop)) {
+        const wide = [...v.matchAll(/(?<![\w.-])(\d*\.?\d+)px/g)].some(m => Number(m[1]) > 1);
+        if (wide) return 'var(--gv-focus-ring) for focus, var(--gv-border-width-2) for another 2px ring';
+        if (d.prop === 'outline' && FOCUS.test(d.selectors.join(' ')) && !/^(none|0|unset|inherit|initial)$/.test(v) &&
+          v !== 'var(--gv-focus-ring)' && !ON_DARK.test(v))
+          return 'var(--gv-focus-ring); on a dark fill var(--gv-border-width-2) solid var(--gv-border-inverse)';
+        return false;
+      }
+      if (d.prop === 'opacity') return !/^(0|1|0%|100%|var\(--gv-opacity-[\w-]+\))$/.test(v) && !GLOBAL.test(v) && 'var(--gv-opacity-*)';
+      if (d.prop === 'z-index') return /^-?\d+$/.test(v) && Number(v) > 5 && 'var(--gv-layer-sticky|panel|overlay)';
+      return false;
+    })();
+    if (why) hits.push(`${d.line}: ${d.prop}: ${v} (${why})`);
+  }
+  return hits;
+}
+
+describe('weight, focus rings, opacity and layers come only from tokens', () => {
+  it('catches a raw weight, a hand-drawn ring, a raw opacity and a high z-index', () => {
+    const fails = [
+      'a { font-weight: 500; }',
+      'a { font-weight: var(--gv-type-ui-weight); }',
+      ':root { --font-weight: 600; }',
+      'a { outline: 2px solid var(--gv-border-focused); }',
+      'a { outline-width: 3px; }',
+      'a[data-focus-visible] { outline: 1px solid var(--gv-border-focused); }',
+      'a { &:focus-visible { outline: var(--gv-border-width-2) solid var(--gv-border-selected); } }',
+      'a { opacity: 0.5; }',
+      'a { opacity: 45%; }',
+      'a { z-index: 10; }',
+      'a { z-index: 100; }'
+    ];
+    for (const source of fails) expect(rawState(source), source).toHaveLength(1);
+  });
+  it('lets tokens, keywords, rings on dark fills, low layers and raw notes through', () => {
+    const passes = [
+      'a { font-weight: var(--gv-font-weight-medium); font-weight: inherit; }',
+      'a[data-focus-visible] { outline: var(--gv-focus-ring); outline-offset: var(--gv-focus-ring-offset-inset); }',
+      'a:focus-visible { outline: var(--gv-border-width-2) solid var(--gv-border-inverse); }',
+      'a[data-focus-visible] { outline: var(--gv-border-width-2) solid var(--gv-side-nav-border-focused); }',
+      'a { outline: none; } a:focus-visible { outline: none; } a { outline: 1px solid var(--gv-border-subtle); }',
+      'a[data-drop-target] { outline: var(--gv-border-width-2) solid var(--gv-border-selected); }',
+      'a { opacity: 0; opacity: 1; opacity: var(--gv-opacity-disabled); }',
+      'a { opacity: 0.25; /* raw: a thin line steps back further */ }',
+      'a { z-index: 5; z-index: -1; z-index: var(--gv-layer-overlay); z-index: calc(sibling-count() - sibling-index()); }'
+    ];
+    for (const source of passes) expect(rawState(source), source).toEqual([]);
+  });
+  it('src CSS takes weight, focus rings, opacity and layers only from tokens', () => {
+    expect(css.flatMap(([f, s]) => rawState(s).map(hit => `${f}:${hit}`))).toEqual([]);
+  });
+  it('no --gv-type-*-tracking remains: one --gv-font-tracking, set on :root', () => {
+    const roots = ['src', 'backoffice/src', '.storybook', 'e2e'].filter(existsSync);
+    const files = roots.flatMap(r => readdirSync(r, {recursive: true}).filter(f => /\.(css|tsx?|mdx|mjs|js)$/.test(f))
+      .map(f => `${r}/${f}`));
+    expect(files.filter(f => /--gv-type-[\w${}<>-]*-tracking/.test(readFileSync(f, 'utf8')))).toEqual([]);
+  });
+});
+
 describe('spacing, radius, type and shadow come only from tokens', () => {
   it('catches raw lengths, weights, sizes, families and shadows', () => {
     const fails = [
       'a { padding: 13px var(--gv-space-16); }',
-      'a { margin-inline-start: -1px; }',
+      'a { margin-inline-start: -2px; }',
       'a { gap: 8px; }',
-      'a { inset: 3px; }',
+      'a { inset: 5px; }',
+      'a { padding: 1px; }',
+      'a { gap: 3px; }',
+      'a { border-radius: calc(var(--gv-radius-22) - 1px); }',
+      'a { gap: var(--gv-space-14); }',
+      'a { margin: var(--gv-space-5); }',
+      'a { border-radius: var(--gv-radius-3); }',
       'a { top: 12px; }',
       'a { margin-right: 1.75rem; }',
       'a { padding: calc(var(--gv-space-8) + 4px); }',
@@ -125,9 +220,9 @@ describe('spacing, radius, type and shadow come only from tokens', () => {
       'a { font-family: monospace; }',
       'a { font-family: var(--gv-font-family, sans-serif); }',
       'a { font: 500 12px/16px var(--gv-font-family); }',
-      'a { box-shadow: 0 2px 8px var(--gv-border-card); }',
+      'a { box-shadow: 0 2px 8px var(--gv-border-default); }',
       'a { box-shadow: 0 0 0 4px var(--gv-surface-info); }',
-      'a { box-shadow: var(--gv-shadow-subtle), 0 1px 3px var(--x); }',
+      'a { box-shadow: var(--gv-shadow-raised), 0 1px 3px var(--x); }',
       ':root { --spacing: 4px; }',
       ':root { --font-size-sm: 12px; }',
       ':root { --radius-xl: 14px; }',
@@ -150,25 +245,34 @@ describe('spacing, radius, type and shadow come only from tokens', () => {
       'a { border-radius: var(--gv-radius-full); border-radius: 50%; border-radius: 0 0 var(--radius) var(--radius); }',
       'a { border-radius: inherit; }',
       'a { font: var(--gv-type-ui); font: inherit; font-family: var(--gv-font-family); }',
-      'a { font-size: var(--gv-type-small-size); line-height: var(--gv-type-small-line); }',
-      'a { font-weight: var(--gv-type-ui-strong-weight); font-weight: inherit; }',
+      'a { font-size: var(--gv-font-size-12); line-height: var(--gv-font-line-height-16); }',
+      'a { font-weight: var(--gv-font-weight-medium); font-weight: inherit; }',
       'a { line-height: 1; line-height: 0; font-size: 100%; }',
-      'a { box-shadow: none; box-shadow: var(--gv-shadow-dialog); }',
+      'a { box-shadow: none; box-shadow: var(--gv-shadow-overlay); }',
       'a { box-shadow: inset 0 0 0 1px var(--gv-border-subtle); }',
-      'a { box-shadow: 0 0 0 1.5px var(--gv-action-primary), var(--gv-shadow-subtle); }',
+      'a { box-shadow: 0 0 0 1.5px var(--gv-border-selected), var(--gv-shadow-raised); }',
       'a { box-shadow: 0 0 0 3px color-mix(in srgb, var(--gv-border-selected) 10%, transparent); }',
-      'a { box-shadow: inset 0 -1px 0 var(--gv-divider-default); }',
+      'a { box-shadow: inset 0 -1px 0 var(--gv-border-subtle); }',
       'a { box-shadow: inset 0 0 0 var(--button-border-size) var(--button-border); }',
       ':root { --spacing: var(--gv-space-4); --spacing-9: var(--gv-size-control-36); --radius: var(--gv-radius-8); }',
-      ':root { --font-size: var(--gv-type-ui-size); --popover-shadow: var(--gv-shadow-dialog); }',
+      ':root { --font-size: var(--gv-font-size-13); --popover-shadow: var(--gv-shadow-overlay); }',
       'a { --button-border-size: 0.5px; --check-width: 26px; --origin: translateY(8px); }',
       'a { width: 14px; height: 36px; border: 1px solid var(--x); outline-offset: 2px; }',
       '/* padding: 13px; font-weight: 500 */ a { color: var(--x); }',
       '@media (max-width: 600px) { a:not(.b) { padding: var(--gv-space-4); } }',
       'a { border-radius: 44px; /* raw: a drawing of a phone, not UI */ }',
-      'a { inset-inline-start: calc(var(--gv-space-16) - var(--gv-space-1) / 2); }'
+      'a { inset-inline-start: calc(var(--gv-space-16) - 1px / 2); }',
+      'a { margin-inline-start: -1px; inset: 3px; margin: -3px calc(-1 * var(--gv-space-4)) 0 0; top: -1px; }',
+      'a { border-radius: calc(var(--gv-radius-22) - var(--gv-border-width-1)); padding: var(--gv-space-104); }'
     ];
     for (const source of passes) expect(rawTokens(source), source).toEqual([]);
+  });
+
+  it('tokens.css holds exactly the base-4 space and radius steps', () => {
+    const tokens = readFileSync('src/tokens.css', 'utf8');
+    const steps = scale => [...tokens.matchAll(new RegExp(`--gv-${scale}-(\\d+):`, 'g'))].map(m => Number(m[1]));
+    expect(steps('space')).toEqual(SPACE);
+    expect(steps('radius')).toEqual(RADIUS);
   });
 
   it('src CSS writes spacing, radius, type and shadow only via tokens', () => {

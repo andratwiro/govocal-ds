@@ -10,8 +10,8 @@
       --gvi-avatar: color-mix(in oklch, var(--gv-color-teal-400) 20%, var(--gv-color-neutral-25));
       font-family: var(--gv-font-family);
     }
-    .gvi-document-annotation .stage { fill: var(--gv-surface-stage); }
-    .gvi-document-annotation .card { fill: var(--gv-surface-panel); stroke: var(--gv-border-card); stroke-width: 1; }
+    .gvi-document-annotation .stage { fill: var(--gv-surface-tertiary); }
+    .gvi-document-annotation .card { fill: var(--gv-surface-panel); stroke: var(--gv-border-default); stroke-width: 1; }
     .gvi-document-annotation .title { font-size: 13px; fill: var(--gv-text-primary); }
     .gvi-document-annotation .txt { font-size: 12px; fill: var(--gv-text-secondary); }
     .gvi-document-annotation .mark { fill: var(--gvi-mark); }

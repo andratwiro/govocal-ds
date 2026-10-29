@@ -1,19 +1,50 @@
 import {Meta} from '@storybook/addon-docs/blocks';
-import {Tokens} from './TokenBlocks';
+import {Intents, Ladders, NotInFigma, Renamed, Tokens} from './TokenBlocks';
 
 <Meta title="Foundations/Colour" />
 
 # Colour
 
-The colour variables from the Figma Foundations page, pulled with `npm run tokens:pull`. Primitives hold the raw
-values; the semantic tokens name a role and point at a primitive, and components paint only with those. Right-click a
-row to see which components use it.
+**In Figma:** the `Tokens` collection, groups `surface/`, `text/`, `icon/`, `border/` and `chart/`, drawn on the
+Foundations page's Color frame; the primitives are the `Primitives` collection, hidden from publishing. `npm run
+tokens:pull` reads them; tokens Figma has no variable for yet are written by hand (**Not in Figma**, below).
 
-## Primitives
+Every colour a component paints is a semantic token, named by one grammar:
 
-<Tokens category="Colour primitives @presenter Color" view="card" />
+```
+--gv-{property}-{role}[-strong][-{state}]
+```
 
-## Semantic
+`surface-danger` is the danger tint, `surface-danger-strong` the solid danger fill, `surface-danger-pressed` the tint
+held down; `text-link-hovered` a link under the pointer. Right-click a row of a table to see which components use it.
+
+| Part | Words |
+|---|---|
+| property | `surface` (fills) · `text` · `icon` · `border` (borders, outlines, rings) |
+| role: neutral ladders | text and icon `primary` · `secondary` · `tertiary` (icon also `quiet`); surface `app` · `panel` · `secondary` · `tertiary`; border `subtle` · `row` · `default` · `strong` · `control` |
+| role: intents | `neutral` · `brand` · `accent` · `info` · `success` · `warning` · `danger` · `selected` · `inverse` |
+| role: special | `body` · `placeholder` · `link` · `backdrop` |
+| emphasis | none (a surface: the tint) · `strong` (the solid fill) |
+| state | `hovered` · `pressed` · `selected` · `disabled` · `focused`: React Aria's words, as in `[data-pressed]` |
+
+A semantic name holds no hue (`red`, `teal`: those are primitives), no component (`button`, `toast`: only the side
+nav has its own tier) and no Go Vocal word (`live`, `reviewed`). Two tokens of one property that look the same keep
+apart only when their jobs differ, and their descriptions say which to pick.
+
+## Intents
+
+A row per role, a column per property. An empty cell has no token: nothing paints it yet. A name that isn't here is
+no token; `tests/tokens-defined.test.mjs` refuses it.
+
+<Intents />
+
+## Neutral ladders
+
+Lightest first, each with the primitive it points at, so two tokens on one step are plain to see.
+
+<Ladders />
+
+## By property
 
 ### Surface
 <Tokens category="surface @presenter Color" />
@@ -21,34 +52,44 @@ row to see which components use it.
 ### Text
 <Tokens category="text @presenter Color" />
 
-### Border
-<Tokens category="border @presenter Color" />
-
 ### Icon
 <Tokens category="icon @presenter Color" />
 
-### Action
-<Tokens category="action @presenter Color" />
+### Border
+<Tokens category="border @presenter Color" />
 
-### Control
-<Tokens category="control @presenter Color" />
+## Side nav
 
-### State
-<Tokens category="state @presenter Color" />
+The one component tier: the dark side nav, where the page's tokens would vanish.
 
-### Avatar
-<Tokens category="avatar @presenter Color" />
+<Tokens category="side-nav @presenter Color" />
 
-### Divider
-<Tokens category="divider @presenter Color" />
+## Chart
 
-### Chart
-
-The data-viz palette Insights uses.
+The data-viz palette Insights uses: its own namespace, named by meaning (agree, disagree, pass), by element (bar,
+grid, axis) and by hue for the categorical colours.
 
 <Tokens category="chart @presenter Color" />
 
 ## Not in Figma
 
-**Focus ring**: the code draws `outline: 2px solid var(--gv-border-selected)` at offset `2px`. Figma has no focus
-token yet.
+Tokens the components need that Figma has no variable for yet, written by hand in `tokens/semantic.tokens.json`
+(danger, warning, success, selected, inverse and their states). When Figma gains one, it leaves that file. The focus
+ring, opacity and layers are on **Focus and states**.
+
+<NotInFigma />
+
+## Renamed
+
+What `npm run tokens:rename` moved, from `tokens/renames.json`. There are no aliases: an old name fails the build
+(`tests/tokens-defined.test.mjs` names its replacement). **Figma follows** says whether the Figma variable has the new
+name yet.
+
+<Renamed match="^--gv-(surface|text|icon|border|action|control|state|avatar|divider|color)-" />
+
+## Primitives: don't paint with these
+
+The raw values the semantic tokens point at, named by hue and step. Components never use them
+(`tests/paint.test.mjs`); a colour no semantic token covers is a question for the designer, not a primitive.
+
+<Tokens category="Colour primitives @presenter Color" view="card" />

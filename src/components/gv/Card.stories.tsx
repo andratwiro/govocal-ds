@@ -195,7 +195,7 @@ export const AllVariants: Story = {
           <span style={{font: 'var(--gv-type-small)', color: 'var(--gv-text-tertiary)'}}>{name}</span>
           <div
             style={{width: w, padding: props.variant === 'filled' ? 8 : 0,
-              background: props.variant === 'filled' ? 'var(--gv-surface-stage)' : undefined}}>
+              background: props.variant === 'filled' ? 'var(--gv-surface-tertiary)' : undefined}}>
             <Card {...props} />
           </div>
         </div>
@@ -207,7 +207,7 @@ export const AllVariants: Story = {
 /** Manage and Insights cards sit on the grey stage. */
 const stage = (w: number) => [
   (Story: () => JSX.Element) => (
-    <div style={{width: w, padding: 16, background: 'var(--gv-surface-stage)'}}><Story /></div>
+    <div style={{width: w, padding: 16, background: 'var(--gv-surface-tertiary)'}}><Story /></div>
   )
 ];
 

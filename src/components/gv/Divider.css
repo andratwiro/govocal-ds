@@ -1,8 +1,8 @@
 @import '../theme.css';
 
-/* Divider (Figma node 5:303): fill --gv-divider-default, 1px. */
+/* Divider (Figma node 5:303): fill --gv-border-subtle, 1px. */
 .gv-divider {
-  background: var(--gv-divider-default);
+  background: var(--gv-border-subtle);
   border-style: none;
   height: 1px;
   width: 100%;

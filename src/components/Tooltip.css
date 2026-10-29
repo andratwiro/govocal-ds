@@ -13,7 +13,6 @@
   box-shadow: none;
   color: var(--gv-text-inverse);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   text-align: start;
   text-wrap: balance;
   overflow-wrap: anywhere;

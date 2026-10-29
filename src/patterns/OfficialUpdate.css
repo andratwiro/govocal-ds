@@ -13,19 +13,17 @@
 .gv-official-update__posted {
   padding: var(--gv-space-10) var(--gv-space-12);
   border-radius: var(--gv-radius-8);
-  background: var(--gv-surface-stage);
+  background: var(--gv-surface-tertiary);
 }
 
 .gv-official-update__key {
   margin: 0 0 var(--gv-space-4);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 }
 
 .gv-official-update__text {
   font: var(--gv-type-body);
-  letter-spacing: var(--gv-type-body-tracking);
   overflow-wrap: anywhere;
 
   p {
@@ -57,6 +55,5 @@
 .gv-official-update__reach {
   margin-inline-end: auto;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 }

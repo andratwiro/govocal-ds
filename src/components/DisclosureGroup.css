@@ -3,11 +3,11 @@
 /* The prototype's accordion list (.pj-acc): a 1px divider above the first item and under every item; square headers. */
 .react-aria-DisclosureGroup {
   width: 200px;
-  border-top: 1px solid var(--gv-divider-strong);
+  border-top: 1px solid var(--gv-border-default);
 
   > .react-aria-Disclosure {
     width: auto;
-    border-bottom: 1px solid var(--gv-divider-strong);
+    border-bottom: 1px solid var(--gv-border-default);
 
     .disclosure-button {
       border-radius: 0;

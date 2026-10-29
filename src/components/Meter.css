@@ -13,7 +13,6 @@
   width: 250px;
   color: var(--gv-text-primary);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
 
   .react-aria-Label {
     margin-bottom: 0;
@@ -30,13 +29,13 @@
     forced-color-adjust: none;
     height: 6px;
     border-radius: var(--gv-radius-full);
-    background: var(--gv-surface-pill);
+    background: var(--gv-surface-neutral);
     box-shadow: none;
     overflow: hidden;
   }
 
   .fill {
-    --fill-color: var(--gv-surface-brand-mark);
+    --fill-color: var(--gv-surface-accent-strong);
     background: var(--fill-color);
     height: 100%;
     border-radius: inherit;

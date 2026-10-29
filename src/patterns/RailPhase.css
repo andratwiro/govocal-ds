@@ -10,7 +10,7 @@
 
 /* The row lights while the pointer is anywhere on it, its delete button included. */
 .gv-rail-phase:hover {
-  background: var(--gv-surface-hover);
+  background: var(--gv-surface-hovered);
 }
 
 .gv-rail-phase__link {
@@ -26,8 +26,8 @@
   outline: none;
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
   }
 }
 
@@ -39,7 +39,7 @@
   block-size: var(--gv-space-8);
   margin: var(--gv-space-6) var(--gv-space-12) 0 0;
   border-radius: var(--gv-radius-full);
-  background: var(--gv-state-upcoming);
+  background: var(--gv-surface-neutral-strong);
 }
 
 .gv-rail-phase[data-status='completed'] .gv-rail-phase__dot {
@@ -58,8 +58,8 @@ li:has(+ li) > .gv-rail-phase::after {
   content: '';
   position: absolute;
   z-index: 0;
-  inset-inline-start: calc(var(--gv-space-16) - var(--gv-space-1) / 2); /* the dot's centre (12 + 4), less half the line */
-  inset-block: var(--gv-space-18) calc(-1 * var(--gv-space-18)); /* 8 + 6 + 4: the dot's centre */
+  inset-inline-start: calc(var(--gv-space-16) - 1px / 2); /* the dot's centre (12 + 4), less half the line */
+  inset-block: var(--gv-space-16) calc(-1 * var(--gv-space-16)); /* 8 + 6 + 4: the dot's centre */
   inline-size: 1px;
   background: var(--gv-border-subtle);
 }
@@ -81,7 +81,6 @@ li:has(+ li) > .gv-rail-phase[data-status='completed']::after {
   align-self: stretch;
   padding-inline-end: var(--gv-space-56);
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-primary);
   overflow-wrap: anywhere;
 }
@@ -94,9 +93,8 @@ li:has(+ li) > .gv-rail-phase[data-status='completed']::after {
   margin-block-start: var(--gv-space-6);
   padding: 0 var(--gv-space-8);
   border-radius: var(--gv-radius-full);
-  background: var(--gv-surface-hover);
+  background: var(--gv-surface-hovered);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
   white-space: nowrap;
 }
@@ -104,7 +102,6 @@ li:has(+ li) > .gv-rail-phase[data-status='completed']::after {
 .gv-rail-phase__meta {
   margin-block-start: var(--gv-space-2);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 
   &[data-after-chip] {
@@ -118,7 +115,7 @@ li:has(+ li) > .gv-rail-phase[data-status='completed']::after {
 }
 
 .gv-rail-phase[data-status='live'] .gv-rail-phase__state {
-  font-weight: var(--gv-type-small-strong-weight);
+  font-weight: var(--gv-font-weight-medium);
 }
 
 /* Not in Figma: the prototype's "N new", top right in the 56 the name leaves free. */
@@ -131,7 +128,7 @@ li:has(+ li) > .gv-rail-phase[data-status='completed']::after {
   gap: var(--gv-space-6);
   height: 20px;
   font: var(--gv-type-small-strong);
-  color: var(--gv-state-notification);
+  color: var(--gv-text-danger);
   white-space: nowrap;
 }
 
@@ -140,7 +137,7 @@ li:has(+ li) > .gv-rail-phase[data-status='completed']::after {
   inline-size: var(--gv-space-6);
   block-size: var(--gv-space-6);
   border-radius: var(--gv-radius-full);
-  background: var(--gv-state-notification);
+  background: var(--gv-surface-danger-strong);
 }
 
 /* Not in Figma: the prototype's delete at the row's end, centred, shown on hover and focus. It stays in the tab

@@ -7,5 +7,5 @@
   height: 6px;
   flex-shrink: 0;
   border-radius: var(--gv-radius-full);
-  background: var(--gv-state-notification);
+  background: var(--gv-surface-danger-strong);
 }

@@ -14,6 +14,6 @@
   width: var(--gv-space-6);
   height: var(--gv-space-6);
   border-radius: var(--gv-radius-full);
-  background: var(--gv-icon-default);
+  background: var(--gv-icon-tertiary);
   flex-shrink: 0;
 }

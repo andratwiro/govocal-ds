@@ -32,7 +32,7 @@
   gap: var(--gv-space-12);
   width: 100%;
   max-width: none;
-  padding: var(--gv-space-9) var(--gv-space-2);
+  padding: var(--gv-space-8) var(--gv-space-2);
   border-top: 1px solid var(--gv-border-row);
   border-radius: 0;
   background: none;
@@ -44,8 +44,8 @@
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
     border-radius: var(--gv-radius-6);
   }
 }
@@ -53,7 +53,7 @@
 .gv-file-list__icon {
   flex: none;
   stroke-width: 1.75;
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-tertiary);
 }
 
 .gv-file-list__text {
@@ -61,12 +61,11 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--gv-space-1);
+  gap: var(--gv-space-2);
 }
 
 .gv-file-list__name {
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -75,7 +74,6 @@
 
 .gv-file-list__meta {
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-tertiary);
 }
 
@@ -91,7 +89,6 @@
   padding: var(--gv-space-16) var(--gv-space-2);
   text-align: center;
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-tertiary);
 }
 

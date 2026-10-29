@@ -21,13 +21,11 @@
 
 .gv-panel-section__title {
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-primary);
 }
 
 .gv-panel-section__aside {
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-secondary);
 }
 
@@ -56,13 +54,13 @@
 }
 
 .gv-panel-section__trigger[data-focus-visible] {
-  outline: 2px solid var(--gv-border-selected);
-  outline-offset: 2px;
+  outline: var(--gv-focus-ring);
+  outline-offset: var(--gv-focus-ring-offset);
 }
 
 .gv-panel-section__chevron {
   flex: none;
-  color: var(--gv-icon-strong);
+  color: var(--gv-icon-secondary);
   transition: transform var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 }
 

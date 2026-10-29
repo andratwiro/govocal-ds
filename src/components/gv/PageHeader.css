@@ -24,7 +24,6 @@
   min-width: 0;
   margin: 0;
   font: var(--gv-type-title);
-  letter-spacing: var(--gv-type-title-tracking);
   color: var(--gv-text-primary);
   overflow-wrap: anywhere;
 }
@@ -39,6 +38,5 @@
 .gv-page-header__description {
   margin: var(--gv-space-8) 0 0;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
-  color: var(--gv-text-meta);
+  color: var(--gv-text-secondary);
 }

@@ -5,7 +5,7 @@
 .gv-card {
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid var(--gv-border-card);
+  border: 1px solid var(--gv-border-default);
   border-radius: var(--gv-radius-8);
   background: transparent;
   font-family: var(--gv-font-family);
@@ -53,13 +53,13 @@
   /* The drawn chevron lights up like the ghost Icon button it stands for (the prototype's .pjsec__chev hover). */
   &[data-hovered] .gv-card__chevron,
   &[aria-haspopup][aria-expanded='true'] .gv-card__chevron {
-    background: var(--gv-surface-hover);
-    color: var(--gv-icon-strong);
+    background: var(--gv-surface-hovered);
+    color: var(--gv-icon-secondary);
   }
 
   &[data-focus-visible] {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: -2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
   }
 }
 
@@ -68,7 +68,6 @@
   min-width: 0;
   margin: 0;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -132,7 +131,7 @@
   border: none;
   border-radius: var(--gv-radius-8);
   background: transparent;
-  color: var(--gv-icon-default);
+  color: var(--gv-icon-tertiary);
 }
 
 .gv-card__chevron svg {
@@ -170,14 +169,13 @@
   padding: var(--gv-space-6) var(--gv-space-8);
   border-radius: var(--gv-radius-8);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
   cursor: pointer;
   outline: none;
 
   svg {
     flex: none;
-    color: var(--gv-action-checked);
+    color: var(--gv-icon-brand);
   }
 
   /* An item's own icon (the input term menu) sits before its label in the icon grey; the tick stays at the end. */
@@ -188,14 +186,14 @@
     min-width: 0;
 
     svg {
-      color: var(--gv-icon-default);
+      color: var(--gv-icon-tertiary);
     }
   }
 
   /* No fill for the item focused on open (the prototype's chosen row has none); the pointer and the keyboard light it. */
   &[data-hovered],
   &[data-focus-visible] {
-    background: var(--gv-surface-hover);
+    background: var(--gv-surface-hovered);
   }
 }
 
@@ -204,7 +202,6 @@
   min-height: var(--gv-size-control-40);
   padding-inline: var(--gv-space-12);
   font: var(--gv-type-body);
-  letter-spacing: var(--gv-type-body-tracking);
 }
 
 /* The card's switch: 26 × 16, a 12 knob, off = toggle-off (Figma "Manage · Toggle"; the prototype's .pj-sw).
@@ -214,19 +211,19 @@
     --height: 16px;
     width: 26px;
     height: 16px;
-    background: var(--gv-control-toggle-off);
+    background: var(--gv-surface-neutral-strong);
     box-shadow: none;
 
     .handle {
       width: 12px;
       height: 12px;
-      box-shadow: var(--gv-shadow-subtle);
+      box-shadow: var(--gv-shadow-raised);
     }
   }
 
   &[data-selected] {
     .track {
-      background: var(--gv-control-toggle-on);
+      background: var(--gv-surface-inverse);
     }
 
     .handle {
@@ -243,7 +240,6 @@
   gap: var(--gv-space-2);
   padding: 0 var(--gv-space-12) var(--gv-space-12);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 }
 
@@ -252,7 +248,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--gv-space-24);
-  padding: var(--gv-space-14) var(--gv-space-12);
+  padding: var(--gv-space-16) var(--gv-space-12);
 }
 
 .gv-card__title-line {
@@ -303,13 +299,13 @@
 /* A header action with nothing to do yet that says why (a tooltip): it stays focusable, so it is greyed by
    aria-disabled rather than the disabled attribute (IconButton's own [data-disabled] look). */
 .gv-card__actions .gv-icon-button[aria-disabled='true'] {
-  opacity: 0.45;
+  opacity: var(--gv-opacity-disabled);
   cursor: not-allowed;
 
   &[data-hovered],
   &[data-pressed] {
     background: none;
-    color: var(--gv-icon-default);
+    color: var(--gv-icon-tertiary);
   }
 }
 
@@ -329,5 +325,5 @@
 }
 
 .gv-card[data-layout='stacked'] > .gv-card__media {
-  margin: calc(-1 * var(--gv-space-14)) calc(-1 * var(--gv-space-12)) calc(var(--gv-space-12) - var(--gv-space-24));
+  margin: calc(-1 * var(--gv-space-16)) calc(-1 * var(--gv-space-12)) calc(var(--gv-space-12) - var(--gv-space-24));
 }

@@ -1,15 +1,15 @@
 @import './theme.css';
 
 .react-aria-DropZone {
-  color: var(--text-color);
-  background: var(--overlay-background);
+  color: var(--gv-text-primary);
+  background: var(--gv-surface-panel);
   border: 1px solid var(--border-color);
   forced-color-adjust: none;
-  border-radius: var(--radius);
+  border-radius: var(--gv-radius-8);
   appearance: none;
   vertical-align: middle;
-  font-size: var(--gv-type-body-size);
-  line-height: var(--gv-type-body-line);
+  font-size: var(--gv-font-size-14);
+  line-height: var(--gv-font-line-height-20);
   text-align: center;
   margin: 0;
   outline: none;
@@ -23,11 +23,11 @@
 
   &[data-focus-visible],
   &[data-drop-target] {
-    outline: 2px solid var(--focus-ring-color);
+    outline: var(--gv-focus-ring);
     outline-offset: -1px;
   }
 
   &[data-drop-target] {
-    background: var(--highlight-overlay);
+    background: var(--gv-surface-info);
   }
 }

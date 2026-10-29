@@ -4,10 +4,10 @@
 .react-aria-SwitchField {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-1);
+  gap: var(--gv-space-4);
 
   &[data-disabled] [slot='description'] {
-    color: var(--text-color-disabled);
+    color: var(--gv-text-disabled);
   }
 }
 
@@ -18,7 +18,6 @@
   align-items: center;
   gap: var(--gv-space-8);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
   forced-color-adjust: none;
   -webkit-tap-highlight-color: transparent;
@@ -33,7 +32,7 @@
     box-sizing: border-box;
     padding: var(--gv-space-2);
     border-radius: var(--gv-radius-full);
-    background: var(--gv-control-toggle-off);
+    background: var(--gv-surface-neutral-strong);
     box-shadow: none;
     transition: background-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 
@@ -42,7 +41,7 @@
       height: 16px;
       width: 16px;
       border-radius: var(--gv-radius-full);
-      background: var(--gv-control-knob);
+      background: var(--gv-surface-panel);
       box-shadow: none;
       transition: transform var(--gv-motion-duration-medium) var(--gv-motion-easing-move);
       will-change: transform;
@@ -51,22 +50,22 @@
   }
 
   &[data-hovered] .track {
-    background: var(--gv-border-radio);
+    background: var(--gv-border-strong);
   }
 
   &[data-invalid] .track {
-    background: var(--gv-state-notification);
+    background: var(--gv-surface-danger-strong);
   }
 
   &[data-selected] {
     .track,
     &[data-hovered] .track {
-      background: var(--gv-color-neutral-900);
+      background: var(--gv-surface-inverse);
     }
 
     .handle {
       transform: translateX(16px);
-      background: var(--gv-control-knob);
+      background: var(--gv-surface-panel);
 
       @media (forced-colors: active) {
         background: HighlightText;
@@ -79,24 +78,24 @@
   }
 
   &[data-focus-visible] .track {
-    outline: 2px solid var(--gv-border-selected);
-    outline-offset: 2px;
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
   }
 
   &[data-disabled] {
-    color: var(--gv-text-quiet);
+    color: var(--gv-text-disabled);
     cursor: default;
 
     .track {
-      opacity: 0.5;
+      opacity: var(--gv-opacity-disabled);
     }
 
     &[data-hovered] .track {
-      background: var(--gv-control-toggle-off);
+      background: var(--gv-surface-neutral-strong);
     }
 
     &[data-selected][data-hovered] .track {
-      background: var(--gv-color-neutral-900);
+      background: var(--gv-surface-inverse);
     }
   }
 }

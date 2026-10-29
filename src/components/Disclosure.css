@@ -4,7 +4,7 @@
    strong icon grey that turns a quarter when open; hover the stronger wash, an open header the light wash; the body
    UI type at 6 15 16. In a DisclosureGroup the items are split by 1px dividers (DisclosureGroup.css). */
 .react-aria-Disclosure {
-  width: calc(var(--spacing) * 50);
+  width: calc(var(--gv-space-4) * 50);
 
   .react-aria-Heading {
     margin: 0;
@@ -18,13 +18,12 @@
     width: 100%;
     color: var(--gv-text-primary);
     font: var(--gv-type-body-strong);
-    letter-spacing: var(--gv-type-body-strong-tracking);
     display: flex;
     align-items: center;
     text-align: start;
     gap: var(--gv-space-10);
-    padding: var(--gv-space-12) var(--gv-space-15);
-    border-radius: var(--radius);
+    padding: var(--gv-space-12) var(--gv-space-16);
+    border-radius: var(--gv-radius-8);
     transition: background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
     outline: none;
     cursor: pointer;
@@ -32,16 +31,16 @@
 
     &[data-hovered],
     &[data-pressed] {
-      background: var(--gv-surface-hover-strong);
+      background: var(--gv-surface-pressed);
     }
 
     &[data-focus-visible] {
-      outline: 2px solid var(--focus-ring-color);
-      outline-offset: -2px;
+      outline: var(--gv-focus-ring);
+      outline-offset: var(--gv-focus-ring-offset-inset);
     }
 
     &[data-disabled] {
-      color: var(--text-color-disabled);
+      color: var(--gv-text-disabled);
       cursor: default;
     }
 
@@ -53,17 +52,17 @@
       flex: none;
       width: var(--gv-size-icon-14);
       height: var(--gv-size-icon-14);
-      color: var(--gv-icon-strong);
+      color: var(--gv-icon-secondary);
       rotate: 0deg;
       transition: rotate var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
     }
   }
 
   &[data-expanded] .disclosure-button {
-    background: var(--gv-surface-hover);
+    background: var(--gv-surface-hovered);
 
     &[data-hovered] {
-      background: var(--gv-surface-hover-strong);
+      background: var(--gv-surface-pressed);
     }
 
     svg {
@@ -75,13 +74,12 @@
 .react-aria-DisclosurePanel {
   color: var(--gv-text-primary);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   height: var(--disclosure-panel-height);
   transition: height var(--gv-motion-duration-slow) var(--gv-motion-easing-move);
   overflow: clip;
 
   > div {
-    padding: var(--gv-space-6) var(--gv-space-15) var(--gv-space-16);
+    padding: var(--gv-space-6) var(--gv-space-16) var(--gv-space-16);
   }
 
   p {

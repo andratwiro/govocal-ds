@@ -18,7 +18,6 @@
 .gv-selection-bar__count {
   margin-inline-end: var(--gv-space-4);
   font: var(--gv-type-ui-strong);
-  letter-spacing: var(--gv-type-ui-strong-tracking);
   color: var(--gv-text-primary);
   white-space: nowrap;
 }

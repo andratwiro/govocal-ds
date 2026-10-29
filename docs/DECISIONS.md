@@ -57,6 +57,44 @@ The architecture review's API pass: two entry points, the className contract and
 - ReviewStatus and DashboardCard's Figma kinds stay Components though their values speak Go Vocal → **kept** → Card composes the first, three back-office screens the second, and a Component can't build on a Pattern.
 - NotificationRowList painted with the bell list's class → **its own `gv-notification-row-list`** → both lists on one page took one look.
 
+## Token names (29 Oct 2026)
+
+The token review (one grammar, the missing intents, base 4; docs/NAMING.md "Token names"). The codemod is
+`npm run tokens:rename` over `tokens/renames.json`; before/after shots of 95 stories showed only these moves.
+
+**Names**
+- Three vocabularies in the semantic colours (roles, component names such as `action`, `control`, `avatar`, Go Vocal words such as `live`, `reviewed`) → **one grammar, `--gv-{surface|text|icon|border}-{role}[-strong][-{state}]`, with React Aria's state words** → a name can be worked out instead of looked up; `tests/token-names.test.mjs` holds it.
+- The starter's second set of names (`--spacing-*`, `--radius*`, `--focus-ring-color`, `--highlight-*`) beside ours → **deleted; the codemod moved every use onto `--gv-` names** → one namespace; theme.css keeps only `--background-color` and `--border-color`, which a stylesheet also sets as its own variables.
+- Danger, warning, success, selected and inverse painted with 47 primitives and 26 colour mixes → **intent tokens (`surface-danger`, `-danger-strong`, `-danger-pressed`, `border-warning`, `surface-success-strong`, `surface-selected`, `surface-inverse`, …), Not in Figma, in `tokens/semantic.tokens.json`** → components paint with roles; the values are what they already painted.
+- `brand-*` primitives → **`navy-*`** → a primitive is named by its hue; brand is a role.
+- Shadows `subtle` / `segment-selected` / `dialog` → **`raised` / `raised-strong` / `overlay`** → named by elevation.
+- 214 zero letter-spacing lines and a size, line, weight and tracking token per role → **one `--gv-font-tracking` on `:root`; the font primitives `--gv-font-size-*`, `-line-height-*`, `-weight-*` (Figma's own variables)** → a role is one `font:`; an override takes a primitive.
+- `surface-hover-strong` → **`surface-pressed`**, though 11 of its 25 uses are a selected, current or open state or an image placeholder → same value; the codemod flags those uses, the designer may give them their own token.
+- Same-value and near-white pairs (`text-tertiary`/`text-placeholder`, `surface-hovered`/`surface-tertiary`, `border-focused`/`border-selected`, the panel → app ladder) → **kept two, each reason listed in the guard** → merging a token is the designer's call; the guard fails when one stops being a near-duplicate.
+
+**Base 4** (the project lead's call)
+- 27 spacing steps, among them Figma's 5, 7, 9, 11, 14, 15, 18, 22, 25 and 44 → **0 · 2 · 4 · 6 · 8 · 10 · 12 · 16 · 20 · 24 · 28 · 32 · 40 · 48 · 56 · 64 · 104; snaps 5→4, 7→8, 9→8, 11→12, 14→16, 15→16, 18→16, 22→24, 25→24, 44→40** → one ladder to pick from; each snap moves a box by 1 or 2px (a dashboard card's padding 14 → 16, a drop zone's 22 → 24, an empty state's 44 → 40).
+- Radius 3, 5, 7, 9 → **4, 6, 8, 8; the ladder is 2 · 4 · 6 · 8 · 10 · 12 · 14 · 22 · full** → 22 stays for the phone preview's frame.
+- `space-1` and `space-3` → **a raw 1px or 3px on a position, an offset or a stroke; 2 or 4 anywhere else (padding, gap, a size)** → an offset is not spacing, and a size computed from a padding must move with it (the Segmented control's segment: 30 tall in a 3-padded track → 28 in a 4-padded one, the track still 36). The date field's segments gain 1px a side (1 → 2).
+- Comments that quote Figma's or the prototype's number ("padding 14") → **left as the source drew it, except where the code computes with it** → the comment records the source; the ladder holds the code.
+
+**Merges the codemod made by value**
+- The selected tint at 5, 8 and 10% of the brand → **`surface-selected` (10%)** → one selected fill; the 5% and 8% rows get a shade deeper.
+- Red tints at 10 and 12% → **`surface-danger` (12%)**; 16% → **`surface-danger-pressed`** → one danger tint and its press.
+- Amber tints at 9% (the side panel's strip) and 14% (Banner) → **`surface-warning` (14%)**; 30% → **`border-warning`** → one warning tint.
+- Teal 75 (`surface-ai`, the info Badge) → **`surface-info` (teal 50)**, ΔE 1.4; `text-segment` → **`text-neutral`**, ΔE 2.4 → tokens win.
+
+**By hand**
+- The side nav's Support icon in green-400 and its focus ring in teal-400 → **`side-nav-icon-accent`, `side-nav-border-focused` (component tier)** → no semantic role fits a mark on the one dark surface.
+- The coachmark's white focus ring, drop targets' 2px outlines (in `border-focused` or `border-selected`) → **`var(--gv-border-width-2) solid var(--gv-border-inverse)` on a dark fill, `… var(--gv-border-selected)` for a drop target** → only focus draws `--gv-focus-ring`; a drop target is a selected edge.
+- A dimmed series at 0.4 in three components; one-off opacities (a dimmed chart line 0.25, a chevron 0.75, read-only rules 0.62, the quiet select-all 0.55, the skeleton's pulse) → **`--gv-opacity-dimmed`; a `raw:` note on each one-off** → only a shared meaning becomes a token.
+- A selected toggle button's border and fill from one starter alias → **the border reads the button's own fill (`--button-color`)** → the split would have given them two tokens that could drift apart.
+- The phone preview's inner radius `calc(22 - 1px)` → **`calc(var(--gv-radius-22) - var(--gv-border-width-1))`** → arithmetic on tokens.
+- Storybook's chrome hovered in teal 75, which `surface-info` replaced → **the chrome theme reads the teal-75 primitive** → the manager is not a component and keeps its look.
+- Primitives no semantic token fits yet (the Tooltip's fill, slate-750 tab and radio labels, slate-250 tracks, the tag's slate-500 edge, the kbd hint's teal-500, the Data table's tile hues, the Toast's greens) → **allowlisted in `tests/paint.test.mjs`, each with its reason** → the designer names them (phase 3); a fixed one must leave the list.
+- Size's page said Figma has no size variables → **it has two, control 24 and 28 (`1:127`, `1:129`)** → corrected.
+- The Foundations pages name Figma's `Tokens` and `Primitives` collections from the token review → **taken as written** → the REST API that would confirm them is off limits; the pull reads only the drawing.
+
 ## Back office redesign on the current components (29 Oct 2026)
 
 **Dashboard**

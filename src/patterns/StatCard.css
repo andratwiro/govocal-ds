@@ -11,7 +11,7 @@
   padding: var(--gv-space-12);
   border: 1px solid var(--gv-border-subtle);
   border-radius: var(--gv-radius-8);
-  background: var(--gv-surface-toolbar);
+  background: var(--gv-surface-secondary);
   color: var(--gv-text-primary);
   font-family: var(--gv-font-family);
   text-align: start;
@@ -24,7 +24,7 @@
 }
 
 .gv-stat-card[data-hovered] {
-  border-color: var(--gv-border-card);
+  border-color: var(--gv-border-default);
 }
 
 .gv-stat-card[data-hovered] .gv-stat-card__chevron {
@@ -32,7 +32,7 @@
 }
 
 .gv-stat-card[data-focus-visible] {
-  outline: 2px solid var(--gv-border-selected);
+  outline: var(--gv-focus-ring);
   outline-offset: 1px;
 }
 
@@ -51,13 +51,11 @@
 
 .gv-stat-card__label {
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 }
 
 .gv-stat-card__value {
   font: var(--gv-type-stat-small);
-  letter-spacing: var(--gv-type-stat-small-tracking);
   color: var(--gv-text-primary);
 }
 
@@ -74,6 +72,5 @@
 
 .gv-stat-card__caption {
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 }

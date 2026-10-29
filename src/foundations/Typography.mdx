@@ -5,9 +5,23 @@ import {Tokens, TypeRoles} from './TokenBlocks';
 
 # Typography
 
-Nine type roles from the Figma Foundations page, on the 12 · 13 · 14 · 16 · 20 · 28 scale, Regular and Medium only:
-hierarchy comes from size steps and grey versus black, not from extra weights. A component sets a role with
-`font: var(--gv-type-<role>)` and `letter-spacing: var(--gv-type-<role>-tracking)`.
+**In Figma:** the nine text styles on the Foundations page's Typography frame, each binding its size, line height and
+weight to the `Tokens` collection's `font/` variables (`font/size-13`, `font/line-height-20`, `font/weight-medium`).
+
+Nine roles on the 12 · 13 · 14 · 16 · 20 · 28 scale, Regular and Medium only: hierarchy comes from size steps and grey
+versus black, not from extra weights. One rule sets them:
+
+```css
+.gv-row__title { font: var(--gv-type-ui-strong); }
+```
+
+To make a role's text medium without changing its size, override the weight with the font primitive, never a number:
+
+```css
+.gv-row__count { font: var(--gv-type-ui); font-weight: var(--gv-font-weight-medium); }
+```
+
+Letter spacing is set once, `--gv-font-tracking` (0) on `:root`, and every element inherits it: no role tracks its own.
 
 ## Roles
 
@@ -17,10 +31,19 @@ hierarchy comes from size steps and grey versus black, not from extra weights. A
 <Tokens category="Font family @presenter FontFamily" />
 
 ## Size
+
+Six sizes, each named by its value; a role picks one.
+
 <Tokens category="Font size @presenter FontSize" />
 
 ## Line height
+
+Four line heights, each named by its value.
+
 <Tokens category="Line height @presenter LineHeight" />
 
 ## Weight
+
+Two weights: Regular for reading and UI text, Medium for the strong roles and titles.
+
 <Tokens category="Font weight @presenter FontWeight" />

@@ -21,12 +21,11 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--gv-space-4) var(--gv-space-18);
+  gap: var(--gv-space-4) var(--gv-space-16);
   margin: 0;
   padding: 0;
   list-style: none;
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
 }
 .gv-chart-legend--center { justify-content: center; }
@@ -44,14 +43,14 @@
   cursor: default;
 }
 .gv-chart-legend__item[tabindex]:focus-visible {
-  outline: 2px solid var(--gv-border-selected);
-  outline-offset: 2px;
+  outline: var(--gv-focus-ring);
+  outline-offset: var(--gv-focus-ring-offset);
 }
 .gv-chart-legend__item[data-highlighted] {
   color: var(--gv-text-primary);
 }
 .gv-chart-legend__item[data-dimmed] {
-  opacity: 0.4;
+  opacity: var(--gv-opacity-dimmed);
 }
 .gv-chart-legend__swatch {
   flex: none;
@@ -60,8 +59,8 @@
   border-radius: var(--gv-radius-full);
   background: var(--chart-color);
 }
-.gv-chart-legend--square { column-gap: var(--gv-space-14); }
-.gv-chart-legend--square .gv-chart-legend__item { gap: var(--gv-space-5); }
+.gv-chart-legend--square { column-gap: var(--gv-space-16); }
+.gv-chart-legend--square .gv-chart-legend__item { gap: var(--gv-space-4); }
 .gv-chart-legend--square .gv-chart-legend__swatch {
   inline-size: 8px;
   block-size: 8px;
@@ -94,7 +93,6 @@
   min-inline-size: var(--gv-space-24);
   margin-block: calc(-1 * var(--gv-space-8));
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-chart-axis);
   text-align: end;
 }
@@ -130,7 +128,7 @@
   stroke-width: 3.35;
 }
 .gv-line-chart__line[data-dimmed] {
-  opacity: 0.25;
+  opacity: 0.25; /* raw: a thin line steps back further than a bar or a legend item to read as behind */
 }
 .gv-line-chart__x {
   grid-column: 2;
@@ -138,7 +136,6 @@
   block-size: 16px;
   margin-inline-end: var(--gv-space-10);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-chart-axis);
 }
 /* Chart coordinates are physical (time runs left to right), so the labels are placed with `left`. */
@@ -206,8 +203,8 @@
   outline: none;
 }
 .gv-chart-explore:focus-visible {
-  outline: 2px solid var(--gv-border-selected);
-  outline-offset: var(--gv-space-2);
+  outline: var(--gv-focus-ring);
+  outline-offset: var(--gv-focus-ring-offset);
 }
 
 /* A 1px guide down the plot at the point shown. */
@@ -237,7 +234,7 @@
     opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 }
 .gv-chart-dot[data-dimmed] {
-  opacity: 0.25;
+  opacity: 0.25; /* raw: the dot of a line that steps back, as the line does */
 }
 
 /* The value card (prototype: the Audience chart's card): the date, then a swatch, label and value per series.
@@ -257,9 +254,8 @@
   border: 1px solid var(--gv-border-control);
   border-radius: var(--gv-radius-8);
   background: var(--gv-surface-panel);
-  box-shadow: var(--gv-shadow-subtle);
+  box-shadow: var(--gv-shadow-raised);
   font: var(--gv-type-small);
-  letter-spacing: var(--gv-type-small-tracking);
   color: var(--gv-text-secondary);
   pointer-events: none;
   transition:
@@ -300,7 +296,6 @@
 .gv-chart-card__value {
   margin-inline-start: var(--gv-space-8);
   font: var(--gv-type-small-strong);
-  letter-spacing: var(--gv-type-small-strong-tracking);
   color: var(--gv-text-primary);
   font-variant-numeric: tabular-nums;
 }

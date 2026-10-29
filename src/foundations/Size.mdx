@@ -5,10 +5,11 @@ import {SizeSpecimens, Tokens} from './TokenBlocks';
 
 # Size
 
-**Not in Figma.** Our Figma export has no size variables, so the sizes are written by hand in
-`tokens/size.tokens.json` (DTCG `dimension`). `npm run tokens:build` merges them with the Figma tokens into
-`src/tokens.css`; `npm run tokens:pull` rewrites only the Figma files, so it never wipes them. When Figma gets size
-variables, these move there.
+**In Figma:** two of them so far, the control heights 24 and 28 (the `Tokens` collection's variables `1:127` and
+`1:129`, which the pull can't read off the drawing yet). The rest are **Not in Figma**: all of them are written by hand
+in `tokens/size.tokens.json` (DTCG `dimension`, each with its Figma id where it has one). `npm run tokens:build` merges
+them with the Figma tokens into `src/tokens.css`; `npm run tokens:pull` rewrites only the Figma files, so it never
+wipes them. When the pull reads Figma's variables, these move there.
 
 They are the sizes the components already draw, three kinds: icons, control heights and avatars. Each token is named
 by its value in px. A width or height takes a size token wherever the box is an icon, a control or an avatar:
@@ -19,8 +20,8 @@ by its value in px. A width or height takes a size token wherever the box is an 
 ```
 
 What stays a number: one-off geometry (a popover's or modal's width, a chart's bars, the phone preview's frame,
-a progress track) and strokes. A border, a divider or a focus ring is 1, 1.5, 2 or 3 px wide: Figma binds stroke
-weights to two variables, 1 px and 2 px, which our export doesn't carry yet. Gaps and paddings are
+a progress track) and strokes. A border, a divider or a ring is 1, 1.5, 2 or 3 px wide: Figma binds stroke
+weights to two variables, `--gv-border-width-1` and `--gv-border-width-2` (Focus and states). Gaps and paddings are
 **Spacing**, not Size.
 
 ## Icons

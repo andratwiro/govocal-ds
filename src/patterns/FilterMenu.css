@@ -9,20 +9,20 @@
   &[data-active] {
     .gv-icon-button {
       border-color: var(--gv-border-selected);
-      color: var(--gv-text-accent);
+      color: var(--gv-icon-brand);
     }
 
     &::after {
       content: '';
       position: absolute;
-      inset-block-start: calc(var(--gv-space-3) * -1);
-      inset-inline-end: calc(var(--gv-space-3) * -1);
+      inset-block-start: -3px;
+      inset-inline-end: -3px;
       inline-size: 7px;
       block-size: 7px;
       box-sizing: content-box;
       border: 1.5px solid var(--gv-surface-panel);
       border-radius: var(--gv-radius-full);
-      background: var(--gv-action-checked);
+      background: var(--gv-surface-selected-strong);
       pointer-events: none;
     }
   }
@@ -40,7 +40,7 @@
     display: inline-flex;
     align-items: center;
     margin-inline-end: var(--gv-space-10);
-    color: var(--gv-icon-strong);
+    color: var(--gv-icon-secondary);
 
     > svg {
       inline-size: var(--gv-space-16);
@@ -59,7 +59,6 @@
     grid-area: label;
     justify-self: end;
     font: var(--gv-type-small);
-    letter-spacing: var(--gv-type-small-tracking);
     color: var(--gv-text-tertiary);
   }
 }

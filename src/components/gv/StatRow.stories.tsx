@@ -25,7 +25,7 @@ export const AllVariants: Story = () => (
     <div style={{width: 292}}>
       <StatRow label="New ideas" value="18" isNew href="#" />
     </div>
-    <div style={{width: 292, background: 'var(--gv-surface-hover)', borderRadius: 'var(--gv-radius-8)'}}>
+    <div style={{width: 292, background: 'var(--gv-surface-hovered)', borderRadius: 'var(--gv-radius-8)'}}>
       <StatRow label="New comments" value="33" href="#" />
     </div>
     <div style={{width: 276}}>
@@ -53,7 +53,7 @@ export const Hover: Story = () => (
   </div>
 );
 Hover.parameters = {
-  docs: {description: {story: 'Hover the row to see `--gv-surface-hover` and the chevron turn primary.'}}
+  docs: {description: {story: 'Hover the row to see `--gv-surface-hovered` and the chevron turn primary.'}}
 };
 
 export const Static: Story = () => (

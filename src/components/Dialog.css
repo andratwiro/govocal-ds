@@ -9,7 +9,6 @@
   overflow: auto;
   padding: var(--gv-space-24);
   font: var(--gv-type-ui);
-  letter-spacing: var(--gv-type-ui-tracking);
   color: var(--gv-text-primary);
 
   /* isFlush: the content brings its own edges (an Option list in a popover). */
@@ -21,7 +20,6 @@
     margin-top: 0;
     margin-bottom: var(--gv-space-12);
     font: var(--gv-type-title);
-    letter-spacing: var(--gv-type-title-tracking);
     color: var(--gv-text-primary);
   }
 }
