@@ -223,6 +223,9 @@ export const Empty: Story = {render: () => <PeopleTable empty selectable />};
 // ── Cells: thumbnails, assignees, tags, the Projects list ─────────────────────────────────────────
 const FEW = MANAGE_IDEAS.slice(0, 6);
 const shortDate = (iso: string) => new Date(iso).toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+// Nobody sorts after every name, whichever the direction.
+const byAssignee = (a: ManageIdea, b: ManageIdea, sign: number) =>
+  !a.assignee || !b.assignee ? Number(!a.assignee) - Number(!b.assignee) : sign * a.assignee.localeCompare(b.assignee);
 
 /**
  * A picture before the title (the Manage table's idea image): `DataTableText`'s `leading` takes a
@@ -263,8 +266,7 @@ export const AssigneeColumn: Story = {
   name: 'Assignee column',
   render: () => {
     const [sort, setSort] = useState<SortDescriptor>({column: 'assignee', direction: 'ascending'});
-    const rows = [...FEW].sort((a, b) => (sort.direction === 'descending' ? -1 : 1) *
-      (a.assignee ?? '~').localeCompare(b.assignee ?? '~'));
+    const rows = [...FEW].sort((a, b) => byAssignee(a, b, sort.direction === 'descending' ? -1 : 1));
     return (
       <div style={{maxWidth: 760}}>
         <DataTable aria-label="Ideas" sortDescriptor={sort} onSortChange={d => setSort(d as SortDescriptor)}>
@@ -467,9 +469,9 @@ type IdeaKey = 'title' | 'assignee' | 'status' | 'likes' | 'comments' | 'publish
 function sortIdeas(list: ManageIdea[], sort: SortDescriptor) {
   const key = sort.column as IdeaKey;
   const sign = sort.direction === 'descending' ? -1 : 1;
-  const value = (i: ManageIdea) => key === 'assignee' ? i.assignee ?? '~' : i[key];
   return [...list].sort((a, b) => {
-    const x = value(a), y = value(b);
+    if (key === 'assignee') return byAssignee(a, b, sign);
+    const x = a[key], y = b[key];
     return sign * (typeof x === 'number' && typeof y === 'number' ? x - y : String(x).localeCompare(String(y)));
   });
 }
