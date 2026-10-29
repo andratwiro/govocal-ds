@@ -1,0 +1,101 @@
+@import '../components/theme.css';
+
+/* The real admin's notifications dropdown, in the system's popover card: 360 wide, rows split by hairlines. */
+.gv-notification-list {
+  box-sizing: border-box;
+  inline-size: min(360px, 100vw - 32px);
+  max-block-size: min(480px, 80vh);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  color: var(--gv-text-primary);
+}
+
+.gv-notification-list__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-8);
+  padding: var(--gv-space-4) var(--gv-space-4) var(--gv-space-8) var(--gv-space-8);
+  border-block-end: 1px solid var(--gv-border-separator);
+}
+
+.gv-notification-list__title {
+  margin: 0;
+  font: var(--gv-type-body-strong);
+  letter-spacing: var(--gv-type-body-strong-tracking);
+}
+
+.gv-notification-list__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+}
+
+.gv-notification-list__item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gv-space-10);
+  padding: var(--gv-space-10) var(--gv-space-8);
+  border-block-end: 1px solid var(--gv-border-row);
+
+  &:last-child {
+    border-block-end: 0;
+  }
+
+  > .gv-new-dot {
+    margin-block-start: var(--gv-space-6);
+  }
+}
+
+.gv-notification-list__icon {
+  flex: none;
+  display: inline-flex;
+  margin-block-start: var(--gv-space-2);
+  color: var(--gv-icon-default);
+}
+
+.gv-notification-list__body {
+  flex: 1;
+  min-inline-size: 0;
+  display: grid;
+  gap: var(--gv-space-2);
+}
+
+.gv-notification-list__text {
+  font: var(--gv-type-ui);
+  letter-spacing: var(--gv-type-ui-tracking);
+  color: var(--gv-text-body);
+  text-decoration: none;
+  outline: none;
+
+  &[href][data-hovered] {
+    text-decoration: underline;
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--gv-border-selected);
+    outline-offset: 2px;
+    border-radius: var(--gv-radius-2);
+  }
+}
+
+.gv-notification-list__item[data-unread] .gv-notification-list__text {
+  font: var(--gv-type-ui-strong);
+  letter-spacing: var(--gv-type-ui-strong-tracking);
+  color: var(--gv-text-primary);
+}
+
+.gv-notification-list__time {
+  font: var(--gv-type-small);
+  letter-spacing: var(--gv-type-small-tracking);
+  color: var(--gv-text-meta);
+}
+
+.gv-notification-list__empty {
+  margin: 0;
+  padding: var(--gv-space-32) var(--gv-space-16);
+  text-align: center;
+  font: var(--gv-type-ui);
+  color: var(--gv-text-secondary);
+}

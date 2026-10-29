@@ -29,7 +29,7 @@ export const Spotlight: Story = {
   render: () => (
     <>
       <RailSectionLabel>Spotlight</RailSectionLabel>
-      <PhaseTimeline connected={false} phases={[{id: 's', title: 'Resident satisfaction', state: 'in-progress', dates: '9 Oct to 18 Nov', method: 'Survey', count: '214 responses', href: '#s'}]} />
+      <PhaseTimeline phases={[{id: 's', title: 'Resident satisfaction', state: 'in-progress', dates: '9 Oct to 18 Nov', method: 'Survey', count: '214 responses', href: '#s'}]} />
     </>
   )
 };

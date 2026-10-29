@@ -132,7 +132,7 @@ function Rail({project, o, onHide}: {project: Project; o: Overview; onHide: () =
       {o.spotlight.length > 0 && (
         <div className="bo-phase-rail-section">
           <RailSectionLabel>Spotlight</RailSectionLabel>
-          <div className="bo-project-rail-list"><PhaseTimeline connected={false} phases={o.spotlight} /></div>
+          <div className="bo-project-rail-list"><PhaseTimeline phases={o.spotlight} /></div>
         </div>
       )}
     </aside>

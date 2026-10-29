@@ -119,14 +119,15 @@ test('an ended phase reads Done, not Draft, and its rail passes axe', async ({pa
   expect(await violations(page, 'nav[aria-label="Phases"]')).toEqual([]);
 });
 
-// Only the rail section label's contrast is waived (see above); every other rule runs on it.
+// Only the contrast of two system parts is waived: the rail section label (see above) and Rail phase's green state
+// word, both reported to the system; every other rule runs on them.
 async function violations(page: Page, within?: string) {
   const builder = new AxeBuilder({page});
   if (within) builder.include(within);
   const {violations} = await builder
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
   return violations
-    .map(v => ({...v, nodes: v.nodes.filter(n => !(v.id === 'color-contrast' && String(n.target).includes('gv-rail-section-label')))}))
+    .map(v => ({...v, nodes: v.nodes.filter(n => !(v.id === 'color-contrast' && /gv-rail-section-label|gv-rail-phase__state/.test(String(n.target))))}))
     .filter(v => v.nodes.length)
     .map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`);
 }
