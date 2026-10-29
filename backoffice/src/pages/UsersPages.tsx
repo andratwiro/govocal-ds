@@ -41,9 +41,7 @@ function InviteForm({onSend}: {onSend: (emails: string[], role: Role) => void}) 
           <Select label="Role" selectedKey={role} onSelectionChange={k => setRole(k as Role)}>
             {ROLES.map(r => <SelectItem key={r} id={r}>{r}</SelectItem>)}
           </Select>
-          {/* "No group" is an item, not a placeholder: the starter Select's placeholder grey is under 4.5:1. */}
-          <Select label="Add to a group" defaultSelectedKey="none">
-            <SelectItem id="none">No group</SelectItem>
+          <Select label="Add to a group" placeholder="No group">
             {GROUPS.filter(g => g.kind === 'manual').map(g => <SelectItem key={g.id} id={g.id}>{g.label}</SelectItem>)}
           </Select>
         </div>

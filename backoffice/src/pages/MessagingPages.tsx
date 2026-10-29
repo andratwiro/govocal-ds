@@ -103,7 +103,7 @@ export function EmailStats() {
           <StatTile label="Clicked" value={`${email.clicked ?? 0}%`} note={`${n(pctOf(email.clicked))} people`} />
         </div>
         <SectionHeading>Who got it</SectionHeading>
-        <Card tone="manage" title="Recipients" pills={[{label: `${RECIPIENTS.length} of ${n(sent)} shown`}]}>
+        <Card tone="manage" title="Recipients" summary={`${RECIPIENTS.length} of ${n(sent)} shown`}>
           <div className="bo-messaging-scroll">
             <DataTable aria-label="Recipients">
               <DataTableHeader>
