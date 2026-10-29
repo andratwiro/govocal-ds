@@ -36,7 +36,13 @@ async function get(url) {
 
 export async function fetchFile(fileKey = config.fileKey, {fresh = process.argv.includes('--fresh')} = {}) {
   const cache = `.cache/figma-${fileKey}.json`;
-  if (!fresh) { try { return JSON.parse(await readFile(cache, 'utf8')); } catch {} }
+  // Only an explicit fresh pull (tokens:pull, or --fresh) calls Figma: the API is rate-limited per seat, and a missing
+  // cache (a new worktree) must not quietly spend calls.
+  if (!fresh) {
+    try { return JSON.parse(await readFile(cache, 'utf8')); } catch {
+      throw new Error(`No cached Figma file at ${cache}. Copy or link it from the main checkout; --fresh downloads it (rate-limited).`);
+    }
+  }
   const {status, body} = await get(`${API}/files/${fileKey}`);
   if (status !== 200) throw new Error(`Figma said ${status}: ${body}`);
   const file = JSON.parse(body);
