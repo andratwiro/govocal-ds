@@ -5,12 +5,12 @@ import {Card} from '../../../src/components/gv/Card';
 import {Badge} from '../../../src/components/gv/Badge';
 import {StatusBadge} from '../../../src/components/gv/StatusBadge';
 import {HelpPopover} from '../../../src/components/gv/HelpPopover';
+import {Panel} from '../../../src/components/gv/Panel';
 import {TOOLS, type Tool} from '../data-tools';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
-import {SectionHeading} from '../SectionHeading';
 
-// The prototype's card gallery: art on top, then name, tags, description and the action.
+// One Card per tool in a Panel gallery, as the Inspiration hub's: art on top, then tags, the description and the action.
 function ToolCard({tool}: {tool: Tool}) {
   const Icon = tool.icon;
   const navigate = useNavigate();
@@ -44,11 +44,14 @@ function ToolCard({tool}: {tool: Tool}) {
 export function Tools() {
   return (
     <Page title="Tools" description="Integrations, embeds and add-ons that work alongside the platform.">
-      <SectionHeading>All tools</SectionHeading>
-      <ul className="bo-tools-grid" aria-label="Tools">
-        {TOOLS.map(t => <li key={t.id} className="bo-tools-item"><ToolCard tool={t} /></li>)}
-      </ul>
-      <GapLegend names={['tool illustrations']} />
+      <div className="bo-tools-stack">
+        <Panel title="All tools" count={TOOLS.length} description="Open a tool to set it up. The help icon says what each one does.">
+          <ul className="bo-tools-grid" aria-label="Tools">
+            {TOOLS.map(t => <li key={t.id} className="bo-tools-item"><ToolCard tool={t} /></li>)}
+          </ul>
+        </Panel>
+        <GapLegend names={['tool illustrations']} />
+      </div>
     </Page>
   );
 }

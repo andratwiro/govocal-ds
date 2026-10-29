@@ -143,14 +143,15 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-users-form { display: grid; gap: var(--gv-space-16); max-width: 640px; }
 .bo-users-modal { display: grid; gap: var(--gv-space-16); }
 .bo-users-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--gv-space-16); }
-.bo-users-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-8); }
+.bo-users-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-16); }
 .bo-users-panel { padding-block-start: var(--gv-space-16); }
 .bo-users-stack { display: grid; gap: var(--gv-space-16); }
 .bo-users-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--gv-space-12); }
 .bo-users-profile { display: flex; align-items: flex-start; gap: var(--gv-space-16); }
-.bo-users-facts { display: grid; grid-template-columns: auto 1fr; gap: var(--gv-space-8) var(--gv-space-16); margin: 0; }
-.bo-users-facts dd { margin: 0; }
+.bo-users-note { padding: var(--gv-space-12) var(--gv-space-20) 0; }
+.bo-users-badges { display: flex; flex-wrap: wrap; gap: var(--gv-space-4); }
 /* ── Tools ── */
+.bo-tools-stack { display: grid; gap: var(--gv-space-16); }
 .bo-tools-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: var(--gv-space-16); }
 .bo-tools-item { display: flex; }
 .bo-tools-body { display: grid; gap: var(--gv-space-12); align-content: start; }
@@ -161,13 +162,10 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-tools-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-16); margin-block-start: auto; }
 .bo-page-crumbs { margin-block-end: var(--gv-space-12); }
 .bo-tools-docs { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-4); }
-.bo-tools-table { width: 100%; }
 .bo-tools-scroll { overflow-x: auto; }
-.bo-tools-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .bo-tools-form { display: grid; gap: var(--gv-space-16); }
 .bo-tools-form p { margin: 0; }
 .bo-tools-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-8); }
-.bo-tools-pills { display: flex; flex-wrap: wrap; gap: var(--gv-space-4); }
 .bo-tools-events { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr)); gap: var(--gv-space-8); }
 .bo-tools-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: var(--gv-space-16); }
 .bo-tools-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: var(--gv-space-16); align-items: start; }
@@ -274,6 +272,9 @@ body { margin: 0; background: var(--gv-surface-app); color: var(--gv-text-body);
 .bo-users-profile { display: flex; align-items: flex-start; gap: var(--gv-space-16); }
 .bo-users-facts { display: grid; grid-template-columns: auto 1fr; gap: var(--gv-space-8) var(--gv-space-16); margin: 0; }
 .bo-users-facts dd { margin: 0; }
+.bo-messaging-scroll { overflow-x: auto; }
+.bo-messaging-sms { display: grid; gap: var(--gv-space-4); padding: var(--gv-space-12); }
+.bo-messaging-sms p { margin: 0; }
 /* ── Project phase · Manage ── */
 .bo-phase-manage-nowrap { white-space: nowrap; }
 /* ── Feedback: project settings side tabs, phase status ── */

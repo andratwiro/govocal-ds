@@ -20,7 +20,9 @@ const card = (page: Page, title: string) => page.getByRole('list', {name: 'Tools
 test('tools follows the real admin: one card per tool, each with its action', async ({page}) => {
   await page.goto('/backoffice/#/tools');
   await expect(page.getByRole('heading', {level: 1, name: 'Tools'})).toBeVisible();
-  await expect(page.getByRole('list', {name: 'Tools'}).getByRole('listitem')).toHaveCount(TOOLS.length);
+  const all = page.getByRole('region', {name: /^All tools/});
+  await expect(all.getByRole('heading', {level: 2})).toContainText(String(TOOLS.length));
+  await expect(all.getByRole('list', {name: 'Tools'}).getByRole('listitem')).toHaveCount(TOOLS.length);
   for (const [title, action] of TOOLS) {
     await expect(card(page, title)).toBeVisible();
     await expect(card(page, title).getByRole('button', {name: action})).toBeVisible();
@@ -64,7 +66,7 @@ test('every unlocked tool opens its own page, with a way back to Tools', async (
   }
 });
 
-test('public API tokens: the list, then Create new token shows the secret once and adds a row', async ({page}) => {
+test('public API tokens: the list, then Create new token shows the secret once and adds a row; delete asks first', async ({page}) => {
   await page.goto('/backoffice/#/tools/public-api-tokens');
   await expect(page.getByRole('heading', {level: 1, name: 'Public API tokens'})).toBeVisible();
   const table = page.getByRole('grid', {name: 'Public API tokens'});
@@ -83,16 +85,33 @@ test('public API tokens: the list, then Create new token shows the secret once a
   const done = page.getByRole('dialog', {name: 'Your token has been created'});
   await expect(done.getByText(/You can only copy this secret once/)).toBeVisible();
   await done.getByRole('button', {name: 'Copy secret'}).click();
-  await expect(done.getByText('Copied!')).toBeVisible();
+  await expect(done.getByRole('button', {name: 'Copied!'})).toBeDisabled();
   await done.getByRole('button', {name: 'Close', exact: true}).last().click();
   await expect(rows).toHaveCount(3);
   await expect(rows.last()).toContainText('Open data portal');
 
   await rows.last().getByRole('button', {name: 'Delete token: Open data portal'}).click();
+  const confirm = page.getByRole('alertdialog', {name: 'Delete token?'});
+  a11yReport(await axeViolations(page, '.gv-alert-dialog'));
+  await confirm.getByRole('button', {name: 'Delete token'}).click();
   await expect(rows).toHaveCount(2);
+  await expect(page.locator('.react-aria-Toast').filter({hasText: 'Token deleted'})).toBeVisible();
 });
 
-test('webhooks: the list, Create webhook adds one, Edit webhook opens it filled in', async ({page}) => {
+test('public API tokens: with every token deleted, an Empty state offers Create new token', async ({page}) => {
+  await page.goto('/backoffice/#/tools/public-api-tokens');
+  const panel = page.getByRole('region', {name: /^Tokens/});
+  for (let i = 0; i < 2; i++) {
+    await panel.getByRole('button', {name: /^Delete token: /}).first().click();
+    await page.getByRole('alertdialog', {name: 'Delete token?'}).getByRole('button', {name: 'Delete token'}).click();
+  }
+  await expect(page.getByRole('grid', {name: 'Public API tokens'})).toHaveCount(0);
+  await expect(panel.getByRole('heading', {name: 'You do not have any tokens yet'})).toBeVisible();
+  await panel.getByRole('button', {name: 'Create new token'}).last().click();
+  await expect(page.getByRole('dialog', {name: 'Create a new token'})).toBeVisible();
+});
+
+test('webhooks: the list, Create webhook adds one, Edit and Delete from the row menu', async ({page}) => {
   await page.goto('/backoffice/#/tools/webhooks');
   await expect(page.getByRole('heading', {level: 1, name: 'Webhooks'})).toBeVisible();
   const table = page.getByRole('grid', {name: 'Webhooks'});
@@ -114,31 +133,45 @@ test('webhooks: the list, Create webhook adds one, Edit webhook opens it filled 
   await expect(rows).toHaveCount(2);
   await expect(rows.last()).toContainText('Case system');
 
-  await rows.first().getByRole('button', {name: /^Edit webhook: /}).click();
+  await expect(page.locator('.react-aria-Toast').filter({hasText: 'Webhook created'})).toBeVisible();
+
+  await rows.first().getByRole('button', {name: /^Options for webhook: /}).click();
+  await page.getByRole('menuitem', {name: 'Edit webhook'}).click();
   const edit = page.getByRole('dialog', {name: 'Edit webhook'});
   await expect(edit.getByRole('textbox', {name: 'Name'})).not.toHaveValue('');
   await edit.getByRole('textbox', {name: 'Name'}).fill('Renamed hook');
   await edit.getByRole('button', {name: 'Update webhook'}).click();
   await expect(rows.first()).toContainText('Renamed hook');
+
+  await rows.first().getByRole('button', {name: 'Options for webhook: Renamed hook'}).click();
+  await page.getByRole('menuitem', {name: 'Delete webhook'}).click();
+  await page.getByRole('alertdialog', {name: 'Delete webhook?'}).getByRole('button', {name: 'Delete webhook'}).click();
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText('Case system');
 });
 
 test('Esri: Save key stays off until a key is pasted', async ({page}) => {
   await page.goto('/backoffice/#/tools/esri-integration');
   await expect(page.getByRole('heading', {level: 1, name: 'Esri Maps'})).toBeVisible();
-  const save = page.getByRole('button', {name: 'Save key'});
+  const panel = page.getByRole('region', {name: 'Esri API key'});
+  await expect(panel.getByText('Not connected')).toBeVisible();
+  const save = panel.getByRole('button', {name: 'Save key'});
   await expect(save).toBeDisabled();
-  await page.getByRole('textbox', {name: 'Esri API key'}).fill('invented-key-123');
+  await panel.getByRole('textbox', {name: 'Esri API key'}).fill('invented-key-123');
   await save.click();
-  await expect(page.getByText('API key saved')).toBeVisible();
+  await expect(page.locator('.react-aria-Toast').filter({hasText: 'API key saved'})).toBeVisible();
+  await expect(panel.getByText('Connected', {exact: true})).toBeVisible();
 });
 
-test('Power BI: two templates, each with its download', async ({page}) => {
+test('Power BI: the API note links to the tokens, two templates, each with its download', async ({page}) => {
   await page.goto('/backoffice/#/tools/power-bi');
   await expect(page.getByRole('heading', {level: 1, name: 'Power BI templates'})).toBeVisible();
-  await expect(page.getByRole('heading', {level: 3, name: 'Report template'})).toBeVisible();
-  await expect(page.getByRole('heading', {level: 3, name: 'Dataflow template'})).toBeVisible();
+  await expect(page.getByRole('heading', {level: 2, name: 'Report template'})).toBeVisible();
+  await expect(page.getByRole('heading', {level: 2, name: 'Dataflow template'})).toBeVisible();
   await page.getByRole('button', {name: 'Download report template'}).click();
-  await expect(page.getByRole('status').filter({hasText: 'Report template'})).toBeVisible();
+  await expect(page.locator('.react-aria-Toast').filter({hasText: 'report-template.pbit'})).toBeVisible();
+  await page.getByRole('link', {name: 'Public API tokens'}).click();
+  await expect(page.getByRole('heading', {level: 1, name: 'Public API tokens'})).toBeVisible();
 });
 
 test('MCP authorizations: Revoke access asks first, then removes the client', async ({page}) => {
@@ -152,12 +185,20 @@ test('MCP authorizations: Revoke access asks first, then removes the client', as
   a11yReport(await axeViolations(page, '.gv-alert-dialog'));
   await modal.getByRole('button', {name: 'Revoke access'}).click();
   await expect(rows).toHaveCount(1);
+  await expect(page.locator('.react-aria-Toast').filter({hasText: 'Access revoked'})).toBeVisible();
+  await rows.first().getByRole('button', {name: /^Revoke access: /}).click();
+  await page.getByRole('alertdialog', {name: 'Revoke access?'}).getByRole('button', {name: 'Revoke access'}).click();
+  await expect(page.getByRole('heading', {name: 'You have no MCP authorizations yet'})).toBeVisible();
 });
 
 test('widget: the settings, with the preview named as a gap', async ({page}) => {
   await page.goto('/backoffice/#/tools/widgets');
   await expect(page.getByRole('heading', {level: 1, name: 'Widget'})).toBeVisible();
-  await expect(page.getByRole('textbox', {name: 'Embed code'})).toBeVisible();
+  const settings = page.getByRole('region', {name: 'Settings'});
+  await expect(settings.getByRole('textbox', {name: 'Embed code'})).toHaveValue(/limit=3/);
+  await settings.getByRole('button', {name: 'Copy embed code'}).click();
+  await expect(page.locator('.react-aria-Toast').filter({hasText: 'Embed code copied'})).toBeVisible();
+  await expect(page.getByRole('region', {name: 'Preview'})).toBeVisible();
 });
 
 test('tools names what the system still lacks', async ({page}) => {

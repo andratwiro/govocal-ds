@@ -113,7 +113,11 @@ test('segments, groups and search narrow the users', async ({page}) => {
   await groups.getByRole('option', {name: /^Youth panel/}).click();
   await expect(page.getByRole('grid', {name: 'Youth panel'}).getByRole('row')).toHaveCount(4);
   await segments.getByRole('option', {name: /^Banned emails/}).click();
-  await expect(page.getByText('No users here.')).toBeVisible();
+  // An empty list is the Empty state, not an empty table (docs/DECISIONS.md).
+  const banned = page.getByRole('region', {name: 'Banned emails'});
+  await expect(banned.locator('.gv-empty-state').getByRole('heading', {name: 'No banned emails'})).toBeVisible();
+  await expect(banned.getByRole('grid')).toHaveCount(0);
+  await expect(banned.getByRole('navigation', {name: 'User pages'})).toHaveCount(0);
   await segments.getByRole('option', {name: /^Registered users/}).click();
   await page.getByRole('searchbox', {name: 'Search users'}).fill('user12@');
   await expect(page.getByRole('grid', {name: 'Registered users'}).getByRole('row')).toHaveCount(2);
@@ -216,8 +220,9 @@ test('Add a new group: choose normal or smart, name it, and it joins the list wi
   await page.goto('/backoffice/#/users');
   await page.getByRole('button', {name: 'Add a new group'}).click();
   const modal = page.getByRole('dialog', {name: 'Add a new group'});
-  // The kinds are the gv Card's choice cards (a stacked Card with its radio list), not restyled buttons.
-  const kinds = modal.locator('.gv-card[data-layout="stacked"]').getByRole('radiogroup', {name: 'Kind of group'});
+  // The kinds are Choice cards in a RadioGroup (CardRadio is deprecated for Choice card).
+  const kinds = modal.getByRole('radiogroup', {name: 'Kind of group'});
+  await expect(kinds.locator('.gv-choice-card')).toHaveCount(2);
   await expect(kinds.getByRole('radio', {name: /Create a normal group/})).toBeVisible();
   await expect(kinds.getByRole('radio', {name: /Create a smart group/})).toBeVisible();
   await expect(modal.getByRole('button', {name: 'Save group'})).toBeDisabled();
@@ -225,12 +230,16 @@ test('Add a new group: choose normal or smart, name it, and it joins the list wi
   await kinds.getByText('Create a smart group').click();
   await expect(kinds.getByRole('radio', {name: /Create a smart group/})).toBeChecked();
   await modal.getByRole('textbox', {name: 'Name of the group'}).fill('Cyclists');
-  await expect(modal.getByRole('button', {name: /Rule/})).toBeVisible();
+  // The rules open under the smart card once it is chosen (Choice card's `revealed`), still a Gap.
+  await expect(kinds.locator('.gv-choice-card__revealed').getByRole('button', {name: /Rule/})).toBeVisible();
   await modal.getByRole('button', {name: 'Save group'}).click();
   await expect(modal).toHaveCount(0);
   await expect(page).toHaveURL(/#\/users\/groups\/[\w-]+$/);
   await expect(page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Cyclists/})).toHaveAttribute('aria-selected', 'true');
-  await expect(page.getByRole('grid', {name: 'Cyclists'})).toBeVisible();
+  // A new smart group: the Banner says why its list fills itself, and the Empty state says nobody is in it yet.
+  const cyclists = page.getByRole('region', {name: 'Cyclists'});
+  await expect(cyclists.locator('.gv-banner')).toContainText('smart group');
+  await expect(cyclists.getByRole('heading', {name: 'Nobody meets the rules yet'})).toBeVisible();
   await expect(toast(page).first()).toContainText('Group created');
 });
 
@@ -369,4 +378,116 @@ test('the users pages keep their headings in order (h1 → h2 → h3)', async ({
   await page.getByRole('tab', {name: 'All invitations'}).click();
   await expect(page.getByRole('grid', {name: 'All invitations'})).toBeVisible();
   expect(await headingJumps(page)).toEqual([]);
+});
+
+// ── The redesign on the current components ──────────────────────────────────
+
+test('row menus carry their icons in the icon slot, with the removing items apart', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  await page.getByRole('button', {name: 'Options for Resident E'}).click();
+  const menu = page.getByRole('menu');
+  for (const m of ['Make platform admin', 'Add to group', 'Block user', 'Delete user']) {
+    await expect(menu.getByRole('menuitem', {name: m}).locator('.gv-menu-icon svg')).toHaveCount(1);
+  }
+  await expect(menu.getByRole('separator')).toHaveCount(1);
+  // Only a manual group's own list takes someone out of it.
+  await expect(menu.getByRole('menuitem', {name: 'Remove from group'})).toHaveCount(0);
+});
+
+test('instant changes carry Undo: admin rights, add to group', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  const grid = page.getByRole('grid', {name: 'Registered users'});
+  await grid.getByRole('button', {name: 'Options for Resident E'}).click();
+  await page.getByRole('menuitem', {name: 'Make platform admin'}).click();
+  await expect(grid.getByRole('row', {name: /Resident E/})).toContainText('Platform admin');
+  await toast(page).filter({hasText: 'Resident E is now a platform admin'}).getByRole('button', {name: 'Undo'}).click();
+  await expect(grid.getByRole('row', {name: /Resident E/})).toContainText('Registered user');
+
+  await grid.getByRole('row', {name: /Resident G/}).locator('.gv-checkbox .indicator').click();
+  await page.getByRole('button', {name: 'Add to group'}).click();
+  await page.getByRole('menuitem', {name: 'Youth panel'}).click();
+  const groups = page.getByRole('listbox', {name: 'Groups'});
+  await expect(groups.getByRole('option', {name: /^Youth panel/})).toContainText('4');
+  await toast(page).filter({hasText: '1 user added to Youth panel'}).getByRole('button', {name: 'Undo'}).click();
+  await expect(groups.getByRole('option', {name: /^Youth panel/})).toContainText('3');
+});
+
+test('a manual group takes users out from the row or the Selection bar, with Undo; empty, it says so', async ({page}) => {
+  await page.goto('/backoffice/#/users/groups/youth');
+  const grid = page.getByRole('grid', {name: 'Youth panel'});
+  await expect(page.getByRole('region', {name: 'Youth panel'}).locator('.gv-banner')).toHaveCount(0);
+  await grid.getByRole('button', {name: 'Options for Resident E'}).click();
+  await page.getByRole('menuitem', {name: 'Remove from group'}).click();
+  await expect(grid.getByRole('row')).toHaveCount(3);
+  await toast(page).filter({hasText: '1 user removed from Youth panel'}).getByRole('button', {name: 'Undo'}).click();
+  await expect(grid.getByRole('row')).toHaveCount(4);
+  // Not forced: the click waits until the page takes pointer events again (a toast's exit briefly holds them).
+  await grid.getByRole('columnheader').locator('.gv-checkbox .indicator').click();
+  await expect(page.getByText('3 selected')).toBeVisible();
+  await page.getByRole('button', {name: 'Remove from group'}).click();
+  const region = page.getByRole('region', {name: 'Youth panel'});
+  await expect(region.getByRole('heading', {name: 'No members yet'})).toBeVisible();
+  // A search that finds nobody says so too.
+  await page.goto('/backoffice/#/users');
+  await page.getByRole('searchbox', {name: 'Search users'}).fill('nobody-here');
+  await expect(page.getByRole('heading', {name: 'No users match'})).toBeVisible();
+});
+
+test('a blocked user is unblocked from their row under Banned emails, with Undo', async ({page}) => {
+  await page.goto('/backoffice/#/users');
+  const grid = page.getByRole('grid', {name: 'Registered users'});
+  await grid.getByRole('button', {name: 'Options for Resident H'}).click();
+  await page.getByRole('menuitem', {name: 'Block user'}).click();
+  await page.getByRole('alertdialog', {name: 'Block this user?'}).getByRole('button', {name: 'Block user'}).click();
+  await page.getByRole('listbox', {name: 'Users'}).getByRole('option', {name: /^Banned emails/}).click();
+  const banned = page.getByRole('grid', {name: 'Banned emails'});
+  await banned.getByRole('button', {name: 'Options for Resident H'}).click();
+  await expect(page.getByRole('menuitem', {name: 'Block user', exact: true})).toHaveCount(0);
+  await page.getByRole('menuitem', {name: 'Unblock user'}).click();
+  await expect(page.getByRole('heading', {name: 'No banned emails'})).toBeVisible();
+  await toast(page).filter({hasText: 'Resident H is unblocked'}).getByRole('button', {name: 'Undo'}).click();
+  await expect(banned.getByRole('row', {name: /Resident H/})).toBeVisible();
+});
+
+test('invitations: the form is a Panel with Send in its foot; an invitation is a Badge, deleted with Undo', async ({page}) => {
+  await page.goto('/backoffice/#/users/invitations');
+  const form = page.getByRole('region', {name: 'Invite by email'});
+  await expect(form.locator('.gv-panel__foot').getByRole('button', {name: 'Send invites'})).toBeDisabled();
+  await form.getByRole('button', {name: /Role/}).click();
+  await expect(page.getByRole('option', {name: /Platform admin/})).toContainText('Takes an admin seat');
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('tab', {name: 'All invitations (3)'})).toBeVisible();
+  await page.getByRole('tab', {name: /All invitations/}).click();
+  const grid = page.getByRole('grid', {name: 'All invitations'});
+  await expect(grid.getByRole('row', {name: /invitee2/}).locator('.gv-pill')).toHaveText('Pending');
+  await grid.getByRole('button', {name: 'Options for invitee2@example.org'}).click();
+  await expect(page.getByRole('menuitem', {name: 'Resend invitation'})).toBeVisible();
+  await page.getByRole('menuitem', {name: 'Delete invitation'}).click();
+  await expect(grid.getByRole('row', {name: /invitee2/})).toHaveCount(0);
+  await toast(page).filter({hasText: 'Invitation deleted'}).getByRole('button', {name: 'Undo'}).click();
+  await expect(grid.getByRole('row').nth(2)).toContainText('invitee2@example.org');
+  await page.getByRole('searchbox', {name: 'Search invitations'}).fill('zzz');
+  await expect(page.getByRole('heading', {name: 'No invitations match'})).toBeVisible();
+});
+
+test('seats: Stat tiles with a trend and a help icon; a profile is a Property list with its groups', async ({page}) => {
+  await page.goto('/backoffice/#/users/seats');
+  const used = page.locator('.gv-kpi', {hasText: 'Admin seats used'});
+  await expect(used.locator('.gv-kpi__trend')).toContainText('+1');
+  await expect(used.locator('.gv-kpi__trend')).toContainText('since last month');
+  await expect(page.locator('.gv-kpi__info')).toHaveCount(4);
+
+  await page.goto('/backoffice/#/users/u8');
+  const profile = page.getByRole('region', {name: 'Profile'});
+  const facts = profile.locator('.gv-property-list');
+  for (const k of ['Email', 'Role', 'Joined', 'Last active', 'Groups']) await expect(facts.getByText(k, {exact: true})).toBeVisible();
+  await expect(facts.locator('.gv-pill')).toHaveText(['Verified residents', 'Youth panel']);
+  await page.getByRole('button', {name: 'Make platform admin'}).click();
+  await expect(facts).toContainText('Platform admin');
+  await toast(page).filter({hasText: 'is now a platform admin'}).getByRole('button', {name: 'Undo'}).click();
+  await expect(facts).toContainText('Registered user');
+  await expect(page.getByRole('button', {name: 'Make platform admin'})).toBeVisible();
+
+  await page.goto('/backoffice/#/users/nobody');
+  await expect(page.getByRole('heading', {level: 2, name: 'This user is not on the platform'})).toBeVisible();
 });

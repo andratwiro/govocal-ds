@@ -43,6 +43,23 @@ list; change any line and the agent follows. Newest first within each section.
 - Custom emails, SMS campaigns and a sent email's recipients drawn three ways (Data table in a Panel, List rows in a Card, Data table in a Card) → **Panel, Table toolbar (the count; the Filter menu and search on emails and recipients), Data table, Pagination for all three** → one list shape on every admin table.
 - The SMS composer as a Card with its buttons inline vs the email composer's Panel → **both Panels, Cancel (secondary) and the sends in the foot; the recipient count as the To Select's description** → one composer.
 - Switching an automated email, duplicating an email and deleting a draft changed things silently → **a Toast with Undo for each; Delete still confirms first** → "This cannot be undone" leaves the confirm.
+### Users
+
+- Add a new group's two kinds as a stacked Card with its radio list (CardRadio, deprecated) → **Choice cards in a RadioGroup, a smart group's rule picker in the chosen card's `revealed` slot** → the rules belong to the smart kind, so they open under it.
+- An empty list as an empty table reading "No users here." → **an Empty state in the Panel body, by list (no members yet, nobody meets the rules, no banned emails, no bounces, a role nobody holds, no match), with no table or Pagination under it** → the shape every admin list uses.
+- Admin rights, add to group and the rest changed silently or with a plain toast → **instant with an Undo toast: admin rights (row and profile), add to group (row and Selection bar), remove from group, unblock, delete invitation; Block and Delete user still confirm in an Alert dialog** → Undo where it can be taken back, a confirm where it can't.
+- Row menus as bare words → **icons in Menu's icon slot, the removing items (Block, Delete) after a separator; Unblock user under Banned emails, Remove from group in a manual group's list and its Selection bar** → each list offers the way back out of it.
+- A smart group's page looked like a manual one → **an info Banner in the Panel saying its list fills itself; no Remove from group there** → a hand edit would be undone by the rules.
+- Invite by email as a stacked Card with Send inside → **a Panel with the address count and Send invites in its foot; Role a Select with descriptions (what each role may do, which seat it takes)**; the invitation status as a project Status badge (draft/live) → **a Badge, outlined while Pending**, with Resend and Delete in the row menu.
+- The profile as a Card with a hand-built `dl` → **a Panel with a Property list (email, role, joined, last active, groups as value Badges), participation as Stat tiles in a second Panel**; seats' tiles take a month's trend and an info popover on what counts.
+
+### Tools
+
+- Tools' sub-pages as bare starter Tables under the page head, the create button in the page head → **a Panel each (title, count, description, the create action in its head) over a Data table; an Empty state with the create action when the list is empty** → the list shape of every admin screen.
+- Delete token and Delete webhook removed a row at once (the real admin asks first) → **an Alert dialog, then a Toast** → a token or webhook gone breaks an integration; there is nothing to undo.
+- Edit and Delete webhook as two icon buttons in the row vs the "…" row menu of Projects and Reports → **Data table options, Menu items with their icons** → one row-actions look.
+- "Copied!", "API key saved" and "Report template ready" as status lines beside the button → **a Toast for saves and downloads; inside a dialog the button turns to a disabled "Copied!"** → one feedback channel, the Inspiration hub's copy.
+- Esri key, Widget settings and Power BI templates as Cards → **Panels, the save or download in the foot; Esri's connection as a Status badge in the head; Power BI's API note a Banner linking to the tokens** → forms sit in Panels, as Settings.
 
 ## Building from the prototype review (29 Oct 2026)
 

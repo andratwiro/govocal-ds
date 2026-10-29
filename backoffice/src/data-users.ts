@@ -65,3 +65,6 @@ export const SEATS = {admins: 5, managers: 10};
 
 /** Smart group rules (the real admin's rule picker, shortened). */
 export const SMART_RULES = ['Email domain is', 'Is verified', 'Lives in area', 'Took part in project', 'Registered after'];
+
+/** Seats taken a month ago, for the Seats overview's trend. */
+export const SEATS_A_MONTH_AGO = {admins: 1, managers: 2};

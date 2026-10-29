@@ -1,13 +1,17 @@
 import {useMemo, useState, type ComponentProps, type ReactNode} from 'react';
 import {useNavigate, useParams} from 'react-router';
-import {ChartColumn, Download, Mail, Pencil, Plus, ShieldCheck, Trash2, Users as UsersIcon, Zap} from 'lucide-react';
-import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell, DataTableEmpty,
+import {Ban, ChartColumn, Download, Mail, Pencil, Plus, SearchX, ShieldCheck, ShieldOff, Trash2, UserMinus, UserPlus,
+  Users as UsersIcon, Zap} from 'lucide-react';
+import {DataTable, DataTableHeader, DataTableColumn, DataTableBody, DataTableRow, DataTableCell,
   DataTablePerson, DataTableStack, DataTableOptions} from '../../../src/components/gv/DataTable';
+import {RadioGroup} from '../../../src/components/RadioGroup';
+import {ChoiceCard} from '../../../src/components/gv/ChoiceCard';
+import {EmptyState} from '../../../src/components/gv/EmptyState';
+import {Banner} from '../../../src/components/gv/Banner';
 import {ListBox, ListBoxItem} from '../../../src/components/ListBox';
 import {SearchField} from '../../../src/components/SearchField';
-import {Menu, MenuItem} from '../../../src/components/Menu';
+import {Menu, MenuItem, Separator} from '../../../src/components/Menu';
 import {Button} from '../../../src/components/Button';
-import {Card, CardRadio, CardRadioGroup} from '../../../src/components/gv/Card';
 import {Modal} from '../../../src/components/gv/Modal';
 import {AlertDialog} from '../../../src/components/gv/AlertDialog';
 import {Pagination} from '../../../src/components/gv/Pagination';
@@ -36,10 +40,11 @@ const DESCRIPTION = 'Get an overview of all the people and organisations that re
 type Group = (typeof GROUPS)[number];
 
 // The groups made or renamed here outlive a change of route (a group's page, a profile and back), until a reload.
-const groupStore: {groups: Group[]} = {groups: [...GROUPS]};
+export const groupStore: {groups: Group[]} = {groups: [...GROUPS]};
 function useGroups() {
   const [groups, set] = useState(groupStore.groups);
-  const setGroups = (f: (g: Group[]) => Group[]) => set(g => (groupStore.groups = f(g)));
+  // The store first: an Undo pressed after leaving the page still lands.
+  const setGroups = (f: (g: Group[]) => Group[]) => set(groupStore.groups = f(groupStore.groups));
   return [groups, setGroups] as const;
 }
 
@@ -48,15 +53,18 @@ export type Member = Person & {blocked?: boolean};
 export const peopleStore: {people: Member[]} = {people: [...PEOPLE]};
 function usePeople() {
   const [people, set] = useState(peopleStore.people);
-  const setPeople = (f: (p: Member[]) => Member[]) => set(p => (peopleStore.people = f(p)));
+  const setPeople = (f: (p: Member[]) => Member[]) => set(peopleStore.people = f(peopleStore.people));
   return [people, setPeople] as const;
 }
-const toast = (title: string, description?: string) => queue.add({title, description}, {timeout: 5000});
+/** Instant changes say so in a Toast; the ones that can be taken back carry Undo (docs/DECISIONS.md). */
+export const toast = (title: string, description?: string, undo?: () => void) =>
+  queue.add({title, description, ...(undo && {action: 'Undo', onAction: undo})}, {timeout: 5000});
+const icon = (Icon: typeof Plus) => <Icon aria-hidden size={16} />;
 
 // "Resident E" → "RE".
 export const initials = (name: string) => name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
-function ago(minutes?: number) {
+export function ago(minutes?: number) {
   if (minutes === undefined) return '';
   const units: [number, string][] = [[43200, 'month'], [10080, 'week'], [1440, 'day'], [60, 'hour'], [1, 'minute']];
   const [size, unit] = units.find(([s]) => minutes >= s) ?? [1, 'minute'];
@@ -130,23 +138,43 @@ function Sidebar({view, setView, all, people, onAddGroup}: {
   );
 }
 
-type RowAction = 'admin' | 'group' | 'block' | 'delete';
+type RowAction = 'admin' | 'group' | 'ungroup' | 'block' | 'unblock' | 'delete';
 
-function RowOptions({person, onAction}: {person: Person; onAction: (a: RowAction) => void}) {
+/** A row's menu (Menu's "With icons" story): the rights and groups first, then, apart, what removes the user. In a
+ * manual group's list it also takes the user out of that group; under Banned emails, Block becomes Unblock. */
+function RowOptions({person, blocked, inManualGroup, onAction}: {
+  person: Member; blocked: boolean; inManualGroup: boolean; onAction: (a: RowAction) => void;
+}) {
   const admin = person.role === 'Platform admin';
   return (
     <DataTableOptions aria-label={`Options for ${person.name}`} onAction={k => onAction(k as RowAction)}>
-      <MenuItem id="admin">{admin ? 'Remove platform admin rights' : 'Make platform admin'}</MenuItem>
-      <MenuItem id="group">Add to group</MenuItem>
-      <MenuItem id="block">Block user</MenuItem>
-      <MenuItem id="delete">Delete user</MenuItem>
+      <MenuItem id="admin" icon={icon(admin ? ShieldOff : ShieldCheck)}>{admin ? 'Remove platform admin rights' : 'Make platform admin'}</MenuItem>
+      <MenuItem id="group" icon={icon(UserPlus)}>Add to group</MenuItem>
+      {inManualGroup && <MenuItem id="ungroup" icon={icon(UserMinus)}>Remove from group</MenuItem>}
+      <Separator />
+      {blocked
+        ? <MenuItem id="unblock" icon={icon(Ban)}>Unblock user</MenuItem>
+        : <MenuItem id="block" icon={icon(Ban)}>Block user</MenuItem>}
+      <MenuItem id="delete" icon={icon(Trash2)}>Delete user</MenuItem>
     </DataTableOptions>
   );
 }
 
-function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowAction, onAddToGroup}: {
+/** What an empty list says, by list: a role nobody holds, an empty group, no bans or bounces. */
+function emptyCopy(view: string, group?: Group): {title: string; description: string} {
+  if (group?.kind === 'manual') return {title: 'No members yet',
+    description: 'Tick users in Registered users and choose Add to group, or use a row\'s Add to group.'};
+  if (group) return {title: 'Nobody meets the rules yet', description: 'Users who meet this group\'s rules join it by themselves.'};
+  if (view === 'banned') return {title: 'No banned emails', description: 'A user you block shows here, and can be unblocked from their row.'};
+  if (view === 'bounces') return {title: 'No email bounces', description: 'Addresses our emails could not reach show here.'};
+  const label = SEGMENTS.find(s => s.id === view)?.label.toLowerCase() ?? 'users';
+  return {title: `No ${label} yet`, description: 'Give someone this role from their row or their profile.'};
+}
+
+function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowAction, onAddToGroup, onRemoveFromGroup}: {
   view: string; groups: Group[]; people: Member[]; onEditGroup: () => void; onDeleteGroup: () => void;
-  onRowAction: (p: Person, a: RowAction) => void; onAddToGroup: (ids: string[], groupId: string) => void;
+  onRowAction: (p: Member, a: RowAction) => void; onAddToGroup: (ids: string[], groupId: string) => void;
+  onRemoveFromGroup: (ids: string[]) => void;
 }) {
   const group = groups.find(g => g.id === view);
   const title = SEGMENTS.find(s => s.id === view)?.label ?? group?.label ?? '';
@@ -177,20 +205,27 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
   const count = ids.length;
   const exportUsers = (n: number) => toast('Export started', `${n === 1 ? '1 user' : `${n} users`} in users.xlsx`);
 
+  const manualGroup = group?.kind === 'manual';
   const actions: SelectionAction[] = [
-    {id: 'group', label: 'Add to group', icon: <UsersIcon aria-hidden size={16} />, menu: (
+    {id: 'group', label: 'Add to group', icon: icon(UserPlus), menu: (
       <Menu aria-label="Manual groups" onAction={k => { onAddToGroup(ids, String(k)); setSelected(new Set()); }}>
-        {groups.filter(g => g.kind === 'manual').map(g => <MenuItem key={g.id} id={g.id}>{g.label}</MenuItem>)}
+        {groups.filter(g => g.kind === 'manual').map(g => <MenuItem key={g.id} id={g.id} icon={icon(UsersIcon)}>{g.label}</MenuItem>)}
       </Menu>
     )},
-    {id: 'export', label: 'Export selected', icon: <Download aria-hidden size={16} />}
+    ...(manualGroup ? [{id: 'ungroup', label: 'Remove from group', icon: icon(UserMinus)}] : []),
+    {id: 'export', label: 'Export selected', icon: icon(Download)}
   ];
+  const onBulk = (id: string) => {
+    if (id === 'export') exportUsers(count);
+    if (id === 'ungroup') { onRemoveFromGroup(ids); setSelected(new Set()); }
+  };
+  const {title: emptyTitle, description: emptyText} = emptyCopy(view, group);
 
   // The toolbar row (the Data table's "In a panel" story): the count, which follows the search, gives way to the
   // Selection bar while rows are ticked; the export and the search stay put at the end.
   const toolbar = (
     <TableToolbar aria-label="User tools" start={(
-      <SelectionBar count={count} actions={actions} onAction={id => id === 'export' && exportUsers(count)}
+      <SelectionBar count={count} actions={actions} onAction={onBulk}
         onClear={() => setSelected(new Set())}>
         <TableToolbarHeading>{usersWord(rows.length)}</TableToolbarHeading>
       </SelectionBar>
@@ -208,7 +243,22 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
           <Button variant="quiet" tone="danger" size={32} onPress={onDeleteGroup}><Trash2 aria-hidden size={16} />Delete Group</Button>
         </>
       )}
-      footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="User pages" />}>
+      footer={rows.length > 0 && <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="User pages" />}>
+      {/* A smart group says why its list can't be edited by hand (the Banner's info tone). */}
+      {group?.kind === 'smart' && (
+        <div className="bo-users-note">
+          <Banner tone="info">This is a smart group: users who meet its rules join it, and leave it, by themselves.</Banner>
+        </div>
+      )}
+      {/* Nothing in the list, or nothing found: the Empty state, as every admin list (docs/DECISIONS.md). */}
+      {rows.length === 0 ? (
+        query ? (
+          <EmptyState size="panel" headingLevel={3} icon={<SearchX size={24} />} title="No users match"
+            description="Try another name or email address." />
+        ) : (
+          <EmptyState size="panel" headingLevel={3} icon={<UsersIcon size={24} />} title={emptyTitle} description={emptyText} />
+        )
+      ) : (
         <div className="bo-users-scroll">
         <DataTable aria-label={title} selectionMode="multiple" selectedKeys={selected} onSelectionChange={onSelect}
           sortDescriptor={sort} onSortChange={onSort}>
@@ -220,7 +270,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
             <DataTableColumn id="joined" allowsSorting>Joined</DataTableColumn>
             <DataTableColumn id="options" align="options">Options</DataTableColumn>
           </DataTableHeader>
-          <DataTableBody renderEmptyState={() => <DataTableEmpty>No users here.</DataTableEmpty>}>{shown.map(p => (
+          <DataTableBody>{shown.map(p => (
             <DataTableRow key={p.id} id={p.id} textValue={p.name} href={`#/users/${p.id}`}>
               <DataTableCell>
                 <DataTablePerson name={p.name} initials={initials(p.name)}
@@ -233,11 +283,14 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
               </DataTableCell>
               <DataTableCell><span className="bo-users-nowrap">{ago(p.lastActive)}</span></DataTableCell>
               <DataTableCell><span className="bo-users-nowrap">{date(p.joined)}</span></DataTableCell>
-              <DataTableCell align="options"><RowOptions person={p} onAction={a => onRowAction(p, a)} /></DataTableCell>
+              <DataTableCell align="options">
+                <RowOptions person={p} blocked={!!p.blocked} inManualGroup={manualGroup} onAction={a => onRowAction(p, a)} />
+              </DataTableCell>
             </DataTableRow>))}
           </DataTableBody>
         </DataTable>
         </div>
+      )}
     </Panel>
   );
 }
@@ -274,28 +327,23 @@ function GroupModal({editing, onClose, onSave}: {
   return (
     <Modal title={title} isOpen onOpenChange={open => !open && onClose()} footer={footer}>
       <div className="bo-users-modal">
-      {/* The choice cards (the gv Card, stacked, with its radio list), as the phase's Survey options. */}
+      {/* The kinds are Choice cards in a RadioGroup (Choice card's stories); a smart group's rules open under its
+          card once it is chosen (the card's `revealed` slot). */}
       {!editing && (
-        <Card layout="stacked" title="Kind of group">
-          <CardRadioGroup aria-label="Kind of group" value={kind} onChange={v => setKind(v as Group['kind'])}>
-            {KINDS.map(({kind: k, title: t, note}) => (
-              <CardRadio key={k} value={k} description={note}>{t}</CardRadio>
-            ))}
-          </CardRadioGroup>
-        </Card>
+        <RadioGroup label="Kind of group" value={kind} onChange={v => setKind(v as Group['kind'])}>
+          {KINDS.map(({kind: k, title: t, note}) => (
+            <ChoiceCard key={k} value={k} description={note} media={icon(k === 'smart' ? Zap : UsersIcon)}
+              revealed={k === 'smart' && (
+                <Gap name="Smart group rules">
+                  <Select label="Rule" placeholder="Choose a rule">
+                    {SMART_RULES.map(r => <SelectItem key={r} id={r}>{r}</SelectItem>)}
+                  </Select>
+                </Gap>
+              )}>{t}</ChoiceCard>
+          ))}
+        </RadioGroup>
       )}
-      {kind && (
-        <div className="bo-users-form">
-          <TextField label="Name of the group" value={name} onChange={setName} autoFocus />
-          {kind === 'smart' && (
-            <Gap name="Smart group rules">
-              <Select label="Rule" placeholder="Choose a rule">
-                {SMART_RULES.map(r => <SelectItem key={r} id={r}>{r}</SelectItem>)}
-              </Select>
-            </Gap>
-          )}
-        </div>
-      )}
+      {kind && <TextField label="Name of the group" value={name} onChange={setName} autoFocus />}
       </div>
     </Modal>
   );
@@ -357,7 +405,7 @@ export function Users() {
   const [segment, setSegment] = useState('all');
   const [people, setPeople] = usePeople();
   const [modal, setModal] = useState<'add' | 'edit' | 'delete' | null>(null);
-  const [ask, setAsk] = useState<{kind: 'group' | 'block' | 'delete'; person: Person} | null>(null);
+  const [ask, setAsk] = useState<{kind: 'group' | 'block' | 'delete'; person: Member} | null>(null);
   const group = groups.find(g => g.id === groupId);
   const view = group ? group.id : segment;
   // A group has its own page (the real admin's /users/:groupId); the role lists stay on /users.
@@ -386,22 +434,42 @@ export function Users() {
   const addToGroup = (ids: string[], groupId: string) => {
     const target = groups.find(g => g.id === groupId);
     if (!target) return;
-    setGroups(gs => gs.map(g => (g.id === groupId ? {...g, members: [...new Set([...g.members, ...ids])]} : g)));
-    toast(ids.length === 1 ? `1 user added to ${target.label}` : `${ids.length} users added to ${target.label}`);
+    const added = ids.filter(id => !target.members.includes(id));
+    const members = (f: (m: string[]) => string[]) => setGroups(gs => gs.map(g => (g.id === groupId ? {...g, members: f(g.members)} : g)));
+    members(m => [...m, ...added]);
+    toast(ids.length === 1 ? `1 user added to ${target.label}` : `${ids.length} users added to ${target.label}`, undefined,
+      () => members(m => m.filter(id => !added.includes(id))));
     setAsk(null);
   };
-  const onRowAction = (person: Person, a: RowAction) => {
-    if (a !== 'admin') { setAsk({kind: a, person}); return; }
-    // As on the profile page: the admin rights go on and off from the same item.
+  // Out of a manual group at once, with Undo (the group's own list, its row menu or the Selection bar).
+  const removeFromGroup = (ids: string[]) => {
+    if (!group) return;
+    const before = group.members;
+    setGroups(gs => gs.map(g => (g.id === group.id ? {...g, members: g.members.filter(m => !ids.includes(m))} : g)));
+    toast(ids.length === 1 ? `1 user removed from ${group.label}` : `${ids.length} users removed from ${group.label}`, undefined,
+      () => setGroups(gs => gs.map(g => (g.id === group.id ? {...g, members: before} : g))));
+  };
+  const setRole = (id: string, role: Person['role']) => setPeople(ps => ps.map(p => (p.id === id ? {...p, role} : p)));
+  const setBlocked = (id: string, blocked: boolean) => setPeople(ps => ps.map(p => (p.id === id ? {...p, blocked} : p)));
+  const onRowAction = (person: Member, a: RowAction) => {
+    if (a === 'group' || a === 'block' || a === 'delete') { setAsk({kind: a, person}); return; }
+    if (a === 'ungroup') { removeFromGroup([person.id]); return; }
+    if (a === 'unblock') {
+      setBlocked(person.id, false);
+      toast(`${person.name} is unblocked`, 'They can sign in and take part again.', () => setBlocked(person.id, true));
+      return;
+    }
+    // As on the profile page: the admin rights go on and off from the same item, at once, with Undo.
     const admin = person.role === 'Platform admin';
-    setPeople(ps => ps.map(p => (p.id === person.id ? {...p, role: admin ? 'Registered user' : 'Platform admin'} : p)));
-    toast(admin ? `${person.name} is no longer a platform admin` : `${person.name} is now a platform admin`);
+    setRole(person.id, admin ? 'Registered user' : 'Platform admin');
+    toast(admin ? `${person.name} is no longer a platform admin` : `${person.name} is now a platform admin`, undefined,
+      () => setRole(person.id, person.role));
   };
   const confirm = () => {
     if (!ask) return;
     const {kind, person} = ask;
     if (kind === 'block') {
-      setPeople(ps => ps.map(p => (p.id === person.id ? {...p, blocked: true} : p)));
+      setBlocked(person.id, true);
       toast(`${person.name} is blocked`, 'They are listed under Banned emails.');
     } else {
       setPeople(ps => ps.filter(p => p.id !== person.id));
@@ -416,7 +484,8 @@ export function Users() {
         <Sidebar view={view} setView={setView} all={groups} people={people} onAddGroup={() => setModal('add')} />
         {/* A fresh table per view: search and selection belong to the list they were made in. */}
         <UserTable key={view} view={view} groups={groups} people={people} onEditGroup={() => setModal('edit')}
-          onDeleteGroup={() => setModal('delete')} onRowAction={onRowAction} onAddToGroup={addToGroup} />
+          onDeleteGroup={() => setModal('delete')} onRowAction={onRowAction} onAddToGroup={addToGroup}
+          onRemoveFromGroup={removeFromGroup} />
       </div>
       {(modal === 'add' || (modal === 'edit' && group)) && (
         <GroupModal key={modal} editing={modal === 'edit' ? group : undefined} onClose={() => setModal(null)} onSave={save} />
