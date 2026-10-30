@@ -4379,6 +4379,7 @@ Interface, from `src/components/RadioGroup.tsx`. The props of `Radio`, listed th
 Component, from `src/patterns/RailHeader.tsx`.
 
 - `className?: string`
+- `headingLevel?: 2 | 3 | 4 | 5 | 6`
 - `labels?: Partial<RailHeaderLabels>`
 - `onAdd?: () => void`
 - `onTogglePanel?: () => void`

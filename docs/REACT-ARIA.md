@@ -59,7 +59,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Data display › Quote | through Badge: `Button` | – | – | yes | 6 |
 | Data display › Reaction counts | `VisuallyHidden` | – | yes | yes | 4 |
 | Data display › Stat row | `Link`, `ToggleButton` | – | – | yes | 7 |
-| Data display › Stat tile | `VisuallyHidden`; through Help popover: `Heading`, `Dialog`, `DialogTrigger`, `OverlayArrow`, `Popover`, `Button`, `ProgressBar` | – | – | yes | 12 |
+| Data display › Stat tile | `VisuallyHidden`; through Help popover: `Heading`, `Dialog`, `DialogTrigger`, `OverlayArrow`, `Popover`, `Button`, `ProgressBar` | – | – | yes | 11 |
 | Forms › Checkbox | through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text` | `CheckboxFieldProps` | – | yes | 8 |
 | Forms › Checkbox group | `CheckboxGroup`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `CheckboxGroupProps` | – | yes | 2 |
 | Forms › Choice card | `RadioField`, `RadioButton`, `CheckboxField`, `CheckboxButton`; through Section label: `Heading` | `RadioFieldProps` | – | yes | 7 |
@@ -144,11 +144,11 @@ what would survive a change of base library. It decides nothing: the base librar
 | Project page › Action row | `Button`, `MenuTrigger`, `ProgressBar`, `Link`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `Heading`, `Text`, `Header`, `Keyboard`; through Popover: `OverlayArrow`, `Popover` | – | – | yes | 13 |
 | Project page › Panel section | `Button`, `Heading`, `Disclosure`, `DisclosurePanel` | – | – | yes | 5 |
 | Project page › Phone preview | `Button`, `Link`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | – | yes | 6 |
-| Project page › Project header | `MenuTrigger`; through Button: `Button`, `ProgressBar`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`; through Popover: `OverlayArrow`, `Popover`; through Breadcrumbs: `Breadcrumbs`, `Breadcrumb`, `Link`, `Button`; through Icon button: `Button`; through Segmented control: `ToggleButtonGroup`, `SelectionIndicator`, `ToggleButton`, `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | – | yes | 10 |
+| Project page › Project header | `MenuTrigger`; through Button: `Button`, `ProgressBar`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`; through Popover: `OverlayArrow`, `Popover`; through Breadcrumbs: `Breadcrumbs`, `Breadcrumb`, `Link`, `Button`; through Icon button: `Button`; through Segmented control: `ToggleButtonGroup`, `SelectionIndicator`, `ToggleButton`, `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | – | yes | 14 |
 | Project page › Setup step | `Button`, `Dialog`, `DialogTrigger`, `Disclosure`, `DisclosurePanel`, `Heading`, `MenuTrigger`; through Popover: `OverlayArrow`, `Popover` | – | – | yes | 7 |
-| Project page › Stat card | `Button` | – | yes | yes | 4 |
+| Project page › Stat card | `Button` | – | yes | yes | 6 |
 | Project rail › Phase timeline | through Rail phase: `Link`, `Button`, `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 6 |
-| Project rail › Rail header | through Icon button: `Button` | – | – | yes | 5 |
+| Project rail › Rail header | `Heading`; through Icon button: `Button` | – | – | yes | 5 |
 | Project rail › Rail phase | `Link`; through Icon button: `Button`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 7 |
 | Report builder › Assistant panel | through Button: `Button`, `ProgressBar`; through Side panel: `Dialog`, `Toolbar`, `Button`, `OverlayArrow`, `Tooltip`, `TooltipTrigger`; through Chat thread: `Button`, `ProgressBar`; through Item chip: `Button`, `VisuallyHidden`; through Prompt composer: `Button`, `FileTrigger`, `TextArea`, `TextField`, `OverlayArrow`, `Tooltip`, `TooltipTrigger`, `VisuallyHidden`; through Prompt suggestions: `Button` | – | yes | – | 9 |
 

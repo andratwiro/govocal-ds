@@ -23,7 +23,8 @@ type Story = StoryObj<typeof PhaseTimeline>;
 /** Done, in progress and upcoming phases joined by the spine; one carries new inputs. */
 export const Timeline: Story = {name: 'Default', args: {phases: PHASES}};
 
-/** The phase being viewed is highlighted. */
+/** The phase being viewed is marked as the current page for screen readers (`aria-current`); it draws no tint, as the
+ * prototype dropped the open phase's card. */
 export const Current: Story = {args: {phases: PHASES.map(p => ({...p, isCurrent: p.id === 'b'}))}};
 
 /** Spotlight: methods outside the timeline, no spine. */

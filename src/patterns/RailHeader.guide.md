@@ -14,7 +14,7 @@
 
 ## Anatomy
 
-1. **Title**: the rail's name.
+1. **Title**: the rail's name, a heading (h2 unless `headingLevel` says otherwise).
 2. **Hide panel** (optional, Not in Figma): an icon button before the +.
 3. **Add** (optional): the strong + icon button.
 
@@ -32,8 +32,8 @@ Two icon buttons, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARI
 ## Content
 
 - The title is one word or two: "Participation".
-- Name the buttons for what they do here: `labels={{add: 'Add a phase', togglePanel: 'Hide the participation rail'}}`.
-  The defaults, "Add" and "Hide panel", are too vague for a page with more than one panel.
+- The buttons' names default to "Add a phase" and "Hide the participation rail"; pass the page's own through
+  `labels` in its language.
 
 ## Accessibility
 
@@ -42,7 +42,7 @@ Two icon buttons, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARI
 **You still own:**
 - Specific button names in the page's language (`labels`).
 - A way back once the rail is hidden (the overview shows a "Show the participation rail" button).
-- A heading for the rail if the page needs one; the title here is text, not a heading.
+- The title's `headingLevel` fitting the page's outline (an h2 by default).
 
 ## Related
 
@@ -55,10 +55,12 @@ Two icon buttons, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARI
 
 - Built by AI agents from Figma ("Rail header", the title and +) and the designer's prototype (hide panel).
 - Reviewed by a person: not yet.
-- Known limits: the title isn't a heading; the button names default to generic words.
+- Known limits: none known.
 
 ## Changes
 
+- 30 Oct 2026: the title is a heading (`headingLevel`, h2 by default); the buttons' default names say what they do
+  ("Add a phase", "Hide the participation rail").
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: its words come in through `labels`; the + is the strong icon button (`emphasis`).
 - 29 Oct 2026: one rail head on the overview and the phase screen (docs/DECISIONS.md, "Project overview").

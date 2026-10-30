@@ -114,3 +114,10 @@ test('Project header: Save saves, then reads Back to project; a mode carries its
   await expect(survey.getByRole('radio')).toHaveCount(2);
   await report(page);
 });
+
+test('Rail header: the title is a heading and the buttons say what they do', async ({page}) => {
+  await page.goto(story('patterns-project-rail-rail-header--with-panel-toggle'));
+  await expect(page.getByRole('heading', {level: 2})).toBeVisible();
+  await expect(page.getByRole('button', {name: 'Hide the participation rail'})).toBeVisible();
+  await report(page);
+});
