@@ -5,7 +5,7 @@ with each component's props: its own with their types, the ones passed straight 
 (React Aria's behaviour props, React's, the DOM's). An API change shows up here as a diff to review;
 `tests/api-report.test.mjs` fails while this file is stale. The convention it follows: `docs/API.md`.
 
-## `govocal-ds` (667 names)
+## `govocal-ds` (668 names)
 
 ### `ACCESS_WHO_VALUE`
 
@@ -5614,6 +5614,14 @@ Function, from `src/components/gv/MultilingualTextField.tsx`.
 
 ```ts
 (props: MultilingualFieldProps, inputId?: string): { locale: string; setLocale: (locale: string) => void; value: Partial<Record<string, string>>; text: string; setText: (next: string) => void; inputLabel: string; lang: string; dir: "ltr" | "rtl"; isInvalid: boolean; error: string | undefined; head: string | false | import("react").ReactElement<any, string | import("react").JSXElementConstructor<any>> | Iterable<ReactNode>; status: (code: string) => import("src/index").LocaleStatus; labels: MultilingualFieldLabels; }
+```
+
+### `useNumberFormatter`
+
+Function, from `src/components/format.ts`.
+
+```ts
+(options?: Intl.NumberFormatOptions): Intl.NumberFormat
 ```
 
 ### `ViewOptionList`

@@ -3,7 +3,7 @@ import {Navigate, useNavigate, useParams} from 'react-router';
 import {Archive, ChevronUp, Info, Link, PanelLeft, Rocket, RotateCcw, Settings, UserPlus} from 'lucide-react';
 import {ActionRow, ActionRowList, AlertDialog, AppFramePanel, Avatar, AvatarGroup, Banner, Button, Divider, Grid, IconButton, Inline, MenuItem,
   Modal, Panel, PanelSection, PhoneHeader, PhoneImage, PhonePreview, PhoneStage, ProjectHeader, PropertyList,
-  PropertyListItem, Stack, StatCard, Text, TextField, toast, VisuallyHidden} from 'govocal-ds';
+  PropertyListItem, Stack, StatCard, Text, TextField, toast, useNumberFormatter, VisuallyHidden} from 'govocal-ds';
 import {ME, PROJECTS, type Project} from '../data';
 import {NO_OVERVIEW, OVERVIEWS, type NewPhase, type Overview} from '../data-project';
 import {AddPhase, CHECKLIST, CHECKLIST_TAB, CardStub, ChecklistStep, ProjectRail, ProjectSettings, useDeletedPhases,
@@ -108,6 +108,7 @@ function Overview({projectId}: {projectId?: string}) {
 function Setup({project, o, live, archived, onSettings, onChange}: {project: Project; o: Overview; live: boolean; archived: boolean;
   onSettings: (tab: SettingsTab) => void; onChange: () => void}) {
   const navigate = useNavigate();
+  const number = useNumberFormatter();
   const [stub, setStub] = useState<string | null>(null);
   return (
     <Panel title="Project setup" className="bo-project-setup"
@@ -119,7 +120,7 @@ function Setup({project, o, live, archived, onSettings, onChange}: {project: Pro
         {live ? (
           <>
             <PanelSection title="Collecting now">
-              <StatCard label="Participants" value={(project.participants ?? 0).toLocaleString('en-GB')} series={o.weeks}
+              <StatCard label="Participants" value={number.format(project.participants ?? 0)} series={o.weeks}
                 caption={o.since ? `Weekly, since ${o.since}` : 'Numbers appear here once participants take part'}
                 onPress={() => navigate('/dashboard')} />
             </PanelSection>
@@ -162,6 +163,8 @@ function Setup({project, o, live, archived, onSettings, onChange}: {project: Pro
 const REPORT_SECONDS = 4;
 function CreateReport() {
   const [left, setLeft] = useState<number | null>(null);
+  // The countdown in the locale's own short unit: "4s" (en), "4 s" (fr, de).
+  const seconds = useNumberFormatter({style: 'unit', unit: 'second', unitDisplay: 'narrow'});
   useEffect(() => {
     if (left == null || left === 0) return;
     const t = setTimeout(() => setLeft(s => (s ?? 1) - 1), 1000);
@@ -170,7 +173,7 @@ function CreateReport() {
   if (left === 0) return <ActionRow status="done" href="#/reporting">Report ready</ActionRow>;
   if (left != null) {
     return (
-      <ActionRow status="working" progress={(REPORT_SECONDS - left) / REPORT_SECONDS * 100} badge={`${left}s`}
+      <ActionRow status="working" progress={(REPORT_SECONDS - left) / REPORT_SECONDS * 100} badge={seconds.format(left)}
         description="Reading the results so far">Creating report</ActionRow>
     );
   }
@@ -181,6 +184,7 @@ function CreateReport() {
 // phone's action (on hover or focus) opens the project page's settings.
 function Phone({project, o, onEdit}: {project: Project; o: Overview; onEdit: () => void}) {
   const people = project.participants ?? 0;
+  const number = useNumberFormatter();
   return (
     <PhonePreview aria-label="What residents see" header={<PhoneHeader />} action={{label: 'Edit project page', onPress: onEdit}}>
       <PhoneImage aria-label="Project image" />
@@ -190,7 +194,7 @@ function Phone({project, o, onEdit}: {project: Project; o: Overview; onEdit: () 
         <Button isFullWidth>{o.ways > 1 ? `Participate · ${o.ways} ways` : 'Participate'} <ChevronUp aria-hidden size={16} /></Button>
         {people > 0 && (
           <AvatarGroup initials={['A', 'B', 'C']}>
-            {people.toLocaleString('en-GB')} participants <Info aria-hidden size={14} />
+            {number.format(people)} participants <Info aria-hidden size={14} />
           </AvatarGroup>
         )}
       </Stack>

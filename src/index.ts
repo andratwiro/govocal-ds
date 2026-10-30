@@ -116,6 +116,7 @@ export {TitleField, type TitleFieldProps} from './components/gv/TitleField';
 
 // Components / Layout & containers
 export {AppProvider, type AppProviderProps} from './components/gv/AppProvider';
+export {useNumberFormatter} from './components/format';
 export {
   Card, CardSwitch, CardRadioGroup, CardRadio, type CardPill, type CardMenuItem, type CardIconAction, type CardProps
 } from './components/gv/Card';
