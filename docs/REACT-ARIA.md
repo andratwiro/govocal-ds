@@ -158,7 +158,7 @@ what would survive a change of base library. It decides nothing: the base librar
 |---|---|---|---|---|---|
 | Calendar | `Calendar`, `CalendarCell`, `CalendarGrid`, `CalendarHeading`; through Content: `Heading`, `Text`, `Header`, `Keyboard`; through Button: `Button`, `ProgressBar` | `CalendarProps` | yes | yes | 1 |
 | ColorField | `ColorField`, `Input`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `ColorFieldProps` | – | yes | 1 |
-| ColorSwatch | `ColorSwatch` | – | – | yes | 1 |
+| ColorSwatch | `ColorSwatch` | `ColorSwatchProps` | – | yes | 2 |
 | DateField | `DateField`, `DateInput`, `DateSegment`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `DateFieldProps` | yes | yes | 1 |
 | DatePicker | `DatePicker`, `Group`; through DateField: `DateField`, `DateInput`, `DateSegment`, `Form`, `Label`, `FieldError`, `Button`, `Text`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text`; through Calendar: `Calendar`, `CalendarCell`, `CalendarGrid`, `CalendarHeading`, `Heading`, `Text`, `Header`, `Keyboard`, `Button`, `ProgressBar`; through Popover: `OverlayArrow`, `Popover` | `DatePickerProps` | yes | yes | 1 |
 | DateRangePicker | `DateRangePicker`, `Group`; through DateField: `DateField`, `DateInput`, `DateSegment`, `Form`, `Label`, `FieldError`, `Button`, `Text`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text`; through Popover: `OverlayArrow`, `Popover`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text`; through RangeCalendar: `CalendarCell`, `RangeCalendar`, `CalendarHeading`, `Text`, `Button`, `ProgressBar`, `Calendar`, `CalendarGrid`, `Heading`, `Header`, `Keyboard` | `DateRangePickerProps` | yes | yes | 1 |

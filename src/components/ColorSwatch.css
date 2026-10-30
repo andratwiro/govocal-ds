@@ -5,4 +5,15 @@
   height: var(--gv-space-32);
   border-radius: var(--gv-radius-full);
   box-shadow: inset 0 0 0 1px var(--border-color);
+
+  &[data-size='24'] {
+    width: var(--gv-space-24);
+    height: var(--gv-space-24);
+  }
+
+  &[data-size='16'] {
+    flex: none;
+    width: var(--gv-space-16);
+    height: var(--gv-space-16);
+  }
 }

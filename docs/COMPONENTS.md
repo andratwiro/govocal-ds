@@ -287,7 +287,7 @@ React Aria parts painted with the tokens. Primitives: don't use them directly in
 - **Calendar** `Calendar` (primitive): A month grid to pick one date (React Aria's Calendar): for a date in a form, use DatePicker or Date range field. Stories: Example.
 - **Checkbox** `Checkbox` (primitive; hidden: a Component replaces it): One tick box with a label (React Aria's Checkbox): in pages use the Checkbox component, or Checkbox group for several options. Stories: Example.
 - **ColorField** `ColorField` (primitive): A text field to type a colour as hex (React Aria's ColorField): use it for a colour setting, with ColorSwatch to show the result. Stories: Example.
-- **ColorSwatch** `ColorSwatch` (primitive): A small square showing one colour (React Aria's ColorSwatch): pair it with ColorField when a person picks a colour. Stories: Example.
+- **ColorSwatch** `ColorSwatch` (primitive): A colour's dot, named by the colour (React Aria's ColorSwatch): a tag's colour in its row, a colour field's value. Stories: Example, Sizes.
 - **DateField** `DateField` (primitive): Typed date entry in segments (day, month, year) (React Aria's DateField): for picking from a grid too, use DatePicker. Stories: Example.
 - **DatePicker** `DatePicker` (primitive): A date field with a button that opens a Calendar (React Aria's DatePicker): for a start and an end, use Date range field. Stories: Example.
 - **DateRangePicker** `DateRangePicker` (primitive): A start and end date in one field with a RangeCalendar (React Aria's DateRangePicker): prefer Date range field, where the end may stay empty. Stories: Example.

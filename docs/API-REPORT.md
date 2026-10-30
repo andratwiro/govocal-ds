@@ -6269,13 +6269,14 @@ Interface, from `src/components/ColorField.tsx`. The props of `ColorField`, list
 
 Component, from `src/components/ColorSwatch.tsx`.
 
+- `size?: 16 | 24 | 32`
 - Passed through from @react-types/shared (75): `aria-describedby`, `aria-details`, `aria-label`, `aria-labelledby`, `dir`, `hidden`, `id`, `inert`, `lang`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`
 - Passed through from react-aria (2): `color`, `colorName`
 - Passed through from react-aria-components (4): `className`, `render`, `slot`, `style`
 
 ### `ColorSwatchProps`
 
-Interface, from `react-aria-components`. The props of `ColorSwatch`, listed there.
+Interface, from `src/components/ColorSwatch.tsx`. The props of `ColorSwatch`, listed there.
 
 ### `Column`
 
