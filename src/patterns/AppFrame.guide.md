@@ -22,7 +22,7 @@
 
 ## Behaviour
 
-Not interactive: the frame takes no focus or keys. The Side nav and the page keep their own.
+Not interactive: the frame can't be reached with Tab and answers no keys. The Side nav and the page keep their own.
 
 ## Content
 

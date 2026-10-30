@@ -87,7 +87,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Layout & containers › Page header | None: plain React and CSS | – | – | yes | 3 |
 | Layout & containers › Panel | through Badge: `Button` | – | yes | yes | 8 |
 | Layout & containers › Stack | None: plain React and CSS | – | – | yes | 3 |
-| Layout & containers › Tile grid | None: plain React and CSS | – | – | yes | 3 |
+| Layout & containers › Tile grid | None: plain React and CSS | – | – | yes | 4 |
 | Navigation › Breadcrumbs | `Breadcrumbs`, `Breadcrumb`, `Link`; through Icon button: `Button` | `BreadcrumbsProps` | – | yes | 5 |
 | Navigation › Link | `Link` | `LinkProps` | – | yes | 2 |
 | Navigation › Pagination | `Button` | – | yes | yes | 8 |
@@ -130,7 +130,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Manage tab › Comment thread | `Button`, `TextArea`, `TextField`; through Tabs: `Tabs`, `TabList`, `Tab`, `TabPanels`, `TabPanel`, `SelectionIndicator`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `Header`, `VisuallyHidden`; through Button: `ProgressBar` | – | yes | yes | 9 |
 | Manage tab › Official update | `TextArea`, `TextField`; through Button: `Button`, `ProgressBar`; through Text field: `Input`, `Group`, `Form`, `Label`, `FieldError`, `Button`, `Text`; through Modal: `Button`, `Heading`, `Dialog`, `Modal` | – | yes | yes | 5 |
 | Pages & menu › Section toggle | through Switch: `SwitchField`, `SwitchButton`, `Form`, `Label`, `FieldError`, `Button`, `Text` | – | – | yes | 5 |
-| Participation methods › Common ground row | through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text`; through List row: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text` | – | yes | yes | 7 |
+| Participation methods › Common ground row | through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text`; through List row: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text` | – | yes | yes | 8 |
 | Participation methods › Proposals row | through Vote progress: `ProgressBar` | – | yes | yes | 6 |
 | Participation methods › Volunteering row | `ProgressBar`; through Icon button: `Button`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 8 |
 | Participation methods › Vote progress | `ProgressBar` | – | yes | yes | 4 |
