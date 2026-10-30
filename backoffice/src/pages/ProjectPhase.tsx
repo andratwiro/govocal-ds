@@ -7,7 +7,7 @@ import {ACCESS_WHO_VALUE, AccessRightsModal, type AccessWho, AppFramePanel, Avat
   DashboardDemographic, DashboardList, DashboardRanking, DashboardTopics, DataTable, DataTableAddColumn,
   DataTableAssignee, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader, DataTableRow,
   DataTableStack, DataTableTags, DataTableText, DataTableThumbnail, DateRangeField, DropZone, EmptyState, FileList,
-  type FileListItemData, FilterChips, type FilterFacet, FilterMenu, type FilterValue, Grid, GroupedTab, GroupedTabList,
+  EmailPreview, type FileListItemData, FilterChips, type FilterFacet, FilterMenu, type FilterValue, Grid, GroupedTab, GroupedTabList,
   GroupedTabPanel, GroupedTabs, IconButton, Illustration, type IllustrationName, type Key, LineChart, ListHeader, type ListHeaderColumn, LocaleSwitcher,
   MapCard, MapChip, type MapItem, MapOverlay, MapView, Menu, MethodCard, MenuItem, MenuSection, MenuTrigger, Modal,
   MultilingualRichTextEditor, MultilingualTextField, type Multiloc, NotificationEmail, NotificationRow,
@@ -292,13 +292,10 @@ function Build({project, phase, rail, onSettings, onChange}: {project: Project; 
       <Workspace rail={rail} column={column}>
         <Grid elementType="section" aria-label="Preview" className="bo-fill">
           {email ? (
-            <PhoneStage caption="The email, as residents get it">
-              <PhonePreview aria-label={`The email: ${email.name}`} header={<PhoneHeader mark={LOGO} logo="Larkvale" />}>
-                <h2>{email.name}</h2>
-                <p>{email.when}: this email goes to the {email.who.toLowerCase()}.</p>
-                <Button isFullWidth>View it</Button>
-              </PhonePreview>
-            </PhoneStage>
+            <EmailPreview aria-label={`The email: ${email.name}`} subject={email.name} to={email.who} from="Larkvale"
+              logo={LOGO} logoLabel="Larkvale" title={email.name} headingLevel={2} buttonText="View it" defaultDevice="phone">
+              <p>{email.when}: this email goes to the {email.who.toLowerCase()}.</p>
+            </EmailPreview>
           ) : <PhasePhone project={project} phase={phase} />}
         </Grid>
       </Workspace>

@@ -2,13 +2,12 @@ import {useMemo, useState} from 'react';
 import {useNavigate} from 'react-router';
 import {BarChart3, CircleCheck, Clock, Copy, Mail, MessageSquare, Pencil, Plus, Send, Trash2} from 'lucide-react';
 import {AlertDialog, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty,
-  DataTableHeader, DataTableOptions, DataTableRow, DataTableStack, Divider, EmptyState, FilterChips, Grid, Inline, type FilterFacet,
+  DataTableHeader, DataTableOptions, DataTableRow, DataTableStack, Divider, EmailPreview, EmptyState, FilterChips, Inline, type FilterFacet,
   FilterMenu, type FilterValue, MenuItem, NotificationEmail, NotificationRow, NotificationRowList, Pagination, Panel,
   RichTextEditor, SearchField, SectionLabel, Select, SelectItem, StatTile, StatusBadge, Tab, TableToolbar, TabList,
   Stack, TabPanel, TabPanels, Tabs, Text, TextField, TileGrid, toast, useNumberFormatter} from 'govocal-ds';
 import {Label} from 'govocal-ds/base';
 import {AUTOMATED, GROUP_SIZES, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
-import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
 import {emailStore, sentText, usePages} from './MessagingPages';
 import {SectionHeading} from '../SectionHeading';
@@ -270,25 +269,19 @@ function AutomatedList({on, setOn, onEdit}: {on: Record<string, boolean>; setOn:
   );
 }
 
-/** The email as it lands: a stand-in until the system draws an email preview. */
-function EmailPreview({email}: {email: AutomatedEmail}) {
+/** The platform's logo mark in the email's head: invented, drawn inline. */
+const MARK = (
+  <svg viewBox="0 0 64 32" width={64} height={32} fill="currentColor" aria-hidden="true"><path d="M0 32 18 8l10 12 8-10 14 22H0Z" /></svg>
+);
+
+/** The email as it lands (Email preview): the envelope, then the email at desktop or phone width. */
+function AutomatedEmailPreview({email}: {email: AutomatedEmail}) {
   return (
-    <Gap name="Email preview">
-      <dl className="bo-messaging-mailhead">
-        <Grid columns="auto 1fr" rowGap="4" columnGap="12">
-          <Text elementType="dt" kind="small" color="meta">To</Text><Text elementType="dd" kind="ui">{email.who}</Text>
-          <Text elementType="dt" kind="small" color="meta">From</Text><Text elementType="dd" kind="ui">{SENDER.from}</Text>
-          <Text elementType="dt" kind="small" color="meta">Reply-To</Text><Text elementType="dd" kind="ui">{SENDER.replyTo}</Text>
-          <Text elementType="dt" kind="small" color="meta">Subject</Text><Text elementType="dd" kind="ui">{email.subject}</Text>
-        </Grid>
-      </dl>
-      <Divider />
-      <Stack gap="12" alignItems="start" paddingBlock="8">
-        <strong>{email.title || email.subject}</strong>
-        {email.intro && <Text elementType="p" kind="ui">{email.intro}</Text>}
-        {email.button && <span><Button variant="primary" size={32}>{email.button}</Button></span>}
-      </Stack>
-    </Gap>
+    <EmailPreview subject={email.subject} to={email.who} from={SENDER.from} replyTo={SENDER.replyTo} logo={MARK}
+      logoLabel="Larkvale" title={email.title || email.subject} headingLevel={4} buttonText={email.button}
+      footerNote="You get this email because you have an account on the Larkvale participation platform.">
+      {email.intro && <p>{email.intro}</p>}
+    </EmailPreview>
   );
 }
 
@@ -310,7 +303,6 @@ function AutomatedEmails() {
       <Inline gap="16" justifyContent="space-between" className="bo-messaging-intro">
         <Text elementType="p" kind="small" color="meta">Emails sent automatically when something happens on the platform. Turn one off, or open it to edit its content.</Text>
       </Inline>
-      <GapLegend names={['Email preview']} />
       <TileGrid minTileWidth={360} className="bo-messaging-split">
         {current
           ? (
@@ -328,7 +320,7 @@ function AutomatedEmails() {
               <Send aria-hidden size={16} />Send me a test email</Button>
           )}>
           {current
-            ? <EmailPreview email={current} />
+            ? <AutomatedEmailPreview email={current} />
             : <EmptyState layout="panel" headingLevel="none" icon={<Mail aria-hidden size={24} />} title="No email open"
               description="Open an email that is on to edit it and see it here." />}
         </Panel>

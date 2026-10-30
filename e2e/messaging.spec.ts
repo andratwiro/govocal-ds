@@ -95,9 +95,13 @@ test('automated emails are grouped by recipient, switch on and off with Undo, an
   for (const f of ['Replies should go to', 'Subject', 'Title', 'Button text']) await expect(editor.getByRole('textbox', {name: f, exact: true})).toBeVisible();
   await expect(editor.getByRole('textbox', {name: 'Introduction'})).toBeVisible();
   await expect(page.getByRole('region', {name: 'Residents', exact: true})).toHaveCount(0);
-  const preview = page.getByRole('region', {name: 'Preview'});
+  const preview = page.getByRole('region', {name: 'Preview', exact: true});
   await expect(preview.getByRole('button', {name: 'Send me a test email'})).toBeVisible();
-  await expect(preview.locator('[data-missing-part="Email preview"]')).toContainText('New comment on your input');
+  // The email as it lands (Email preview): the envelope, then the email with its button.
+  const email = preview.getByRole('region', {name: 'Email preview: New comment on your input'});
+  await expect(email.getByRole('definition').first()).toHaveText('Author of the input');
+  await expect(email.getByRole('heading', {name: 'Resident B commented on your input'})).toBeVisible();
+  await expect(email.getByText('Read the comment', {exact: true})).toBeVisible();
   // ← goes back to the list.
   await editor.getByRole('button', {name: 'Back to automated emails'}).click();
   await expect(editor).toHaveCount(0);
@@ -120,13 +124,6 @@ test('SMS shows the credit balance and the campaigns in a list Panel', async ({p
   await expect(list.locator('.gv-panel__foot').getByRole('navigation', {name: 'SMS pages'})).toBeVisible();
 });
 
-test('messaging names what the system still lacks', async ({page}) => {
-  await page.goto('/backoffice/#/messaging');
-  await page.getByRole('tab', {name: 'Automated emails'}).click();
-  await page.getByRole('button', {name: 'Edit Comment on your input'}).click();
-  const gaps = await page.locator('[data-missing-part]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-missing-part')))]);
-  expect(gaps).toEqual(expect.arrayContaining(['Email preview']));
-});
 
 // ── The first clicks (shallow: each control leads somewhere visible) ─────────
 

@@ -34,7 +34,6 @@ body { margin: 0; }
 .bo-messaging-intro { margin-block: var(--gv-space-16); }
 .bo-messaging-split { align-items: start; }
 .bo-messaging-lists { margin-block-start: var(--gv-space-16); }
-.bo-messaging-mailhead { margin: 0; }
 .bo-messaging-scroll { overflow-x: auto; }
 /* ── Users ── */
 .bo-users-groups-title { margin-block-start: var(--gv-space-12); }

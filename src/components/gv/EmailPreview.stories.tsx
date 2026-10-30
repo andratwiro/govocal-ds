@@ -12,7 +12,7 @@ const MARK = (
 const meta: Meta<typeof EmailPreview> = {
   title: 'Components/Data display/Email preview',
   component: EmailPreview,
-  tags: ['autodocs', 'not-in-figma', 'status:draft'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'},
   args: {
     subject: 'New comment on your input',

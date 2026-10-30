@@ -568,7 +568,7 @@ test('Build: Participant actions, each opening its Access rights modal; the row 
   await expect(modal).toHaveCount(0);
 });
 
-test('Build: Available views and Notifications; an email opens in the setup\'s place, the email on the phone', async ({page}) => {
+test('Build: Available views and Notifications; an email opens in the setup\'s place, the email beside it', async ({page}) => {
   await page.goto(BUILD);
   const views = setup(page).locator('[data-gv="setup-card"]', {hasText: /^Available views/});
   await views.getByRole('button', {name: /Available views/}).click();
@@ -585,7 +585,7 @@ test('Build: Available views and Notifications; an email opens in the setup\'s p
   const email = setup(page).getByRole('region', {name: 'A reply on my comment'});
   await expect(email.getByRole('switch', {name: 'Send this email'})).toBeChecked();
   await expect(email.getByRole('textbox', {name: 'Subject'})).toHaveValue('A reply on my comment');
-  await expect(page.getByRole('region', {name: 'Preview'}).getByRole('group', {name: 'The email: A reply on my comment'})).toBeVisible();
+  await expect(page.getByRole('region', {name: 'Preview', exact: true}).getByRole('region', {name: 'The email: A reply on my comment'})).toBeVisible();
   await email.getByRole('button', {name: 'Back to Ideation setup'}).click();
   await expect(setup(page).getByRole('button', {name: /^Notifications/})).toBeVisible();
 });

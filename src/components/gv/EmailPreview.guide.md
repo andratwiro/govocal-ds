@@ -63,4 +63,4 @@ switch.
 ## Changes
 
 - 30 Oct 2026: built (envelope, logo, title, body, button, footer, desktop and phone widths), with this page; it
-  replaces the Email preview gap in Messaging.
+  replaces the Email preview gap in Messaging and the phone that stood in for a phase's notification email.
