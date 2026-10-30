@@ -66,11 +66,11 @@ tech, so only the count is read.
   come from the prototype (Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: one colour for every person (a grey variant for assignees and commenters is not built yet,
-  docs/DECISIONS.md); `AvatarGroup` takes initials only, no photos; the "Group" story stacks avatars by hand rather
-  than showing `AvatarGroup`.
+  docs/DECISIONS.md); `AvatarGroup` takes initials only, no photos.
 
 ## Changes
 
+- 30 Oct 2026: the Group story shows `AvatarGroup` (it stacked avatars by hand with negative margins).
 - 30 Oct 2026: this page written.
 - 29 Oct 2026: `src` puts a photo over the initials, which show while it loads or if it fails.
 - 29 Oct 2026: the 16 avatar's initials snapped from 11 to 12px; assignees show as an avatar and a name, "Unassigned"

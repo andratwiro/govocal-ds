@@ -1,4 +1,5 @@
-import {Avatar} from './Avatar';
+import {expect, within} from 'storybook/test';
+import {Avatar, AvatarGroup} from './Avatar';
 import {PORTRAITS} from '../../stories/images';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
@@ -47,16 +48,11 @@ export const Image: Story = () => (
 export const ImageFails: Story = () => <Avatar initials="RD" src="missing-photo.jpg" aria-label="Resident D" />;
 ImageFails.storyName = 'Image fails';
 
-/** The header's people stack: each avatar 6 over the one before (prototype `.pj-avstack`). */
-export const Stack: Story = () => (
-  <div style={{display: 'flex'}}>
-    <Avatar initials="S" aria-label="Sam" />
-    <div style={{marginLeft: -6}}>
-      <Avatar initials="JL" aria-label="Jo Lee" />
-    </div>
-    <div style={{marginLeft: -6}}>
-      <Avatar isUnassigned aria-label="Unassigned" />
-    </div>
-  </div>
-);
-Stack.storyName = 'Group';
+/** `AvatarGroup`: overlapping faces before a count, each 24 and 6 over the one before (the phone preview's "215
+ * participants"). The faces are decoration, hidden from screen readers; the count says it. */
+export const Group: Story = () => <AvatarGroup initials={['RA', 'RE', 'MB']}>215 participants</AvatarGroup>;
+Group.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  await expect(canvas.getByText('215 participants')).toBeVisible();
+  await expect(canvas.queryAllByRole('img')).toHaveLength(0);
+};
