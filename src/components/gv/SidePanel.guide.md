@@ -7,6 +7,10 @@
 - When changes made to the record apply at once (with an Undo toast). The panel has no Save.
 - With the record pager ("‹ 3 of 124 ›") when people walk the list one record at a time.
 - Inline (`isInline`) when the record is a column of the page, such as a preview beside a list.
+- With a kind icon and the label as its title (`icon`, `headingLevel`) when the label names the record itself, such as
+  a report widget's settings ("By the numbers").
+- Head-less (`isInline showHead={false}`) for a column that rests on the page and can't be closed, such as the report
+  builder's assistant (the Assistant panel).
 
 ## When not to use
 
@@ -18,8 +22,9 @@
 
 ## Anatomy
 
-1. **Head**: the context label at the start (where the record comes from, such as "Collect ideas"), the record pager
-   (optional) and × at the end.
+1. **Head**: an optional kind icon (16), the context label at the start (where the record comes from, such as
+   "Collect ideas"; with `headingLevel`, the record's title as a heading in Title type), the record pager (optional)
+   and × at the end. `showHead={false}` leaves the head out of an inline panel.
 2. **Record head** (`SidePanelRecordHead`, optional): the record's title, words, author and date, with quick actions.
 3. **Sections** (`SidePanelSection`): the record's parts, with a hairline between them, such as a Property list of its
    status, assignee and tags.
@@ -72,6 +77,8 @@ throws away half-written words, a pager whose turned-off end moves focus to the 
 
 ## Changes
 
+- 30 Oct 2026: `icon` (a kind icon in the head), `headingLevel` (the label as a Title heading; the prototype's 15px
+  snaps to Title 16) and `showHead={false}` (an inline column with no head, a region rather than a dialog).
 - 30 Oct 2026: this page written; a play function proves Tab and Esc in a field.
 - 29 Oct 2026: a floating panel is closed until `isOpen` or `defaultOpen` (docs/DECISIONS.md, "Composition contracts
   in code").

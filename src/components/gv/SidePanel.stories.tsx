@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, userEvent, waitFor, within} from 'storybook/test';
-import {Check, ExternalLink, SquarePen, Trash2} from 'lucide-react';
+import {Check, ExternalLink, Hash, SquarePen, Trash2} from 'lucide-react';
 import {Button} from '../Button';
 import {TextField} from '../TextField';
 import {ToastRegion, queue} from '../Toast';
@@ -9,6 +9,7 @@ import {DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeade
 import {PropertyList, PropertyListItem} from './PropertyList';
 import {DemoAssignee, DemoPhase, DemoStatus, DemoTags} from './PropertyList.stories';
 import {ReactionCounts} from './ReactionCounts';
+import {Stack} from './Stack';
 import {SidePanel, SidePanelActions, SidePanelDecision, SidePanelRecordHead, SidePanelSection, type SidePanelAction} from './SidePanel';
 
 // Invented ideas for the phase "Collect ideas": 124 of them, the texts taking turns.
@@ -291,6 +292,40 @@ export const Narrow: Story = {render: () => <Manage width="narrow" />};
 
 /** Right to left (Arabic): the panel floats at the left edge, the pager's arrows point the other way. */
 export const RightToLeft: Story = {name: 'Right to left', globals: {direction: 'rtl'}, render: () => <Manage />};
+
+/** A titled head: a kind icon and the label as the panel's title (Title type, a heading), as a report widget's
+ * settings name their widget. Inline, beside the report. */
+export const WithIconAndTitle: Story = {
+  name: 'With icon and title',
+  parameters: {layout: 'padded'},
+  render: () => (
+    <div style={{height: 420, width: 360}}>
+      <SidePanel isInline label="By the numbers" icon={<Hash aria-hidden />} headingLevel={2}
+        labels={{close: 'Close the settings'}}>
+        <SidePanelSection title="Layout">
+          <PropertyList>
+            <PropertyListItem label="Numbers">4 of 4</PropertyListItem>
+            <PropertyListItem label="Lead number">Participants</PropertyListItem>
+          </PropertyList>
+        </SidePanelSection>
+      </SidePanel>
+    </div>
+  )
+};
+
+/** No head (`showHead={false}`): an inline column that rests on the page and can't be closed, such as the report
+ * builder's assistant. A region named by its label, not a dialog; its content pads and scrolls itself. */
+export const Headless: Story = {
+  name: 'Head-less',
+  parameters: {layout: 'padded'},
+  render: () => (
+    <div style={{height: 320, width: 360}}>
+      <SidePanel isInline showHead={false} label="Assistant">
+        <Stack padding="24">The column's content: here a Chat thread, in the Assistant panel pattern.</Stack>
+      </SidePanel>
+    </div>
+  )
+};
 
 /** The record head: an idea (its words, "Posted by" and the date) and an input, which has a title and says what its
  * author is. Both end on their `actions` row: counts and quick actions. */

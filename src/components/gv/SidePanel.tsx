@@ -43,6 +43,25 @@ export interface SidePanelProps {
   /** The context label at the top left: where the record comes from, e.g. the phase "Collect ideas". It names the
    * panel for assistive tech too, unless `aria-label` is given. */
   label: string;
+  /**
+   * A kind icon before the label (`<BarChart3 aria-hidden />`), drawn 16 in the secondary icon grey: what the record
+   * is, as a widget's settings show their widget's kind.
+   */
+  icon?: ReactNode;
+  /**
+   * Draws the label as the panel's title, a heading of this level in Title type (the prototype's 15px snaps to Title
+   * 16), instead of the Small grey context label. For a panel whose label names the record itself ("Key figures",
+   * "Version history") rather than where it comes from ("Collect ideas").
+   */
+  headingLevel?: 2 | 3 | 4 | 5 | 6;
+  /**
+   * Whether the head (label, pager, ×) shows. `false` makes an inline panel a resting column with no head, such as
+   * an assistant: it can't be closed, Esc does nothing, it takes no focus on load, and it is a region named by
+   * `label` rather than a dialog. Its content brings its own padding (a Chat thread does). Inline only.
+   *
+   * @default true
+   */
+  showHead?: boolean;
   /** The panel's accessible name, when the context label isn't enough. */
   'aria-label'?: string;
   /** The record. Lay it out in `SidePanelSection`s; the panel puts a hairline between them. */
@@ -106,6 +125,9 @@ export interface SidePanelProps {
  */
 export function SidePanel({
   label,
+  icon,
+  headingLevel,
+  showHead = true,
   'aria-label': ariaLabel,
   children,
   footer,
@@ -133,11 +155,13 @@ export function SidePanel({
   if (isOpen) returnRef.current = returnFocus;
   const {direction} = useLocale();
   const number = useNumberFormatter();
+  // A head-less inline panel is a column of the page, not a dialog: no focus moves, no Esc.
+  const isColumn = !showHead && Boolean(isInline);
 
   // Remember what had focus when the panel opened (before the dialog takes it), and give focus back on close
   // when it was inside the panel, or lost with it.
   useLayoutEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || isColumn) return;
     const active = document.activeElement;
     opener.current = active instanceof HTMLElement && active !== document.body ? active : null;
     // A pointer opens the panel on press, and the browser then focuses what was pressed (the row): once that
@@ -163,9 +187,24 @@ export function SidePanel({
       }
       focusInside.current = false;
     };
-  }, [isOpen]);
+  }, [isOpen, isColumn]);
 
   if (!isOpen) return null;
+
+  if (isColumn) {
+    return (
+      <section
+        className={clsx('gv-side-panel', className)}
+        style={style}
+        data-inline
+        data-headless
+        data-width={width}
+        aria-label={ariaLabel ?? label}>
+        <div className="gv-side-panel__body">{children}</div>
+        {footer && <div className="gv-side-panel__footer">{footer}</div>}
+      </section>
+    );
+  }
 
   const close = () => {
     setOpenState(false);
@@ -192,6 +231,7 @@ export function SidePanel({
     if (atEnd) document.getElementById(`${id}-prev`)?.focus();
     onPositionChange?.(to);
   };
+  const Heading = `h${headingLevel ?? 2}` as const;
   const [Back, Forward] = direction === 'rtl' ? [ChevronRight, ChevronLeft] : [ChevronLeft, ChevronRight];
 
   return (
@@ -211,7 +251,12 @@ export function SidePanel({
         aria-label={ariaLabel}
         aria-labelledby={ariaLabel ? undefined : `${id}-label`}>
         <div className="gv-side-panel__head">
-          <span id={`${id}-label`} className="gv-side-panel__label">{label}</span>
+          {icon && <span className="gv-side-panel__icon" aria-hidden>{icon}</span>}
+          {headingLevel ? (
+            <Heading id={`${id}-label`} className="gv-side-panel__label" data-title>{label}</Heading>
+          ) : (
+            <span id={`${id}-label`} className="gv-side-panel__label">{label}</span>
+          )}
           {position && (
             <Toolbar aria-label={l.pager} className="gv-side-panel__pager">
               <IconButton id={`${id}-prev`} aria-label={l.previous} emphasis="strong"

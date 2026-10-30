@@ -4,6 +4,21 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## The AI assistant (30 Oct 2026)
+
+Calls made building Components › AI, the Activity feed, the Assistant panel and Side panel's new head options
+(benchmark-gaps plan, Task 8c; the back office's deep dive of the report builder, §3).
+
+- Prototype radii 16 (composer, your bubble) → **radius 14**, the nearest token; the openings' heading and Side
+  panel's title at 15/22 → **Title 16/24**, the nearest type token (14 and 16 are equally near; Title is already the
+  panel and modal title).
+- Side panel's titled head: a new `title` prop beside `label` vs a look switch → **`headingLevel`**: with it, the
+  label renders as a heading in Title type → one string, no alias (rule 9), and a title is a heading where the context
+  label isn't one; `icon` adds the 16 kind icon.
+- Side panel head-less: hide the head of the same dialog vs a different element → **`showHead={false}` on an inline
+  panel renders a named region, not a dialog: no ×, no Esc, no focus taken on load** → the assistant is the column's
+  resting state; a dialog that grabs focus when the page loads and closes on Esc would fight the page.
+
 ## Developers' side and orientation (30 Oct 2026)
 
 Calls made while building Overview's developer and orientation pages, the seam stories, Voice and tone, the Word list

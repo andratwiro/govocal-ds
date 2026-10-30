@@ -87,6 +87,24 @@
   color: var(--gv-text-secondary);
 }
 
+.gv-side-panel__label[data-title] {
+  margin: 0;
+  font: var(--gv-type-title);
+  color: var(--gv-text-primary);
+}
+
+/* The head icon: 16, the secondary icon grey, before the label. */
+.gv-side-panel__icon {
+  display: inline-flex;
+  flex: none;
+  color: var(--gv-icon-secondary);
+
+  > svg {
+    width: var(--gv-size-icon-16);
+    height: var(--gv-size-icon-16);
+  }
+}
+
 .gv-side-panel__pager {
   display: inline-flex;
   align-items: center;
@@ -220,3 +238,22 @@
   gap: var(--gv-space-8);
   flex: none;
 }
+
+/* Head-less (an inline column such as the assistant): the body fills the panel with no padding and doesn't scroll;
+   its content (a Chat thread) scrolls and pads itself. */
+.gv-side-panel[data-headless] {
+  flex-direction: column;
+
+  > .gv-side-panel__body {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+
+    > * {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+  }
+}
+

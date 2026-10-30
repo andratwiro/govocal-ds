@@ -4304,6 +4304,8 @@ Component, from `src/components/gv/SidePanel.tsx`.
 - `className?: string`
 - `defaultOpen?: boolean`
 - `footer?: ReactNode`
+- `headingLevel?: 2 | 3 | 4 | 5 | 6`
+- `icon?: ReactNode`
 - `isInline?: boolean`
 - `isOpen?: boolean`
 - `label: string`
@@ -4312,6 +4314,7 @@ Component, from `src/components/gv/SidePanel.tsx`.
 - `onPositionChange?: (current: number) => void`
 - `position?: SidePanelPosition`
 - `returnFocus?: () => HTMLElement | null | undefined`
+- `showHead?: boolean`
 - `style?: CSSProperties` (no description)
 - `width?: 'default' | 'narrow'`
 

@@ -88,7 +88,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Overlays › Coachmark | `OverlayArrow`, `Popover` | `PopoverProps` | – | yes | 3 |
 | Overlays › Help popover | `Heading`, `Dialog`, `DialogTrigger` through `components/Popover`, `components/Button` | – | – | yes | 4 |
 | Overlays › Modal | `Button`, `Heading`, `Dialog` through `components/Modal` | – | – | yes | 9 |
-| Overlays › Side panel | `Dialog`, `Toolbar` through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 11 |
+| Overlays › Side panel | `Dialog`, `Toolbar` through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 13 |
 | Overlays › Tooltip | `OverlayArrow`, `Tooltip`, `TooltipTrigger` | `TooltipProps` | – | yes | 1 |
 | Status & feedback › Badge | `Button` | – | – | yes | 7 |
 | Status & feedback › Banner | `Link` through `components/gv/IconButton` | – | – | yes | 12 |
