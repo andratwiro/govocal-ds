@@ -46,20 +46,11 @@ body { margin: 0; }
 
 /* ── Project phase ── */
 
-.bo-phase { display: grid; grid-template-rows: auto 1fr; gap: var(--gv-space-8); min-height: calc(100vh - 2 * var(--gv-space-8)); }
-.bo-phase-body { display: flex; align-items: stretch; gap: var(--gv-space-8); min-width: 0; }
-.bo-phase-panel { background: var(--gv-surface-panel); border-radius: var(--gv-radius-12); padding: var(--gv-space-16); margin: 0; }
-.bo-phase-panel-tight { padding: var(--gv-space-8); display: grid; }
-.bo-phase-rail { flex: 0 0 300px; display: grid; align-content: start; gap: var(--gv-space-16); padding-block-start: var(--gv-space-24); }
-.bo-phase-rail-section { display: grid; }
+.bo-phase { min-height: calc(100vh - 2 * var(--gv-space-8)); }
+.bo-phase-rail { flex: 0 0 300px; padding-block-start: var(--gv-space-24); }
 .bo-phase-side { flex: 0 0 332px; align-self: start; }
 .bo-phase-body[data-view="manage"] .bo-phase-side { flex-basis: 308px; }
 .bo-phase-grow { flex: 1; min-width: 0; align-self: stretch; }
-.bo-phase-stage-box { display: grid; }
-.bo-phase-stack { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--gv-space-8); }
-.bo-phase-flush { margin: 0; }
-.bo-phase-panel-actions { padding: var(--gv-space-16); }
-.bo-phase-panel-actions .bo-phase-stack { gap: var(--gv-space-10); }
 /* ── Settings ── */
 .bo-settings-stack { margin-block-start: var(--gv-space-24); }
 /* ── Messaging ── */
@@ -151,14 +142,8 @@ body { margin: 0; }
 .bo-project { position: relative; }
 .bo-project-body { min-height: 0; }
 .bo-project-setup { flex: 0 0 300px; align-self: start; }
-.bo-project-setup-body { display: grid; gap: var(--gv-space-24); }
-.bo-project-setup-body > hr { margin: 0; }
 .bo-project-rail-list { margin-inline: calc(-1 * var(--gv-space-10)); padding-block-start: var(--gv-space-4); }
-.bo-phase-timeline { list-style: none; margin-block: 0; padding-inline: 0; }
-.bo-project-rail-closed { flex: 0 0 auto; align-self: stretch; padding: var(--gv-space-10); }
-.bo-project-phone-box { display: grid; gap: var(--gv-space-12); justify-items: start; }
-.bo-project-phone-box > .react-aria-Button { width: 100%; justify-content: center; }
-
+.bo-project-rail-closed { flex: 0 0 auto; }
 
 /* ── First clicks: Users, Messaging, Reporting ── */
 
@@ -172,31 +157,14 @@ body { margin: 0; }
 .bo-messaging-scroll { overflow-x: auto; }
 .bo-messaging-sms { display: grid; gap: var(--gv-space-4); padding: var(--gv-space-12); }
 .bo-messaging-sms p { margin: 0; }
-/* ── Project phase · Manage ── */
-.bo-phase-manage-nowrap { white-space: nowrap; }
 /* ── Feedback: project settings side tabs, phase status ── */
 /* Modal's "With side tabs" story: the list and the panel each scroll on their own inside the fixed-height body. */
-.bo-phase-settings { display: flex; width: 100%; min-height: 0; }
-.bo-phase-settings-list { flex: 0 0 200px; padding: var(--gv-space-16) var(--gv-space-12); overflow-y: auto; border-inline-end: 1px solid var(--gv-border-row); }
-.bo-phase-settings-panel { flex: 1 1 auto; min-width: 0; overflow-y: auto; padding: var(--gv-space-20) var(--gv-space-24); }
+.bo-phase-settings { min-height: 0; }
+.bo-phase-settings-list { flex: 0 0 200px; padding: var(--gv-space-16) var(--gv-space-12); overflow-y: auto; }
+.bo-phase-settings-panel { overflow-y: auto; padding: var(--gv-space-20) var(--gv-space-24); }
 /* ── Project phase · Build, empty tabs, method Manage, Insights ── */
-.bo-phase-setup-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gv-space-24); }
-.bo-phase-setup-body .bo-phase-stack { grid-template-columns: minmax(0, 1fr); }
 .bo-phase-setup { flex-basis: 344px; }
-.bo-phase-phone-call { width: 100%; justify-content: center; }
 .bo-phase-empty { display: grid; place-items: center; }
-.bo-phase-empty-side { display: grid; align-content: start; }
-.bo-phase-method-list { display: grid; }
-.bo-phase-insights { display: grid; align-content: start; gap: var(--gv-space-16); }
-.bo-phase-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--gv-space-10); }
-.bo-phase-tiles[data-tiles="4"] { grid-template-columns: repeat(4, 1fr); }
-.bo-phase-tiles[data-tiles="6"] { grid-template-columns: repeat(3, 1fr); }
-.bo-phase-insights-pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gv-space-16); }
-.bo-phase-insights-pair[data-wide] { grid-template-columns: 1.4fr 1fr; }
-.bo-phase-insights-side { align-self: start; }
-/* ── Project phase · Side panel, attachments ── */
-
-.bo-phase-attach { display: grid; gap: var(--gv-space-16); }
 
 /* ── Report view ── */
 /* Three columns (outline or library · pages · side panel), each scrolling on its own under the page head. The sheets,
@@ -311,6 +279,6 @@ body { margin: 0; }
 /* ── App shell: side nav, notifications ── */
 
 /* The Manage tab's Map: the map beside a one-column list of the same ideas, most of the window tall; the list scrolls. */
-.bo-phase-map { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 400px); block-size: 70vh; }
+.bo-phase-map { block-size: 70vh; }
 .bo-phase-map-view { block-size: 100%; }
 .bo-phase-map-list { overflow: auto; block-size: 100%; }

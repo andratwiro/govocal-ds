@@ -1,9 +1,9 @@
 import {useEffect, useState} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router';
 import {Archive, ChevronUp, Info, Link, PanelLeft, Rocket, RotateCcw, Settings, UserPlus} from 'lucide-react';
-import {ActionRow, ActionRowList, AlertDialog, Avatar, AvatarGroup, Banner, Button, Divider, IconButton, MenuItem,
+import {ActionRow, ActionRowList, AlertDialog, AppFramePanel, Avatar, AvatarGroup, Banner, Button, Divider, Grid, IconButton, Inline, MenuItem,
   Modal, Panel, PanelSection, PhoneHeader, PhoneImage, PhonePreview, PhoneStage, ProjectHeader, PropertyList,
-  PropertyListItem, StatCard, Text, TextField, toast, VisuallyHidden} from 'govocal-ds';
+  PropertyListItem, Stack, StatCard, Text, TextField, toast, VisuallyHidden} from 'govocal-ds';
 import {ME, PROJECTS, type Project} from '../data';
 import {NO_OVERVIEW, OVERVIEWS, type NewPhase, type Overview} from '../data-project';
 import {AddPhase, CHECKLIST, CHECKLIST_TAB, CardStub, ChecklistStep, ProjectRail, ProjectSettings, useDeletedPhases,
@@ -47,7 +47,7 @@ function Overview({projectId}: {projectId?: string}) {
   const NextIcon = NEXT_ICON[status];
 
   return (
-    <div className="bo-phase bo-project">
+    <Grid rows="auto 1fr" gap="8" className="bo-phase bo-project">
       <VisuallyHidden elementType="h1">{project.title}</VisuallyHidden>
       {/* Project header's "Share and Publish" story: the setup toggle and crumbs, who is here, Share ▾, then Publish ▾
           (a draft; an archived project too, whose menu restores it) or ● Live ▾. Unsaved setup: one Save instead. */}
@@ -64,24 +64,24 @@ function Overview({projectId}: {projectId?: string}) {
             {next.label}
           </MenuItem>
         )} />
-      <div className="bo-phase-body bo-project-body">
+      <Inline gap="8" alignItems="stretch" wrap="nowrap" className="bo-project-body">
         {setupOpen && <Setup project={project} o={o} live={live} archived={status === 'Archived'} onSettings={setSettings}
           onChange={() => setDirty(true)} />}
         {railOpen ? (
           <ProjectRail project={project} added={added} onAdd={() => setAdding(true)} onHide={() => setRailOpen(false)}
             removed={removed} onDelete={deletePhase} href={p => `#/projects/${project.id}/phases/${p.id}/build`} />
         ) : (
-          <aside className="bo-phase-panel bo-project-rail-closed" aria-label="Participation">
+          <AppFramePanel elementType="aside" aria-label="Participation" padding="10" className="bo-project-rail-closed">
             <IconButton aria-label="Show the participation rail" onPress={() => setRailOpen(true)}><PanelLeft aria-hidden size={16} /></IconButton>
-          </aside>
+          </AppFramePanel>
         )}
-        <section className="bo-phase-grow bo-phase-stage-box" aria-label="Preview">
+        <Grid elementType="section" aria-label="Preview" className="bo-phase-grow">
           {/* Phone preview's "On the stage": the phone's own action edits the project page. */}
           <PhoneStage caption="What residents see on the project page">
             <Phone project={project} o={o} onEdit={() => setSettings('Project page')} />
           </PhoneStage>
-        </section>
-      </div>
+        </Grid>
+      </Inline>
       <ProjectSettings project={project} tab={settings} onTabChange={setSettings} onClose={() => setSettings(null)} />
       <AddPhase isOpen={adding} onOpenChange={setAdding} onAdd={p => setAdded(a => [...a, p])} />
       <Modal title="Invite people" isOpen={inviting} onOpenChange={setInviting}
@@ -99,7 +99,7 @@ function Overview({projectId}: {projectId?: string}) {
             : 'The project goes back to draft: only managers can see it.'}
         </Text>
       </AlertDialog>
-    </div>
+    </Grid>
   );
 }
 
@@ -112,7 +112,7 @@ function Setup({project, o, live, archived, onSettings, onChange}: {project: Pro
   return (
     <Panel title="Project setup" className="bo-project-setup"
       actions={<IconButton aria-label="Project settings" onPress={() => onSettings('General')}><Settings aria-hidden size={16} /></IconButton>}>
-      <div className="bo-project-setup-body">
+      <Stack gap="24">
         {archived && (
           <Banner density="compact" tone="neutral" title="Archived">Residents can read the project but no longer take part.</Banner>
         )}
@@ -133,14 +133,14 @@ function Setup({project, o, live, archived, onSettings, onChange}: {project: Pro
           </>
         ) : !archived && (
           <PanelSection title="Before you publish" aside={`0 of ${CHECKLIST.length} ready`}>
-            <ul className="bo-phase-stack">
+            <Stack elementType="ul" gap="8">
               {CHECKLIST.map(c => (
                 <li key={c.title} data-gv="setup-card">
                   <ChecklistStep step={c} onChange={onChange}
                     onOpen={title => { const t = CHECKLIST_TAB[title]; if (t) onSettings(t); else setStub(title); }} />
                 </li>
               ))}
-            </ul>
+            </Stack>
           </PanelSection>
         )}
         <Divider />
@@ -152,7 +152,7 @@ function Setup({project, o, live, archived, onSettings, onChange}: {project: Pro
             <PropertyListItem label="Managers">{project.managers?.length ? project.managers.join(', ') : 'Nobody yet'}</PropertyListItem>
           </PropertyList>
         </PanelSection>
-      </div>
+      </Stack>
       <CardStub title={stub} onClose={() => setStub(null)} />
     </Panel>
   );
@@ -186,14 +186,14 @@ function Phone({project, o, onEdit}: {project: Project; o: Overview; onEdit: () 
       <PhoneImage aria-label="Project image" />
       <h2>{project.title}</h2>
       <p>{o.intro}</p>
-      <div className="bo-project-phone-box">
-        <Button>{o.ways > 1 ? `Participate · ${o.ways} ways` : 'Participate'} <ChevronUp aria-hidden size={16} /></Button>
+      <Stack gap="12" alignItems="start">
+        <Button isFullWidth>{o.ways > 1 ? `Participate · ${o.ways} ways` : 'Participate'} <ChevronUp aria-hidden size={16} /></Button>
         {people > 0 && (
           <AvatarGroup initials={['A', 'B', 'C']}>
             {people.toLocaleString('en-GB')} participants <Info aria-hidden size={14} />
           </AvatarGroup>
         )}
-      </div>
+      </Stack>
       {o.more.map(t => <p key={t}>{t}</p>)}
     </PhonePreview>
   );

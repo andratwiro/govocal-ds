@@ -2,13 +2,13 @@ import {useMemo, useState, type Dispatch, type ReactNode, type SetStateAction} f
 import {Navigate, useNavigate, useParams} from 'react-router';
 import {CalendarDays, CircleCheck, Copy, Download, ExternalLink, FileChartColumn, FileText, Inbox, Lightbulb, Link2, List, Lock, Mail,
   Map as MapIcon, MessageSquareText, Paperclip, MapPin, Plus, Settings, Sparkles, SquarePen, Tag, Trash2, TriangleAlert, Upload, User, Users} from 'lucide-react';
-import {ACCESS_WHO_VALUE, AccessRightsModal, type AccessWho, ActionRow, ActionRowList, Avatar, Badge, Banner,
+import {ACCESS_WHO_VALUE, AccessRightsModal, type AccessWho, ActionRow, ActionRowList, AppFramePanel, Avatar, Badge, Banner,
   BulkOfficialUpdate, Button, Card, type ChartColor, CommentThread, CompactButton, DashboardBars, DashboardCard,
   DashboardDemographic, DashboardList, DashboardRanking, DashboardTopics, DataTable, DataTableAddColumn,
   DataTableAssignee, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader, DataTableRow,
   DataTableStack, DataTableTags, DataTableText, DataTableThumbnail, DateRangeField, DropZone, EmptyState, FileList,
-  type FileListItemData, FilterChips, type FilterFacet, FilterMenu, type FilterValue, GroupedTab, GroupedTabList,
-  GroupedTabPanel, GroupedTabs, IconButton, type Key, LineChart, ListHeader, type ListHeaderColumn, LocaleSwitcher,
+  type FileListItemData, FilterChips, type FilterFacet, FilterMenu, type FilterValue, Grid, GroupedTab, GroupedTabList,
+  GroupedTabPanel, GroupedTabs, IconButton, Inline, type Key, LineChart, ListHeader, type ListHeaderColumn, LocaleSwitcher,
   MapCard, MapChip, type MapItem, MapOverlay, MapView, Menu, MenuItem, MenuSection, MenuTrigger, Modal,
   MultilingualRichTextEditor, MultilingualTextField, type Multiloc, NotificationEmail, NotificationRow,
   NotificationRowList, OfficialUpdate, OptionList, Pagination, Panel, PanelSection, ParticipantActionList,
@@ -16,8 +16,8 @@ import {ACCESS_WHO_VALUE, AccessRightsModal, type AccessWho, ActionRow, ActionRo
   type PostedUpdate, ProjectHeader, PropertyList, PropertyListItem, ProposalsRow, RailHeader, RailPhase, ReactionCounts,
   SearchField, SectionLabel, SegmentedControl, SegmentedControlItem, Select, type SelectionAction, SelectionBar,
   SelectItem, Separator, SetupStep, SidePanel, SidePanelActions, SidePanelDecision, SidePanelRecordHead, SidePanelSection, Sparkline,
-  StatRow, StatTile, SubmenuTrigger, TableToolbar, TableToolbarHeading, TabSection, Text, TextField, type ThreadComment,
-  type ThreadTab, type ThreadTarget, type TimelinePhase, TitleField, toast, ViewOptionList, ViewOptionRow,
+  Stack, StatRow, StatTile, SubmenuTrigger, TableToolbar, TableToolbarHeading, TabSection, Text, TextField, type ThreadComment,
+  type ThreadTab, type ThreadTarget, TileGrid, type TimelinePhase, TitleField, toast, ViewOptionList, ViewOptionRow,
   VisuallyHidden, VolunteeringRow, VotingRow} from 'govocal-ds';
 import {Dialog, Form, Tag as TagItem, TagGroup} from 'govocal-ds/base';
 import {PICTURES} from '../pictures';
@@ -58,7 +58,7 @@ function PhaseScreen() {
   const view = tab as Tab;
 
   return (
-    <div className="bo-phase" data-rail={railOpen ? 'open' : 'closed'}>
+    <Grid rows="auto 1fr" gap="8" className="bo-phase">
       <VisuallyHidden elementType="h1">{project.title}</VisuallyHidden>
       {/* Project header's bar (its "With mode switch" story): crumbs, Build · Manage · Insights, who is here, Save. Save
           turns on once something in the setup changes. A phase that hasn't started keeps Manage and Insights open: they
@@ -68,7 +68,7 @@ function PhaseScreen() {
         modes={TABS.map(t => ({id: t, label: label(t)}))} mode={view} onModeChange={t => navigate(phaseUrl(project, phase, t as Tab))}
         people={<Avatar initials={ME.slice(-1)} aria-label={`${ME} is here`} />}
         hasChanges={dirty} onSave={() => { setDirty(false); toast('Changes saved'); }} />
-      <div className="bo-phase-body" data-view={view}>
+      <Inline gap="8" alignItems="stretch" wrap="nowrap" className="bo-phase-body" data-view={view}>
         {railOpen && <ProjectRail project={project} current={phase.id} added={added} onAdd={() => setAdding(true)}
           removed={removed} onDelete={deletePhase} href={p => `#${phaseUrl(project, p, view)}`} />}
         {view === 'build' && <Build key={`${project.id}/${phase.id}`} project={project} phase={phase} onSettings={setSettings}
@@ -79,10 +79,10 @@ function PhaseScreen() {
           ? <Manage key={`${project.id}/${phase.id}`} phase={phase} project={project} onAddPhase={() => setAdding(true)} />
           : <MethodManage phase={phase} />)}
         {view === 'insights' && phase.status !== 'Draft' && <Insights key={`${project.id}/${phase.id}`} project={project} phase={phase} />}
-      </div>
+      </Inline>
       <ProjectSettings project={project} tab={settings} onTabChange={setSettings} onClose={() => setSettings(null)} />
       <AddPhase isOpen={adding} onOpenChange={setAdding} onAdd={p => setAdded(a => [...a, p])} />
-    </div>
+    </Grid>
   );
 }
 
@@ -107,30 +107,32 @@ export function ProjectRail({project, href, current, added, onAdd, onHide, remov
   const spotlight = (OVERVIEWS[project.id] ?? NO_OVERVIEW).spotlight;
   const phases = [...timeline(project, href, current), ...addedTimeline(added)].filter(p => !removed.has(p.id));
   return (
-    <aside className="bo-phase-panel bo-phase-rail" aria-label="Participation">
-      <RailHeader title="Participation" onAdd={onAdd} onTogglePanel={onHide}
-        labels={{add: 'Add a phase', togglePanel: 'Hide the participation rail'}} />
-      <nav aria-label="Phases" className="bo-phase-rail-section">
-        <SectionLabel>Timeline</SectionLabel>
-        {/* Phase timeline's rows, drawn here as Rail phases: the timeline takes no delete (Rail phase's onDelete). The
-            phase being viewed can't be deleted from its own screen. */}
-        <ul className="bo-project-rail-list bo-phase-timeline">
-          {phases.map(p => (
-            <li key={p.id}>
-              <RailPhase status={RAIL_DOT[p.status]} isCurrent={p.isCurrent} href={p.href} title={p.title} chip={p.count}
-                newCount={p.fresh} statusLabel={RAIL_WORD[p.status]} meta={`${p.dates} · ${p.method}`}
-                onDelete={p.isCurrent ? undefined : () => onDelete(p)} />
-            </li>
-          ))}
-        </ul>
-      </nav>
-      {spotlight.length > 0 && (
-        <div className="bo-phase-rail-section">
-          <SectionLabel>Spotlight</SectionLabel>
-          <div className="bo-project-rail-list"><PhaseTimeline phases={spotlight} /></div>
-        </div>
-      )}
-    </aside>
+    <AppFramePanel elementType="aside" aria-label="Participation" padding="16" className="bo-phase-rail">
+      <Stack gap="16">
+        <RailHeader title="Participation" onAdd={onAdd} onTogglePanel={onHide}
+          labels={{add: 'Add a phase', togglePanel: 'Hide the participation rail'}} />
+        <Stack elementType="nav" aria-label="Phases">
+          <SectionLabel>Timeline</SectionLabel>
+          {/* Phase timeline's rows, drawn here as Rail phases: the timeline takes no delete (Rail phase's onDelete). The
+              phase being viewed can't be deleted from its own screen. */}
+          <Stack elementType="ul" className="bo-project-rail-list">
+            {phases.map(p => (
+              <li key={p.id}>
+                <RailPhase status={RAIL_DOT[p.status]} isCurrent={p.isCurrent} href={p.href} title={p.title} chip={p.count}
+                  newCount={p.fresh} statusLabel={RAIL_WORD[p.status]} meta={`${p.dates} · ${p.method}`}
+                  onDelete={p.isCurrent ? undefined : () => onDelete(p)} />
+              </li>
+            ))}
+          </Stack>
+        </Stack>
+        {spotlight.length > 0 && (
+          <Stack>
+            <SectionLabel>Spotlight</SectionLabel>
+            <div className="bo-project-rail-list"><PhaseTimeline phases={spotlight} /></div>
+          </Stack>
+        )}
+      </Stack>
+    </AppFramePanel>
   );
 }
 
@@ -217,13 +219,13 @@ function Build({project, phase, onSettings, onChange}: {project: Project; phase:
   const email = PHASE_EMAILS.find(e => e.id === emailId);
   return (
     <>
-      <section className="bo-phase-grow bo-phase-stage-box" aria-label="Preview">
+      <Grid elementType="section" aria-label="Preview" className="bo-phase-grow">
         <PhoneStage caption={email ? 'The email, as residents get it' : 'What residents see while the phase is open'}>
           {email ? (
             <PhonePreview aria-label={`The email: ${email.name}`} header={<PhoneHeader />}>
               <h2>{email.name}</h2>
               <p>{email.when}: this email goes to the {email.who.toLowerCase()}.</p>
-              <Button className="bo-phase-phone-call">View it</Button>
+              <Button isFullWidth>View it</Button>
             </PhonePreview>
           ) : (
             <PhonePreview aria-label={`What residents see of ${phase.title}`} header={<PhoneHeader />}>
@@ -231,11 +233,11 @@ function Build({project, phase, onSettings, onChange}: {project: Project; phase:
               <h2>{project.title}</h2>
               <p>{phase.title} · {phase.dates}</p>
               {call && <p>{call.line}</p>}
-              <Button className="bo-phase-phone-call">{call?.button ?? 'Take part'}</Button>
+              <Button isFullWidth>{call?.button ?? 'Take part'}</Button>
             </PhonePreview>
           )}
         </PhoneStage>
-      </section>
+      </Grid>
       <Panel title="Setup" className="bo-phase-side bo-phase-setup"
         actions={<IconButton aria-label="Project settings" onPress={() => onSettings('General')}><Settings aria-hidden size={16} /></IconButton>}>
         {email ? (
@@ -244,16 +246,16 @@ function Build({project, phase, onSettings, onChange}: {project: Project; phase:
             isSelected={emailsOn.has(email.id)} onChange={on => setEmail(email.id, on)}
             replyTo="support@example.org" subject={email.name} buttonText="View it" />
         ) : (
-          <div className="bo-phase-setup-body">
+          <Stack gap="24">
             <PanelSection title="Before you publish" aside={`0 of ${CHECKLIST.length} ready`}>
-              <ul className="bo-phase-stack">
+              <Stack elementType="ul" gap="8">
                 {CHECKLIST.map(c => (
                   <li key={c.title} data-gv="setup-card"><ChecklistStep step={c} onOpen={open} onChange={onChange} /></li>
                 ))}
-              </ul>
+              </Stack>
             </PanelSection>
             <PanelSection title={`${phase.method} setup`}>
-              <div className="bo-phase-stack">
+              <Stack gap="8">
                 <PhaseStatus phase={phase} />
                 {phase.method === 'Ideation' ? (
                   <IdeationCards phase={phase} onOpen={setStub} onAttach={() => setAttaching(true)} files={files.length}
@@ -263,9 +265,9 @@ function Build({project, phase, onSettings, onChange}: {project: Project; phase:
                 ) : (
                   <Text elementType="p" kind="small" color="meta">The {phase.method.toLowerCase()} setup cards: not in Figma yet.</Text>
                 )}
-              </div>
+              </Stack>
             </PanelSection>
-          </div>
+          </Stack>
         )}
       </Panel>
       <CardStub title={stub} onClose={() => setStub(null)} />
@@ -329,7 +331,7 @@ function DatesAndTitle({phase, onChange, help}: {phase: Phase; onChange: () => v
       <DateRangeField isRequired description={help} defaultValue={phaseRange(phase.dates)} onChange={onChange} />
     </Card></li>
     <li data-gv="setup-card"><Card title="Title and description" isRequired control="expand" defaultExpanded>
-      <div className="bo-phase-stack">
+      <Stack gap="8">
         <TitleField aria-label="Phase title" isRequired lang={locale} value={title[locale] ?? ''}
           onChange={text => { setTitle(t => ({...t, [locale]: text})); onChange(); }}
           localeSwitcher={(
@@ -339,7 +341,7 @@ function DatesAndTitle({phase, onChange, help}: {phase: Phase; onChange: () => v
         <MultilingualRichTextEditor aria-label="Phase description" placeholder="Add a short description" locales={LANGUAGES}
           locale={locale} onLocaleChange={setLocale} showLocaleSwitcher={false} value={description}
           onChange={v => { setDescription(v); onChange(); }} />
-      </div>
+      </Stack>
     </Card></li>
   </>;
 }
@@ -360,7 +362,7 @@ function IdeationCards({phase, onOpen, onAttach, files, onChange, emailsOn, onEm
   const accessFor = PARTICIPANT_ACTIONS.find(a => a.id === access);
   const emailCount = emailsOn.size;
   return (
-    <ul className="bo-phase-stack">
+    <Stack elementType="ul" gap="8">
       <DatesAndTitle phase={phase} onChange={onChange} help={DATES_HELP} />
       <li data-gv="setup-card"><Card title="Attachments" summary={files ? `${files} ${files === 1 ? 'file' : 'files'}` : undefined}
         iconActions={[{icon: Paperclip, label: 'Add an attachment', onPress: onAttach}]} /></li>
@@ -435,7 +437,7 @@ function IdeationCards({phase, onOpen, onAttach, files, onChange, emailsOn, onEm
           defaultWho={who[accessFor.id]} onWhoChange={changed((v: AccessWho) => setWho(s => ({...s, [accessFor.id]: v})))}
           onSave={() => setAccess(null)} />
       )}
-    </ul>
+    </Stack>
   );
 }
 
@@ -451,7 +453,7 @@ function VolunteeringCards({phase, onOpen, onChange}: {phase: Phase; onOpen: (ti
     toast(`${gone.title} deleted`, undefined, {action: 'Undo', onAction: () => setCauses(list => [...list.slice(0, at), gone, ...list.slice(at)])});
   };
   return (
-    <ul className="bo-phase-stack">
+    <Stack elementType="ul" gap="8">
       <DatesAndTitle phase={phase} onChange={onChange} help="Residents can sign up from the first day to the last." />
       <li data-gv="setup-card"><Card title="Causes" pills={[{label: `${causes.length} ${causes.length === 1 ? 'cause' : 'causes'}`}]}
         iconActions={[
@@ -465,7 +467,7 @@ function VolunteeringCards({phase, onOpen, onChange}: {phase: Phase; onOpen: (ti
           ))}
         </div>
       </Card></li>
-    </ul>
+    </Stack>
   );
 }
 
@@ -686,24 +688,26 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
 
   return (
     <>
-      <aside className="bo-phase-side bo-phase-stack" aria-label="Ideas overview">
-        <div className="bo-phase-panel bo-phase-panel-tight">
-          {WALKS.map(w => {
-            const count = ideas.filter(i => (w.filter ? matches(i, w.filter) : w.test!(i))).length;
-            const isOn = w.filter ? sameFilters(filters, w.filter) : walk?.key === w.key;
-            return <StatRow key={w.key} label={w.label} value={String(count)} isNew={w.key === 'new' && count > 0}
-              isStatic={count === 0} isSelected={isOn}
-              onPress={() => (w.filter ? setFilters(isOn ? {} : w.filter) : setView(isOn ? null : w))} />;
-          })}
-        </div>
-        <div className="bo-phase-panel bo-phase-panel-actions">
-          <ul className="bo-phase-stack">
+      <Stack elementType="aside" gap="8" aria-label="Ideas overview" className="bo-phase-side">
+        <AppFramePanel padding="8">
+          <Stack>
+            {WALKS.map(w => {
+              const count = ideas.filter(i => (w.filter ? matches(i, w.filter) : w.test!(i))).length;
+              const isOn = w.filter ? sameFilters(filters, w.filter) : walk?.key === w.key;
+              return <StatRow key={w.key} label={w.label} value={String(count)} isNew={w.key === 'new' && count > 0}
+                isStatic={count === 0} isSelected={isOn}
+                onPress={() => (w.filter ? setFilters(isOn ? {} : w.filter) : setView(isOn ? null : w))} />;
+            })}
+          </Stack>
+        </AppFramePanel>
+        <AppFramePanel padding="16">
+          <Stack elementType="ul" gap="10">
             <li><Card variant="filled" title="Add an idea" iconActions={[{icon: Plus, label: 'Add an idea'}]} /></li>
             <li><Card variant="filled" title="Import paper ideas" summary="Not set" iconActions={[{icon: Upload, label: 'Import paper ideas'}]} /></li>
             <li><Card variant="filled" title="Exports" iconActions={[{icon: Download, label: 'Export ideas'}]} /></li>
-          </ul>
-        </div>
-      </aside>
+          </Stack>
+        </AppFramePanel>
+      </Stack>
       {/* The Data table's "In a panel" story: the Panel's toolbar holds the count (or the Selection bar), the collapsible
           search and the Filter menu, then the chips (the quick view first); the table; the Pagination in its foot. */}
       <Panel title={phase.title} className="bo-phase-grow" isFlush
@@ -734,7 +738,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
             filtered list, no pages); one open idea for both (the map's value, the list's openKey, the side panel), a
             hovered row marks its pin and a hovered pin its row. The chip counts the ideas the map can't show. */}
         {mode === 'map' ? (
-          <div className="bo-phase-map">
+          <Grid columns="minmax(0, 1fr) minmax(280px, 400px)" className="bo-phase-map">
             <MapView aria-label="Ideas on the map" items={pins} className="bo-phase-map-view"
               value={open} onChange={k => { setReading(false); setOpen(k == null ? null : String(k)); }} hoveredKey={hot} onHoverChange={setHot}
               renderCard={pinCard}>
@@ -765,7 +769,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
                 </DataTableBody>
               </DataTable>
             </div>
-          </div>
+          </Grid>
         ) : (
         /* The checkboxes keep the bulk selection, so the open idea can't also be the table's selection (the Side panel
             story's single-select `selectedKeys=[open]`): a row's action opens it instead, as in the Data table's
@@ -801,7 +805,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
                   </DataTableCell>
                   <DataTableCell><DataTableAssignee name={person(i.assignee)} initials={i.assignee.slice(-1)} /></DataTableCell>
                   <DataTableCell>{i.tags.length ? <DataTableTags items={i.tags} /> : null}</DataTableCell>
-                  <DataTableCell isMuted><span className="bo-phase-manage-nowrap">{i.screening ? 'Waiting for approval' : i.status}</span></DataTableCell>
+                  <DataTableCell isMuted>{i.screening ? 'Waiting for approval' : i.status}</DataTableCell>
                   <DataTableCell align="number">{i.likes}</DataTableCell>
                   {extra.has('comments') && <DataTableCell align="number">{i.comments}</DataTableCell>}
                 </DataTableRow>
@@ -938,18 +942,19 @@ const capital = (t: string) => t[0].toUpperCase() + t.slice(1);
 function EmptyTab({phase, tab}: {phase: Phase; tab: 'manage' | 'insights'}) {
   const noun = NOUN[phase.method];
   const main = (
-    <section className="bo-phase-panel bo-phase-grow bo-phase-empty" aria-label={label(tab)}>
+    <AppFramePanel elementType="section" aria-label={label(tab)} padding="16" className="bo-phase-grow bo-phase-empty">
       {tab === 'manage'
         ? <EmptyState illustration="empty-notebook" title={`${capital(noun)} will appear here`}
           description={`Once the phase starts, you can review and manage ${noun} here`} />
         : <EmptyState illustration="empty-notebook" title="Insights will appear here"
           description="Once the phase starts, insights will help you turn participation into clear results" />}
-    </section>
+    </AppFramePanel>
   );
   const side = (
-    <aside className="bo-phase-panel bo-phase-side bo-phase-empty-side" aria-label={tab === 'manage' ? `${capital(noun)} overview` : 'Recommended actions'}>
+    <AppFramePanel elementType="aside" aria-label={tab === 'manage' ? `${capital(noun)} overview` : 'Recommended actions'} padding="16"
+      className="bo-phase-side">
       <EmptyState layout="panel" illustration="empty-notebook" headingLevel="none" title={tab === 'manage' ? `No ${noun} yet` : 'No insights yet'} />
-    </aside>
+    </AppFramePanel>
   );
   // The side panel keeps its place: before the list on Manage, after the dashboard on Insights.
   return tab === 'manage' ? <>{side}{main}</> : <>{main}{side}</>;
@@ -971,11 +976,11 @@ const PROPOSAL_COLUMNS: ListHeaderColumn[] = [
 function MethodManage({phase}: {phase: Phase}) {
   if (phase.method !== 'Voting' && phase.method !== 'Proposals') {
     return (
-      <section className="bo-phase-panel bo-phase-grow bo-phase-empty" aria-label="Manage">
+      <AppFramePanel elementType="section" aria-label="Manage" padding="16" className="bo-phase-grow bo-phase-empty">
         <EmptyState icon={<Inbox aria-hidden size={24} />} title={phase.method === 'Information' ? 'Nothing to manage here' : `${phase.method}: Manage`}
           description={phase.method === 'Information' ? 'An information phase shares news with residents; it collects no inputs.'
             : 'This method\'s Manage tab: not in Figma yet.'} />
-      </section>
+      </AppFramePanel>
     );
   }
   const voting = phase.method === 'Voting';
@@ -984,7 +989,7 @@ function MethodManage({phase}: {phase: Phase}) {
     <Panel title={phase.title} className="bo-phase-grow" isFlush count={voting ? VOTE_OPTIONS.length : PROPOSALS.length}
       description={voting ? 'The options residents vote on, most votes first. Votes counted on paper are added as offline votes.'
         : 'Every proposal, most supported first. 300 votes bring an official response.'}>
-      <div className="bo-phase-method-list" role="list" aria-label={voting ? 'Options' : 'Proposals'}>
+      <div role="list" aria-label={voting ? 'Options' : 'Proposals'}>
         <ListHeader columns={voting ? VOTING_COLUMNS : PROPOSAL_COLUMNS} />
         {voting ? VOTE_OPTIONS.map(o => (
           <div role="listitem" key={o.title}>
@@ -1017,12 +1022,12 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
     const votes = VOTES_BY_DAY;
     const weekly = votes.filter((_, k) => k % 7 === 6 || k === votes.length - 1);
     body = <>
-      <div className="bo-phase-tiles" data-tiles="4">
+      <Grid columns={4} gap="10">
         <StatTile layout="with-note" label="Voters" value="517" note="updating live" />
         <StatTile layout="with-note" label="Votes" value="1,240" note="updating live" />
         <StatTile layout="with-note" label="Avg per voter" value="2.4" note="multiple picks" />
         <StatTile layout="with-note" label="Participation" value="18%" note="of visitors" />
-      </div>
+      </Grid>
       <DashboardCard kind="votes-over-time" title="Participation over time" subtitle="Votes cast · cumulative" actions={(
         <SegmentedControl size={30} aria-label="Range" disallowEmptySelection selectedKeys={[range]}
           onSelectionChange={k => { const next = [...k][0]; if (next) setRange(next as 'daily' | 'weekly'); }}>
@@ -1035,10 +1040,10 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
       <DashboardCard kind="live-ranking" title="Live ranking" subtitle={`By votes · ${phase.status === 'Done' ? 'final' : 'updating live'}`}>
         <DashboardRanking items={VOTE_OPTIONS.map(o => ({title: o.title, count: o.votes}))} />
       </DashboardCard>
-      <div className="bo-phase-insights-pair">
+      <Grid columns={2} gap="16">
         <DashboardCard kind="demographic-age"><DashboardDemographic label="Age group" items={[...VOTER_AGES]} /></DashboardCard>
         <DashboardCard kind="demographic-commute"><DashboardDemographic label="Primary commute" items={[...VOTER_COMMUTES]} /></DashboardCard>
-      </div>
+      </Grid>
       <Banner tone="ai" linkLabel="Open AI analysis" onLinkPress={() => navigate(phaseUrl(project, phase, 'manage'))}>
         Explore AI-powered summaries and view individual votes.
       </Banner>
@@ -1048,20 +1053,20 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
     const total = IDEAS.length;
     const liked = [...IDEAS].sort((a, b) => b.likes - a.likes).slice(0, 3);
     body = <>
-      <div className="bo-phase-tiles" data-tiles="6">
+      <Grid columns={3} gap="10">
         <StatTile label="Visitors" value="412" />
         <StatTile label="Phase participants" value="124" />
         <StatTile label={capital(noun)} value={String(total)} />
         <StatTile label="Comments" value={IDEAS.reduce((k, i) => k + i.comments, 0).toLocaleString('en-GB')} />
         <StatTile label="Reactions" value={IDEAS.reduce((k, i) => k + i.likes + i.dislikes, 0).toLocaleString('en-GB')} />
         <StatTile label="Participation rate" value="30.1%" />
-      </div>
+      </Grid>
       <DashboardCard kind="participation-over-time" title="Participation over time">
         <LineChart showLegend xAxis={INSIGHT_WEEKS} series={[
           {label: 'Participants', values: PARTICIPATION_WEEKS.participants}, {label: 'Visitors', values: PARTICIPATION_WEEKS.visitors}
         ]} />
       </DashboardCard>
-      <div className="bo-phase-insights-pair" data-wide>
+      <Grid columns="1.4fr 1fr" gap="16">
         <DashboardCard kind="ai-summary" icon={<Sparkles />} title="What are people saying?"
           footer={<>1 / {total}<CompactButton onPress={() => navigate(phaseUrl(project, phase, 'manage'))}>Explore</CompactButton></>}>
           <p>{AI_SUMMARY}</p>
@@ -1072,7 +1077,7 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
             {id: 'manual', label: 'Manual tags', meta: `${IDEAS.filter(i => i.tags.length).length} ${noun} · ${IDEA_TAGS.length} topics`}
           ]} />
         </DashboardCard>
-      </div>
+      </Grid>
       <DashboardCard kind="status-breakdown" title="Status breakdown">
         <DashboardBars items={IDEA_STATUSES.map(st => {
           const count = IDEAS.filter(i => i.status === st).length;
@@ -1089,7 +1094,7 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
     </>;
   } else {
     body = <>
-      <div className="bo-phase-tiles"><StatTile label="Visitors" value={phase.count?.split(' ')[0] ?? '0'} /></div>
+      <TileGrid minTileWidth={160} layout="gallery" density="compact"><StatTile label="Visitors" value={phase.count?.split(' ')[0] ?? '0'} /></TileGrid>
       <DashboardCard kind="visitors-over-time" title="Visitors over time">
         <LineChart xAxis={INSIGHT_WEEKS} series={[{label: 'Visitors', values: PARTICIPATION_WEEKS.visitors}]} />
       </DashboardCard>
@@ -1097,9 +1102,9 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
   }
   return (
     <>
-      <section className="bo-phase-grow bo-phase-insights" aria-label="Insights">{body}</section>
+      <Stack elementType="section" aria-label="Insights" gap="16" className="bo-phase-grow bo-phase-insights">{body}</Stack>
       {/* Action row's "Recommended actions" story: each action's icon at the end of its row. */}
-      <Panel title="Recommended actions" className="bo-phase-side bo-phase-insights-side">
+      <Panel title="Recommended actions" className="bo-phase-side">
         <ActionRowList aria-label="Recommended actions">
           <ActionRow href="#/reporting" icon={<FileChartColumn />}>Add a report</ActionRow>
           <ActionRow href="#/messaging" icon={<Link2 />}>Share results with participants</ActionRow>
@@ -1156,8 +1161,8 @@ export function ProjectSettings({project, tab, onTabChange, onClose}: {project: 
         </GroupedTabList>
         {SETTINGS_TABS.map(t => (
           <GroupedTabPanel key={t} id={t} className="bo-phase-settings-panel">
-            <div className="bo-phase-stack">
-              <h3 className="bo-section-title bo-phase-flush">{t}</h3>
+            <Stack gap="8">
+              <Text elementType="h3" kind="body" isStrong color="primary">{t}</Text>
               <Text elementType="p" kind="small" color="meta">{SETTINGS_ABOUT[t]}</Text>
               {t === 'General' && <>
                 <MultilingualTextField label="Title" isRequired locales={LANGUAGES} defaultValue={{[LANGUAGES[0]]: project.title}} />
@@ -1171,7 +1176,7 @@ export function ProjectSettings({project, tab, onTabChange, onClose}: {project: 
                 <TagGroup label="Tags" items={IDEA_TAGS.map(id => ({id}))}>{item => <TagItem id={item.id}>{item.id}</TagItem>}</TagGroup>
               )}
               <Text elementType="p" kind="small" color="meta">The rest of this tab: not in Figma yet.</Text>
-            </div>
+            </Stack>
           </GroupedTabPanel>
         ))}
       </GroupedTabs>
@@ -1198,12 +1203,14 @@ export function AddPhase({isOpen, onOpenChange, onAdd}: {isOpen: boolean; onOpen
         <Button variant="secondary" size={32} slot="close">Cancel</Button>
         <Button size={32} isDisabled={!title} onPress={add}>Add phase</Button>
       </>}>
-      <Form className="bo-phase-stack" onSubmit={e => { e.preventDefault(); add(); }}>
-        <MultilingualTextField label="Title" isRequired locales={LANGUAGES} value={titles} onChange={setTitles} autoFocus />
-        <Select label="Method" selectedKey={method} onSelectionChange={k => setMethod(k as Method)}>
-          {METHODS.map(m => <SelectItem key={m} id={m}>{m}</SelectItem>)}
-        </Select>
-        <TextField label="Dates" placeholder="e.g. 17 Nov to 7 Dec" value={dates} onChange={setDates} />
+      <Form onSubmit={e => { e.preventDefault(); add(); }}>
+        <Stack gap="8">
+          <MultilingualTextField label="Title" isRequired locales={LANGUAGES} value={titles} onChange={setTitles} autoFocus />
+          <Select label="Method" selectedKey={method} onSelectionChange={k => setMethod(k as Method)}>
+            {METHODS.map(m => <SelectItem key={m} id={m}>{m}</SelectItem>)}
+          </Select>
+          <TextField label="Dates" placeholder="e.g. 17 Nov to 7 Dec" value={dates} onChange={setDates} />
+        </Stack>
       </Form>
     </Modal>
   );
@@ -1220,13 +1227,13 @@ function Attachments({isOpen, onOpenChange, files, onChange}: {isOpen: boolean; 
   return (
     <Modal title="Attachments" isOpen={isOpen} onOpenChange={onOpenChange}
       footer={<Button variant="secondary" slot="close">Done</Button>}>
-      <div className="bo-phase-attach">
+      <Stack gap="16">
         <DropZone density="compact" acceptedFileTypes={['*']} allowsMultiple onSelect={list => list && add([...list])}
           onDrop={async e => add(await Promise.all(e.items.flatMap(i => (i.kind === 'file' ? [i.getFile()] : []))))}>
           Drop a file here or browse
         </DropZone>
         <FileList aria-label="Attachments" items={files} onDelete={item => onChange(current => current.filter(f => f.id !== item.id))} />
-      </div>
+      </Stack>
     </Modal>
   );
 }
