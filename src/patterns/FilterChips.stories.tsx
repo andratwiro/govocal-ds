@@ -39,7 +39,7 @@ export const Wrapping: Story = {
     tags: ['Cycling', 'Safety'], reply: ['awaiting']}} />
 };
 
-/** Without the Clear button, for bars that put it elsewhere. */
+/** Without the Clear button, when one Clear is enough: the Filter menu has its own "Clear all filters". */
 export const WithoutClear: Story = {name: 'Without Clear', render: () => <Demo initial={{tags: ['Housing']}} showClear={false} />};
 
 /**
@@ -48,7 +48,7 @@ export const WithoutClear: Story = {name: 'Without Clear', render: () => <Demo i
  */
 export const MetricChip: Story = {name: 'Metric chip', render: () => <Demo initial={{assignee: ['Unassigned']}} metric="New ideas" />};
 
-/** Empty: no filter on, nothing renders. */
+/** Empty: no filter on, so nothing shows (this story is blank on purpose) and the list below moves up. */
 export const Empty: Story = {render: () => <Demo initial={{}} />};
 
 /** Right to left (Arabic): chips flow from the right, the × at each chip's end. */

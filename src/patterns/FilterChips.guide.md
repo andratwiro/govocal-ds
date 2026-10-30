@@ -2,59 +2,76 @@
 
 ## When to use
 
-- Under a list's Table toolbar, to show which filters are on and turn them off one by one: "Assignee | is | Manager
-  A | ×", "Status | is any of | Proposed, Viewed | ×", with "Clear" at the end.
-- Always beside a **Filter menu**, sharing its `value`, so the two stay in step: the phase Manage tab, the Input
-  manager, Projects, the Inspiration hub, Messaging.
-- With a quick view from the stats above the table (`metric`, "New ideas") as the first chip.
+- Words this page uses: a *facet* is one thing a list can be filtered by (Assignee, Status, Tags); its *values* are
+  the choices under it (Manager A; Proposed, Viewed); the *operator* is the word between them, "is" for one value,
+  "is any of" for more.
+- Under a list's Table toolbar, to show which filters are on and turn them off one by one. Each chip reads as a
+  sentence, "Assignee is Manager A ×" or "Status is any of Proposed or Viewed ×", and "Clear" comes after the chips.
+- Always together with a **Filter menu** in the toolbar above: the menu picks filters, the chips show them. They stay
+  in step: removing a chip unticks the same value in the menu, and ticking in the menu adds a chip. Real screens: a
+  phase's Manage tab (its list of inputs), the Input manager, Projects, the Inspiration hub, Messaging.
+- When the list also has a quick view: a stat card above the table that filters it when pressed ("New ideas"). Its
+  chip comes first and has the view's name only.
 
 ## When not to use
 
-- To pick filters: use **Filter menu** (the chips only show and remove them).
-- For tags on a record that people add and remove: use **Tag picker**.
-- For a status or a label that isn't a filter: use **Badge** or **Status badge**.
-- For a pick-one view switch: use **Segmented control**.
+- To pick filters: use **Filter menu**. The chips only show and remove what is already on.
+- For tags that belong to a record: use **Tag picker** (an idea's Cycling, Housing, added and removed on the idea).
+  Ask "does removing it change the record, or only what the list shows?" Only the list: Filter chips.
+- For a word that says what something is, with no ×: use **Badge** (a kind or a tag) or **Status badge** (a stage, such
+  as Draft or Live).
+- To switch between a few fixed views that are always shown, one at a time: use **Segmented control**. A quick view's
+  chip only appears once someone has pressed the stat card, and goes with its ×.
 
 ## Anatomy
 
-1. **Strip**: a quiet bar holding the chips, wrapping onto more lines when it needs to. It disappears while no filter is
-   on.
-2. **Chip**: the facet's icon and name, the operator ("is", "is any of"), the values joined as the language lists them,
-   and a ×.
-3. **Metric chip** (optional): a quick view's name only, first.
-4. **Clear** (optional, `showClear`): at the end; turns every filter off.
+1. **Strip**: a light grey bar (the secondary surface) holding the chips. Chips wrap onto more lines when they don't
+   fit. The strip disappears while no filter is on, so the table moves up.
+2. **Chip**: the facet's icon (from the facet, the same as in the Filter menu; no icon if the facet has none), the
+   facet's name, the operator in grey, the values, and a ×, split by thin lines.
+3. **Quick-view chip** (only with a quick view): the view's name only, no icon or operator, first in the strip.
+4. **Clear** (shown by default; a developer can turn it off, `showClear`): a quiet text button at the far end of the
+   strip's first line. It turns every filter off.
+
+Sizes: chips are 6px apart; the strip has no margin of its own.
 
 ## Behaviour
 
-Behaviour from React Aria's `TagGroup`, `TagList`, `Tag` and `Button`.
+The chips are one group, after the WAI-ARIA [Grid pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/): Tab lands on
+the chips once, then the arrow keys move between them. Pressing a chip's × with a pointer removes it, like Delete. The
+chip itself does nothing when pressed (it doesn't open the Filter menu).
 
-The chips are one group after the WAI-ARIA [Grid pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/): one Tab
-stop, the arrows between chips.
-
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus into the chips, onto the first; the next Tab goes on to Clear. | `play: Keyboard` |
 | → and ← | Move between the chips. | `play: Keyboard` |
-| Delete or Backspace | Turns the focused chip's filter off; focus moves to a chip beside it. | `play: Keyboard` |
+| Delete or Backspace | Turns the focused chip's filter off; focus moves to the next chip, or the previous one if it was the last. | `play: Keyboard` |
 | Enter (on Clear) | Turns every filter off; the strip goes. | `play: Keyboard` |
 
 ## Content
 
-- The chip reads as a sentence: facet, operator, values. The facet's name and values come from the facets you pass
-  (the same as the Filter menu's).
-- The words it says itself come through `labels`: "is", "is any of", "Remove the Assignee filter", "Clear", and the
-  strip's name, "Active filters".
-- A metric chip says the quick view's name as the stats row says it: "New ideas", "Unassigned".
+- The chip reads as a sentence: facet, operator, values. Facet names and values are written once, for the Filter menu,
+  in sentence case ("Assignee", "Under consideration"), and the chips repeat them.
+- Values are joined the way the language says "or": "Proposed, Viewed or Under consideration" in English. All the
+  values show; the chip doesn't shorten them, so keep value names short (one to three words).
+- Chips come in the order of the facets in the Filter menu, not the order they were turned on.
+- Only "is" and "is any of" exist today: no "is not", ranges or text search.
+- The words the chips say on their own, which a screen passes translated (`labels`): "is", "is any of", the × name
+  "Remove the {facet} filter" ("Remove the Assignee filter"), "Clear", and the strip's name for screen readers,
+  "Active filters".
+- A quick-view chip says the view's name as its stat card says it: "New ideas".
 
 ## Accessibility
 
 **The chips give you:** a named group with one Tab stop, chips read as sentences ("Assignee is Manager A"), Delete and
 Backspace to remove, each × named for its facet, and values joined in the page's language.
 
-**You still own:**
-- Telling people the list changed: the Table toolbar's count does it when the two share the filter.
-- Where focus goes when Clear empties the strip and it disappears.
-- Words in the page's language (`labels`).
+**You still own** (the screen's designer and developer):
+- Telling people the list changed: the Table toolbar's count does it when the two share the filters. Without a toolbar
+  count, show the list's count somewhere else.
+- Where focus goes after Clear: the strip disappears, so send focus to the Filter menu's button (the chips can't do it;
+  see Provenance).
+- The chips' words in the page's language (`labels`).
 
 ## Related
 
@@ -65,13 +82,16 @@ Backspace to remove, each × named for its facet, and values joined in the page'
 
 ## Provenance
 
-- **Built by:** agents, from the prototype (the Manage tab's active-filter bar, after Linear). Not in Figma.
+- **Built by:** AI agents, from the prototype (the Manage tab's active-filter bar, modelled on the Linear app's). Not in
+  Figma: design with the stories.
 - **Reviewed by a person:** not yet.
 - **Known limits:** pressing a chip doesn't open its facet in the Filter menu; the strip renders nothing at all while no
   filter is on, so focus on Clear is lost when it empties.
 
 ## Changes
 
+- 30 Oct 2026: values join with "or" in every language (Arabic and French said "and" before); the page reworded after
+  a fresh-eyes read.
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: moved from Patterns to Components › Tables & lists (docs/DECISIONS.md, "Structure: one place for each
   part").

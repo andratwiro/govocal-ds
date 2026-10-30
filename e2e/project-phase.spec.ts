@@ -82,7 +82,7 @@ test('the filter menu narrows the table, and its chips follow', async ({page}) =
   await tick(page, 'Status', 'Proposed');
   await tick(page, 'Status', 'Viewed');
   await expect(rows(page)).toHaveCount(onPage(a.filter(i => ['Proposed', 'Viewed'].includes(i.status)).length));
-  await expect(chips(page).getByRole('row', {name: 'Status is any of Proposed, Viewed'})).toBeVisible();
+  await expect(chips(page).getByRole('row', {name: 'Status is any of Proposed or Viewed'})).toBeVisible();
   await menu.getByRole('menuitem', {name: 'Clear all filters'}).click();
   await expect(chips(page)).toHaveCount(0);
   await expect(rows(page)).toHaveCount(onPage(IDEAS.length));

@@ -55,9 +55,9 @@ export interface FilterChipsProps extends PlacementProps {
 const METRIC = '__metric';
 
 /**
- * The active-filter bar (the prototype's `.pj-infbar`, after Linear): one chip per facet that is on, reading
- * "Assignee | is | Manager A | ×" ("is any of" and a list once several values are ticked), on a quiet strip with
- * "Clear" at the end. The × (or Delete / Backspace on a focused chip) turns that facet off. A React Aria TagGroup, so
+ * The bar under a list's toolbar that shows each filter that is on as a chip, "Assignee is Manager A ×" (the prototype's
+ * `.pj-infbar`, after Linear): "is any of" and the values joined by "or" once several are ticked, on a light grey strip
+ * with "Clear" at the end. The × (or Delete / Backspace on a focused chip) turns that facet off. A React Aria TagGroup, so
  * the arrows move between chips. Renders nothing while no filter is on. Share `value` with `FilterMenu` and the two
  * stay in sync. A `metric` (a quick view from the stats row) leads the bar as a chip with its name only. Not in Figma
  * yet.
@@ -68,7 +68,7 @@ export function FilterChips({
   style
 }: FilterChipsProps) {
   const l = mergeLabels(filterChipsLabels, labels);
-  const list = useListFormatter({type: 'unit', style: 'short'});
+  const list = useListFormatter({type: 'disjunction', style: 'short'});
   const on = activeFacets(facets, value);
   if (on.length === 0 && !metric) return null;
   const remove = (ids: Iterable<string | number>) => {
