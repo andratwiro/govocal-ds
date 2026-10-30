@@ -1,8 +1,6 @@
 import {useState} from 'react';
 import {ListHeader, type ListHeaderColumn} from './ListHeader';
 import {ListRow} from './ListRow';
-import {Table, TableHeader, TableBody, Column, Row, Cell} from '../Table';
-import {PICTURES} from '../../stories/images';
 import {expect, userEvent, within} from 'storybook/test';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
@@ -114,98 +112,52 @@ const IDEAS = [
 
 /**
  * The prototype's Manage table: `ListHeader` with its select-all, then `ListRow`s with theirs.
- * The header checkbox selects every row, and shows a dash while only some are picked.
+ * The header checkbox selects every row, and shows a dash while only some are picked. The header is a row of column
+ * heads, so the list is a table (`role="table"`); a `ListRow` isn't a row itself (it also sits in plain lists), so
+ * each one goes in a row and a cell.
  */
 export const ManageTable: Story = () => {
   const [picked, setPicked] = useState<Set<number>>(new Set());
   const all = picked.size === IDEAS.length;
+  const pick = (i: number, on: boolean) =>
+    setPicked(p => {
+      const n = new Set(p);
+      if (on) n.add(i);
+      else n.delete(i);
+      return n;
+    });
   return (
-    <div style={{width: 764, padding: 8, background: 'var(--gv-surface-panel)'}}>
-      <ListHeader
-        columns={ideation}
-        onSort={() => {}}
-        onAddColumn={() => {}}
-        selectAll={{
-          isSelected: all,
-          isIndeterminate: picked.size > 0 && !all,
-          onChange: on => setPicked(on ? new Set(IDEAS.map((_, i) => i)) : new Set())
-        }}
-      />
-      {IDEAS.map(([title, status, warning], i) => (
-        <ListRow
-          key={i}
-          title={title}
-          status={status}
-          hasWarning={warning}
-          select={{
-            isSelected: picked.has(i),
-            'aria-label': `Select: ${title}`,
-            onChange: on =>
-              setPicked(p => {
-                const n = new Set(p);
-                if (on) n.add(i);
-                else n.delete(i);
-                return n;
-              })
+    <div role="table" aria-label="Ideas awaiting review" style={{width: 764, padding: 8, background: 'var(--gv-surface-panel)'}}>
+      <div role="rowgroup">
+        <ListHeader
+          columns={ideation}
+          onSort={() => {}}
+          onAddColumn={() => {}}
+          selectAll={{
+            isSelected: all,
+            isIndeterminate: picked.size > 0 && !all,
+            onChange: on => setPicked(on ? new Set(IDEAS.map((_, i) => i)) : new Set())
           }}
         />
-      ))}
+      </div>
+      <div role="rowgroup">
+        {IDEAS.map(([title, status, warning], i) => (
+          <div role="row" key={i}>
+            <div role="cell">
+              <ListRow
+                title={title}
+                status={status}
+                hasWarning={warning}
+                select={{isSelected: picked.has(i), 'aria-label': `Select: ${title}`, onChange: on => pick(i, on)}}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 ManageTable.storyName = 'Manage table';
-
-/**
- * `ListHeader` and `ListRow` inside a selectable React Aria `Table`: the starter
- * `Table`/`TableHeader`/`Row` add the checkbox column when `selectionMode="multiple"`,
- * and handle focus, keyboard navigation and selection state. `ListHeader`/`ListRow` only
- * supply the look, as the single column's content (`hasLeadSlot` keeps the header in line with
- * the row's empty checkbox slot). The starter Table keeps its own zebra and borders; the
- * prototype's look is `ManageTable`.
- */
-export const InATable: Story = () => (
-  <Table
-    aria-label="Ideas awaiting review"
-    selectionMode="multiple"
-    style={{width: 764}}>
-    <TableHeader>
-      <Column isRowHeader>
-        <ListHeader columns={ideation} hasLeadSlot onAddColumn={() => {}} />
-      </Column>
-    </TableHeader>
-    <TableBody>
-      <Row>
-        <Cell>
-          <ListRow
-            title="Organise open-air cinema nights on Linde square"
-            status="Viewed"
-            hasWarning
-          />
-        </Cell>
-      </Row>
-      <Row>
-        <Cell>
-          <ListRow title="Build rain gardens along the north district" status="Rejected" />
-        </Cell>
-      </Row>
-      <Row>
-        <Cell>
-          <ListRow
-            title="More street trees along the canal would cool the area"
-            status="Under consideration"
-            thumbnail={PICTURES.streetTrees}
-          />
-        </Cell>
-      </Row>
-      <Row>
-        <Cell>
-          <ListRow title="A pop-up library for Green Corridors for Riverside" status="New" />
-        </Cell>
-      </Row>
-    </TableBody>
-  </Table>
-);
-InATable.storyName = 'In a table';
 
 /** The keyboard: Tab reaches the select-all checkbox, then each sortable column (static ones are skipped); Space
  * ticks the checkbox, Enter or Space on a column sorts by it. */

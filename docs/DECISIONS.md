@@ -8,6 +8,11 @@ list; change any line and the agent follows. Newest first within each section.
 
 Calls made fixing the bugs the component-page writers found (benchmark-gaps plan, overnight fixes).
 
+- List header's "In a table" story put the header row inside a React Aria `Table` column, and "Manage table" had no
+  table around it → **"In a table" removed; "Manage table" is a `role="table"` with the header in one row group and
+  each List row in a row and a cell** → List header is a row of column heads (b9f041d), so it can't sit inside a
+  column head; React Aria's Table draws its own heads, and a keyboard-navigable table is **Data table**'s job. List
+  row stays a plain block because it also sits in lists.
 - List header cell: the sorted column was a pressed toggle (`aria-pressed`), and a column with no `onSort` was still a
   button → **every cell is a column head (`role="columnheader"`), the sorted one carries `aria-sort` with a new
   `sortDirection` (`descending` by default, the arrow up for `ascending`), and a label or number cell is a button only

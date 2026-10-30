@@ -51,7 +51,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Data display › Avatar | None: plain React and CSS | – | – | yes | 6 |
 | Data display › File list | `GridList`, `GridListItem`; through Link: `Link` | – | – | yes | 6 |
 | Data display › Illustration | None: plain React and CSS | – | – | yes | 10 |
-| Data display › List header | through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text`; through List header cell: `Button` | – | – | yes | 10 |
+| Data display › List header | through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text`; through List header cell: `Button` | – | – | yes | 9 |
 | Data display › List header cell | `Button` | – | – | yes | 8 |
 | Data display › List row | through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text` | – | – | yes | 6 |
 | Data display › Map view | `Button` | – | yes | yes | 11 |
