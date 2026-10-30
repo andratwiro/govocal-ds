@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {Badge} from './Badge';
 import {Lightbulb, MapPin} from 'lucide-react';
 import type {Meta, StoryFn} from '@storybook/react-vite';
@@ -80,4 +81,28 @@ export const Removable: Story = () => {
       {tags.length === 0 && <span style={{font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>No tags</span>}
     </div>
   );
+};
+
+/** The keyboard: Tab moves from one removable badge's × to the next; Enter or Space removes that badge. */
+export const Keyboard: Story = () => {
+  const [tags, setTags] = useState(['Cycling', 'Safety', 'Public space']);
+  return (
+    <div style={row}>
+      {tags.map(t => <Badge key={t} onRemove={() => setTags(tags.filter(x => x !== t))}>{t}</Badge>)}
+    </div>
+  );
+};
+Keyboard.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  await userEvent.tab();
+  await expect(canvas.getByRole('button', {name: 'Remove Cycling'})).toHaveFocus();
+  await userEvent.tab();
+  await expect(canvas.getByRole('button', {name: 'Remove Safety'})).toHaveFocus();
+  await userEvent.keyboard('{Enter}');
+  await waitFor(() => expect(canvas.queryByText('Safety')).toBeNull());
+  await userEvent.tab({shift: true});
+  await expect(canvas.getByRole('button', {name: 'Remove Cycling'})).toHaveFocus();
+  await userEvent.keyboard(' ');
+  await waitFor(() => expect(canvas.queryByText('Cycling')).toBeNull());
+  await expect(canvas.getByText('Public space')).toBeVisible();
 };

@@ -1,5 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {useState} from 'react';
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {ExternalLink} from 'lucide-react';
 import {Button} from '../Button';
 import {Banner} from './Banner';
@@ -138,4 +139,36 @@ export const PhaseStatus: Story = {
       <Banner density="compact" tone="neutral" title="Ended">Closed on 12 Dec</Banner>
     </div>
   )
+};
+
+/** The keyboard: Tab reaches the banner's link, then its ×; Enter follows the link or dismisses the banner. */
+export const Keyboard: Story = {
+  render: () => {
+    function Demo() {
+      const [open, setOpen] = useState(true);
+      const [followed, setFollowed] = useState(false);
+      return (
+        <div style={{width: 400}}>
+          {open && (
+            <Banner tone="info" linkLabel="Go to Settings" onLinkPress={() => setFollowed(true)} onDismiss={() => setOpen(false)}>
+              Terms and policies are set for the whole platform.
+            </Banner>
+          )}
+          <p role="status">{followed ? 'Went to Settings' : ''}</p>
+        </div>
+      );
+    }
+    return <Demo />;
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('link', {name: 'Go to Settings'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Went to Settings');
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Dismiss'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(canvas.queryByRole('note')).toBeNull());
+  }
 };

@@ -1,4 +1,5 @@
 import {useEffect, type ComponentType} from 'react';
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {Toast, ToastRegion, queue, toast} from '../Toast';
 import {Button} from '../Button';
 import type {Meta, StoryObj} from '@storybook/react-vite';
@@ -168,5 +169,49 @@ export const Example: Story = {
 toast('"Green Corridors for Riverside" deleted', undefined, {action: 'Undo', onAction: restore});`
       }
     }
+  }
+};
+
+/** The keyboard: Enter on "Archive idea" shows a toast with Undo; Tab reaches its Undo and ×; Enter on Undo takes the
+ * change back (a plain "Idea restored" toast), Enter on × closes that one. Both stay until closed (`timeout: 0`). */
+export const Keyboard: Story = {
+  render: () => {
+    useEffect(() => {
+      queue.clear();
+      return () => queue.clear();
+    }, []);
+    return (
+      <>
+        <ToastRegion />
+        <Button variant="secondary" onPress={() => toast('Idea archived', 'Moved to the archive.', {
+          action: 'Undo',
+          timeout: 0,
+          onAction: () => toast('Idea restored', undefined, {icon: null, timeout: 0})
+        })}>
+          Archive idea
+        </Button>
+      </>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const page = within(canvasElement.ownerDocument.body);
+    const tabTo = async (name: string) => {
+      for (let i = 0; i < 6 && canvasElement.ownerDocument.activeElement !== page.queryByRole('button', {name}); i++) {
+        await userEvent.tab();
+      }
+      await expect(page.getByRole('button', {name})).toHaveFocus();
+    };
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Archive idea'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(page.getByText('Idea archived')).toBeVisible());
+    await tabTo('Undo');
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(page.queryByText('Idea archived')).toBeNull());
+    await waitFor(() => expect(page.getByText('Idea restored')).toBeVisible());
+    await tabTo('Close');
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(page.queryByText('Idea restored')).toBeNull());
   }
 };
