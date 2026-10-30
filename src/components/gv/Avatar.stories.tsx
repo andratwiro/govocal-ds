@@ -13,7 +13,7 @@ const meta: Meta<typeof Avatar> = {
       url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=4-62'
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'status:candidate']
 };
 
 export default meta;

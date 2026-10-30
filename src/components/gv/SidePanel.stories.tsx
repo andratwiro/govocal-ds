@@ -241,7 +241,7 @@ const meta: Meta<typeof SidePanel> = {
   title: 'Components/Overlays/Side panel',
   component: SidePanel,
   subcomponents: {SidePanelRecordHead, SidePanelActions, SidePanelSection, SidePanelDecision},
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   excludeStories: /^(Demo[A-Z]\w*|[A-Z_]+)$/,
   parameters: {
     layout: 'fullscreen',

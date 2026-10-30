@@ -7,7 +7,7 @@ import {Avatar} from './Avatar';
 const meta: Meta<typeof ActivityFeed> = {
   title: 'Components/Data display/Activity feed',
   component: ActivityFeed,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'padded'},
   args: {onRestore: fn(), onChangePress: fn()},
   decorators: [Story => <div style={{maxWidth: 360}}><Story /></div>]

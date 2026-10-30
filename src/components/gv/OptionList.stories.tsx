@@ -37,7 +37,7 @@ function Demo({label = 'Tags', ...props}: DemoProps) {
 const meta: Meta<typeof OptionList> = {
   title: 'Components/Forms/Option list',
   component: OptionList,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'centered'}
 };
 export default meta;

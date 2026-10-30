@@ -11,7 +11,7 @@ const meta: Meta<typeof Illustration> = {
   title: 'Components/Data display/Illustration',
   component: Illustration,
   parameters: {layout: 'centered'},
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   argTypes: {
     name: {control: 'select', options: illustrationNames},
     motion: {control: 'inline-radio', options: ['auto', 'once', 'loop', 'hover', 'still']}

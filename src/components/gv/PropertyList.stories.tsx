@@ -80,7 +80,7 @@ const meta: Meta<typeof PropertyList> = {
   title: 'Components/Data display/Property list',
   component: PropertyList,
   subcomponents: {PropertyListItem},
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   excludeStories: /^(Demo[A-Z]\w*|[A-Z_]+)$/,
   parameters: {layout: 'padded'}
 };

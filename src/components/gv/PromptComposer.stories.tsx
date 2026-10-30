@@ -10,7 +10,7 @@ import {Text} from './Text';
 const meta: Meta<typeof PromptComposer> = {
   title: 'Components/AI/Prompt composer',
   component: PromptComposer,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'padded'},
   args: {onSend: fn(), onAttach: fn()},
   decorators: [Story => <div style={{maxWidth: 320}}><Story /></div>]

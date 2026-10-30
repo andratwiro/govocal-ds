@@ -9,7 +9,7 @@ import {TextField} from '../TextField';
 const meta: Meta<typeof Stack> = {
   title: 'Components/Layout & containers/Stack',
   component: Stack,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'},
   argTypes: {
     gap: {control: 'select', options: ['0', '4', '8', '12', '16', '24', '32', '48']},

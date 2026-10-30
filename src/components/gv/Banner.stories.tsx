@@ -8,7 +8,7 @@ import {Banner} from './Banner';
 const meta: Meta<typeof Banner> = {
   title: 'Components/Status & feedback/Banner',
   component: Banner,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   parameters: {
     design: {type: 'figma', url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=33-479'}
   }

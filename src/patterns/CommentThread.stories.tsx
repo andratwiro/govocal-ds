@@ -93,7 +93,7 @@ const meta: Meta<typeof CommentThread> = {
   title: 'Patterns/Manage tab/Comment thread',
   component: CommentThread,
   subcomponents: {CommentComposer},
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   excludeStories: /^(Demo[A-Z]\w*|[A-Z_]+)$/,
   parameters: {layout: 'padded'},
   decorators: [Story => <><Story /><ToastRegion /></>]

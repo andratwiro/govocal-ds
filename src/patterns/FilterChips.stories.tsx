@@ -21,7 +21,7 @@ function Demo({initial, showClear, metric: initialMetric}: {initial: FilterValue
 const meta: Meta<typeof FilterChips> = {
   title: 'Components/Tables & lists/Filter chips',
   component: FilterChips,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'}
 };
 export default meta;

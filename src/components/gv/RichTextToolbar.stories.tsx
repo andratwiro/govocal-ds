@@ -9,7 +9,7 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 const meta: Meta<typeof RichTextToolbar> = {
   title: 'Components/Forms/Rich text toolbar',
   component: RichTextToolbar,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   parameters: {
     design: {
       type: 'figma',

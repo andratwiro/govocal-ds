@@ -7,7 +7,7 @@ import {ToastRegion, toast} from '../Toast';
 const meta: Meta<typeof AppProvider> = {
   title: 'Components/Layout & containers/App provider',
   component: AppProvider,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'padded'}
 };
 export default meta;

@@ -10,7 +10,7 @@ import {SetupStep} from './SetupStep';
 const meta: Meta<typeof SetupStep> = {
   title: 'Patterns/Project page/Setup step',
   component: SetupStep,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   parameters: {
     design: {type: 'figma', url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=14-874'}
   },

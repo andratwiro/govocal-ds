@@ -12,7 +12,7 @@ const meta: Meta<typeof Pagination> = {
   title: 'Components/Navigation/Pagination',
   component: Pagination,
   parameters: {layout: 'centered'},
-  tags: ['autodocs', 'not-in-figma']
+  tags: ['autodocs', 'not-in-figma', 'status:candidate']
 };
 export default meta;
 type Story = StoryObj<typeof Pagination>;

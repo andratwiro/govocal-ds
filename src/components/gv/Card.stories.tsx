@@ -31,7 +31,7 @@ const width = (w: number) => [(Story: () => JSX.Element) => <div style={{width: 
 const meta: Meta<typeof Card> = {
   title: 'Components/Layout & containers/Card',
   component: Card,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   parameters: figma('14-879')
 };
 export default meta;

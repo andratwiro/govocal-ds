@@ -12,7 +12,7 @@ import {Button} from '../components/Button';
 const meta: Meta<typeof AppFrame> = {
   title: 'Patterns/App shell/App frame',
   component: AppFrame,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'fullscreen'}
 };
 export default meta;

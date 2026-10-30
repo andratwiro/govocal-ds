@@ -9,7 +9,7 @@ import {SearchField} from '../SearchField';
 const meta: Meta<typeof Inline> = {
   title: 'Components/Layout & containers/Inline',
   component: Inline,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'},
   argTypes: {
     gap: {control: 'select', options: ['0', '4', '8', '12', '16', '24']},

@@ -84,6 +84,9 @@ A story is one state or configuration of a component, worth showing. A configura
   - sentence case.
 - Renames a story with `name:`, never its export: the export is part of the story's address, and links use it.
 - Tags the file `not-in-figma` if Figma doesn't draw the component.
+- A new component also gets its lifecycle stage: `npm run lifecycle` adds its `status:<stage>` tag (Overview ›
+  Lifecycle says how the stage is decided). `npm test` fails on a part with no tag, or a tag the rule disagrees with;
+  rerun it whenever Figma starts drawing a part, a second back-office page uses it, or a test is added.
 - Runs `npm run components:index`, which refreshes docs/COMPONENTS.md. `npm test` fails if that file is stale.
 
 **A new component** follows the same road, plus the rule in docs/NAMING.md: generic and used on two screens, or drawn
@@ -145,7 +148,8 @@ different parts never touch the same file.
 1. **Purpose**: the first sentence of the doc comment above the part's export. If the page says "No doc comment yet",
    write one that says what someone would ask for, run `npm run components:index`, and take the part off `NOT_YET` in
    `tests/components-described.test.mjs`.
-2. **Status**: the part's `status:<stage>` tag in its stories (draft · candidate · stable); no tag reads "Draft".
+2. **Status**: the part's `status:<stage>` tag in its stories (draft · candidate · stable). Never type it: `npm run
+   lifecycle` writes it from the rule on Overview › Lifecycle, and `npm test` fails until a new part has it.
 3. **Variants and states**: the part's stories.
 4. **Tokens**: the tokens its stylesheet (`<Name>.css`) uses, from `npm run tokens:usage`.
 

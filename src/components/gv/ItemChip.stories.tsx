@@ -10,7 +10,7 @@ import {Text} from './Text';
 const meta: Meta<typeof ItemChip> = {
   title: 'Components/AI/Item chip',
   component: ItemChip,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'padded'},
   args: {label: 'Votes per cycle lane route', icon: <BarChart3 aria-hidden />}
 };

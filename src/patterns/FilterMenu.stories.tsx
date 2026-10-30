@@ -35,7 +35,7 @@ function Demo({initial = {}, open}: {initial?: FilterValue; open?: boolean}) {
 const meta: Meta<typeof FilterMenu> = {
   title: 'Components/Tables & lists/Filter menu',
   component: FilterMenu,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   // IDEA_FACETS is shared data for the other filter stories, not a story.
   excludeStories: /^[A-Z_]+$/,
   parameters: {layout: 'padded'}

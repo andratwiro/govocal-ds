@@ -2,8 +2,9 @@ import {Markdown, Meta} from '@storybook/addon-docs/blocks';
 
 <Meta title="Overview/Lifecycle" />
 
-{/* Circuit's model, cut to three stages. The tags themselves (status:draft, status:candidate, status:stable on each
-    stories file) land separately; this page says what they mean. Logged in docs/DECISIONS.md. */}
+{/* Circuit's model, cut to three stages. Each part's stage is a status:<stage> tag on its stories file, written by
+    `npm run lifecycle` (scripts/lifecycle.mjs) from the rule below; tests/lifecycle.test.mjs holds every part to it.
+    Logged in docs/DECISIONS.md. */}
 
 # Lifecycle
 
@@ -27,9 +28,30 @@ A part on its way out is **deprecated**: the sidebar says so after its name, and
   happened ([Who owns what](?path=/docs/overview-who-owns-what--docs)).
 - **Not in Figma doesn't hold a part back.** A part built from the prototype alone can still be a candidate: Figma
   drawing it is a separate question (`docs/OPEN-DECISIONS.md`).
-- Each part's stage will show as a `status:` tag on its page and in the sidebar's tag filter.
+- Each part's stage shows on its page (under Status), after its name in the sidebar, and in the sidebar's tag filter
+  (the `status:` tags).
+
+## How a part's stage is decided
+
+A part is any entry under Components or Patterns; Base parts have no stage (they are primitives with a one-line page,
+see [Base](?path=/docs/base-introduction--docs)). The stage comes from facts in the repo, never from a feeling, so
+anyone running `npm run lifecycle` gets the same answer:
+
+- **Stable** when a developer has reviewed its API. None yet.
+- **Candidate** when all three hold:
+  - **its shape is settled outside its own stories**: Figma draws it, or two or more back-office files use it;
+  - **its behaviour is proven**: it takes no keys or presses, or a test of its own presses it (a story's play function,
+    or a browser test that opens one of its stories);
+  - **its page is written** (every part's is).
+- **Draft** otherwise: a part only its stories use, or used once in the back office and not drawn in Figma, or one
+  that takes keys with no test of its own.
+
+So a Not in Figma part used across the back office is a candidate, and a part Figma draws but nothing tests yet stays
+a draft. `npm run lifecycle` prints how many parts sit at each stage.
 
 ## Who moves a part
 
-The designer moves a part from draft to candidate. A developer's API review moves it from candidate to stable. Either
-can move a part back, with a line in `docs/DECISIONS.md` saying why.
+The facts move a part from draft to candidate: once Figma draws it or a second back-office screen uses it, and a test
+presses it, `npm run lifecycle` retags it (ask an agent: *"Rerun the lifecycle tags."*). A developer's API review moves
+it to stable: the part goes in `REVIEWED` in `scripts/lifecycle.mjs` with the review's date. Either side can change
+the rule, with a line in `docs/DECISIONS.md` saying why.

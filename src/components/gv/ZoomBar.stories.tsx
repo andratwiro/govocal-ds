@@ -6,7 +6,7 @@ import {ZoomBar} from './ZoomBar';
 const meta: Meta<typeof ZoomBar> = {
   title: 'Components/Layout & containers/Zoom bar',
   component: ZoomBar,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'centered'},
   args: {zoom: 83, onZoomChange: fn(), fitZoom: 100, page: 3, pageCount: 12}
 };

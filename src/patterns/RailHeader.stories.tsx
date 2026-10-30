@@ -6,7 +6,7 @@ import {useState} from 'react';
 const meta: Meta<typeof RailHeader> = {
   title: 'Patterns/Project rail/Rail header',
   component: RailHeader,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   parameters: {
     design: {
       type: 'figma',

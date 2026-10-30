@@ -5,7 +5,7 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 const meta: Meta<typeof SectionLabel> = {
   title: 'Components/Text/Section label',
   component: SectionLabel,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   parameters: {
     design: {
       type: 'figma',

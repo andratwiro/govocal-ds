@@ -6,7 +6,7 @@ import {Grid} from './Grid';
 const meta: Meta<typeof Quote> = {
   title: 'Components/Data display/Quote',
   component: Quote,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'padded'},
   args: {
     tag: 'Heat and shade',

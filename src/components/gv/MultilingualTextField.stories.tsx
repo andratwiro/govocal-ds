@@ -19,7 +19,7 @@ const meta: Meta<typeof MultilingualTextField> = {
       }
     }
   },
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   args: {
     label: 'Title',
     locales: ['en', 'nl-BE', 'fr-BE'],

@@ -5,7 +5,7 @@ import {Text} from './Text';
 const meta: Meta<typeof VisuallyHidden> = {
   title: 'Components/Text/Visually hidden',
   component: VisuallyHidden,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'}
 };
 export default meta;

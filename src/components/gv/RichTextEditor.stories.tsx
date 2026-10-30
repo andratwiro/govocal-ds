@@ -11,7 +11,7 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 const meta: Meta<typeof RichTextEditor> = {
   title: 'Components/Forms/Rich text editor',
   component: RichTextEditor,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   parameters: {
     layout: 'padded',
     design: {

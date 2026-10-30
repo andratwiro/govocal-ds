@@ -19,7 +19,7 @@ const meta: Meta<typeof Tabs> = {
   component: Tabs,
   parameters: {layout: 'padded'},
   args: {onSelectionChange: fn()},
-  tags: ['autodocs', 'not-in-figma']
+  tags: ['autodocs', 'not-in-figma', 'status:candidate']
 };
 
 export default meta;

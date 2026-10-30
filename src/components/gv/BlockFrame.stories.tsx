@@ -12,7 +12,7 @@ const meta: Meta<typeof BlockFrame> = {
   title: 'Components/Layout & containers/Block frame',
   component: BlockFrame,
   subcomponents: {BlockInsertLine},
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   // Room above each block for its tag and toolbar, as on a sheet's margin.
   parameters: {layout: 'padded'},
   args: {label: 'By the numbers', icon: <Hash aria-hidden />, onSelect: fn(), onDeselect: fn(), onMoveUp: fn(),

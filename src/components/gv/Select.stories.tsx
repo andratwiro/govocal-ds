@@ -30,7 +30,7 @@ const meta: Meta<typeof Select> = {
   title: 'Components/Forms/Select',
   component: Select,
   parameters: {layout: 'centered'},
-  tags: ['autodocs', 'not-in-figma']
+  tags: ['autodocs', 'not-in-figma', 'status:candidate']
 };
 export default meta;
 type Story = StoryObj<typeof Select>;

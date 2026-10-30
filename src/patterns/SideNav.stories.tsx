@@ -8,7 +8,7 @@ import {MenuTrigger, Menu, MenuItem} from '../components/Menu';
 const meta: Meta<typeof SideNav> = {
   title: 'Patterns/App shell/Side nav',
   component: SideNav,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'fullscreen'},
   decorators: [Story => <div style={{display: 'flex', height: 640}}><Story /></div>]
 };

@@ -9,7 +9,7 @@ import {ParticipantActionList, ParticipantActionRow} from './ParticipantActionRo
 const meta: Meta<typeof AccessRights> = {
   title: 'Patterns/Build tab/Access rights',
   component: AccessRights,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   decorators: [Story => <div style={{width: 760, maxWidth: '100%'}}><Story /></div>]
 };
 export default meta;

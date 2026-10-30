@@ -4,7 +4,7 @@ import {Text, type TextKind} from './Text';
 const meta: Meta<typeof Text> = {
   title: 'Components/Text/Text',
   component: Text,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'},
   args: {kind: 'body', children: 'Green corridors for the riverside'}
 };

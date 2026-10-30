@@ -13,7 +13,7 @@ const meta: Meta<typeof NumberField> = {
       url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=5-234'
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'status:candidate']
 };
 
 export default meta;

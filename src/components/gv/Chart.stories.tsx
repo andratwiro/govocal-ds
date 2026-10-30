@@ -18,7 +18,7 @@ const DAYS = VOTES.map((_, i) => `${i + 1} May`);
 const meta: Meta<typeof LineChart> = {
   title: 'Components/Charts/Chart',
   component: LineChart,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   parameters: {...figma('23-219'), layout: 'padded'},
   decorators: [Story => <div style={{width: 730}}><Story /></div>]
 };

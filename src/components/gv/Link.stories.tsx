@@ -10,7 +10,7 @@ const meta: Meta<typeof Link> = {
   parameters: {
     layout: 'centered'
   },
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   argTypes: {
     size: {control: 'radio', options: [undefined, 'small', 'medium']}
   }

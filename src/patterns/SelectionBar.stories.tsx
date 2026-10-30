@@ -46,7 +46,7 @@ function Demo({initial, actions = ACTIONS}: {initial: number; actions?: Selectio
 const meta: Meta<typeof SelectionBar> = {
   title: 'Components/Tables & lists/Selection bar',
   component: SelectionBar,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'}
 };
 export default meta;

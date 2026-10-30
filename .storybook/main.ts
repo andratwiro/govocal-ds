@@ -61,8 +61,12 @@ const config: StorybookConfig & {experimental_manifests?: typeof withGuides} = {
   staticDirs: ['./static'],
   framework: {name: '@storybook/react-vite', options: {}},
   // Status marks (docs/NAMING.md): filter the sidebar by them; `covered` hides a Base entry a Components entry wraps;
-  // `test-only` hides an entry that exists only for a test (it still builds, so e2e can open it by id).
-  tags: {'not-in-figma': {}, deprecated: {}, covered: {excludeFromSidebar: true}, 'test-only': {excludeFromSidebar: true}},
+  // `test-only` hides an entry that exists only for a test (it still builds, so e2e can open it by id). The `status:`
+  // tags are each part's lifecycle stage (Overview/Lifecycle; `npm run lifecycle` writes them).
+  tags: {
+    'not-in-figma': {}, deprecated: {}, covered: {excludeFromSidebar: true}, 'test-only': {excludeFromSidebar: true},
+    'status:draft': {}, 'status:candidate': {}, 'status:stable': {}
+  },
   core: {disableTelemetry: true},
   // The component manifest the Storybook MCP serves agents (/mcp while `npm run storybook` runs; built into
   // dist/storybook/manifests/). react-docgen-typescript follows `extends RACButtonProps`, so a part's React Aria props

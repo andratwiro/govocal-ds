@@ -13,7 +13,7 @@ const figma = (id: string) => ({
 const meta: Meta<typeof StatTile> = {
   title: 'Components/Data display/Stat tile',
   component: StatTile,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   parameters: figma('33-480'),
   argTypes: {
     layout: {control: 'inline-radio', options: ['default', 'tall', 'with-note']}

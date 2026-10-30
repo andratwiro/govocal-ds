@@ -13,7 +13,7 @@ const meta: Meta<typeof Menu> = {
   title: 'Components/Actions/Menu',
   component: Menu,
   parameters: {layout: 'centered'},
-  tags: ['autodocs', 'not-in-figma']
+  tags: ['autodocs', 'not-in-figma', 'status:candidate']
 };
 export default meta;
 type Story = StoryFn<typeof Menu>;

@@ -14,7 +14,7 @@ const meta: Meta<typeof Breadcrumbs> = {
       url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=14-875'
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'status:candidate']
 };
 
 export default meta;

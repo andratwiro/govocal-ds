@@ -5,7 +5,7 @@ import {ChatProgress, type ChatProgressStep} from './ChatProgress';
 const meta: Meta<typeof ChatProgress> = {
   title: 'Components/AI/Chat progress',
   component: ChatProgress,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'padded'}
 };
 export default meta;

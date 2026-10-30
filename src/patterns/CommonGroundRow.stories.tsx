@@ -14,7 +14,7 @@ const meta: Meta<typeof CommonGroundRow> = {
       url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=33-486'
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'status:candidate']
 };
 
 export default meta;

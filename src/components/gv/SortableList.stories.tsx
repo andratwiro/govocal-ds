@@ -9,7 +9,7 @@ import {Text} from './Text';
 const meta: Meta<typeof SortableList> = {
   title: 'Components/Tables & lists/Sortable list',
   component: SortableList,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'padded'},
   decorators: [Story => <div style={{maxInlineSize: 360}}><Story /></div>]
 };

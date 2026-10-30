@@ -24,7 +24,7 @@ const Row = ({label, children}: {label: string; children: ReactNode}) => (
 const meta: Meta<typeof TagPicker> = {
   title: 'Components/Forms/Tag picker',
   component: TagPicker,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'centered'}
 };
 export default meta;

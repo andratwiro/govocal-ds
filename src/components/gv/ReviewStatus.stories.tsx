@@ -4,7 +4,7 @@ import {ReviewStatus} from './ReviewStatus';
 const meta: Meta<typeof ReviewStatus> = {
   title: 'Components/Status & feedback/Review status',
   component: ReviewStatus,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   parameters: {
     design: {type: 'figma', url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=4-224'}
   }

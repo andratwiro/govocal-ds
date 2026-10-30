@@ -11,7 +11,7 @@ const meta: Meta<typeof LegendRow> = {
       url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=26-523'
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'status:draft']
 };
 
 export default meta;

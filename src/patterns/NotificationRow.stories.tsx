@@ -7,7 +7,7 @@ import {NotificationEmail, NotificationRowList, NotificationRow} from './Notific
 const meta: Meta<typeof NotificationRow> = {
   title: 'Patterns/Build tab/Notification row',
   component: NotificationRow,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   decorators: [Story => <div style={{width: 412}}><Story /></div>],
   args: {children: 'A reply on my comment', who: 'User who commented', when: 'User replies to comment'}
 };

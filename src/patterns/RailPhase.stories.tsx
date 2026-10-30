@@ -9,7 +9,7 @@ import {useState} from 'react';
 const meta: Meta<typeof RailPhase> = {
   title: 'Patterns/Project rail/Rail phase',
   component: RailPhase,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   parameters: {
     design: {
       type: 'figma',

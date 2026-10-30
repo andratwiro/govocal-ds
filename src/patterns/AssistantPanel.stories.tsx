@@ -10,7 +10,7 @@ import {ItemChip} from '../components/gv/ItemChip';
 const meta: Meta<typeof AssistantPanel> = {
   title: 'Patterns/Report builder/Assistant panel',
   component: AssistantPanel,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'padded'},
   args: {onSend: fn(), onStop: fn(), onAttach: fn(), onSuggestion: fn(), onGenerate: fn(), onClearScope: fn(),
     onAskAccountManager: fn()},

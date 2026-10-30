@@ -16,7 +16,7 @@ const meta: Meta<typeof LocaleSwitcher> = {
       }
     }
   },
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   args: {
     locales: ['en', 'nl-BE', 'fr-BE'],
     defaultLocale: 'en',

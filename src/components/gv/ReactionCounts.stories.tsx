@@ -4,7 +4,7 @@ import {ReactionCounts} from './ReactionCounts';
 const meta: Meta<typeof ReactionCounts> = {
   title: 'Components/Data display/Reaction counts',
   component: ReactionCounts,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   args: {likes: 128, dislikes: 3}
 };
 export default meta;

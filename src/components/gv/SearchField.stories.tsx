@@ -7,7 +7,7 @@ const meta: Meta<typeof SearchField> = {
   title: 'Components/Forms/Search field',
   component: SearchField,
   parameters: {layout: 'centered'},
-  tags: ['autodocs', 'not-in-figma']
+  tags: ['autodocs', 'not-in-figma', 'status:candidate']
 };
 export default meta;
 type Story = StoryObj<typeof SearchField>;

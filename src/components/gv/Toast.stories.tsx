@@ -20,7 +20,7 @@ const meta: Meta<ToastStoryArgs> = {
   parameters: {
     layout: 'centered'
   },
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   argTypes: {
     title: {
       control: 'text',

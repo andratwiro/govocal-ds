@@ -6,7 +6,7 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 const meta: Meta<typeof DateRangeField> = {
   title: 'Components/Forms/Date range field',
   component: DateRangeField,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'}
 };
 

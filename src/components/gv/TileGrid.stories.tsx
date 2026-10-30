@@ -8,7 +8,7 @@ import {PICTURES} from '../../stories/images';
 const meta: Meta<typeof TileGrid> = {
   title: 'Components/Layout & containers/Tile grid',
   component: TileGrid,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'}
 };
 export default meta;

@@ -119,7 +119,7 @@ const meta: Meta = {
   title: 'Components/Tables & lists/Data table',
   component: DataTable,
   parameters: {layout: 'padded'},
-  tags: ['autodocs', 'not-in-figma']
+  tags: ['autodocs', 'not-in-figma', 'status:candidate']
 };
 export default meta;
 type Story = StoryObj;

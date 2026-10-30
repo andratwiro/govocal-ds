@@ -8,7 +8,7 @@ import {Inline} from './Inline';
 const meta: Meta<typeof MissingPart> = {
   title: 'Components/Status & feedback/Missing part',
   component: MissingPart,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'padded'}
 };
 export default meta;

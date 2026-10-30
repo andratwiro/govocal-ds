@@ -11,7 +11,7 @@ import {PhoneCard, PhoneCountdown, PhoneHeader, PhoneImage, PhonePreview, PhoneS
 const meta: Meta<typeof PhonePreview> = {
   title: 'Patterns/Project page/Phone preview',
   component: PhonePreview,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'}
 };
 export default meta;

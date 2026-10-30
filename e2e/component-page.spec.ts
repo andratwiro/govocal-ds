@@ -10,6 +10,26 @@ const SECTIONS = ['Purpose', 'Status', 'When to use', 'When not to use', 'Anatom
 const headings = (page: Page) => page.locator('.gv-sb-page__section > h2').allInnerTexts();
 const section = (page: Page, name: string) => page.locator(`.gv-sb-page__section[data-section="${name}"]`);
 
+type Entry = {id: string; title: string; type: string; tags?: string[]};
+/** The built Storybook's index: what the sidebar and its tag filter read. */
+const index = (): Record<string, Entry> => JSON.parse(readFileSync('dist/storybook/index.json', 'utf8')).entries;
+/** A part's stage as its page says it: its `status:` tag in index.json, `candidate` → `Candidate`. */
+const stageOf = (id: string) => {
+  const stage = index()[`${id}--docs`]?.tags?.find(t => t.startsWith('status:'))?.slice('status:'.length) ?? 'draft';
+  return stage[0].toUpperCase() + stage.slice(1);
+};
+
+// Overview/Lifecycle: every part (a Components or Patterns docs page, not a recipe) reaches the sidebar with exactly
+// one stage tag (scripts/lifecycle.mjs writes them; tests/lifecycle.test.mjs checks the stories files).
+test('every part carries exactly one status tag in index.json', () => {
+  const parts = Object.values(index()).filter(e => e.type === 'docs' && /^(Components|Patterns)\//.test(e.title) &&
+    !e.title.startsWith('Patterns/Recipes/'));
+  expect(parts.length).toBeGreaterThan(90);
+  const bad = parts.filter(e => (e.tags ?? []).filter(t => /^status:(draft|candidate|stable)$/.test(t)).length !== 1 ||
+    (e.tags ?? []).filter(t => t.startsWith('status:')).length !== 1);
+  expect(bad.map(e => e.title)).toEqual([]);
+});
+
 for (const [name, id] of [['Button', 'components-actions-button'], ['Data table', 'components-tables-lists-data-table'],
   ['Side panel', 'components-overlays-side-panel']]) {
   test(`${name}: the thirteen sections in order, each with something in it`, async ({page}) => {
@@ -19,7 +39,7 @@ for (const [name, id] of [['Button', 'components-actions-button'], ['Data table'
     for (const s of SECTIONS.slice(0, -1)) {
       await expect(section(page, s), s).not.toHaveText(new RegExp(`^\\s*${s}\\s*$`));
     }
-    await expect(section(page, 'Status')).toContainText('Draft');
+    await expect(section(page, 'Status')).toContainText(`${stageOf(id)}:`);
     await expect(section(page, 'Provenance')).toContainText('Not yet recorded');
     await expect(section(page, 'Tokens').locator('tbody tr').first()).toBeVisible();
     await expect(section(page, 'Behaviour').getByRole('table')).toBeVisible();

@@ -12,7 +12,7 @@ const meta: Meta<typeof TextField> = {
       url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=4-224'
     }
   },
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   args: {
     placeholder: 'Enter your full name'
   }

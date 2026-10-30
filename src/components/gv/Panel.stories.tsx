@@ -15,7 +15,7 @@ const meta: Meta<typeof Panel> = {
   title: 'Components/Layout & containers/Panel',
   component: Panel,
   parameters: {layout: 'padded'},
-  tags: ['autodocs', 'not-in-figma']
+  tags: ['autodocs', 'not-in-figma', 'status:candidate']
 };
 export default meta;
 type Story = StoryObj<typeof Panel>;

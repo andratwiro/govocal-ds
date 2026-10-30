@@ -7,7 +7,7 @@ import {ParticipantActionList, ParticipantActionRow, ParticipantLimit} from './P
 const meta: Meta<typeof ParticipantActionRow> = {
   title: 'Patterns/Build tab/Participant action row',
   component: ParticipantActionRow,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   decorators: [Story => <div style={{width: 412}}><Story /></div>],
   args: {children: 'Submitting inputs', value: 'Anyone can participate', onOpen: () => {}}
 };

@@ -9,7 +9,7 @@ import {ActionRow, ActionRowList} from './ActionRow';
 const meta: Meta<typeof ActionRow> = {
   title: 'Patterns/Project page/Action row',
   component: ActionRow,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   decorators: [Story => <div style={{width: 264}}><Story /></div>]
 };
 export default meta;

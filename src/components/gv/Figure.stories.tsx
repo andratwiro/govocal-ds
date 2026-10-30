@@ -10,7 +10,7 @@ import {Stack} from './Stack';
 const meta: Meta<typeof Figure> = {
   title: 'Components/Charts/Figure',
   component: Figure,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'padded'},
   args: {
     finding: 'Cycling leads in every district',

@@ -13,7 +13,7 @@ const PHASES: TimelinePhase[] = [
 const meta: Meta<typeof PhaseTimeline> = {
   title: 'Patterns/Project rail/Phase timeline',
   component: PhaseTimeline,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   decorators: [Story => <nav aria-label="Phases" style={{width: 284}}><Story /></nav>]
 };
 export default meta;

@@ -7,7 +7,7 @@ import {Button} from '../Button';
 const meta: Meta<typeof PromptSuggestions> = {
   title: 'Components/AI/Prompt suggestions',
   component: PromptSuggestions,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'padded'},
   args: {onAction: fn()},
   decorators: [Story => <div style={{maxWidth: 320}}><Story /></div>]

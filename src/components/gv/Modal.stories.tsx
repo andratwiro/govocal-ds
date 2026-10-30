@@ -18,7 +18,7 @@ const figma = (id: string) => ({
 const meta: Meta<typeof Modal> = {
   title: 'Components/Overlays/Modal',
   component: Modal,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   parameters: {
     ...figma('5-513'),
     // Each open modal gets its own frame on the docs page.

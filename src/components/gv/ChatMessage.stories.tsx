@@ -9,7 +9,7 @@ import {Stack} from './Stack';
 const meta: Meta<typeof ChatMessage> = {
   title: 'Components/AI/Chat message',
   component: ChatMessage,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'padded'},
   decorators: [Story => <div style={{maxWidth: 360}}><Story /></div>]
 };

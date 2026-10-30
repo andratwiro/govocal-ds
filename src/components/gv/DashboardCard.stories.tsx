@@ -162,7 +162,7 @@ const cards = {
 const meta: Meta<typeof DashboardCard> = {
   title: 'Components/Charts/Dashboard card',
   component: DashboardCard,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   parameters: {...figma('33-481'), layout: 'padded'}
 };
 export default meta;

@@ -14,7 +14,7 @@ const meta: Meta<typeof PageStage> = {
   title: 'Components/Layout & containers/Page stage',
   component: PageStage,
   subcomponents: {PageStageSheet},
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'fullscreen'}
 };
 export default meta;

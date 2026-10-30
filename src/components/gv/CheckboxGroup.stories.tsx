@@ -9,7 +9,7 @@ const meta: Meta<typeof CheckboxGroup> = {
   parameters: {
     layout: 'centered'
   },
-  tags: ['autodocs', 'not-in-figma']
+  tags: ['autodocs', 'not-in-figma', 'status:candidate']
 };
 
 export default meta;

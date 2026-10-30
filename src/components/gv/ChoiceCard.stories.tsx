@@ -9,7 +9,7 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 const meta: Meta<typeof ChoiceCard> = {
   title: 'Components/Forms/Choice card',
   component: ChoiceCard,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'}
 };
 

@@ -7,7 +7,7 @@ const meta: Meta<typeof Grid> = {
   title: 'Components/Layout & containers/Grid',
   component: Grid,
   subcomponents: {GridItem},
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'},
   argTypes: {
     gap: {control: 'select', options: ['0', '8', '12', '16', '24', '32']}

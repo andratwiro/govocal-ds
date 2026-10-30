@@ -35,7 +35,7 @@ const meta: Meta<typeof OfficialUpdate> = {
   title: 'Patterns/Manage tab/Official update',
   component: OfficialUpdate,
   subcomponents: {PostedOfficialUpdate, OfficialUpdateForm, BulkOfficialUpdate},
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   excludeStories: /^(Demo[A-Z]\w*|[A-Z_]+)$/,
   parameters: {layout: 'padded'},
   decorators: [Story => <><Story /><ToastRegion /></>]

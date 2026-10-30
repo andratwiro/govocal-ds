@@ -16,7 +16,7 @@ import {CENTRE_PIN, MAP_CENTRE, MAP_IDEAS, MAP_PINS, NEAR_CENTRE, STATUS_LEGEND,
 const meta: Meta<typeof MapView> = {
   title: 'Components/Data display/Map view',
   component: MapView,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'padded'}
 };
 export default meta;

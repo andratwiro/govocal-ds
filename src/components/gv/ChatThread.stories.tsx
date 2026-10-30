@@ -10,7 +10,7 @@ import {PromptSuggestions} from './PromptSuggestions';
 const meta: Meta<typeof ChatThread> = {
   title: 'Components/AI/Chat thread',
   component: ChatThread,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   parameters: {layout: 'padded'},
   // The thread fills its container's height: here a 560 column, as the report builder's end column.
   decorators: [Story => <div style={{height: 560, maxWidth: 360}}><Story /></div>]

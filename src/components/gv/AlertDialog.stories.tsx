@@ -8,7 +8,7 @@ import {AlertDialog} from './AlertDialog';
 const meta: Meta<typeof AlertDialog> = {
   title: 'Components/Overlays/Alert dialog',
   component: AlertDialog,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {
     // Each open dialog gets its own frame on the docs page.
     docs: {story: {inline: false, iframeHeight: 420}}

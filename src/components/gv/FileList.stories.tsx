@@ -10,7 +10,7 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 const meta: Meta<typeof FileList> = {
   title: 'Components/Data display/File list',
   component: FileList,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'}
 };
 

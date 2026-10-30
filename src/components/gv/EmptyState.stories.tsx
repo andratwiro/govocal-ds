@@ -11,7 +11,7 @@ const meta: Meta<typeof EmptyState> = {
   title: 'Components/Status & feedback/Empty state',
   component: EmptyState,
   parameters: {layout: 'centered'},
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   argTypes: {
     illustration: {control: 'select', options: [undefined, ...illustrationNames]},
     icon: {control: false},

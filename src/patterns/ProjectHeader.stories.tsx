@@ -10,7 +10,7 @@ import {ProjectHeader, type ProjectHeaderMode} from './ProjectHeader';
 const meta: Meta<typeof ProjectHeader> = {
   title: 'Patterns/Project page/Project header',
   component: ProjectHeader,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'status:candidate'],
   parameters: {
     design: {type: 'figma', url: 'https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=14-876'}
   },

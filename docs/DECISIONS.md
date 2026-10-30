@@ -155,6 +155,15 @@ describing every prop (the benchmark plan's Task 7).
 Calls made while building Overview's developer and orientation pages, the seam stories, Voice and tone, the Word list
 and the copy check (benchmark-gaps plan, Tasks 4 and 5).
 
+- Lifecycle: the rule for candidate vs draft (the Lifecycle page's "what it takes to move on" can't all be read from
+  the repo: "every state has a story" has no fact behind it) → **candidate = Figma draws it or 2+ back-office files
+  import it, and it takes no keys or a test of its own presses it (a play function in its stories, or an e2e spec that
+  opens one of its stories), with its guide written; draft = otherwise; stable = listed in `REVIEWED` in
+  `scripts/lifecycle.mjs` (empty)**, written as `status:<stage>` by `npm run lifecycle` and held by
+  `tests/lifecycle.test.mjs` → Figma drawing it or a second screen using it is the repo's own test of a settled shape
+  (docs/NAMING.md, "What becomes a component"), and a test is what lets "look and behaviour hold" be promised. On
+  30 Oct 2026 (first run): 83 candidate, 34 draft, 0 stable. Base gets no stage: the page's glossary calls only Components and
+  Patterns entries parts.
 - Circuit's six lifecycle stages vs the plan's three → **draft · candidate · stable, plus deprecated as a mark**
   (Overview › Lifecycle) → three stages are enough for about 120 parts and one reviewer; nothing is stable until a
   developer has reviewed its API, and Not in Figma doesn't hold a part back.

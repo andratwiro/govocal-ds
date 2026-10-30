@@ -45,7 +45,7 @@
   },
   "e2e/component-page.spec.ts": {
     "group": "Site and Storybook",
-    "what": "A component's docs page shows its thirteen sections in order, each filled in, and a part named in bold links to its page."
+    "what": "A component's docs page shows its thirteen sections in order, each filled in, and a part named in bold links to its page; every part reaches the built Storybook with exactly one lifecycle stage tag, the one its page shows."
   },
   "e2e/dashboard.spec.ts": {
     "group": "Back office screens",
@@ -294,6 +294,10 @@
   "tests/layout-text.test.mjs": {
     "group": "Components behave",
     "what": "Text, Visually hidden, Page header and Tile grid draw the right element, heading level, defaults and kind or colour."
+  },
+  "tests/lifecycle.test.mjs": {
+    "group": "Public API and docs",
+    "what": "Every component and pattern carries exactly one lifecycle stage (draft, candidate or stable), and it is the stage the written rule gives from the repo's facts; nothing is stable before a developer has reviewed it."
   },
   "tests/map.test.mjs": {
     "group": "Components behave",

@@ -10,7 +10,7 @@ import {ViewOptionList, ViewOptionRow} from './ViewOptionRow';
 const meta: Meta<typeof ViewOptionRow> = {
   title: 'Patterns/Build tab/View option row',
   component: ViewOptionRow,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   decorators: [
     Story => (
       <div style={{width: 412}}>

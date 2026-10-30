@@ -6,7 +6,7 @@ import {SectionToggle} from './SectionToggle';
 const meta: Meta<typeof SectionToggle> = {
   title: 'Patterns/Pages & menu/Section toggle',
   component: SectionToggle,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   decorators: [Story => <div style={{width: 560}}><Story /></div>]
 };
 export default meta;

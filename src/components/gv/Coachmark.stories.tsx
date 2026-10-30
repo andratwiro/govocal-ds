@@ -10,7 +10,7 @@ const meta: Meta<typeof Coachmark> = {
   parameters: {
     layout: 'centered'
   },
-  tags: ['autodocs', 'not-in-figma']
+  tags: ['autodocs', 'not-in-figma', 'status:draft']
 };
 
 export default meta;

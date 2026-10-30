@@ -42,7 +42,7 @@ const meta: Meta<typeof TableToolbar> = {
   title: 'Components/Tables & lists/Table toolbar',
   component: TableToolbar,
   subcomponents: {TableToolbarHeading},
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'}
 };
 export default meta;

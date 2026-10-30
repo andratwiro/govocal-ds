@@ -7,7 +7,7 @@ import {Button} from '../Button';
 const meta: Meta<typeof PageHeader> = {
   title: 'Components/Layout & containers/Page header',
   component: PageHeader,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'padded'},
   decorators: [Story => <div style={{maxWidth: 960}}><Story /></div>]
 };

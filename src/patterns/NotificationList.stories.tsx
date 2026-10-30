@@ -7,7 +7,7 @@ import {NotificationList, type NotificationItem} from './NotificationList';
 const meta: Meta<typeof NotificationList> = {
   title: 'Patterns/App shell/Notification list',
   component: NotificationList,
-  tags: ['autodocs', 'not-in-figma']
+  tags: ['autodocs', 'not-in-figma', 'status:draft']
 };
 export default meta;
 type Story = StoryObj<typeof NotificationList>;

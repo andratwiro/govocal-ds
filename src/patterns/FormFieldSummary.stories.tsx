@@ -13,7 +13,7 @@ import './FormFieldSummary.css';
  */
 const meta: Meta = {
   title: 'Patterns/Build tab/Form field summary',
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   decorators: [
     Story => (
       <div style={{width: 584, maxWidth: '100%'}}>

@@ -5,7 +5,7 @@ import {HelpPopover} from './HelpPopover';
 const meta: Meta<typeof HelpPopover> = {
   title: 'Components/Overlays/Help popover',
   component: HelpPopover,
-  tags: ['autodocs', 'not-in-figma'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   parameters: {layout: 'centered'}
 };
 export default meta;
