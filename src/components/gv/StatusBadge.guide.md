@@ -21,7 +21,7 @@
 
 ## Behaviour
 
-Not interactive: the badge takes no focus and no keys.
+Not interactive: the badge can't be reached with Tab and answers no keys.
 
 ## Content
 
@@ -46,7 +46,7 @@ Not interactive: the badge takes no focus and no keys.
 
 ## Provenance
 
-- Built by agents from Figma's Status badge (`State`: Draft, Live) and the prototype, which uses the same pill for other
+- Built by AI agents from Figma's Status badge (`State`: Draft, Live) and the prototype, which uses the same pill for other
   words.
 - Reviewed by a person: not yet.
 - Known limits: two tones only; a warning or a danger state (Failed, Expired) has no pill yet.

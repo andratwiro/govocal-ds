@@ -26,9 +26,8 @@
 
 Each date follows the WAI-ARIA [Spinbutton pattern](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/) for its day,
 month and year, with a calendar after the [Dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/).
-Behaviour from React Aria's DatePicker and TimeField.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Digits (on a part of a date) | Type the date part by part; an end before the start shows the error. | `e2e/forms.spec.ts` |
 | Up arrow (on a part of a date) | Steps that part. | `play: Keyboard` |
@@ -63,7 +62,7 @@ error said in words (not colour alone) and marked invalid, and Required said bot
 
 ## Provenance
 
-- Built by agents from the prototype (`.pj-dates2`), from two DatePickers; not in Figma yet.
+- Built by AI agents from the prototype (`.pj-dates2`), from two DatePickers; not in Figma yet.
 - Reviewed by a person: not yet.
 - Known limits: the time zone is text only, there is no time-zone picker.
 

@@ -26,9 +26,9 @@
 ## Behaviour
 
 No WAI-ARIA APG pattern covers a plain text field: it is the browser's own text input, with its label, description
-and error wired to it. Behaviour from React Aria's TextField.
+and error wired to it.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus into the field. A read-only field takes focus too, so its words can be read and copied. | `play: Keyboard` |
 | Typing | Fills the field; the counter follows. A read-only field ignores it. | `play: Keyboard` |
@@ -62,7 +62,7 @@ and error wired to it. Behaviour from React Aria's TextField.
 
 ## Provenance
 
-- Built by agents from Figma (Text field, node 4:224) on React Aria's starter TextField; the prefix, the counter and
+- Built by AI agents from Figma (Text field, node 4:224) on React Aria's starter TextField; the prefix, the counter and
   read only come from the prototype's pages.
 - Reviewed by a person: not yet.
 - Known limits: the multi-line `TextArea` beside it has no story of its own.

@@ -23,9 +23,9 @@
 
 A collapsible section is a disclosure, after the WAI-ARIA
 [Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/): its header is a button that folds the body.
-A plain section takes no focus itself. Behaviour from React Aria's Button, Heading, Disclosure and DisclosurePanel.
+A plain section takes no focus itself.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to a collapsible section's header. | `play: Keyboard` |
 | Enter, Space | Opens or folds the section. | `play: Keyboard` |
@@ -54,7 +54,7 @@ is open (`aria-expanded`) with its body tied to it.
 
 ## Provenance
 
-- Built by agents from the designer's prototype (the project page's panel sections); not in Figma.
+- Built by AI agents from the designer's prototype (the project page's panel sections); not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: no `aside` on a collapsible section; the open state can only be set at first render
   (`defaultExpanded`).

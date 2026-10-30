@@ -27,9 +27,9 @@
 ## Behaviour
 
 The list is a menu with checkable items, after the WAI-ARIA [Menu pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/),
-with a search over it. Behaviour from React Aria's Menu inside its Autocomplete.
+with a search over it.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus into the list (or its search). | `play: Keyboard` |
 | Down arrow | Moves to the next option, also while focus stays in the search. | `play: Keyboard`, `e2e/selectors.spec.ts` |
@@ -64,7 +64,7 @@ the arrows move, "No results" in the list, and Esc that empties a search before 
 
 ## Provenance
 
-- Built by agents from the prototype's filter submenu, tag pickers and setup steps; not in Figma yet.
+- Built by AI agents from the prototype's filter submenu, tag pickers and setup steps; not in Figma yet.
 - Reviewed by a person: not yet.
 - Known limits: in the back office's topic-tags picker, the Esc that closes the popover flaked once under load
   (`e2e/project-overview.spec.ts`, "Set topic tags"); its play function leaves Esc to the popover's tests.

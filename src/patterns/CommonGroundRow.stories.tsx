@@ -141,8 +141,7 @@ export const Selectable: Story = () => {
 };
 
 /**
- * The keys a selectable row takes: Tab reaches its checkbox, Space ticks or clears it. Its play function proves the
- * component page's keyboard table.
+ * The keys a selectable row takes: Tab reaches its checkbox, Space ticks or clears it. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = () => {
   const [picked, setPicked] = useState(false);

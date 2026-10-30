@@ -27,7 +27,7 @@
 ## Behaviour
 
 Not interactive: the row takes no focus and does nothing when pressed. The vote bar reads as a progress bar named
-"Votes for <title>". Behaviour from React Aria's ProgressBar, through Vote progress.
+"Votes for <title>".
 
 ## Content
 
@@ -55,7 +55,7 @@ thumbnail hidden from screen readers.
 
 ## Provenance
 
-- Built by agents from Figma ("Proposals row": Open, Closed, New, New · warning) and the designer's prototype.
+- Built by AI agents from Figma ("Proposals row": Open, Closed, New, New · warning) and the designer's prototype.
 - Reviewed by a person: not yet.
 - Known limits: the row can't be selected or opened.
 

@@ -32,12 +32,10 @@ or holds at 640 (`height="fixed"`) so a tabbed body doesn't jump.
 
 ## Behaviour
 
-Behaviour from React Aria's `Dialog`, `Heading` and `Button`, through the system's starter Modal.
-
 The modal follows the WAI-ARIA [Dialog (modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/): the page behind is dimmed and can't
 be reached while the modal is open.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Enter (on what opens it) | Opens the modal and moves focus onto the dialog. | `play: Keyboard` |
 | Tab and Shift Tab | Walk the ×, the body's controls and the footer's buttons, and wrap round without leaving the modal. | `play: Keyboard` |
@@ -77,7 +75,7 @@ close, the page behind hidden from assistive tech, and a named ×.
 
 ## Provenance
 
-- **Built by:** agents, from Figma (its one Modal: Attachments) and the prototype (Share, Access, Input manager, the
+- **Built by:** AI agents, from Figma (its one Modal: Attachments) and the prototype (Share, Access, Input manager, the
   wide and fixed-height shells, the side tabs).
 - **Reviewed by a person:** not yet.
 - **Known limits:** no description slot under the title yet (the plan's small fixes list it); on a short window a

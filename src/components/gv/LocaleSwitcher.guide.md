@@ -29,10 +29,9 @@
 ## Behaviour
 
 The buttons are one radio group, after the WAI-ARIA [Radio group pattern](https://www.w3.org/WAI/ARIA/apg/patterns/radio/);
-the menu opens a list after the [Listbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/). Behaviour from
-React Aria's RadioGroup and Radio, or Select.
+the menu opens a list after the [Listbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Lands on the shown language (one stop for the row); the next Tab goes on into the field. | `e2e/multilingual-text-field.spec.ts` |
 | Right arrow, Left arrow | Pick the next or previous language; the field follows. | `e2e/multilingual-text-field.spec.ts` |
@@ -66,7 +65,7 @@ alone), the menu's filled count read in words, and names in the interface's lang
 
 ## Provenance
 
-- Built by agents from the platform's multilingual fields and the prototype's language button; not in Figma (the
+- Built by AI agents from the platform's multilingual fields and the prototype's language button; not in Figma (the
   designer's drawings for multilingual fields are pending: docs/OPEN-DECISIONS.md).
 - Reviewed by a person: not yet.
 - Known limits: the marks' colours and the shown chip's fill are the agents' call until the drawings land.

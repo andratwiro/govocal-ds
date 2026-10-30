@@ -22,7 +22,7 @@ One line, small.
 
 ## Behaviour
 
-Not interactive: the status takes no focus and no keys.
+Not interactive: the status can't be reached with Tab and answers no keys.
 
 ## Content
 
@@ -47,7 +47,7 @@ Not interactive: the status takes no focus and no keys.
 
 ## Provenance
 
-- Built by agents from Figma's Review status ("To review"); "To set" and "Reviewed" come from the prototype (Not in
+- Built by AI agents from Figma's Review status ("To review"); "To set" and "Reviewed" come from the prototype (Not in
   Figma).
 - Reviewed by a person: not yet.
 - Known limits: three fixed states; the page decides when a card counts as reviewed.

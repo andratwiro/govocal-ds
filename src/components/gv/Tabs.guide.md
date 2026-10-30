@@ -27,13 +27,10 @@
 
 ## Behaviour
 
-Behaviour from React Aria's `Tabs`, `TabList`, `Tab`, `TabPanels`, `TabPanel` and `SelectionIndicator`; the grouped side
-list is React Aria's `ListBox`, `ListBoxItem` and `ListBoxSection`.
-
 It follows the WAI-ARIA [Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/): the tab list is one Tab stop,
 and moving to a tab shows its panel at once.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the chosen tab; the next Tab moves into its panel. | `play: Keyboard` |
 | → and ← | Choose the next or previous tab and show its panel; they wrap at the ends. | `play: Keyboard` |
@@ -68,7 +65,7 @@ by their tabs, counts and dots read as part of the tab's name, and a grouped sid
 
 ## Provenance
 
-- **Built by:** agents, from the prototype (the underline tabs, counts, icons, status dots and the settings side list).
+- **Built by:** AI agents, from the prototype (the underline tabs, counts, icons, status dots and the settings side list).
   Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** the horizontal tab list doesn't scroll or fold when its tabs outgrow the width.

@@ -26,14 +26,11 @@
 
 ## Behaviour
 
-Behaviour from React Aria's `ToggleButtonGroup`, `ToggleButton` and `SelectionIndicator`, through the system's
-Tooltip.
-
 With `selectionMode="single"` it is a radio group: one Tab stop, the arrows move between segments, and Enter or Space
 picks the focused one. It follows the WAI-ARIA [Radio group pattern](https://www.w3.org/WAI/ARIA/apg/patterns/radio/),
 except that the arrows move focus without picking.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus into the control, onto a segment; the next Tab leaves it. | `play: Keyboard` |
 | → and ← | Move focus to the next or previous segment, without picking it. | `play: Keyboard` |
@@ -68,7 +65,7 @@ icons hidden from screen readers, and tooltips read as descriptions.
 
 ## Provenance
 
-- **Built by:** agents, from Figma (Segmented control, node 14:883, and its item, 14:882) and the prototype (the 30
+- **Built by:** AI agents, from Figma (Segmented control, node 14:883, and its item, 14:882) and the prototype (the 30
   range switch, the unread tooltip).
 - **Reviewed by a person:** not yet.
 - **Known limits:** the track doesn't wrap, so it suits up to about five short segments.

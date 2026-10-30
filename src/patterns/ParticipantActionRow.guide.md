@@ -32,9 +32,9 @@ Off, there is no value and no chevron: who can do something nobody can do isn't 
 
 The switch follows the WAI-ARIA [Switch pattern](https://www.w3.org/WAI/ARIA/apg/patterns/switch/); the row is a button
 to Access rights, after the [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/); the limit is a radio
-group. Behaviour from React Aria's Button, and through the system's Switch, Radio group and Number field.
+group.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the switch, then to the row's button while the action is on. | `play: Keyboard` |
 | Space (on the switch) | Turns the action off or on; off, the row's button goes. | `play: Keyboard` |
@@ -71,7 +71,7 @@ while they apply.
 
 ## Provenance
 
-- Built by agents from the designer's prototype (a phase's Participant actions card); not in Figma.
+- Built by AI agents from the designer's prototype (a phase's Participant actions card); not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: `ACCESS_WHO_VALUE` is an English table (docs/DECISIONS.md, "Words and locales").
 

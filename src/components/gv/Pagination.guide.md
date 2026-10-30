@@ -27,12 +27,10 @@ the reading way.
 
 ## Behaviour
 
-Behaviour from React Aria's `Button`.
-
 It is a `nav` landmark of buttons, after the WAI-ARIA [Landmark regions](https://www.w3.org/WAI/ARIA/apg/patterns/landmarks/)
 practice: each page button is named "Page N", and the current one is `aria-current="page"`.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves through ‹, each page and ›; a turned-off arrow is skipped. | `play: Keyboard` |
 | Enter or Space | Goes to that page. | `play: Keyboard` |
@@ -67,7 +65,7 @@ turned-off arrow.
 
 ## Provenance
 
-- **Built by:** agents, from the prototype (the Audience table's pager, `.gv-bo-pager`). Not in Figma.
+- **Built by:** AI agents, from the prototype (the Audience table's pager, `.gv-bo-pager`). Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** no page size choice and no "go to page" field.
 

@@ -23,12 +23,10 @@
 
 ## Behaviour
 
-Behaviour from React Aria's `Breadcrumbs`, `Breadcrumb` and `Link`, through the system's Icon button.
-
 It follows the WAI-ARIA [Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/): each crumb is a
 link, and the last one is the current page (`aria-current="page"`).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves through the crumbs that lead somewhere; the current page is skipped. | `play: Keyboard` |
 | Enter | Follows the focused crumb. | `play: Keyboard` |
@@ -59,7 +57,7 @@ order, separators hidden from screen readers, and named editor buttons.
 
 ## Provenance
 
-- **Built by:** agents, from Figma (Breadcrumbs, node 14:875: Project, Phase · Draft, Phase · Live) and the prototype
+- **Built by:** AI agents, from Figma (Breadcrumbs, node 14:875: Project, Phase · Draft, Phase · Live) and the prototype
   (`.pj-bc`).
 - **Reviewed by a person:** not yet.
 - **Known limits:** no landmark of its own (the page wraps it); long trails don't collapse into "…".

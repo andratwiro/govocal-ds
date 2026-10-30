@@ -30,7 +30,7 @@ read it, even as a reply streams in; scrolled up, it stays put and shows Jump to
 [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/). When a pressed opening makes the openings go away,
 focus moves to the composer's field.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves through the turns' buttons, then the openings, then the composer. | `play: Keyboard` |
 | Enter (on an opening) | Sends it; focus moves to the composer's field. | `play: Keyboard` |

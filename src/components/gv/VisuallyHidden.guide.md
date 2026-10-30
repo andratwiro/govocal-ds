@@ -23,8 +23,6 @@
 Not interactive: the part takes no focus itself. With `isFocusable`, what is inside it (a link) keeps its own keys
 and shows while it has focus.
 
-Behaviour from React Aria's VisuallyHidden.
-
 ## Content
 
 - Write it as if it were on screen: a heading names the section, a status says what's happening.
@@ -48,7 +46,7 @@ or `style` that could undo the hiding.
 
 ## Provenance
 
-- Built by agents on React Aria's VisuallyHidden (Not in Figma); promoted from two copies in the back office.
+- Built by AI agents on React Aria's VisuallyHidden (Not in Figma); promoted from two copies in the back office.
 - Reviewed by a person: not yet.
 - Known limits: none known beyond the hiding itself.
 

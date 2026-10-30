@@ -22,10 +22,9 @@ The row is 18 tall; its 28 buttons hang 5 above and below and 6 past the end so 
 
 ## Behaviour
 
-Two icon buttons, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/). Behaviour from
-React Aria's Button (through Icon button).
+Two icon buttons, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to hide panel, then to +. | `play: Keyboard` |
 | Enter, Space | Presses the button. | `play: Keyboard` |
@@ -54,7 +53,7 @@ React Aria's Button (through Icon button).
 
 ## Provenance
 
-- Built by agents from Figma ("Rail header", the title and +) and the designer's prototype (hide panel).
+- Built by AI agents from Figma ("Rail header", the title and +) and the designer's prototype (hide panel).
 - Reviewed by a person: not yet.
 - Known limits: the title isn't a heading; the button names default to generic words.
 

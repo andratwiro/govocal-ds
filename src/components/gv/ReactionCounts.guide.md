@@ -26,8 +26,6 @@ One line; a count shows only when its number is given, 0 included.
 
 Not interactive: the counts take no focus and no keys.
 
-Behaviour from React Aria's VisuallyHidden (each count's words, read in place of the icon and number).
-
 ## Content
 
 - Pass the real numbers; the part formats them for the page's locale ("1,284").
@@ -52,7 +50,7 @@ from screen readers, and numbers in the page's locale.
 
 ## Provenance
 
-- Built by agents from the prototype's side-panel reactions and Most liked rows (Not in Figma).
+- Built by AI agents from the prototype's side-panel reactions and Most liked rows (Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: three fixed reactions (likes, dislikes, comments); no other kinds, such as votes or emoji.
 

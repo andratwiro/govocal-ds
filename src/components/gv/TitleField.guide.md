@@ -25,10 +25,9 @@
 ## Behaviour
 
 No WAI-ARIA APG pattern covers a plain text field: the title is the browser's own text input; its language button opens
-a list after the [Listbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/). Behaviour from React Aria's
-TextField (and, with the button, Locale switcher's Select).
+a list after the [Listbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus into the title, then to the language button in its end. | `e2e/multilingual-text-field.spec.ts` |
 | Down arrow (on the language button) | Opens the list of languages, each saying filled or empty. | `e2e/multilingual-text-field.spec.ts` |
@@ -63,7 +62,7 @@ so it is read in that language and runs its way.
 
 ## Provenance
 
-- Built by agents from Figma (Title field, node 4:123) and the prototype (`.pj-titlereq`); the invalid state and the
+- Built by AI agents from Figma (Title field, node 4:123) and the prototype (`.pj-titlereq`); the invalid state and the
   language button are not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: the language button's place is an open decision with the designer (Figma keeps the end clear).

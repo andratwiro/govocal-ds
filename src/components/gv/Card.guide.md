@@ -32,13 +32,10 @@
 
 ## Behaviour
 
-Behaviour from React Aria's `Disclosure`, `DisclosurePanel`, `Button`, `Heading`, `MenuTrigger`, `Menu` and `MenuItem`,
-through the system's Popover, Tooltip, Radio group and Switch.
-
 An expanding card follows the WAI-ARIA [Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/): its
 whole header is one button. A menu card's header is a menu button.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the card's header, then to its actions in order. | `play: Keyboard` |
 | Enter or Space (on an expanding header) | Opens or closes the body. | `play: Keyboard` |
@@ -79,7 +76,7 @@ review status in words, not only colour.
 
 ## Provenance
 
-- **Built by:** agents, from Figma (Card, node 14:879, its 23 types as props) and the prototype (media, the disabled
+- **Built by:** AI agents, from Figma (Card, node 14:879, its 23 types as props) and the prototype (media, the disabled
   action with its tooltip, Reviewed, the menu with icons).
 - **Reviewed by a person:** not yet.
 - **Known limits:** `CardRadioGroup` and `CardRadio` are deprecated but kept until Reporting and Users move to Choice

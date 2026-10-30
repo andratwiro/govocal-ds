@@ -27,11 +27,11 @@
 
 ## Behaviour
 
-Behaviour from React Aria's GridList. The list follows the WAI-ARIA [Grid pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/):
+The list follows the WAI-ARIA [Grid pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/):
 the list is one stop for Tab, the arrow keys move between rows and into a row's links. Nothing in it is selected;
 the rows are only a way to reach each file's actions.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus into the list, onto the first row. | `play: Keyboard` |
 | ↓ and ↑ | Move focus to the next or previous file. | `play: Keyboard` |
@@ -71,7 +71,7 @@ assistive tech.
 
 ## Provenance
 
-- Built by agents from the prototype's attachment rows (Not in Figma).
+- Built by AI agents from the prototype's attachment rows (Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: no upload progress or error per file; no file type icon (one paperclip for all); the meta line is
   text the page formats, so sizes don't follow the locale on their own.

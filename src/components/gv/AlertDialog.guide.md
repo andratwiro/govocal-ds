@@ -36,13 +36,11 @@
 
 ## Behaviour
 
-Behaviour from React Aria's `Dialog` and `Heading`, through the system's Modal, Button and Text field.
-
 The dialog (`role="alertdialog"`) follows the WAI-ARIA [Alert dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/): the page behind it can't be reached
 while it is open, and both buttons close it. Confirm calls `onConfirm`; Cancel, Esc and a click outside call
 `onCancel`.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Enter (on what opens it) | Opens the dialog. A plain confirm puts focus on the dialog itself. | `play: Keyboard` |
 | (on open, danger) | Focus starts on Cancel, so a stray Enter never deletes. | `e2e/alert-dialog.spec.ts` |
@@ -88,7 +86,7 @@ from assistive tech while it is open.
 
 ## Provenance
 
-- **Built by:** agents, from the prototype (its confirms, the reset's type to confirm and the Edit form warning). Not
+- **Built by:** AI agents, from the prototype (its confirms, the reset's type to confirm and the Edit form warning). Not
   in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** the confirm closes the dialog straight away; a confirm that waits on the server must control

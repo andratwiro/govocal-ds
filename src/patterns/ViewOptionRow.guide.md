@@ -29,9 +29,9 @@
 The switch follows the WAI-ARIA [Switch pattern](https://www.w3.org/WAI/ARIA/apg/patterns/switch/); Make default is a
 toggle button, after the [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/). The default view's button
 stays focusable (pressed, a press does nothing) instead of disabled, so making a view the default keeps focus where it
-was. Behaviour from React Aria's ToggleButton, and through the system's Switch.
+was.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the switch, then to Make default. | `play: Keyboard` |
 | Space (on the switch) | Turns the view on or off. | `play: Keyboard` |
@@ -66,7 +66,7 @@ default changes, and a named group around the rows.
 
 ## Provenance
 
-- Built by agents from the designer's prototype (a phase's Available views card); not in Figma.
+- Built by AI agents from the designer's prototype (a phase's Available views card); not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: the row doesn't keep one default across a list by itself; the page does (`isDefault`,
   `onMakeDefault`, `onChange`).

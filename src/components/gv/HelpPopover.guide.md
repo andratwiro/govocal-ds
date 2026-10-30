@@ -26,12 +26,10 @@
 
 ## Behaviour
 
-Behaviour from React Aria's `DialogTrigger`, `Dialog` and `Heading`, through the system's Popover and Button.
-
 The popover follows the WAI-ARIA [Dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/): a press opens it, so it works by touch and
 keyboard as well as with a mouse. Nothing opens on hover.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the help icon (or the "Learn more" button). | `play: Keyboard` |
 | Enter or Space | Opens the popover and moves focus into it. | `play: Keyboard` |
@@ -67,7 +65,7 @@ back on close, Esc to close, and no hover-only content.
 
 ## Provenance
 
-- **Built by:** agents, from the real admin's help tooltips on tool cards and the prototype. Not in Figma.
+- **Built by:** AI agents, from the real admin's help tooltips on tool cards and the prototype. Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** it always opens below its trigger (`placement="bottom"` is fixed); the body is meant for text only.
 

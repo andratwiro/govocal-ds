@@ -133,8 +133,7 @@ BuildInACard.storyName = 'Build · in a card';
 BuildInACard.tags = ['not-in-figma'];
 
 /**
- * The keys a Build row takes: Tab reaches Edit, then Delete, each showing its tooltip; Enter or Space presses it. Its
- * play function proves the component page's keyboard table.
+ * The keys a Build row takes: Tab reaches Edit, then Delete, each showing its tooltip; Enter or Space presses it. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = () => {
   const [said, setSaid] = useState('Nothing pressed yet');

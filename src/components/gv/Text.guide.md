@@ -26,9 +26,7 @@ Type styles (`kind`): title, body, ui, small, stat; body, ui and small have a st
 
 ## Behaviour
 
-Not interactive: text takes no focus and no keys.
-
-Behaviour from React Aria's Text, so it fills a part's `slot` ("description", "label") as React Aria's own does.
+Not interactive: text can't be reached with Tab and answers no keys.
 
 ## Content
 
@@ -57,7 +55,7 @@ sizes from the tokens.
 
 ## Provenance
 
-- Built by agents from Foundations/Typography's type styles (the tokens from Figma); the part itself is Not in Figma.
+- Built by AI agents from Foundations/Typography's type styles (the tokens from Figma); the part itself is Not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: five type styles and four colours, by design; most back-office pages still use their own note style.
 

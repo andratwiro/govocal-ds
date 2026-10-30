@@ -26,10 +26,9 @@
 
 ## Behaviour
 
-A switch follows the WAI-ARIA [Switch pattern](https://www.w3.org/WAI/ARIA/apg/patterns/switch/). Behaviour from React
-Aria's SwitchField and SwitchButton.
+A switch follows the WAI-ARIA [Switch pattern](https://www.w3.org/WAI/ARIA/apg/patterns/switch/).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the switch. A disabled switch is skipped. | `play: Keyboard` |
 | Space | Turns it on, or off. | `play: Keyboard` |
@@ -61,7 +60,7 @@ description read with it.
 
 ## Provenance
 
-- Built by agents from Figma (Switch, node 24:508) and the prototype (its near-black "on"); the revealed-fields and
+- Built by AI agents from Figma (Switch, node 24:508) and the prototype (its near-black "on"); the revealed-fields and
   badge stories are not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: "on" is the prototype's near-black, not Figma's `control/toggle-on` (the prototype wins on look,

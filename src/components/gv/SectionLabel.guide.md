@@ -21,10 +21,8 @@
 
 ## Behaviour
 
-Not interactive: the label takes no focus and no keys. With `headingLevel` it is a heading a screen reader can jump
+Not interactive: the label can't be reached with Tab and answers no keys. With `headingLevel` it is a heading a screen reader can jump
 to; without it, plain text.
-
-Behaviour from React Aria's Heading (with `headingLevel`).
 
 ## Content
 
@@ -51,7 +49,7 @@ screen readers.
 
 ## Provenance
 
-- Built by agents from Figma's Rail section label and the prototype; moved up from the rail as a Component on its
+- Built by AI agents from Figma's Rail section label and the prototype; moved up from the rail as a Component on its
   second use.
 - Reviewed by a person: not yet.
 - Known limits: one look; Figma's rename to Text/Section label is the designer's pending pass (docs/DECISIONS.md).

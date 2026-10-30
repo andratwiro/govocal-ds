@@ -25,10 +25,8 @@
 
 ## Behaviour
 
-Not interactive: the list itself takes no focus and no keys. A value that is a control (a Select, tags, a link) keeps
+Not interactive: the list itself can't be reached with Tab and answers no keys. A value that is a control (a Select, tags, a link) keeps
 its own keyboard; see that part's page.
-
-Behaviour from React Aria's VisuallyHidden (the "Not set" read for an empty value).
 
 ## Content
 
@@ -61,7 +59,7 @@ many there are; a named empty value instead of a bare dash.
 
 ## Provenance
 
-- Built by agents from the prototype's side-panel properties and Figma's idea panel; Not in Figma as a component.
+- Built by AI agents from the prototype's side-panel properties and Figma's idea panel; Not in Figma as a component.
 - Reviewed by a person: not yet.
 - Known limits: one layout, label beside value (no stacked layout for narrow places); labels don't name the controls
   inside values.

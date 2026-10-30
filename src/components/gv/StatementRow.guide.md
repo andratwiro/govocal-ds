@@ -27,9 +27,9 @@ The columns are 430 | 200 | 72; under 480 wide the row stacks statement, bar and
 
 ## Behaviour
 
-Not interactive: the row takes no focus and no keys. Hovering it darkens the bar a step and shows the card; screen
+Not interactive: the row can't be reached with Tab and answers no keys. Hovering it darkens the bar a step and shows the card; screen
 readers get every share in the bar's name instead ("21 agree (3%), 88 disagree (14%), …"), so nothing is lost to
-the keyboard (docs/DECISIONS.md, "Built in the dashboards package"). No React Aria part.
+the keyboard (docs/DECISIONS.md, "Built in the dashboards package").
 
 ## Content
 
@@ -60,7 +60,7 @@ from screen readers since the name already says it, and colours that are never t
 
 ## Provenance
 
-- Built by agents from Figma ("Statement row", three shares) and the designer's prototype; the four-share bar, the
+- Built by AI agents from Figma ("Statement row", three shares) and the designer's prototype; the four-share bar, the
   bar-only row, the narrow stacking and the hover card come from the prototype.
 - Reviewed by a person: not yet.
 - Known limits: `summary` is text the caller writes and formats; gaps between segments only appear with four shares,

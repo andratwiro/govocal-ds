@@ -29,9 +29,9 @@ One language only: no switcher, and no language in the input's name.
 ## Behaviour
 
 The language row follows the WAI-ARIA [Radio group pattern](https://www.w3.org/WAI/ARIA/apg/patterns/radio/); the input
-is the browser's own text field. Behaviour from React Aria's TextField and the Locale switcher's RadioGroup.
+is the browser's own text field.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Lands on the shown language, then goes on into the input. | `e2e/multilingual-text-field.spec.ts` |
 | Right arrow, Left arrow (on the languages) | Show the next or previous language; each keeps its own text. | `e2e/multilingual-text-field.spec.ts` |
@@ -68,7 +68,7 @@ readable in every language when disabled.
 
 ## Provenance
 
-- Built by agents from the platform's multilingual inputs (InputMultilocWithLocaleSwitcher and its text-area sibling)
+- Built by AI agents from the platform's multilingual inputs (InputMultilocWithLocaleSwitcher and its text-area sibling)
   and the prototype; not in Figma (the designer's drawings are pending: docs/OPEN-DECISIONS.md).
 - Reviewed by a person: not yet.
 - Known limits: the look waits on the designer's drawings for multilingual fields.

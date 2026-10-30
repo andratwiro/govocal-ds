@@ -76,7 +76,7 @@ export const Keyboard: Story = {
       <Stack gap="12">
         <PromptComposer isWorking={working} onStop={() => setWorking(false)}
           onSend={p => { setSent(s => [...s, p]); setWorking(true); }} />
-        <Text color="secondary">{sent.length ? `Sent: ${sent.join(' | ')}` : 'Nothing sent'}</Text>
+        <Text color="secondary">{sent.length ? `Sent: ${sent.join(' | ')}` : 'Not part of the composer: what you send shows here'}</Text>
       </Stack>
     );
   },

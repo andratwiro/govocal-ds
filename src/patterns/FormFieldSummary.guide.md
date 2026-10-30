@@ -26,9 +26,8 @@
 
 The questions take no focus and do nothing when pressed (docs/DECISIONS.md: a static list, not a grid, so it adds no
 tab stops). Edit form is a button, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/).
-No React Aria part of its own; the button is the system's Button.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves straight to Edit form, past the questions. | `play: Keyboard` |
 | Enter, Space (on Edit form) | Opens the form builder. | `play: Keyboard` |
@@ -59,7 +58,7 @@ for the cut-off ones, and one tab stop (Edit form).
 
 ## Provenance
 
-- Built by agents for the back office's phase Build tab (the Idea form card, which was a stub); not in Figma.
+- Built by AI agents for the back office's phase Build tab (the Idea form card, which was a stub); not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: a recipe, so each page holds its own copy; its words ("Required", "N more") are English in the
   markup; a cut-off question shows its whole text only on hover (`title`), not on focus.

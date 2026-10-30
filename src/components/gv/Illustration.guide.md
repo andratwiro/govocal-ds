@@ -26,7 +26,7 @@ around its middle.
 
 ## Behaviour
 
-Not interactive: an illustration takes no focus and no keys. How it moves (`motion`):
+Not interactive: an illustration can't be reached with Tab and answers no keys. How it moves (`motion`):
 
 - `auto` (the default) plays once it is on screen and rests on its still within 5 seconds; a longer story rests until
   hovered.
@@ -61,7 +61,7 @@ something, nothing moving unbidden for more than 5 seconds (WCAG 2.2.2), and a s
 
 ## Provenance
 
-- Built by agents from the prototype's drawings, one SVG file each (Not in Figma); the designer owns the drawings.
+- Built by AI agents from the prototype's drawings, one SVG file each (Not in Figma); the designer owns the drawings.
 - Reviewed by a person: not yet.
 - Known limits: a fixed set of drawings (adding one means drawing an SVG by the file's rules); `hover` motion needs a
   host element with `data-illustration-host`.

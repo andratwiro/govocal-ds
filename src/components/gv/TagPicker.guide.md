@@ -23,9 +23,9 @@
 ## Behaviour
 
 The tags follow the WAI-ARIA [Grid pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) as one row, and Add tag
-opens a popover with the Option list. Behaviour from React Aria's TagGroup and DialogTrigger, with the Option list's Menu.
+opens a popover with the Option list.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Right arrow, Left arrow | Move between the tags. | `e2e/selectors.spec.ts` |
 | Backspace or Delete | Removes the focused tag; focus moves to its neighbour, or to Add tag when none is left. | `e2e/selectors.spec.ts` |
@@ -58,7 +58,7 @@ focus somewhere sensible, a named × on each tag, and focus back on Add tag when
 
 ## Provenance
 
-- Built by agents from the prototype's tag picker in the idea drawer; not in Figma yet.
+- Built by AI agents from the prototype's tag picker in the idea drawer; not in Figma yet.
 - Reviewed by a person: not yet.
 - Known limits: no story shows the footer's count; the only page using it is the Input manager.
 

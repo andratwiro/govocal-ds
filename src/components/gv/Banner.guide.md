@@ -36,11 +36,11 @@ Compact: one row, the icon, a bold title and a lighter line, no box padding.
 
 ## Behaviour
 
-Behaviour from React Aria's Link (the link) and Button (the dismiss ×, through Icon button). The banner itself takes
+The banner itself takes
 no focus; its link follows the WAI-ARIA [Link pattern](https://www.w3.org/WAI/ARIA/apg/patterns/link/) and its × the
 [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the banner's link, then to its ×. | `play: Keyboard` |
 | Enter (on the link) | Follows the link. | `play: Keyboard` |
@@ -82,7 +82,7 @@ announced when it appears, a compact strip as a status that is announced when it
 
 ## Provenance
 
-- Built by agents from Figma's Banner (Info, Info · link); the neutral, warning, success and AI tones, the title,
+- Built by AI agents from Figma's Banner (Info, Info · link); the neutral, warning, success and AI tones, the title,
   actions, dismiss and the compact strip come from the prototype and the review (Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: no danger or error tone.

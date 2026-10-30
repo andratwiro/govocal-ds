@@ -22,10 +22,9 @@
 
 ## Behaviour
 
-Each phase is a link to its screen, after the WAI-ARIA [Link pattern](https://www.w3.org/WAI/ARIA/apg/patterns/link/); the timeline is a plain list of them in order. Behaviour from React Aria's Link
-(through Rail phase).
+Each phase is a link to its screen, after the WAI-ARIA [Link pattern](https://www.w3.org/WAI/ARIA/apg/patterns/link/); the timeline is a plain list of them in order.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves from phase to phase, in order. | `play: Keyboard` |
 
@@ -55,7 +54,7 @@ text (colour is never the only sign) and a decorative dot and line.
 
 ## Provenance
 
-- Built by agents from the designer's prototype (the rail's stepper); not in Figma.
+- Built by AI agents from the designer's prototype (the rail's stepper); not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: no delete on its rows; the colours of the done and live dots borrow the nearest tokens
   (docs/DECISIONS.md, "Fidelity review against Figma and the prototype").

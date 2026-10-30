@@ -30,9 +30,9 @@ Rows stack 4 apart in a card; the track takes whatever width the label and value
 
 ## Behaviour
 
-Not interactive: a bar row takes no focus and no keys. Hovering it darkens the fill a step and shows the detail card;
+Not interactive: a bar row can't be reached with Tab and answers no keys. Hovering it darkens the fill a step and shows the detail card;
 the same words reach screen readers with the label, so nothing is lost to the keyboard (docs/DECISIONS.md, "Built in
-the dashboards package"). Behaviour from React Aria's VisuallyHidden (the detail read with the label).
+the dashboards package").
 
 ## Content
 
@@ -67,7 +67,7 @@ value as text, and a fill that is never the only carrier of the number.
 
 ## Provenance
 
-- Built by agents from Figma ("Bar row") and the designer's prototype; the two-line label, the row without a value
+- Built by AI agents from Figma ("Bar row") and the designer's prototype; the two-line label, the row without a value
   and the hover card come from the prototype, not Figma.
 - Reviewed by a person: not yet.
 - Known limits: the caller writes `value` and `detail` as text, so their number format is the page's job; the label

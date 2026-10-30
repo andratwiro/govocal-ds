@@ -26,15 +26,14 @@ The 28 slots at both ends match those of **List row** and **Common ground row**,
 
 ## Behaviour
 
-Behaviour from React Aria's Button (each sortable column, through List header cell) and CheckboxField and
-CheckboxButton (select all, through Checkbox). The header is a row of column
+ The header is a row of column
 heads; with `onSort`, each sortable column holds a button, after the WAI-ARIA
 [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/), and the sorted column's head says its order with
 `aria-sort`, as in the [Sortable table example](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/).
 Select-all is a checkbox, after the [Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/). Static
 columns, and every column when there is no `onSort`, are plain text and take no focus (`play: NotSortable`).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the select-all checkbox, then to each sortable column in turn; static columns are skipped. | `play: Keyboard` |
 | Space (on select all) | Ticks or unticks every row. | `play: Keyboard` |
@@ -71,7 +70,7 @@ static columns as plain text.
 
 ## Provenance
 
-- Built by agents from Figma's List header (its four `Method` column sets) and the prototype's Manage table (the
+- Built by AI agents from Figma's List header (its four `Method` column sets) and the prototype's Manage table (the
   select-all checkbox).
 - Reviewed by a person: not yet.
 - Known limits: the page sorts the rows itself (the header only reports a press).

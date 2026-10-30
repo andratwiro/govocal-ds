@@ -30,9 +30,9 @@ It fills the popover it sits in; the back office's is about 360 wide.
 
 The list holds a button and links, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/)
 and [Link pattern](https://www.w3.org/WAI/ARIA/apg/patterns/link/); the popover around it is the page's (a Popover with
-a Dialog). Behaviour from React Aria's Link, and Button through the system's Button.
+a Dialog).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to "Mark all as read", then to each notification that leads somewhere. | `play: Keyboard` |
 | Enter (on Mark all as read) | Clears every unread dot; focus stays on the button. | `play: Keyboard` |
@@ -70,7 +70,7 @@ notification closes the list in the back office (docs/DECISIONS.md, "App shell: 
 
 ## Provenance
 
-- Built by agents from neither Figma nor the prototype: from the real admin's notification menu (tagged Not in
+- Built by AI agents from neither Figma nor the prototype: from the real admin's notification menu (tagged Not in
   Figma).
 - Reviewed by a person: not yet.
 - Known limits: no paging of its own (the page adds "Show older notifications"); `time` is text the page writes;

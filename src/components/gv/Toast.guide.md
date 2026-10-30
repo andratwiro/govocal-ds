@@ -31,11 +31,11 @@ Toasts sit fixed at the window's bottom end, newest on top, and leave after 5 se
 
 ## Behaviour
 
-Behaviour from React Aria's Toast, ToastRegion and Button. The toasts sit in a landmark region and each is announced
+The toasts sit in a landmark region and each is announced
 when it appears, after the WAI-ARIA [Alert pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/); its action and
 × are buttons. Pressing the action closes the toast, then runs `onAction`.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus into the toast, to its action (Undo) and then its ×. | `play: Keyboard` |
 | Enter (on the action) | Closes the toast and runs the action: Undo takes the change back. | `play: Keyboard` |
@@ -71,7 +71,7 @@ timer that waits while it is focused or hovered, a named ×, and focus that neve
 
 ## Provenance
 
-- Built by agents from React Aria's toast and the prototype's undo snackbar (icon and Undo action; Not in Figma).
+- Built by AI agents from React Aria's toast and the prototype's undo snackbar (icon and Undo action; Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: React Aria's toast is marked unstable (`UNSTABLE_Toast`), so its API may change; one action per toast;
   no error or warning look.

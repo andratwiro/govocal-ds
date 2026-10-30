@@ -25,7 +25,7 @@ Gap: 16, or 12 with `density="compact"`. No margin of its own.
 
 ## Behaviour
 
-Not interactive: it takes no focus or keys, and adds no role (choose `elementType="ul"` for a list).
+Not interactive: it can't be reached with Tab and answers no keys, and adds no role (choose `elementType="ul"` for a list).
 
 ## Content
 
@@ -50,7 +50,7 @@ a card with a picture, 360 for a panel.
 
 ## Provenance
 
-- **Built by:** agents, from the back office's seven `auto-fit` grids (Stat tile rows, card galleries, side-by-side
+- **Built by:** AI agents, from the back office's seven `auto-fit` grids (Stat tile rows, card galleries, side-by-side
   panels). Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** the four widths are raw pixels in its stylesheet until layout size tokens exist; the back office's

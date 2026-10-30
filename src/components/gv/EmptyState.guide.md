@@ -29,7 +29,7 @@ All centred; `isFramed` adds a dashed frame.
 
 ## Behaviour
 
-Not interactive: the empty state takes no focus and no keys. An action inside it keeps its own (see **Button**).
+Not interactive: the empty state can't be reached with Tab and answers no keys. An action inside it keeps its own (see **Button**).
 
 ## Content
 
@@ -59,7 +59,7 @@ one), and a drawing or icon hidden from screen readers.
 
 ## Provenance
 
-- Built by agents from the prototype's empty tabs, panels and lists (Not in Figma).
+- Built by AI agents from the prototype's empty tabs, panels and lists (Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: two layouts (page and panel); one action only, by design.
 

@@ -32,7 +32,7 @@
 A button follows the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/). It acts when it is
 pressed: a click, a tap, or a key.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the button. A disabled button is skipped. | `play: Keyboard` |
 | Enter | Presses the button. | `play: Keyboard` |

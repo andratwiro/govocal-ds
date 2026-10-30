@@ -24,9 +24,9 @@
 
 ## Behaviour
 
-The row is a link to the phase, after the WAI-ARIA [Link pattern](https://www.w3.org/WAI/ARIA/apg/patterns/link/); the delete is a separate button after it, always in the tab order and shown when it has focus. Behaviour from React Aria's Link (and Icon button and Tooltip for the delete).
+The row is a link to the phase, after the WAI-ARIA [Link pattern](https://www.w3.org/WAI/ARIA/apg/patterns/link/); the delete is a separate button after it, always in the tab order and shown when it has focus.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the phase, then to its delete, which shows. | `e2e/build-tab.spec.ts` |
 | Enter (on the phase) | Opens the phase. | `play: Keyboard` |
@@ -59,7 +59,7 @@ on screen, a delete named for its phase ("Delete Collect ideas") with a tooltip,
 
 ## Provenance
 
-- Built by agents from Figma ("Rail phase", the upcoming row) and the designer's prototype (the live and completed
+- Built by AI agents from Figma ("Rail phase", the upcoming row) and the designer's prototype (the live and completed
   dots, the chip, "N new" and the delete).
 - Reviewed by a person: not yet.
 - Known limits: the live and completed greens have no tokens of their own (a colour mix and the nearest token); the

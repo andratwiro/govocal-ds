@@ -36,11 +36,9 @@ The choices are a radio group of cards, after the WAI-ARIA
 [Radio group pattern](https://www.w3.org/WAI/ARIA/apg/patterns/radio/), and sign-in's settings are disclosures,
 after the [Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/). Read-only before Override:
 everything can be reached and read, nothing changes. Override and Revert take away the button that was pressed, so
-focus moves to the chosen card or back to Override instead of falling to the page. Behaviour from React Aria's
-Button, Disclosure, DisclosurePanel, DisclosureGroup and Heading, and through the system's Radio group, Choice card,
-Switch, Select, Modal and Alert dialog.
+focus moves to the chosen card or back to Override instead of falling to the page.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Enter (on an action's row) | Opens the modal for that action. | `e2e/build-tab.spec.ts` |
 | Enter (on Override) | Sets the action for this phase; focus moves to the chosen card. | `e2e/build-tab.spec.ts` |
@@ -83,7 +81,7 @@ Revert takes its button away; a confirm before discarding; Esc back to the row.
 
 ## Provenance
 
-- Built by agents from the designer's prototype (the access modal); not in Figma.
+- Built by AI agents from the designer's prototype (the access modal); not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: "Customize error message" only calls `onCustomizeError`, it has no editor of its own; the
   choice words for the row are an English table (`ACCESS_WHO_VALUE`).

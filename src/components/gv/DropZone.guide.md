@@ -24,10 +24,9 @@
 ## Behaviour
 
 The zone is one button, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/): pressing
-it opens the device's file picker; a file dropped on it is taken the same way. Behaviour from React Aria's DropZone and
-FileTrigger.
+it opens the device's file picker; a file dropped on it is taken the same way.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the zone. A disabled zone is skipped. | `play: Keyboard` |
 
@@ -56,7 +55,7 @@ browse as well as the mouse, and a disabled state that leaves the tab order.
 
 ## Provenance
 
-- Built by agents from Figma (Drop zone, node 5:490) and the prototype (`.attz`, compact `.gv-dropzone`); the dashed
+- Built by AI agents from Figma (Drop zone, node 5:490) and the prototype (`.attz`, compact `.gv-dropzone`); the dashed
   border and the disabled state are the prototype's, not Figma's.
 - Reviewed by a person: not yet.
 - Known limits: Enter opening the file picker isn't checked by a test (the browser's picker can't be seen by one); no

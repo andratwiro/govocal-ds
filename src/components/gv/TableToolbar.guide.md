@@ -26,12 +26,10 @@
 
 ## Behaviour
 
-Behaviour from React Aria's `Toolbar`.
-
 The tools follow the WAI-ARIA [Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/): one Tab stop for
 all of them, the arrow keys between them.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus into the tools, onto the first; the next Tab leaves them. | `play: Keyboard` |
 | → and ← | Move between the tools. | `play: Keyboard` |
@@ -66,7 +64,7 @@ toolbar with arrow keys, and a search field whose arrows move the caret before t
 
 ## Provenance
 
-- **Built by:** agents, from the prototype (the Manage tables' and the Audience table's top row). Not in Figma.
+- **Built by:** AI agents, from the prototype (the Manage tables' and the Audience table's top row). Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** the tools don't fold into a menu on a narrow screen.
 

@@ -21,7 +21,7 @@ One size.
 
 ## Behaviour
 
-Not interactive: the dot takes no focus and no keys.
+Not interactive: the dot can't be reached with Tab and answers no keys.
 
 ## Content
 
@@ -48,7 +48,7 @@ Not interactive: the dot takes no focus and no keys.
 
 ## Provenance
 
-- Built by agents from Figma's New dot and the prototype.
+- Built by AI agents from Figma's New dot and the prototype.
 - Reviewed by a person: not yet.
 - Known limits: one size and one colour.
 

@@ -149,8 +149,7 @@ export const ShareAndPublish: Story = {
 
 /**
  * The bar by keyboard: in a phase's mode switch the arrows move between modes and Enter picks one; on the project,
- * Enter on Share opens its menu and Esc closes it back to the button. Its play function proves the component page's
- * keyboard table.
+ * Enter on Share opens its menu and Esc closes it back to the button. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   decorators: [onApp],

@@ -29,10 +29,10 @@
 
 ## Behaviour
 
-Behaviour from React Aria's Button (the remove ×). A badge is display only unless it is removable; then its × is a
+A badge is display only unless it is removable; then its × is a
 button, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the next badge's ×. | `play: Keyboard` |
 | Enter | Removes the badge whose × has focus. | `play: Keyboard` |
@@ -65,7 +65,7 @@ for what it removes.
 
 ## Provenance
 
-- Built by agents from Figma's Badge (filled, with or without an icon); the outlined, value and count looks and the
+- Built by AI agents from Figma's Badge (filled, with or without an icon); the outlined, value and count looks and the
   remove × come from the prototype (Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: no tone colours beyond grey and teal (a status with a colour is a Status badge); the value teal has no

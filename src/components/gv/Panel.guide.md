@@ -27,7 +27,7 @@
 
 ## Behaviour
 
-Not interactive itself: it takes no focus or keys. It is a `section` named by its title, so screen readers can jump to
+Not interactive itself: it can't be reached with Tab and answers no keys. It is a `section` named by its title, so screen readers can jump to
 it; its actions, toolbar and body keep their own keys.
 
 ## Content
@@ -56,7 +56,7 @@ it; its actions, toolbar and body keep their own keys.
 
 ## Provenance
 
-- **Built by:** agents, from the prototype (the Audience table card, the Messaging panel and composer). Not in Figma.
+- **Built by:** AI agents, from the prototype (the Audience table card, the Messaging panel and composer). Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** no borderless look yet (the plan's small fixes list it); it can't fold away (that is a Section
   toggle's job).

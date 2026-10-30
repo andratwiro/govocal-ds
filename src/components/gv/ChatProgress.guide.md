@@ -22,7 +22,7 @@
 
 ## Behaviour
 
-Not interactive: it takes no focus or keys. Each row rises in as it is added; under reduced motion the spinner holds
+Not interactive: it can't be reached with Tab and answers no keys. Each row rises in as it is added; under reduced motion the spinner holds
 still.
 
 ## Content

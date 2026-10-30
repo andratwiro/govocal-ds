@@ -23,8 +23,7 @@ Horizontal, it keeps the browser's 8px above and below for now (Figma draws none
 
 ## Behaviour
 
-Not interactive: it takes no focus or keys. Behaviour from React Aria's `Separator`: a `role="separator"` with its
-orientation.
+Not interactive: it can't be reached with Tab and answers no keys.
 
 ## Content
 
@@ -47,7 +46,7 @@ line.
 
 ## Provenance
 
-- **Built by:** agents, from Figma (Divider, node 5:303).
+- **Built by:** AI agents, from Figma (Divider, node 5:303).
 - **Reviewed by a person:** not yet.
 - **Known limits:** five back-office pages still rely on the browser's 8px margin around it, kept until each page moves
   to a gap.

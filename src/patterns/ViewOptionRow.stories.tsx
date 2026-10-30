@@ -138,8 +138,7 @@ export const InACard: Story = {name: 'In a card', render: () => <InACardRender /
 
 /**
  * The keys a row takes: Tab reaches its switch and Space turns the view on and off; Tab goes on to Make default, and
- * Enter makes the view the default (its button turns to a pressed "Default"). Its play function proves the component
- * page's keyboard table.
+ * Enter makes the view the default (its button turns to a pressed "Default"). Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   render: function Render(args) {

@@ -171,11 +171,10 @@ export const Rail: StoryObj = {
   )
 };
 
-/** A phase by keyboard: Enter on the row opens the phase, Tab moves to its delete, Enter deletes. Its play function
- * proves the component page's keyboard table. */
+/** A phase by keyboard: Enter on the row opens the phase, Tab moves to its delete, Enter deletes. Try the keys here; an automated test presses them too (the Interactions panel). */
 export const Keyboard: Story = {
   render: function Render() {
-    const [said, setSaid] = useState('Nothing yet');
+    const [said, setSaid] = useState('Not part of the row: what your keys do shows here');
     return (
       <div style={{width: 284, display: 'flex', flexDirection: 'column', gap: 16}}>
         <RailPhase status="upcoming" title="Collect ideas" statusLabel="Upcoming" meta="Ideation"

@@ -25,13 +25,13 @@ with no `onPress`, doesn't react.
 
 ## Behaviour
 
-Behaviour from React Aria's Button. Every cell is a column head (`role="columnheader"`). A sortable cell (with
+ Every cell is a column head (`role="columnheader"`). A sortable cell (with
 `onPress`) and the "Add column" cell hold a button, after the WAI-ARIA
 [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/); the sorted column's head says its order with
 `aria-sort` (ascending or descending), as in the [Sortable table example](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/).
 A static cell, or one with no `onPress`, is plain text and takes no focus.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the next sortable or "Add column" cell; static cells and cells with no `onPress` are skipped. | `play: Keyboard` |
 | Enter | Presses the cell: sorts by its column, or adds a column. | `play: Keyboard` |
@@ -61,7 +61,7 @@ sorted column, a named plus, and plain text for static columns and cells with no
 
 ## Provenance
 
-- Built by agents from Figma's List header cell (its `Type` and `· sorted` variants) and the prototype.
+- Built by AI agents from Figma's List header cell (its `Type` and `· sorted` variants) and the prototype.
 - Reviewed by a person: not yet.
 - Known limits: the cell only reports a press; the page sorts and flips `sortDirection`.
 

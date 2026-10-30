@@ -33,10 +33,9 @@ A hairline under each row but the last.
 
 The Manage row is not interactive; its goal bar reads as a progress bar named "Volunteer goal for <title>" that says
 the share reached ("60% of the goal"). The Build row's Edit and Delete are buttons, after the WAI-ARIA
-[Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/), each showing its tooltip on focus. Behaviour from
-React Aria's ProgressBar (the goal bar), and Button and Tooltip through Icon button and Tooltip.
+[Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/), each showing its tooltip on focus.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to Edit, then Delete; each shows its tooltip. | `play: Keyboard` |
 | Enter, Space | Presses the focused button (`onEdit`, `onDelete`). | `play: Keyboard` |
@@ -67,7 +66,7 @@ hidden from screen readers, the count as text.
 
 ## Provenance
 
-- Built by agents from Figma ("Volunteering row", the Manage row) and the designer's prototype (the Causes card for
+- Built by AI agents from Figma ("Volunteering row", the Manage row) and the designer's prototype (the Causes card for
   the Build layout, Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: the back office uses only the Build layout.

@@ -32,13 +32,10 @@
 
 ## Behaviour
 
-Behaviour from React Aria's `Menu`, `MenuItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger` and `MenuLoadMoreItem`,
-through the system's Popover.
-
 The menu follows the WAI-ARIA [Menu button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/): one Tab
 stop for the button; inside the menu the arrow keys move and typing a letter jumps to an item.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Enter (on the button) | Opens the menu with focus on its first item. | `play: Keyboard` |
 | ↓ and ↑ | Move to the next or previous item. | `play: Keyboard` |
@@ -82,7 +79,7 @@ that open and close by keyboard.
 
 ## Provenance
 
-- **Built by:** agents, from the prototype's one dropdown rhythm (rows 32, icons, descriptions, sections, submenus).
+- **Built by:** AI agents, from the prototype's one dropdown rhythm (rows 32, icons, descriptions, sections, submenus).
   Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** React Aria closes a menu on Enter, ticks included, unless the section sets

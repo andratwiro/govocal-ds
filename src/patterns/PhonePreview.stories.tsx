@@ -143,8 +143,7 @@ export const Avatars: StoryObj<typeof AvatarGroup> = {
 };
 
 /**
- * The phone's action by keyboard: Tab reaches it (it shows on focus), Enter presses it. Its play function proves the
- * component page's keyboard table.
+ * The phone's action by keyboard: Tab reaches it (it shows on focus), Enter presses it. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   render: function Render() {

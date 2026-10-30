@@ -28,7 +28,7 @@
 Each prompt row is a button, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/).
 Preview rows are text.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves from row to row. | `play: Keyboard` |
 | Enter | Sends that row's prompt (or starts what it names). | `play: Keyboard` |

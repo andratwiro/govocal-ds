@@ -82,7 +82,7 @@ export const Bulk: Story = {
 
 /**
  * The keys the form takes: Tab goes from the words to the name, then to Publish; Enter on Publish posts the update.
- * Its play function proves the component page's keyboard table.
+ * Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   render: () => <div style={{width: 512}}><DemoUpdates /></div>,

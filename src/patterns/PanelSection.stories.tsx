@@ -32,8 +32,7 @@ export const CollapsibleOpen: Story = {
 };
 
 /**
- * A collapsible section by keyboard: Tab reaches its header, Enter or Space folds and unfolds it. Its play function
- * proves the component page's keyboard table.
+ * A collapsible section by keyboard: Tab reaches its header, Enter or Space folds and unfolds it. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   args: {title: 'Project details', isCollapsible: true, children: <p style={{margin: 0}}>Dates, folder, visibility.</p>},

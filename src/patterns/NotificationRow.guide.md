@@ -31,10 +31,9 @@ Rows sit in a `NotificationRowList`, a named group. The switch is the system Swi
 
 The switch follows the WAI-ARIA [Switch pattern](https://www.w3.org/WAI/ARIA/apg/patterns/switch/); the rest of the
 row is a button to the email's page, after the [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/).
-Off, the row opens nothing: an email that is off isn't edited. Behaviour from React Aria's Button, and through the
-system's Switch, Text field and Rich text editor (the email's page).
+Off, the row opens nothing: an email that is off isn't edited.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the switch, then to the row's button while the email is on. | `play: Keyboard` |
 | Space (on the switch) | Turns the email off or on; off, the row's button goes. | `play: Keyboard` |
@@ -73,7 +72,7 @@ switch says it).
 
 ## Provenance
 
-- Built by agents from the designer's prototype (a phase's Notifications card and the email's page); not in Figma.
+- Built by AI agents from the designer's prototype (a phase's Notifications card and the email's page); not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: there is no preview of the email itself in the part (the page draws it on the stage).
 

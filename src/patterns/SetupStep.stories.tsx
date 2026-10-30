@@ -126,8 +126,7 @@ export const OpensAPicker: Story = {
 
 /**
  * The three kinds by keyboard: Tab moves card to card; Enter on Open runs it, Enter on Expand opens it in place, Enter
- * on Pick opens its picker and Esc closes it back to the card. Its play function proves the component page's keyboard
- * table.
+ * on Pick opens its picker and Esc closes it back to the card. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   render: function Render() {

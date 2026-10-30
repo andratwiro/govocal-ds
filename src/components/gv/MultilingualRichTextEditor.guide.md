@@ -23,10 +23,9 @@
 ## Behaviour
 
 The language row follows the WAI-ARIA [Radio group pattern](https://www.w3.org/WAI/ARIA/apg/patterns/radio/), the
-toolbar the [Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/). Behaviour from React Aria's
-RadioGroup, Toolbar and TextField.
+toolbar the [Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Lands on the shown language, then on the toolbar. | `play: Keyboard` |
 | Right arrow (on the languages) | Shows the next language; the editor follows. | `play: Keyboard` |
@@ -58,7 +57,7 @@ marks read in words, and the missing language shown and named (in an alert) when
 
 ## Provenance
 
-- Built by agents from the platform's multilingual rich text field (QuillMultilocWithLocaleSwitcher) on the Rich text
+- Built by AI agents from the platform's multilingual rich text field (QuillMultilocWithLocaleSwitcher) on the Rich text
   editor; not in Figma (the designer's drawings are pending: docs/OPEN-DECISIONS.md).
 - Reviewed by a person: not yet.
 - Known limits: the text is plain under the toolbar, as in Rich text editor (the toolbar shows state, it doesn't format

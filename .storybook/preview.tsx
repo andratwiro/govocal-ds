@@ -30,16 +30,22 @@ const preview: Preview = {
   },
   initialGlobals: {locale: 'en-GB', direction: 'ltr'},
   decorators: [
-    (Story, {globals}) => {
-      const chosen = LOCALES.some(l => l.value === globals.locale) ? (globals.locale as string) : 'en-GB';
-      const locale = globals.direction === 'rtl' ? 'ar-SA' : chosen;
+    (Story, {globals, storyGlobals, viewMode}) => {
+      // A story's own globals (the "Right to left" stories) win; on a docs page Storybook leaves them out of `globals`.
+      const g = {...globals, ...storyGlobals};
+      const chosen = LOCALES.some(l => l.value === g.locale) ? (g.locale as string) : 'en-GB';
+      const locale = g.direction === 'rtl' ? 'ar-SA' : chosen;
       const dir = RTL_LOCALES.has(locale) ? 'rtl' : 'ltr';
+      const docs = viewMode === 'docs';
       useEffect(() => {
+        if (docs) return;
         document.documentElement.dir = dir;
         document.documentElement.lang = locale;
-      }, [dir, locale]);
+      }, [dir, locale, docs]);
       // Figma and the prototype draw icons at 1.75 (Lucide's default is 2); an explicit strokeWidth still wins.
-      return <I18nProvider locale={locale}><LucideProvider strokeWidth={1.75}><Story /></LucideProvider></I18nProvider>;
+      const story = <I18nProvider locale={locale}><LucideProvider strokeWidth={1.75}><Story /></LucideProvider></I18nProvider>;
+      // On a docs page many stories share one document: each story turns only its own box.
+      return docs ? <div dir={dir} lang={locale}>{story}</div> : story;
     }
   ],
   parameters: {

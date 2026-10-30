@@ -44,8 +44,7 @@ export const Folded: Story = {render: () => <div style={{width: 52}}><SideNav ar
 
 /**
  * The keys the rail takes, folded: Tab walks the rows in order and each shows its name as a tooltip; Enter on a row
- * with a menu opens it, Esc closes it and puts focus back on the row. Its play function proves the component page's
- * keyboard table.
+ * with a menu opens it, Esc closes it and puts focus back on the row. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   render: () => <div style={{width: 52}}><SideNav aria-label="Main" isFolded><Items /></SideNav></div>,

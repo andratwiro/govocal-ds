@@ -20,9 +20,8 @@
 ## Behaviour
 
 The tool is a toggle button, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/).
-Behaviour from React Aria's ToggleButton.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the tool (inside a toolbar, the arrows do). | `play: Keyboard` |
 | Space | Presses it in, or out. | `play: Keyboard` |
@@ -49,7 +48,7 @@ Behaviour from React Aria's ToggleButton.
 
 ## Provenance
 
-- Built by agents from Figma's toolbar tool (one shape with each icon); the selected and disabled states are not in
+- Built by AI agents from Figma's toolbar tool (one shape with each icon); the selected and disabled states are not in
   Figma or the prototype.
 - Reviewed by a person: not yet.
 - Known limits: no tooltip shows its name.

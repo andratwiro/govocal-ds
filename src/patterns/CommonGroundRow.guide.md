@@ -27,10 +27,9 @@
 ## Behaviour
 
 Only the checkbox takes focus, after the WAI-ARIA [Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/);
-the row itself does nothing when pressed. Behaviour from React Aria's CheckboxField and CheckboxButton, through the
-system's Checkbox.
+the row itself does nothing when pressed.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the row's checkbox. | `play: Keyboard` |
 | Space | Ticks or clears the checkbox. | `play: Keyboard` |
@@ -62,7 +61,7 @@ system's Checkbox.
 
 ## Provenance
 
-- Built by agents from Figma ("Common ground row": Assignee · new, New, New · warning, Empty) and the designer's
+- Built by AI agents from Figma ("Common ground row": Assignee · new, New, New · warning, Empty) and the designer's
   prototype's Manage table; the checkbox is Not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: the back office doesn't use it yet; the row is a flex row, not

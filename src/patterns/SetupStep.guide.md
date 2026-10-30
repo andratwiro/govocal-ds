@@ -27,9 +27,9 @@
 
 The card's header is a button. Expand is a disclosure, after the WAI-ARIA
 [Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/); Pick opens a popover or a menu under the
-card. Behaviour from React Aria's Button, Dialog, DialogTrigger, Disclosure, DisclosurePanel, Heading and MenuTrigger.
+card.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves from card to card. | `play: Keyboard` |
 | Enter (Open) | Runs the step (`onPress`). | `play: Keyboard` |
@@ -64,7 +64,7 @@ is open, a picker that returns focus to the card, and decorative circles and che
 
 ## Provenance
 
-- Built by agents from Figma ("Setup step": Open and Expand) and the designer's prototype (the done check, the value
+- Built by AI agents from Figma ("Setup step": Open and Expand) and the designer's prototype (the done check, the value
   badge and the Pick kind are Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: the value badge keeps Figma's radius 6, unlike the round Badge (docs/DECISIONS.md, "Built in the

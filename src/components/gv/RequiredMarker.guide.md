@@ -22,7 +22,7 @@ Two placements: `field` (beside a field's label) and `card` (in a card's foot).
 
 ## Behaviour
 
-Not interactive: it shows a word and takes no focus or keys.
+Not interactive: it shows a word and can't be reached with Tab and answers no keys.
 
 ## Content
 
@@ -47,7 +47,7 @@ Not interactive: it shows a word and takes no focus or keys.
 
 ## Provenance
 
-- Built by agents from Figma (Required marker, node 14:878).
+- Built by AI agents from Figma (Required marker, node 14:878).
 - Reviewed by a person: not yet.
 - Known limits: the 6px gap before the word is the prototype's (Figma has none).
 

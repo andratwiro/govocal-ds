@@ -21,9 +21,9 @@
 ## Behaviour
 
 The toolbar follows the WAI-ARIA [Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/); the text is the
-browser's own text area. Behaviour from React Aria's Toolbar, ToggleButton and TextField.
+browser's own text area.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Lands on the toolbar (one stop), then in the text. | `play: Keyboard` |
 | Typing | Writes in the text. | `play: Keyboard` |
@@ -54,7 +54,7 @@ The toolbar's own keys are on the **Rich text toolbar** page.
 
 ## Provenance
 
-- Built by agents from Figma's Rich text toolbar and the prototype's editor; the text area is a plain one.
+- Built by AI agents from Figma's Rich text toolbar and the prototype's editor; the text area is a plain one.
 - Reviewed by a person: not yet.
 - Known limits: the text is plain: bold, italic and list hold a pressed state but don't format the words, and there is
   no story for the pickers.

@@ -34,7 +34,7 @@ A plain chip is static text. With `onPress` its label is a button, after the WAI
 [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/); with `onRemove` an × button sits beside it (two
 buttons, never one inside the other). A removed item can't be pressed: it is gone.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the chip's press, then to its ×. | `play: Keyboard` |
 | Enter (on the label) | Reveals the item (the page scrolls to it). | `play: Keyboard` |

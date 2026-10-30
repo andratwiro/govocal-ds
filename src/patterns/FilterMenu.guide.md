@@ -26,13 +26,10 @@
 
 ## Behaviour
 
-Behaviour from React Aria's `MenuTrigger`, `Menu`, `SubmenuTrigger` and `Dialog` (a long facet's searchable submenu),
-through the system's Option list and Icon button.
-
 It follows the WAI-ARIA [Menu button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/). Ticking a value
 keeps the menus open, so several can be ticked in a row.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Enter (on the button) | Opens the facets with focus on the first. | `play: Keyboard` |
 | ↓ and ↑ | Move between the facets, or between a facet's values. | `play: Keyboard` |
@@ -68,7 +65,7 @@ keeps the menus open, so several can be ticked in a row.
 
 ## Provenance
 
-- **Built by:** agents, from the prototype (the Manage tab's filter, after Linear). Not in Figma.
+- **Built by:** AI agents, from the prototype (the Manage tab's filter, after Linear). Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** it only holds which values are ticked (`value`); filtering the rows, and how facets combine, is the
   page's job. No "is not" operator.

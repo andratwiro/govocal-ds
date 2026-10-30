@@ -23,10 +23,9 @@
 ## Behaviour
 
 The switch follows the WAI-ARIA [Switch pattern](https://www.w3.org/WAI/ARIA/apg/patterns/switch/); turning it shows
-or hides the section and the badge follows. A locked section's switch is skipped. Behaviour from React Aria's SwitchField
-and SwitchButton, through the system's Switch.
+or hides the section and the badge follows. A locked section's switch is skipped.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the next section's switch, skipping a locked one. | `play: Keyboard` |
 | Space | Shows or hides the section; the badge changes with it. | `play: Keyboard` |
@@ -58,7 +57,7 @@ the only signal, and a locked switch that stays on and out of the tab order.
 
 ## Provenance
 
-- Built by agents from the real admin's section toggle on the homepage and custom pages; not in Figma.
+- Built by AI agents from the real admin's section toggle on the homepage and custom pages; not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: sections can't be reordered from the row; the badge reuses Status badge's live and draft looks.
 

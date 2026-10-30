@@ -26,9 +26,9 @@
 ## Behaviour
 
 The group follows the WAI-ARIA [Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/): every box is its
-own stop. Behaviour from React Aria's CheckboxGroup.
+own stop.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the next box in the group, then out of it. | `play: Keyboard` |
 | Shift+Tab | Moves to the box before. | `play: Keyboard` |
@@ -61,7 +61,7 @@ it, and the invalid state on every box.
 
 ## Provenance
 
-- Built by agents from neither Figma nor the prototype: React Aria's starter CheckboxGroup painted with the tokens
+- Built by AI agents from neither Figma nor the prototype: React Aria's starter CheckboxGroup painted with the tokens
   (tagged Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: only one story (Example); the horizontal row has none.

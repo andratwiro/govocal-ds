@@ -33,11 +33,11 @@ The map fills the height it is given (`className` or `style` sets it).
 
 ## Behaviour
 
-Behaviour from React Aria's Button (each pin). There is no WAI-ARIA pattern for a map. Each pin is a button, after the
+There is no WAI-ARIA pattern for a map. Each pin is a button, after the
 [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/), and the pins share one Tab stop with the arrow
 keys between them, as in a composite widget. Tab order: the map surface, the pins, the zoom buttons, the credits.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab (from the map surface) | Moves focus onto the pins: the last one focused, else the open one, else the first in view. | `e2e/map.spec.ts` |
 | Arrow keys (on a pin) | Move focus to the nearest pin in that direction. Directions stay as on screen, right to left too. | `e2e/map.spec.ts` |
@@ -80,7 +80,7 @@ controls that swap sides right to left while the map doesn't mirror.
 
 ## Provenance
 
-- Built by agents from the prototype's Manage tab map (MapLibre with OpenFreeMap's tiles; Not in Figma).
+- Built by AI agents from the prototype's Manage tab map (MapLibre with OpenFreeMap's tiles; Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: the platform draws its maps with ArcGIS; that engine is not written (the map takes any engine through
   `engine`, docs/DECISIONS.md, "Maps"); the arrow keys on the map surface pan it, but no test proves that yet; no

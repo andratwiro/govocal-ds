@@ -28,7 +28,7 @@ its columns at every width.
 
 ## Behaviour
 
-Not interactive: it takes no focus or keys, and adds no role (choose `elementType` for meaning: `main`, `form`,
+Not interactive: it can't be reached with Tab and answers no keys, and adds no role (choose `elementType` for meaning: `main`, `form`,
 `section`, a list).
 
 ## Content
@@ -54,7 +54,7 @@ yours, short and lower case (`list`, `detail`, `head`).
 
 ## Provenance
 
-- **Built by:** agents, for the benchmark's "compose a screen without CSS" (after Amsterdam's Grid). Not in Figma.
+- **Built by:** AI agents, for the benchmark's "compose a screen without CSS" (after Amsterdam's Grid). Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** no responsive areas: it keeps its columns on a narrow screen (the back office is a desktop admin);
   new on 30 Oct 2026, so the back office's pages haven't moved onto it yet.

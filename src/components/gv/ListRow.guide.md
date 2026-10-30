@@ -27,10 +27,10 @@ A ticked row is tinted.
 
 ## Behaviour
 
-Behaviour from React Aria's CheckboxField and CheckboxButton, through the system's Checkbox. The row itself takes no focus; its checkbox does, after the WAI-ARIA
+ The row itself takes no focus; its checkbox does, after the WAI-ARIA
 [Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the row's checkbox (which shows), then to the next row's. | `play: Keyboard` |
 | Space | Ticks or unticks the row. | `play: Keyboard` |
@@ -65,7 +65,7 @@ attention", and a decorative thumbnail hidden from assistive tech.
 
 ## Provenance
 
-- Built by agents from Figma's List row (Ideation: `Marks` and `Image`) and the prototype's Manage table (the
+- Built by AI agents from Figma's List row (Ideation: `Marks` and `Image`) and the prototype's Manage table (the
   checkbox, Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: two columns only (title and status); the row can't be opened or focused; no back-office page uses it

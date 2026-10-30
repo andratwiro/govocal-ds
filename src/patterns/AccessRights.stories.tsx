@@ -107,8 +107,7 @@ export const Modal: Story = {
 
 /**
  * The keys Access rights takes once overriding: Tab lands on the chosen card, arrows pick another, Tab goes on to
- * Require sign-in's settings, whose headings open and close with Enter or Space. Its play function proves the
- * component page's keyboard table.
+ * Require sign-in's settings, whose headings open and close with Enter or Space. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   args: {defaultOverriding: true},

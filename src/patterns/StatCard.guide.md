@@ -26,9 +26,9 @@
 
 With `onPress` the whole card is one button, after the WAI-ARIA
 [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/); its sparkline stays a picture so the card keeps one
-tab stop. Without it the card is a named group that takes no focus. Behaviour from React Aria's Button.
+tab stop. Without it the card is a named group that takes no focus.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to a card that opens a detail; a display-only card is skipped. | `play: Keyboard` |
 | Enter | Opens the detail. | `play: Keyboard` |
@@ -60,7 +60,7 @@ sentence for the sparkline, and a decorative chevron.
 
 ## Provenance
 
-- Built by agents from the designer's prototype (the overview's "Collecting now"); not in Figma.
+- Built by AI agents from the designer's prototype (the overview's "Collecting now"); not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: `value` is a string the page formats; the sparkline has no dates, so no value card.
 

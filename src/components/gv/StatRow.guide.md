@@ -29,13 +29,13 @@ Rows are 80 tall, so a stack's hover areas touch. A selected row stays painted a
 
 ## Behaviour
 
-Behaviour from React Aria's Link and ToggleButton. A row that leads somewhere is a link, after the WAI-ARIA
+ A row that leads somewhere is a link, after the WAI-ARIA
 [Link pattern](https://www.w3.org/WAI/ARIA/apg/patterns/link/); with `href` it goes there, with `onPress` it runs the
 page's action. A row that turns a filter on and off (`isSelected` passed, `true` or `false`) is a toggle button, after
 the [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/), and says whether it is pressed. A static row
 takes no focus.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the next row that leads somewhere; static rows are skipped. | `play: Keyboard` |
 | Enter | Follows the row: goes to its page, or turns its filter on or off. | `play: Keyboard` |
@@ -73,7 +73,7 @@ filter is on.
 
 ## Provenance
 
-- Built by agents from Figma's Stat row (Default, Default · new, Hover, Static); the selected state is the prototype's
+- Built by AI agents from Figma's Stat row (Default, Default · new, Hover, Static); the selected state is the prototype's
   (Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: none recorded.

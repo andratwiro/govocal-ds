@@ -34,7 +34,7 @@
 The toggles and chips are buttons, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/);
 the ⋯ opens a menu, after the [Menu button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves through an entry's toggles, its chips and its ⋯ menu. | `play: Keyboard` |
 | Enter (on a toggle) | Opens the full prompt, or the changes. | `play: Keyboard` |

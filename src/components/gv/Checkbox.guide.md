@@ -25,10 +25,9 @@
 
 ## Behaviour
 
-A checkbox follows the WAI-ARIA [Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/). Behaviour from
-React Aria's CheckboxField and CheckboxButton (through the starter's Checkbox).
+A checkbox follows the WAI-ARIA [Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the box. A disabled box is skipped. | `play: Keyboard` |
 | Space | Ticks the box, or unticks it. | `play: Keyboard` |
@@ -61,7 +60,7 @@ state for indeterminate, Space to tick, a focus ring, and an error read as its d
 
 ## Provenance
 
-- Built by agents from Figma (Checkbox, node 5:317) and the prototype: Figma draws the box; the checked, indeterminate
+- Built by AI agents from Figma (Checkbox, node 5:317) and the prototype: Figma draws the box; the checked, indeterminate
   and disabled states are the prototype's.
 - Reviewed by a person: not yet.
 - Known limits: Figma's prototype blue for "checked" has no token, so the box uses Figma's `action/checked`.

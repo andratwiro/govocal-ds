@@ -32,7 +32,7 @@ export const Empty: Story = {args: {items: []}};
 
 /**
  * The keys the list takes: Tab reaches "Mark all as read", then each notification that leads somewhere; Enter on
- * "Mark all as read" clears every unread dot. Its play function proves the component page's keyboard table.
+ * "Mark all as read" clears every unread dot. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   render: () => {

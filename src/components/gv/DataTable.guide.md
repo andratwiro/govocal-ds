@@ -38,7 +38,7 @@ The table follows the WAI-ARIA [Grid pattern](https://www.w3.org/WAI/ARIA/apg/pa
 stop for Tab, and the arrow keys move inside it. A press on a row opens it; only the checkbox, Space, or a Shift, ⌘
 or Ctrl click ticks it, so people can open a record while others stay ticked.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus into the table, onto a row. | `play: Keyboard` |
 | ↓ and ↑ | Move focus to the next or previous row. | `play: Keyboard` |

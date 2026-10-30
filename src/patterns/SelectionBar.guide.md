@@ -24,12 +24,10 @@
 
 ## Behaviour
 
-Behaviour from React Aria's `Toolbar` and `MenuTrigger`, through the system's Button, Icon button and Popover.
-
 It follows the WAI-ARIA [Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/): one Tab stop, the arrows
 between the actions.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus into the bar, onto its first action. | `play: Keyboard` |
 | → and ← | Move between the actions and the ×. | `play: Keyboard` |
@@ -65,7 +63,7 @@ buttons announced as such, and a named ×.
 
 ## Provenance
 
-- **Built by:** agents, from the prototype (its one `.pj-inbar` bulk bar). Not in Figma.
+- **Built by:** AI agents, from the prototype (its one `.pj-inbar` bulk bar). Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** focus isn't moved anywhere when the bar disappears; with many actions the bar doesn't fold them into
   a "More" menu.

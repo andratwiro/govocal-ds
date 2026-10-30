@@ -31,10 +31,9 @@ In bulk: the same form in a Modal titled "Official update", its footer saying ho
 
 A form with a button; in bulk, a modal dialog after the WAI-ARIA
 [Dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) that opens on the words and gives focus back
-to its button when it closes. Publishing applies at once, with an Undo toast from the page. Behaviour from React
-Aria's TextArea and TextField (and its Button and Modal, through the system's parts).
+to its button when it closes. Publishing applies at once, with an Undo toast from the page.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves from the words to the name, then to Publish. | `play: Keyboard` |
 | Enter (on Publish) | Publishes the update and clears the words. | `play: Keyboard` |
@@ -76,7 +75,7 @@ returns focus when it closes.
 
 ## Provenance
 
-- Built by agents from the designer's prototype (its update block and bulk popover); not in Figma.
+- Built by AI agents from the designer's prototype (its update block and bulk popover); not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: the words field draws no visible label (it is named by its place); an update can't be edited or
   deleted once posted, only taken back by the page's Undo.

@@ -156,11 +156,25 @@ different parts never touch the same file.
 | `## When to use` | Bullets: the jobs it does, with real examples from the back office ("an idea in the Manage tab"). |
 | `## When not to use` | Bullets. **Every bullet names the part to use instead, in bold, by its sidebar name**: `use **Link**`. The guard fails on a bullet with no bold name, or a bold name that isn't a Components or Patterns entry. |
 | `## Anatomy` | A numbered list of its named parts (Head, Label, Leading icon…), and its sizes in a line. |
-| `## Behaviour` | Interactive parts: one sentence linking the WAI-ARIA APG pattern (`https://www.w3.org/WAI/ARIA/apg/patterns/<name>/`; a plain text input has none: start "No WAI-ARIA APG pattern covers…"), then a keyboard table, `\| Key \| What it does \| Checked by \|`, in plain words (no React Aria terms). Each row's "Checked by" names what proves it: `` `e2e/<spec>.spec.ts` `` or `` `play: <StoryExport>` ``. A part that takes no focus or keys: one line starting "Not interactive". |
+| `## Behaviour` | Interactive parts: one sentence linking the WAI-ARIA APG pattern (`https://www.w3.org/WAI/ARIA/apg/patterns/<name>/`; a plain text input has none: start "No WAI-ARIA APG pattern covers…"), then a keyboard table, `\| Key \| What it does \| Tested by \|`, in plain words (no React Aria terms, and no "Behaviour from React Aria's …" line: docs/REACT-ARIA.md lists those). Each row's "Tested by" names what proves it: `` `e2e/<spec>.spec.ts` `` or `` `play: <StoryExport>` ``. A part that takes no focus or keys: one line starting "Not interactive" ("Not interactive: you can't reach it with Tab or press it"). |
 | `## Content` | Label rules, sentence case, how long, the exact words for common cases, which words come in through `labels`. |
 | `## Accessibility` | "The part gives you:" and "You still own:" (the page adds its axe results and the link to Overview › Accessibility). |
 | `## Related` | Bullets, each with a bold part name and why you'd look at it. |
 | `## Changes` | Dated bullets, newest first, from `docs/DECISIONS.md` and the git log; the first is the day you wrote the page. |
+
+**Write for a designer new to the system** (the fresh-eyes check of 30 Oct 2026 found the same confusions on most
+pages):
+- Say a setting in words first, its prop name after, if at all: "the Clear button (`showClear`, on by default)", not
+  "Clear (optional, `showClear`)". `aria-label` is "a name screen readers hear, not shown on screen".
+- Sizes in pixels with the unit: "32px tall", "a 16px icon". Type as its role and size: "Small (12px)".
+- Every product word once explained where it first appears: "the Manage tab (a phase's list of inputs)".
+- A story described in Content or When to use must show it: a story named "Filled" is filled, "Empty" is empty, and a
+  layout the page promises (wrapping, a short last row, right to left) is visible in the story.
+- "When not to use" gives the test, not just the name: "Pick **Badge** when the word names a kind, not a stage".
+- "You still own" lists what the screen's designer or developer must decide; say which when it is only one of them.
+- Changes and Provenance cite `docs/DECISIONS.md` with the decision in a few words; the page links the file.
+- The page explains its own words (part, story, `labels`, Not in Figma, Tested by…) in "Words on this page" at the
+  top (`WORDS` in `src/overview/ComponentPage.tsx`); add one there rather than explaining it on every page.
 
 Leave out `## Provenance`: the page says "Not yet recorded" until it is filled in (who built it, from what, who
 reviewed it). If you add it, it goes between Related and Changes.

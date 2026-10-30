@@ -33,9 +33,8 @@
 ## Behaviour
 
 The trigger is a button that opens a list after the WAI-ARIA [Listbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/).
-Behaviour from React Aria's Select (and its Autocomplete when searchable).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Enter (on the trigger) | Opens the list, focus on an option; with a search, focus goes to the search. | `e2e/form-validation.spec.ts`, `e2e/selectors.spec.ts` |
 | Typing (in the search) | Narrows the list; "No results" when nothing matches. | `e2e/selectors.spec.ts` |
@@ -75,7 +74,7 @@ marked selected, focus back on the trigger when it closes, a search that keeps f
 
 ## Provenance
 
-- Built by agents from the prototype's selectors (New project's Space pill, the drawer's property pills, the toolbar
+- Built by AI agents from the prototype's selectors (New project's Space pill, the drawer's property pills, the toolbar
   sorts) on React Aria's Select; not in Figma yet.
 - Reviewed by a person: not yet.
 - Known limits: several values at once (`selectionMode="multiple"`) has no story; use Option list for that today.

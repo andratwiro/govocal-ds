@@ -29,10 +29,9 @@
 ## Behaviour
 
 Radio tiles follow the WAI-ARIA [Radio group pattern](https://www.w3.org/WAI/ARIA/apg/patterns/radio/); checkbox tiles
-the [Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/). Behaviour from React Aria's RadioField and
-RadioButton, or CheckboxField and CheckboxButton.
+the [Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Down arrow (radio tiles) | Moves to the next tile and chooses it. | `e2e/forms.spec.ts` |
 | Tab (checkbox tiles) | Moves to the next tile; each is its own stop. | `play: Keyboard` |
@@ -66,7 +65,7 @@ target, the group's arrow keys or Tab stops, and revealed fields placed after th
 
 ## Provenance
 
-- Built by agents from the prototype (`.pj-repopt`, `.pj-pick`); not in Figma yet.
+- Built by AI agents from the prototype (`.pj-repopt`, `.pj-pick`); not in Figma yet.
 - Reviewed by a person: not yet.
 - Known limits: `media` takes an icon today; the method picker's Illustration in it is still to come.
 

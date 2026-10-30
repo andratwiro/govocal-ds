@@ -24,12 +24,10 @@
 
 ## Behaviour
 
-Behaviour from React Aria's `Button`.
-
 It follows the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/): a click, a tap, Enter or
 Space presses it.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the button. A disabled one is skipped. | `play: Keyboard` |
 | Enter | Presses the button. | `play: Keyboard` |
@@ -63,7 +61,7 @@ ring, Enter and Space, and a disabled state that leaves the tab order.
 
 ## Provenance
 
-- **Built by:** agents, from Figma (Icon button: Style × Tone, 28) and the prototype (the 24 size in dense toolbars).
+- **Built by:** AI agents, from Figma (Icon button: Style × Tone, 28) and the prototype (the 24 size in dense toolbars).
 - **Reviewed by a person:** not yet.
 - **Known limits:** Figma draws bordered only in strong; default works but has no Figma frame. No pressed (toggle)
   state.

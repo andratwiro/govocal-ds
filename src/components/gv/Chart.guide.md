@@ -35,10 +35,9 @@ The plot is 141 high by default (the axis labels add 34); a Sparkline is 110, or
 
 The plot is one tab stop that works as a slider over the points, after the WAI-ARIA
 [Slider pattern](https://www.w3.org/WAI/ARIA/apg/patterns/slider/); each point is read out as the keyboard reaches it
-("09 Mar: Participants 10, Visitors 9"). Hovering does the same with the pointer and picks out the line under it. No
-React Aria part: React Aria has no charts, so this is the system's own SVG with pointer and key events.
+("09 Mar: Participants 10, Visitors 9"). Hovering does the same with the pointer and picks out the line under it. It is drawn by the system itself.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the plot and shows the first point's card. A legend item linked to the chart is the next stop. | `e2e/charts.spec.ts` |
 | Right arrow, Left arrow | Moves to the next or the previous point; at the last point it stays put. | `e2e/charts.spec.ts` |
@@ -86,7 +85,7 @@ follows focus as it follows the pointer, a legend that picks a series out on foc
 
 ## Provenance
 
-- Built by agents from Figma ("Chart": Line · 1 series, Line · 2 series, Sparkline) and the designer's prototype; the
+- Built by AI agents from Figma ("Chart": Line · 1 series, Line · 2 series, Sparkline) and the designer's prototype; the
   value card, the keyboard explorer and the linked legend are Not in Figma (the project lead's call, 29 Oct: charts
   are interactive).
 - Reviewed by a person: not yet.

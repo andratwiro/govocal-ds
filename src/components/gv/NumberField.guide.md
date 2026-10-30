@@ -25,10 +25,9 @@
 
 ## Behaviour
 
-The field follows the WAI-ARIA [Spinbutton pattern](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/). Behaviour
-from React Aria's NumberField.
+The field follows the WAI-ARIA [Spinbutton pattern](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus into the number. The − and + buttons take no Tab stop: the next Tab leaves the field. | `play: Keyboard` |
 | Up arrow | Adds one. | `play: Keyboard` |
@@ -60,7 +59,7 @@ the page's language, and the description and error read with it.
 
 ## Provenance
 
-- Built by agents from Figma (Number field, node 5:234) on React Aria's starter NumberField; the side label and the
+- Built by AI agents from Figma (Number field, node 5:234) on React Aria's starter NumberField; the side label and the
   prefix come from the prototype's Proposal requirements and Voting fields.
 - Reviewed by a person: not yet.
 - Known limits: no stories for the description, the error or the disabled state.

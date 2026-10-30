@@ -24,8 +24,7 @@ export const Static: Story = {args: {label: 'Participants', value: '215', series
 export const Empty: Story = {args: {label: 'Participants', value: '0', caption: 'Numbers appear here once participants take part'}};
 
 /**
- * A card that opens a detail, by keyboard: Tab reaches it, Enter opens. A display-only card takes no tab stop. Its
- * play function proves the component page's keyboard table.
+ * A card that opens a detail, by keyboard: Tab reaches it, Enter opens. A display-only card takes no tab stop. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   render: function Render() {

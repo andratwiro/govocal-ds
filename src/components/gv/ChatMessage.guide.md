@@ -32,7 +32,7 @@ The actions are buttons, after the WAI-ARIA [Button pattern](https://www.w3.org/
 choice can be made once: both buttons then turn off, the picked one marked pressed, and focus stays on the group
 instead of dropping to the page.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to Undo this change, then Show what changed, then the next message's buttons. | `play: Keyboard` |
 | Enter (on a choice) | Picks it; both choices turn off and focus stays on the group. | `play: Keyboard` |

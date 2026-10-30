@@ -28,13 +28,11 @@ It sits 12 from the control it points at.
 
 ## Behaviour
 
-Behaviour from React Aria's `Popover` and `OverlayArrow`.
-
 The bubble is a dialog after the WAI-ARIA
 [Dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/): when it opens, focus moves into it and stays
 there until it closes. Got it calls `onDismiss`, Skip calls `onSkip`; the page closes it in both (`isOpen`).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | (on open) | Focus moves into the bubble. | `play: Keyboard` |
 | Tab and Shift Tab | Move through ×, Skip and Got it, and wrap round inside the bubble. | `play: Keyboard` |
@@ -69,7 +67,7 @@ to close, and a tail that follows its placement in both directions.
 
 ## Provenance
 
-- **Built by:** agents, from the prototype (its `#pj-coach` bubble). Not in Figma.
+- **Built by:** AI agents, from the prototype (its `#pj-coach` bubble). Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** its dialog has no accessible name (the title isn't wired to it); the × calls both `onSkip` and
   `onDismiss`; nothing in the back office uses it yet; the bubble's translucent white is still an open call for the

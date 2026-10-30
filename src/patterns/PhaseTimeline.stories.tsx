@@ -38,8 +38,7 @@ export const Spotlight: Story = {
 /** Every phase still to come: grey dots, grey spine. */
 export const AllUpcoming: Story = {name: 'All upcoming', args: {phases: PHASES.map(p => ({...p, status: 'upcoming', count: undefined, fresh: undefined}))}};
 
-/** Tab walks the phases in order, one link each; the phase being viewed says so. Its play function proves the
- * component page's keyboard table. */
+/** Tab walks the phases in order, one link each; the phase being viewed says so. Try the keys here; an automated test presses them too (the Interactions panel). */
 export const Keyboard: Story = {
   args: {phases: PHASES.map(p => ({...p, isCurrent: p.id === 'b'}))},
   play: async ({canvasElement}) => {

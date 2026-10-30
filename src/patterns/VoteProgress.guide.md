@@ -25,7 +25,7 @@
 ## Behaviour
 
 Not interactive: a progress bar that takes no focus. Screen readers read it as a progress bar named by `label`, with
-its value and maximum. Behaviour from React Aria's ProgressBar.
+its value and maximum.
 
 ## Content
 
@@ -54,7 +54,7 @@ is never the only signal.
 
 ## Provenance
 
-- Built by agents from Figma ("Vote progress": Threshold, Count, Count · new) and the designer's prototype.
+- Built by AI agents from Figma ("Vote progress": Threshold, Count, Count · new) and the designer's prototype.
 - Reviewed by a person: not yet.
 - Known limits: the bar is 96 wide wherever it sits (the prototype's; Figma varies by frame, docs/DECISIONS.md,
   "Fidelity review"); a count bar's maximum is the leader's votes, not a goal.

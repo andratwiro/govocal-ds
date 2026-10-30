@@ -22,12 +22,10 @@
 
 ## Behaviour
 
-Behaviour from React Aria's `Button`.
-
 It follows the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/): a click, a tap, Enter or
 Space presses it.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the button. A disabled one is skipped. | `play: Keyboard` |
 | Enter | Presses the button. | `play: Keyboard` |
@@ -59,7 +57,7 @@ order.
 
 ## Provenance
 
-- **Built by:** agents, from Figma (Button · compact, node 33:478) and the prototype (in-card buttons: the icon gap,
+- **Built by:** AI agents, from Figma (Button · compact, node 33:478) and the prototype (in-card buttons: the icon gap,
   the hover lift, disabled at 45%).
 - **Reviewed by a person:** not yet.
 - **Known limits:** no pending state and no danger tone (a Button has both); Figma draws no disabled state.

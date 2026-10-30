@@ -31,12 +31,10 @@ It opens 120 ms after the pointer arrives and closes as soon as it leaves (`Tool
 
 ## Behaviour
 
-Behaviour from React Aria's `Tooltip`, `TooltipTrigger` and `OverlayArrow`.
-
 The tooltip follows the WAI-ARIA [Tooltip pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/): it shows while
 its control has keyboard focus or the pointer on it, and the control is described by it.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab (onto the control) | Shows the tooltip. | `play: Keyboard` |
 | Esc | Hides the tooltip; focus stays on the control. | `play: Keyboard` |
@@ -74,7 +72,7 @@ control (`aria-describedby`), hides on Esc, and keeps its words in view up to 32
 
 ## Provenance
 
-- **Built by:** agents, from the prototype (its GVTooltip: the 120 ms delay, the 320 maximum, the hugging box, the
+- **Built by:** AI agents, from the prototype (its GVTooltip: the 120 ms delay, the 320 maximum, the hugging box, the
   tail on step cards). Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** it doesn't open on the very first focus when that focus is set from code rather than by a key

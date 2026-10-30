@@ -22,9 +22,9 @@
 ## Behaviour
 
 The toolbar follows the WAI-ARIA [Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/): one Tab stop,
-arrows inside. Behaviour from React Aria's Toolbar and ToggleButton.
+arrows inside.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Lands on the first tool; the next Tab leaves the toolbar. | `play: Keyboard` |
 | Right arrow, Left arrow | Move between the tools. | `play: Keyboard` |
@@ -54,7 +54,7 @@ icon buttons.
 
 ## Provenance
 
-- Built by agents from Figma (Rich text toolbar, node 4:178) and the prototype's 14px icons.
+- Built by AI agents from Figma (Rich text toolbar, node 4:178) and the prototype's 14px icons.
 - Reviewed by a person: not yet.
 - Known limits: the tools hold state only; no tooltips on the icon-only tools.
 

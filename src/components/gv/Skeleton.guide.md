@@ -21,7 +21,7 @@
 
 ## Behaviour
 
-Not interactive: a skeleton takes no focus and no keys, and is hidden from screen readers.
+Not interactive: a skeleton can't be reached with Tab and answers no keys, and is hidden from screen readers.
 
 ## Content
 
@@ -49,7 +49,7 @@ Not interactive: a skeleton takes no focus and no keys, and is hidden from scree
 
 ## Provenance
 
-- Built by agents from the prototype's skeleton rows (Not in Figma).
+- Built by AI agents from the prototype's skeleton rows (Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: no ready-made groups (a text block, a card, a row) beyond the stories; each page lays its shapes out.
 

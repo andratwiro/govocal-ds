@@ -114,7 +114,7 @@ function problems(part) {
     if (!APG.test(behaviour) && !/^No WAI-ARIA APG pattern covers\b/m.test(behaviour)) {
       say('interactive: "Behaviour" must link its WAI-ARIA APG pattern (https://www.w3.org/WAI/ARIA/apg/patterns/…), or start "No WAI-ARIA APG pattern covers" for a plain text input');
     }
-    if (!rows.length) say('interactive: "Behaviour" needs a keyboard table (| Key | What it does | Checked by |)');
+    if (!rows.length) say('interactive: "Behaviour" needs a keyboard table (| Key | What it does | Tested by |)');
   } else if (!rows.length && !/^Not interactive\b/.test(behaviour)) {
     say('"Behaviour" is a keyboard table, or starts "Not interactive"');
   }
@@ -126,7 +126,7 @@ function problems(part) {
     if (play && !hasPlay(part.stories, play)) {
       say(`keyboard row "${key}" cites the play function of story ${play}, which has none`);
     }
-    if (!spec && !play) say(`keyboard row "${key}": "Checked by" names \`e2e/<spec>.spec.ts\` or \`play: <Story>\``);
+    if (!spec && !play) say(`keyboard row "${key}": "Tested by" names \`e2e/<spec>.spec.ts\` or \`play: <Story>\``);
   }
   return out;
 }

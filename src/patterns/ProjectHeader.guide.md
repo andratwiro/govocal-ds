@@ -28,9 +28,8 @@ The crumb frame is 48 tall; the bar is full width.
 
 The bar is a row of buttons and links; Share and Publish open menus, after the WAI-ARIA
 [Menu button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/), and the mode switch is a single choice.
-Behaviour from React Aria's MenuTrigger (through Button, Menu, Breadcrumbs and Segmented control).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Right arrow, Left arrow (in the mode switch) | Moves to the next or previous mode. | `play: Keyboard` |
 | Enter (on a mode) | Opens that mode. | `play: Keyboard` |
@@ -66,7 +65,7 @@ badge in words, a mode switch read as one choice, and menu buttons whose menus r
 
 ## Provenance
 
-- Built by agents from Figma ("Project header", its three levels) and the designer's prototype (the full bar).
+- Built by AI agents from Figma ("Project header", its three levels) and the designer's prototype (the full bar).
 - Reviewed by a person: not yet.
 - Known limits: no archived state (the page says it in a Banner and Publish ▾ offers the way back); a phase has no
   Share.

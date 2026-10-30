@@ -30,7 +30,7 @@ The field is a text box and the round button a button, after the WAI-ARIA
 [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/). While the assistant works the field stays
 focusable but read-only, and the button stops the run.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Enter (in the field) | Sends the prompt; the field clears and keeps focus. | `play: Keyboard` |
 | Shift+Enter | Starts a new line. | `play: Keyboard` |

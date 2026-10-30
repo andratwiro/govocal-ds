@@ -28,9 +28,9 @@
 ## Behaviour
 
 The group follows the WAI-ARIA [Radio group pattern](https://www.w3.org/WAI/ARIA/apg/patterns/radio/): the group is one
-Tab stop. Behaviour from React Aria's RadioGroup, RadioField and RadioButton.
+Tab stop.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus into the group, onto the chosen option; the next Tab leaves the group. | `play: Keyboard` |
 | Down arrow, Up arrow | Moves to the next or previous option and chooses it. | `play: Keyboard` |
@@ -62,7 +62,7 @@ description read with it, and an error read with the group.
 
 ## Provenance
 
-- Built by agents from the prototype's New project modal (options with a description, side by side) on React Aria's
+- Built by AI agents from the prototype's New project modal (options with a description, side by side) on React Aria's
   starter RadioGroup; not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: the radio label's slate tone is a primitive no semantic token fits yet (allow-listed in

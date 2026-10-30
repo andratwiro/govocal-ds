@@ -34,9 +34,9 @@ Rows are bordered, full width of their column, stacked 8 apart in an `ActionRowL
 
 A row is a link (with `href` or `onPress`), or a menu button with `menu`, after the WAI-ARIA
 [Menu button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/). A working row is a busy group with
-nothing to press. Behaviour from React Aria's Button, MenuTrigger, ProgressBar and Link.
+nothing to press.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the next row; a working row is skipped. | `play: Keyboard` |
 | Enter | Runs the row's action or follows its link. | `play: Keyboard` |
@@ -73,7 +73,7 @@ the label.
 
 ## Provenance
 
-- Built by agents from the designer's prototype ("Next actions" and the Insights panel's "Recommended actions");
+- Built by AI agents from the designer's prototype ("Next actions" and the Insights panel's "Recommended actions");
   not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: a working row can't be cancelled from the row; the badge is text the page writes.

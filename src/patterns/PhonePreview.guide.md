@@ -30,10 +30,9 @@
 
 The screen is inert: what a resident would press does nothing here. The phone's own action is one button or link
 that shows on hover and on keyboard focus, after the WAI-ARIA
-[Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/). Behaviour from React Aria's Button and Link (and
-the stage eye's Tooltip).
+[Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the phone's action and shows it. | `e2e/build-tab.spec.ts` |
 | Enter | Presses the action ("Edit project page"). | `play: Keyboard` |
@@ -67,7 +66,7 @@ that says so, and the stage eye with a tooltip.
 
 ## Provenance
 
-- Built by agents from the designer's prototype (its light phone and preview pane); Figma draws a dark bezel, which
+- Built by AI agents from the designer's prototype (its light phone and preview pane); Figma draws a dark bezel, which
   was not followed.
 - Reviewed by a person: not yet.
 - Known limits: the screen is a hand-built likeness, not the front office itself; no Before · Open · Ended switch

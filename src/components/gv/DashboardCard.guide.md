@@ -38,10 +38,9 @@
 
 The card itself takes no focus; what's inside does. Topic rows are buttons, after the WAI-ARIA
 [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/), and a demographic card's legend rows each take a
-tab stop that picks their share out of the stacked bar. A chart inside keeps its own keys (see Chart). Behaviour from
-React Aria's Button (the topic rows).
+tab stop that picks their share out of the stacked bar. A chart inside keeps its own keys (see Chart).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the next topic row, then to each legend row of a demographic card. | `play: Keyboard` |
 | Enter, Space (on a topic row) | Opens that topic (`onAction`). | `play: Keyboard` |
@@ -86,7 +85,7 @@ input with its reactions).
 
 ## Provenance
 
-- Built by agents from Figma ("Dashboard card", ten types) and the designer's prototype; the Most liked list, the
+- Built by AI agents from Figma ("Dashboard card", ten types) and the designer's prototype; the Most liked list, the
   empty card and the hover and focus emphasis are Not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: the kinds and body parts speak Go Vocal's dashboards (statements, votes) though the card is a

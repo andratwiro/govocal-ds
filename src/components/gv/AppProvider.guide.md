@@ -28,7 +28,7 @@ It draws no element of its own and takes no `className`. Inside it:
 
 ## Behaviour
 
-Not interactive itself: it takes no focus or keys. The toasts it draws are Toast's (their keys are on Toast's page);
+Not interactive itself: it can't be reached with Tab and answers no keys. The toasts it draws are Toast's (their keys are on Toast's page);
 `e2e/app-provider.spec.ts` checks that `toast()` shows one toast, even beside a page's own region, and that icons draw
 at 1.75.
 
@@ -56,7 +56,7 @@ announcement), parts laid out in the locale's direction, and dates and numbers i
 
 ## Provenance
 
-- **Built by:** agents, from the system's own needs (one toast region, the 1.75 stroke every app had to remember).
+- **Built by:** AI agents, from the system's own needs (one toast region, the 1.75 stroke every app had to remember).
   Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** the back office's root doesn't use it yet (it sets the 1.75 stroke itself and its pages mount their

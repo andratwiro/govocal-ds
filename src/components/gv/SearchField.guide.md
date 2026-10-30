@@ -26,9 +26,9 @@ Collapsible: a bordered search **Icon button** with the tooltip "Search" until i
 ## Behaviour
 
 No WAI-ARIA APG pattern covers a search input: it is the browser's own search field. The list it filters is the
-page's. Behaviour from React Aria's SearchField.
+page's.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Enter (on the search button) | Opens the collapsible field with focus inside. | `play: Keyboard` |
 | Esc | Clears the text and keeps focus in the field. | `play: Keyboard` |
@@ -61,7 +61,7 @@ page's language, Esc to clear, and a collapsible button that shares the field's 
 
 ## Provenance
 
-- Built by agents from the prototype (its Manage tables' collapsible search); not in Figma.
+- Built by AI agents from the prototype (its Manage tables' collapsible search); not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: Enter submitting (`onSubmit`) has no story.
 

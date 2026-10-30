@@ -38,7 +38,7 @@ The panel is a non-modal dialog, after the WAI-ARIA [Dialog pattern](https://www
 focus moves in when it opens and goes back when it closes, but the list behind it stays usable, so a click on another
 row shows that row here.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Enter (on what opens it) | Opens the panel and moves focus into it. | `play: Keyboard` |
 | Tab | Moves through the panel's controls in order: the head's buttons (pager, ×), then the body's fields and buttons. | `play: Keyboard` |

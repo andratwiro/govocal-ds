@@ -120,7 +120,7 @@ export const RecommendedActions: Story = {
 
 /**
  * The keys a row takes: Tab reaches each row that does something (a working row is skipped: nothing to press), Enter
- * runs it, and a menu row opens its menu. Its play function proves the component page's keyboard table.
+ * runs it, and a menu row opens its menu. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   render: function Render() {

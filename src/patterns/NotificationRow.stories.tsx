@@ -130,7 +130,7 @@ export const IdeationEmails: Story = {
 
 /**
  * The keys a row takes: Tab reaches its switch, Space turns the email off and on; Tab goes on to the row itself while
- * the email is on, and Enter opens its page. Its play function proves the component page's keyboard table.
+ * the email is on, and Enter opens its page. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   render: function Render(args) {

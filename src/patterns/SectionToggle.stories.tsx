@@ -37,7 +37,7 @@ export const List: Story = {
 
 /**
  * The keys a section list takes: Tab skips a locked section's switch and moves from switch to switch; Space shows or
- * hides the section. Its play function proves the component page's keyboard table.
+ * hides the section. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   render: () => {

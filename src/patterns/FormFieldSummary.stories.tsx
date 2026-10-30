@@ -129,8 +129,7 @@ export const InACard: Story = {
 };
 
 /**
- * The questions take no focus; Tab goes straight to Edit form, and Enter or Space presses it. Its play function proves
- * the component page's keyboard table.
+ * The questions take no focus; Tab goes straight to Edit form, and Enter or Space presses it. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   render: function Render() {
@@ -138,7 +137,7 @@ export const Keyboard: Story = {
     return (
       <>
         <FormFieldSummary questions={IDEA_FORM} onEdit={() => setPresses(n => n + 1)} />
-        <span role="status">{presses ? `Edit form pressed ${presses} ${presses === 1 ? 'time' : 'times'}` : 'Setup'}</span>
+        <span role="status">{presses ? `Edit form pressed ${presses} ${presses === 1 ? 'time' : 'times'}` : 'Not part of the recipe: your presses on Edit form show here'}</span>
       </>
     );
   },

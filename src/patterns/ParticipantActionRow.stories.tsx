@@ -96,7 +96,7 @@ export const InACard: Story = {name: 'In a card', render: () => <InACardRender /
 
 /**
  * The keys a row takes: Tab reaches its switch, Space turns the action off and on; Tab goes on to the row while the
- * action is on, and Enter opens who can take it. Its play function proves the component page's keyboard table.
+ * action is on, and Enter opens who can take it. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   render: function Render(args) {

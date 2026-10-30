@@ -26,7 +26,7 @@ No margin of its own: the page or its parent places it. Padding only when asked 
 
 ## Behaviour
 
-Not interactive: it takes no focus or keys, and adds no role (choose `elementType` for meaning: `section`, `nav`,
+Not interactive: it can't be reached with Tab and answers no keys, and adds no role (choose `elementType` for meaning: `section`, `nav`,
 `ul`…).
 
 ## Content
@@ -53,7 +53,7 @@ the one you choose.
 
 ## Provenance
 
-- **Built by:** agents, for the benchmark's "compose a screen without CSS" (after Grafana's Stack). Not in Figma.
+- **Built by:** AI agents, for the benchmark's "compose a screen without CSS" (after Grafana's Stack). Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** new on 30 Oct 2026, so the back office's pages haven't moved onto it yet; no responsive gaps.
 

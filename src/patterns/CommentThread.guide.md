@@ -32,10 +32,9 @@ It fills the side panel's width (512 in the stories); a new comment sits on the 
 
 The two lists are tabs, after the WAI-ARIA [Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/); each
 action is a button. Every action applies at once: Post adds the comment, Delete and Dismiss warning act with an Undo
-toast from the page. Behaviour from React Aria's Button, TextArea and TextField (and its Tabs, through the system's
-Tabs).
+toast from the page.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the tabs, then through each comment's actions in order, then to the composer and Post. | `play: Keyboard` |
 | Right arrow, Left arrow (on the tabs) | Moves between Comments and Internal conversation and shows it. | `play: Keyboard` |
@@ -79,7 +78,7 @@ words.
 
 ## Provenance
 
-- Built by agents from the designer's prototype (its discussion block); not in Figma.
+- Built by AI agents from the designer's prototype (its discussion block); not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: replies go one level deep (a reply to a reply answers its parent); `time` is text the page writes, not
   a date the thread formats; the composer's field draws no visible label (it is named by its place).

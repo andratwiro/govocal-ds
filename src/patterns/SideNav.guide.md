@@ -32,9 +32,9 @@
 
 A navigation landmark of links and buttons, after the WAI-ARIA
 [Disclosure navigation pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/): Tab walks the rows, and the
-rows with a menu open it. Behaviour from React Aria's Button and Link, with Tooltip through the system's Tooltip.
+rows with a menu open it.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves through the rows in order, top to bottom. | `play: Keyboard` |
 | Tab (folded) | Shows the focused row's name as a tooltip. | `play: Keyboard` |
@@ -76,7 +76,7 @@ the dark surface.
 
 ## Provenance
 
-- Built by agents from the real admin's dark rail and the prototype's sidebar, not from Figma (tagged Not in Figma).
+- Built by AI agents from the real admin's dark rail and the prototype's sidebar, not from Figma (tagged Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: only two levels (no nested items); the accent icon and focus ring use component tokens on the one dark
   surface (docs/DECISIONS.md); the folded count's text is a step larger than the prototype's.

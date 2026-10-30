@@ -28,7 +28,7 @@
 The openings and the composer are buttons and a text box, after the WAI-ARIA
 [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/). The column takes no focus when the page loads.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Enter (on the scope chip's ×) | Goes back to the whole report; the openings change and focus moves to the field. | `play: Keyboard` |
 | Enter (in the field) | Sends the prompt; the openings hide and the send button becomes stop. | `play: Keyboard` |

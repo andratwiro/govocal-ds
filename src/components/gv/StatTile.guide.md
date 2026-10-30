@@ -32,11 +32,11 @@ Layouts (Figma's Type): `default`, `tall`, `with-note` (picked for you when ther
 
 ## Behaviour
 
-Behaviour from React Aria's Dialog and Popover, through the Help popover. The tile is display only, except its help
+The tile is display only, except its help
 icon, a button that opens a popover dialog, after the WAI-ARIA
 [Dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/).
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Enter (on the help icon) | Opens the Help popover with what the number means. | `e2e/stat-tile.spec.ts` |
 | Esc | Closes the Help popover. | `e2e/stat-tile.spec.ts` |
@@ -75,7 +75,7 @@ screen readers.
 
 ## Provenance
 
-- Built by agents from Figma's Stat tile (Default, Tall, With note) and the prototype's KPI tiles; the trend, the
+- Built by AI agents from Figma's Stat tile (Default, Tall, With note) and the prototype's KPI tiles; the trend, the
   empty phase and the help icon are Not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: the trend's colour always reads up as green and down as red; the page formats every number itself.

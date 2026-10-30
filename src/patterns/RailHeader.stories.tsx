@@ -45,8 +45,7 @@ export const WithoutAction: Story = {
   args: {title: 'Participation'}
 };
 
-/** Its buttons by keyboard: Tab reaches hide panel, then +; Enter or Space presses. Its play function proves the
- * component page's keyboard table. */
+/** Its buttons by keyboard: Tab reaches hide panel, then +; Enter or Space presses. Try the keys here; an automated test presses them too (the Interactions panel). */
 export const Keyboard: Story = {
   render: function Render() {
     const [said, setSaid] = useState('Nothing pressed');

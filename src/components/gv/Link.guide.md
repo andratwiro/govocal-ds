@@ -25,13 +25,11 @@ Sizes: small (12/16), medium (14/20), or the text's own size when left out.
 
 ## Behaviour
 
-Behaviour from React Aria's `Link`.
-
 It follows the WAI-ARIA [Link pattern](https://www.w3.org/WAI/ARIA/apg/patterns/link/): `href` navigates (through
 `AppProvider`'s router when one is set), `onPress` runs for a link that is handled in code, and `isDisabled` greys it
 out and takes it out of the tab order.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the link. A disabled one is skipped. | `play: Keyboard` |
 | Enter | Follows the link. | `play: Keyboard` |
@@ -64,7 +62,7 @@ disabled state that leaves the tab order.
 
 ## Provenance
 
-- **Built by:** agents, from the prototype (its tertiary text links, small and medium). Not in Figma.
+- **Built by:** AI agents, from the prototype (its tertiary text links, small and medium). Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** no "opens in a new tab" mark; the file still lives in `src/components/` until the folder move.
 

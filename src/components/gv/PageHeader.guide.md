@@ -25,7 +25,7 @@ It has no margin of its own: the page places it (a Stack's gap).
 
 ## Behaviour
 
-Not interactive itself: it takes no focus or keys. The breadcrumbs and actions you pass keep their own keys (see
+Not interactive itself: it can't be reached with Tab and answers no keys. The breadcrumbs and actions you pass keep their own keys (see
 **Breadcrumbs** and **Button**).
 
 ## Content
@@ -54,7 +54,7 @@ Not interactive itself: it takes no focus or keys. The breadcrumbs and actions y
 
 ## Provenance
 
-- **Built by:** agents, from the back office's own page head (on every page). Not in Figma.
+- **Built by:** AI agents, from the back office's own page head (on every page). Not in Figma.
 - **Reviewed by a person:** not yet.
 - **Known limits:** the back office's pages still draw their own head (`backoffice/src/pages/Page.tsx`) and haven't
   moved onto it.

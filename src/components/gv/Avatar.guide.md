@@ -29,7 +29,7 @@ Sizes: 28 (the default, Figma's), 24 and 16 (the prototype's smaller stacks: ass
 
 ## Behaviour
 
-Not interactive: an avatar takes no focus and no keys. A photo that can't load falls back to the initials, and a new
+Not interactive: an avatar can't be reached with Tab and answers no keys. A photo that can't load falls back to the initials, and a new
 `src` gets its own try. To make a person pressable, put the avatar inside a **Link** or a button with the person's
 name.
 
@@ -62,7 +62,7 @@ tech, so only the count is read.
 
 ## Provenance
 
-- Built by agents from Figma's Avatar (28, filled); the photo, the 16 and 24 sizes, the unassigned ring and the group
+- Built by AI agents from Figma's Avatar (28, filled); the photo, the 16 and 24 sizes, the unassigned ring and the group
   come from the prototype (Not in Figma).
 - Reviewed by a person: not yet.
 - Known limits: one colour for every person (a grey variant for assignees and commenters is not built yet,

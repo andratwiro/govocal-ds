@@ -238,7 +238,7 @@ export const Empty: Story = {
 
 /**
  * The keys a dashboard card takes: Tab reaches each topic row, Enter or Space opens it; Tab reaches each legend row of
- * a demographic card, which picks its share out. Its play function proves the component page's keyboard table.
+ * a demographic card, which picks its share out. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   render: function Render() {

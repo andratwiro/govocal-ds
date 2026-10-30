@@ -195,8 +195,7 @@ export const InASidePanel: Story = {
 
 /**
  * The keys the thread takes: Tab reaches the tabs, the arrows move between Comments and Internal conversation; Tab
- * goes on to each comment's actions; Enter on Reply moves focus to the composer, where Enter starts a new line. Its
- * play function proves the component page's keyboard table.
+ * goes on to each comment's actions; Enter on Reply moves focus to the composer, where Enter starts a new line. Try the keys here; an automated test presses them too (the Interactions panel).
  */
 export const Keyboard: Story = {
   render: () => at512(<DemoThread comments={COMMENTS} internal={INTERNAL} />),

@@ -26,9 +26,9 @@ Rows stack 8 apart; Figma draws them 341 wide.
 ## Behaviour
 
 Not focusable on its own. Linked to a chart (`onHighlightChange`), the row becomes one tab stop: focusing or hovering
-it picks its series out and the other rows dim with their series. No React Aria part.
+it picks its series out and the other rows dim with their series.
 
-| Key | What it does | Checked by |
+| Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab (when linked) | Moves to the row and picks its series out; the other line dims. | `e2e/charts.spec.ts` |
 
@@ -60,7 +60,7 @@ readers, and, when linked, a tab stop with a focus ring.
 
 ## Provenance
 
-- Built by agents from Figma ("Legend row", the demographic age legend) and the designer's prototype; the count
+- Built by AI agents from Figma ("Legend row", the demographic age legend) and the designer's prototype; the count
   column and the link to a chart are Not in Figma.
 - Reviewed by a person: not yet.
 - Known limits: `value` is a string, so its number format is the caller's; `color` takes any token name, not only a
