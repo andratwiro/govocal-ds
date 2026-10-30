@@ -25,6 +25,9 @@
 3. **Body**: padded, or flush (`isFlush`) for a table or list that runs edge to edge.
 4. **Foot** (optional, `footer`): under a hairline, its content at the end: Pagination, or Cancel / Send.
 
+Looks: `framed` (default), the white card; `plain`, a module on the grey canvas with no border, fill or hairlines,
+its head and body lined up with the canvas.
+
 ## Behaviour
 
 Not interactive itself: it can't be reached with Tab and answers no keys. It is a `section` named by its title, so screen readers can jump to
@@ -58,11 +61,11 @@ it; its actions, toolbar and body keep their own keys.
 
 - **Built by:** AI agents, from the prototype (the Audience table card, the Messaging panel and composer). Not in Figma.
 - **Reviewed by a person:** not yet.
-- **Known limits:** no borderless look yet (the plan's small fixes list it); it can't fold away (that is a Section
-  toggle's job).
+- **Known limits:** it can't fold away (that is a Section toggle's job).
 
 ## Changes
 
+- 30 Oct 2026: `variant="plain"`, the borderless look for a module on the canvas (docs/DECISIONS.md, "Small fixes").
 - 30 Oct 2026: this page written.
 - 29 Oct 2026: every admin list is a Panel over a Table toolbar, a Data table and Pagination (docs/DECISIONS.md, "Back
   office redesign on the current components").

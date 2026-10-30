@@ -89,7 +89,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Layout & containers › Inline | None: plain React and CSS | – | – | yes | 3 |
 | Layout & containers › Page header | None: plain React and CSS | – | – | yes | 3 |
 | Layout & containers › Page stage | None: plain React and CSS | – | yes | yes | 7 |
-| Layout & containers › Panel | through Badge: `Button` | – | yes | yes | 8 |
+| Layout & containers › Panel | through Badge: `Button` | – | yes | yes | 9 |
 | Layout & containers › Stack | None: plain React and CSS | – | – | yes | 3 |
 | Layout & containers › Tile grid | None: plain React and CSS | – | – | yes | 4 |
 | Layout & containers › Zoom bar | `Button`, `Toolbar` | – | yes | yes | 9 |

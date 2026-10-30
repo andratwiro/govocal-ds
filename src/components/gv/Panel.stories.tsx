@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, within} from 'storybook/test';
 import {ExternalLink, Plus, SquarePen} from 'lucide-react';
 import {Panel} from './Panel';
 import {Pagination} from './Pagination';
@@ -194,6 +195,32 @@ export const InAComposer: Story = {
       </Panel>
     </div>
   )
+};
+
+/**
+ * `variant="plain"`: a module on the page's grey canvas (the project overview's sections), with no frame, fill or
+ * hairlines; the head and body line up with the canvas. The play function checks the frame is gone.
+ */
+export const OnTheCanvas: Story = {
+  name: 'On the canvas',
+  render: () => (
+    <div style={{maxWidth: 560, padding: 24, background: 'var(--gv-surface-app)'}}>
+      <Panel variant="plain" title="Collecting now" description="What residents can do in this project today."
+        actions={<Button variant="secondary" size={32}><ExternalLink aria-hidden size={16} />View as resident</Button>}>
+        <p style={{margin: 0, font: 'var(--gv-type-body)'}}>
+          Ideation is open until 12 December: 48 ideas so far, 6 new since yesterday.
+        </p>
+      </Panel>
+    </div>
+  ),
+  play: async ({canvasElement}) => {
+    const panel = within(canvasElement).getByRole('region', {name: 'Collecting now'});
+    const style = getComputedStyle(panel);
+    await expect(style.borderTopWidth).toBe('0px');
+    await expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    const heading = within(panel).getByRole('heading', {name: 'Collecting now'});
+    await expect(heading.getBoundingClientRect().left - panel.getBoundingClientRect().left).toBeLessThan(1);
+  }
 };
 
 /** Right to left (Arabic): the title and count at the right, the action at the left; the count in Arabic digits. */

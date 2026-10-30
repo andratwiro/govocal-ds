@@ -34,6 +34,13 @@ export interface PanelProps extends PlacementProps {
    * @default false
    */
   isFlush?: boolean;
+  /**
+   * `framed`: the white card with its border. `plain`: a module on the page's grey canvas (the project overview's
+   * sections), with no border, fill or hairlines; the head and body line up with the canvas.
+   *
+   * @default 'framed'
+   */
+  variant?: 'framed' | 'plain';
   /** The body, under the head and toolbar. */
   children?: ReactNode;
 }
@@ -41,18 +48,19 @@ export interface PanelProps extends PlacementProps {
 /**
  * The white frame a table or list sits in (the prototype's Audience table card, Messaging panel and composer): a
  * head with the title, an optional count Badge and description and trailing actions, over a hairline; an optional
- * toolbar row; the body; an optional foot. A `section` named by its heading. For a bare table without a head, Data table's `framed` is
- * enough. Not in Figma yet.
+ * toolbar row; the body; an optional foot. A `section` named by its heading. `variant="plain"` drops the frame for a
+ * module on the canvas. For a bare table without a head, Data table's `framed` is enough. Not in Figma yet.
  */
 export function Panel({
-  title, headingLevel = 2, count, description, actions, toolbar, footer, isFlush, children, className, style
+  title, headingLevel = 2, count, description, actions, toolbar, footer, isFlush, variant = 'framed', children, className,
+  style
 }: PanelProps) {
   const id = useId();
   const number = useNumberFormatter();
   const shown = typeof count === 'number' ? number.format(count) : count;
   const Heading = `h${headingLevel}` as const;
   return (
-    <section className={clsx('gv-panel', className)} style={style} aria-labelledby={id}>
+    <section className={clsx('gv-panel', className)} style={style} aria-labelledby={id} data-variant={variant}>
       <header className="gv-panel__head">
         <div className="gv-panel__titles">
           <Heading id={id} className="gv-panel__title">

@@ -3764,6 +3764,7 @@ Component, from `src/components/gv/Panel.tsx`.
 - `style?: CSSProperties`
 - `title: ReactNode`
 - `toolbar?: ReactNode`
+- `variant?: 'framed' | 'plain'`
 
 ### `PanelProps`
 

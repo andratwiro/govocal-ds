@@ -78,3 +78,30 @@
   padding: var(--gv-space-12) var(--gv-space-20);
   border-top: 1px solid var(--gv-border-subtle);
 }
+
+/* Plain (`variant="plain"`): a module on the canvas. No frame, fill or hairlines; the head keeps 12 under it and the
+   body and foot lose their sides, so the words line up with the canvas around. */
+.gv-panel[data-variant='plain'] {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+
+  .gv-panel__head {
+    padding: 0 0 var(--gv-space-12);
+    border-bottom: 0;
+  }
+
+  .gv-panel__toolbar {
+    padding-inline: 0;
+  }
+
+  .gv-panel__body {
+    padding: 0;
+  }
+
+  .gv-panel__foot {
+    padding-inline: 0;
+    border-top: 0;
+  }
+}
