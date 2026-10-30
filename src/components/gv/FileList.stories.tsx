@@ -85,7 +85,7 @@ export const InADialog: Story = {
 };
 
 /** The keyboard: Tab reaches the list on its first row, ↓ and ↑ move between rows, → and ← move between a row's
- * links, Enter follows the focused link (here Delete). */
+ * actions, Enter presses the focused one (here Delete, a button). */
 export const Keyboard: Story = {
   render: function Keyboard() {
     const [items, setItems] = useState(files);
@@ -101,7 +101,7 @@ export const Keyboard: Story = {
     await userEvent.keyboard('{ArrowRight}');
     await expect(within(row).getByRole('link', {name: 'View'})).toHaveFocus();
     await userEvent.keyboard('{ArrowRight}');
-    await expect(within(row).getByRole('link', {name: 'Delete'})).toHaveFocus();
+    await expect(within(row).getByRole('button', {name: 'Delete'})).toHaveFocus();
     await userEvent.keyboard('{Enter}');
     await waitFor(() => expect(canvas.queryByRole('row', {name: /street\.webp/})).toBeNull());
     await expect(canvas.getAllByRole('row')).toHaveLength(2);

@@ -95,3 +95,29 @@
 .gv-file-list__add {
   margin-top: var(--gv-space-12);
 }
+
+/* Delete stays on the page, so it is a button, worn as the small blue words beside View (Link's small look). */
+.gv-file-list__delete {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--gv-radius-4);
+  background: none;
+  color: var(--gv-text-link);
+  font: var(--gv-type-small-strong);
+  cursor: pointer;
+  outline: none;
+  transition: color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+  -webkit-tap-highlight-color: transparent;
+
+  &[data-hovered],
+  &[data-pressed] {
+    color: var(--gv-text-link-hovered);
+  }
+
+  &[data-focus-visible] {
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
+  }
+}

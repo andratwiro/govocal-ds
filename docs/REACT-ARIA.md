@@ -49,7 +49,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Charts › Statement row | None: plain React and CSS | – | yes | yes | 6 |
 | Data display › Activity feed | `Button`; through Button: `ProgressBar`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`; through Item chip: `VisuallyHidden` | – | yes | yes | 7 |
 | Data display › Avatar | None: plain React and CSS | – | – | yes | 6 |
-| Data display › File list | `GridList`, `GridListItem`; through Link: `Link` | – | – | yes | 6 |
+| Data display › File list | `GridList`, `GridListItem`, `Button`; through Link: `Link` | – | – | yes | 6 |
 | Data display › Illustration | None: plain React and CSS | – | – | yes | 10 |
 | Data display › List header | through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text`; through List header cell: `Button` | – | – | yes | 9 |
 | Data display › List header cell | `Button` | – | – | yes | 8 |

@@ -20,23 +20,23 @@
 2. **File icon**: a 16 paperclip at the start.
 3. **Name**: the file's name, "street.webp".
 4. **Meta line**: under the name, type and size, "PDF · 340 KB".
-5. **Actions**: "View" (when the file has a `url`, opens in a new tab) and "Delete" (when there is an `onDelete`), as
-   small links at the end.
+5. **Actions**: "View" (when the file has a `url`, a link that opens it in a new tab) and "Delete" (when there is an
+   `onDelete`, a button that stays on the page), both in small blue words at the end.
 6. **Empty line**: in place of the rows when there are no files, "No files yet".
 7. **Footer** (optional): a row under the list.
 
 ## Behaviour
 
 The list follows the WAI-ARIA [Grid pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/):
-the list is one stop for Tab, the arrow keys move between rows and into a row's links. Nothing in it is selected;
+the list is one stop for Tab, the arrow keys move between rows and into a row's actions. Nothing in it is selected;
 the rows are only a way to reach each file's actions.
 
 | Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus into the list, onto the first row. | `play: Keyboard` |
 | ↓ and ↑ | Move focus to the next or previous file. | `play: Keyboard` |
-| → and ← | Move focus between the row's links (View, Delete). | `play: Keyboard` |
-| Enter | Follows the focused link: View opens the file, Delete removes it. | `play: Keyboard` |
+| → and ← | Move focus between the row's actions (View, Delete). | `play: Keyboard` |
+| Enter | Presses the focused action: View opens the file, Delete removes it. | `play: Keyboard` |
 
 Delete calls the page's latest `onDelete`, so deleting one file after another removes each in turn
 (`e2e/file-list.spec.ts`).
@@ -54,7 +54,7 @@ Delete calls the page's latest `onDelete`, so deleting one file after another re
 ## Accessibility
 
 **The list gives you:** a grid named by its `aria-label`, each row named by its file, one Tab stop with arrow keys
-between rows and links, links that open files in a new tab safely (`noopener`), and the paperclip hidden from
+between rows and their actions, links that open files in a new tab safely (`noopener`), and the paperclip hidden from
 assistive tech.
 
 **You still own:**
@@ -67,7 +67,7 @@ assistive tech.
 - **Drop zone**: adds the files this list shows.
 - **Modal**: the Attachments dialog that holds a Drop zone and the list.
 - **Toast**: the Undo after a Delete.
-- **Link**: the View and Delete actions are Links.
+- **Link**: the View action is a Link; Delete is a button in Link's small look.
 
 ## Provenance
 
@@ -78,6 +78,7 @@ assistive tech.
 
 ## Changes
 
+- 30 Oct 2026: Delete is a button, no longer a link: it stays on the page (docs/DECISIONS.md, "Small fixes").
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: View, Delete and the empty line come through `labels`.
 - 29 Oct 2026: Delete calls the latest handler, so deleting one file after another works; the `addButton` slot became

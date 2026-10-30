@@ -3,6 +3,7 @@ import {Paperclip} from 'lucide-react';
 import type {CSSProperties, ReactNode} from 'react';
 import {clsx} from 'clsx';
 import {GridList, GridListItem} from 'react-aria-components/GridList';
+import {Button} from 'react-aria-components/Button';
 import {Link} from '../Link';
 import {mergeLabels} from '../labels';
 import './FileList.css';
@@ -53,8 +54,9 @@ export interface FileListProps {
 
 /**
  * File list (Figma not yet drawn; the prototype's `.attlist` / `.attf` rows): one row per
- * attachment — a file icon, its name and "PDF · 0 KB", then View / Delete. Built on GridList, so
- * the rows stay keyboard-navigable even though nothing in them is selectable.
+ * attachment — a file icon, its name and "PDF · 0 KB", then View (a link to the file) and Delete (a button that
+ * stays on the page, in the same small blue words). Built on GridList, so the rows stay keyboard-navigable even though
+ * nothing in them is selectable.
  */
 export function FileList({items, onDelete, emptyLabel, footer, labels, className, style, ...props}: FileListProps) {
   const l = mergeLabels(fileListLabels, labels);
@@ -78,9 +80,9 @@ export function FileList({items, onDelete, emptyLabel, footer, labels, className
                   </Link>
                 )}
                 {onDelete && (
-                  <Link size="small" onPress={() => onDelete(item)}>
+                  <Button className="gv-file-list__delete" onPress={() => onDelete(item)}>
                     {l.delete}
-                  </Link>
+                  </Button>
                 )}
               </span>
             </GridListItem>

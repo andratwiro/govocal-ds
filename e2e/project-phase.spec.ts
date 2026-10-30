@@ -339,7 +339,7 @@ test('Build: the Attachments card opens its dialog: a drop zone, the files, Done
   await dialog.locator('input[type="file"]').setInputFiles({name: 'walk-route.pdf', mimeType: 'application/pdf', buffer: Buffer.alloc(2048)});
   await expect(files).toHaveCount(3);
   await expect(files.last()).toContainText('walk-route.pdf');
-  await files.first().getByRole('link', {name: 'Delete'}).click();
+  await files.first().getByRole('button', {name: 'Delete'}).click();
   await expect(files).toHaveCount(2);
   await dialog.getByRole('button', {name: 'Done'}).click();
   await expect(dialog).toHaveCount(0);
