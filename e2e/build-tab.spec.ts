@@ -71,11 +71,11 @@ test('Participant action row: Limited reveals the maximum, Unlimited hides it', 
   await page.goto(story('patterns-build-tab-participant-action-row--limited'));
   const limited = page.getByRole('radio', {name: 'Limited', exact: true});
   await expect(limited).toBeChecked();
-  await expect(page.getByRole('textbox', {name: 'Maximum likes'})).toBeVisible();
+  await expect(page.getByRole('textbox', {name: 'Maximum reactions'})).toBeVisible();
   await limited.focus();
   await page.keyboard.press('ArrowLeft');
   await expect(page.getByRole('radio', {name: 'Unlimited', exact: true})).toBeChecked();
-  await expect(page.getByRole('textbox', {name: 'Maximum likes'})).toHaveCount(0);
+  await expect(page.getByRole('textbox', {name: 'Maximum reactions'})).toHaveCount(0);
   await report(page, '#storybook-root');
 });
 

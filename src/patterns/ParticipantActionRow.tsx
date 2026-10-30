@@ -38,10 +38,10 @@ export interface ParticipantLimitLabels {
 
 /** Participant limit's English words; a page passes its own over them with `labels`. */
 export const participantLimitLabels: ParticipantLimitLabels = {
-  limit: 'Number of likes per participant',
+  limit: 'Number of reactions per participant',
   unlimited: 'Unlimited',
   limited: 'Limited',
-  max: 'Maximum likes'
+  max: 'Maximum reactions'
 };
 
 /** The words Participant action list says itself (docs/API.md rule 11). */
@@ -76,7 +76,7 @@ export interface ParticipantActionRowProps extends PlacementProps {
   onChange?: (isSelected: boolean) => void;
   /** Opens who can take it (Access rights). Without it the row is a plain switch and label (Disliking). */
   onOpen?: () => void;
-  /** Settings that hang from the action while it is on (Reacting's likes per participant), in the label column. */
+  /** Settings that hang from the action while it is on (Reacting's reactions per participant), in the label column. */
   options?: ReactNode;
   /** Its own words (the check's and the button's names), over `participantActionRowLabels`. */
   labels?: Partial<ParticipantActionRowLabels>;
@@ -142,13 +142,17 @@ export function ParticipantActionRow({
 }
 
 export interface ParticipantLimitProps extends PlacementProps {
-  /** @default `labels.limit` ("Number of likes per participant") */
+  /** @default `labels.limit` ("Number of reactions per participant") */
   label?: string;
-  /** `limited` reveals the maximum. */
+  /** Unlimited, or `limited`, which reveals the maximum (controlled). */
+  limit?: 'unlimited' | 'limited';
+  /** The choice it starts with, when `limit` is not given. @default 'unlimited' */
   defaultLimit?: 'unlimited' | 'limited';
-  /** @default 5 */
+  /** The maximum per participant, 1 or more (controlled). */
+  max?: number;
+  /** The maximum it starts with, when `max` is not given. @default 5 */
   defaultMax?: number;
-  /** Fires when the choice or the maximum changes, with both. */
+  /** Fires when the choice or the maximum changes, with both; a cleared maximum is not a change (never `NaN`). */
   onChange?: (limit: 'unlimited' | 'limited', max: number) => void;
   /** Its own words (the choices, the maximum's label), over `participantLimitLabels`. */
   labels?: Partial<ParticipantLimitLabels>;
@@ -157,7 +161,9 @@ export interface ParticipantLimitProps extends PlacementProps {
 /** How many reactions each participant has: Unlimited or Limited; Limited reveals the maximum. */
 export function ParticipantLimit({
   label,
+  limit: limitProp,
   defaultLimit = 'unlimited',
+  max: maxProp,
   defaultMax = 5,
   onChange,
   labels,
@@ -165,8 +171,10 @@ export function ParticipantLimit({
   style
 }: ParticipantLimitProps) {
   const words = mergeLabels(participantLimitLabels, labels);
-  const [limit, setLimit] = useState(defaultLimit);
-  const [max, setMax] = useState(defaultMax);
+  const [innerLimit, setLimit] = useState(defaultLimit);
+  const [innerMax, setMax] = useState(defaultMax);
+  const limit = limitProp ?? innerLimit;
+  const max = maxProp ?? innerMax;
   return (
     <div className={clsx('gv-participant-limit', className)} style={style}>
       <RadioGroup
@@ -188,6 +196,8 @@ export function ParticipantLimit({
           minValue={1}
           value={max}
           onChange={next => {
+            // A cleared field reports NaN: keep the last maximum, which the field shows again when it loses focus.
+            if (Number.isNaN(next)) return;
             setMax(next);
             onChange?.(limit, next);
           }}

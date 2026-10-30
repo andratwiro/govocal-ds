@@ -524,7 +524,7 @@ test('Build: Participant actions, each opening its Access rights modal; the row 
   await expect(actions.getByRole('switch', {name: 'Disliking'})).toBeVisible();
   await expect(actions.getByRole('img', {name: 'Always on'})).toBeVisible();
   // Reacting carries its limit while it is on.
-  await expect(actions.getByRole('radiogroup', {name: 'Number of likes per participant'})).toBeVisible();
+  await expect(actions.getByRole('radiogroup', {name: 'Number of reactions per participant'})).toBeVisible();
   await actions.getByRole('switch', {name: 'Commenting on inputs'}).click({force: true});
   await expect(card).toContainText('Submit +1');
   await expect(page.getByRole('button', {name: 'Save'})).toBeEnabled();

@@ -132,10 +132,20 @@ export interface AccessRightsProps extends PlacementProps {
   onWhoChange?: (who: AccessWho) => void;
   /** The choices this action offers (some offer two). @default ['anyone', 'signin', 'admins'] */
   whoItems?: AccessWho[];
-  /** Sign-in's security requirement: participants set a password. @default true */
+  /** Sign-in's security requirement: participants set a password (controlled). */
+  requirePassword?: boolean;
+  /** Whether the password switch starts on, when `requirePassword` is not given. @default true */
   defaultRequirePassword?: boolean;
+  /** Fires when the password switch is turned on or off, with whether it is now on. */
+  onRequirePasswordChange?: (requirePassword: boolean) => void;
   /** The groups an action can be limited to; the first is "no restriction". @default [`labels.allParticipants`] */
   groups?: string[];
+  /** The group the action is limited to, one of `groups` (controlled). */
+  group?: string;
+  /** The group picked first, when `group` is not given. @default the first of `groups` */
+  defaultGroup?: string;
+  /** Fires when another group is picked, with its name. */
+  onGroupChange?: (group: string) => void;
   /** The "platform defaults" link: where the defaults are set. */
   onPlatformDefaults?: () => void;
   /** "Customize error message" under Limit to groups. */
@@ -160,8 +170,13 @@ export function AccessRights({
   defaultWho = 'signin',
   onWhoChange,
   whoItems = ['anyone', 'signin', 'admins'],
+  requirePassword: requirePasswordProp,
   defaultRequirePassword = true,
+  onRequirePasswordChange,
   groups: groupsProp,
+  group: groupProp,
+  defaultGroup,
+  onGroupChange,
   onPlatformDefaults,
   onCustomizeError,
   defaultExpandedKeys = ['security', 'groups'],
@@ -178,6 +193,8 @@ export function AccessRights({
   };
   const [overriding, setOverriding] = useValue(isOverriding, defaultOverriding, onOverridingChange);
   const [who, setWho] = useValue(whoProp, defaultWho, onWhoChange);
+  const [requirePassword, setRequirePassword] = useValue(requirePasswordProp, defaultRequirePassword, onRequirePasswordChange);
+  const [group, setGroup] = useValue(groupProp, defaultGroup ?? groups[0], onGroupChange);
   const readOnly = !overriding;
   // Override and Revert take away the button that was pressed: focus lands on what comes next (the chosen card, or
   // Override again) instead of falling to the page.
@@ -255,7 +272,8 @@ export function AccessRights({
               <DisclosurePanel className="gv-access-rights__section-panel">
                 <div className="gv-access-rights__toggle">
                   <Switch
-                    defaultSelected={defaultRequirePassword}
+                    isSelected={requirePassword}
+                    onChange={setRequirePassword}
                     isReadOnly={readOnly}
                     description={l.requirePasswordDescription}>
                     <Lock aria-hidden size={16} className="gv-access-rights__toggle-icon" />
@@ -275,9 +293,9 @@ export function AccessRights({
               <DisclosurePanel className="gv-access-rights__section-panel">
 <div className="gv-access-rights__panel-body">
                 <p className="gv-access-rights__lead">{l.groupsLead}</p>
-                <Select aria-label={l.groupPicker} defaultValue="0" isDisabled={readOnly}>
-                  {groups.map((g, i) => (
-                    <SelectItem key={g} id={String(i)}>
+                <Select aria-label={l.groupPicker} value={group} onChange={key => setGroup(String(key))} isDisabled={readOnly}>
+                  {groups.map(g => (
+                    <SelectItem key={g} id={g}>
                       {g}
                     </SelectItem>
                   ))}

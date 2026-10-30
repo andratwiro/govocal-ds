@@ -75,11 +75,12 @@ switch says it).
 
 - Built by agents from the designer's prototype (a phase's Notifications card and the email's page); not in Figma.
 - Reviewed by a person: not yet.
-- Known limits: `NotificationEmail`'s fields are uncontrolled (`defaultValue`, no `onChange`), so the page can't read
-  what was typed; there is no preview of the email itself in the part (the page draws it on the stage).
+- Known limits: there is no preview of the email itself in the part (the page draws it on the stage).
 
 ## Changes
 
+- 30 Oct 2026: `NotificationEmail`'s fields are controllable (`fields` / `onFieldsChange`), so the page can read
+  what was typed; the starting props still work.
 - 30 Oct 2026: this page written; a play function proves the switch and the row's keys.
 - 29 Oct 2026: its words come in through `labels`, English by default.
 - 29 Oct 2026: the list's own root class (`gv-notification-row-list`), apart from the bell's Notification list.

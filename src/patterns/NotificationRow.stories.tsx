@@ -158,3 +158,27 @@ export const Keyboard: Story = {
     await expect(canvas.getByRole('status')).toHaveTextContent('Email page open');
   }
 };
+
+/** Controlled: the page holds the email's fields (`fields` / `onFieldsChange`) and reads them back, here the subject
+ * into the line under it. */
+export const EmailControlled: Story = {
+  name: 'Email controlled',
+  render: function Render() {
+    const [fields, setFields] = useState({subject: 'A reply on your comment'});
+    return (
+      <>
+        <NotificationEmail name="A reply on my comment" who="User who commented" when="User replies to comment"
+          replyTo="support@example.org" fields={fields} onFieldsChange={f => setFields({subject: f.subject})} />
+        <p role="status">{`Subject: ${fields.subject}`}</p>
+      </>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const subject = canvas.getByRole('textbox', {name: 'Subject'});
+    await userEvent.clear(subject);
+    await userEvent.type(subject, 'New reply');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Subject: New reply');
+    await expect(canvas.getByRole('textbox', {name: 'Replies should go to'})).toHaveValue('support@example.org');
+  }
+};

@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {expect, userEvent, within} from 'storybook/test';
+import {expect, screen, userEvent, within} from 'storybook/test';
 import {DialogTrigger} from 'react-aria-components/Dialog';
 import {Button} from '../components/Button';
 import {AccessRights, AccessRightsModal, ACCESS_WHO_VALUE, type AccessWho} from './AccessRights';
@@ -129,5 +129,32 @@ export const Keyboard: Story = {
     await expect(security).toHaveAttribute('aria-expanded', 'false');
     await userEvent.keyboard(' ');
     await expect(security).toHaveAttribute('aria-expanded', 'true');
+  }
+};
+
+/**
+ * Controlled: the page holds the password switch and the group (`requirePassword` / `onRequirePasswordChange`,
+ * `group` / `onGroupChange`) and reads them back, here into the line under it.
+ */
+export const Controlled: Story = {
+  render: function Render() {
+    const [requirePassword, setRequirePassword] = useState(true);
+    const [group, setGroup] = useState('Residents of the old town');
+    return (
+      <>
+        <AccessRights defaultOverriding groups={['All participants (no group restriction)', 'Residents of the old town', 'Youth council']}
+          requirePassword={requirePassword} onRequirePasswordChange={setRequirePassword} group={group} onGroupChange={setGroup} />
+        <p role="status">{`Password ${requirePassword ? 'required' : 'not required'}; group: ${group}`}</p>
+      </>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole('status')).toHaveTextContent('Password required; group: Residents of the old town');
+    await userEvent.click(canvas.getByRole('switch', {name: /Require user to set a password/}));
+    await expect(canvas.getByRole('status')).toHaveTextContent('Password not required');
+    await userEvent.click(canvas.getByRole('button', {name: /Groups/}));
+    await userEvent.click(await screen.findByRole('option', {name: 'Youth council'}));
+    await expect(canvas.getByRole('status')).toHaveTextContent('group: Youth council');
   }
 };

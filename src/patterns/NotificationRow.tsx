@@ -161,6 +161,20 @@ export function NotificationRowList({children, 'aria-label': ariaLabel, labels, 
   );
 }
 
+/** What an email's page lets people write: its fields' values. */
+export interface NotificationEmailFields {
+  /** Where replies go. */
+  replyTo: string;
+  /** The Subject field. */
+  subject: string;
+  /** The Title field (an email with a title). */
+  title: string;
+  /** The Introduction, as the rich text editor writes it. */
+  introduction: string;
+  /** The Button text field (an email with a button). */
+  buttonText: string;
+}
+
 export interface NotificationEmailProps extends OnOff, PlacementProps {
   /** The email's name: the page's title. */
   name: string;
@@ -180,6 +194,13 @@ export interface NotificationEmailProps extends OnOff, PlacementProps {
   introduction?: string;
   /** Leave it out for an email that has no button. */
   buttonText?: string;
+  /**
+   * The fields' values (controlled); a field left out keeps its own, from its starting prop (`replyTo`, `subject`,
+   * `title`, `introduction`, `buttonText`).
+   */
+  fields?: Partial<NotificationEmailFields>;
+  /** Fires when any field changes, with every field's value. */
+  onFieldsChange?: (fields: NotificationEmailFields) => void;
   /** Its own words (the ←'s name, the switch's, the fields' labels, the toolbar's), over `notificationEmailLabels`.
    * Name the way back: `labels={{back: 'Back to Ideation setup'}}`. */
   labels?: Partial<NotificationEmailLabels>;
@@ -199,6 +220,8 @@ export function NotificationEmail({
   title,
   introduction = '',
   buttonText,
+  fields: fieldsProp,
+  onFieldsChange,
   isSelected,
   defaultSelected = true,
   onChange,
@@ -208,7 +231,23 @@ export function NotificationEmail({
 }: NotificationEmailProps) {
   const l = mergeLabels(notificationEmailLabels, labels);
   const [on, setOn] = useOnOff(isSelected, defaultSelected, onChange);
-  const [intro, setIntro] = useState(introduction);
+  const [inner, setInner] = useState<NotificationEmailFields>(() => ({
+    replyTo: replyTo ?? '',
+    subject: subject ?? '',
+    title: title ?? '',
+    introduction,
+    buttonText: buttonText ?? ''
+  }));
+  const value: NotificationEmailFields = {...inner};
+  for (const key of Object.keys(fieldsProp ?? {}) as (keyof NotificationEmailFields)[])
+    if (fieldsProp?.[key] !== undefined) value[key] = fieldsProp[key]!;
+  const set = (key: keyof NotificationEmailFields) => (next: string) => {
+    const fields = {...value, [key]: next};
+    setInner(fields);
+    onFieldsChange?.(fields);
+  };
+  const hasTitle = title != null || fieldsProp?.title != null;
+  const hasButton = buttonText != null || fieldsProp?.buttonText != null;
   return (
     <section className={clsx('gv-notification-email', className)} style={style} aria-label={name}>
       <div className="gv-notification-email__head">
@@ -226,18 +265,18 @@ export function NotificationEmail({
         </span>
       </div>
       <div className="gv-notification-email__fields">
-        <TextField label={l.replyTo} defaultValue={replyTo} type="email" />
+        <TextField label={l.replyTo} value={value.replyTo} onChange={set('replyTo')} type="email" />
         <hr className="gv-notification-email__rule" />
-        <TextField label={l.subject} defaultValue={subject} />
-        {title != null && <TextField label={l.title} defaultValue={title} />}
+        <TextField label={l.subject} value={value.subject} onChange={set('subject')} />
+        {hasTitle && <TextField label={l.title} value={value.title} onChange={set('title')} />}
         <div className="gv-notification-email__field">
           <span className="gv-notification-email__label" aria-hidden="true">
             {l.introduction}
           </span>
-          <RichTextEditor aria-label={l.introduction} placeholder={l.introductionPlaceholder} labels={l} value={intro}
-            onChange={setIntro} />
+          <RichTextEditor aria-label={l.introduction} placeholder={l.introductionPlaceholder} labels={l}
+            value={value.introduction} onChange={set('introduction')} />
         </div>
-        {buttonText != null && <TextField label={l.buttonText} defaultValue={buttonText} />}
+        {hasButton && <TextField label={l.buttonText} value={value.buttonText} onChange={set('buttonText')} />}
       </div>
     </section>
   );

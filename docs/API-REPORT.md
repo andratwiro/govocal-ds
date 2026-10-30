@@ -21,16 +21,21 @@ Component, from `src/patterns/AccessRights.tsx`.
 
 - `className?: string`
 - `defaultExpandedKeys?: Array<'security' | 'groups'>`
+- `defaultGroup?: string`
 - `defaultOverriding?: boolean`
 - `defaultRequirePassword?: boolean`
 - `defaultWho?: AccessWho`
+- `group?: string`
 - `groups?: string[]`
 - `isOverriding?: boolean`
 - `labels?: Partial<AccessRightsLabels>`
 - `onCustomizeError?: () => void`
+- `onGroupChange?: (group: string) => void`
 - `onOverridingChange?: (isOverriding: boolean) => void`
 - `onPlatformDefaults?: () => void`
+- `onRequirePasswordChange?: (requirePassword: boolean) => void`
 - `onWhoChange?: (who: AccessWho) => void`
+- `requirePassword?: boolean`
 - `style?: CSSProperties`
 - `who?: AccessWho`
 - `whoItems?: AccessWho[]`
@@ -74,20 +79,25 @@ Component, from `src/patterns/AccessRights.tsx`.
 
 - `className?: string`
 - `defaultExpandedKeys?: Array<'security' | 'groups'>`
+- `defaultGroup?: string`
 - `defaultOpen?: boolean`
 - `defaultOverriding?: boolean`
 - `defaultRequirePassword?: boolean`
 - `defaultWho?: AccessWho`
+- `group?: string`
 - `groups?: string[]`
 - `isOpen?: boolean`
 - `isOverriding?: boolean`
 - `labels?: Partial<AccessRightsModalLabels>`
 - `onCustomizeError?: () => void`
+- `onGroupChange?: (group: string) => void`
 - `onOpenChange?: (isOpen: boolean) => void`
 - `onOverridingChange?: (isOverriding: boolean) => void`
 - `onPlatformDefaults?: () => void`
+- `onRequirePasswordChange?: (requirePassword: boolean) => void`
 - `onSave?: () => void`
 - `onWhoChange?: (who: AccessWho) => void`
+- `requirePassword?: boolean`
 - `style?: CSSProperties`
 - `title: string`
 - `who?: AccessWho`
@@ -3167,12 +3177,14 @@ Component, from `src/patterns/NotificationRow.tsx`.
 - `buttonText?: string`
 - `className?: string`
 - `defaultSelected?: boolean`
+- `fields?: Partial<NotificationEmailFields>`
 - `introduction?: string`
 - `isSelected?: boolean`
 - `labels?: Partial<NotificationEmailLabels>`
 - `name: string`
 - `onBack?: () => void`
 - `onChange?: (isSelected: boolean) => void`
+- `onFieldsChange?: (fields: NotificationEmailFields) => void`
 - `replyTo?: string`
 - `style?: CSSProperties`
 - `subject?: string`
@@ -3647,6 +3659,8 @@ Component, from `src/patterns/ParticipantActionRow.tsx`.
 - `defaultMax?: number`
 - `label?: string`
 - `labels?: Partial<ParticipantLimitLabels>`
+- `limit?: 'unlimited' | 'limited'`
+- `max?: number`
 - `onChange?: (limit: 'unlimited' | 'limited', max: number) => void`
 - `style?: CSSProperties`
 

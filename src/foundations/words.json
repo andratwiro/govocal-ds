@@ -10,6 +10,7 @@
     {"term": "idea", "use": "An input in an ideation phase.", "where": "backoffice/src/data-project.ts (Phase screen · Manage)", "avoid": []},
     {"term": "proposal", "use": "An input in a proposals phase; it needs a number of votes to pass its threshold.", "where": "backoffice/src/data-project.ts (a proposals phase's proposals)", "avoid": []},
     {"term": "comment", "use": "A resident's reply under an input. The team's own notes are internal comments.", "where": "backoffice/src/data-inputs.ts (thread, internal)", "avoid": []},
+    {"term": "reaction", "use": "A like, or a dislike where Disliking is on, that a resident gives an input (the Reacting to inputs action). Dashboards count them as Reactions; a phase can limit how many each participant has.", "where": "backoffice/src/data-project.ts (Reacting to inputs), backoffice/src/data-dashboard.ts (Reactions)", "avoid": []},
     {"term": "official update", "use": "What the team posts on an input to say what happens next.", "where": "backoffice/src/data-inputs.ts (updates), src/patterns/OfficialUpdate.tsx", "avoid": []},
     {"term": "resident", "use": "A person who lives in the place and may take part. The invented people in the demo are Resident A, Resident B…", "where": "backoffice/src/data.ts, backoffice/src/data-community-monitor.ts", "avoid": ["citizen", "citizens"]},
     {"term": "participant", "use": "A resident who has taken part in a project or phase; the count on dashboards and reports.", "where": "backoffice/src/data-report.ts, backoffice/src/data-project.ts", "avoid": []},

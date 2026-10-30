@@ -24,6 +24,15 @@ Calls made fixing the bugs the component-page writers found (benchmark-gaps plan
   announces changes, not what it was born with, so filling it after mount is what screen readers reliably read; a
   banner on screen when the page opens must not interrupt, so announcing stays the page's call, not a guess from
   mount time.
+- Access rights' password switch and group, Notification email's fields and Participant limit kept their own state,
+  so a page couldn't read them → **controlled pairs beside the defaults: `requirePassword` / `onRequirePasswordChange`,
+  `group` / `defaultGroup` / `onGroupChange` (the group's name, not its index), `fields` / `onFieldsChange` (one object
+  for the five fields, a left-out field keeping its own), `limit` / `max` with the existing `onChange`** → rule 7's
+  value trio, named for what each holds; the starting props keep working. A cleared maximum reports `NaN` from the
+  Number field → **not a change: the last maximum stays and the field shows it again on blur**.
+- Participant limit said "likes" while its doc comment said reactions → **"Number of reactions per participant",
+  "Maximum reactions", and "reaction" in the word list** → the back office says Reactions (dashboards) and Reacting to
+  inputs (the action), and the word list had no entry for it.
 
 ## Report parts (30 Oct 2026)
 

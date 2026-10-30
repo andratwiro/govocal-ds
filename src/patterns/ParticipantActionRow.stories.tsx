@@ -47,7 +47,7 @@ export const On: Story = {
 export const SignInRequired: Story = {name: 'Sign-in required', args: {value: 'Sign-in required', isDefault: false}};
 
 /**
- * Reacting's settings hang under it while it is on, in the label column: likes per participant; Limited reveals the
+ * Reacting's settings hang under it while it is on, in the label column: reactions per participant; Limited reveals the
  * maximum. Disliking follows as a plain switch row, its switch in the switch column.
  */
 export const Limited: Story = {
@@ -122,5 +122,34 @@ export const Keyboard: Story = {
     await expect(canvas.getByRole('button', {name: 'Edit access for Submitting inputs'})).toHaveFocus();
     await userEvent.keyboard('{Enter}');
     await expect(canvas.getByRole('status')).toHaveTextContent('Access rights open');
+  }
+};
+
+/** Participant limit, controlled: the page holds the choice and the maximum (`limit`, `max`, `onChange`). Clearing the
+ * maximum is not a change: the page never gets `NaN`, and the field shows the last maximum again. */
+export const LimitControlled: Story = {
+  name: 'Limit controlled',
+  render: function Render() {
+    const [value, setValue] = useState<{limit: 'unlimited' | 'limited'; max: number}>({limit: 'unlimited', max: 5});
+    return (
+      <>
+        <ParticipantLimit limit={value.limit} max={value.max} onChange={(limit, max) => setValue({limit, max})} />
+        <p role="status">{`${value.limit}, ${value.max}`}</p>
+      </>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('radio', {name: 'Limited'}));
+    await expect(canvas.getByRole('status')).toHaveTextContent('limited, 5');
+    const max = canvas.getByRole('textbox', {name: 'Maximum reactions'});
+    await userEvent.clear(max);
+    await userEvent.tab();
+    await expect(canvas.getByRole('status')).toHaveTextContent('limited, 5');
+    await expect(max).toHaveValue('5');
+    await userEvent.clear(max);
+    await userEvent.type(max, '3');
+    await userEvent.tab();
+    await expect(canvas.getByRole('status')).toHaveTextContent('limited, 3');
   }
 };

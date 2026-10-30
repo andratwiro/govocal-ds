@@ -7,7 +7,7 @@
 - With `onOpen` so the row opens Access rights for that action; `value` says who can take it ("Sign-in required"),
   grey while it is the platform's default (`isDefault`), dark once set for this phase.
 - With `isLocked` for an action the phase can't turn off (Attending an event; voting in a voting phase).
-- With `options` for settings that hang from the action while it is on: `ParticipantLimit` for Reacting's likes per
+- With `options` for settings that hang from the action while it is on: `ParticipantLimit` for Reacting's reactions per
   participant (Unlimited or Limited, and the maximum).
 - Without `onOpen` for a plain switch row that has no access of its own (Disliking).
 
@@ -73,11 +73,13 @@ while they apply.
 
 - Built by agents from the designer's prototype (a phase's Participant actions card); not in Figma.
 - Reviewed by a person: not yet.
-- Known limits: `ParticipantLimit` is uncontrolled (`defaultLimit`, `defaultMax`) and its words speak of likes;
-  `ACCESS_WHO_VALUE` is an English table (docs/DECISIONS.md, "Words and locales").
+- Known limits: `ACCESS_WHO_VALUE` is an English table (docs/DECISIONS.md, "Words and locales").
 
 ## Changes
 
+- 30 Oct 2026: `ParticipantLimit` is controllable (`limit`, `max`, `onChange`; a cleared maximum never reports
+  `NaN`), and speaks of reactions, the word the back office uses ("Number of reactions per participant", "Maximum
+  reactions"; src/foundations/words.json).
 - 30 Oct 2026: this page written; a play function proves the switch and the row's keys.
 - 29 Oct 2026: its words come in through `labels`, English by default.
 - 29 Oct 2026: default vs set-for-this-phase values: grey vs dark, and different words (docs/DECISIONS.md, "Built in

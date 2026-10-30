@@ -85,12 +85,13 @@ Revert takes its button away; a confirm before discarding; Esc back to the row.
 
 - Built by agents from the designer's prototype (the access modal); not in Figma.
 - Reviewed by a person: not yet.
-- Known limits: the password switch and the group Select keep their own state and report nothing to the page (no
-  `onChange` for either); "Customize error message" only calls `onCustomizeError`, it has no editor of its own; the
+- Known limits: "Customize error message" only calls `onCustomizeError`, it has no editor of its own; the
   choice words for the row are an English table (`ACCESS_WHO_VALUE`).
 
 ## Changes
 
+- 30 Oct 2026: the password switch and the group are controllable (`requirePassword` / `onRequirePasswordChange`,
+  `group` / `defaultGroup` / `onGroupChange`, by the group's name), so the page can read them; the defaults still work.
 - 30 Oct 2026: this page written; a play function proves the cards' arrows and the sections' keys.
 - 29 Oct 2026: its words come in through `labels`, English by default.
 - 29 Oct 2026: read-only before Override uses `isReadOnly`, the body faded once, not `isDisabled`; Revert sits in the
