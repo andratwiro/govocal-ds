@@ -158,3 +158,37 @@
   background: var(--gv-surface-selected-strong);
   border-color: var(--gv-border-selected);
 }
+
+/* Thumbnail (`layout="thumbnail"`): the media alone, 8 in, as wide as it is; the title is the tile's name but not
+   shown, and the selected ring stands in for the mark. */
+.gv-choice-card[data-layout='thumbnail'] {
+  width: auto;
+
+  .gv-choice-card__button {
+    padding: var(--gv-space-8);
+  }
+
+  .gv-choice-card__media {
+    margin: 0;
+    color: var(--gv-icon-quiet);
+
+    > svg {
+      display: block;
+      width: 64px;
+      height: 40px;
+    }
+  }
+
+  &[data-selected] .gv-choice-card__media {
+    color: var(--gv-icon-brand);
+  }
+}
+
+.gv-choice-card__title[data-hidden] {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

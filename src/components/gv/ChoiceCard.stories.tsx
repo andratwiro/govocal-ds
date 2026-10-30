@@ -159,3 +159,31 @@ export const Keyboard: Story = {
     await expect(build).not.toBeChecked();
   }
 };
+/** A layout drawn in a thumbnail: one, two or three columns. */
+const Columns = ({count}: {count: number}) => (
+  <svg viewBox="0 0 64 40" aria-hidden>
+    {Array.from({length: count}, (_, i) => {
+      const w = (64 - 4 * (count + 1)) / count;
+      return <rect key={i} x={4 + i * (w + 4)} y={4} width={w} height={32} rx={2} fill="currentColor" />;
+    })}
+  </svg>
+);
+
+/** `layout="thumbnail"`: the media alone fills the tile, for choices a picture says best (a block's layout). The title
+ * stays each tile's name, read by screen readers but not shown; the play function checks it. */
+export const Thumbnails: Story = {
+  render: () => (
+    <RadioGroup aria-label="Layout" defaultValue="one" orientation="horizontal">
+      <ChoiceCard value="one" layout="thumbnail" media={<Columns count={1} />}>One column</ChoiceCard>
+      <ChoiceCard value="two" layout="thumbnail" media={<Columns count={2} />}>Two columns</ChoiceCard>
+      <ChoiceCard value="three" layout="thumbnail" media={<Columns count={3} />}>Three columns</ChoiceCard>
+    </RadioGroup>
+  ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const two = canvas.getByRole('radio', {name: 'Two columns'});
+    await expect(canvas.getByText('Two columns').getBoundingClientRect().width).toBeLessThanOrEqual(1);
+    await userEvent.click(two.closest('label') ?? two);
+    await expect(two).toBeChecked();
+  }
+};

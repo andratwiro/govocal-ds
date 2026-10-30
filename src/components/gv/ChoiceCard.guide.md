@@ -21,7 +21,8 @@
 
 1. **Tile**: a bordered box; chosen = a 2px primary border drawn inside, so the tile never moves.
 2. **Control**: the radio dot (or the checkbox) at the start.
-3. **Media** (optional): an icon above the title.
+3. **Media** (optional): an icon above the title; with `layout="thumbnail"` the media is the whole tile (a 64 × 40
+   drawing), the dot hides and the title is kept for screen readers only.
 4. **Title** and **Description**: the option's name and a grey line under it.
 5. **Revealed** (optional): fields under the tile, shown only while it is chosen.
 6. **Group heading** (`ChoiceCardGroupHeading`, optional): a Section label over a group of checkbox tiles.
@@ -71,6 +72,7 @@ target, the group's arrow keys or Tab stops, and revealed fields placed after th
 
 ## Changes
 
+- 30 Oct 2026: `layout="thumbnail"`, a tile that is only its picture (a report's column layouts) (docs/DECISIONS.md, "Small fixes").
 - 30 Oct 2026: this page written; a play function proves the checkbox tiles' keys.
 - 29 Oct 2026: its group heading renders Section label; Card's radios deprecated in its favour.
 - 29 Oct 2026: replaced stacked Cards in Create report, Add a new group, the template gallery and Settings' access

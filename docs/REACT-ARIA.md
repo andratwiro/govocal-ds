@@ -62,7 +62,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Data display › Stat tile | `VisuallyHidden`; through Help popover: `Heading`, `Dialog`, `DialogTrigger`, `OverlayArrow`, `Popover`, `Button`, `ProgressBar` | – | – | yes | 12 |
 | Forms › Checkbox | through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text` | `CheckboxFieldProps` | – | yes | 8 |
 | Forms › Checkbox group | `CheckboxGroup`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `CheckboxGroupProps` | – | yes | 2 |
-| Forms › Choice card | `RadioField`, `RadioButton`, `CheckboxField`, `CheckboxButton`; through Section label: `Heading` | `RadioFieldProps` | – | yes | 6 |
+| Forms › Choice card | `RadioField`, `RadioButton`, `CheckboxField`, `CheckboxButton`; through Section label: `Heading` | `RadioFieldProps` | – | yes | 7 |
 | Forms › Date range field | through Button: `Button`, `ProgressBar`; through DatePicker: `DatePicker`, `Group`, `DateField`, `DateInput`, `DateSegment`, `Form`, `Label`, `FieldError`, `Button`, `Text`, `Calendar`, `CalendarCell`, `CalendarGrid`, `CalendarHeading`, `Heading`, `Header`, `Keyboard`, `ProgressBar`, `OverlayArrow`, `Popover`; through TimeField: `TimeField`, `Form`, `Label`, `FieldError`, `Button`, `Text`, `DateField`, `DateInput`, `DateSegment` | – | yes | yes | 8 |
 | Forms › Drop zone | `DropZone`, `FileTrigger`, `Button` | `DropZoneProps` | – | yes | 6 |
 | Forms › Locale switcher | `RadioGroup`, `Radio`, `Select`, `SelectValue`, `Button`, `VisuallyHidden`; through Popover: `OverlayArrow`, `Popover`; through ListBox: `ListBox`, `ListBoxItem`, `ListBoxSection`, `ListBoxLoadMoreItem`, `Heading`, `Text`, `Header`, `Keyboard`, `ProgressBar` | – | yes | yes | 7 |

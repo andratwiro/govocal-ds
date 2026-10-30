@@ -1096,6 +1096,7 @@ Component, from `src/components/gv/ChoiceCard.tsx`.
 - `children: ReactNode`
 - `className?: string`
 - `description?: ReactNode`
+- `layout?: 'default' | 'thumbnail'`
 - `media?: ReactNode`
 - `revealed?: ReactNode`
 - `style?: CSSProperties`
@@ -1110,6 +1111,7 @@ Component, from `src/components/gv/ChoiceCard.tsx`.
 - `children: ReactNode`
 - `className?: string`
 - `description?: ReactNode`
+- `layout?: 'default' | 'thumbnail'`
 - `media?: ReactNode`
 - `revealed?: ReactNode`
 - `style?: CSSProperties`
