@@ -124,10 +124,14 @@ export {Divider, type DividerProps} from './components/gv/Divider';
 export {Grid, GridItem, type GridProps, type GridItemProps} from './components/gv/Grid';
 export {Inline, type InlineProps} from './components/gv/Inline';
 export {PageHeader, type PageHeaderProps} from './components/gv/PageHeader';
+export {
+  PageStage, PageStageSheet, type PageStageFormat, type PageStageProps, type PageStageSheetProps
+} from './components/gv/PageStage';
 export {Panel, type PanelProps} from './components/gv/Panel';
 export {type PaddingProps, type Space} from './components/space';
 export {Stack, type StackProps} from './components/gv/Stack';
 export {TileGrid, type TileGridProps} from './components/gv/TileGrid';
+export {ZoomBar, ZOOM_STEPS, type ZoomBarProps} from './components/gv/ZoomBar';
 
 // Components / Navigation
 export {Breadcrumbs, type BreadcrumbItem, type BreadcrumbsProps} from './components/gv/Breadcrumbs';
@@ -275,6 +279,8 @@ export {chatMessageLabels, type ChatMessageLabels} from './components/gv/ChatMes
 export {chatProgressLabels, type ChatProgressLabels} from './components/gv/ChatProgress';
 export {chatThreadLabels, type ChatThreadLabels} from './components/gv/ChatThread';
 export {itemChipLabels, type ItemChipLabels} from './components/gv/ItemChip';
+export {pageStageLabels, type PageStageLabels} from './components/gv/PageStage';
+export {zoomBarLabels, type ZoomBarLabels} from './components/gv/ZoomBar';
 export {promptComposerLabels, type PromptComposerLabels} from './components/gv/PromptComposer';
 export {badgeLabels, type BadgeLabels} from './components/gv/Badge';
 export {bannerLabels, type BannerLabels} from './components/gv/Banner';

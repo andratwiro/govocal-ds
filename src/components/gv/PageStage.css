@@ -1,0 +1,112 @@
+@import '../theme.css';
+
+/*
+ * Page stage (not in Figma; the report prototype's `.fr-stage`, `.fr-pages`, `.fr-page`). The stage is the tertiary
+ * grey and scrolls both ways; the sheets stand in a centred column 24 apart, padded 32 round and 104 at the foot so
+ * the last page clears the floating Zoom bar. A sheet is the document's paper (surface-document) with the raised
+ * shadow and a hairline, radius 2. A4: 794 × 1123 (96 dpi), margins 64 (the prototype's 72 snaps to the scale);
+ * a slide: 1123 × 632 (16:9), margins 48. The footer: the title at the start, the number at the end, Small
+ * secondary, 20 above, 28 below.
+ */
+.gv-page-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+  block-size: 100%;
+  background: var(--gv-surface-tertiary);
+}
+
+.gv-page-stage__scroll {
+  flex: 1;
+  min-block-size: 0;
+  overflow: auto;
+  outline: none;
+
+  &:focus-visible {
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
+  }
+}
+
+/* zoom (set inline from the prop) scales the sheets' layout box, so the scroll area follows the zoom. */
+.gv-page-stage__sheets {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gv-space-24);
+  inline-size: max-content;
+  min-inline-size: 100%;
+  box-sizing: border-box;
+  padding: var(--gv-space-32) var(--gv-space-32) var(--gv-space-104);
+}
+
+/* The bar floats at the bottom centre, over the stage, never over its scroll bar. */
+.gv-page-stage__bar {
+  position: absolute;
+  inset-block-end: var(--gv-space-20);
+  inset-inline: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.gv-page-sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  box-sizing: border-box;
+  inline-size: 794px;
+  min-block-size: 1123px;
+  background: var(--gv-surface-document);
+  border-radius: var(--gv-radius-2);
+  box-shadow: 0 0 0 1px var(--gv-border-subtle), var(--gv-shadow-raised);
+  font: var(--gv-type-document-body);
+  color: var(--gv-text-body);
+
+  &[data-format='slide'] {
+    inline-size: 1123px;
+    min-block-size: 632px;
+  }
+}
+
+.gv-page-sheet__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--gv-space-64) var(--gv-space-64) 0;
+
+  [data-format='slide'] > & {
+    padding: var(--gv-space-48) var(--gv-space-48) 0;
+  }
+}
+
+.gv-page-sheet__foot {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gv-space-16);
+  padding: var(--gv-space-20) var(--gv-space-64) var(--gv-space-28);
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+  font-variant-numeric: tabular-nums;
+
+  [data-format='slide'] > & {
+    padding-inline: var(--gv-space-48);
+  }
+}
+
+.gv-page-sheet__title {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gv-page-sheet__number {
+  margin-inline-start: auto;
+}

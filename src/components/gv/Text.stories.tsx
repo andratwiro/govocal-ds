@@ -54,5 +54,20 @@ export const HeadingAndParagraph: Story = {
   )
 };
 
+/** A document's four kinds (a report's pages on a Page stage), in their own family, themed per platform. */
+export const DocumentKinds: Story = {
+  name: 'Document kinds',
+  render: () => (
+    <div style={{display: 'grid', gap: 'var(--gv-space-12)', maxWidth: 560}}>
+      <Text elementType="h1" kind="document-display" color="primary">Moving the city 2026</Text>
+      <Text elementType="p" kind="document-lead" color="secondary">What 3,600 residents told us about their streets</Text>
+      <Text elementType="h2" kind="document-heading" color="primary">Executive summary</Text>
+      <Text elementType="p" kind="document-body">
+        3,600 identifiable participants took part across 6 projects. The project totals include repeat participants.
+      </Text>
+    </div>
+  )
+};
+
 /** The controls on the docs page drive this one. */
 export const Playground: Story = {args: {kind: 'small', color: 'meta', children: 'Posted 2 days ago'}};

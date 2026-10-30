@@ -5,7 +5,7 @@ with each component's props: its own with their types, the ones passed straight 
 (React Aria's behaviour props, React's, the DOM's). An API change shows up here as a diff to review;
 `tests/api-report.test.mjs` fails while this file is stale. The convention it follows: `docs/API.md`.
 
-## `govocal-ds` (672 names)
+## `govocal-ds` (684 names)
 
 ### `ACCESS_WHO_VALUE`
 
@@ -3530,6 +3530,66 @@ Type, from `src/components/gv/Pagination.tsx`.
 type PageItem = number | 'start-ellipsis' | 'end-ellipsis'
 ```
 
+### `PageStage`
+
+Component, from `src/components/gv/PageStage.tsx`.
+
+- `aria-label?: string`
+- `children?: ReactNode`
+- `className?: string`
+- `labels?: Partial<PageStageLabels>`
+- `onFitZoomChange?: (zoom: number) => void`
+- `onPageChange?: (page: number) => void`
+- `style?: CSSProperties`
+- `zoom?: number`
+- `zoomBar?: ReactNode`
+
+### `PageStageFormat`
+
+Type, from `src/components/gv/PageStage.tsx`.
+
+```ts
+type PageStageFormat = 'a4' | 'slide'
+```
+
+### `pageStageLabels`
+
+Value, from `src/components/gv/PageStage.tsx`.
+
+```ts
+PageStageLabels
+```
+
+### `PageStageLabels`
+
+Interface, from `src/components/gv/PageStage.tsx`.
+
+- `page: (page: string) => string`
+- `stage: string`
+
+### `PageStageProps`
+
+Interface, from `src/components/gv/PageStage.tsx`. The props of `PageStage`, listed there.
+
+### `PageStageSheet`
+
+Component, from `src/components/gv/PageStage.tsx`.
+
+- `aria-label?: string`
+- `children?: ReactNode`
+- `className?: string`
+- `footer?: ReactNode`
+- `format?: PageStageFormat`
+- `isBusy?: boolean`
+- `isCover?: boolean`
+- `labels?: Partial<PageStageLabels>`
+- `pageNumber?: number`
+- `style?: CSSProperties`
+
+### `PageStageSheetProps`
+
+Interface, from `src/components/gv/PageStage.tsx`. The props of `PageStageSheet`, listed there.
+
 ### `Pagination`
 
 Component, from `src/components/gv/Pagination.tsx`.
@@ -5434,7 +5494,7 @@ Interface, from `src/components/TextField.tsx`. The props of `TextField`, listed
 Type, from `src/components/gv/Text.tsx`.
 
 ```ts
-type TextKind = 'title' | 'body' | 'ui' | 'small' | 'stat'
+type TextKind = 'title' | 'body' | 'ui' | 'small' | 'stat' | 'document-display' | 'document-heading' | 'document-lead' | 'document-body'
 ```
 
 ### `TextProps`
@@ -5892,6 +5952,52 @@ Interface, from `src/patterns/VotingRow.tsx`.
 ### `VotingRowProps`
 
 Interface, from `src/patterns/VotingRow.tsx`. The props of `VotingRow`, listed there.
+
+### `ZOOM_STEPS`
+
+Value, from `src/components/gv/ZoomBar.tsx`.
+
+```ts
+number[]
+```
+
+### `ZoomBar`
+
+Component, from `src/components/gv/ZoomBar.tsx`.
+
+- `className?: string`
+- `fitZoom?: number`
+- `isDisabled?: boolean`
+- `labels?: Partial<ZoomBarLabels>`
+- `onZoomChange: (zoom: number) => void`
+- `page?: number`
+- `pageCount?: number`
+- `steps?: number[]`
+- `style?: CSSProperties`
+- `zoom: number`
+
+### `zoomBarLabels`
+
+Value, from `src/components/gv/ZoomBar.tsx`.
+
+```ts
+ZoomBarLabels
+```
+
+### `ZoomBarLabels`
+
+Interface, from `src/components/gv/ZoomBar.tsx`.
+
+- `fit: string`
+- `page: (page: string, count: string) => string`
+- `toolbar: string`
+- `zoom: (percent: string) => string`
+- `zoomIn: string`
+- `zoomOut: string`
+
+### `ZoomBarProps`
+
+Interface, from `src/components/gv/ZoomBar.tsx`. The props of `ZoomBar`, listed there.
 
 ## `govocal-ds/base` (89 names)
 

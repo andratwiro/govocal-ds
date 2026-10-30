@@ -28,7 +28,7 @@ Generic parts any admin could ship, from `govocal-ds`. Reach for one first.
 
 - Data display: `ActivityFeed`, `Avatar`, `FileList`, `Illustration`, `ListHeader`, `ListHeaderCell`, `ListRow`, `MapView`, `PropertyList`, `ReactionCounts`, `StatRow`, `StatTile`
 - Overlays: `AlertDialog`, `Coachmark`, `HelpPopover`, `Modal`, `SidePanel`, `Tooltip`
-- Layout & containers: `AppProvider`, `Card`, `Divider`, `Grid`, `Inline`, `PageHeader`, `Panel`, `Stack`, `TileGrid`
+- Layout & containers: `AppProvider`, `Card`, `Divider`, `Grid`, `Inline`, `PageHeader`, `PageStage`, `Panel`, `Stack`, `TileGrid`, `ZoomBar`
 - Status & feedback: `Badge`, `Banner`, `EmptyState`, `MissingPart`, `NewDot`, `ReviewStatus`, `Skeleton`, `StatusBadge`, `Toast`
 - Charts: `BarRow`, Chart (`LineChart`), `DashboardCard`, `LegendRow`, `StatementRow`
 - Navigation: `Breadcrumbs`, `Link`, `Pagination`, `Tabs`

@@ -21,8 +21,8 @@
 
 1. **Words**: one element (`span` by default; `p`, or `h2` to `h6` with `elementType`).
 
-Type styles (`kind`): title, body, ui, small, stat; body, ui and small have a strong weight (`isStrong`). Colours
-(`color`): primary, secondary, meta, tertiary. No margins.
+Type styles (`kind`): title, body, ui, small, stat, and a document's four (`document-display`, `-heading`, `-lead`,
+`-body`, for a report's pages); body, ui and small have a strong weight (`isStrong`). Colours (`color`): primary, secondary, meta, tertiary. No margins.
 
 ## Behaviour
 
@@ -61,6 +61,8 @@ sizes from the tokens.
 
 ## Changes
 
+- 30 Oct 2026: four document kinds (`document-display`, `-heading`, `-lead`, `-body`) for a report's pages on the
+  Page stage, on the document type roles (docs/DECISIONS.md, "Report parts").
 - 30 Oct 2026: this page written.
 - 29 Oct 2026: built as one Text, React Aria's underneath, with `kind`, `isStrong` and `color`; it opened the
   Components/Text group (docs/DECISIONS.md, "Composition contracts in code").

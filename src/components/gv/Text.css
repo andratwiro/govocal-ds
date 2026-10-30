@@ -37,6 +37,23 @@
     font: var(--gv-type-stat);
   }
 
+  /* A document's roles (a report's pages, Page stage): their own family, themed per platform. */
+  &[data-kind='document-display'] {
+    font: var(--gv-type-document-display);
+  }
+
+  &[data-kind='document-heading'] {
+    font: var(--gv-type-document-heading);
+  }
+
+  &[data-kind='document-lead'] {
+    font: var(--gv-type-document-lead);
+  }
+
+  &[data-kind='document-body'] {
+    font: var(--gv-type-document-body);
+  }
+
   &[data-color='primary'] {
     color: var(--gv-text-primary);
   }

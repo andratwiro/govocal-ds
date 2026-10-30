@@ -1,0 +1,66 @@
+@import '../theme.css';
+
+/*
+ * Zoom bar (not in Figma; the report prototype's `.fr-zoom`): a pill on the panel surface with a hairline and the
+ * overlay shadow, padding 2 (the prototype's 3 snaps), 2 between its parts. − and + are 24 Icon buttons; the value
+ * sits 44 wide in the middle, primary, tabular; Fit is a 24 quiet text button; the page line follows a hairline at
+ * its start, secondary. Small type throughout (the prototype's 12).
+ */
+.gv-zoom-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-2);
+  padding: var(--gv-space-2);
+  background: var(--gv-surface-panel);
+  border: 1px solid var(--gv-border-default);
+  border-radius: var(--gv-radius-full);
+  box-shadow: var(--gv-shadow-overlay);
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+  white-space: nowrap;
+}
+
+.gv-zoom-bar__value {
+  min-inline-size: 44px;
+  text-align: center;
+  color: var(--gv-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.gv-zoom-bar__fit {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  block-size: var(--gv-size-control-24);
+  margin: 0;
+  padding: 0 var(--gv-space-10);
+  border: 0;
+  border-radius: var(--gv-radius-full);
+  background: transparent;
+  font: inherit;
+  color: var(--gv-text-primary);
+  cursor: pointer;
+  outline: none;
+
+  &[data-hovered] {
+    background: var(--gv-surface-hovered);
+  }
+
+  &[data-focus-visible] {
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
+  }
+
+  &[data-disabled] {
+    color: var(--gv-text-disabled);
+    cursor: default;
+    background: transparent;
+  }
+}
+
+.gv-zoom-bar__page {
+  padding-inline: var(--gv-space-8) var(--gv-space-10);
+  margin-inline-start: var(--gv-space-4);
+  border-inline-start: 1px solid var(--gv-border-default);
+  font-variant-numeric: tabular-nums;
+}

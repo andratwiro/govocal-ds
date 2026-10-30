@@ -5,7 +5,8 @@ import {clsx} from 'clsx';
 import './Text.css';
 
 /** A type style from Foundations/Typography. */
-export type TextKind = 'title' | 'body' | 'ui' | 'small' | 'stat';
+export type TextKind = 'title' | 'body' | 'ui' | 'small' | 'stat' | 'document-display' | 'document-heading' |
+  'document-lead' | 'document-body';
 
 /** A text colour, by emphasis: primary (the words that matter), secondary, meta (a record's date and author), tertiary. */
 export type TextColor = 'primary' | 'secondary' | 'meta' | 'tertiary';
@@ -18,7 +19,9 @@ export interface TextProps extends Omit<RACTextProps, 'className' | 'style' | 'c
   slot?: string | null;
   /**
    * The type style: `title` (a page's or dialog's title), `body` (reading text), `ui` (labels and controls), `small`
-   * (meta lines, captions), `stat` (a figure). Left out, the text takes its look from around it (a slot inside a
+   * (meta lines, captions), `stat` (a figure). A document's own (a report's page, themed per platform):
+   * `document-display` (its title), `document-heading` (a section), `document-lead` (a lead line), `document-body`
+   * (its paragraphs). Left out, the text takes its look from around it (a slot inside a
    * React Aria part, e.g. an item's `slot="description"`).
    */
   kind?: TextKind;

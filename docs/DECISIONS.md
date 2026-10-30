@@ -62,6 +62,13 @@ the plain stat tile, figure, quote and sortable list.
 - Weights: the prototype draws the title and headings 500, the subtitle 300 → **Medium and Regular** → the system has no Light; tokens win.
 - A sheet surface token (white, shadow 1): an unreviewed draft said none (a sheet is `surface-panel`), the plan asks for one → **`--gv-surface-document` (white, the panel's value) with `--gv-shadow-raised`, on the `--gv-surface-tertiary` stage** → `document` is the word the type roles already use, so a platform's theme can set a document's paper (cream, say) with its face and leave every panel white; `sheet` would have been a component word. A new place role in the grammar; the pair with `surface-panel` is explained in the near-duplicate guard.
 - The lead number "in the accent": `--gv-text-accent` is a retired name (renames.json splits it into link, brand and icon-brand) → **`--gv-chart-highlight` (teal 500, as `surface-accent-strong`)** → the earlier audit's "one rule (accent = named in the finding), one chart token": a highlighted bar and a highlighted figure are the same mark, and a retired name must never come back with a new meaning.
+- Page stage's names: the audit's PageStage, PageStagePage and PageStageBreak → **`PageStage` and `PageStageSheet`, no break part** → a sheet is what the stage holds (`page` is already Pagination's word); a page break is the document's content, drawn by the page that owns the document.
+- A4 margins: the prototype's 72 → **64** (the space scale has no 72); slide margins 48. The sheet's size stays in pixels (794 × 1123, A4 at 96 dpi): a paper size, not a spacing value.
+- Zoom: CSS transform (the prototype) vs CSS `zoom` → **`zoom`** → the layout box scales with the sheets, so the stage's scroll area and the fit both follow without measuring.
+- Zoom bar's place: the prototype floats it at the bottom right (one screen) and the deep dive at the bottom centre → **bottom centre, in Page stage's `zoomBar` slot** → it never covers the vertical scroll bar and reads the same in right to left.
+- Fit: a toggle that stays pressed (our back office) vs the prototype's button that turns off when the zoom already fits → **the prototype's** → Fit is an action, not a mode; zooming again is the way out.
+- The zoom steps: **50, 67, 83, 100, 125, 150, 200** (`ZOOM_STEPS`) → the prototype's 83% default sits on a step, and − and + stop at the ends instead of doing nothing.
+- A document's type in parts: inline font tokens in pages vs the Text part → **Text gains `document-display`, `-heading`, `-lead` and `-body` kinds** → a page writes a report's page with no CSS of its own.
 
 ## The AI assistant (30 Oct 2026)
 

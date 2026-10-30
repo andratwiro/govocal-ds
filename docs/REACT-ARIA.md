@@ -6,7 +6,7 @@ Every interactive part is built on React Aria Components. This table says, per p
 what would survive a change of base library. It decides nothing: the base library is a question for developers
 (Overview › Questions for developers).
 
-**111 of 129 parts** wire behaviour from React Aria; the rest are plain React and CSS.
+**112 of 131 parts** wire behaviour from React Aria; the rest are plain React and CSS.
 
 **What comes from React Aria** (would be rewritten on another library):
 
@@ -85,9 +85,11 @@ what would survive a change of base library. It decides nothing: the base librar
 | Layout & containers › Grid | None: plain React and CSS | – | – | yes | 3 |
 | Layout & containers › Inline | None: plain React and CSS | – | – | yes | 3 |
 | Layout & containers › Page header | None: plain React and CSS | – | – | yes | 3 |
+| Layout & containers › Page stage | None: plain React and CSS | – | yes | yes | 7 |
 | Layout & containers › Panel | through Badge: `Button` | – | yes | yes | 8 |
 | Layout & containers › Stack | None: plain React and CSS | – | – | yes | 3 |
 | Layout & containers › Tile grid | None: plain React and CSS | – | – | yes | 4 |
+| Layout & containers › Zoom bar | `Button`, `Toolbar` | – | yes | yes | 9 |
 | Navigation › Breadcrumbs | `Breadcrumbs`, `Breadcrumb`, `Link`; through Icon button: `Button` | `BreadcrumbsProps` | – | yes | 5 |
 | Navigation › Link | `Link` | `LinkProps` | – | yes | 2 |
 | Navigation › Pagination | `Button` | – | yes | yes | 8 |
@@ -113,7 +115,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Tables & lists › Selection bar | `MenuTrigger`, `Toolbar`; through Button: `Button`, `ProgressBar`; through Popover: `OverlayArrow`, `Popover`; through Icon button: `Button` | – | yes | yes | 7 |
 | Tables & lists › Table toolbar | `Toolbar` | – | – | yes | 7 |
 | Text › Section label | `Heading` | – | – | yes | 4 |
-| Text › Text | `Text` | `TextProps` | – | yes | 4 |
+| Text › Text | `Text` | `TextProps` | – | yes | 5 |
 | Text › Visually hidden | `VisuallyHidden` | – | – | – | 2 |
 
 ## Patterns

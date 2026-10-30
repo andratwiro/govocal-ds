@@ -155,6 +155,10 @@
     "group": "Back office screens",
     "what": "The back office's Projects list shows views, filters, a full table, paging, row menus, and the New project flow."
   },
+  "e2e/report-parts.spec.ts": {
+    "group": "Components behave",
+    "what": "The report builder's parts: Page stage zooms, fits and follows the page in view, the Zoom bar stops at its ends and speaks the locale, and the block, text, figure, quote and sortable parts work by role and keyboard."
+  },
   "e2e/report-view.spec.ts": {
     "group": "Back office screens",
     "what": "The back office's report view has outline, pages and assistant; selecting, keyboard use and block edits with Undo all work."
