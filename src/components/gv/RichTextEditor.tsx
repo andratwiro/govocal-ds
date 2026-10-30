@@ -35,8 +35,9 @@ export interface RichTextEditorProps extends Omit<RichTextToolbarProps, 'labels'
 }
 
 /**
- * A formatting toolbar over a text area, for a description. The toolbar only reports presses; the page applies them.
- * For plain text use Text area; for one per language, Multilingual rich text editor.
+ * A box to write a longer text with formatting buttons above it, for a description, an email or a policy page. For now
+ * the buttons only light up when pressed: the screen's code applies the formatting. For plain text use Text field's
+ * TextArea; for one text per language, Multilingual rich text editor.
  */
 export function RichTextEditor({
   'aria-label': ariaLabel,
