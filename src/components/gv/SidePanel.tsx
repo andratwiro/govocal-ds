@@ -120,6 +120,11 @@ export interface SidePanelProps {
   style?: CSSProperties;
 }
 
+/** A non-modal dialog that leaves focus where it is when it shows: an inline Side panel's frame without `autoFocus`. */
+function QuietDialog({children, ...rest}: {children: ReactNode; className: string; 'aria-label'?: string; 'aria-labelledby'?: string}) {
+  return <section {...rest} role="dialog" tabIndex={-1}>{children}</section>;
+}
+
 /**
  * Side panel: one record of a list beside the list, the prototype's Manage drawer (`#pj-idrawer`). A non-modal
  * dialog: it floats at the window's end edge, the list behind it stays usable (a row click shows that row here),
@@ -245,6 +250,9 @@ export function SidePanel({
     onPositionChange?.(to);
   };
   const Heading = `h${headingLevel ?? 2}` as const;
+  // React Aria's Dialog moves focus into itself on mount; a panel that doesn't take focus is the same dialog, drawn
+  // without that move.
+  const Frame = autoFocus ? Dialog : QuietDialog;
   const [Back, Forward] = direction === 'rtl' ? [ChevronRight, ChevronLeft] : [ChevronLeft, ChevronRight];
 
   return (
@@ -259,7 +267,7 @@ export function SidePanel({
       onBlur={e => {
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) focusInside.current = false;
       }}>
-      <Dialog
+      <Frame
         className="gv-side-panel__dialog"
         aria-label={ariaLabel}
         aria-labelledby={ariaLabel ? undefined : `${id}-label`}>
@@ -291,7 +299,7 @@ export function SidePanel({
         </div>
         <div className="gv-side-panel__body">{children}</div>
         {footer && <div className="gv-side-panel__footer">{footer}</div>}
-      </Dialog>
+      </Frame>
     </div>
   );
 }
