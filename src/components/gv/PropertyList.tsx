@@ -13,7 +13,8 @@ export interface PropertyListProps extends PlacementProps {
 }
 
 /**
- * Property list: label · value rows (the prototype's `.pj-props` in the side panel, Figma's idea panel 1:512). The
+ * Property list: the facts about one record as rows, each a label and its value, such as an idea's Status, Assignee and
+ * Tags in its side panel (the prototype's `.pj-props`, Figma's idea panel 1:512). The
  * labels share one column, 64 wide or as wide as the longest; the values start 8 after it and wrap. A `dl`, so a
  * screen reader reads each label with its value. Values are anything: text, a number, a Select, tags, a link.
  * Not in Figma as a component.

@@ -87,8 +87,12 @@ const meta: Meta<typeof PropertyList> = {
 export default meta;
 type Story = StoryObj<typeof PropertyList>;
 
-/** Every kind of value, as the side panels of the four methods carry them: an idea (pickers, tags, a phase with an
- * action), a proposal (plain text: its status is set by the votes), a statement (a number, and "–" for no value). */
+/**
+ * Every kind of value, as three side panels carry them, top to bottom. An idea: pickers to change Status and Assignee,
+ * tags, a phase with an action, a number and an empty value. A proposal: plain text, because nobody picks its status
+ * (the votes set it) and "Closed" is what Time left says once voting has ended. A statement: an assignee picker, a
+ * number, and "–" for no value.
+ */
 export const AllVariants: Story = {
   render: () => (
     <div style={{display: 'grid', gap: 32, width: 512}}>
@@ -107,13 +111,16 @@ export const AllVariants: Story = {
   )
 };
 
-/** An idea's properties: Status and Assignee pickers, removable tags with "Add tag", the phase with "Copy to
- * phase", a number and an empty value ("–", read as "Not set"). Each change applies at once. */
+/**
+ * An idea's properties: Status and Assignee pickers, removable tags with "Add tag", the phase with "Copy to phase" (a
+ * menu that copies the idea into another phase), a number and an empty value ("–", read as "Not set"). Each change
+ * applies at once; the back office confirms it with an Undo toast, which this story leaves out.
+ */
 export const Default: Story = {
   render: () => <div style={{width: 512}}><IdeaProperties /></div>
 };
 
-/** Its place: a side panel's body, under the record, the label column 24 from the panel's edge. */
+/** Its place: a side panel's body, under the record's title. The side panel's own padding puts the labels 24px from its edge. */
 export const InASidePanel: Story = {
   name: 'In a side panel',
   render: () => (
