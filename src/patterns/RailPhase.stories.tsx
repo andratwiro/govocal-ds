@@ -3,6 +3,8 @@ import {RailHeader} from './RailHeader';
 import {SectionLabel} from '../components/gv/SectionLabel';
 import {Divider} from '../components/gv/Divider';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
+import {useState} from 'react';
 
 const meta: Meta<typeof RailPhase> = {
   title: 'Patterns/Project rail/Rail phase',
@@ -167,4 +169,30 @@ export const Rail: StoryObj = {
       <SectionLabel>Events</SectionLabel>
     </aside>
   )
+};
+
+/** A phase by keyboard: Enter on the row opens the phase, Tab moves to its delete, Enter deletes. Its play function
+ * proves the component page's keyboard table. */
+export const Keyboard: Story = {
+  render: function Render() {
+    const [said, setSaid] = useState('Nothing yet');
+    return (
+      <div style={{width: 284, display: 'flex', flexDirection: 'column', gap: 16}}>
+        <RailPhase status="upcoming" title="Collect ideas" statusLabel="Upcoming" meta="Ideation"
+          onPress={() => setSaid('Collect ideas opened')} onDelete={() => setSaid('Collect ideas deleted')} />
+        <span role="status">{said}</span>
+      </div>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('link', {name: /^Collect ideas/})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Collect ideas opened');
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Delete Collect ideas'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Collect ideas deleted');
+  }
 };

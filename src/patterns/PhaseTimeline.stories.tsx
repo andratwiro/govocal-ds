@@ -1,4 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {PhaseTimeline, type TimelinePhase} from './PhaseTimeline';
 import {SectionLabel} from '../components/gv/SectionLabel';
 
@@ -36,3 +37,17 @@ export const Spotlight: Story = {
 
 /** Every phase still to come: grey dots, grey spine. */
 export const AllUpcoming: Story = {name: 'All upcoming', args: {phases: PHASES.map(p => ({...p, status: 'upcoming', count: undefined, fresh: undefined}))}};
+
+/** Tab walks the phases in order, one link each; the phase being viewed says so. Its play function proves the
+ * component page's keyboard table. */
+export const Keyboard: Story = {
+  args: {phases: PHASES.map(p => ({...p, isCurrent: p.id === 'b'}))},
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    for (const name of [/^Project background/, /^Collect ideas/, /^Community vote/, /^Feedback survey/]) {
+      await userEvent.tab();
+      await expect(canvas.getByRole('link', {name})).toHaveFocus();
+    }
+    await expect(canvas.getByRole('link', {name: /^Collect ideas/})).toHaveAttribute('aria-current', 'page');
+  }
+};

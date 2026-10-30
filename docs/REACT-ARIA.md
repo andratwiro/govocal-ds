@@ -138,9 +138,9 @@ what would survive a change of base library. It decides nothing: the base librar
 | Project page › Project header | `MenuTrigger` through `components/Button`, `components/Menu`, `components/gv/Breadcrumbs`, `components/gv/SegmentedControl` | – | – | yes | 9 |
 | Project page › Setup step | `Button`, `Dialog`, `DialogTrigger`, `Disclosure`, `DisclosurePanel`, `Heading`, `MenuTrigger` through `components/Popover` | – | – | yes | 7 |
 | Project page › Stat card | `Button` | – | yes | yes | 4 |
-| Project rail › Phase timeline | through `patterns/RailPhase` | – | yes | yes | 4 |
-| Project rail › Rail header | through `components/gv/IconButton` | – | – | yes | 4 |
-| Project rail › Rail phase | `Link` through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 6 |
+| Project rail › Phase timeline | through `patterns/RailPhase` | – | yes | yes | 5 |
+| Project rail › Rail header | through `components/gv/IconButton` | – | – | yes | 5 |
+| Project rail › Rail phase | `Link` through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 7 |
 | Report builder › Assistant panel | through `components/Button`, `components/gv/SidePanel`, `components/gv/ItemChip`, `components/gv/PromptComposer` | – | yes | – | 9 |
 
 ## Base

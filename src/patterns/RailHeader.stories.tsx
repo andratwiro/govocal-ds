@@ -1,5 +1,7 @@
 import {RailHeader} from './RailHeader';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
+import {useState} from 'react';
 
 const meta: Meta<typeof RailHeader> = {
   title: 'Patterns/Project rail/Rail header',
@@ -41,4 +43,30 @@ export const WithPanelToggle: Story = {
 export const WithoutAction: Story = {
   name: 'Without action',
   args: {title: 'Participation'}
+};
+
+/** Its buttons by keyboard: Tab reaches hide panel, then +; Enter or Space presses. Its play function proves the
+ * component page's keyboard table. */
+export const Keyboard: Story = {
+  render: function Render() {
+    const [said, setSaid] = useState('Nothing pressed');
+    return (
+      <div style={{width: 264, display: 'flex', flexDirection: 'column', gap: 16}}>
+        <RailHeader title="Participation" onTogglePanel={() => setSaid('Panel hidden')} onAdd={() => setSaid('Phase added')}
+          labels={{add: 'Add a phase', togglePanel: 'Hide the participation rail'}} />
+        <span role="status">{said}</span>
+      </div>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Hide the participation rail'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Panel hidden');
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Add a phase'})).toHaveFocus();
+    await userEvent.keyboard(' ');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Phase added');
+  }
 };
