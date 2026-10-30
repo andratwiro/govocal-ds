@@ -3165,6 +3165,7 @@ Component, from `src/components/gv/MultilingualRichTextEditor.tsx`.
 - `description?: string`
 - `errorMessage?: string | Multiloc`
 - `isBold?: boolean`
+- `isDisabled?: boolean`
 - `isInvalid?: boolean`
 - `isItalic?: boolean`
 - `isList?: boolean`
@@ -4534,10 +4535,16 @@ Component, from `src/components/gv/RichTextEditor.tsx`.
 
 - `aria-label?: string`
 - `className?: string`
+- `description?: ReactNode`
+- `dir?: 'ltr' | 'rtl'`
+- `errorMessage?: string`
 - `isBold?: boolean`
+- `isDisabled?: boolean`
+- `isInvalid?: boolean`
 - `isItalic?: boolean`
 - `isList?: boolean`
 - `labels?: Partial<RichTextEditorLabels>`
+- `lang?: string`
 - `onBoldChange?: (v: boolean) => void`
 - `onChange?: (value: string) => void`
 - `onImage?: () => void`
@@ -4588,6 +4595,7 @@ Component, from `src/components/gv/RichTextToolbar.tsx`.
 - `blockType?: RichTextBlockType`
 - `className?: string`
 - `isBold?: boolean`
+- `isDisabled?: boolean`
 - `isItalic?: boolean`
 - `isList?: boolean`
 - `labels?: Partial<RichTextToolbarLabels>`

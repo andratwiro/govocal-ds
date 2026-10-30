@@ -49,7 +49,20 @@ export const Required: Story = {
 
 /** After a save was tried: the missing language is shown and named under the editor. */
 export const Invalid: Story = {
-  args: {defaultValue: intro, isRequired: true, isInvalid: true}
+  args: {defaultValue: intro, isRequired: true, isInvalid: true},
+  play: async ({canvasElement}) => {
+    const box = within(canvasElement).getByRole('textbox');
+    await expect(box).toHaveAttribute('aria-invalid', 'true');
+    await expect(box).toHaveAccessibleDescription(/Spanish/);
+  }
+};
+
+/** `isDisabled`: the language switcher still shows each language; the editor and its toolbar are off. */
+export const Disabled: Story = {
+  args: {defaultValue: intro, isDisabled: true},
+  play: async ({canvasElement}) => {
+    await expect(within(canvasElement).getByRole('textbox')).toBeDisabled();
+  }
 };
 
 /** An Arabic text runs right to left in the editor; the toolbar keeps the interface's order. */
@@ -59,6 +72,11 @@ export const RightToLeft: Story = {
     locales: ['en', 'ar-SA'],
     defaultLocale: 'ar-SA',
     defaultValue: {en: intro.en, 'ar-SA': 'أضف مقدمة قصيرة هنا: أخبر السكان عن هذا المشروع وكيف يمكنهم المشاركة.'}
+  },
+  play: async ({canvasElement}) => {
+    const box = within(canvasElement).getByRole('textbox');
+    await expect(box).toHaveAttribute('dir', 'rtl');
+    await expect(box).toHaveAttribute('lang', 'ar-SA');
   }
 };
 

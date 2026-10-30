@@ -65,6 +65,7 @@ icon buttons.
 
 ## Changes
 
+- 30 Oct 2026: `isDisabled` turns every tool off (the editor's disabled state).
 - 30 Oct 2026: a `floating` variant with a block-type segment and an `actions` slot, for a report's text blocks
   (docs/DECISIONS.md, "Report parts"); `play: FloatingKeyboard` proves its segment's keys.
 - 30 Oct 2026: this page written; a play function proves the keyboard table.

@@ -22,7 +22,11 @@
 1. **Toolbar**: the **Rich text toolbar** along the top, with a line under it: bold, italic and a bulleted list, then add
    link, add image and embed video. It is 25px tall.
 2. **Writing area**: where the words go, at least 74px tall, with the placeholder "Add a short description" until
-   something is written. Longer text scrolls inside it; people can't resize it.
+   something is written. Longer text scrolls inside it; people can't resize it. It takes `lang` and `dir`, so a text in
+   another language reads and runs its own way.
+3. **Hint** (optional, `description`): a grey line under the box.
+4. **Error** (with `isInvalid`): `errorMessage` under the box, whose border turns red. `isDisabled` greys the whole
+   field and turns the toolbar off.
 
 The whole box takes the width of its container (Figma draws it 444px), with a 1px control border and 10px corners.
 While someone writes in it, the border turns the selected colour with a light ring around it.
@@ -82,6 +86,8 @@ that say when they are on (they look pressed and screen readers hear "pressed").
 
 ## Changes
 
+- 30 Oct 2026: `lang`, `dir`, `description`, `isInvalid` with `errorMessage`, and `isDisabled` (docs/DECISIONS.md, "Small
+  fixes").
 - 30 Oct 2026: an `inline` variant for text typed on a report's page (docs/DECISIONS.md, "Report parts").
 - 30 Oct 2026: the Filled story has text; the page reworded after a fresh-eyes read.
 - 30 Oct 2026: this page written; a play function proves the keyboard table.

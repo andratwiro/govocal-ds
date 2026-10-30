@@ -129,3 +129,52 @@ export const InlineRightToLeft: Story = {
   globals: {direction: 'rtl'},
   render: Inline.render
 };
+
+/** A line under the editor (`description`), and the error that replaces nothing but joins it once the field is invalid
+ * (`isInvalid`, `errorMessage`): both describe the text area to screen readers. The play function checks it. */
+export const InvalidWithDescription: Story = {
+  name: 'Invalid, with a description',
+  render: () => (
+    <div style={{width: 444}}>
+      <RichTextEditor aria-label="Project description" description="Residents read this on the project page."
+        isInvalid errorMessage="Add a description before you publish." />
+    </div>
+  ),
+  play: async ({canvasElement}) => {
+    const box = within(canvasElement).getByRole('textbox', {name: 'Project description'});
+    await expect(box).toHaveAttribute('aria-invalid', 'true');
+    await expect(box).toHaveAccessibleDescription(/Residents read this on the project page\./);
+    await expect(box).toHaveAccessibleDescription(/Add a description before you publish\./);
+  }
+};
+
+/** `isDisabled`: the text area and every toolbar button are off. */
+export const Disabled: Story = {
+  render: () => (
+    <div style={{width: 444}}>
+      <RichTextEditor aria-label="Project description" value="Published projects can't be edited here." isDisabled />
+    </div>
+  ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole('textbox', {name: 'Project description'})).toBeDisabled();
+    for (const button of within(canvas.getByRole('toolbar')).getAllByRole('button')) await expect(button).toBeDisabled();
+  }
+};
+
+/** `lang` and `dir`: the text's own language and direction (an Arabic text runs right to left); the toolbar keeps the
+ * interface's order. */
+export const TextInAnotherLanguage: Story = {
+  name: 'Text in another language',
+  render: () => (
+    <div style={{width: 444}}>
+      <RichTextEditor aria-label="Description, Arabic" lang="ar-SA" dir="rtl"
+        value="أضف مقدمة قصيرة هنا: أخبر السكان عن هذا المشروع وكيف يمكنهم المشاركة." />
+    </div>
+  ),
+  play: async ({canvasElement}) => {
+    const box = within(canvasElement).getByRole('textbox', {name: 'Description, Arabic'});
+    await expect(box).toHaveAttribute('lang', 'ar-SA');
+    await expect(box).toHaveAttribute('dir', 'rtl');
+  }
+};

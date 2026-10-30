@@ -4,6 +4,14 @@
    description editor (.ph-wysiwyg) is the same, and while you type in it the border turns the selected
    colour with a 3px ring around it. */
 .gv-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-4);
+  width: 100%;
+}
+
+/* The box: the toolbar over the text area. The description and the error sit under it. */
+.gv-editor__box {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -19,9 +27,17 @@
   }
 }
 
-.gv-editor__field {
-  display: flex;
-  flex: 1;
+.gv-editor[data-invalid] .gv-editor__box {
+  border-color: var(--gv-border-danger);
+}
+
+.gv-editor[data-disabled] .gv-editor__box {
+  border-color: var(--gv-border-disabled);
+  background: var(--gv-surface-disabled);
+}
+
+.gv-editor[data-disabled] .gv-editor__area {
+  color: var(--gv-text-disabled);
 }
 
 /* Small type, as Figma's placeholder; the prototype gives the text a 20 line so paragraphs breathe. */
@@ -54,13 +70,15 @@
  * line. The placeholder keeps the placeholder grey.
  */
 .gv-editor[data-variant='inline'] {
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  overflow: visible;
+  .gv-editor__box {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    overflow: visible;
 
-  &:focus-within {
-    box-shadow: none;
+    &:focus-within {
+      box-shadow: none;
+    }
   }
 
   .gv-editor__area {

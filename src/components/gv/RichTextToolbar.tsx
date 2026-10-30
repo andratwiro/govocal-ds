@@ -84,6 +84,8 @@ export interface RichTextToolbarProps extends PlacementProps {
   onImage?: () => void;
   /** Fires when Embed video is pressed; open the page's video picker. */
   onVideo?: () => void;
+  /** Every button off (a disabled editor). @default false */
+  isDisabled?: boolean;
   /** Its own words (the toolbar's and each button's name), over `richTextToolbarLabels`. */
   labels?: Partial<RichTextToolbarLabels>;
 }
@@ -111,6 +113,7 @@ export function RichTextToolbar({
   onLink,
   onImage,
   onVideo,
+  isDisabled,
   labels,
   className,
   style
@@ -121,7 +124,7 @@ export function RichTextToolbar({
     <Toolbar aria-label={l.toolbar} className={clsx('gv-editor-toolbar', className)} style={style} data-variant={variant}>
       {floating && onBlockTypeChange && (
         <>
-          <ToggleButtonGroup aria-label={l.blockType} selectionMode="single" disallowEmptySelection
+          <ToggleButtonGroup isDisabled={isDisabled} aria-label={l.blockType} selectionMode="single" disallowEmptySelection
             selectedKeys={blockType ? [blockType] : []} className="gv-editor-toolbar__segment"
             onSelectionChange={keys => { const [k] = [...keys]; if (k) onBlockTypeChange(k as RichTextBlockType); }}>
             {(['section', 'subsection', 'text'] as const).map(t => (
@@ -131,27 +134,27 @@ export function RichTextToolbar({
           <Separator orientation="vertical" className="gv-editor-toolbar__rule" />
         </>
       )}
-      <RichTextToolbarButton aria-label={l.bold} isSelected={isBold} onChange={onBoldChange}>
+      <RichTextToolbarButton isDisabled={isDisabled} aria-label={l.bold} isSelected={isBold} onChange={onBoldChange}>
         <Bold aria-hidden size={14} strokeWidth={1.75} />
       </RichTextToolbarButton>
-      <RichTextToolbarButton aria-label={l.italic} isSelected={isItalic} onChange={onItalicChange}>
+      <RichTextToolbarButton isDisabled={isDisabled} aria-label={l.italic} isSelected={isItalic} onChange={onItalicChange}>
         <Italic aria-hidden size={14} strokeWidth={1.75} />
       </RichTextToolbarButton>
-      <RichTextToolbarButton aria-label={l.list} isSelected={isList} onChange={onListChange}>
+      <RichTextToolbarButton isDisabled={isDisabled} aria-label={l.list} isSelected={isList} onChange={onListChange}>
         <List aria-hidden size={14} strokeWidth={1.75} />
       </RichTextToolbarButton>
       {(!floating || onLink) && (
-        <Button aria-label={l.link} onPress={onLink} className="gv-editor-tool">
+        <Button isDisabled={isDisabled} aria-label={l.link} onPress={onLink} className="gv-editor-tool">
           <LinkIcon aria-hidden size={14} strokeWidth={1.75} />
         </Button>
       )}
       {(!floating || onImage) && (
-        <Button aria-label={l.image} onPress={onImage} className="gv-editor-tool">
+        <Button isDisabled={isDisabled} aria-label={l.image} onPress={onImage} className="gv-editor-tool">
           <Image aria-hidden size={14} strokeWidth={1.75} />
         </Button>
       )}
       {(!floating || onVideo) && (
-        <Button aria-label={l.video} onPress={onVideo} className="gv-editor-tool">
+        <Button isDisabled={isDisabled} aria-label={l.video} onPress={onVideo} className="gv-editor-tool">
           <SquarePlay aria-hidden size={14} strokeWidth={1.75} />
         </Button>
       )}

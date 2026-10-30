@@ -25,7 +25,6 @@ export const REACH_INS = {
   // Map view: MapLibre's own canvas classes (an engine's DOM, not a system part) and the zoom buttons.
   'src/components/gv/MapView.css': ['.gv-icon-button', '.maplibregl-canvas-container', '.maplibregl-interactive'],
   'src/components/gv/Modal.css': ['.react-aria-Modal'],
-  'src/components/gv/MultilingualRichTextEditor.css': ['.gv-editor__area'],
   'src/components/gv/MultilingualTextField.css': ['.react-aria-Label'],
   'src/components/gv/OptionList.css': ['.react-aria-Button', '.react-aria-Input'],
   'src/components/gv/SegmentedControl.css': ['.gv-new-dot'],

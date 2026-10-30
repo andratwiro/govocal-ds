@@ -18,7 +18,7 @@
 1. **Label row**: the label, the Required marker (with `isRequired`), the **Locale switcher** at the end.
 2. **Rich text toolbar**: bold, italic, list, link, image, video, in the interface's order.
 3. **Text**: the shown language's text, running its way (right to left for Arabic).
-4. **Error**: names the missing language ("Add the text in Spanish (Spain)").
+4. **Error**: names the missing language ("Add the text in Spanish (Spain)"), through the Rich text editor's own error.
 
 ## Behaviour
 
@@ -65,6 +65,8 @@ marks read in words, and the missing language shown and named (in an alert) when
 
 ## Changes
 
+- 30 Oct 2026: the language's `lang` and `dir`, the error and `isDisabled` go through the Rich text editor; its own direction
+  override and alert went (docs/DECISIONS.md, "Small fixes").
 - 30 Oct 2026: this page written; a play function proves Tab and the arrow.
 - 29 Oct 2026: its words moved onto the multilingual fields' shared `labels` (docs/DECISIONS.md).
 - 29 Oct 2026: built from the Rich text editor and the Locale switcher, one Multiloc for every language.
