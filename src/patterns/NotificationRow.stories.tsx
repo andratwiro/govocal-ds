@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, userEvent, within} from 'storybook/test';
 import {Card} from '../components/gv/Card';
 import {NotificationEmail, NotificationRowList, NotificationRow} from './NotificationRow';
 
@@ -125,4 +126,35 @@ export const IdeationEmails: Story = {
       ))}
     </NotificationRowList>
   )
+};
+
+/**
+ * The keys a row takes: Tab reaches its switch, Space turns the email off and on; Tab goes on to the row itself while
+ * the email is on, and Enter opens its page. Its play function proves the component page's keyboard table.
+ */
+export const Keyboard: Story = {
+  render: function Render(args) {
+    const [opened, setOpened] = useState(false);
+    return (
+      <>
+        <NotificationRow {...args} onOpen={() => setOpened(true)} />
+        <span role="status">{opened ? 'Email page open' : 'Setup'}</span>
+      </>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    const toggle = canvas.getByRole('switch', {name: 'A reply on my comment'});
+    await expect(toggle).toHaveFocus();
+    await userEvent.keyboard(' ');
+    await expect(toggle).not.toBeChecked();
+    await expect(canvas.queryByRole('button', {name: 'Edit A reply on my comment'})).toBeNull();
+    await userEvent.keyboard(' ');
+    await expect(toggle).toBeChecked();
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Edit A reply on my comment'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Email page open');
+  }
 };

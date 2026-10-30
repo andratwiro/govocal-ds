@@ -1,4 +1,6 @@
+import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, userEvent, within} from 'storybook/test';
 import {Lightbulb} from 'lucide-react';
 import {Button} from '../components/Button';
 import {Card} from '../components/gv/Card';
@@ -124,4 +126,29 @@ export const InACard: Story = {
       </Card>
     </div>
   )
+};
+
+/**
+ * The questions take no focus; Tab goes straight to Edit form, and Enter or Space presses it. Its play function proves
+ * the component page's keyboard table.
+ */
+export const Keyboard: Story = {
+  render: function Render() {
+    const [presses, setPresses] = useState(0);
+    return (
+      <>
+        <FormFieldSummary questions={IDEA_FORM} onEdit={() => setPresses(n => n + 1)} />
+        <span role="status">{presses ? `Edit form pressed ${presses} ${presses === 1 ? 'time' : 'times'}` : 'Setup'}</span>
+      </>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Edit form'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Edit form pressed 1 time');
+    await userEvent.keyboard(' ');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Edit form pressed 2 times');
+  }
 };

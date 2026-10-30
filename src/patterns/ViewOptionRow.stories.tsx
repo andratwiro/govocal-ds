@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, userEvent, within} from 'storybook/test';
 import {Map as MapIcon} from 'lucide-react';
 import {Button} from '../components/Button';
 import {Link} from '../components/Link';
@@ -134,3 +135,32 @@ function InACardRender() {
  * view on ("Map view +1").
  */
 export const InACard: Story = {name: 'In a card', render: () => <InACardRender />};
+
+/**
+ * The keys a row takes: Tab reaches its switch and Space turns the view on and off; Tab goes on to Make default, and
+ * Enter makes the view the default (its button turns to a pressed "Default"). Its play function proves the component
+ * page's keyboard table.
+ */
+export const Keyboard: Story = {
+  render: function Render(args) {
+    const [isDefault, setDefault] = useState(false);
+    return <ViewOptionRow {...args} description={undefined} isDefault={isDefault} onMakeDefault={() => setDefault(true)} />;
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    const toggle = canvas.getByRole('switch', {name: 'Map view'});
+    await expect(toggle).toHaveFocus();
+    await userEvent.keyboard(' ');
+    await expect(toggle).toBeChecked();
+    await userEvent.keyboard(' ');
+    await expect(toggle).not.toBeChecked();
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Make default Map view'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    const isDefault = canvas.getByRole('button', {name: 'Default Map view'});
+    await expect(isDefault).toHaveFocus();
+    await expect(isDefault).toHaveAttribute('aria-pressed', 'true');
+    await expect(toggle).toBeChecked();
+  }
+};

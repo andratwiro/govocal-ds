@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, userEvent, within} from 'storybook/test';
 import {DialogTrigger} from 'react-aria-components/Dialog';
 import {Button} from '../components/Button';
 import {AccessRights, AccessRightsModal, ACCESS_WHO_VALUE, type AccessWho} from './AccessRights';
@@ -102,4 +103,31 @@ export const Modal: Story = {
       <AccessRightsModal title="Who can submit inputs?" defaultOverriding />
     </DialogTrigger>
   )
+};
+
+/**
+ * The keys Access rights takes once overriding: Tab lands on the chosen card, arrows pick another, Tab goes on to
+ * Require sign-in's settings, whose headings open and close with Enter or Space. Its play function proves the
+ * component page's keyboard table.
+ */
+export const Keyboard: Story = {
+  args: {defaultOverriding: true},
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('radio', {name: /Require sign-in/})).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect(canvas.getByRole('radio', {name: /Administrators and managers/})).toBeChecked();
+    await expect(canvas.getByText(/Only administrators and managers can take this action/)).toBeVisible();
+    await userEvent.keyboard('{ArrowLeft}');
+    await expect(canvas.getByRole('radio', {name: /Require sign-in/})).toBeChecked();
+    await userEvent.tab();
+    const security = canvas.getByRole('button', {name: 'Security requirements'});
+    await expect(security).toHaveFocus();
+    await expect(security).toHaveAttribute('aria-expanded', 'true');
+    await userEvent.keyboard('{Enter}');
+    await expect(security).toHaveAttribute('aria-expanded', 'false');
+    await userEvent.keyboard(' ');
+    await expect(security).toHaveAttribute('aria-expanded', 'true');
+  }
 };

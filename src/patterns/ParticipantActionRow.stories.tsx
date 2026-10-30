@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, userEvent, within} from 'storybook/test';
 import {Card} from '../components/gv/Card';
 import {ParticipantActionList, ParticipantActionRow, ParticipantLimit} from './ParticipantActionRow';
 
@@ -92,3 +93,34 @@ function InACardRender() {
 
 /** An ideation phase's Participant actions card; closed, its pill names the first action on and counts the rest ("Submit +2"). */
 export const InACard: Story = {name: 'In a card', render: () => <InACardRender />};
+
+/**
+ * The keys a row takes: Tab reaches its switch, Space turns the action off and on; Tab goes on to the row while the
+ * action is on, and Enter opens who can take it. Its play function proves the component page's keyboard table.
+ */
+export const Keyboard: Story = {
+  render: function Render(args) {
+    const [opened, setOpened] = useState(false);
+    return (
+      <>
+        <ParticipantActionRow {...args} onOpen={() => setOpened(true)} />
+        <span role="status">{opened ? 'Access rights open' : 'Setup'}</span>
+      </>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    const toggle = canvas.getByRole('switch', {name: 'Submitting inputs'});
+    await expect(toggle).toHaveFocus();
+    await userEvent.keyboard(' ');
+    await expect(toggle).not.toBeChecked();
+    await expect(canvas.queryByRole('button', {name: 'Edit access for Submitting inputs'})).toBeNull();
+    await userEvent.keyboard(' ');
+    await expect(toggle).toBeChecked();
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Edit access for Submitting inputs'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Access rights open');
+  }
+};
