@@ -13,6 +13,7 @@
 
 - For a card someone opens or acts on: use **Card**.
 - For a row someone picks in a list: use **List row**.
+- For reordering a short list of settings (a report's key figures in the side panel): use **Sortable list**.
 
 ## Anatomy
 
@@ -60,6 +61,7 @@ named tools with tooltips, ends that turn off (`canMoveUp`, `canMoveDown`), and 
 
 - **Page stage**: the sheets the blocks sit on.
 - **Rich text toolbar**: the floating format bar a text block puts in `toolbar`.
+- **Sortable list**: reordering a list of settings by drag or keyboard.
 - **Icon button**: the toolbar's tools.
 
 ## Changes

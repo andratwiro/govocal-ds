@@ -5,7 +5,7 @@ with each component's props: its own with their types, the ones passed straight 
 (React Aria's behaviour props, React's, the DOM's). An API change shows up here as a diff to review;
 `tests/api-report.test.mjs` fails while this file is stale. The convention it follows: `docs/API.md`.
 
-## `govocal-ds` (700 names)
+## `govocal-ds` (704 names)
 
 ### `ACCESS_WHO_VALUE`
 
@@ -5183,6 +5183,38 @@ Component, from `src/components/gv/Skeleton.tsx`.
 ### `SkeletonProps`
 
 Interface, from `src/components/gv/Skeleton.tsx`. The props of `Skeleton`, listed there.
+
+### `SortableList`
+
+Component, from `src/components/gv/SortableList.tsx`.
+
+- `aria-label: string`
+- `children: (item: T) => ReactNode`
+- `className?: string`
+- `isDisabled?: boolean`
+- `itemLabel: (item: T) => string`
+- `items: T[]`
+- `labels?: Partial<SortableListLabels>`
+- `onReorder: (items: T[]) => void`
+- `style?: CSSProperties`
+
+### `sortableListLabels`
+
+Value, from `src/components/gv/SortableList.tsx`.
+
+```ts
+SortableListLabels
+```
+
+### `SortableListLabels`
+
+Interface, from `src/components/gv/SortableList.tsx`.
+
+- `drag: (item: string) => string`
+
+### `SortableListProps`
+
+Interface, from `src/components/gv/SortableList.tsx`. The props of `SortableList`, listed there.
 
 ### `SortDescriptor`
 

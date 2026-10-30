@@ -187,6 +187,7 @@ export {
 export {FilterChips, type FilterChipsProps} from './patterns/FilterChips';
 export {FilterMenu, type FilterFacet, type FilterValue, type FilterMenuProps} from './patterns/FilterMenu';
 export {SelectionBar, type SelectionAction, type SelectionBarProps} from './patterns/SelectionBar';
+export {SortableList, type SortableListProps} from './components/gv/SortableList';
 export {
   TableToolbarHeading, TableToolbar, type TableToolbarHeadingProps, type TableToolbarProps
 } from './components/gv/TableToolbar';
@@ -289,6 +290,7 @@ export {
 } from './components/gv/BlockFrame';
 export {figureLabels, type FigureLabels} from './components/gv/Figure';
 export {quoteLabels, type QuoteLabels} from './components/gv/Quote';
+export {sortableListLabels, type SortableListLabels} from './components/gv/SortableList';
 export {pageStageLabels, type PageStageLabels} from './components/gv/PageStage';
 export {zoomBarLabels, type ZoomBarLabels} from './components/gv/ZoomBar';
 export {promptComposerLabels, type PromptComposerLabels} from './components/gv/PromptComposer';

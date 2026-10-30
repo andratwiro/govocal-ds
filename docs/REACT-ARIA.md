@@ -6,7 +6,7 @@ Every interactive part is built on React Aria Components. This table says, per p
 what would survive a change of base library. It decides nothing: the base library is a question for developers
 (Overview › Questions for developers).
 
-**114 of 134 parts** wire behaviour from React Aria; the rest are plain React and CSS.
+**115 of 135 parts** wire behaviour from React Aria; the rest are plain React and CSS.
 
 **What comes from React Aria** (would be rewritten on another library):
 
@@ -116,6 +116,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Tables & lists › Filter chips | `Button`, `Tag`, `TagGroup`, `TagList`; through Filter menu: `MenuTrigger`, `Dialog`, `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`, `Separator`, `Autocomplete`, `Input`, `SearchField`, `Form`, `Label`, `FieldError`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 8 |
 | Tables & lists › Filter menu | `MenuTrigger`, `Dialog`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`; through Separator: `Separator`; through Popover: `OverlayArrow`, `Popover`; through Icon button: `Button`; through Option list: `Autocomplete`, `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`, `Button`, `Input`, `SearchField`, `Form`, `Label`, `FieldError`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 6 |
 | Tables & lists › Selection bar | `MenuTrigger`, `Toolbar`; through Button: `Button`, `ProgressBar`; through Popover: `OverlayArrow`, `Popover`; through Icon button: `Button` | – | yes | yes | 7 |
+| Tables & lists › Sortable list | `Button`, `GridList`, `GridListItem`, `DropIndicator` | – | – | yes | 5 |
 | Tables & lists › Table toolbar | `Toolbar` | – | – | yes | 7 |
 | Text › Section label | `Heading` | – | – | yes | 4 |
 | Text › Text | `Text` | `TextProps` | – | yes | 5 |

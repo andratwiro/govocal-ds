@@ -171,3 +171,53 @@ test('quote: the words in a blockquote, in the language\'s marks, with the perso
   await open(page, 'components-data-display-quote--in-a-row');
   await report(page);
 });
+
+/** Picks the focused row up with Enter, then presses ↓ until the focused drop place is `to` (React Aria focuses each
+ * place, a "drop indicator" named for where the row would land). */
+async function carry(page: Page, to: RegExp) {
+  await page.keyboard.press('Enter');
+  const place = page.locator('[aria-roledescription="drop indicator"]:focus');
+  await expect(place).toHaveCount(1);
+  for (let i = 0; i < 6 && !to.test((await place.getAttribute('aria-label')) ?? ''); i++) {
+    await page.keyboard.press('ArrowDown');
+    await expect(place).toHaveCount(1);
+  }
+  await expect(place).toHaveAttribute('aria-label', to);
+}
+
+test('sortable list: a row moves by keyboard (pick up, move, drop) and Esc puts it back', async ({page}) => {
+  await open(page, 'components-tables-lists-sortable-list--default');
+  const list = page.getByRole('grid', {name: 'Numbers'});
+  // While carrying, React Aria adds drop places as empty rows: read the rows that hold words.
+  const order = async () => (await list.getByRole('row').allTextContents()).filter(t => t.trim());
+  expect((await order())[0]).toContain('Participants');
+  await page.keyboard.press('Tab');
+  await expect(list.locator(':focus')).toHaveCount(1);
+  const handle = list.getByRole('button', {name: 'Move 3,600 Participants'});
+  await handle.focus();
+  await carry(page, /between 61% Took part for the first time and 6 Projects/);
+  await page.keyboard.press('Enter');
+  await expect.poll(async () => (await order())[0]).toContain('Took part for the first time');
+  // Esc while carrying: nothing moves.
+  await open(page, 'components-tables-lists-sortable-list--default');
+  await list.getByRole('button', {name: 'Move 3,600 Participants'}).focus();
+  await carry(page, /between 61% Took part for the first time and 6 Projects/);
+  await page.keyboard.press('Escape');
+  await expect.poll(async () => (await order())[0]).toContain('Participants');
+  await expect.poll(async () => (await list.getByRole('row').allTextContents()).length).toBe(4);
+  await report(page);
+});
+
+test('sortable list: a row moves by dragging its handle', async ({page}) => {
+  await open(page, 'components-tables-lists-sortable-list--default');
+  const list = page.getByRole('grid', {name: 'Numbers'});
+  const handle = list.getByRole('button', {name: 'Move 3,600 Participants'});
+  const target = list.getByRole('row').nth(2);
+  const from = (await handle.boundingBox())!, to = (await target.boundingBox())!;
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(from.x + 10, from.y + 10, {steps: 4});
+  await page.mouse.move(to.x + 40, to.y + to.height - 4, {steps: 10});
+  await page.mouse.up();
+  await expect.poll(async () => (await list.getByRole('row').allTextContents())[0]).toContain('Took part');
+});

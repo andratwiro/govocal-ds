@@ -1,0 +1,114 @@
+@import '../theme.css';
+
+/*
+ * Sortable list (not in Figma; the report prototype's numbers editor, `.fr-grab` rows): rows 40 tall, a row line
+ * between them, a 24 grab handle at the start in the quiet icon grey (primary on hover), then the content 8 after it,
+ * UI type. A dragged row dims; the drop line is 2 in the selected colour with a dot at its start, drawn between rows
+ * without moving them. Focus: the ring inside the row, or round the handle.
+ */
+.gv-sortable-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+}
+
+.gv-sortable-list__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  min-block-size: var(--gv-size-control-40);
+  box-sizing: border-box;
+  padding-inline: var(--gv-space-4) var(--gv-space-8);
+  border-block-end: 1px solid var(--gv-border-row);
+  background: var(--gv-surface-panel);
+  outline: none;
+
+  &[data-focus-visible] {
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
+  }
+
+  &[data-dragging] {
+    opacity: var(--gv-opacity-dragging);
+  }
+}
+
+.gv-sortable-list__handle {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: var(--gv-size-control-24);
+  block-size: var(--gv-size-control-24);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--gv-radius-4);
+  background: transparent;
+  color: var(--gv-icon-quiet);
+  cursor: grab;
+  outline: none;
+
+  > svg {
+    inline-size: var(--gv-size-icon-16);
+    block-size: var(--gv-size-icon-16);
+  }
+
+  &[data-hovered] {
+    color: var(--gv-icon-primary);
+    background: var(--gv-surface-hovered);
+  }
+
+  &[data-focus-visible] {
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
+  }
+
+  &[data-disabled] {
+    color: var(--gv-icon-disabled);
+    cursor: default;
+  }
+}
+
+.gv-sortable-list__content {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  flex: 1;
+  min-inline-size: 0;
+}
+
+/* The drop line: no height of its own, so the rows stay put; drawn over the line between two rows. */
+.gv-sortable-list__drop {
+  position: relative;
+  block-size: 0;
+  outline: none;
+
+  &[data-drop-target]::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    inset-inline: 0;
+    inset-block-start: -1px;
+    block-size: 2px;
+    background: var(--gv-border-selected);
+  }
+
+  &[data-drop-target]::after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    inset-inline-start: calc(-1 * var(--gv-space-4));
+    inset-block-start: calc(-1 * var(--gv-space-4));
+    inline-size: var(--gv-space-8);
+    block-size: var(--gv-space-8);
+    border-radius: var(--gv-radius-full);
+    background: var(--gv-border-selected);
+  }
+}
