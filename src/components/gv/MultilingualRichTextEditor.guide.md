@@ -65,6 +65,7 @@ marks read in words, and the missing language shown and named (in an alert) when
 
 ## Changes
 
+- 30 Oct 2026: candidate, its second screen: the back office's email composer writes the message in every language.
 - 30 Oct 2026: the language's `lang` and `dir`, the error and `isDisabled` go through the Rich text editor; its own direction
   override and alert went (docs/DECISIONS.md, "Small fixes").
 - 30 Oct 2026: this page written; a play function proves Tab and the arrow.

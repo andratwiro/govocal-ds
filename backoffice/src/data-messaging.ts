@@ -1,30 +1,35 @@
 // Messaging: invented emails and text messages. No real tenants, people or places.
+import type {Multiloc} from 'govocal-ds';
 import {REGISTERED_USERS} from './data-users';
 
 export type CustomEmail = {
-  id: string; subject: string; status: 'Sent' | 'Scheduled' | 'Draft'; date: string; project?: string;
-  to: string; opened?: number; clicked?: number; body: string
+  id: string; subject: string; status: 'Sent' | 'Scheduled' | 'Draft';
+  /** ISO: when it was sent or is scheduled ("2026-10-21T14:30"); a draft's, when it was last edited ("2026-10-19"). */
+  date: string; project?: string;
+  to: string; opened?: number; clicked?: number;
+  /** The message in each platform language (the composer's Multilingual rich text editor). */
+  body: Multiloc
 };
 
 export const SENDER = {from: 'Larkvale participation team', replyTo: 'participation@example.org'};
 export const GROUPS = ['All users', 'Residents of the north district', 'Youth panel', 'Followers of Harbour Plan 2030'];
 
 export const CUSTOM_EMAILS: CustomEmail[] = [
-  {id: 'e1', subject: 'Harbour Plan: the ideas phase opens on Monday', status: 'Scheduled', date: '03 Nov 2026, 09:00',
+  {id: 'e1', subject: 'Harbour Plan: the ideas phase opens on Monday', status: 'Scheduled', date: '2026-11-03T09:00',
     project: 'Harbour Plan 2030', to: 'Followers of Harbour Plan 2030',
-    body: 'From Monday you can share your ideas for the harbour front. Tell us what you would like to see there.'},
-  {id: 'e2', subject: 'Thank you for voting on safer school streets', status: 'Sent', date: '21 Oct 2026, 14:30',
-    project: 'Safer School Streets', to: 'All users', opened: 48, clicked: 12, body: ''},
-  {id: 'e3', subject: 'Bike parking survey: tell us where', status: 'Draft', date: 'Edited 19 Oct 2026',
+    body: {en: 'From Monday you can share your ideas for the harbour front. Tell us what you would like to see there.'}},
+  {id: 'e2', subject: 'Thank you for voting on safer school streets', status: 'Sent', date: '2026-10-21T14:30',
+    project: 'Safer School Streets', to: 'All users', opened: 48, clicked: 12, body: {}},
+  {id: 'e3', subject: 'Bike parking survey: tell us where', status: 'Draft', date: '2026-10-19',
     to: 'Residents of the north district',
-    body: 'We are planning new bike racks for next spring. Take five minutes to mark the streets where you need them most.'},
-  {id: 'e4', subject: 'Library opening hours: the results', status: 'Sent', date: '07 Oct 2026, 10:00',
-    project: 'Library opening hours', to: 'All users', opened: 61, clicked: 23, body: ''},
-  {id: 'e5', subject: 'Youth budget 2027: what happens next', status: 'Sent', date: '18 Sep 2026, 16:45',
-    project: 'Youth budget 2027', to: 'Youth panel', opened: 39, clicked: 9, body: ''},
-  {id: 'e6', subject: 'Market Square: join the walk on Saturday', status: 'Draft', date: 'Edited 02 Sep 2026',
+    body: {en: 'We are planning new bike racks for next spring. Take five minutes to mark the streets where you need them most.'}},
+  {id: 'e4', subject: 'Library opening hours: the results', status: 'Sent', date: '2026-10-07T10:00',
+    project: 'Library opening hours', to: 'All users', opened: 61, clicked: 23, body: {}},
+  {id: 'e5', subject: 'Youth budget 2027: what happens next', status: 'Sent', date: '2026-09-18T16:45',
+    project: 'Youth budget 2027', to: 'Youth panel', opened: 39, clicked: 9, body: {}},
+  {id: 'e6', subject: 'Market Square: join the walk on Saturday', status: 'Draft', date: '2026-09-02',
     project: 'Market Square redesign', to: 'All users',
-    body: 'Walk the square with the design team this Saturday at 10:00 and tell us what works and what does not.'}
+    body: {en: 'Walk the square with the design team this Saturday at 10:00 and tell us what works and what does not.'}}
 ];
 
 export type AutomatedEmail = {
@@ -65,13 +70,15 @@ export const AUTOMATED: AutomatedGroup[] = [
   ]}
 ];
 
-export type SmsCampaign = {id: string; label: string; body: string; status: 'Sent' | 'Draft'; date: string; delivered?: number; failed?: number};
+export type SmsCampaign = {id: string; label: string; body: string; status: 'Sent' | 'Draft';
+  /** ISO date: sent, or a draft's last edit. */
+  date: string; delivered?: number; failed?: number};
 export const SMS_BALANCE = {purchased: 2000, usedCampaigns: 342, usedTests: 18};
 export const SMS: SmsCampaign[] = [
-  {id: 's1', label: 'Reminder: vote on school streets', body: 'Voting on safer school streets closes Friday. Have your say.', status: 'Sent', date: '06 Oct 2026', delivered: 214, failed: 3},
-  {id: 's2', label: 'Library survey is open', body: 'Help us set new library opening hours: five questions.', status: 'Sent', date: '02 Sep 2026', delivered: 121, failed: 4},
-  {id: 's3', label: 'Market Square walk', body: 'Walk the square with us on Saturday at 10:00.', status: 'Draft', date: 'Edited 28 Oct 2026'},
-  {id: 's4', label: 'Harbour Plan ideas phase', body: 'Share your ideas for the harbour front from Monday.', status: 'Draft', date: 'Edited 27 Oct 2026'}
+  {id: 's1', label: 'Reminder: vote on school streets', body: 'Voting on safer school streets closes Friday. Have your say.', status: 'Sent', date: '2026-10-06', delivered: 214, failed: 3},
+  {id: 's2', label: 'Library survey is open', body: 'Help us set new library opening hours: five questions.', status: 'Sent', date: '2026-09-02', delivered: 121, failed: 4},
+  {id: 's3', label: 'Market Square walk', body: 'Walk the square with us on Saturday at 10:00.', status: 'Draft', date: '2026-10-28'},
+  {id: 's4', label: 'Harbour Plan ideas phase', body: 'Share your ideas for the harbour front from Monday.', status: 'Draft', date: '2026-10-27'}
 ];
 
 /** How many people each recipient group holds (invented). */

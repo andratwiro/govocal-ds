@@ -4,14 +4,14 @@ import {BarChart3, CircleCheck, Clock, Copy, Mail, MessageSquare, Pencil, Plus, 
 import {AlertDialog, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty,
   DataTableHeader, DataTableOptions, DataTableRow, DataTableStack, Divider, EmptyState, FilterChips, Grid, Inline, type FilterFacet,
   FilterMenu, type FilterValue, MenuItem, NotificationEmail, NotificationRow, NotificationRowList, Pagination, Panel,
-  RichTextEditor, SearchField, SectionLabel, Select, SelectItem, StatTile, StatusBadge, Tab, TableToolbar, TabList,
-  Stack, TabPanel, TabPanels, Tabs, Text, TextField, TileGrid, toast, useNumberFormatter} from 'govocal-ds';
-import {Label} from 'govocal-ds/base';
-import {AUTOMATED, GROUP_SIZES, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
+  SearchField, SectionLabel, StatTile, StatusBadge, Tab, TableToolbar, TabList,
+  Stack, TabPanel, TabPanels, Tabs, Text, TileGrid, toast, useNumberFormatter} from 'govocal-ds';
+import {AUTOMATED, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
-import {emailStore, sentText, usePages} from './MessagingPages';
+import {emailStore, usePages} from './MessagingPages';
 import {SectionHeading} from '../SectionHeading';
+import {TODAY, useDay, useDayTime} from '../dates';
 
 const pct = (v?: number) => (v == null ? '—' : `${v}%`);
 const emailsWord = (v: number, n: (v: number) => string) => `${n(v)} ${v === 1 ? 'email' : 'emails'}`;
@@ -47,6 +47,7 @@ function CustomEmailTable({emails, onAction, onCreate}: {
   emails: CustomEmail[]; onAction: (e: CustomEmail, a: RowAction) => void; onCreate: () => void;
 }) {
   const {format: n} = useNumberFormatter();
+  const day = useDay(), dayTime = useDayTime();
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<FilterValue>({});
   const facets = useMemo(() => emailFacets(emails), [emails]);
@@ -89,13 +90,14 @@ function CustomEmailTable({emails, onAction, onCreate}: {
       </DataTableHeader>
       <DataTableBody renderEmptyState={() => <DataTableEmpty>No emails match. Clear the search or the filters to see them all.</DataTableEmpty>}>
         {shown.map(e => (
-        // A sent email opens its statistics; a draft opens from its menu.
-        <DataTableRow key={e.id} id={e.id} textValue={e.subject} href={e.status === 'Sent' ? `#/messaging/emails/custom/${e.id}` : undefined}>
+        // A sent email opens its statistics; a draft or a scheduled email opens in the composer.
+        <DataTableRow key={e.id} id={e.id} textValue={e.subject}
+          href={e.status === 'Sent' ? `#/messaging/emails/custom/${e.id}` : `#/messaging/emails/custom/${e.id}/edit`}>
           <DataTableCell>
             <DataTableStack isStrong sub={<>To: {e.to}{e.project && <> · Project: {e.project}</>}</>}>{e.subject}</DataTableStack>
           </DataTableCell>
           <DataTableCell><StatusBadge status={e.status === 'Sent' ? 'live' : 'draft'}>{e.status}</StatusBadge></DataTableCell>
-          <DataTableCell>{e.date}</DataTableCell>
+          <DataTableCell>{e.status === 'Draft' ? `Edited ${day(e.date)}` : dayTime(e.date)}</DataTableCell>
           <DataTableCell align="number">{pct(e.opened)}</DataTableCell>
           <DataTableCell align="number">{pct(e.clicked)}</DataTableCell>
           <DataTableCell align="options">
@@ -120,88 +122,27 @@ function CustomEmailTable({emails, onAction, onCreate}: {
   );
 }
 
-/** The draft being written: sender and recipients, then subject and message (the real admin's campaign form). */
-function DraftComposer({email, onSave, onSend, onCancel}: {
-  email: CustomEmail; onSave: (patch: Partial<CustomEmail>) => void; onSend: (patch: Partial<CustomEmail>) => void;
-  onCancel: () => void;
-}) {
-  const {format: n} = useNumberFormatter();
-  const [to, setTo] = useState(email.to);
-  const [subject, setSubject] = useState(email.subject);
-  const [body, setBody] = useState(email.body);
-  const [bold, setBold] = useState(false);
-  const [italic, setItalic] = useState(false);
-  const [list, setList] = useState(false);
-  const label = `Draft: ${email.subject}`;
-  const patch = () => ({to, subject: subject.trim() || 'Untitled email', body});
-  // The composer's Panel (Panel's "In a composer" story): the form in the body, Cancel and Send in the foot. The
-  // Panel is the region, named by its title.
-  return (
-    <Panel title={label} headingLevel={3} description={email.status === 'Scheduled' ? `Scheduled for ${email.date}` : email.date}
-      footer={<>
-        <Button variant="secondary" size={32} onPress={onCancel}>Cancel</Button>
-        <Button variant="quiet" size={32} onPress={() => onSave(patch())}>Save as draft</Button>
-        <Button variant="secondary" size={32} onPress={() => toast('Preview sent', `To ${SENDER.replyTo}`)}>
-          <Mail aria-hidden size={16} />Send a preview</Button>
-        <Button variant="primary" size={32} onPress={() => onSend(patch())}><Send aria-hidden size={16} />Send now</Button>
-      </>}>
-        <Stack gap="16">
-          <TileGrid minTileWidth={220}>
-            <TextField label="From" defaultValue={SENDER.from} />
-            <TextField label="Replies should go to" defaultValue={SENDER.replyTo} />
-          </TileGrid>
-          <Select label="To" selectedKey={to} onSelectionChange={k => setTo(String(k))}
-            description={`${n(GROUP_SIZES[to] ?? 0)} recipients`}>
-            {GROUPS.map(g => <SelectItem key={g} id={g}>{g}</SelectItem>)}
-          </Select>
-          <Divider />
-          <TextField label="Subject" value={subject} onChange={setSubject} />
-          <Stack gap="4">
-            <Label aria-hidden>Email message</Label>
-            <RichTextEditor aria-label="Email message" placeholder="Write your message" value={body} onChange={setBody}
-              isBold={bold} onBoldChange={setBold} isItalic={italic} onItalicChange={setItalic} isList={list} onListChange={setList} />
-          </Stack>
-        </Stack>
-    </Panel>
-  );
-}
-
 let copies = 0;
 
 function CustomEmails() {
-  const {format: n} = useNumberFormatter();
   const navigate = useNavigate();
   const [emails, setEmails] = useEmails();
-  const [draftId, setDraftId] = useState(emails.find(e => e.status === 'Draft' && e.body)?.id);
   const [deleting, setDeleting] = useState<CustomEmail | null>(null);
   // The "sent" confirmation stays on the list (a success Banner) until dismissed: the composer's route leaves it here too.
   const [sent, setSent] = useState(emailStore.sent);
   const confirmSent = (text?: string) => setSent(emailStore.sent = text);
-  const draft = emails.find(e => e.id === draftId && e.status !== 'Sent');
-  const update = (id: string, patch: Partial<CustomEmail>) => setEmails(list => list.map(e => (e.id === id ? {...e, ...patch} : e)));
   const insertAt = (email: CustomEmail, at: number) => setEmails(list => [...list.slice(0, at), email, ...list.slice(at)]);
   const onAction = (e: CustomEmail, a: RowAction) => {
     if (a === 'stats') navigate(`/messaging/emails/custom/${e.id}`);
-    else if (a === 'edit') setDraftId(e.id);
+    // One composer, at the real admin's route for a draft (emails/custom/:id/edit).
+    else if (a === 'edit') navigate(`/messaging/emails/custom/${e.id}/edit`);
     else if (a === 'delete') setDeleting(e);
     else {
       const copy: CustomEmail = {...e, id: `${e.id}-copy-${++copies}`, subject: `Copy of ${e.subject}`, status: 'Draft',
-        date: 'Edited 29 Oct 2026', opened: undefined, clicked: undefined};
+        date: TODAY, opened: undefined, clicked: undefined};
       insertAt(copy, emails.findIndex(x => x.id === e.id) + 1);
       toast('Email duplicated', `${copy.subject} is a draft.`, {action: 'Undo', onAction: () => setEmails(list => list.filter(x => x.id !== copy.id))});
     }
-  };
-  const save = (patch: Partial<CustomEmail>) => {
-    if (!draft) return;
-    update(draft.id, {...patch, date: 'Edited 29 Oct 2026'});
-    toast('Draft saved', patch.subject);
-  };
-  const send = (patch: Partial<CustomEmail>) => {
-    if (!draft) return;
-    update(draft.id, {...patch, status: 'Sent', date: '29 Oct 2026, just now', opened: 0, clicked: 0});
-    const to = patch.to ?? draft.to;
-    confirmSent(sentText(patch.subject ?? draft.subject, GROUP_SIZES[to] ?? 0, n));
-    setDraftId(undefined);
   };
   // Delete asks first, then offers Undo too (as Projects).
   const remove = () => {
@@ -217,12 +158,6 @@ function CustomEmails() {
       <Stack gap="16" className="bo-messaging-lists">
         {sent && <Banner tone="success" onDismiss={() => confirmSent(undefined)}>{sent}</Banner>}
         <CustomEmailTable emails={emails} onAction={onAction} onCreate={() => navigate('/messaging/emails/custom/new')} />
-        {draft
-          ? <DraftComposer key={draft.id} email={draft} onSave={save} onSend={send} onCancel={() => setDraftId(undefined)} />
-          : emails.some(e => e.status !== 'Sent') && (
-            <EmptyState layout="panel" isFramed headingLevel="none" icon={<Pencil aria-hidden size={24} />}
-              title="No draft open" description="Choose Edit on a draft to open it here." />
-          )}
       </Stack>
       <AlertDialog tone="danger" title="Delete this draft?" confirmLabel="Delete draft" isOpen={deleting !== null}
         onOpenChange={o => { if (!o) setDeleting(null); }} onConfirm={remove}>
@@ -342,6 +277,7 @@ function AutomatedEmails() {
 /** The credits as Stat tiles, then the campaigns in the list shape every admin table shares. */
 function Sms() {
   const {format: n} = useNumberFormatter();
+  const day = useDay();
   const navigate = useNavigate();
   const used = SMS_BALANCE.usedCampaigns + SMS_BALANCE.usedTests;
   const {current, pageCount, setPage, shown} = usePages(SMS, PAGE_SIZE);
@@ -369,7 +305,7 @@ function Sms() {
               <DataTableRow key={s.id} id={s.id} textValue={s.label}>
                 <DataTableCell><DataTableStack isStrong sub={s.body}>{s.label}</DataTableStack></DataTableCell>
                 <DataTableCell><StatusBadge status={s.status === 'Sent' ? 'live' : 'draft'}>{s.status}</StatusBadge></DataTableCell>
-                <DataTableCell>{s.date}</DataTableCell>
+                <DataTableCell>{s.status === 'Draft' ? `Edited ${day(s.date)}` : day(s.date)}</DataTableCell>
                 <DataTableCell align="number">{s.delivered == null ? '—' : n(s.delivered)}</DataTableCell>
                 <DataTableCell align="number">{s.failed == null ? '—' : n(s.failed)}</DataTableCell>
               </DataTableRow>))}

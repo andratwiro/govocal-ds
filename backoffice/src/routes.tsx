@@ -56,6 +56,7 @@ export const router = createHashRouter([{
     {path: 'users/seats', element: <SeatsOverview />},
     {path: 'users/:userId', element: <UserProfile />},
     {path: 'messaging/emails/custom/new', element: <EmailComposer />},
+    {path: 'messaging/emails/custom/:emailId/edit', element: <EmailComposer />},
     {path: 'messaging/emails/custom/:emailId', element: <EmailStats />},
     {path: 'messaging/texting/new', element: <SmsComposer />},
     {path: 'reporting/report-builder/:reportId/editor', element: <ReportView />},

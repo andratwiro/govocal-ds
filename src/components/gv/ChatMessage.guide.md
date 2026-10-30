@@ -68,5 +68,6 @@ icon buttons with tooltips; choices that keep focus once made.
 
 ## Changes
 
+- 30 Oct 2026: candidate, its second screen: the back office's SMS preview draws the text in its bubble (`labels.you` "Text message:").
 - 30 Oct 2026: built (yours and the assistant's; change line, Undo and Show; choices; streaming, undone, stopped and
   error), with this page.

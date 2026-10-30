@@ -11,7 +11,7 @@ test('messaging follows the real admin: custom emails, automated emails and SMS 
   await expect(tabs.getByRole('tab', {name: 'Custom emails'})).toHaveAttribute('aria-selected', 'true');
 });
 
-test('custom emails list sent, scheduled and draft emails, and a draft opens in the editor', async ({page}) => {
+test('custom emails list sent, scheduled and draft emails, and a draft opens in the one composer', async ({page}) => {
   await page.goto('/backoffice/#/messaging');
   await expect(page.getByRole('button', {name: 'Create email'})).toBeVisible();
   const table = page.getByRole('grid', {name: 'Custom emails'});
@@ -19,24 +19,22 @@ test('custom emails list sent, scheduled and draft emails, and a draft opens in 
     await expect(table.getByRole('columnheader', {name: c, exact: true})).toBeVisible();
   }
   for (const s of ['Sent', 'Scheduled', 'Draft']) await expect(table.getByText(s, {exact: true}).first()).toBeVisible();
-  // The draft composer: sender, recipients, subject and the message editor with its formatting toolbar.
-  const draft = page.getByRole('region', {name: /^Draft:/});
-  await expect(draft.getByRole('textbox', {name: 'From'})).toBeVisible();
-  await expect(draft.getByRole('textbox', {name: 'Replies should go to'})).toBeVisible();
-  await expect(draft.getByRole('textbox', {name: 'Subject'})).toBeVisible();
-  await expect(draft.getByRole('toolbar', {name: 'Formatting'})).toBeVisible();
-  await expect(draft.getByRole('textbox', {name: 'Email message'})).toBeVisible();
-  await expect(draft.getByRole('button', {name: 'Send a preview'})).toBeVisible();
-  await expect(draft.getByRole('button', {name: 'Send now'})).toBeVisible();
-  // Choosing another draft from its row's menu loads it.
-  await expect(page.getByRole('region', {name: 'Draft: Bike parking survey: tell us where'})).toBeVisible();
+  // No second composer on the list: Edit opens the draft at the real admin's route.
+  await expect(page.getByRole('region', {name: /^Draft:/})).toHaveCount(0);
   await page.getByRole('button', {name: /^Actions for Market Square/}).click();
   await page.getByRole('menuitem', {name: 'Edit'}).click();
-  await expect(page.getByRole('region', {name: 'Draft: Market Square: join the walk on Saturday'})).toBeVisible();
+  await expect(page).toHaveURL(/#\/messaging\/emails\/custom\/e6\/edit$/);
+  await expect(page.getByRole('heading', {level: 1, name: 'Edit email'})).toBeVisible();
+  const composer = page.getByRole('region', {name: 'Write a message and choose who gets it'});
+  await expect(composer.getByRole('textbox', {name: 'Subject'})).toHaveValue('Market Square: join the walk on Saturday');
+  await expect(composer.getByRole('toolbar', {name: 'Formatting'})).toBeVisible();
+  // The message in every platform language: the Multilingual rich text editor's language switcher.
+  await expect(composer.getByRole('radio', {name: /^EN\b/})).toBeChecked();
+  await expect(composer.getByRole('textbox', {name: /Email message/})).toContainText('Walk the square with the design team');
 });
 
-// The list and the composer each sit in a Panel (Panel's "With actions" and "In a composer" stories).
-test('custom emails: the list Panel carries Create email and its pages; the composer Panel has Cancel and Send in its foot', async ({page}) => {
+// The list sits in a Panel (Panel's "With actions" story); the composer is its own route (below).
+test('custom emails: the list Panel carries Create email and its pages', async ({page}) => {
   await page.goto('/backoffice/#/messaging');
   const list = page.getByRole('region', {name: 'Custom emails', exact: true});
   await expect(list).toHaveClass(/gv-panel/);
@@ -46,20 +44,7 @@ test('custom emails: the list Panel carries Create email and its pages; the comp
   await expect(list.locator('.gv-panel__body').getByRole('grid', {name: 'Custom emails'})).toBeVisible();
   const pager = list.locator('.gv-panel__foot').getByRole('navigation', {name: 'Email pages'});
   await expect(pager.getByRole('button', {name: 'Page 1'})).toHaveAttribute('aria-current', 'page');
-  const draft = page.getByRole('region', {name: 'Draft: Bike parking survey: tell us where'});
-  await expect(draft).toHaveClass(/gv-panel/);
-  await expect(draft.getByRole('heading', {level: 3, name: 'Draft: Bike parking survey: tell us where'})).toBeVisible();
-  const foot = draft.locator('.gv-panel__foot');
-  for (const b of ['Cancel', 'Save as draft', 'Send a preview', 'Send now']) await expect(foot.getByRole('button', {name: b})).toBeVisible();
-  await expect(draft.locator('.gv-panel__body').getByRole('textbox', {name: 'Subject'})).toBeVisible();
   a11yReport(await axeViolations(page, '.bo-messaging-lists'));
-  // Cancel closes the composer and keeps the draft as it was.
-  await draft.getByRole('textbox', {name: 'Subject'}).fill('Not kept');
-  await foot.getByRole('button', {name: 'Cancel'}).click();
-  await expect(draft).toHaveCount(0);
-  await expect(page.getByText('Choose Edit on a draft to open it here.')).toBeVisible();
-  await expect(page.getByRole('grid', {name: 'Custom emails'}).getByRole('row', {name: /Bike parking survey/})).toContainText('Draft');
-  await expect(page.getByRole('row', {name: /Not kept/})).toHaveCount(0);
 });
 
 test('automated emails are grouped by recipient, switch on and off with Undo, and an on email opens its page', async ({page}) => {
@@ -130,27 +115,48 @@ test('messaging names what the system still lacks', async ({page}) => {
 
 // ── The first clicks (shallow: each control leads somewhere visible) ─────────
 
-test('Create email opens the composer: sender, recipients, subject, message; Send now returns to the list', async ({page}) => {
+test('Create email opens the composer; Send now checks the email and asks, with the recipient count', async ({page}) => {
   await page.goto('/backoffice/#/messaging');
   await page.getByRole('button', {name: 'Create email'}).click();
   await expect(page).toHaveURL(/#\/messaging\/emails\/custom\/new$/);
   await expect(page.getByRole('heading', {level: 1, name: 'New email'})).toBeVisible();
-  for (const f of ['From', 'Replies should go to', 'Subject']) await expect(page.getByRole('textbox', {name: f, exact: true})).toBeVisible();
-  await expect(page.getByRole('button', {name: /To$/})).toBeVisible();
-  await expect(page.getByRole('textbox', {name: 'Email message'})).toBeVisible();
+  for (const f of ['From', 'Replies should go to']) await expect(page.getByRole('textbox', {name: f, exact: true})).toBeVisible();
+  await expect(page.getByRole('textbox', {name: /^Subject/})).toBeVisible();
+  // Recipients, as the prototype: everyone by default, with the count in a chip; or a group.
+  const recipients = page.getByRole('radiogroup', {name: 'Recipients'});
+  await expect(recipients.getByRole('radio', {name: 'Send to all participants'})).toBeChecked();
+  await expect(page.getByText('All participants · 5,012 recipients')).toBeVisible();
+  await recipients.getByText('Send to a group', {exact: true}).click();
+  await expect(page.getByText('Residents of the north district · 612 recipients')).toBeVisible();
+  await recipients.getByText('Send to all participants', {exact: true}).click();
   // The composer is a Panel: the form in its body, Cancel, Save as draft, Send a preview and Send now in its foot.
   const composer = page.getByRole('region', {name: 'Write a message and choose who gets it'});
   await expect(composer).toHaveClass(/gv-panel/);
   for (const b of ['Cancel', 'Save as draft', 'Send a preview', 'Send now']) {
     await expect(composer.locator('.gv-panel__foot').getByRole('button', {name: b})).toBeVisible();
   }
-  await page.getByRole('textbox', {name: 'Subject', exact: true}).fill('Autumn clean-up day');
+  // Empty: Send now sends nothing, and says what is missing.
+  await page.getByRole('button', {name: 'Send now'}).click();
+  await expect(page.getByRole('alertdialog')).toHaveCount(0);
+  await expect(composer.getByText('Add a subject line.')).toBeVisible();
+  await expect(composer.getByText('Write the message.')).toBeVisible();
+  await expect(page).toHaveURL(/#\/messaging\/emails\/custom\/new$/);
+  await page.getByRole('textbox', {name: /^Subject/}).fill('Autumn clean-up day');
+  await composer.getByRole('textbox', {name: /Email message/}).fill('Join us on Saturday to tidy the park.');
+  await expect(composer.getByText('Add a subject line.')).toHaveCount(0);
   await page.getByRole('button', {name: 'Send a preview'}).click();
   await expect(page.locator('.react-aria-Toast').first()).toContainText('Preview sent');
   await page.locator('.react-aria-Toast').getByRole('button', {name: 'Close'}).click(); // it sits over the footer
+  // Filled: Send now asks first, with how many people it goes to; Cancel keeps the email here.
   await page.getByRole('button', {name: 'Send now'}).click();
+  const confirm = page.getByRole('alertdialog', {name: 'Send this email to 5,012 people?'});
+  await expect(confirm).toBeVisible();
+  await confirm.getByRole('button', {name: 'Cancel'}).click();
+  await expect(page).toHaveURL(/#\/messaging\/emails\/custom\/new$/);
+  await page.getByRole('button', {name: 'Send now'}).click();
+  await confirm.getByRole('button', {name: 'Send email'}).click();
   await expect(page).toHaveURL(/#\/messaging$/);
-  await expect(page.locator('.gv-banner[data-tone="success"]')).toContainText('Your email “Autumn clean-up day” was sent to');
+  await expect(page.locator('.gv-banner[data-tone="success"]')).toContainText('Your email “Autumn clean-up day” was sent to 5,012 recipients.');
   await expect(page.getByRole('grid', {name: 'Custom emails'}).getByRole('row', {name: /Autumn clean-up day/})).toContainText('Sent');
 });
 
@@ -189,38 +195,47 @@ test('Create SMS opens the SMS composer with a character count and a phone previ
   for (const b of ['Cancel', 'Send test SMS', 'Send now']) await expect(composer.locator('.gv-panel__foot').getByRole('button', {name: b})).toBeVisible();
   await page.getByRole('textbox', {name: 'Message'}).fill('The library is open late on Thursday.');
   await expect(page.getByText('37 / 160 characters · 1 SMS per recipient')).toBeVisible();
+  // The text lands in the Chat message's bubble: no SMS bubble gap any more.
   await expect(page.getByRole('group', {name: 'SMS preview'})).toContainText('The library is open late');
+  await expect(page.getByRole('group', {name: 'SMS preview'}).locator('.gv-chat-message')).toBeVisible();
   await page.getByRole('button', {name: 'Send test SMS'}).click();
   await expect(page.locator('.react-aria-Toast').first()).toContainText('Test SMS sent');
-  const gaps = await page.locator('[data-missing-part]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-missing-part')))]);
-  expect(gaps).toEqual(['SMS bubble']);
+  await expect(page.locator('[data-missing-part]')).toHaveCount(0);
+  // Send now asks first, with the people and the credits.
+  await page.getByRole('button', {name: 'Send now'}).click();
+  const confirm = page.getByRole('alertdialog', {name: /^Send this SMS to [\d,]+ people\?$/});
+  await confirm.getByRole('button', {name: 'Send SMS'}).click();
+  await expect(page).toHaveURL(/#\/messaging$/);
 });
 
 // ── Behaviour fixes: every control answers ──
 
 const toasts = (page: import('@playwright/test').Page) => page.locator('.react-aria-Toast');
 
-test('the draft composer saves, previews and sends the draft into the list', async ({page}) => {
+test('a draft opens in the composer, saves, and sends into the list after asking', async ({page}) => {
   await page.goto('/backoffice/#/messaging');
-  const draft = page.getByRole('region', {name: 'Draft: Bike parking survey: tell us where'});
-  await draft.getByRole('textbox', {name: 'Subject'}).fill('Bike parking: mark your street');
-  await draft.getByRole('button', {name: 'Save as draft'}).click();
-  await expect(toasts(page).filter({hasText: 'Draft saved'})).toBeVisible();
   const table = page.getByRole('grid', {name: 'Custom emails'});
+  // A draft's row opens it in the composer.
+  await table.getByRole('row', {name: /Bike parking survey/}).getByText('Draft').click();
+  await expect(page).toHaveURL(/#\/messaging\/emails\/custom\/e3\/edit$/);
+  await page.getByRole('textbox', {name: /^Subject/}).fill('Bike parking: mark your street');
+  await page.getByRole('button', {name: 'Save as draft'}).click();
+  await expect(toasts(page).filter({hasText: 'Draft saved'})).toBeVisible();
+  await expect(page).toHaveURL(/#\/messaging$/);
   await expect(table.getByRole('row', {name: /Bike parking: mark your street/})).toContainText('Draft');
-  // The saved subject renames the draft's card.
-  const saved = page.getByRole('region', {name: 'Draft: Bike parking: mark your street'});
-  await saved.getByRole('button', {name: 'Send a preview'}).click();
-  await expect(toasts(page).filter({hasText: 'Preview sent'})).toBeVisible();
-  await saved.getByRole('button', {name: 'Send now'}).click();
+  await expect(table.getByRole('row', {name: /Bike parking survey/})).toHaveCount(0);
+  await table.getByRole('button', {name: /^Actions for Bike parking: mark your street/}).click();
+  await page.getByRole('menuitem', {name: 'Edit'}).click();
+  // It goes to the group it was written for.
+  await expect(page.getByText('Residents of the north district · 612 recipients')).toBeVisible();
+  await page.getByRole('button', {name: 'Send now'}).click();
+  await page.getByRole('alertdialog', {name: 'Send this email to 612 people?'}).getByRole('button', {name: 'Send email'}).click();
   // Sent: a success Banner on the list (the Banner's Success story), until it is dismissed.
   const sent = page.locator('.gv-banner[data-tone="success"]');
-  await expect(sent).toHaveText(/^Your email “Bike parking: mark your street” was sent to [\d,]+ recipients\.$/);
-  await expect(toasts(page).filter({hasText: 'Email sent'})).toHaveCount(0);
+  await expect(sent).toHaveText(/^Your email “Bike parking: mark your street” was sent to 612 recipients\.$/);
   await sent.getByRole('button', {name: 'Dismiss'}).click();
   await expect(sent).toHaveCount(0);
   await expect(table.getByRole('row', {name: /Bike parking: mark your street/})).toContainText('Sent');
-  await expect(saved).toHaveCount(0);
 });
 
 test('a row menu duplicates an email, and deletes a draft after asking', async ({page}) => {
@@ -281,7 +296,7 @@ test('an automated email sends a test email to the sender', async ({page}) => {
 });
 
 test('the messaging pages keep their headings in order (h1 → h2 → h3)', async ({page}) => {
-  for (const route of ['messaging', 'messaging/emails/custom/new', 'messaging/emails/custom/e4', 'messaging/texting/new']) {
+  for (const route of ['messaging', 'messaging/emails/custom/new', 'messaging/emails/custom/e3/edit', 'messaging/emails/custom/e4', 'messaging/texting/new']) {
     await page.goto(`/backoffice/#/${route}`);
     await expect(page.getByRole('heading', {level: 1})).toBeVisible();
     expect(await headingJumps(page), route).toEqual([]);

@@ -17,7 +17,7 @@ const meta: Meta<typeof MultilingualRichTextEditor> = {
       }
     }
   },
-  tags: ['autodocs', 'not-in-figma', 'status:draft'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   args: {
     label: 'Description',
     locales: ['en', 'es-ES'],
