@@ -87,3 +87,49 @@ test('zoom bar: German numbers and words', async ({page}) => {
   await expect(bar).toContainText('83 %');
   await expect(bar).toContainText('Seite 3 von 1.284');
 });
+
+test('block frame: press selects, the toolbar moves and deletes, Esc steps out with focus kept', async ({page}) => {
+  await open(page, 'components-layout-containers-block-frame--live');
+  const numbers = page.getByRole('group', {name: 'By the numbers'});
+  const tools = page.getByRole('toolbar', {name: 'By the numbers: block tools'});
+  await expect(tools).toBeVisible();
+  await expect(numbers).toHaveAttribute('aria-current', 'true');
+  // Move up: By the numbers now sits before Executive summary.
+  await tools.getByRole('button', {name: 'Move up'}).click();
+  const names = () => page.getByRole('group').evaluateAll(gs => gs.map(g => g.getAttribute('aria-label')));
+  expect(await names()).toEqual(['Title page', 'By the numbers', 'Executive summary', 'Votes per route']);
+  await expect(tools.getByRole('button', {name: 'Move up'})).toBeDisabled();
+  // Select another block by pressing it; Esc deselects and keeps focus on it.
+  const routes = page.getByRole('group', {name: 'Votes per route'});
+  await routes.click();
+  await expect(page.getByRole('toolbar', {name: 'Votes per route: block tools'})).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('toolbar')).toHaveCount(0);
+  await expect(routes).toBeFocused();
+  // Pinned keeps only Delete.
+  await page.getByRole('group', {name: 'Title page'}).click();
+  const pinned = page.getByRole('toolbar', {name: 'Title page: block tools'});
+  await expect(pinned.getByRole('button')).toHaveCount(1);
+  await expect(pinned.getByRole('button', {name: 'Delete'})).toBeVisible();
+  // Delete by keyboard.
+  await routes.focus();
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Tab');
+  const del = page.getByRole('toolbar', {name: 'Votes per route: block tools'}).getByRole('button', {name: 'Delete'});
+  await del.focus();
+  await page.keyboard.press('Enter');
+  await expect(routes).toHaveCount(0);
+  await report(page);
+});
+
+test('block frame: hover shows the tag; the AI-made mark has a name; the selected frame is the selected navy', async ({page}) => {
+  await open(page, 'components-layout-containers-block-frame--ai-made');
+  const block = page.getByRole('group', {name: 'Summary'});
+  await expect(block.getByRole('img', {name: 'Made by the assistant'})).toBeVisible();
+  await expect(block.getByText('Summary', {exact: true})).toBeHidden();
+  await block.hover();
+  await expect(block.getByText('Summary', {exact: true})).toBeVisible();
+  await open(page, 'components-layout-containers-block-frame--selected');
+  await expect(page.getByRole('group', {name: 'By the numbers'})).toHaveCSS('outline-color', 'rgb(4, 77, 108)');
+  await report(page);
+});

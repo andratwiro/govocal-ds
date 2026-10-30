@@ -69,6 +69,11 @@ the plain stat tile, figure, quote and sortable list.
 - Fit: a toggle that stays pressed (our back office) vs the prototype's button that turns off when the zoom already fits → **the prototype's** → Fit is an action, not a mode; zooming again is the way out.
 - The zoom steps: **50, 67, 83, 100, 125, 150, 200** (`ZOOM_STEPS`) → the prototype's 83% default sits on a step, and − and + stop at the ends instead of doing nothing.
 - A document's type in parts: inline font tokens in pages vs the Text part → **Text gains `document-display`, `-heading`, `-lead` and `-body` kinds** → a page writes a report's page with no CSS of its own.
+- Block frame's selected colour: the prototype's teal (its theme's primary) → **the selected navy (`--gv-border-selected`, the tag on `--gv-surface-selected-strong`)** → the system has one selection colour; teal is the accent of a measure. The hover frame and tag: the prototype's grey 300 and grey 500 → **the hovered control border, the tag on the neutral tint with neutral words** (no grey strong fill with white words exists).
+- The toolbar: inline icons in the block (our page) vs the prototype's floating card → **a floating card off the top end, outside the content box**, and for a text block a `toolbar` slot centred over it (the format bar replaces the tools, as the prototype does) → the text never shifts when a block is selected.
+- Pinned blocks: the prototype keeps Edit widget on a page break → **pinned keeps only Delete**; the earlier audit's "pinned blocks lose move/duplicate".
+- The insert line: **its own export, `BlockInsertLine`**, beside the frame → it sits between frames, never inside one. Its + is named "Add widget here".
+- Block frame's selected frame: 1.5 in the prototype → **1 (`--gv-border-width-1`)**, the 2 being the focus ring's. Its tag: 11px in the prototype → **Small strong 12**; the tag sits 28 above the content (the prototype's 30 snaps) and the toolbar 40 (36 snaps).
 
 ## The AI assistant (30 Oct 2026)
 

@@ -118,6 +118,9 @@ export {TitleField, type TitleFieldProps} from './components/gv/TitleField';
 export {AppProvider, type AppProviderProps} from './components/gv/AppProvider';
 export {useNumberFormatter} from './components/format';
 export {
+  BlockFrame, BlockInsertLine, type BlockFrameProps, type BlockInsertLineProps
+} from './components/gv/BlockFrame';
+export {
   Card, CardSwitch, CardRadioGroup, CardRadio, type CardPill, type CardMenuItem, type CardIconAction, type CardProps
 } from './components/gv/Card';
 export {Divider, type DividerProps} from './components/gv/Divider';
@@ -279,6 +282,9 @@ export {chatMessageLabels, type ChatMessageLabels} from './components/gv/ChatMes
 export {chatProgressLabels, type ChatProgressLabels} from './components/gv/ChatProgress';
 export {chatThreadLabels, type ChatThreadLabels} from './components/gv/ChatThread';
 export {itemChipLabels, type ItemChipLabels} from './components/gv/ItemChip';
+export {
+  blockFrameLabels, type BlockFrameLabels, blockInsertLineLabels, type BlockInsertLineLabels
+} from './components/gv/BlockFrame';
 export {pageStageLabels, type PageStageLabels} from './components/gv/PageStage';
 export {zoomBarLabels, type ZoomBarLabels} from './components/gv/ZoomBar';
 export {promptComposerLabels, type PromptComposerLabels} from './components/gv/PromptComposer';

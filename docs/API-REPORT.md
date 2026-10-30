@@ -5,7 +5,7 @@ with each component's props: its own with their types, the ones passed straight 
 (React Aria's behaviour props, React's, the DOM's). An API change shows up here as a diff to review;
 `tests/api-report.test.mjs` fails while this file is stale. The convention it follows: `docs/API.md`.
 
-## `govocal-ds` (684 names)
+## `govocal-ds` (692 names)
 
 ### `ACCESS_WHO_VALUE`
 
@@ -572,6 +572,86 @@ Component, from `src/components/gv/BarRow.tsx`.
 ### `BarRowProps`
 
 Interface, from `src/components/gv/BarRow.tsx`. The props of `BarRow`, listed there.
+
+### `BlockFrame`
+
+Component, from `src/components/gv/BlockFrame.tsx`.
+
+- `aria-label?: string`
+- `canMoveDown?: boolean`
+- `canMoveUp?: boolean`
+- `children?: ReactNode`
+- `className?: string`
+- `icon?: ReactNode`
+- `id?: string`
+- `isAiMade?: boolean`
+- `isDragging?: boolean`
+- `isHighlighted?: boolean`
+- `isPinned?: boolean`
+- `isSelected?: boolean`
+- `label: string`
+- `labels?: Partial<BlockFrameLabels>`
+- `onDelete?: () => void`
+- `onDeselect?: () => void`
+- `onDuplicate?: () => void`
+- `onHoverChange?: (isHovering: boolean) => void`
+- `onMoveDown?: () => void`
+- `onMoveUp?: () => void`
+- `onSelect?: () => void`
+- `style?: CSSProperties`
+- `toolbar?: ReactNode`
+
+### `blockFrameLabels`
+
+Value, from `src/components/gv/BlockFrame.tsx`.
+
+```ts
+BlockFrameLabels
+```
+
+### `BlockFrameLabels`
+
+Interface, from `src/components/gv/BlockFrame.tsx`.
+
+- `aiMade: string`
+- `delete: string`
+- `duplicate: string`
+- `moveDown: string`
+- `moveUp: string`
+- `toolbar: (label: string) => string`
+
+### `BlockFrameProps`
+
+Interface, from `src/components/gv/BlockFrame.tsx`. The props of `BlockFrame`, listed there.
+
+### `BlockInsertLine`
+
+Component, from `src/components/gv/BlockFrame.tsx`.
+
+- `className?: string`
+- `isAlwaysVisible?: boolean`
+- `isTarget?: boolean`
+- `labels?: Partial<BlockInsertLineLabels>`
+- `onInsert: () => void`
+- `style?: CSSProperties`
+
+### `blockInsertLineLabels`
+
+Value, from `src/components/gv/BlockFrame.tsx`.
+
+```ts
+BlockInsertLineLabels
+```
+
+### `BlockInsertLineLabels`
+
+Interface, from `src/components/gv/BlockFrame.tsx`.
+
+- `insert: string`
+
+### `BlockInsertLineProps`
+
+Interface, from `src/components/gv/BlockFrame.tsx`. The props of `BlockInsertLine`, listed there.
 
 ### `BreadcrumbItem`
 

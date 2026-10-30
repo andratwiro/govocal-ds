@@ -1,0 +1,187 @@
+@import '../theme.css';
+
+/*
+ * Block frame (not in Figma; the report prototype's `.fr-w`, `.fr-w__tag`, `.fr-w__tools`, `.fr-w__aimark`,
+ * `.fr-insert`). The frame is an outline 6 outside the content (radius 4), so nothing inside moves:
+ * - hover (or highlighted from the outline): the hovered control border, and a grey tag on the neutral tint;
+ * - selected: the selected border (the prototype's 1.5 snaps to the 1 width token); the tag filled in the selected strong fill with inverse words;
+ * - focus: the focus ring in the same place.
+ * The tag hangs off the top start (20 tall, radius 6 6 6 0, Small strong; the prototype's 11px snaps to 12), 28
+ * above the content. The toolbar card floats off the top end (or centred, for a text block's format bar), 36 above:
+ * the panel surface, a hairline, radius 8, the overlay shadow, padding 2. The ✦ mark sits outside the end edge, in
+ * the accent icon colour. Dragging dims the block.
+ */
+.gv-block-frame {
+  position: relative;
+  border-radius: var(--gv-radius-4);
+  outline: 1px solid transparent;
+  outline-offset: var(--gv-space-6);
+  transition: outline-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+  cursor: default;
+
+  &:hover,
+  &[data-highlighted] {
+    outline-color: var(--gv-border-control-hovered);
+  }
+
+  &[data-selected] {
+    outline: var(--gv-border-width-1) solid var(--gv-border-selected);
+  }
+
+  &:focus-visible {
+    outline: var(--gv-focus-ring);
+  }
+
+  &[data-dragging] {
+    opacity: var(--gv-opacity-dragging);
+  }
+}
+
+.gv-block-frame__tag {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: calc(-1 * var(--gv-space-28));
+  inset-inline-start: calc(-1 * var(--gv-space-6));
+  display: none;
+  align-items: center;
+  gap: var(--gv-space-4);
+  block-size: var(--gv-space-20);
+  padding-inline: var(--gv-space-8);
+  border-start-start-radius: var(--gv-radius-6);
+  border-start-end-radius: var(--gv-radius-6);
+  border-end-end-radius: var(--gv-radius-6);
+  background: var(--gv-surface-neutral);
+  color: var(--gv-text-neutral);
+  font: var(--gv-type-small-strong);
+  white-space: nowrap;
+  pointer-events: none;
+
+  .gv-block-frame:hover > &,
+  .gv-block-frame[data-highlighted] > & {
+    display: inline-flex;
+  }
+
+  .gv-block-frame[data-selected] > & {
+    display: inline-flex;
+    background: var(--gv-surface-selected-strong);
+    color: var(--gv-text-inverse);
+  }
+}
+
+.gv-block-frame__icon {
+  display: inline-flex;
+
+  > svg {
+    inline-size: var(--gv-size-icon-12);
+    block-size: var(--gv-size-icon-12);
+  }
+}
+
+.gv-block-frame__bar {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: calc(-1 * var(--gv-space-40));
+  inset-inline-end: calc(-1 * var(--gv-space-6));
+
+  [data-custom-toolbar] > & {
+    inset-inline: 0;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.gv-block-frame__tools {
+  display: flex;
+  gap: var(--gv-space-2);
+  padding: var(--gv-space-2);
+  background: var(--gv-surface-panel);
+  border: 1px solid var(--gv-border-default);
+  border-radius: var(--gv-radius-8);
+  box-shadow: var(--gv-shadow-overlay);
+}
+
+.gv-block-frame__ai {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: calc(-1 * var(--gv-space-28));
+  display: inline-flex;
+  color: var(--gv-icon-accent);
+
+  > svg {
+    inline-size: var(--gv-size-icon-14);
+    block-size: var(--gv-size-icon-14);
+  }
+}
+
+/*
+ * The insert line: 24 tall between blocks, a hairline across (strong border) with a 24 pill + in the middle (panel,
+ * control border, secondary icon), hidden until hover or focus. The target: the line 2 wide in the selected colour.
+ */
+.gv-block-insert {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  block-size: var(--gv-space-24);
+  opacity: 0;
+  transition: opacity var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    block-size: 1px;
+    background: var(--gv-border-strong);
+    pointer-events: none;
+  }
+
+  &:hover,
+  &:focus-within,
+  &[data-target],
+  &[data-visible] {
+    opacity: 1;
+  }
+
+  &[data-target]::before {
+    block-size: 2px;
+    background: var(--gv-border-selected);
+  }
+}
+
+.gv-block-insert__button {
+  appearance: none;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--gv-size-control-24);
+  block-size: var(--gv-size-control-24);
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--gv-border-control);
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-panel);
+  color: var(--gv-icon-secondary);
+  cursor: pointer;
+  outline: none;
+
+  > svg {
+    inline-size: var(--gv-size-icon-14);
+    block-size: var(--gv-size-icon-14);
+  }
+
+  &[data-hovered] {
+    border-color: var(--gv-border-control-hovered);
+    color: var(--gv-icon-primary);
+  }
+
+  &[data-focus-visible] {
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
+  }
+
+  [data-target] > & {
+    border-color: var(--gv-border-selected);
+    color: var(--gv-icon-primary);
+  }
+}

@@ -6,7 +6,7 @@ Every interactive part is built on React Aria Components. This table says, per p
 what would survive a change of base library. It decides nothing: the base library is a question for developers
 (Overview › Questions for developers).
 
-**112 of 131 parts** wire behaviour from React Aria; the rest are plain React and CSS.
+**113 of 132 parts** wire behaviour from React Aria; the rest are plain React and CSS.
 
 **What comes from React Aria** (would be rewritten on another library):
 
@@ -80,6 +80,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Forms › Text field | `Input`, `TextField`, `TextArea`, `Group`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `TextFieldProps` | yes | yes | 8 |
 | Forms › Title field | `Input`, `TextField`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text`; through Locale switcher: `RadioGroup`, `Radio`, `Select`, `SelectValue`, `Button`, `VisuallyHidden`, `OverlayArrow`, `Popover`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `ListBoxLoadMoreItem`, `Heading`, `Text`, `Header`, `Keyboard`, `ProgressBar` | `TextFieldProps` | yes | yes | 6 |
 | Layout & containers › App provider | through Toast: `UNSTABLE_ToastRegion`, `UNSTABLE_Toast`, `UNSTABLE_ToastQueue`, `UNSTABLE_ToastContent`, `Text`, `Button`, `ProgressBar` | – | – | – | 2 |
+| Layout & containers › Block frame | `Button`, `Toolbar`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | – | yes | 10 |
 | Layout & containers › Card | `Button`, `Disclosure`, `DisclosurePanel`, `Heading`, `Menu`, `MenuItem`, `MenuTrigger`; through Popover: `OverlayArrow`, `Popover`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger`; through Radio group: `RadioGroup`, `RadioField`, `RadioButton`, `Form`, `Label`, `FieldError`, `Text`; through Switch: `SwitchField`, `SwitchButton`, `Form`, `Label`, `FieldError`, `Text` | – | – | yes | 30 |
 | Layout & containers › Divider | `Separator` | `SeparatorProps` | – | yes | 3 |
 | Layout & containers › Grid | None: plain React and CSS | – | – | yes | 3 |
