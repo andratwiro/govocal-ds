@@ -65,3 +65,23 @@ export const FoldedNav: Story = {
     </AppFrame>
   )
 };
+
+/** The project screens: the Side nav hidden (it opens over the page from the page's toggle), so the page takes every
+ * column. */
+export const HiddenNav: Story = {
+  name: 'Hidden nav',
+  render: () => (
+    <AppFrame isNavHidden nav={
+      <SideNav aria-label="Main" isHidden>
+        <SideNavHome href="#" />
+        <SideNavGroup>
+          <SideNavLink href="#" label="Projects" icon={<FolderKanban aria-hidden size={18} />} isCurrent />
+        </SideNavGroup>
+      </SideNav>
+    }>
+      <AppFramePanel elementType="section" aria-label="Project" padding="16">
+        <Text elementType="p" kind="ui">The project's screen, the window's full width.</Text>
+      </AppFramePanel>
+    </AppFrame>
+  )
+};

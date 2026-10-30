@@ -212,7 +212,7 @@ part's `<Name>.guide.md`) names the part to use instead.
   - Not for: To hide something from everyone: leave it out of the page, as a closed **Side panel** or a folded **Panel section** does; visually hidden content is still read. For a name on an icon-only control: use the control's own `aria-label` (**Icon button**). For words everyone should see, however small: use **Text** (`kind="small"`).
 
 ## Patterns / App shell
-- **App frame** `AppFrame` (not in Figma): App frame: the back office's frame around every page, the Side nav in a column at the start (224 wide, or the 52 rail when `isNavFolded`) and the page in a `… Stories: Default, Folded Nav.
+- **App frame** `AppFrame` (not in Figma): App frame: the back office's frame around every page, the Side nav in a column at the start (224 wide, or the 52 rail when `isNavFolded`, none when `isNavHid… Stories: Default, Folded Nav, Hidden Nav.
   - Not for: For a titled region over a hairline, such as a table and its toolbar: use **Panel**. For a box people tick, open or expand: use **Card**. To lay out a page's regions inside the frame: use **Stack**, **Grid** or **Tile grid**. For a record beside a list: use **Side panel**.
 - **Notification list** `NotificationList` (not in Figma): The notifications list the admin sidebar's bell opens (the real admin's notification menu): a title with "Mark all as read", then one row per notification, n… Stories: Default, All Read, Empty, Keyboard.
   - Not for: For a passing confirmation of something the admin just did: use **Toast**. For a message about the page in front of them: use **Banner**. For the emails a phase sends participants: use **Notification row**. For a long, filterable list of records: use **Data table**.

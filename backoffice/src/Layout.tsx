@@ -48,7 +48,7 @@ export function Layout() {
   );
 
   return (
-    <AppFrame isNavFolded={folded} className={hidden ? 'bo-frame-navless' : undefined} nav={
+    <AppFrame isNavFolded={folded} isNavHidden={hidden} nav={
         <SideNav aria-label="Main" isFolded={folded} isHidden={hidden} isOpen={navOpen} onOpenChange={setNavOpen}>
           <SideNavHome href="#/platform" />
           <SideNavGroup>{NAV.slice(0, BOTTOM_FROM).map(link)}</SideNavGroup>

@@ -12,7 +12,7 @@
   inherits: false;
 }
 
-/* App frame (the real admin's layout): the Side nav's column (224, or the 52 rail) and the page beside it on the app's
+/* App frame (the real admin's layout): the Side nav's column (224, the 52 rail, or none when hidden) and the page beside it on the app's
    grey ground, 8 in, as tall as the window at least. The page's words default to UI type in the body text colour. */
 .gv-app-frame {
   display: grid;
@@ -22,6 +22,11 @@
 
   &[data-folded] {
     grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  /* Hidden nav (`SideNav isHidden` opens over the page): the nav column takes no room. */
+  &[data-nav-hidden] {
+    grid-template-columns: 0 minmax(0, 1fr);
   }
 }
 

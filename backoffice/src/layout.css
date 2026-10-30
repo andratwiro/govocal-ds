@@ -122,10 +122,6 @@ body { margin: 0; }
 .bo-phase-map-view { block-size: 100%; }
 .bo-phase-map-list { overflow: auto; block-size: 100%; }
 
-/* ── App shell: the project screens hide the Side nav (it opens over the page), so the frame gives the page every
-   column. App frame has no hidden state of its own yet: this places its columns. ── */
-.bo-frame-navless[class] { grid-template-columns: 0 minmax(0, 1fr); }
-
 /* ── Project screens: Workspace layout fills the bar's row; the preview fills the stage ── */
 .bo-workspace { min-height: 0; }
 .bo-fill { block-size: 100%; min-width: 0; }

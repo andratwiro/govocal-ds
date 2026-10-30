@@ -348,6 +348,7 @@ Component, from `src/patterns/AppFrame.tsx`.
 - `children: ReactNode`
 - `className?: string`
 - `isNavFolded?: boolean`
+- `isNavHidden?: boolean`
 - `nav: ReactNode`
 - `style?: CSSProperties`
 

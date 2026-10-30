@@ -988,3 +988,7 @@ Calls made moving the back office's overview and phase screens onto the project-
 - Survey phases' tabs → **Build and Insights only** (Manage redirects to Build) → deep dive §1.9 and Project header's "Tabs and unread dot".
 - Add a phase as a small form vs the method picker → **the picker first (Modal with side tabs, a grid of Method cards), then the title and dates of the method picked** → the deep dive's method picker; the title and dates step keeps a new phase named on the timeline. Method lines come from Method card's stories, the project templates and the phone's lines; no new product facts.
 - Modal lead paragraphs vs Modal `description` → **`description` on the Modals that open with a line about themselves** (Community monitor's survey, import and add manager; Reporting's create; Tools' webhook; Users' add to group) → it describes the dialog to screen readers; delete and confirm steps are Alert dialogs, whose body already is the message.
+
+## Gaps the builders found (30 Oct 2026, night)
+
+- App frame had no hidden-nav state, so the back office set the frame's columns from its own stylesheet → **`isNavHidden` on App frame (the nav column takes no room), paired with `SideNav isHidden`** → the frame owns its columns; the name follows `isNavFolded`.

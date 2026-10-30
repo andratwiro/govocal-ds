@@ -127,7 +127,7 @@ what would survive a change of base library. It decides nothing: the base librar
 
 | Part | Behaviour from React Aria's … | Props straight through | Locale | CSS | Stories |
 |---|---|---|---|---|---|
-| App shell › App frame | None: plain React and CSS | – | – | yes | 2 |
+| App shell › App frame | None: plain React and CSS | – | – | yes | 3 |
 | App shell › Notification list | `Link`; through Button: `Button`, `ProgressBar` | – | – | yes | 4 |
 | App shell › Side nav | `Button`, `Link`, `Dialog`, `Modal`, `ModalOverlay`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 4 |
 | Build tab › Access rights | `Button`, `Disclosure`, `DisclosurePanel`, `DisclosureGroup`, `Heading`; through Button: `ProgressBar`; through Link: `Link`; through Radio group: `RadioGroup`, `RadioField`, `RadioButton`, `Form`, `Label`, `FieldError`, `Text`; through Select: `Select`, `SelectValue`, `Autocomplete`, `ProgressBar`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `ListBoxLoadMoreItem`, `Text`, `Header`, `Keyboard`, `OverlayArrow`, `Popover`, `Input`, `SearchField`, `Form`, `Label`, `FieldError`, `Tooltip`, `TooltipTrigger`; through Switch: `SwitchField`, `SwitchButton`, `Form`, `Label`, `FieldError`, `Text`; through Alert dialog: `Dialog`, `Modal`, `ProgressBar`, `Input`, `TextField`, `TextArea`, `Group`, `Form`, `Label`, `FieldError`, `Text`; through Choice card: `RadioField`, `RadioButton`, `CheckboxField`, `CheckboxButton`; through Modal: `Dialog`, `Modal` | – | yes | yes | 9 |

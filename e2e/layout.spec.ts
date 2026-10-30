@@ -51,3 +51,14 @@ test('inline: a list of topics that wraps onto a second line, still one list', a
   const ys = new Set(await list.getByRole('listitem').evaluateAll(els => els.map(e => Math.round(e.getBoundingClientRect().y))));
   expect(ys.size).toBeGreaterThan(1);
 });
+
+test('app frame: with the nav hidden, the page takes the full width', async ({page}) => {
+  await page.setViewportSize({width: 1200, height: 800});
+  await page.goto('/storybook/iframe.html?id=patterns-app-shell-app-frame--hidden-nav&viewMode=story');
+  const main = page.getByRole('main');
+  await expect(main).toBeVisible();
+  const box = (await main.boundingBox())!;
+  expect(box.x).toBe(0);
+  expect(Math.round(box.width)).toBe(1200);
+  await expect(page.getByRole('navigation', {name: 'Main'})).toHaveCount(0);
+});

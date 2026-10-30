@@ -12,6 +12,13 @@ export interface AppFrameProps {
   children: ReactNode;
   /** The Side nav's folded rail (52 wide) instead of the open nav (224): inside a project, as `SideNav isFolded`. */
   isNavFolded?: boolean;
+  /**
+   * The nav column gone, so the page takes the full width: pair it with `SideNav isHidden`, which opens the nav over
+   * the page from the page's own toggle (the project screens).
+   *
+   * @default false
+   */
+  isNavHidden?: boolean;
   /** Places the frame; never paints it. */
   className?: string;
   /** Inline placement, as `className`. */
@@ -20,7 +27,7 @@ export interface AppFrameProps {
 
 /**
  * App frame: the back office's frame around every page, the Side nav in a column at the start (224 wide, or the 52
- * rail when `isNavFolded`) and the page in a `main` on the app's grey ground, 8 in, in the UI type and the body text
+ * rail when `isNavFolded`, none when `isNavHidden`) and the page in a `main` on the app's grey ground, 8 in, in the UI type and the body text
  * colour. Not in Figma: the real admin's layout. Pages lay their panels out on it with Stack, Inline and Grid; a white
  * region of the frame with no head of its own (the page's bar, a project page's column) is an App frame panel.
  *
@@ -28,9 +35,10 @@ export interface AppFrameProps {
  * <AppFrame nav={<SideNav aria-label="Main">…</SideNav>}><Outlet /></AppFrame>
  * ```
  */
-export function AppFrame({nav, children, isNavFolded, className, style}: AppFrameProps) {
+export function AppFrame({nav, children, isNavFolded, isNavHidden, className, style}: AppFrameProps) {
   return (
-    <div className={clsx('gv-app-frame', className)} style={style} data-folded={isNavFolded || undefined}>
+    <div className={clsx('gv-app-frame', className)} style={style} data-folded={(isNavFolded && !isNavHidden) || undefined}
+      data-nav-hidden={isNavHidden || undefined}>
       <div className="gv-app-frame__nav">{nav}</div>
       <main className="gv-app-frame__main">{children}</main>
     </div>
