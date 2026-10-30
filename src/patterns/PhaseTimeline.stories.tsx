@@ -1,4 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {useState} from 'react';
 import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {PhaseTimeline, type TimelinePhase} from './PhaseTimeline';
 import {SectionLabel} from '../components/gv/SectionLabel';
@@ -48,5 +49,20 @@ export const Keyboard: Story = {
       await expect(canvas.getByRole('link', {name})).toHaveFocus();
     }
     await expect(canvas.getByRole('link', {name: /^Collect ideas/})).toHaveAttribute('aria-current', 'page');
+  }
+};
+/** `onDelete`: each row shows a delete button on hover and focus (Rail phase's), but the phase being viewed, which
+ * can't be deleted from its own screen. The play function deletes one. */
+export const Deletable: Story = {
+  render: function Render() {
+    const [phases, setPhases] = useState(PHASES.map(p => ({...p, isCurrent: p.id === 'c'})));
+    return <PhaseTimeline phases={phases} onDelete={p => setPhases(all => all.filter(x => x.id !== p.id))} />;
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.queryByRole('button', {name: 'Delete Community vote'})).toBeNull();
+    await userEvent.click(canvas.getByRole('button', {name: 'Delete Feedback survey'}));
+    await waitFor(() => expect(canvas.queryByRole('link', {name: /Feedback survey/})).toBeNull());
+    await expect(canvas.getAllByRole('link')).toHaveLength(3);
   }
 };

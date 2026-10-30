@@ -49,6 +49,11 @@ export interface TimelinePhase {
 export interface PhaseTimelineProps extends PlacementProps {
   /** The phases, in order. */
   phases: TimelinePhase[];
+  /**
+   * Deletes a phase: each row shows Rail phase's delete button on hover and focus, but the phase being viewed
+   * (`isCurrent`), which can't be deleted from its own screen. Left out, no row can be deleted.
+   */
+  onDelete?: (phase: TimelinePhase) => void;
   /** Its own words (each status's, "N new"), over `phaseTimelineLabels`. */
   labels?: Partial<PhaseTimelineLabels>;
 }
@@ -58,16 +63,18 @@ const DOT = {done: 'completed', 'in-progress': 'live', upcoming: 'upcoming'} as 
 
 /**
  * The Participation rail's timeline (prototype `#proj-rail .pj-stepper`): Rail phase rows in a list. Rail phase
- * draws the guide line through the dots, the count chip, "N new" and the coloured status word. Not in Figma yet.
+ * draws the guide line through the dots, the count chip, "N new" and the coloured status word; with `onDelete`, its
+ * delete button. Not in Figma yet.
  */
-export function PhaseTimeline({phases, labels, className, style}: PhaseTimelineProps) {
+export function PhaseTimeline({phases, onDelete, labels, className, style}: PhaseTimelineProps) {
   const l = mergeLabels(phaseTimelineLabels, labels);
   return (
     <ul className={clsx('gv-phase-timeline', className)} style={style}>
       {phases.map(p => (
         <li key={p.id}>
           <RailPhase status={DOT[p.status]} isCurrent={p.isCurrent} href={p.href} title={p.title}
-            chip={p.count} newCount={p.fresh} statusLabel={l[WORD[p.status]]} meta={`${p.dates} · ${p.method}`} labels={l} />
+            chip={p.count} newCount={p.fresh} statusLabel={l[WORD[p.status]]} meta={`${p.dates} · ${p.method}`} labels={l}
+            onDelete={onDelete && !p.isCurrent ? () => onDelete(p) : undefined} />
         </li>
       ))}
     </ul>

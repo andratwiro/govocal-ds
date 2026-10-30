@@ -3893,6 +3893,7 @@ Component, from `src/patterns/PhaseTimeline.tsx`.
 
 - `className?: string`
 - `labels?: Partial<PhaseTimelineLabels>`
+- `onDelete?: (phase: TimelinePhase) => void`
 - `phases: TimelinePhase[]`
 - `style?: CSSProperties`
 

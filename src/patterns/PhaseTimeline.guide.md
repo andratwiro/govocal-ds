@@ -56,11 +56,12 @@ text (colour is never the only sign) and a decorative dot and line.
 
 - Built by AI agents from the designer's prototype (the rail's stepper); not in Figma.
 - Reviewed by a person: not yet.
-- Known limits: no delete on its rows; the colours of the done and live dots borrow the nearest tokens
+- Known limits: the colours of the done and live dots borrow the nearest tokens
   (docs/DECISIONS.md, "Fidelity review against Figma and the prototype").
 
 ## Changes
 
+- 30 Oct 2026: `onDelete` puts Rail phase's delete on every phase but the current one (docs/DECISIONS.md, "Small fixes").
 - 30 Oct 2026: this page written; a play function proves Tab.
 - 29 Oct 2026: its words come in through `labels`.
 - 29 Oct 2026: one rail, the timeline under Rail header, Spotlight only when something runs there (docs/DECISIONS.md,

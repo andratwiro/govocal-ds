@@ -266,7 +266,7 @@ part's `<Name>.guide.md`) names the part to use instead.
   - Not for: For a row of headline numbers on a dashboard: use **Stat tile**. For a chart people read point by point: use **Chart** in a **Dashboard card**. For a figure in a list of label and value pairs: use **Stat row**. For an action to take next: use **Action row**.
 
 ## Patterns / Project rail
-- **Phase timeline** `PhaseTimeline` (not in Figma): The Participation rail's timeline: Rail phase rows in a list. Stories: Timeline, Current, Spotlight, All Upcoming, Keyboard.
+- **Phase timeline** `PhaseTimeline` (not in Figma): The Participation rail's timeline: Rail phase rows in a list. Stories: Timeline, Current, Spotlight, All Upcoming, Keyboard, Deletable.
   - Not for: For a single phase row, or a phase that can be deleted from the rail: use **Rail phase** (the timeline takes no For steps of a setup checklist: use **Setup step**. For a page's trail: use **Breadcrumbs**.
 - **Rail header** `RailHeader`: The rail's header row: 18 tall (Figma), its 28 buttons hanging 5 above and below and 6 past the right edge so their icons line up with the rail. Stories: All Variants, With Action, With Panel Toggle, Without Action, Keyboard.
   - Not for: For a label over a group inside the rail ("Spotlight"): use **Section label**. For the head of a page: use **Page header**, or **Project header** on a project. For the head of a panel: use **Panel**'s head.
