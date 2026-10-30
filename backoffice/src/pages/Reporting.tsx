@@ -6,12 +6,12 @@ import {AlertDialog, Badge, Banner, Button, CheckboxGroup, ChoiceCard, ChoiceCar
   Grid, Inline, MenuItem, Modal, Pagination, Panel, RadioGroup, SearchField, SegmentedControl, SegmentedControlItem, Separator, Tab,
   TableToolbar, TabList, TabPanel, TabPanels, Tabs, Stack, Text, TextField, toast} from 'govocal-ds';
 import {CONTENTS, CONTENT_GROUPS, REPORTS, type Report} from '../data-reporting';
+import {daysBefore, TODAY, useDay} from '../dates';
 import {Page} from './Page';
 
 // Every admin table pages (docs/DECISIONS.md).
 const PAGE_SIZE = 10;
 const reportsWord = (n: number) => `${n} ${n === 1 ? 'report' : 'reports'}`;
-const modified = (d: number) => `Modified ${d} ${d === 1 ? 'day' : 'days'} ago`;
 const editorHref = (r: Report) => `#/reporting/report-builder/${r.id}/editor`;
 const icon = (Icon: typeof Plus) => <Icon aria-hidden size={16} />;
 
@@ -28,6 +28,7 @@ const TABS: {id: TabId; label: string; description: string; keep: (r: Report) =>
 type RowAction = 'edit' | 'copy' | 'delete';
 
 function ReportTable({label, reports, onAction}: {label: string; reports: Report[]; onAction: (r: Report, a: RowAction) => void}) {
+  const day = useDay();
   return (
     <div className="bo-reporting-scroll">
       <DataTable aria-label={label}>
@@ -47,8 +48,9 @@ function ReportTable({label, reports, onAction}: {label: string; reports: Report
                   {r.kind === 'progress' && <Badge>Progress</Badge>}
                 </Inline>
               </DataTableCell>
-              <DataTableCell>{r.created}</DataTableCell>
-              <DataTableCell><Text kind="small" color="meta">{modified(r.modifiedDays)}</Text></DataTableCell>
+              <DataTableCell>{day(r.created)}</DataTableCell>
+              {/* Both columns are days, in the one list date format (dates.ts), never a mix of 27/10/2026 and "1 day ago". */}
+              <DataTableCell isMuted>{day(daysBefore(r.modifiedDays))}</DataTableCell>
               <DataTableCell align="options">
                 {/* Row menus put their icons in Menu's icon slot; the removing item after a separator (Users, Tools). */}
                 <DataTableOptions aria-label={`Actions for ${r.title}`} onAction={k => onAction(r, k as RowAction)}>
@@ -171,7 +173,7 @@ export function Reporting() {
   const onAction = (r: Report, a: RowAction) => {
     if (a === 'edit') return navigate(editorHref(r).slice(1));
     if (a === 'delete') return setDeleting(r);
-    const copy: Report = {...r, id: `${r.id}-copy-${Date.now()}`, title: `${r.title} (copy)`, created: '29/10/2026',
+    const copy: Report = {...r, id: `${r.id}-copy-${Date.now()}`, title: `${r.title} (copy)`, created: TODAY,
       modifiedDays: 0, owner: 'you', isNew: true};
     setReports(rs => { const i = rs.findIndex(x => x.id === r.id); return [...rs.slice(0, i + 1), copy, ...rs.slice(i + 1)]; });
     toast('Report duplicated', copy.title, {action: 'Undo', onAction: () => setReports(rs => rs.filter(x => x.id !== copy.id))});

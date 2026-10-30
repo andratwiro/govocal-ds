@@ -1,7 +1,6 @@
 // The main sidebar's invented data: who is signed in, the counts, the notifications and the menus' links.
 export const ME = {name: 'Alex Morgan', initials: 'AM', role: 'Administrator'};
-/** Inputs that need feedback and are assigned to the signed-in admin (the real admin's Input manager count). */
-export const INPUTS_NEEDING_FEEDBACK = 46;
+// The Input manager's count comes from the inputs themselves: data.ts, MY_INPUTS_AWAITING_FEEDBACK.
 /** Unread notifications; the list below shows the newest few of them. */
 export const UNREAD_NOTIFICATIONS = 28;
 

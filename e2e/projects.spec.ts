@@ -313,7 +313,8 @@ test('the Dates range keeps the projects running in it', async ({page}) => {
   await dates.getByRole('spinbutton').first().click();
   await page.keyboard.type('01012027');
   await dates.getByRole('spinbutton').nth(3).click();
-  await page.keyboard.type('01312027');
+  // The app's locale is en-GB: day, month, year.
+  await page.keyboard.type('31012027');
   // January 2027: the project running since August and the one starting on the 1st.
   await expect(bodyRows(page)).toHaveCount(2);
   await expect(bodyRows(page).first()).toContainText('Green Corridors for Larkvale');

@@ -203,5 +203,5 @@ test('the project select filters the KPIs', async ({page}) => {
   await expect(part).not.toContainText('873');
   await expect(page.locator('.gv-kpi', {hasText: 'Inputs'})).toContainText('131');
   // Registrations are platform-wide in the real admin: a project does not narrow them.
-  await expect(page.locator('.gv-kpi', {hasText: 'Registrations'})).toContainText('1,284');
+  await expect(page.locator('.gv-kpi', {hasText: 'Registrations'})).toContainText('5,012');
 });

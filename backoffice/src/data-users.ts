@@ -44,8 +44,12 @@ export function inventPeople(count: number, from = PEOPLE.length + 1): Person[] 
   });
 }
 
+/** Everyone registered on the invented platform: the one count the Users list, the Dashboard's Registrations and
+ * Messaging's "All users" share. */
+export const REGISTERED_USERS = 5012;
+
 /** The twelve, then the invented tail: the Users page's list. */
-export const ALL_PEOPLE: Person[] = [...PEOPLE, ...inventPeople(5000)];
+export const ALL_PEOPLE: Person[] = [...PEOPLE, ...inventPeople(REGISTERED_USERS - PEOPLE.length)];
 
 /** The real admin's role lists, in its order, with the role each one keeps. */
 export const SEGMENTS: {id: string; label: string; roles?: Role[]}[] = [
@@ -74,11 +78,11 @@ export const PARTICIPATION: Record<string, {ideas: number; comments: number; vot
   u12: {ideas: 2, comments: 0, votes: 9, projects: 2}
 };
 
-export type Invitation = {id: string; email: string; invited: string; status: 'Pending' | 'Accepted'; role: Role};
+export type Invitation = {id: string; email: string; /** ISO date. */ invited: string; status: 'Pending' | 'Accepted'; role: Role};
 export const INVITATIONS: Invitation[] = [
-  {id: 'i1', email: 'invitee1@example.org', invited: 'October 20, 2026', status: 'Accepted', role: 'Registered user'},
-  {id: 'i2', email: 'invitee2@example.org', invited: 'October 20, 2026', status: 'Pending', role: 'Registered user'},
-  {id: 'i3', email: 'invitee3@example.org', invited: 'September 2, 2026', status: 'Accepted', role: 'Project manager'}
+  {id: 'i1', email: 'invitee1@example.org', invited: '2026-10-20', status: 'Accepted', role: 'Registered user'},
+  {id: 'i2', email: 'invitee2@example.org', invited: '2026-10-20', status: 'Pending', role: 'Registered user'},
+  {id: 'i3', email: 'invitee3@example.org', invited: '2026-09-02', status: 'Accepted', role: 'Project manager'}
 ];
 
 /** Seats in the plan: admins and managers each have their own count. */

@@ -1,4 +1,5 @@
 // Messaging: invented emails and text messages. No real tenants, people or places.
+import {REGISTERED_USERS} from './data-users';
 
 export type CustomEmail = {
   id: string; subject: string; status: 'Sent' | 'Scheduled' | 'Draft'; date: string; project?: string;
@@ -75,7 +76,7 @@ export const SMS: SmsCampaign[] = [
 
 /** How many people each recipient group holds (invented). */
 export const GROUP_SIZES: Record<string, number> = {
-  'All users': 2184, 'Residents of the north district': 612, 'Youth panel': 148, 'Followers of Harbour Plan 2030': 341
+  'All users': REGISTERED_USERS, 'Residents of the north district': 612, 'Youth panel': 148, 'Followers of Harbour Plan 2030': 341
 };
 
 /** A sample of who received a sent email, for its statistics page. */

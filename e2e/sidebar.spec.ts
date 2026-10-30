@@ -40,8 +40,9 @@ test('To platform leaves for the resident placeholder and comes back', async ({p
 test('Input manager carries its count badge', async ({page}) => {
   await page.goto('/backoffice/#/dashboard');
   const link = nav(page).getByRole('link', {name: /Input manager/});
-  await expect(link).toContainText('46');
-  await expect(link).toHaveAccessibleName(/Input manager.*46/);
+  // The inputs waiting for feedback that are assigned to the signed-in admin (data.ts), as the real admin counts them.
+  await expect(link).toContainText('2');
+  await expect(link).toHaveAccessibleName(/Input manager.*2 of your inputs need feedback/);
 });
 
 test('Notifications opens a list; Mark all as read clears the badge', async ({page}) => {
@@ -148,7 +149,7 @@ test('folded in the report view: icons only, names still accessible, badges on t
   expect(box!.width).toBeLessThan(64);
   for (const label of ['To platform', ...TOP, ...BOTTOM])
     await expect(nav(page).getByRole('link', {name: label})).toBeAttached();
-  await expect(nav(page).getByRole('link', {name: /Input manager/})).toHaveAccessibleName(/46/);
+  await expect(nav(page).getByRole('link', {name: /Input manager/})).toHaveAccessibleName(/2 of your inputs need feedback/);
   for (const name of [/Notifications/, /Alex Morgan/, /Support/])
     await expect(nav(page).getByRole('button', {name})).toBeVisible();
   // Labels are visually hidden: the Projects row is no wider than the rail.

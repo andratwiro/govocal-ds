@@ -7,7 +7,8 @@ import {Avatar, Badge, Banner, Button, DataTable, DataTableBody, DataTableCell, 
   TabPanels, Tabs, Text, TextArea, TileGrid, toast} from 'govocal-ds';
 import {Meter} from 'govocal-ds/base';
 import {INVITATIONS, PARTICIPATION, SEATS, SEATS_A_MONTH_AGO, type Invitation, type Person, type Role} from '../data-users';
-import {ago, date, groupStore, initials, PAGE_SIZE, peopleStore} from './Users';
+import {ago, groupStore, initials, PAGE_SIZE, peopleStore} from './Users';
+import {TODAY, useDay} from '../dates';
 import {Page} from './Page';
 
 // The Users page's first clicks, each on its own route as in the real admin: invitations, seats, a profile.
@@ -69,6 +70,7 @@ function InviteForm({onSend}: {onSend: (emails: string[], role: Role) => void}) 
 function InvitationTable({invitations, onResend, onDelete}: {
   invitations: Invitation[]; onResend: (i: Invitation) => void; onDelete: (i: Invitation) => void;
 }) {
+  const day = useDay();
   const [query, setQuery] = useState('');
   const found = invitations.filter(i => i.email.toLowerCase().includes(query.trim().toLowerCase()));
   const {page, pageCount, setPage, shown} = usePage(found);
@@ -105,7 +107,7 @@ function InvitationTable({invitations, onResend, onDelete}: {
               <DataTableRow key={i.id} id={i.id} textValue={i.email}>
                 <DataTableCell>{i.email}</DataTableCell>
                 <DataTableCell>{i.role}</DataTableCell>
-                <DataTableCell>{i.invited}</DataTableCell>
+                <DataTableCell>{day(i.invited)}</DataTableCell>
                 {/* A status of an invitation, not of a project: a Badge (outlined while it waits). */}
                 <DataTableCell><Badge variant={i.status === 'Pending' ? 'outlined' : 'filled'}>{i.status}</Badge></DataTableCell>
                 <DataTableCell align="options">
@@ -131,7 +133,7 @@ export function UserInvitations() {
   const [tab, setTab] = useState<string>('invite');
   const send = (emails: string[], role: Role) => {
     setInvitations(list => [...emails.map((email, n) => (
-      {id: `new-${list.length + n}`, email, role, invited: 'October 29, 2026', status: 'Pending' as const})), ...list]);
+      {id: `new-${list.length + n}`, email, role, invited: TODAY, status: 'Pending' as const})), ...list]);
     toast(emails.length === 1 ? '1 invitation sent' : `${emails.length} invitations sent`, 'They appear under All invitations.');
   };
   // Delete is instant, with Undo (docs/DECISIONS.md): the invitation goes back where it was.
@@ -163,6 +165,7 @@ export function UserInvitations() {
 // ── Seats overview ───────────────────────────────────────────────────────────
 
 function PeopleTable({label, people, empty}: {label: string; people: Person[]; empty: string}) {
+  const day = useDay();
   const {page, pageCount, setPage, shown} = usePage(people);
   return (
     <Panel title={label} count={people.length} isFlush
@@ -180,7 +183,7 @@ function PeopleTable({label, people, empty}: {label: string; people: Person[]; e
               <DataTableRow key={p.id} id={p.id} textValue={p.name} href={`#/users/${p.id}`}>
                 <DataTableCell><DataTablePerson name={p.name} initials={initials(p.name)} sub={p.email} /></DataTableCell>
                 <DataTableCell>{p.role}</DataTableCell>
-                <DataTableCell>{date(p.joined)}</DataTableCell>
+                <DataTableCell>{day(p.joined)}</DataTableCell>
               </DataTableRow>
             ))}
           </DataTableBody>
@@ -233,6 +236,7 @@ export function SeatsOverview() {
 
 export function UserProfile() {
   const {userId} = useParams();
+  const day = useDay();
   // The list's changes (a role, a group, a deletion) show here too.
   const person = peopleStore.people.find(p => p.id === userId);
   const [role, setRoleState] = useState<Role | undefined>(person?.role);
@@ -269,7 +273,7 @@ export function UserProfile() {
             <PropertyList>
               <PropertyListItem label="Email" emptyLabel="No email">{person.email ?? 'No email (signed up by phone)'}</PropertyListItem>
               <PropertyListItem label="Role">{role}</PropertyListItem>
-              <PropertyListItem label="Joined">{date(person.joined)}</PropertyListItem>
+              <PropertyListItem label="Joined">{day(person.joined)}</PropertyListItem>
               <PropertyListItem label="Last active" emptyLabel="Not since joining">{ago(person.lastActive)}</PropertyListItem>
               <PropertyListItem label="Groups" emptyLabel="In no group">
                 {groups.length > 0 && (

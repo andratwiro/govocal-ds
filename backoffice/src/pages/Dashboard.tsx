@@ -9,7 +9,7 @@ import {Badge, Banner, BarRow, Button, ChartLegend, DashboardBars, DashboardCard
   StatusBadge, Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, Text, TileGrid, toast,
   VisuallyHidden, useNumberFormatter} from 'govocal-ds';
 import {Meter} from 'govocal-ds/base';
-import {DASHBOARD, PROJECTS} from '../data';
+import {DASHBOARD, INPUTS_AWAITING_FEEDBACK, PROJECTS} from '../data';
 import {MONTHS, PER_TAG, STATUS_BREAKDOWN, EMAILS, INVITATIONS, EVENTS, ADOPTION, DATE_PRESETS, METRICS, PROJECT_METRICS,
   TAG_METRICS, USERS, VISITORS, REPRESENTATION, PARTICIPATION_FEED, MANAGEMENT_FEED, FEED_ACTIONS,
   type Metric} from '../data-dashboard';
@@ -196,7 +196,8 @@ function Management() {
             <DashboardBars items={STATUS_BREAKDOWN.map(b => ({label: b.label, percent: (b.count / total) * 100, count: b.count, color: b.color}))} />
             <StatTrio items={[['Status changed', n(s.statusChanged)], ['Official updates', n(s.officialUpdates)],
               ['Avg. response', `${s.avgResponseDays} days`]]} />
-            <StatRow label="Waiting for feedback" value={n(total - s.statusChanged)} isNew href="#/inputs" />
+            {/* The Input manager's own count (data.ts), so the two screens agree. */}
+            <StatRow label="Waiting for feedback" value={n(INPUTS_AWAITING_FEEDBACK)} isNew href="#/inputs" />
           </DashCard>
           <DashCard title="Events">
             <StatTrio items={[['Total events added', n(EVENTS.added)], ['Upcoming', n(EVENTS.upcoming)], ['Completed', n(EVENTS.completed)]]} />

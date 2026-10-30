@@ -5,7 +5,8 @@ import {AppFrame, Avatar, Button, Menu, MenuItem, MenuTrigger, NotificationList,
   SideNavHome, SideNavLink, Stack, SubmenuTrigger} from 'govocal-ds';
 import {Dialog, DialogTrigger, Popover} from 'govocal-ds/base';
 import {NAV} from './nav';
-import {ME, INPUTS_NEEDING_FEEDBACK, UNREAD_NOTIFICATIONS, NOTIFICATIONS, OLDER_NOTIFICATIONS, LOCALES, SUPPORT_LINKS, type SidebarNotification} from './data-sidebar';
+import {MY_INPUTS_AWAITING_FEEDBACK} from './data';
+import {ME, UNREAD_NOTIFICATIONS, NOTIFICATIONS, OLDER_NOTIFICATIONS, LOCALES, SUPPORT_LINKS, type SidebarNotification} from './data-sidebar';
 
 const KIND_ICON: Record<SidebarNotification['kind'], typeof Bell> = {
   comment: MessageSquare, inputs: Inbox, report: FileChartColumn, phase: Flag, assigned: UserCheck, review: ScrollText};
@@ -44,7 +45,7 @@ export function Layout() {
   const link = ({id, label, icon: Icon}: (typeof NAV)[number]) => (
     <SideNavLink key={id} href={`#/${id}`} label={label} icon={<Icon aria-hidden size={18} />}
       isCurrent={pathname === `/${id}` || pathname.startsWith(`/${id}/`)}
-      {...(id === 'inputs' ? {count: INPUTS_NEEDING_FEEDBACK, countLabel: `${INPUTS_NEEDING_FEEDBACK} inputs need feedback`} : {})} />
+      {...(id === 'inputs' ? {count: MY_INPUTS_AWAITING_FEEDBACK, countLabel: `${MY_INPUTS_AWAITING_FEEDBACK} of your inputs need feedback`} : {})} />
   );
 
   return (

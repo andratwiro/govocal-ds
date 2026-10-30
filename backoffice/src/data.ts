@@ -1,3 +1,4 @@
+import {REGISTERED_USERS} from './data-users';
 export const METHODS = ['Information', 'Ideation', 'Survey', 'Voting', 'Proposals', 'Common ground',
   'Document annotation', 'Volunteering', 'Poll'] as const;
 export type Method = typeof METHODS[number];
@@ -60,6 +61,10 @@ export const INPUTS = TITLES.map((title, i) => ({
   // Phase screen · Manage: the phase an input came in through, and whether it carries a content warning.
   phase: INPUT_PROJECTS[i % 4] === 'green-corridors' ? 'p2' : 'p1', warning: i % 8 === 0, newComments: (i * 2) % 3
 }));
+/** Inputs that wait for feedback: the Input manager's switch badge and the Dashboard's "Waiting for feedback". */
+export const INPUTS_AWAITING_FEEDBACK = INPUTS.filter(i => i.needsFeedback).length;
+/** Of those, the ones assigned to the signed-in admin: the side nav's Input manager count (as the real admin's). */
+export const MY_INPUTS_AWAITING_FEEDBACK = INPUTS.filter(i => i.needsFeedback && i.assignee === ME).length;
 export const USERS = Array.from({length: 10}, (_, i) => ({
   id: `u${i + 1}`, name: `Test user ${i + 1}`, email: `user${i + 1}@example.org`, role: i === 0 ? 'Admin' : 'Resident', joined: `0${(i % 9) + 1} Jan 2027`
 }));
@@ -67,7 +72,7 @@ export const USERS = Array.from({length: 10}, (_, i) => ({
 // Dashboard · Overview, after the real admin's sections (invented numbers).
 export const DASHBOARD = {
   people: [
-    {label: 'Registrations', value: 1284, last30: 46, series: [12, 18, 15, 22, 30, 26, 41, 46]},
+    {label: 'Registrations', value: REGISTERED_USERS, last30: 46, series: [12, 18, 15, 22, 30, 26, 41, 46]},
     {label: 'Participants', value: 873, last30: 61, series: [20, 24, 31, 28, 35, 44, 52, 61]}
   ],
   participation: [
@@ -80,7 +85,7 @@ export const DASHBOARD = {
     {project: 'Safer School Streets', inputs: 131},
     {project: 'Harbour Plan 2030', inputs: 47}
   ],
-  inputStatus: {feedbackGiven: 62, statusChanged: 148, officialUpdates: 95, avgResponseDays: 4},
+  inputStatus: {feedbackGiven: Math.round((1 - INPUTS_AWAITING_FEEDBACK / INPUTS.length) * 100), statusChanged: 148, officialUpdates: 95, avgResponseDays: 4},
   management: [
     {label: 'Emails sent', value: 36, note: '12 automated, 24 custom'},
     {label: 'Invitations', value: 58, note: '14 pending, 44 accepted'},

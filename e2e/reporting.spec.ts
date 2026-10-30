@@ -12,7 +12,9 @@ test('reporting follows the real admin: report list with search and report tabs'
   await expect(tabs.getByRole('tab', {name: /^All reports/})).toHaveAttribute('aria-selected', 'true');
   const table = page.getByRole('grid', {name: 'All reports'});
   for (const c of ['Report', 'Created', 'Last edited']) await expect(table.getByRole('columnheader', {name: c, exact: true})).toBeVisible();
-  await expect(table.getByText(/Modified \d+ days? ago/).first()).toBeVisible();
+  // Both dates in the app's locale, one format (en-GB): "27 Oct 2026", "28 Oct 2026".
+  await expect(table.getByRole('row', {name: /Larkvale park renewal/})).toContainText('27 Oct 2026');
+  await expect(table.getByRole('row', {name: /Larkvale park renewal/})).toContainText('28 Oct 2026');
   // Each tab is a Panel (title, description), its count and search in the Table toolbar, Pagination in its foot.
   await expect(tabs.getByRole('tab', {name: 'All reports (13)'})).toBeVisible();
   const panel = page.getByRole('tabpanel', {name: /^All reports/});
@@ -136,7 +138,7 @@ test('the report list has no gaps; the report view names its own (e2e/report-vie
 
 test('a report row opens the report view: Download answers, the crumb goes back', async ({page}) => {
   await page.goto('/backoffice/#/reporting');
-  await page.getByRole('grid', {name: 'All reports'}).getByRole('row', {name: /Bike lanes survey results/}).getByText(/Modified/).click();
+  await page.getByRole('grid', {name: 'All reports'}).getByRole('row', {name: /Bike lanes survey results/}).getByText('14 Oct 2026').click();
   await expect(page).toHaveURL(/#\/reporting\/report-builder\/r2\/editor$/);
   await expect(page.getByRole('heading', {level: 1, name: 'Bike lanes survey results'})).toBeVisible();
   await page.getByRole('button', {name: 'Download'}).click();

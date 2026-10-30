@@ -318,7 +318,7 @@ test('a row opens the user profile: name, email, role, joined and participation'
   await expect(page).toHaveURL(/#\/users\/u3$/);
   await expect(page.getByRole('heading', {level: 1, name: 'Manager C'})).toBeVisible();
   await expect(page.getByText('user3@example.org')).toBeVisible();
-  await expect(page.getByText('June 12, 2025')).toBeVisible();
+  await expect(page.getByText('12 Jun 2025')).toBeVisible();
   const done = page.getByRole('region', {name: 'Participation'});
   for (const k of ['Ideas', 'Comments', 'Votes', 'Projects']) await expect(done.getByText(k, {exact: true})).toBeVisible();
   a11yReport(await axeOn(page, 'main'));

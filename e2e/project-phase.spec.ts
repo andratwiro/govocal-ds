@@ -325,7 +325,7 @@ test('Build: the Dates card holds a Date range field; Events has one with times'
   const setup = page.getByRole('region', {name: / setup$/});
   await setup.getByRole('button', {name: /^Dates/}).click();
   // It starts on the phase's own dates (1 – 21 Sep 2026), so the end date is there to remove, not to add.
-  await expect(setup.getByRole('group', {name: 'Start date'}).getByRole('spinbutton', {name: /^day/})).toHaveText('1');
+  await expect(setup.getByRole('group', {name: 'Start date'}).getByRole('spinbutton', {name: /^day/})).toHaveText('01'); // en-GB pads the day
   await expect(setup.getByRole('group', {name: 'End date'}).getByRole('spinbutton', {name: /^day/})).toHaveText('21');
   await expect(setup.getByRole('button', {name: 'Remove the end date'})).toBeVisible();
 

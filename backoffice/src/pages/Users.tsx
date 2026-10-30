@@ -10,6 +10,7 @@ import {AlertDialog, Banner, Button, ChoiceCard, DataTable, DataTableBody, DataT
 import {ListBox, ListBoxItem} from 'govocal-ds/base';
 import {LOCALES} from '../data-settings';
 import {ALL_PEOPLE, GROUPS, SEGMENTS, SMART_RULES, type Person} from '../data-users';
+import {useDay} from '../dates';
 import {Gap} from '../Gap';
 import {Page} from './Page';
 
@@ -57,8 +58,6 @@ export function ago(minutes?: number) {
   return `${n} ${unit}${n === 1 ? '' : 's'} ago`;
 }
 
-export const date = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US',
-  {month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC'});
 
 function inView(view: string, groups: Group[], people: Member[]): Member[] {
   // A blocked user leaves every list but Banned emails.
@@ -79,11 +78,12 @@ function compare(a: Person, b: Person, column: string) {
 }
 
 function Count({label, count, icon, kind}: {label: string; count: number; icon?: ReactNode; kind?: string}) {
+  const {format: n} = useNumberFormatter();
   return (
     <Inline elementType="span" gap="8" wrap="nowrap" className="bo-users-option">
       {icon}
       <span className="bo-users-option-label">{label}{kind && <VisuallyHidden> ({kind})</VisuallyHidden>}</span>
-      <Text kind="small" color="meta" slot={null}>{count}</Text>
+      <Text kind="small" color="meta" slot={null}>{n(count)}</Text>
     </Inline>
   );
 }
@@ -163,6 +163,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
   onRemoveFromGroup: (ids: string[]) => void;
 }) {
   const {format: n} = useNumberFormatter();
+  const day = useDay();
   const group = groups.find(g => g.id === view);
   const title = SEGMENTS.find(s => s.id === view)?.label ?? group?.label ?? '';
   const [query, setQuery] = useState('');
@@ -267,7 +268,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
                     <DataTableStack sub={p.role !== 'Registered user' && 'Assigned items'}>{p.role}</DataTableStack>
                   </DataTableCell>
                   <DataTableCell>{ago(p.lastActive)}</DataTableCell>
-                  <DataTableCell>{date(p.joined)}</DataTableCell>
+                  <DataTableCell>{day(p.joined)}</DataTableCell>
                   <DataTableCell align="options">
                     <RowOptions person={p} blocked={!!p.blocked} inManualGroup={manualGroup} onAction={a => onAct(p, a)} />
                   </DataTableCell>
