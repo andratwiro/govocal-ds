@@ -1,5 +1,27 @@
 @import '../theme.css';
 
+/* Set from the props on this element only: never inherited, so a nested part left without a prop falls back to
+   its own default rather than its parent's value. */
+@property --gv-inline-gap {
+  syntax: '*';
+  inherits: false;
+}
+
+@property --gv-inline-row-gap {
+  syntax: '*';
+  inherits: false;
+}
+
+@property --gv-inline-padding-block {
+  syntax: '*';
+  inherits: false;
+}
+
+@property --gv-inline-padding-inline {
+  syntax: '*';
+  inherits: false;
+}
+
 /* Inline: a row of parts that wraps, `gap` apart, centred on each other. The gap and padding come in as spacing
    tokens (`--gv-inline-*`, set by the TSX); no margin of its own, no paint. A list loses its bullets and indent. */
 .gv-inline {

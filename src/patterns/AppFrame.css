@@ -1,5 +1,17 @@
 @import '../components/theme.css';
 
+/* Set from the props on this element only: never inherited, so a nested part left without a prop falls back to
+   its own default rather than its parent's value. */
+@property --gv-app-frame-panel-padding-block {
+  syntax: '*';
+  inherits: false;
+}
+
+@property --gv-app-frame-panel-padding-inline {
+  syntax: '*';
+  inherits: false;
+}
+
 /* App frame (the real admin's layout): the Side nav's column (224, or the 52 rail) and the page beside it on the app's
    grey ground, 8 in, as tall as the window at least. The page's words default to UI type in the body text colour. */
 .gv-app-frame {

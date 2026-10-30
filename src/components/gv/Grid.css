@@ -1,5 +1,47 @@
 @import '../theme.css';
 
+/* Set from the props on this element only: never inherited, so a nested part left without a prop falls back to
+   its own default rather than its parent's value. */
+@property --gv-grid-columns {
+  syntax: '*';
+  inherits: false;
+}
+
+@property --gv-grid-rows {
+  syntax: '*';
+  inherits: false;
+}
+
+@property --gv-grid-areas {
+  syntax: '*';
+  inherits: false;
+}
+
+@property --gv-grid-row-gap {
+  syntax: '*';
+  inherits: false;
+}
+
+@property --gv-grid-column-gap {
+  syntax: '*';
+  inherits: false;
+}
+
+@property --gv-grid-padding-block {
+  syntax: '*';
+  inherits: false;
+}
+
+@property --gv-grid-padding-inline {
+  syntax: '*';
+  inherits: false;
+}
+
+@property --gv-grid-item-area {
+  syntax: '*';
+  inherits: false;
+}
+
 /* Grid: regions in columns and named areas. The tracks, areas, gaps and padding come in as custom properties set by
    the TSX from its props (the gaps and padding always spacing tokens); no margin of its own, no paint. A list loses
    its bullets and indent. A Grid item takes its area, span and start the same way. */

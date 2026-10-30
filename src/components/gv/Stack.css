@@ -1,5 +1,22 @@
 @import '../theme.css';
 
+/* Set from the props on this element only: never inherited, so a nested part left without a prop falls back to
+   its own default rather than its parent's value. */
+@property --gv-stack-gap {
+  syntax: '*';
+  inherits: false;
+}
+
+@property --gv-stack-padding-block {
+  syntax: '*';
+  inherits: false;
+}
+
+@property --gv-stack-padding-inline {
+  syntax: '*';
+  inherits: false;
+}
+
 /* Stack: a column of parts, `gap` apart. The gap and padding come in as spacing tokens (`--gv-stack-*`, set by the
    TSX from its props); it has no margin of its own and paints nothing. A list loses its bullets and indent. */
 .gv-stack {
