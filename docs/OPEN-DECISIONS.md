@@ -45,6 +45,7 @@ question for each: add a Figma variable (code then names it), or keep the stand-
 
 ## Components
 
+- Toast's slide: keep it, or drop it everywhere? While it runs (about 200 ms) the browser takes every click on the page — a toast's own Undo and × now skip it, and a toast arriving after a page action still slides — see `components-status-feedback-toast--undo-then-carry-on`.
 - Avatar: a grey version for assignees and commenters, as the prototype draws? — the filled avatar; "Unassigned" has a dashed ring — see `components-data-display-avatar--all-variants`.
 - Badge: should a dropdown card's pill turn teal once it holds a value? — Card passes a plain pill — see `components-layout-containers-card--review-pill-dropdown`.
 - Breadcrumbs: rename the project from the breadcrumb? — not built — see `components-navigation-breadcrumbs--project`.

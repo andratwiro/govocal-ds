@@ -56,6 +56,46 @@ Calls made fixing the bugs the component-page writers found (benchmark-gaps plan
   comment above its meta wins**; a part's Purpose ends at the first sentence end (". ", "? ", "! "), never at a
   semicolon.
 
+## Small fixes (30 Oct 2026, benchmark-gaps Task 8b)
+
+Calls made while fixing the deep dive's small list and the bugs the page writers found (benchmark-gaps plan, Task 8b).
+
+- Tooltip on load: React Aria takes a focus made before any key for keyboard focus, so a control the page focused
+  showed its tooltip on load → **Tooltip trigger ignores a focus open until the person has pressed a key; hover still
+  opens** (a pointer press already makes focus a pointer one; a mouse move can't count, Chromium sends one on load) → the deep dive's rule: keyboard focus or hover, never a focus the page made itself. (In a
+  headless browser the "To platform" tooltip on load is hover: the pointer rests at 0,0, over that link.)
+- Side nav hidden: push the page or lie over it → **`isHidden`, then `isOpen` / `onOpenChange` open it over the page at
+  its open width, a modal drawer with the overlay shadow and no backdrop (focus held in it, Esc and a click outside
+  close it, focus back to the toggle)** → the prototype opens it over the page; holding focus keeps the keyboard in the
+  menu the person asked for.
+- Tree flush: a look or a boolean → **`isFlush`** (rule 1, as Panel's), and the row slot is **`trailing`**, the twin of
+  Data table's `leading`.
+- Choice card thumbnails: a boolean or a layout → **`layout="thumbnail"`** (rule 5: a layout preset) → the title stays the
+  tile's name, visually hidden; the mark goes and the selected ring says it.
+- Panel borderless: `isBorderless` or a variant → **`variant="plain"`** (rule 2: a look), the word the report plan uses
+  for Stat tile's look without a card.
+- Colour swatch in a table cell: shrink by context or a size → **`size` 16 · 24 · 32, the page picks 16 in a cell** → a
+  part never reaches into another's markup (`tests/own-block.test.mjs`).
+- File list's Delete: a quiet Button or a button in the Link's look → **a button in the small blue words beside View**
+  → it stays on the page, so its role is a button; the View / Delete pair still reads as one.
+- Toast blocking clicks: while a view transition runs, Chromium sends every click to the document, and
+  `::view-transition { pointer-events: none }` doesn't change that (tried: the click still landed on `html`) → **the
+  updates a toast's own Undo and × make skip the slide; a toast that arrives after a page action still slides** → the
+  reported case (a press right after Undo) works, and the slide stays where nothing is being pressed. Whether to drop the
+  slide everywhere is open (docs/OPEN-DECISIONS.md).
+- Project header archived: a third look → **`status="archived"`: a secondary Archived ▾ with the archive icon, whose
+  menu restores it; a phase wears the grey badge reading Archived** → neither draft nor live, and the back office's
+  flow restores from that menu.
+- Phase timeline delete: every row or not the current one → **not the phase being viewed** → the back office's rule
+  (a phase can't be deleted from its own screen) moves into the Pattern.
+- Rich text editor's error: the multilingual editor's own `role="alert"` line or the editor's → **the editor shows
+  `errorMessage` while `isInvalid`, under the box with the description, both describing the text area** → as every
+  other field; the multilingual editor hands on `lang`, `dir`, the error, the description and `isDisabled`.
+- Coachmark ×: Got it, Skip or both → **Skip (`onSkip`) only** → × is "not now"; Got it stays the one acknowledgement.
+- Selection bar and Filter chips leaving with focus inside: a new prop or a default → **a default, no prop: the Selection
+  bar puts focus on the nearest list or table; Filter chips on the Filter menu's button beside them, else the table**,
+  found from where the part sat (`src/components/useFocusOnLeave.ts`) → pages get it without a change; a prop can come
+  when a page needs another target.
 ## Report parts (30 Oct 2026)
 
 Calls made while building the report builder's missing parts (benchmark-gaps plan, Task 8d; the back office's deep
