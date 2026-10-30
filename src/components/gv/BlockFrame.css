@@ -7,7 +7,8 @@
  * - selected: the selected border (the prototype's 1.5 snaps to the 1 width token); the tag filled in the selected strong fill with inverse words;
  * - focus: the focus ring in the same place.
  * The tag hangs off the top start (20 tall, radius 6 6 6 0, Small strong; the prototype's 11px snaps to 12), 28
- * above the content. The toolbar card floats off the top end (or centred, for a text block's format bar), 36 above:
+ * above the content. The toolbar card floats off the top end, 36 above (a text block's format bar: centred, over the
+ * tag's row, so the tag stays whole):
  * the panel surface, a hairline, radius 8, the overlay shadow, padding 2. The ✦ mark sits outside the end edge, in
  * the accent icon colour. Dragging dims the block.
  */
@@ -83,7 +84,11 @@
   inset-block-start: calc(-1 * var(--gv-space-40));
   inset-inline-end: calc(-1 * var(--gv-space-6));
 
+  /* A text block's format bar is wide enough to reach the tag: centred, it rides above the tag's row (its foot 4
+     over the tag's top), so the tag never slides under it. */
   [data-custom-toolbar] > & {
+    inset-block-start: auto;
+    inset-block-end: calc(100% + var(--gv-space-28) + var(--gv-space-4));
     inset-inline: 0;
     display: flex;
     justify-content: center;

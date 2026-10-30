@@ -21,7 +21,7 @@
    selected navy.
 2. **Tag**: the block's kind icon and name, hanging off the top start; grey on hover, filled navy when selected.
 3. **Toolbar**: a card of 24 Icon buttons off the top end (↑ ↓ ⧉ and the bin), only while selected; centred for a
-   custom `toolbar`.
+   custom `toolbar`, and then raised over the tag's row, so a wide format bar never covers the tag.
 4. **✦ mark** (`isAiMade`): on the end edge, in the accent icon colour.
 5. **Insert line**: a hairline with a 24 round + in the middle, shown on hover, focus, or as the target.
 
@@ -66,5 +66,7 @@ named tools with tooltips, ends that turn off (`canMoveUp`, `canMoveDown`), and 
 
 ## Changes
 
+- 30 Oct 2026: a custom `toolbar` (a text block's wide format bar) rides above the tag instead of on its row, where it
+  slid over the tag and cut it off.
 - 30 Oct 2026: built (hover, highlighted, selected, pinned, AI-made, dragging, a custom toolbar, the insert line), with
   this page.

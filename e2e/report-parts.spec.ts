@@ -151,6 +151,10 @@ test('rich text toolbar, floating: a block-type segment, the formatting and the 
   await expect(page.getByRole('toolbar', {name: 'Formatting'}).getByRole('button')).toHaveCount(6);
   await open(page, 'components-layout-containers-block-frame--with-format-bar');
   await expect(page.getByRole('group', {name: 'Text'}).getByRole('toolbar', {name: 'Formatting'})).toBeVisible();
+  // The wide format bar rides above the block's tag, so the tag is never slid under it and cut off.
+  const tag = (await page.locator('.gv-block-frame__tag').boundingBox())!;
+  const formatBar = (await page.getByRole('toolbar', {name: 'Formatting'}).boundingBox())!;
+  expect(formatBar.y + formatBar.height).toBeLessThanOrEqual(tag.y);
   await report(page);
 });
 

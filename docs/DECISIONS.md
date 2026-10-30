@@ -992,3 +992,4 @@ Calls made moving the back office's overview and phase screens onto the project-
 ## Gaps the builders found (30 Oct 2026, night)
 
 - App frame had no hidden-nav state, so the back office set the frame's columns from its own stylesheet → **`isNavHidden` on App frame (the nav column takes no room), paired with `SideNav isHidden`** → the frame owns its columns; the name follows `isNavFolded`.
+- Block frame: a text block's format bar, centred on the tag's row, covered the tag on a narrow sheet → **the custom toolbar rides above the tag's row (its foot 4 over the tag); the narrow block tools stay on the tag's row at the end** → the tag stays whole without truncating its name; the block tools are short enough to share the row.
