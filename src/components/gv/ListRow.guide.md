@@ -6,6 +6,8 @@
   when needed) and its status.
 - With `select` when people tick ideas to act on several at once (the prototype's Manage table); pass the header's
   `selectAll` too, so the columns line up.
+- With `isRow` under a List header: the header makes the list a table, and `isRow` makes each List row one of its rows
+  (its checkbox, title and status are cells).
 
 ## When not to use
 
@@ -23,7 +25,8 @@
 3. **Status cell**: the status word, "Under consideration".
 4. **Trail slot** (28 wide): empty, under the header's "Add column".
 
-A ticked row is tinted.
+A ticked row is tinted. With `isRow`, the row is `role="row"` and the lead (with `select`), title and status are
+`role="cell"`.
 
 ## Behaviour
 
@@ -53,7 +56,8 @@ attention", and a decorative thumbnail hidden from assistive tech.
 
 **You still own:**
 - A checkbox name that says which row it ticks.
-- The list around the rows (a `role="list"` or a table) and the header's select-all, so people know how many there are.
+- The list around the rows (a `role="list"` or, under a List header, a `role="table"` with `isRow` on each row) and the
+  header's select-all, so people know how many there are.
 - Saying what the warning means elsewhere on the page; the mark only says it needs attention.
 
 ## Related
@@ -73,6 +77,7 @@ attention", and a decorative thumbnail hidden from assistive tech.
 
 ## Changes
 
+- 30 Oct 2026: `isRow`, so a List row is a row of the table a List header heads (it needed a row and a cell around it).
 - 30 Oct 2026: Behaviour names React Aria's parts as docs/REACT-ARIA.md now reads them (CheckboxField and
   CheckboxButton, through Checkbox).
 - 30 Oct 2026: the stories' thumbnail is a local picture (`src/stories/images`), not a photo from the web.

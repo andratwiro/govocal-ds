@@ -43,22 +43,32 @@ export interface ListRowProps extends PlacementProps {
   select?: ListRowSelect;
   /** Its own words, over `listRowLabels`. */
   labels?: Partial<ListRowLabels>;
+  /**
+   * The row is a row of a table (`role="row"`), its checkbox, title and status each a cell: under a `ListHeader`,
+   * whose heads make the list a table (`role="table"`). Left out, it is plain content (a list item's, a card's).
+   *
+   * @default false
+   */
+  isRow?: boolean;
 }
 
 /**
  * The content of one Ideation-method list row: a title cell (with an optional
  * thumbnail and warning mark) and a status cell, between a leading 28px slot
  * (checkbox) and a trailing 28px slot (under the header's add-column button).
- * Pair it with `ListHeader` (pass `selectAll` so the columns line up).
+ * Pair it with `ListHeader` (pass `selectAll` so the columns line up) and `isRow`, so each row is a row of the
+ * table the header heads. A table people sort, filter and open rows of is a Data table.
  */
-export function ListRow({title, status, thumbnail, hasWarning, select, labels, className, style}: ListRowProps) {
+export function ListRow({title, status, thumbnail, hasWarning, select, labels, isRow, className, style}: ListRowProps) {
   const l = mergeLabels(listRowLabels, labels);
+  const cell = isRow ? 'cell' : undefined;
   return (
     <div
       className={clsx('gv-list-row', className)} style={style}
+      role={isRow ? 'row' : undefined}
       data-selectable={select ? true : undefined}
       data-selected={select?.isSelected || undefined}>
-      <span className="gv-list-row__lead">
+      <span className="gv-list-row__lead" role={isRow && select ? 'cell' : undefined}>
         {select && (
           <Checkbox
             isSelected={select.isSelected}
@@ -68,7 +78,7 @@ export function ListRow({title, status, thumbnail, hasWarning, select, labels, c
         )}
       </span>
       <div className="gv-list-row__cells">
-        <div className="gv-list-row__title-cell">
+        <div className="gv-list-row__title-cell" role={cell}>
           {thumbnail && (
             <img className="gv-list-row__thumbnail" src={thumbnail} alt="" aria-hidden />
           )}
@@ -85,7 +95,7 @@ export function ListRow({title, status, thumbnail, hasWarning, select, labels, c
             </span>
           )}
         </div>
-        <div className="gv-list-row__status-cell">{status}</div>
+        <div className="gv-list-row__status-cell" role={cell}>{status}</div>
       </div>
     </div>
   );

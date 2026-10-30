@@ -2623,6 +2623,7 @@ Component, from `src/components/gv/ListRow.tsx`.
 
 - `className?: string`
 - `hasWarning?: boolean`
+- `isRow?: boolean`
 - `labels?: Partial<ListRowLabels>`
 - `select?: ListRowSelect`
 - `status: string`

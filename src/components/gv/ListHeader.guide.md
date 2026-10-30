@@ -57,7 +57,7 @@ static columns as plain text.
 
 **You still own:**
 - The table around it: the header is a row, so the list it heads is a `role="table"` named for what it lists
-  ("Options", "Proposals"), with its rows as `role="row"`.
+  ("Options", "Proposals"), with its rows as `role="row"` (List row: `isRow`).
 - `sortDirection` on the sorted column, flipped when the page turns the order round.
 - Telling people the list is now sorted by another column (the arrow moves; say it if order matters).
 

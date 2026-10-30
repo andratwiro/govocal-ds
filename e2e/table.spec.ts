@@ -78,3 +78,16 @@ test('in a panel: search, quick view and pages drive the count; the metric chip 
   await expect(heading).toHaveText('40 ideas');
   a11yReport(await axeViolations(page, '.gv-panel'));
 });
+
+test('List header › Manage table: each List row is a row of the table, its cells under the column heads', async ({page}) => {
+  await page.goto(story('components-data-display-list-header--manage-table'));
+  const table = page.getByRole('table', {name: 'Ideas awaiting review'});
+  const header = table.getByRole('row').first();
+  await expect(header.getByRole('columnheader')).toHaveCount(4); // select all, Idea, Status, Add column
+  const row = table.getByRole('row').nth(1);
+  // Select, title, status: one cell under each of the first three heads, no wrapper row or cell around the List row.
+  await expect(row.getByRole('cell')).toHaveCount(3);
+  await expect(row.getByRole('cell').nth(0).getByRole('checkbox')).toHaveCount(1);
+  await expect(row.locator('[role="row"]')).toHaveCount(0);
+  a11yReport(await axeViolations(page, '#storybook-root'));
+});

@@ -113,8 +113,8 @@ const IDEAS = [
 /**
  * The prototype's Manage table: `ListHeader` with its select-all, then `ListRow`s with theirs.
  * The header checkbox selects every row, and shows a dash while only some are picked. The header is a row of column
- * heads, so the list is a table (`role="table"`); a `ListRow` isn't a row itself (it also sits in plain lists), so
- * each one goes in a row and a cell.
+ * heads, so the list is a table (`role="table"`), and each `ListRow` is one of its rows (`isRow`): its checkbox, title
+ * and status are cells under the heads.
  */
 export const ManageTable: Story = () => {
   const [picked, setPicked] = useState<Set<number>>(new Set());
@@ -142,16 +142,14 @@ export const ManageTable: Story = () => {
       </div>
       <div role="rowgroup">
         {IDEAS.map(([title, status, warning], i) => (
-          <div role="row" key={i}>
-            <div role="cell">
-              <ListRow
-                title={title}
-                status={status}
-                hasWarning={warning}
-                select={{isSelected: picked.has(i), 'aria-label': `Select: ${title}`, onChange: on => pick(i, on)}}
-              />
-            </div>
-          </div>
+          <ListRow
+            key={i}
+            isRow
+            title={title}
+            status={status}
+            hasWarning={warning}
+            select={{isSelected: picked.has(i), 'aria-label': `Select: ${title}`, onChange: on => pick(i, on)}}
+          />
         ))}
       </div>
     </div>
