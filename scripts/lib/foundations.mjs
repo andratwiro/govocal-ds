@@ -83,6 +83,9 @@ export function parseFoundations(page, {names = {}, renames = []} = {}) {
       const known = tokens.color[family][step.join('-')];
       if (known && !sameColor(known.$value, value)) throw new Error(`${prim} has two values: ${known.$value.hex} and ${value.hex}`);
       tokens.color[family][step.join('-')] ??= {$type: 'color', $value: value};
+      // The Primitives row draws each colour primitive (`primitive/slate-750`) so a primitive stays when no semantic swatch
+      // points at it any more; it is a primitive only, never a semantic token.
+      if (m[1] === 'primitive') continue;
       const id = rect('Swatch').boundVariables?.fills?.[0]?.id;
       const css = nameOf(id, n.name, cssOf(m[1], m[2]), prim);
       if (!css) continue;

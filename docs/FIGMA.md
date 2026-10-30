@@ -37,6 +37,8 @@ Code has things Figma doesn't, marked "Not in Figma":
    It reads the **drawings** on the Foundations page, not the Variables themselves: Figma's Variables REST API is
    Enterprise-only. What it recognises (`scripts/lib/foundations.mjs`):
    - a frame named `group/role` holding a rectangle called "Swatch" → a colour;
+   - a frame named `primitive/<family>-<step>` (the Primitives row) → that colour primitive only, so a primitive no
+     semantic swatch points at (a tab's slate 750, an illustration's teal 75) still reaches code;
    - `space/<n>` with a "Bar" → a spacing step;
    - `radius/<n>` with a "Shape" → a radius;
    - `shadow/<name>` with a "Sample" → a shadow;

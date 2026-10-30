@@ -6,6 +6,14 @@ and versions follow [Semantic Versioning](https://semver.org/).
 <!-- 0.1.0's counts were measured on main at 9f84f84 (29 Oct). Re-measure them once the public entry point, the token
 rename and the new components land. -->
 
+## Unreleased
+
+### Changed
+
+- **Figma caught up with code (30 Oct).** The token pull reports no difference: Figma's variables carry the code's
+  names, the base-4 spacing and radius ladders, and the merges; `space/40` and `surface/inverse` now come from Figma
+  (out of `tokens/semantic.tokens.json`). The Foundations page draws a Primitives row, read as primitives only.
+
 ## 0.1.0 — 2026-10-30
 
 The system as it passes to the designer and the front-end team on 2 Nov 2026: React Aria Components 1.22 painted with
