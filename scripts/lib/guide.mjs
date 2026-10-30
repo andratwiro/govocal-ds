@@ -43,9 +43,17 @@ export function boldNames(md) {
   return [...md.matchAll(/\*\*([^*]+)\*\*/g)].map(m => m[1].trim());
 }
 
-/** Bullets (`- …`), one string each. */
+/** Bullets (`- …`), one string each. A bullet wrapped onto indented lines is one string: its continuation lines are
+ * joined to it, so a sentence is never cut at the wrap. */
 export function bullets(md) {
-  return md.split('\n').filter(l => /^\s*[-*] /.test(l)).map(l => l.replace(/^\s*[-*] /, '').trim());
+  const out = [];
+  let open = false;
+  for (const l of md.split('\n')) {
+    if (/^\s*[-*] /.test(l)) { out.push(l.replace(/^\s*[-*] /, '').trim()); open = true; }
+    else if (open && /^\s+\S/.test(l)) out[out.length - 1] += ` ${l.trim()}`;
+    else open = false;
+  }
+  return out;
 }
 
 /** The keyboard table's rows: a Markdown table whose first header cell is "Key". Cells are trimmed strings. */
