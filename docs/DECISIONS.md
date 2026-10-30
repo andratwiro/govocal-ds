@@ -895,3 +895,10 @@ checkboxes on list rows, Checkbox quiet (dimmed select-all), Tooltip with a tail
 
 **Not built yet:** a grey avatar variant for assignees and commenters; the chosen-value teal on a dropdown card's pill;
 renaming the project from the breadcrumb.
+
+## Project screens (30 Oct 2026)
+
+Calls made building the project screens' parts from the back office's deep dive (`project/REPORT.md` §3).
+
+- A tint for a chosen value as a new Badge variant vs a state → **`isSelected`, a state on any variant, painted as the value tint** → the deep dive asks for "Badge (Value) isSelected"; a reviewed row's grey pill turns teal without changing what kind of badge it is.
+- Reviewed's check-circle drawn at 16 vs To review's ring at 14 → **both 14** → the deep dive: "the same size as the dashed To review"; a row no longer shifts when it turns Reviewed.

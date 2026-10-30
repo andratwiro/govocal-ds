@@ -28,5 +28,9 @@ export const ToReview: Story = {name: 'To review', args: {status: 'to-review'}};
 /** Not in Figma (the prototype's `.rv--todo` "To set"): a decision with no value yet. */
 export const ToSet: Story = {name: 'To set', args: {status: 'to-set'}};
 
-/** Not in Figma (the prototype's `.rv--done`): after the admin visited the card. */
+/** Not in Figma (the prototype's `.rv--done`): a green check-circle and a green word, after the admin opened the card.
+ * The mark is the same 14 as To review's ring. */
 export const Reviewed: Story = {args: {status: 'reviewed'}};
+
+/** All three, right to left: the mark leads at the right. */
+export const RightToLeft: Story = {name: 'Right to left', globals: {direction: 'rtl'}, render: AllVariants.render};

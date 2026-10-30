@@ -103,12 +103,12 @@ what would survive a change of base library. It decides nothing: the base librar
 | Overlays › Modal | `Button`, `Heading`, `Dialog`; through Modal: `Modal` | – | – | yes | 10 |
 | Overlays › Side panel | `Dialog`, `Toolbar`; through Icon button: `Button`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 15 |
 | Overlays › Tooltip | `OverlayArrow`, `Tooltip`, `TooltipTrigger` | `TooltipProps` | – | yes | 1 |
-| Status & feedback › Badge | `Button` | – | – | yes | 8 |
+| Status & feedback › Badge | `Button` | – | – | yes | 10 |
 | Status & feedback › Banner | `Link`; through Icon button: `Button` | – | – | yes | 14 |
 | Status & feedback › Empty state | None: plain React and CSS | – | – | yes | 10 |
 | Status & feedback › Missing part | None: plain React and CSS | – | – | yes | 2 |
 | Status & feedback › New dot | None: plain React and CSS | – | – | yes | 2 |
-| Status & feedback › Review status | None: plain React and CSS | – | – | yes | 4 |
+| Status & feedback › Review status | None: plain React and CSS | – | – | yes | 5 |
 | Status & feedback › Skeleton | None: plain React and CSS | – | – | yes | 5 |
 | Status & feedback › Status badge | None: plain React and CSS | – | – | yes | 3 |
 | Status & feedback › Toast | `UNSTABLE_ToastRegion`, `UNSTABLE_Toast`, `UNSTABLE_ToastQueue`, `UNSTABLE_ToastContent`, `Text`, `Button`; through Button: `ProgressBar` | – | – | yes | 7 |

@@ -27,6 +27,8 @@
 3. **Label**: the words or the number, one line.
 4. **Remove ×** (with `onRemove`): a 12 × at the end; the badge takes the outlined look.
 
+`isSelected` tints any badge teal as a chosen or reviewed value (a reviewed setup row's pills).
+
 ## Behaviour
 
 A badge is display only unless it is removable; then its × is a
@@ -73,6 +75,7 @@ for what it removes.
 
 ## Changes
 
+- 30 Oct 2026: `isSelected`, the teal tint for a chosen or reviewed value (a reviewed Card's pills).
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: the remove ×'s name comes through `labels`.
 - 29 Oct 2026: outlined, value and count looks, and a removable × (`onRemove`), beside Figma's filled pill.

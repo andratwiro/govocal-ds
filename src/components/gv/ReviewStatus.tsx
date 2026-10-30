@@ -20,7 +20,7 @@ export const reviewStatusLabels: ReviewStatusLabels = {toReview: 'To review', to
 export interface ReviewStatusProps extends PlacementProps {
   /**
    * Where a card's review stands. Figma draws "To review"; the prototype adds "To set" (a decision with no value
-   * yet) and "Reviewed" (green, once the admin has visited the card).
+   * yet) and "Reviewed" (a green check-circle and a green word, once the admin has opened the card).
    *
    * @default 'to-review'
    */
@@ -41,10 +41,11 @@ function Todo() {
   );
 }
 
-/* The prototype's `.rv--done` mark: a filled 15 circle with a white tick, drawn at 16. */
+/* The prototype's `.rv--done` mark: a green check-circle (a filled circle with a white tick), drawn at 14, the same
+   box as To review's dashed ring, so a row keeps its height and its words their place when it turns Reviewed. */
 function Done() {
   return (
-    <svg className="gv-review-notice__icon" viewBox="0 0 16 16" width={16} height={16} aria-hidden="true">
+    <svg className="gv-review-notice__icon" viewBox="0 0 16 16" width={14} height={14} aria-hidden="true">
       <circle className="gv-review-notice__fill" cx="8" cy="8" r="7.5" />
       <path
         className="gv-review-notice__tick"

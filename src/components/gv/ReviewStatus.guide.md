@@ -15,7 +15,7 @@
 
 ## Anatomy
 
-1. **Mark**: a dashed ring (to review, to set) or a filled circle with a tick (reviewed).
+1. **Mark**: a dashed ring (to review, to set) or a green check-circle (reviewed), both 14.
 2. **Word**: "To review", "To set" or "Reviewed".
 
 One line, small.
@@ -54,6 +54,8 @@ Not interactive: the status can't be reached with Tab and answers no keys.
 
 ## Changes
 
+- 30 Oct 2026: Reviewed's check-circle is drawn at 14, the size of To review's ring, so a row doesn't shift when it
+  turns Reviewed.
 - 30 Oct 2026: this page written.
 - 29 Oct 2026: its words come through `labels`; the status axis is one word, `status`.
 - 29 Oct 2026: built from Figma and the prototype (as Review notice, renamed Review status).

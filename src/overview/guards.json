@@ -151,6 +151,10 @@
     "group": "Back office screens",
     "what": "A phase's Manage and Build tabs list ideas with metrics and filters, select rows, and pass the accessibility check."
   },
+  "e2e/project-screens.spec.ts": {
+    "group": "Components behave",
+    "what": "The project screens' parts: a reviewed setup row tints its pills, the Review status marks line up, and the header, rail, phone preview and popovers work by keyboard."
+  },
   "e2e/projects.spec.ts": {
     "group": "Back office screens",
     "what": "The back office's Projects list shows views, filters, a full table, paging, row menus, and the New project flow."

@@ -33,16 +33,21 @@ export interface BadgeProps extends PlacementProps {
    * together are a `TagPicker`, which adds arrow keys between them and Backspace.
    */
   onRemove?: () => void;
+  /**
+   * A chosen or reviewed value: the pill takes the value tint (surface-info under text-info) whatever its variant.
+   * A setup row's pills turn selected once the row has been reviewed (the prototype's `.pjsum-pill--on`). Not in Figma.
+   */
+  isSelected?: boolean;
   /** Its own words (the ×'s name: "Remove <children>"), over `badgeLabels`. */
   labels?: Partial<BadgeLabels>;
 }
 
 /** A small rounded label, e.g. a content type, a status, a chosen value or a count. Display-only unless removable. */
-export function Badge({icon, children, variant = 'filled', onRemove, labels, className, style}: BadgeProps) {
+export function Badge({icon, children, variant = 'filled', onRemove, isSelected, labels, className, style}: BadgeProps) {
   const name = mergeLabels(badgeLabels, labels)
     .remove(typeof children === 'string' || typeof children === 'number' ? String(children) : undefined);
   return (
-    <span className={clsx('gv-pill', className)} style={style} data-variant={onRemove ? 'outlined' : variant} data-removable={onRemove ? true : undefined}>
+    <span className={clsx('gv-pill', className)} style={style} data-variant={onRemove ? 'outlined' : variant} data-removable={onRemove ? true : undefined} data-selected={isSelected || undefined}>
       {icon}
       <span className="gv-pill__label">{children}</span>
       {onRemove && (

@@ -18,7 +18,7 @@
   color: var(--gv-icon-tertiary);
 }
 
-/* Reviewed has to catch the eye (the prototype, 22 Oct): green, medium, a filled 16 check, no chip. */
+/* Reviewed has to catch the eye (the prototype, 22 Oct): green, medium, a filled check-circle at To review's 14, no chip. */
 .gv-review-notice[data-status='reviewed'] {
   font: var(--gv-type-small-strong);
   color: var(--gv-text-success);

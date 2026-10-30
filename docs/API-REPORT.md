@@ -487,6 +487,7 @@ Component, from `src/components/gv/Badge.tsx`.
 - `children: ReactNode`
 - `className?: string`
 - `icon?: ReactNode`
+- `isSelected?: boolean`
 - `labels?: Partial<BadgeLabels>`
 - `onRemove?: () => void`
 - `style?: CSSProperties`

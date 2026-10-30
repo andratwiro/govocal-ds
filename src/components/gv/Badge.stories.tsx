@@ -62,6 +62,28 @@ export const Value: Story = () => (
   </div>
 );
 
+/**
+ * Not in Figma: `isSelected` tints any badge as a chosen or reviewed value. A setup row (Card) selects its pills once
+ * the row has been reviewed: grey "Trending" while it waits, teal "Trending" after.
+ */
+export const Selected: Story = () => (
+  <div style={row}>
+    <Badge>Trending</Badge>
+    <Badge isSelected>Trending</Badge>
+    <Badge isSelected icon={<Lightbulb aria-hidden size={14} />}>Idea</Badge>
+  </div>
+);
+
+/** Selected badges, right to left: the icon leads at the right. */
+export const RightToLeft: Story = () => (
+  <div style={row}>
+    <Badge isSelected icon={<Lightbulb aria-hidden size={14} />}>فكرة</Badge>
+    <Badge>6 أسئلة</Badge>
+  </div>
+);
+RightToLeft.storyName = 'Right to left';
+RightToLeft.globals = {direction: 'rtl'};
+
 /** Not in Figma: a number beside a title or a group (a table's total, a tag group's size). Figures keep one width. */
 export const Count: Story = () => (
   <div style={row}>
