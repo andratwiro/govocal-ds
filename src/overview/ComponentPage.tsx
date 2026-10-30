@@ -54,7 +54,7 @@ const WORDS: [string, string][] = [
   ['labels', 'the words a part says on its own (a × button\'s name, "Clear"). They come in English and a screen passes them translated.'],
   ['Token', 'a named design value (colour, space, type) from Foundations. Tokens lists the ones this part uses.'],
   ['Not in Figma', 'the part exists in code with no Figma component yet: design from its stories, and ask the designer before drawing a new one.'],
-  ['Built by agents', 'made by AI coding assistants; Provenance says whether a person has reviewed it.'],
+  ['Built by AI agents', 'made by AI coding assistants; Provenance says whether a person has reviewed it.'],
   ['WAI-ARIA APG pattern', "the W3C's reference for how this kind of control works with a keyboard and a screen reader."],
   ['Focus, Tab stop', 'focus is where the keyboard is; a Tab stop is a place Tab lands on.'],
   ['Tested by', 'the automated test that proves a keyboard row: a story (open it, then its Interactions panel) or a browser test in the repo.'],
