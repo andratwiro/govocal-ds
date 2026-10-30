@@ -685,7 +685,7 @@ dashboards, Build tab).
 
 - A rail-only label vs a general one → **Section label in Layout & containers**, with an optional heading `level` and a 16 icon → it heads groups in the rail, Access rights and Choice card groups (Choice card's own heading now renders it).
 - Next actions and Insights rows drawn differently → **one Action row**; Done = the tinted tile with the brand border; Working = a busy group with a progress ring, nothing to press.
-- The prototype's full project bar vs Figma's levels → **the bar is built into Project header**, switched on by `modes`, `people`, `onSave`, `publishState` or `shareMenu`; the Figma-level API still works.
+- The prototype's full project bar vs Figma's levels → **the bar is built into Project header**, switched on by `modes`, `people`, `onSave`, `status` (on the project level) or `shareMenu`; the Figma-level API still works.
 - Figma's dark bezel vs the prototype's light device → **the light device (343×683, radius 22)**; one hover/focus look for project and phase (lift, ring, dim, a smoked pill); the eye and caption moved out to Phone stage, so the phone stays reusable.
 - The prototype's 26-wide switch in notification rows → **the system Switch (36)** → one switch in forms.
 - Default vs set-for-this-phase values → **grey vs dark, and different words** → colour is never the only signal.
@@ -694,7 +694,7 @@ dashboards, Build tab).
 - Form field summary: a GridList (the plan) vs a static list → **a static list** → its rows do nothing, so a grid only adds tab stops; six rows, then "N more".
 - A disabled action that explains itself → **with a `tooltip`, Card's `isDisabled` uses `aria-disabled`** (focusable, no press) → a disabled button can't be hovered, so it can't say why. Card radios are deprecated in favour of Choice card.
 - The rail's delete shown only on hover (`display: none`) → **faded in, always in the tab order** → keyboard users can reach it.
-- Volunteering row in Build → **`variant="build"`** (thumbnail, "No sign-ups yet" / "N signed up", Edit and Delete) → the content differs, which args can't express.
+- Volunteering row in Build → **`layout="build"`** (thumbnail, "No sign-ups yet" / "N signed up", Edit and Delete) → the content differs, which args can't express.
 **Redesign: Community monitor** (on the current components)
 - Reports as Cards with an open chevron vs every other admin list → **a Panel (Create report in the head) over a Data table, row menu and Pagination**; a row opens the report → one list shape.
 - Managers as Badges with "Add a manager" beside them vs the person cells of Users and Projects → **a Data table with person cells in a Panel; remove from the row menu, with an Undo toast** → people read the same everywhere.
