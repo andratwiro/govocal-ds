@@ -1,8 +1,10 @@
 import {useState, type ReactNode} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, fn, userEvent, within} from 'storybook/test';
-import {BarChart3, FileText, Hash, Type} from 'lucide-react';
+import {BarChart3, FileText, Hash, Sparkles, Trash2, Type} from 'lucide-react';
 import {BlockFrame, BlockInsertLine} from './BlockFrame';
+import {IconButton} from './IconButton';
+import {RichTextToolbar} from './RichTextToolbar';
 import {Stack} from './Stack';
 import {Text} from './Text';
 
@@ -50,6 +52,24 @@ export const Selected: Story = {args: {isSelected: true, canMoveUp: false}, rend
 export const Pinned: Story = {
   args: {isSelected: true, isPinned: true, label: 'Title page', icon: <FileText aria-hidden />},
   render: args => <Sheet><BlockFrame {...args}><Body title="Moving the city 2026" /></BlockFrame></Sheet>
+};
+
+/** A text block: the floating Rich text toolbar replaces the tools, centred over the block (it carries Delete). */
+export const WithFormatBar: Story = {
+  name: 'With format bar',
+  args: {isSelected: true, label: 'Text', icon: <Type aria-hidden />},
+  render: args => (
+    <Sheet>
+      <BlockFrame {...args} toolbar={
+        <RichTextToolbar variant="floating" blockType="section" onBlockTypeChange={fn()} onLink={fn()} actions={
+          <>
+            <IconButton size={24} aria-label="Ask the assistant"><Sparkles aria-hidden /></IconButton>
+            <IconButton size={24} aria-label="Delete"><Trash2 aria-hidden /></IconButton>
+          </>
+        } />
+      }><Body /></BlockFrame>
+    </Sheet>
+  )
 };
 
 /** Made by the assistant: the ✦ mark on the end edge, shown at rest too. */

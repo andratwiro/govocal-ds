@@ -133,3 +133,23 @@ test('block frame: hover shows the tag; the AI-made mark has a name; the selecte
   await expect(page.getByRole('group', {name: 'By the numbers'})).toHaveCSS('outline-color', 'rgb(4, 77, 108)');
   await report(page);
 });
+
+test('rich text toolbar, floating: a block-type segment, the formatting and the block\'s actions in one toolbar', async ({page}) => {
+  await open(page, 'components-forms-rich-text-toolbar--floating-variant');
+  const bar = page.getByRole('toolbar', {name: 'Formatting'});
+  const types = bar.getByRole('radiogroup', {name: 'Block type'});
+  await expect(types.getByRole('radio')).toHaveText(['Section', 'Sub-section', 'Text']);
+  await expect(types.getByRole('radio', {name: 'Section', exact: true})).toBeChecked();
+  await types.getByRole('radio', {name: 'Text'}).click();
+  await expect(types.getByRole('radio', {name: 'Text'})).toBeChecked();
+  // Image and video show only when a page handles them; the actions follow.
+  await expect(bar.getByRole('button', {name: 'Add image'})).toHaveCount(0);
+  await expect(bar.getByRole('button', {name: 'Add link'})).toBeVisible();
+  await expect(bar.getByRole('button', {name: 'Delete'})).toBeVisible();
+  // The docked toolbar is unchanged: all six buttons.
+  await open(page, 'components-forms-rich-text-toolbar--default');
+  await expect(page.getByRole('toolbar', {name: 'Formatting'}).getByRole('button')).toHaveCount(6);
+  await open(page, 'components-layout-containers-block-frame--with-format-bar');
+  await expect(page.getByRole('group', {name: 'Text'}).getByRole('toolbar', {name: 'Formatting'})).toBeVisible();
+  await report(page);
+});

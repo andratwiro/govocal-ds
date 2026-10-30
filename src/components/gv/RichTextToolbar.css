@@ -8,3 +8,63 @@
   background: var(--gv-surface-secondary);
   border-block-end: 1px solid var(--gv-border-subtle);
 }
+
+/*
+ * Floating (not in Figma; the report prototype's `.fr-fmt`): a card on the panel surface with a hairline, radius 8,
+ * the overlay shadow, padding 2 (the prototype's 3 snaps), no strip. The segment's words are Small, 26 tall (snapped
+ * to the 24 control), padded 6; the pressed type is primary on the pressed fill. Hairlines 16 tall split the groups.
+ */
+.gv-editor-toolbar[data-variant='floating'] {
+  display: inline-flex;
+  padding: var(--gv-space-2);
+  background: var(--gv-surface-panel);
+  border: 1px solid var(--gv-border-default);
+  border-radius: var(--gv-radius-8);
+  box-shadow: var(--gv-shadow-overlay);
+}
+
+.gv-editor-toolbar__segment {
+  display: inline-flex;
+  gap: var(--gv-space-2);
+}
+
+.gv-editor-toolbar__type {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  block-size: var(--gv-size-control-24);
+  margin: 0;
+  padding: 0 var(--gv-space-6);
+  border: 0;
+  border-radius: var(--gv-radius-6);
+  background: transparent;
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+
+  &[data-hovered] {
+    background: var(--gv-surface-hovered);
+    color: var(--gv-text-primary);
+  }
+
+  &[data-selected] {
+    background: var(--gv-surface-pressed);
+    color: var(--gv-text-primary);
+    font: var(--gv-type-small-strong);
+  }
+
+  &[data-focus-visible] {
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
+  }
+}
+
+.gv-editor-toolbar__rule {
+  inline-size: 1px;
+  block-size: var(--gv-space-16);
+  margin: 0 var(--gv-space-2);
+  border: 0;
+  background: var(--gv-border-default);
+}

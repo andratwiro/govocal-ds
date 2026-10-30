@@ -3160,6 +3160,7 @@ MultilingualRichTextEditorLabels
 
 Interface, from `src/components/gv/MultilingualRichTextEditor.tsx`.
 
+- `blockType: string`
 - `bold: string`
 - `counter: (length: string, max: string) => string`
 - `details: (language: string, status?: string) => string`
@@ -3180,7 +3181,9 @@ Interface, from `src/components/gv/MultilingualRichTextEditor.tsx`.
 - `missing: (language: string, more: number, formatted: string) => string`
 - `placeholder: string`
 - `required: string`
+- `section: string`
 - `shortCount: (filled: string, total: string) => string`
+- `subsection: string`
 - `text: string`
 - `toolbar: string`
 - `video: string`
@@ -3300,6 +3303,7 @@ NotificationEmailLabels
 Interface, from `src/patterns/NotificationRow.tsx`.
 
 - `back: string`
+- `blockType: string`
 - `bold: string`
 - `buttonText: string`
 - `image: string`
@@ -3309,8 +3313,11 @@ Interface, from `src/patterns/NotificationRow.tsx`.
 - `link: string`
 - `list: string`
 - `replyTo: string`
+- `section: string`
 - `send: string`
 - `subject: string`
+- `subsection: string`
+- `text: string`
 - `title: string`
 - `toolbar: string`
 - `video: string`
@@ -4480,6 +4487,7 @@ RichTextEditorLabels
 
 Interface, from `src/components/gv/RichTextEditor.tsx`.
 
+- `blockType: string`
 - `bold: string`
 - `field: string`
 - `image: string`
@@ -4487,6 +4495,9 @@ Interface, from `src/components/gv/RichTextEditor.tsx`.
 - `link: string`
 - `list: string`
 - `placeholder: string`
+- `section: string`
+- `subsection: string`
+- `text: string`
 - `toolbar: string`
 - `video: string`
 
@@ -4498,11 +4509,14 @@ Interface, from `src/components/gv/RichTextEditor.tsx`. The props of `RichTextEd
 
 Component, from `src/components/gv/RichTextToolbar.tsx`.
 
+- `actions?: ReactNode`
+- `blockType?: RichTextBlockType`
 - `className?: string`
 - `isBold?: boolean`
 - `isItalic?: boolean`
 - `isList?: boolean`
 - `labels?: Partial<RichTextToolbarLabels>`
+- `onBlockTypeChange?: (type: RichTextBlockType) => void`
 - `onBoldChange?: (v: boolean) => void`
 - `onImage?: () => void`
 - `onItalicChange?: (v: boolean) => void`
@@ -4510,6 +4524,7 @@ Component, from `src/components/gv/RichTextToolbar.tsx`.
 - `onListChange?: (v: boolean) => void`
 - `onVideo?: () => void`
 - `style?: CSSProperties`
+- `variant?: 'docked' | 'floating'`
 
 ### `RichTextToolbarButton`
 
@@ -4539,11 +4554,15 @@ RichTextToolbarLabels
 
 Interface, from `src/components/gv/RichTextToolbar.tsx`.
 
+- `blockType: string`
 - `bold: string`
 - `image: string`
 - `italic: string`
 - `link: string`
 - `list: string`
+- `section: string`
+- `subsection: string`
+- `text: string`
 - `toolbar: string`
 - `video: string`
 

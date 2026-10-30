@@ -21,7 +21,8 @@ export const richTextEditorLabels: RichTextEditorLabels = {
   placeholder: 'Add a short description'
 };
 
-export interface RichTextEditorProps extends Omit<RichTextToolbarProps, 'labels'>, PlacementProps {
+export interface RichTextEditorProps
+  extends Omit<RichTextToolbarProps, 'labels' | 'variant' | 'blockType' | 'onBlockTypeChange' | 'actions'>, PlacementProps {
   /** Accessible name for the text area, since there's no visible label. @default `labels.field` ("Description") */
   'aria-label'?: string;
   /** @default `labels.placeholder` ("Add a short description") */
