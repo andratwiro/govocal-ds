@@ -19,6 +19,11 @@
 
 25 tall with its bottom line; icons at 14 with a 1.75 stroke.
 
+`variant="floating"` (not in Figma): the format bar over a text block on a document's page (a **Block frame**'s
+`toolbar`), a card with the overlay shadow. It adds a **block-type segment** first (Section · Sub-section · Text, with
+`onBlockTypeChange`) and an **actions** slot last, after a hairline (Ask the assistant, Delete); image and video show
+only when a page handles them.
+
 ## Behaviour
 
 The toolbar follows the WAI-ARIA [Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/): one Tab stop,
@@ -60,6 +65,8 @@ icon buttons.
 
 ## Changes
 
+- 30 Oct 2026: a `floating` variant with a block-type segment and an `actions` slot, for a report's text blocks
+  (docs/DECISIONS.md, "Report parts"); `play: FloatingKeyboard` proves its segment's keys.
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: link, image and video became plain buttons (as toggles they stayed pressed after a click); words through
   `labels`.

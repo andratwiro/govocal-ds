@@ -27,6 +27,10 @@
 The whole box takes the width of its container (Figma draws it 444px), with a 1px control border and 10px corners.
 While someone writes in it, the border turns the selected colour with a light ring around it.
 
+`variant="inline"` (not in Figma): the text typed straight on a document's page, with no border and no toolbar, in the
+type and colour around it (wrap it in a document kind of **Text**), growing as you type; a **Block frame** floats the
+floating Rich text toolbar over it.
+
 ## Behaviour
 
 The toolbar follows the WAI-ARIA [Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/): Tab lands on it
@@ -78,6 +82,7 @@ that say when they are on (they look pressed and screen readers hear "pressed").
 
 ## Changes
 
+- 30 Oct 2026: an `inline` variant for text typed on a report's page (docs/DECISIONS.md, "Report parts").
 - 30 Oct 2026: the Filled story has text; the page reworded after a fresh-eyes read.
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: its words (the writing area's name and placeholder, the toolbar's) come through `labels`.
