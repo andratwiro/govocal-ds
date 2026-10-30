@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {CommonGroundRow} from './CommonGroundRow';
+import {expect, userEvent, within} from 'storybook/test';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof CommonGroundRow> = {
@@ -137,4 +138,28 @@ export const Selectable: Story = () => {
       />
     </Frame>
   );
+};
+
+/**
+ * The keys a selectable row takes: Tab reaches its checkbox, Space ticks or clears it. Its play function proves the
+ * component page's keyboard table.
+ */
+export const Keyboard: Story = () => {
+  const [picked, setPicked] = useState(false);
+  return (
+    <Frame>
+      <CommonGroundRow statement="Keep one quiet zone with no music at all." likes={17} agreePercent={60} reactions={123}
+        select={{isSelected: picked, onChange: setPicked, 'aria-label': 'Select Keep one quiet zone'}} />
+    </Frame>
+  );
+};
+Keyboard.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  await userEvent.tab();
+  const box = canvas.getByRole('checkbox', {name: 'Select Keep one quiet zone'});
+  await expect(box).toHaveFocus();
+  await userEvent.keyboard(' ');
+  await expect(box).toBeChecked();
+  await userEvent.keyboard(' ');
+  await expect(box).not.toBeChecked();
 };

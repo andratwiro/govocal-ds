@@ -1,3 +1,5 @@
+import {useState} from 'react';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {VolunteeringRow} from './VolunteeringRow';
 import {Download, List, Plus} from 'lucide-react';
 import {Card} from '../components/gv/Card';
@@ -129,3 +131,32 @@ export const BuildInACard: Story = () => (
 );
 BuildInACard.storyName = 'Build · in a card';
 BuildInACard.tags = ['not-in-figma'];
+
+/**
+ * The keys a Build row takes: Tab reaches Edit, then Delete, each showing its tooltip; Enter or Space presses it. Its
+ * play function proves the component page's keyboard table.
+ */
+export const Keyboard: Story = () => {
+  const [said, setSaid] = useState('Nothing pressed yet');
+  return (
+    <div style={{width: 412}}>
+      <VolunteeringRow layout="build" title="Photograph the park" volunteerCount={4}
+        onEdit={() => setSaid('Edit pressed')} onDelete={() => setSaid('Delete pressed')} isLast />
+      <span role="status">{said}</span>
+    </div>
+  );
+};
+Keyboard.tags = ['not-in-figma'];
+Keyboard.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  await userEvent.tab();
+  const edit = canvas.getByRole('button', {name: 'Edit Photograph the park'});
+  await expect(edit).toHaveFocus();
+  await waitFor(() => expect(screen.getByRole('tooltip', {name: 'Edit'})).toBeVisible());
+  await userEvent.keyboard('{Enter}');
+  await expect(canvas.getByRole('status')).toHaveTextContent('Edit pressed');
+  await userEvent.tab();
+  await expect(canvas.getByRole('button', {name: 'Delete Photograph the park'})).toHaveFocus();
+  await userEvent.keyboard(' ');
+  await expect(canvas.getByRole('status')).toHaveTextContent('Delete pressed');
+};

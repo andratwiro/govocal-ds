@@ -127,9 +127,9 @@ what would survive a change of base library. It decides nothing: the base librar
 | Manage tab › Comment thread | `Button`, `TextArea`, `TextField` through `components/Tabs`, `components/Button` | – | yes | yes | 9 |
 | Manage tab › Official update | `TextArea`, `TextField` through `components/Button`, `components/TextField`, `components/gv/Modal` | – | yes | yes | 5 |
 | Pages & menu › Section toggle | through `components/Switch` | – | – | yes | 5 |
-| Participation methods › Common ground row | through `components/gv/Checkbox` | – | yes | yes | 6 |
+| Participation methods › Common ground row | through `components/gv/Checkbox` | – | yes | yes | 7 |
 | Participation methods › Proposals row | through `patterns/VoteProgress` | – | yes | yes | 5 |
-| Participation methods › Volunteering row | through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 6 |
+| Participation methods › Volunteering row | through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 7 |
 | Participation methods › Vote progress | `ProgressBar` | – | yes | yes | 4 |
 | Participation methods › Voting row | through `patterns/VoteProgress` | – | yes | yes | 4 |
 | Project page › Action row | `Button`, `MenuTrigger`, `ProgressBar`, `Link` through `components/Menu` | – | – | yes | 12 |
