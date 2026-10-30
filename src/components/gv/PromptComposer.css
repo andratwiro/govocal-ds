@@ -1,0 +1,154 @@
+@import '../theme.css';
+
+/*
+ * Prompt composer (not in Figma; the report builder prototype's `.comp`). One box: a 1px control border, radius 14
+ * (the prototype's 16 has no token: the nearest), the panel fill; the border darkens while focus is inside. Inside:
+ * the chip row (padding 10 12 0, chips 6 apart), the field (UI 13/20, padding 12 12 4, grows from 56 to 160 tall
+ * with its words, then scrolls) and the bar (padding 8): the paperclip at the start, the round 32 send button at
+ * the end. Send is the neutral strong fill while there is nothing to send, the inverse fill when there is, and a
+ * stop square on the inverse fill while the assistant works. Disabled: the box at 45%.
+ */
+.gv-prompt-composer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-width: 0;
+  border: 1px solid var(--gv-border-control);
+  border-radius: var(--gv-radius-14);
+  background: var(--gv-surface-panel);
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+  transition: border-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  &:focus-within {
+    border-color: var(--gv-border-control-hovered);
+  }
+
+  &[data-disabled] {
+    opacity: var(--gv-opacity-disabled);
+  }
+
+  &[data-drop-target] {
+    border-color: var(--gv-border-selected);
+  }
+}
+
+.gv-prompt-composer__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gv-space-6);
+  padding: var(--gv-space-10) var(--gv-space-12) 0;
+}
+
+/* A file the page refused: Small danger words with their mark, under the chips. */
+.gv-prompt-composer__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gv-space-6);
+  margin: 0;
+  padding: var(--gv-space-8) var(--gv-space-12) 0;
+  font: var(--gv-type-small);
+  color: var(--gv-text-danger);
+
+  > svg {
+    flex: none;
+    width: var(--gv-size-icon-14);
+    height: var(--gv-size-icon-14);
+    margin-block-start: var(--gv-space-2);
+    color: var(--gv-icon-danger);
+  }
+}
+
+.gv-prompt-composer__field {
+  display: flex;
+  min-width: 0;
+}
+
+.gv-prompt-composer__input {
+  display: block;
+  flex: 1;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 56px;
+  max-height: 160px;
+  margin: 0;
+  padding: var(--gv-space-12) var(--gv-space-12) var(--gv-space-4);
+  border: 0;
+  outline: none;
+  resize: none;
+  background: transparent;
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+  field-sizing: content;
+
+  &::placeholder {
+    color: var(--gv-text-placeholder);
+  }
+
+  &[data-disabled] {
+    cursor: default;
+  }
+}
+
+.gv-prompt-composer__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-8);
+  padding: var(--gv-space-8);
+}
+
+.gv-prompt-composer__send {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--gv-size-control-32);
+  height: var(--gv-size-control-32);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--gv-radius-full);
+  background: var(--gv-surface-neutral-strong);
+  color: var(--gv-icon-inverse);
+  outline: none;
+  cursor: default;
+  transition: background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  > svg {
+    width: var(--gv-size-icon-16);
+    height: var(--gv-size-icon-16);
+  }
+
+  &[data-ready],
+  &[data-stop] {
+    background: var(--gv-surface-inverse);
+    cursor: pointer;
+  }
+
+  &[data-stop] > svg {
+    width: var(--gv-size-icon-12);
+    height: var(--gv-size-icon-12);
+    fill: currentColor;
+  }
+
+  &[data-focus-visible] {
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
+  }
+}
+
+/* Files over the box: the info tint over it, the words in the middle. */
+.gv-prompt-composer__drop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  background: var(--gv-surface-info);
+  font: var(--gv-type-ui-strong);
+  color: var(--gv-text-info);
+  pointer-events: none;
+}

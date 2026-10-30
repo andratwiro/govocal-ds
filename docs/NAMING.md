@@ -44,8 +44,10 @@ Overview                Welcome · Accessibility
 Foundations             Colour · Typography · Spacing · Radius · Shadows · Motion · Icons · Illustrations · Size (a page each)
 Components              src/components/gv/
   Actions               Button · Compact button · Icon button · Menu · Segmented control (with Segmented control item)
+  AI                    Chat message (with Chat choices) · Chat progress · Chat thread · Item chip · Prompt composer
+                        · Prompt suggestions (the assistant's conversation; not in Figma)
   Charts                Bar row · Chart · Dashboard card · Legend row · Statement row
-  Data display          Avatar (with Avatar group) · File list · Illustration · List header · List header cell · List row
+  Data display          Activity feed · Avatar (with Avatar group) · File list · Illustration · List header · List header cell · List row
                         · Map view (with Map pin, Map card, Map overlay, Map chip, Map legend; recipe: In the Manage tab)
                         · Property list · Reaction counts · Stat row · Stat tile
   Forms                 Checkbox · Checkbox group · Choice card · Date range field · Drop zone · Locale switcher
@@ -68,6 +70,7 @@ Patterns                src/patterns/
   Participation methods Common ground row · Proposals row · Vote progress · Volunteering row · Voting row
   Project page          Action row · Panel section · Phone preview · Project header · Setup step · Stat card
   Project rail          Phase timeline · Rail header · Rail phase
+  Report builder        Assistant panel
 Back office             (empty: the whole-page stories DESIGN.md plans land here)
 Base                    Introduction first (what Base is), then src/components/: the React Aria starter, primitives the
                         Components build on (not for pages), A–Z, React Aria's names (Calendar · CheckboxGroup ·

@@ -139,6 +139,7 @@
   --gv-icon-inverse: var(--gv-color-neutral-0); /* An icon on a strong fill (surface-brand-strong, surface-inverse, surface-danger-strong). */
   --gv-icon-danger: var(--gv-color-red-500); /* A danger icon: the alert dialog's badge, a danger button's icon. */
   --gv-icon-brand: var(--gv-color-navy-650); /* A brand icon: a check in a selected option, a selected menu item's tick, an active filter's icon. */
+  --gv-icon-accent: var(--gv-color-teal-500); /* An accent mark: the spinner and the done ticks of a working assistant (Chat progress), the mark on what the assistant made. */
   --gv-icon-disabled: var(--gv-color-slate-400); /* An icon in a control that can't be used. */
   /** @tokens-end */
 
@@ -155,6 +156,7 @@
   --gv-border-warning: var(--gv-color-alpha-amber-30); /* The edge of a warning tint: the side panel's warning strip. */
   --gv-border-success: var(--gv-color-alpha-green-30); /* The edge of a success tint: a success Toast and its action. */
   --gv-border-disabled: var(--gv-color-slate-100); /* The border of a control that can't be used. */
+  --gv-border-accent: var(--gv-color-teal-400); /* The accent edge: an item a change added (an added Item chip), the edge of an assistant's entry in an Activity feed. */
   --gv-border-focused: var(--gv-color-navy-650); /* The keyboard focus ring's colour. Components draw the whole ring with --gv-focus-ring. */
   /** @tokens-end */
 

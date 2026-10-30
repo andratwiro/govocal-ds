@@ -27,7 +27,7 @@ Read this file first; it points to the detail. Every claim names the file or com
 | **Patterns** | Go Vocal assemblies, grouped by the screen they belong to (Project rail, Build tab, Manage tab…). Their props speak phases, methods, projects. | When your screen is that place. |
 | **Base** | React Aria's starter parts painted with the tokens (Calendar, ComboBox, Tree, Popover…). | Only when no Component does the job. Never in place of one. |
 
-Component groups: Actions · Charts · Data display · Forms · Layout & containers · Navigation · Overlays · Status &
+Component groups: Actions · AI · Charts · Data display · Forms · Layout & containers · Navigation · Overlays · Status &
 feedback · Tables & lists · Text. Link, Radio group and Checkbox group are Components (Navigation, Forms).
 
 Each layer builds only on the ones above it. A part used once stays in its page; it is promoted on its second use

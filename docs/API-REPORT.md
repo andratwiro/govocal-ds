@@ -5,7 +5,7 @@ with each component's props: its own with their types, the ones passed straight 
 (React Aria's behaviour props, React's, the DOM's). An API change shows up here as a diff to review;
 `tests/api-report.test.mjs` fails while this file is stale. The convention it follows: `docs/API.md`.
 
-## `govocal-ds` (618 names)
+## `govocal-ds` (659 names)
 
 ### `ACCESS_WHO_VALUE`
 
@@ -214,6 +214,77 @@ Interface, from `src/patterns/ActionRow.tsx`. The props of `ActionRowList`, list
 
 Interface, from `src/patterns/ActionRow.tsx`. The props of `ActionRow`, listed there.
 
+### `ActivityChange`
+
+Interface, from `src/components/gv/ActivityFeed.tsx`.
+
+- `icon?: ReactNode`
+- `id: string` (no description)
+- `label: string`
+- `previousLabel?: string`
+- `status?: ItemChipStatus`
+
+### `ActivityEntry`
+
+Interface, from `src/components/gv/ActivityFeed.tsx`.
+
+- `action: ReactNode`
+- `actor: string`
+- `avatar?: ReactNode`
+- `changes?: ActivityChange[]`
+- `day: string`
+- `id: string` (no description)
+- `isAssistant?: boolean`
+- `isCurrent?: boolean`
+- `note?: string`
+- `prompt?: string`
+- `summary?: string`
+- `time: string`
+
+### `ActivityFeed`
+
+Component, from `src/components/gv/ActivityFeed.tsx`.
+
+- `changesPerPage?: number`
+- `className?: string`
+- `headingLevel?: 2 | 3 | 4 | 5 | 6`
+- `items: ActivityEntry[]`
+- `labels?: Partial<ActivityFeedLabels>`
+- `onChangePress?: (entryId: string, changeId: string) => void`
+- `onRestore?: (id: string) => void`
+- `onShowOlder?: () => void`
+- `style?: CSSProperties`
+
+### `activityFeedLabels`
+
+Value, from `src/components/gv/ActivityFeed.tsx`.
+
+```ts
+ActivityFeedLabels
+```
+
+### `ActivityFeedLabels`
+
+Interface, from `src/components/gv/ActivityFeed.tsx`.
+
+- `empty: string`
+- `hideChanges: string` (no description)
+- `hidePrompt: string` (no description)
+- `more: string`
+- `next: string` (no description)
+- `page: (page: number, formatted: string) => string`
+- `pagination: string`
+- `previous: string` (no description)
+- `restore: string` (no description)
+- `showChanges: CountLabel`
+- `showOlder: string`
+- `showPrompt: string`
+- `showingNow: string`
+
+### `ActivityFeedProps`
+
+Interface, from `src/components/gv/ActivityFeed.tsx`. The props of `ActivityFeed`, listed there.
+
 ### `AlertDialog`
 
 Component, from `src/components/gv/AlertDialog.tsx`.
@@ -273,6 +344,69 @@ Component, from `src/components/gv/AppProvider.tsx`.
 ### `AppProviderProps`
 
 Interface, from `src/components/gv/AppProvider.tsx`. The props of `AppProvider`, listed there.
+
+### `AssistantPanel`
+
+Component, from `src/patterns/AssistantPanel.tsx`.
+
+- `children?: ReactNode`
+- `className?: string`
+- `isEmpty?: boolean`
+- `isEnabled?: boolean`
+- `isWorking?: boolean`
+- `labels?: Partial<AssistantPanelLabels>`
+- `onAskAccountManager?: () => void`
+- `onAttach?: () => void`
+- `onClearScope?: () => void`
+- `onGenerate?: () => void`
+- `onSend: (prompt: string) => void`
+- `onStop?: () => void`
+- `onSuggestion?: (id: string) => void`
+- `previewItems?: PromptSuggestion[]`
+- `scope?: AssistantPanelScope`
+- `style?: CSSProperties`
+- `suggestions?: PromptSuggestion[]`
+
+### `assistantPanelLabels`
+
+Value, from `src/patterns/AssistantPanel.tsx`.
+
+```ts
+AssistantPanelLabels
+```
+
+### `AssistantPanelLabels`
+
+Interface, from `src/patterns/AssistantPanel.tsx`.
+
+- `askAccountManager: string` (no description)
+- `attach: string`
+- `clearScope: string`
+- `drop: string`
+- `field: string`
+- `generate: string`
+- `heading: string`
+- `jumpToLatest: string`
+- `log: string`
+- `notSwitchedOn: string`
+- `panel: string`
+- `placeholder: string`
+- `previewHeading: string`
+- `removeAttachment: (name: string) => string`
+- `scopedHeading: (name: string) => string`
+- `send: string`
+- `stop: string` (no description)
+
+### `AssistantPanelProps`
+
+Interface, from `src/patterns/AssistantPanel.tsx`. The props of `AssistantPanel`, listed there.
+
+### `AssistantPanelScope`
+
+Interface, from `src/patterns/AssistantPanel.tsx`.
+
+- `icon?: ReactNode`
+- `label: string`
 
 ### `Avatar`
 
@@ -649,6 +783,152 @@ Interface, from `src/components/gv/Chart.tsx`.
 - `color?: ChartColor`
 - `label: string`
 - `values: number[]` (no description)
+
+### `ChatChoice`
+
+Interface, from `src/components/gv/ChatMessage.tsx`.
+
+- `icon?: ReactNode`
+- `id: string` (no description)
+- `label: string` (no description)
+- `variant?: 'primary' | 'secondary'`
+
+### `ChatChoices`
+
+Component, from `src/components/gv/ChatMessage.tsx`.
+
+- `aria-label?: string`
+- `className?: string`
+- `defaultValue?: string | null`
+- `items: ChatChoice[]`
+- `onChange?: (id: string) => void`
+- `style?: CSSProperties`
+- `value?: string | null`
+
+### `ChatChoicesProps`
+
+Interface, from `src/components/gv/ChatMessage.tsx`. The props of `ChatChoices`, listed there.
+
+### `ChatMessage`
+
+Component, from `src/components/gv/ChatMessage.tsx`.
+
+- `change?: ReactNode`
+- `children?: ReactNode`
+- `choices?: ReactNode`
+- `className?: string`
+- `context?: ReactNode`
+- `from: 'you' | 'assistant'`
+- `labels?: Partial<ChatMessageLabels>`
+- `onRetry?: () => void`
+- `onShowChange?: () => void`
+- `onUndo?: () => void`
+- `status?: ChatMessageStatus`
+- `style?: CSSProperties`
+
+### `chatMessageLabels`
+
+Value, from `src/components/gv/ChatMessage.tsx`.
+
+```ts
+ChatMessageLabels
+```
+
+### `ChatMessageLabels`
+
+Interface, from `src/components/gv/ChatMessage.tsx`.
+
+- `assistant: string` (no description)
+- `error: string`
+- `retry: string` (no description)
+- `showChange: string` (no description)
+- `stopped: string`
+- `undo: string`
+- `writing: string`
+- `you: string`
+
+### `ChatMessageProps`
+
+Interface, from `src/components/gv/ChatMessage.tsx`. The props of `ChatMessage`, listed there.
+
+### `ChatMessageStatus`
+
+Type, from `src/components/gv/ChatMessage.tsx`.
+
+```ts
+type ChatMessageStatus = 'done' | 'streaming' | 'undone' | 'error' | 'stopped'
+```
+
+### `ChatProgress`
+
+Component, from `src/components/gv/ChatProgress.tsx`.
+
+- `className?: string`
+- `labels?: Partial<ChatProgressLabels>`
+- `status?: 'running' | 'done' | 'stopped'`
+- `steps?: ChatProgressStep[]`
+- `style?: CSSProperties`
+
+### `chatProgressLabels`
+
+Value, from `src/components/gv/ChatProgress.tsx`.
+
+```ts
+ChatProgressLabels
+```
+
+### `ChatProgressLabels`
+
+Interface, from `src/components/gv/ChatProgress.tsx`.
+
+- `done: string`
+- `steps: string`
+- `stopped: string`
+- `stoppedAt: string`
+- `thinking: string`
+
+### `ChatProgressProps`
+
+Interface, from `src/components/gv/ChatProgress.tsx`. The props of `ChatProgress`, listed there.
+
+### `ChatProgressStep`
+
+Interface, from `src/components/gv/ChatProgress.tsx`.
+
+- `id: string` (no description)
+- `label: ReactNode`
+- `status?: 'running' | 'done'`
+
+### `ChatThread`
+
+Component, from `src/components/gv/ChatThread.tsx`.
+
+- `children?: ReactNode`
+- `className?: string`
+- `composer?: ReactNode`
+- `isDisabled?: boolean`
+- `labels?: Partial<ChatThreadLabels>`
+- `openings?: ReactNode`
+- `style?: CSSProperties`
+
+### `chatThreadLabels`
+
+Value, from `src/components/gv/ChatThread.tsx`.
+
+```ts
+ChatThreadLabels
+```
+
+### `ChatThreadLabels`
+
+Interface, from `src/components/gv/ChatThread.tsx`.
+
+- `jumpToLatest: string`
+- `log: string`
+
+### `ChatThreadProps`
+
+Interface, from `src/components/gv/ChatThread.tsx`. The props of `ChatThread`, listed there.
 
 ### `Checkbox`
 
@@ -1949,6 +2229,51 @@ Function, from `src/components/gv/LocaleSwitcher.tsx`.
 
 ```ts
 (locale: string, values: MultilocValues): boolean
+```
+
+### `ItemChip`
+
+Component, from `src/components/gv/ItemChip.tsx`.
+
+- `className?: string`
+- `icon?: ReactNode`
+- `isDisabled?: boolean`
+- `label: string`
+- `labels?: Partial<ItemChipLabels>`
+- `onPress?: () => void`
+- `onRemove?: () => void`
+- `previousLabel?: string`
+- `status?: ItemChipStatus`
+- `style?: CSSProperties`
+- `variant?: 'outlined' | 'filled' | 'quiet'`
+
+### `itemChipLabels`
+
+Value, from `src/components/gv/ItemChip.tsx`.
+
+```ts
+ItemChipLabels
+```
+
+### `ItemChipLabels`
+
+Interface, from `src/components/gv/ItemChip.tsx`.
+
+- `added: (label: string) => string`
+- `remove: (label: string) => string`
+- `removed: (label: string) => string`
+- `renamed: (previousLabel: string, label: string) => string`
+
+### `ItemChipProps`
+
+Interface, from `src/components/gv/ItemChip.tsx`. The props of `ItemChip`, listed there.
+
+### `ItemChipStatus`
+
+Type, from `src/components/gv/ItemChip.tsx`.
+
+```ts
+type ItemChipStatus = 'added' | 'removed' | 'renamed'
 ```
 
 ### `Key`
@@ -3517,6 +3842,87 @@ Interface, from `src/patterns/ProjectHeader.tsx`.
 ### `ProjectHeaderProps`
 
 Interface, from `src/patterns/ProjectHeader.tsx`. The props of `ProjectHeader`, listed there.
+
+### `PromptComposer`
+
+Component, from `src/components/gv/PromptComposer.tsx`.
+
+- `acceptedFileTypes?: string[]`
+- `attachments?: PromptComposerAttachment[]`
+- `className?: string`
+- `context?: ReactNode`
+- `defaultValue?: string`
+- `fileError?: ReactNode`
+- `isDisabled?: boolean`
+- `isWorking?: boolean`
+- `labels?: Partial<PromptComposerLabels>`
+- `onAttach?: () => void`
+- `onChange?: (value: string) => void`
+- `onFiles?: (files: File[]) => void`
+- `onRemoveAttachment?: (id: string) => void`
+- `onSend: (prompt: string) => void`
+- `onStop?: () => void`
+- `style?: CSSProperties`
+- `value?: string`
+
+### `PromptComposerAttachment`
+
+Interface, from `src/components/gv/PromptComposer.tsx`.
+
+- `icon?: ReactNode`
+- `id: string` (no description)
+- `name: string`
+
+### `promptComposerLabels`
+
+Value, from `src/components/gv/PromptComposer.tsx`.
+
+```ts
+PromptComposerLabels
+```
+
+### `PromptComposerLabels`
+
+Interface, from `src/components/gv/PromptComposer.tsx`.
+
+- `attach: string`
+- `drop: string`
+- `field: string`
+- `placeholder: string`
+- `removeAttachment: (name: string) => string`
+- `send: string`
+- `stop: string` (no description)
+
+### `PromptComposerProps`
+
+Interface, from `src/components/gv/PromptComposer.tsx`. The props of `PromptComposer`, listed there.
+
+### `PromptSuggestion`
+
+Interface, from `src/components/gv/PromptSuggestions.tsx`.
+
+- `description?: string`
+- `icon?: ReactNode`
+- `id: string` (no description)
+- `label: string`
+
+### `PromptSuggestions`
+
+Component, from `src/components/gv/PromptSuggestions.tsx`.
+
+- `className?: string`
+- `footer?: ReactNode`
+- `heading: string`
+- `headingLevel?: 2 | 3 | 4 | 5 | 6`
+- `isDisabled?: boolean`
+- `items: PromptSuggestion[]`
+- `kind?: 'prompts' | 'preview'`
+- `onAction?: (id: string) => void`
+- `style?: CSSProperties`
+
+### `PromptSuggestionsProps`
+
+Interface, from `src/components/gv/PromptSuggestions.tsx`. The props of `PromptSuggestions`, listed there.
 
 ### `PropertyList`
 

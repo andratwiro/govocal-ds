@@ -6,7 +6,7 @@ Every interactive part is built on React Aria Components. This table says, per p
 what would survive a change of base library. It decides nothing: the base library is a question for developers
 (Overview › Questions for developers).
 
-**103 of 119 parts** wire behaviour from React Aria; the rest are plain React and CSS.
+**111 of 127 parts** wire behaviour from React Aria; the rest are plain React and CSS.
 
 **What comes from React Aria** (would be rewritten on another library):
 
@@ -34,11 +34,18 @@ what would survive a change of base library. It decides nothing: the base librar
 | Actions › Icon button | `Button` | `ButtonProps` | – | yes | 7 |
 | Actions › Menu | `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger` through `components/Popover`, `components/ProgressCircle`, `components/Content` | – | – | yes | 7 |
 | Actions › Segmented control | `ToggleButtonGroup`, `SelectionIndicator`, `ToggleButton` through `components/Tooltip` | `ToggleButtonGroupProps` | – | yes | 8 |
+| AI › Chat message | through `components/Button`, `components/Tooltip`, `components/gv/VisuallyHidden` | – | – | yes | 12 |
+| AI › Chat progress | through `components/gv/VisuallyHidden` | – | – | yes | 6 |
+| AI › Chat thread | through `components/Button` | – | – | yes | 8 |
+| AI › Item chip | `Button` through `components/gv/VisuallyHidden` | – | – | yes | 10 |
+| AI › Prompt composer | `Button`, `FileTrigger`, `TextArea`, `TextField` through `components/Tooltip`, `components/gv/ItemChip` | – | – | yes | 11 |
+| AI › Prompt suggestions | `Button` | – | – | yes | 7 |
 | Charts › Bar row | `VisuallyHidden` | – | – | yes | 6 |
 | Charts › Chart | None: plain React and CSS | – | yes | yes | 11 |
 | Charts › Dashboard card | `Button` through `components/gv/BarRow` | – | yes | yes | 14 |
 | Charts › Legend row | None: plain React and CSS | – | yes | yes | 4 |
 | Charts › Statement row | None: plain React and CSS | – | yes | yes | 6 |
+| Data display › Activity feed | `Button` through `components/Button`, `components/Menu`, `components/gv/ItemChip` | – | yes | yes | 7 |
 | Data display › Avatar | None: plain React and CSS | – | – | yes | 6 |
 | Data display › File list | `GridList`, `GridListItem` through `components/Link` | – | – | yes | 6 |
 | Data display › Illustration | None: plain React and CSS | – | – | yes | 10 |
@@ -134,6 +141,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Project rail › Phase timeline | through `patterns/RailPhase` | – | yes | yes | 4 |
 | Project rail › Rail header | through `components/gv/IconButton` | – | – | yes | 4 |
 | Project rail › Rail phase | `Link` through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 6 |
+| Report builder › Assistant panel | through `components/Button`, `components/gv/SidePanel`, `components/gv/ItemChip`, `components/gv/PromptComposer` | – | yes | – | 9 |
 
 ## Base
 

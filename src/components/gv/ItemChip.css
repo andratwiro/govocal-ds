@@ -1,0 +1,203 @@
+@import '../theme.css';
+
+/*
+ * Item chip (not in Figma; the report builder prototype's history chips `.fr-h__chip` and composer chip
+ * `.comp__chip`). Three looks by where it sits:
+ * - outlined: a 28 pill, a 1px control border on the panel, padding 0 10 0 8, gap 6, icon 14; hovered (pressable)
+ *   the secondary fill.
+ * - filled: a 24 tag on the neutral tint, radius 6, padding 0 4 0 8, gap 6, icon 12 (the prototype's 11px text
+ *   snaps to Small 12).
+ * - quiet: no chrome, Small secondary, icon 12 (the line above a message).
+ * Status: added draws a + and the accent edge; removed a dashed edge and a struck label, secondary; renamed the
+ * old name struck, then an arrow and the new one.
+ */
+.gv-item-chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  vertical-align: middle;
+  font: var(--gv-type-small);
+  color: var(--gv-text-primary);
+  white-space: nowrap;
+
+  &[data-variant='outlined'] {
+    height: var(--gv-size-control-28);
+    border: 1px solid var(--gv-border-control);
+    border-radius: var(--gv-radius-full);
+    background: var(--gv-surface-panel);
+  }
+
+  &[data-variant='filled'] {
+    height: var(--gv-size-control-24);
+    border-radius: var(--gv-radius-6);
+    background: var(--gv-surface-neutral);
+    color: var(--gv-text-neutral);
+  }
+
+  &[data-variant='quiet'] {
+    color: var(--gv-text-secondary);
+  }
+
+  &[data-status='added'] {
+    border-color: var(--gv-border-accent);
+  }
+
+  &[data-status='removed'] {
+    border-style: dashed;
+    color: var(--gv-text-secondary);
+  }
+
+  &[data-disabled] {
+    opacity: var(--gv-opacity-disabled);
+  }
+}
+
+/* The label's part: a span, or a button when the chip reveals its item. */
+.gv-item-chip__body,
+.gv-item-chip__press {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+}
+
+.gv-item-chip[data-variant='outlined'] :is(.gv-item-chip__body, .gv-item-chip__press) {
+  padding-inline: var(--gv-space-8) var(--gv-space-10);
+}
+
+.gv-item-chip[data-variant='filled'] :is(.gv-item-chip__body, .gv-item-chip__press) {
+  padding-inline: var(--gv-space-8) var(--gv-space-4);
+}
+
+.gv-item-chip[data-variant='filled']:not([data-removable]) :is(.gv-item-chip__body, .gv-item-chip__press) {
+  padding-inline-end: var(--gv-space-8);
+}
+
+.gv-item-chip[data-variant='outlined'][data-removable] :is(.gv-item-chip__body, .gv-item-chip__press) {
+  padding-inline-end: var(--gv-space-4);
+}
+
+.gv-item-chip__press {
+  cursor: pointer;
+  outline: none;
+  transition: background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  &[data-hovered] {
+    background: var(--gv-surface-hovered);
+  }
+
+  &[data-pressed] {
+    background: var(--gv-surface-pressed);
+  }
+
+  &[data-focus-visible] {
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
+  }
+}
+
+.gv-item-chip[data-variant='filled'] .gv-item-chip__press[data-hovered] {
+  background: var(--gv-surface-neutral-hovered);
+}
+
+.gv-item-chip[data-variant='quiet'] .gv-item-chip__press[data-hovered] {
+  background: none;
+  color: var(--gv-text-primary);
+}
+
+.gv-item-chip__icon {
+  display: inline-flex;
+  flex: none;
+  color: var(--gv-icon-secondary);
+
+  > svg {
+    width: var(--gv-size-icon-14);
+    height: var(--gv-size-icon-14);
+  }
+}
+
+.gv-item-chip:is([data-variant='filled'], [data-variant='quiet']) .gv-item-chip__icon > svg {
+  width: var(--gv-size-icon-12);
+  height: var(--gv-size-icon-12);
+}
+
+.gv-item-chip__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gv-item-chip[data-status='removed'] .gv-item-chip__label,
+.gv-item-chip__old {
+  text-decoration: line-through;
+  text-decoration-color: var(--gv-text-danger);
+}
+
+.gv-item-chip__old {
+  color: var(--gv-text-secondary);
+}
+
+/* The arrow between a renamed item's old and new names: 12, 4 either side, pointing the reading way. */
+.gv-item-chip__arrow {
+  width: var(--gv-size-icon-12);
+  height: var(--gv-size-icon-12);
+  margin-inline: var(--gv-space-4);
+  vertical-align: middle;
+  color: var(--gv-icon-tertiary);
+
+  &:dir(rtl) {
+    scale: -1 1;
+  }
+}
+
+/* The + before an added item: accent, 12. */
+.gv-item-chip__mark {
+  flex: none;
+  width: var(--gv-size-icon-12);
+  height: var(--gv-size-icon-12);
+  color: var(--gv-icon-accent);
+  stroke-width: 2.5;
+}
+
+/* × : a 16 hit inside the chip (the tag's own height is the target), icon 12, quiet until hovered. */
+.gv-item-chip__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--gv-size-icon-16);
+  height: var(--gv-size-icon-16);
+  margin-inline-end: var(--gv-space-4);
+  padding: 0;
+  border: 0;
+  border-radius: var(--gv-radius-4);
+  background: none;
+  color: var(--gv-icon-tertiary);
+  cursor: pointer;
+  outline: none;
+
+  > svg {
+    width: var(--gv-size-icon-12);
+    height: var(--gv-size-icon-12);
+  }
+
+  &[data-hovered] {
+    background: var(--gv-surface-neutral-hovered);
+    color: var(--gv-icon-primary);
+  }
+
+  &[data-focus-visible] {
+    outline: var(--gv-focus-ring);
+  }
+}

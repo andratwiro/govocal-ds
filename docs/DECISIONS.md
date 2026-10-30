@@ -9,15 +9,45 @@ list; change any line and the agent follows. Newest first within each section.
 Calls made building Components › AI, the Activity feed, the Assistant panel and Side panel's new head options
 (benchmark-gaps plan, Task 8c; the back office's deep dive of the report builder, §3).
 
+- `wip/ai-parts` (unreviewed, mid-build) vs a fresh start → **kept its Item chip, Chat message, Chat progress and
+  Prompt composer, reviewed**: words moved onto `mergeLabels` and phrase functions (`added`, `removed`), the
+  "Who: " joins and the rename arrow out of JSX text, the composer's missing stylesheet written → the parts matched the
+  deep dive's table and the prototype; only the words and the missing CSS were wrong.
+- An accent mark had no semantic token (the spinner, the done tick, an added chip's edge, an assistant run's edge) →
+  **two new semantic tokens, `--gv-icon-accent` (teal 500) and `--gv-border-accent` (teal 400)** → the prototype
+  draws all four in the accent teal; painting with a primitive is not allowed, and `--gv-surface-accent-strong` is a
+  fill.
 - Prototype radii 16 (composer, your bubble) → **radius 14**, the nearest token; the openings' heading and Side
   panel's title at 15/22 → **Title 16/24**, the nearest type token (14 and 16 are equally near; Title is already the
   panel and modal title).
+- Where the AI parts sit → **a new Components group, AI** (Item chip, Chat message, Chat progress, Chat thread, Prompt
+  composer, Prompt suggestions) → generic: the survey editor and input analysis will draw the same parts; none speaks
+  reports. The Activity feed goes to **Data display** (a version history, not an assistant part), the assembled
+  assistant to **Patterns › Report builder › Assistant panel** (its words, Generate and the account manager, are the
+  report builder's).
+- Prompt suggestions' assistant-off look: a `variant` or a `kind` → **`kind="prompts" | "preview"`** (API rule 2: it
+  changes what a row shows, a description and no press, not its fill).
 - Side panel's titled head: a new `title` prop beside `label` vs a look switch → **`headingLevel`**: with it, the
   label renders as a heading in Title type → one string, no alias (rule 9), and a title is a heading where the context
   label isn't one; `icon` adds the 16 kind icon.
 - Side panel head-less: hide the head of the same dialog vs a different element → **`showHead={false}` on an inline
   panel renders a named region, not a dialog: no ×, no Esc, no focus taken on load** → the assistant is the column's
   resting state; a dialog that grabs focus when the page loads and closes on Esc would fight the page.
+- Chat message's Undo vs a Toast's → **Undo and Show what changed stay on the message for the whole thread; a used
+  Undo turns off and stays** → the deep dive found two Undo toasts stacked over the panel; a Toast is global and
+  short-lived.
+- Focus when what had it goes away → **the composer's field takes it**: after a pressed opening hides the openings
+  (Chat thread) and after the scope chip's × removes the chip (Prompt composer); a made choice keeps focus on its
+  group → focus never drops to the page.
+- A long thread → **Chat thread follows the latest turn while you read it (a ResizeObserver catches streaming) and
+  shows "Jump to latest" once you scroll up** → the deep dive lists jump-to-latest as missing from the prototype.
+- The assistant-off thread at 45% → **dimmed and `inert`** → the prototype's `pointer-events: none` left it reachable
+  by keyboard.
+- The Activity feed's prompt quote → **`<q>` inside a blockquote**: the browser draws the locale's quote marks, so no
+  quote characters are stitched into the words; the "·" before "Showing now" is a drawn separator (CSS content with
+  empty alt text).
+- Activity feed changes → **all shown up to `changesPerPage` (10); past that, behind "Show N changes" with a
+  Pagination** → the prototype's run lists 146 chips behind a pager.
 
 ## Developers' side and orientation (30 Oct 2026)
 

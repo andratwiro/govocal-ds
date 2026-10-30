@@ -1,0 +1,66 @@
+@import '../theme.css';
+
+/*
+ * Chat thread (not in Figma; the report builder prototype's `.fr-chat__scroll`, `.fr-thread`, `.fr-open`). A column
+ * that fills its container: the scroll (padding 24 24 8) holds the log (turns 12 apart) and the openings (pushed to
+ * the foot, 24 above them at least); the composer docks under it, padding 8 24 24. Disabled: the log at 45%. The
+ * jump button floats centred 8 above the composer.
+ */
+.gv-chat-thread {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+}
+
+.gv-chat-thread__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--gv-space-24) var(--gv-space-24) var(--gv-space-8);
+}
+
+.gv-chat-thread__content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.gv-chat-thread__log {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-12);
+}
+
+.gv-chat-thread[data-disabled] .gv-chat-thread__log {
+  opacity: var(--gv-opacity-disabled);
+  user-select: none;
+}
+
+.gv-chat-thread__openings {
+  margin-block-start: auto;
+  padding-block-start: var(--gv-space-24);
+}
+
+.gv-chat-thread__jump {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 0;
+
+  > * {
+    position: absolute;
+    inset-block-end: var(--gv-space-8);
+    box-shadow: var(--gv-shadow-raised);
+  }
+}
+
+.gv-chat-thread__composer {
+  flex: none;
+  padding: var(--gv-space-8) var(--gv-space-24) var(--gv-space-24);
+}

@@ -1,0 +1,93 @@
+@import '../theme.css';
+
+/*
+ * Chat progress (not in Figma; the report builder prototype's `.m-trace`). Small 12/16, secondary, rows 6 apart, a
+ * 12 mark 8 before the words. The spinner: a 1.5px accent ring with its top open, turning twice per loop (the
+ * prototype's 0.8 s a turn); the tick and the stop mark in the accent and the tertiary grey. Each row rises in as it
+ * is added (medium, enter). Under reduced motion the spinner holds still: an open ring next to its words.
+ */
+.gv-chat-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+}
+
+.gv-chat-progress__row {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  animation: gv-chat-progress-in var(--gv-motion-duration-medium) var(--gv-motion-easing-enter) both;
+}
+
+@keyframes gv-chat-progress-in {
+  from {
+    opacity: 0;
+    translate: 0 var(--gv-space-6);
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.gv-chat-progress__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--gv-size-icon-12);
+  height: var(--gv-size-icon-12);
+  color: var(--gv-icon-accent);
+
+  > svg {
+    width: var(--gv-size-icon-12);
+    height: var(--gv-size-icon-12);
+    stroke-width: 2.5;
+  }
+}
+
+.gv-chat-progress__row[data-status='stopped'] .gv-chat-progress__mark {
+  color: var(--gv-icon-tertiary);
+
+  > svg {
+    width: var(--gv-size-icon-12);
+    height: var(--gv-size-icon-12);
+    fill: currentColor;
+    stroke-width: 0;
+    scale: 0.6;
+  }
+}
+
+.gv-chat-progress__spinner {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border: 1.5px solid var(--gv-icon-accent);
+  border-block-start-color: transparent;
+  border-radius: var(--gv-radius-full);
+  animation: gv-chat-progress-spin var(--gv-motion-duration-loop) var(--gv-motion-easing-move) infinite;
+}
+
+@keyframes gv-chat-progress-spin {
+  to {
+    rotate: 720deg;
+  }
+}
+
+.gv-chat-progress__label {
+  min-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gv-chat-progress__row,
+  .gv-chat-progress__spinner {
+    animation: none;
+  }
+}

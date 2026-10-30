@@ -23,6 +23,18 @@ export {
   SegmentedControl, SegmentedControlItem, type SegmentedControlProps, type SegmentedControlItemProps
 } from './components/gv/SegmentedControl';
 
+// Components / AI: the assistant's conversation (the report builder first, then the survey editor and analysis).
+export {
+  ChatMessage, ChatChoices, type ChatMessageStatus, type ChatMessageProps, type ChatChoice, type ChatChoicesProps
+} from './components/gv/ChatMessage';
+export {ChatProgress, type ChatProgressStep, type ChatProgressProps} from './components/gv/ChatProgress';
+export {ChatThread, type ChatThreadProps} from './components/gv/ChatThread';
+export {ItemChip, type ItemChipStatus, type ItemChipProps} from './components/gv/ItemChip';
+export {
+  PromptComposer, type PromptComposerAttachment, type PromptComposerProps
+} from './components/gv/PromptComposer';
+export {PromptSuggestions, type PromptSuggestion, type PromptSuggestionsProps} from './components/gv/PromptSuggestions';
+
 // Components / Charts
 export {BarRow, type BarRowProps} from './components/gv/BarRow';
 export {
@@ -40,6 +52,9 @@ export {LegendRow, type LegendRowProps} from './components/gv/LegendRow';
 export {StatementRow, type StatementCounts, type StatementRowProps} from './components/gv/StatementRow';
 
 // Components / Data display
+export {
+  ActivityFeed, type ActivityEntry, type ActivityChange, type ActivityFeedProps
+} from './components/gv/ActivityFeed';
 export {Avatar, AvatarGroup, type AvatarProps, type AvatarGroupProps} from './components/gv/Avatar';
 export {FileList, type FileListItemData, type FileListProps} from './components/gv/FileList';
 export {
@@ -240,6 +255,9 @@ export {PhaseTimeline, type TimelineStatus, type TimelinePhase, type PhaseTimeli
 export {RailHeader, type RailHeaderProps} from './patterns/RailHeader';
 export {RailPhase, type RailPhaseStatus, type RailPhaseProps} from './patterns/RailPhase';
 
+// Patterns / Report builder
+export {AssistantPanel, type AssistantPanelScope, type AssistantPanelProps} from './patterns/AssistantPanel';
+
 // Words (docs/API.md rule 11): each part's `labels` type and its English defaults, which a page's own words go over.
 export {loadMoreLabels, type LoadMoreLabels, type CountLabel} from './components/labels';
 export {buttonLabels, type ButtonLabels} from './components/Button';
@@ -247,7 +265,14 @@ export {searchFieldLabels, type SearchFieldLabels} from './components/SearchFiel
 export {selectLabels, type SelectLabels} from './components/Select';
 export {tabLabels, type TabLabels} from './components/Tabs';
 export {toastRegionLabels, type ToastRegionLabels} from './components/Toast';
+export {activityFeedLabels, type ActivityFeedLabels} from './components/gv/ActivityFeed';
 export {alertDialogLabels, type AlertDialogLabels} from './components/gv/AlertDialog';
+export {assistantPanelLabels, type AssistantPanelLabels} from './patterns/AssistantPanel';
+export {chatMessageLabels, type ChatMessageLabels} from './components/gv/ChatMessage';
+export {chatProgressLabels, type ChatProgressLabels} from './components/gv/ChatProgress';
+export {chatThreadLabels, type ChatThreadLabels} from './components/gv/ChatThread';
+export {itemChipLabels, type ItemChipLabels} from './components/gv/ItemChip';
+export {promptComposerLabels, type PromptComposerLabels} from './components/gv/PromptComposer';
 export {badgeLabels, type BadgeLabels} from './components/gv/Badge';
 export {bannerLabels, type BannerLabels} from './components/gv/Banner';
 export {breadcrumbsLabels, type BreadcrumbsLabels} from './components/gv/Breadcrumbs';

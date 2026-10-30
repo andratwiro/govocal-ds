@@ -1,0 +1,115 @@
+@import '../theme.css';
+
+/*
+ * Prompt suggestions (not in Figma; the report builder prototype's `.fr-open`, `.fr-pre`, `.fr-pre-foot`). The
+ * heading Title (the prototype's 15/22 snaps to Title 16/24), 8 above the rows. A prompt row: 36 tall at least,
+ * padding 6 8, radius 8, ✦ 16 in the secondary icon grey 10 before UI 13/20; the hovered fill under the pointer.
+ * A preview row: padding 10 8, the 16 icon 12 before a UI title and a Small secondary description. The footer: a
+ * hairline, 12 above, Small secondary words and its button 8 apart.
+ */
+.gv-prompt-suggestions {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+}
+
+.gv-prompt-suggestions__heading {
+  margin: 0 0 var(--gv-space-8);
+  font: var(--gv-type-title);
+  color: var(--gv-text-primary);
+}
+
+.gv-prompt-suggestions__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gv-prompt-suggestions__row {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-10);
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--gv-size-control-36);
+  margin: 0;
+  padding: var(--gv-space-6) var(--gv-space-8);
+  border: 0;
+  border-radius: var(--gv-radius-8);
+  background: none;
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+  text-align: start;
+  cursor: pointer;
+  outline: none;
+  transition: background var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  &[data-hovered] {
+    background: var(--gv-surface-hovered);
+  }
+
+  &[data-pressed] {
+    background: var(--gv-surface-pressed);
+  }
+
+  &[data-focus-visible] {
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset-inset);
+  }
+
+  &[data-disabled] {
+    opacity: var(--gv-opacity-disabled);
+    cursor: default;
+  }
+}
+
+.gv-prompt-suggestions__icon {
+  display: inline-flex;
+  flex: none;
+  color: var(--gv-icon-secondary);
+
+  > svg {
+    width: var(--gv-size-icon-16);
+    height: var(--gv-size-icon-16);
+  }
+}
+
+.gv-prompt-suggestions__preview {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gv-space-12);
+  padding: var(--gv-space-10) var(--gv-space-8);
+
+  .gv-prompt-suggestions__icon {
+    margin-block-start: var(--gv-space-2);
+    color: var(--gv-icon-tertiary);
+  }
+}
+
+.gv-prompt-suggestions__words {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.gv-prompt-suggestions__description {
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+}
+
+.gv-prompt-suggestions__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gv-space-8);
+  margin-block-start: var(--gv-space-12);
+  padding: var(--gv-space-12) var(--gv-space-8) 0;
+  border-block-start: 1px solid var(--gv-border-subtle);
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+}

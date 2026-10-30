@@ -1,0 +1,168 @@
+@import '../theme.css';
+
+/*
+ * Activity feed (not in Figma; the report builder prototype's version history, `.fr-h__*`). A day heading Small
+ * strong secondary, padding 20 16 4. An entry: the 28 avatar, 12 before its words, padding 12 16 (the prototype's 14 snaps to 12; 10 at the end with
+ * a ⋯ menu), a hairline under it. Who and what UI 13/20 (the actor medium), the meta Small secondary 2 under it,
+ * "Showing now" Small strong in the info text. An assistant's run: the info tint and a 3px accent edge at the start.
+ * The prompt: a 2px quiet rule at the start, padding 8, UI secondary, three lines until opened. Toggles UI
+ * secondary, 16 apart; chips 6 apart, 10 under the words.
+ */
+.gv-activity-feed {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font: var(--gv-type-ui);
+  color: var(--gv-text-primary);
+}
+
+.gv-activity-feed__empty {
+  margin: var(--gv-space-32) var(--gv-space-16);
+  color: var(--gv-text-secondary);
+}
+
+.gv-activity-feed__day-title {
+  margin: 0;
+  padding: var(--gv-space-20) var(--gv-space-16) var(--gv-space-4);
+  font: var(--gv-type-small-strong);
+  color: var(--gv-text-secondary);
+}
+
+.gv-activity-feed__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gv-activity-feed__entry {
+  display: grid;
+  grid-template-columns: var(--gv-size-avatar-28) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--gv-space-12);
+  padding: var(--gv-space-12) var(--gv-space-16);
+  border-block-end: 1px solid var(--gv-border-subtle);
+
+  &[data-menu] {
+    grid-template-columns: var(--gv-size-avatar-28) minmax(0, 1fr) var(--gv-size-control-24);
+    padding-inline-end: var(--gv-space-10);
+  }
+
+  &[data-assistant] {
+    background: var(--gv-surface-info);
+    box-shadow: inset 3px 0 0 var(--gv-border-accent);
+  }
+
+  &[data-assistant]:dir(rtl) {
+    box-shadow: inset -3px 0 0 var(--gv-border-accent);
+  }
+}
+
+.gv-activity-feed__avatar {
+  display: inline-flex;
+}
+
+.gv-activity-feed__main {
+  min-width: 0;
+}
+
+.gv-activity-feed__title {
+  margin: 0;
+
+  & strong {
+    font-weight: var(--gv-font-weight-medium);
+  }
+}
+
+.gv-activity-feed__meta,
+.gv-activity-feed__summary {
+  margin: var(--gv-space-2) 0 0;
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+}
+
+.gv-activity-feed__now {
+  font: var(--gv-type-small-strong);
+  color: var(--gv-text-info);
+
+  /* A separator dot after the time, drawn, not read. */
+  &::before {
+    content: '·' / '';
+    margin-inline: var(--gv-space-4);
+    font: var(--gv-type-small);
+    color: var(--gv-text-secondary);
+  }
+}
+
+.gv-activity-feed__prompt {
+  margin: var(--gv-space-8) 0 0;
+  padding-inline-start: var(--gv-space-8);
+  border-inline-start: 2px solid var(--gv-border-strong);
+  color: var(--gv-text-secondary);
+
+  > p {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+
+  &[data-open] > p {
+    display: block;
+  }
+}
+
+.gv-activity-feed__toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--gv-space-16);
+  margin-block-start: var(--gv-space-8);
+}
+
+.gv-activity-feed__toggle {
+  margin: 0;
+  padding: var(--gv-space-2) 0;
+  border: 0;
+  border-radius: var(--gv-radius-2);
+  background: none;
+  font: var(--gv-type-ui);
+  color: var(--gv-text-secondary);
+  cursor: pointer;
+  outline: none;
+
+  &[data-hovered] {
+    color: var(--gv-text-primary);
+    text-decoration: underline;
+  }
+
+  &[data-focus-visible] {
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
+  }
+}
+
+.gv-activity-feed__pager {
+  display: flex;
+  margin-block-start: var(--gv-space-8);
+}
+
+.gv-activity-feed__changes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gv-space-6);
+  margin: var(--gv-space-10) 0 0;
+  padding: 0;
+  list-style: none;
+
+  > li {
+    display: flex;
+    max-width: 100%;
+  }
+}
+
+.gv-activity-feed__older {
+  display: flex;
+  justify-content: center;
+  margin-block-start: var(--gv-space-16);
+}
