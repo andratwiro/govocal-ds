@@ -90,7 +90,8 @@ export interface PromptComposerProps extends PlacementProps {
 }
 
 /**
- * Prompt composer: where you write to the assistant. One rounded box: a chip row (what the prompt is about, then the
+ * Prompt composer: the box where an admin writes to the AI assistant, under the chat (in the report builder's Assistant
+ * panel today). One rounded box: a chip row (what the prompt is about, then the
  * attached files), a field that grows from 56 to 160 tall, the paperclip at the start and a round send button at
  * the end: grey while there is nothing to send, ink when there is, a stop square while the assistant works (the
  * field locks then, keeping focus). Enter sends; Shift+Enter makes a new line. After a send the field clears and

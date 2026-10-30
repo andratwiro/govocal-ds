@@ -23,19 +23,22 @@ const scope = (onRemove = fn()) => (
     labels={{remove: () => 'Ask about the whole report'}} />
 );
 
-/** Empty: send is grey and off. Enter sends, Shift+Enter makes a new line. */
+/** Empty, the state it starts in: send is grey and off until something is written. Enter sends, Shift+Enter makes a new line. */
 export const Default: Story = {};
 
 /** A prompt to send: the round button turns ink. */
 export const Ready: Story = {args: {defaultValue: 'Make the summary shorter'}};
 
-/** The assistant is working: the field locks and send becomes a stop square. */
-export const Working: Story = {args: {isWorking: true, onStop: fn(), defaultValue: 'Translate it to Spanish'}};
+/**
+ * The assistant is working on the prompt just sent (it went into the Chat thread above, so the field is empty again):
+ * the field locks, the paperclip is off, and send becomes a stop square.
+ */
+export const Working: Story = {args: {isWorking: true, onStop: fn()}};
 
-/** About one block: its chip first in the row, × back to the whole report. */
+/** About one block of a report: its chip first in the row; its × goes back to asking about the whole report. */
 export const WithContext: Story = {name: 'With context', args: {context: scope()}};
 
-/** Files the page took: a chip each, with an ×. */
+/** Files the screen accepted: a chip each, with an × to remove it. Send still needs words in the field. */
 export const WithAttachment: Story = {
   name: 'With attachment',
   render: args => {
@@ -44,19 +47,19 @@ export const WithAttachment: Story = {
   }
 };
 
-/** A file the page refused: a danger line under the chips. */
+/** A file the screen refused: a red line with a mark, above the field (under the chips, when there are any). */
 export const FileError: Story = {
   name: 'File error',
   args: {onFiles: fn(), onAttach: undefined, fileError: 'This file is over 25 MB. Attach a smaller one.'}
 };
 
-/** Switched off: field and buttons off, the box at 45%. */
+/** Switched off, when the assistant isn't available on the account: field and buttons off, the box faded. The screen says why around it (Assistant panel's "off" state). */
 export const Disabled: Story = {args: {isDisabled: true}};
 
 /** Without a way to attach: no paperclip. */
 export const NoAttach: Story = {name: 'No attach', args: {onAttach: undefined}};
 
-/** Long words grow the field from 56 to 160, then it scrolls. */
+/** A long prompt grows the field from 56px to 160px tall, then it scrolls. */
 export const LongPrompt: Story = {
   name: 'Long prompt',
   args: {defaultValue: 'Rewrite the whole report in a more formal tone, use the four priority names everywhere, ' +
