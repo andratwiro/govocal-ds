@@ -93,3 +93,24 @@ test('Stat card: a flat sparkline under a light numeral; pressing it opens its d
   await expect(card).toBeFocused();
   await report(page);
 });
+
+test('Project header: Save saves, then reads Back to project; a mode carries its unread dot; a survey has two tabs', async ({page}) => {
+  await page.goto(story('patterns-project-page-project-header--save-states'));
+  const save = page.getByRole('button', {name: 'Save', exact: true});
+  await expect(save).toBeEnabled();
+  await save.focus();
+  await page.keyboard.press('Enter');
+  const back = page.getByRole('button', {name: 'Back to project'});
+  await expect(back).toBeVisible();
+  await back.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('status')).toHaveText('Back on the project');
+  await report(page);
+
+  await page.goto(story('patterns-project-page-project-header--tabs-and-unread'));
+  await expect(page.getByRole('radiogroup', {name: 'Phase view'})).toHaveCount(2);
+  const [ideation, survey] = await page.getByRole('radiogroup', {name: 'Phase view'}).all();
+  await expect(ideation.getByRole('img', {name: 'New activity'})).toBeVisible();
+  await expect(survey.getByRole('radio')).toHaveCount(2);
+  await report(page);
+});

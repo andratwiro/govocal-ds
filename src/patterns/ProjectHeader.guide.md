@@ -17,10 +17,14 @@
 ## Anatomy
 
 1. **Panel toggle** (optional): shows or hides project setup (the project) or the timeline (a phase).
-2. **Crumbs**: the parent and the project, or ← the project and the phase with its status badge.
-3. **Mode switch** (phase, with `modes`): a Segmented control in the middle; modes that can't open yet are off.
+2. **Crumbs**: the parent and the project, or ← the project and the phase with the **project's** status badge (an
+   upcoming phase of a live project reads Live).
+3. **Mode switch** (phase, with `modes`): a Segmented control in the middle; only the modes given show (a survey's
+   Build · Insights), modes that can't open yet are off, and a mode with something new carries a red dot (`hasUnread`).
 4. **People** (optional): an Avatar, or an Avatar group when others edit the same phase.
 5. **Actions**: Share ▾ and Publish ▾ / ● Live ▾ / Archived ▾ on the project, or Save.
+5. **Actions**: Share ▾ (a menu, or your own control in `share`, such as the Access popover) and Publish ▾ / ● Live ▾
+   on the project, or Save. On a phase with `saveState`, Save → saving (busy) → Back to project.
 
 The crumb frame is 48 tall; the bar is full width.
 
@@ -36,6 +40,7 @@ The bar is a row of buttons and links; Share and Publish open menus, after the W
 | Enter (on Share or Publish) | Opens its menu, focus on the first item. | `play: Keyboard` |
 | Esc (in a menu) | Closes it and puts focus back on its button. | `play: Keyboard` |
 | Tab | Moves on from Share to Publish. | `play: Keyboard` |
+| Enter (on Save, with `saveState`) | Saves; once saved the button reads Back to project, and Enter leads back. | `e2e/project-screens.spec.ts` |
 
 ## Content
 
@@ -73,6 +78,8 @@ badge in words, a mode switch read as one choice, and menu buttons whose menus r
 
 - 30 Oct 2026: `status="archived"`: Archived ▾ in place of Publish, with the way back in its menu (docs/DECISIONS.md, "Small
   fixes").
+- 30 Oct 2026: an unread dot per mode (`hasUnread`), `saveState` for Save → saving → Back to project, a `share` slot,
+  and the status badge documented as the project's (docs/DECISIONS.md, "Project screens").
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: its words come in through `labels`.
 - 29 Oct 2026: one status word, `status`; the bar is built into the header, switched on by the bar's props

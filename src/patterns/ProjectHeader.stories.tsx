@@ -211,3 +211,78 @@ export const Archived: Story = {
     await expect(canvas.getAllByText('Archived')).toHaveLength(2);
   }
 };
+
+function SaveFlow(args: React.ComponentProps<typeof ProjectHeader>) {
+  const [state, setState] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const [back, setBack] = useState(false);
+  return (
+    <div style={{display: 'grid', gap: 'var(--gv-space-8)'}}>
+      <ProjectHeader {...args} saveState={state}
+        onSave={() => { setState('saving'); setTimeout(() => setState('saved'), 600); }}
+        onBack={() => setBack(true)} />
+      <span role="status" style={{font: 'var(--gv-type-small)', color: 'var(--gv-text-secondary)'}}>
+        {back ? 'Back on the project' : state === 'saved' ? 'Saved' : ''}
+      </span>
+    </div>
+  );
+}
+
+/**
+ * Not in Figma (the prototype's phase bar): Save is on from the start; pressed, it saves (a busy button), then becomes
+ * "Back to project", which leads back to the project's overview. `saveState` carries where it stands.
+ */
+export const SaveStates: Story = {
+  name: 'Save, saving, back to project',
+  tags: ['not-in-figma'],
+  decorators: [onApp],
+  parameters: {layout: 'padded'},
+  args: {level: 'phase', status: 'live', phaseName: 'Shortlist proposals', modes: modes(true), mode: 'build', people: me, onTogglePanel: () => {}},
+  render: args => <SaveFlow {...args} />
+};
+
+/** Each step of the save, side by side: Save, saving (busy), Back to project. */
+export const SaveStatesStill: Story = {
+  name: 'Save states',
+  tags: ['not-in-figma'],
+  decorators: [onApp],
+  parameters: {layout: 'padded'},
+  args: {level: 'phase', status: 'live', phaseName: 'Shortlist proposals', modes: modes(true), mode: 'build', people: me, onSave: () => {}, onBack: () => {}},
+  render: args => (
+    <div style={{display: 'grid', gap: 'var(--gv-space-16)'}}>
+      <ProjectHeader {...args} saveState="idle" />
+      <ProjectHeader {...args} saveState="saving" />
+      <ProjectHeader {...args} saveState="saved" />
+    </div>
+  )
+};
+
+/**
+ * Not in Figma: `modes` sets which tabs show and each one's unread dot. A survey phase has Build · Insights only; an
+ * ideation phase with new inputs carries a dot on Manage. The status badge is the project's: an upcoming phase of a
+ * live project reads Live.
+ */
+export const TabsAndUnread: Story = {
+  name: 'Tabs and unread dot',
+  tags: ['not-in-figma'],
+  decorators: [onApp],
+  parameters: {layout: 'padded'},
+  args: {level: 'phase', status: 'live', people: me, onSave: () => {}, onTogglePanel: () => {}},
+  render: args => (
+    <div style={{display: 'grid', gap: 'var(--gv-space-16)'}}>
+      <ProjectHeader {...args} phaseName="Collect ideas" mode="build"
+        modes={[{id: 'build', label: 'Build'}, {id: 'manage', label: 'Manage', hasUnread: true}, {id: 'insights', label: 'Insights'}]} />
+      <ProjectHeader {...args} phaseName="Feedback survey" mode="build"
+        modes={[{id: 'build', label: 'Build'}, {id: 'insights', label: 'Insights'}]} />
+    </div>
+  )
+};
+
+/** The phase bar right to left: the crumbs at the right, the actions at the left. */
+export const RightToLeft: Story = {
+  name: 'Right to left',
+  globals: {direction: 'rtl'},
+  decorators: [onApp],
+  parameters: {layout: 'padded'},
+  args: {level: 'phase', status: 'live', phaseName: 'Collect ideas', mode: 'build', people: me, onSave: () => {}, onTogglePanel: () => {},
+    modes: [{id: 'build', label: 'Build'}, {id: 'manage', label: 'Manage', hasUnread: true}, {id: 'insights', label: 'Insights'}]}
+};

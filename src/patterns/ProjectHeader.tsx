@@ -36,6 +36,12 @@ export interface ProjectHeaderLabels extends Pick<BreadcrumbsLabels, 'live' | 'd
   phaseView: string;
   /** An archived project's state: the bar's menu button, a phase's badge. */
   archived: string;
+  /** Save while it saves (`saveState="saving"`). */
+  saving: string;
+  /** What Save becomes once saved (`saveState="saved"`): it leads back to the project. */
+  backToProjectButton: string;
+  /** A mode's unread dot, read after its name. */
+  unread: string;
 }
 
 /** Project header's English words; a page passes its own over them with `labels`. */
@@ -51,7 +57,10 @@ export const projectHeaderLabels: ProjectHeaderLabels = {
   live: 'Live',
   draft: 'Draft',
   phaseView: 'Phase view',
-  archived: 'Archived'
+  archived: 'Archived',
+  saving: 'Saving',
+  backToProjectButton: 'Back to project',
+  unread: 'New activity'
 };
 
 export interface ProjectHeaderMode {
@@ -61,6 +70,8 @@ export interface ProjectHeaderMode {
   label: string;
   /** A mode that can't open yet (Manage and Insights before a phase is published). */
   isDisabled?: boolean;
+  /** Something new waits in this mode (new inputs in Manage): a red dot after its name. */
+  hasUnread?: boolean;
 }
 
 /** `className` and `style` place the header (the bar, or the crumb frame without one); they never paint it. */
@@ -72,8 +83,9 @@ export interface ProjectHeaderProps extends PlacementProps {
    */
   level?: 'project' | 'phase';
   /**
-   * Draft, live or archived. On a phase: the Status badge after the crumbs (default `draft`; archived wears the grey
-   * badge). On the project: the bar's Publish ▾ (`draft`, primary), ● Live ▾ (`live`) or Archived ▾ (`archived`,
+   * The project's status, draft, live or archived, on every level. On a phase it is still the project's: the Status
+   * badge after the crumbs (default `draft`; archived wears the grey badge), so an upcoming phase of a live project
+   * reads Live. On the project: the bar's Publish ▾ (`draft`, primary), ● Live ▾ (`live`) or Archived ▾ (`archived`,
    * residents can read it but no longer take part; its menu restores it) menu button; given, the header becomes the
    * bar.
    */
@@ -101,7 +113,10 @@ export interface ProjectHeaderProps extends PlacementProps {
    * the end. Without them it is Figma's 48-tall crumb frame, as before.
    */
 
-  /** Phase levels: the mode switch in the middle of the bar (Build · Manage · Insights; a survey's Build · Insights). */
+  /**
+   * Phase levels: the tabs of the mode switch in the middle of the bar, in order. Only the modes given show: Build ·
+   * Manage · Insights, a survey's Build · Insights. Each can be disabled or carry an unread dot.
+   */
   modes?: ProjectHeaderMode[];
   /** The selected mode's id. */
   mode?: string;
@@ -116,10 +131,21 @@ export interface ProjectHeaderProps extends PlacementProps {
   hasChanges?: boolean;
   /** Shows Save (always on a phase, while there are changes on the project). */
   onSave?: () => void;
+  /**
+   * Phase levels: where saving stands, for the prototype's Save → saving → Back to project. Given, Save is on whether
+   * or not there are changes; `saving` turns it into a busy button, `saved` into "Back to project", which calls
+   * `onBack`. Leave it out for the older Save that turns on with `hasChanges`.
+   */
+  saveState?: 'idle' | 'saving' | 'saved';
   /** The Publish / Live / Archived menu's items (`MenuItem`s). */
   publishMenu?: ReactNode;
   /** Project level: Share ▾ and its items (`MenuItem`s). */
   shareMenu?: ReactNode;
+  /**
+   * Project level: your own Share control in place of Share ▾'s menu, e.g. the Access popover recipe (a Share ▾ that
+   * opens the people with access). Wins over `shareMenu`.
+   */
+  share?: ReactNode;
   /** Its own words (the toggles' and ←'s names, Save, Share, Publish, Live, Draft), over `projectHeaderLabels`. */
   labels?: Partial<ProjectHeaderLabels>;
 }
@@ -159,16 +185,18 @@ export function ProjectHeader({
   people,
   hasChanges = false,
   onSave,
+  saveState,
   status,
   publishMenu,
   shareMenu,
+  share,
   labels,
   className,
   style
 }: ProjectHeaderProps) {
   const l = mergeLabels(projectHeaderLabels, labels);
   const isProject = level === 'project';
-  const isBar = modes != null || people != null || onSave != null || (level === 'project' && status != null) || shareMenu != null;
+  const isBar = modes != null || people != null || onSave != null || (level === 'project' && status != null) || shareMenu != null || share != null;
   const crumbs = (
     <nav className={clsx('gv-header', !isBar && className)} style={isBar ? undefined : style} data-level={level} aria-label={l.breadcrumb}>
       {isProject && onTogglePanel && (
@@ -205,11 +233,21 @@ export function ProjectHeader({
 
   if (!isBar) return crumbs;
 
-  const save = (
-    <Button size={32} onPress={onSave} isDisabled={!isProject && !hasChanges}>
-      {l.save}
-    </Button>
-  );
+  const save =
+    !isProject && saveState === 'saved' ? (
+      <Button size={32} variant="secondary" onPress={onBack}>
+        {l.backToProjectButton}
+      </Button>
+    ) : (
+      <Button
+        size={32}
+        onPress={onSave}
+        isPending={!isProject && saveState === 'saving'}
+        isDisabled={!isProject && saveState == null && !hasChanges}
+        labels={{pending: l.saving}}>
+        {l.save}
+      </Button>
+    );
 
   let actions: ReactNode;
   if (!isProject) actions = onSave && save;
@@ -217,7 +255,8 @@ export function ProjectHeader({
   else
     actions = (
       <>
-        {shareMenu != null && (
+        {share}
+        {share == null && shareMenu != null && (
           <MenuButton label={l.share} variant="secondary" menu={shareMenu}>
             {l.share}
           </MenuButton>
@@ -255,7 +294,8 @@ export function ProjectHeader({
             if (next != null) onModeChange?.(String(next));
           }}>
           {modes.map(m => (
-            <SegmentedControlItem key={m.id} id={m.id} isDisabled={m.isDisabled}>
+            <SegmentedControlItem key={m.id} id={m.id} isDisabled={m.isDisabled} isUnread={m.hasUnread}
+              labels={{unread: l.unread}}>
               {m.label}
             </SegmentedControlItem>
           ))}

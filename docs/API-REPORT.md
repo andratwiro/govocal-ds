@@ -4094,6 +4094,8 @@ Component, from `src/patterns/ProjectHeader.tsx`.
 - `projectHref?: string`
 - `projectName: string`
 - `publishMenu?: ReactNode`
+- `saveState?: 'idle' | 'saving' | 'saved'`
+- `share?: ReactNode`
 - `shareMenu?: ReactNode`
 - `status?: 'draft' | 'live' | 'archived'`
 - `style?: CSSProperties`
@@ -4112,6 +4114,7 @@ Interface, from `src/patterns/ProjectHeader.tsx`.
 
 - `archived: string`
 - `backToProject: (project: string) => string`
+- `backToProjectButton: string`
 - `breadcrumb: string`
 - `draft: string`
 - `live: string`
@@ -4119,14 +4122,17 @@ Interface, from `src/patterns/ProjectHeader.tsx`.
 - `projects: string`
 - `publish: string`
 - `save: string`
+- `saving: string`
 - `share: string`
 - `toggleSetup: string`
 - `toggleTimeline: string`
+- `unread: string`
 
 ### `ProjectHeaderMode`
 
 Interface, from `src/patterns/ProjectHeader.tsx`.
 
+- `hasUnread?: boolean`
 - `id: string`
 - `isDisabled?: boolean`
 - `label: string`
