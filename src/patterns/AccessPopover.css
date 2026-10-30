@@ -1,0 +1,76 @@
+@import '../components/theme.css';
+
+/* The recipe's popover (the prototype's .pj-sm): 360 wide, padding 12 16 16, sections 12 apart; each person a row of
+   avatar · name and email · role, 8 apart; Copy link the full width at the foot. Page CSS: it places, never paints
+   beyond its own block. */
+.gv-access-popover {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-12);
+  inline-size: 360px;
+  max-inline-size: 100%;
+  box-sizing: border-box;
+  padding: var(--gv-space-12) var(--gv-space-16) var(--gv-space-16);
+  outline: none;
+  font-family: var(--gv-font-family);
+}
+
+.gv-access-popover__invite {
+  margin: 0;
+}
+
+.gv-access-popover__invite-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+
+  > :first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+.gv-access-popover__people {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gv-access-popover__person {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-12);
+}
+
+.gv-access-popover__who {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.gv-access-popover__name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-6);
+  font: var(--gv-type-ui-strong);
+  color: var(--gv-text-primary);
+}
+
+.gv-access-popover__email {
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.gv-access-popover__owner {
+  font: var(--gv-type-ui);
+  color: var(--gv-text-tertiary);
+}
+
+.gv-access-popover__copy {
+  inline-size: 100%;
+}

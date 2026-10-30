@@ -176,3 +176,18 @@ test('Method card: one button named by its method, pressed by keyboard', async (
   await expect(page.getByRole('button', {name: 'Survey'})).toBeFocused();
   await report(page);
 });
+
+test('Access popover (recipe): Share opens it by keyboard, a role changes, Esc closes back onto Share', async ({page}) => {
+  await page.goto(story('patterns-project-page-access-popover--closed'));
+  const share = page.getByRole('button', {name: 'Share'});
+  await share.focus();
+  await page.keyboard.press('Enter');
+  const dialog = page.getByRole('dialog', {name: 'Share'});
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole('list', {name: 'People with access'}).getByRole('listitem')).toHaveCount(3);
+  await expect(dialog.getByText('Owner')).toBeVisible();
+  await report(page, '.gv-access-popover');
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await expect(share).toBeFocused();
+});
