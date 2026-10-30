@@ -2,8 +2,9 @@
 // guards (tests/), the build, then the browser tests (e2e/) against the build. The e2e server listens on E2E_PORT
 // (4173 when unset), as in playwright.config.ts: pick a free one when another run is going.
 //
-// It stops at the first red step. Each run's counts are written to src/overview/checks-last-run.json, which
-// Overview/Checks shows (`--no-save` skips that). Extra arguments go to Playwright (`npm run check -- e2e/table.spec.ts`).
+// It stops at the first red step. Each full run's counts are written to src/overview/checks-last-run.json, which
+// Overview/Checks shows (`--no-save` skips that). Extra arguments go to Playwright (`npm run check -- --workers=2`);
+// naming spec files makes a partial run, which is not saved.
 import {spawn, execSync} from 'node:child_process';
 import {existsSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
@@ -69,7 +70,7 @@ const steps = [
 ];
 
 const result = {ranAt: new Date().toISOString(), commit: execSync('git rev-parse --short HEAD', {cwd: ROOT, encoding: 'utf8'}).trim(),
-  partial: extra.length > 0, steps: []};
+  partial: extra.some(a => !a.startsWith('-')), steps: []};
 let ok = true;
 for (const step of steps) {
   if (!ok) { result.steps.push({name: step.name, label: step.label, status: 'not run'}); continue; }
