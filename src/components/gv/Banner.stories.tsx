@@ -141,6 +141,35 @@ export const PhaseStatus: Story = {
   )
 };
 
+/** A banner that appears after the page has loaded, here when a save fails: `isLive` makes it a status whose words
+ * arrive once it is on screen, so screen readers announce it. */
+export const AppearsLater: Story = {
+  name: 'Appears later',
+  render: () => {
+    function Demo() {
+      const [failed, setFailed] = useState(false);
+      return (
+        <div style={{display: 'flex', flexDirection: 'column', gap: 16, width: 400}}>
+          <Button variant="secondary" size={32} onPress={() => setFailed(true)}>Save</Button>
+          {failed && (
+            <Banner tone="warning" title="Not saved" isLive>
+              The phase could not be saved. Check your connection and try again.
+            </Banner>
+          )}
+        </div>
+      );
+    }
+    return <Demo />;
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.queryByRole('status')).toBeNull();
+    await userEvent.click(canvas.getByRole('button', {name: 'Save'}));
+    await waitFor(() => expect(canvas.getByRole('status')).toHaveTextContent('Not saved'));
+    await expect(canvas.queryByRole('note')).toBeNull();
+  }
+};
+
 /** The keyboard: Tab reaches the banner's link, then its ×; Enter follows the link or dismisses the banner. */
 export const Keyboard: Story = {
   render: () => {

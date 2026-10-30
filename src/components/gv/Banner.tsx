@@ -1,5 +1,5 @@
 'use client';
-import type {ReactNode} from 'react';
+import {useEffect, useState, type ReactNode} from 'react';
 import {Link} from 'react-aria-components';
 import {Info, Clock, TriangleAlert, CircleCheck, Sparkles, X} from 'lucide-react';
 import {IconButton} from './IconButton';
@@ -68,6 +68,15 @@ export interface BannerProps extends PlacementProps {
    * @default 'default'
    */
   density?: 'default' | 'compact';
+  /**
+   * Announces the banner when it appears after the page has loaded (a save that failed, screening that just turned
+   * on): it is a status (`role="status"`) whose words arrive once it is on screen, so screen readers read them. Leave
+   * it off for a banner that is there when the page opens: that one is a note, read in place. The compact strip is
+   * always a status.
+   *
+   * @default false
+   */
+  isLive?: boolean;
 }
 
 /** A message box: icon + text, on a tone's tint (+ title, link, actions, dismiss). */
@@ -84,9 +93,15 @@ export function Banner({
   onDismiss,
   labels,
   density = 'default',
+  isLive = false,
   className,
   style
 }: BannerProps) {
+  // A live region announces what changes inside it, not what it was born with: the words arrive after it mounts.
+  const [isFilled, setFilled] = useState(!isLive);
+  useEffect(() => {
+    if (isLive) setFilled(true);
+  }, [isLive]);
   const resolvedTone: BannerTone = tone ?? 'info';
   const isInline = linkPlacement === 'inline';
   const ToneIcon = TONE_ICON[resolvedTone];
@@ -102,36 +117,40 @@ export function Banner({
   }
 
   return (
-    <div className={clsx('gv-banner', className)} style={style} data-tone={resolvedTone} role="note">
-      {icon !== null && <span className="gv-banner__icon">{icon ?? <ToneIcon aria-hidden size={16} strokeWidth={1.75} />}</span>}
-      <div className="gv-banner__content">
-        <div className="gv-banner__row">
-          <p className="gv-banner__text">
-            {title && <strong className="gv-banner__title">{title}</strong>}
-            {children}
-            {isInline && linkLabel && (
-              <>
-                {' '}
-                <Link className="gv-banner__link" href={linkHref} onPress={onLinkPress}>
+    <div className={clsx('gv-banner', className)} style={style} data-tone={resolvedTone} role={isLive ? 'status' : 'note'}>
+      {isFilled && (
+        <>
+          {icon !== null && <span className="gv-banner__icon">{icon ?? <ToneIcon aria-hidden size={16} strokeWidth={1.75} />}</span>}
+          <div className="gv-banner__content">
+            <div className="gv-banner__row">
+              <p className="gv-banner__text">
+                {title && <strong className="gv-banner__title">{title}</strong>}
+                {children}
+                {isInline && linkLabel && (
+                  <>
+                    {' '}
+                    <Link className="gv-banner__link" href={linkHref} onPress={onLinkPress}>
+                      {linkLabel}
+                    </Link>
+                  </>
+                )}
+              </p>
+              {!isInline && linkLabel && (
+                <Link className="gv-banner__link gv-banner__link--trailing" href={linkHref} onPress={onLinkPress}>
                   {linkLabel}
                 </Link>
-              </>
-            )}
-          </p>
-          {!isInline && linkLabel && (
-            <Link className="gv-banner__link gv-banner__link--trailing" href={linkHref} onPress={onLinkPress}>
-              {linkLabel}
-            </Link>
+              )}
+            </div>
+            {actions && <div className="gv-banner__action">{actions}</div>}
+          </div>
+          {onDismiss && (
+            <span className="gv-banner__dismiss">
+              <IconButton variant="ghost" emphasis="strong" size={24} aria-label={mergeLabels(bannerLabels, labels).dismiss} onPress={onDismiss}>
+                <X aria-hidden size={16} strokeWidth={1.75} />
+              </IconButton>
+            </span>
           )}
-        </div>
-        {actions && <div className="gv-banner__action">{actions}</div>}
-      </div>
-      {onDismiss && (
-        <span className="gv-banner__dismiss">
-          <IconButton variant="ghost" emphasis="strong" size={24} aria-label={mergeLabels(bannerLabels, labels).dismiss} onPress={onDismiss}>
-            <X aria-hidden size={16} strokeWidth={1.75} />
-          </IconButton>
-        </span>
+        </>
       )}
     </div>
   );

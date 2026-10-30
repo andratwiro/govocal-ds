@@ -98,7 +98,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Overlays › Side panel | `Dialog`, `Toolbar` through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 15 |
 | Overlays › Tooltip | `OverlayArrow`, `Tooltip`, `TooltipTrigger` | `TooltipProps` | – | yes | 1 |
 | Status & feedback › Badge | `Button` | – | – | yes | 8 |
-| Status & feedback › Banner | `Link` through `components/gv/IconButton` | – | – | yes | 13 |
+| Status & feedback › Banner | `Link` through `components/gv/IconButton` | – | – | yes | 14 |
 | Status & feedback › Empty state | None: plain React and CSS | – | – | yes | 10 |
 | Status & feedback › Missing part | None: plain React and CSS | – | – | yes | 2 |
 | Status & feedback › New dot | None: plain React and CSS | – | – | yes | 2 |

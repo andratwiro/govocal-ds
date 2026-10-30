@@ -509,6 +509,7 @@ Component, from `src/components/gv/Banner.tsx`.
 - `className?: string`
 - `density?: 'default' | 'compact'`
 - `icon?: ReactNode | null`
+- `isLive?: boolean`
 - `labels?: Partial<BannerLabels>`
 - `linkHref?: string`
 - `linkLabel?: string`

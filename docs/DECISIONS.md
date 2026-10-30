@@ -19,6 +19,11 @@ Calls made fixing the bugs the component-page writers found (benchmark-gaps plan
   React Aria ToggleButton (`aria-pressed`); without it, a link as before** → the row turns a filter on and off, which
   is a toggle, not a navigation; keying the switch on whether `isSelected` is given keeps every linking row unchanged.
   The New dot's name comes through `labels` (rule 11).
+- Banner's `role="note"` is never announced when a banner appears later → **an `isLive` prop: the banner is a status
+  (`role="status"`, polite) and its words arrive just after it mounts; without it, a note as before** → a live region
+  announces changes, not what it was born with, so filling it after mount is what screen readers reliably read; a
+  banner on screen when the page opens must not interrupt, so announcing stays the page's call, not a guess from
+  mount time.
 
 ## Report parts (30 Oct 2026)
 

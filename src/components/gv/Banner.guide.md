@@ -57,17 +57,20 @@ A banner with no link, actions or × is not interactive.
 - Don't stack banners; one per section, the most important.
 - Warning is for consequences, not for decoration; a fact is info.
 - The ×'s name is "Dismiss"; pass `labels` in other languages.
+- A banner that appears in answer to something people did (a failed save) takes `isLive`, so it is heard; one that is
+  there when the page opens doesn't.
 
 ## Accessibility
 
-**The banner gives you:** a note (`role="note"`) a screen reader reads in place, a compact strip as a status that is
-announced when it changes, a tone icon hidden from screen readers, a real link and a named ×.
+**The banner gives you:** a note (`role="note"`) a screen reader reads in place, a live banner (`isLive`) as a status
+announced when it appears, a compact strip as a status that is announced when it changes, a tone icon hidden from screen readers, a real link and a named ×.
 
 **You still own:**
 - Words that say the tone; the colour and icon never carry the meaning alone ("Warning:" is not needed, but the
   sentence must say the risk).
 - Where focus goes after a dismiss.
-- Announcing a banner that appears after the page loaded, if people must hear it (a default banner is not announced).
+- `isLive` on a banner that appears after the page loaded, if people must hear it (a banner without it is not
+  announced).
 
 ## Related
 
@@ -82,10 +85,12 @@ announced when it changes, a tone icon hidden from screen readers, a real link a
 - Built by agents from Figma's Banner (Info, Info · link); the neutral, warning, success and AI tones, the title,
   actions, dismiss and the compact strip come from the prototype and the review (Not in Figma).
 - Reviewed by a person: not yet.
-- Known limits: no danger or error tone; a banner shown later is not announced to screen readers.
+- Known limits: no danger or error tone.
 
 ## Changes
 
+- 30 Oct 2026: `isLive` announces a banner that appears after the page loaded (a status whose words arrive once
+  it is on screen); without it, a note as before (docs/DECISIONS.md, "Component page fixes").
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: the ×'s name comes through `labels`.
 - 29 Oct 2026: `type="info-link"` became `linkPlacement="inline"`; `action` became `actions`; `compact` became
