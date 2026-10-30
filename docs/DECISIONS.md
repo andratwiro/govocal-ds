@@ -265,6 +265,23 @@ Calls made while building the component page (the benchmark plan's Task 1: usage
   every interactive part to link one → **the page says "No WAI-ARIA APG pattern covers a plain text field…" and the
   guard takes that sentence in place of a link; a text part with a list or toolbar in it (Title field, the rich text
   editors) links that pattern** → linking an unrelated pattern would mislead; saying there is none is the honest page.
+- Fresh-eyes check (Task 2's last step), the same confusion on most pages: explain it on every page vs once → **once,
+  in "Words on this page" at the top of every component page (part, story, back office, `labels`, token, Not in
+  Figma, AI agents, the APG pattern, Tab stop, Tested by, You still own, pixel sizes)** → a glossary repeated in 109
+  guides would drift; one list in `ComponentPage.tsx` stays true.
+- "Behaviour from React Aria's …" in 80 guides vs plain words in Behaviour → **removed from the guides** → a designer
+  can't use it, and docs/REACT-ARIA.md (generated from the code) already lists what each part takes from React Aria.
+- The keyboard column "Checked by" read as a checkbox's ticked state → **"Tested by", and the page shows `play: X` as
+  "the X story" and an e2e spec as "browser test (…)"** → the guard reads the cells, not the header, so the source
+  stays checkable.
+- The page's stage shown as a coloured pill read as a Status badge ("Draft") → **plain bold words** → two "Draft"
+  pills on one page meant two things.
+- Filter chips joined "is any of" values with the language's unit list, which is "and" in Arabic and French →
+  **"or" (Intl disjunction): "Proposed, Viewed or Under consideration"** → "is any of" means or; English gains "or"
+  before the last value.
+- A "Right to left" story rendered left to right on its docs page (Storybook leaves a story's own globals out of the
+  decorator's `globals` there) → **the decorator reads `storyGlobals` too, and on a docs page wraps each story in its
+  own `dir`, leaving the page's direction alone** → the page said "flows from the right" over a story that didn't.
 - Forms pages: Select's popup cited as the APG Listbox pattern, not the Select-only combobox → React Aria's Select is a
   button that opens a list box, which is what the keys do.
 

@@ -171,6 +171,7 @@ pages):
 - A story described in Content or When to use must show it: a story named "Filled" is filled, "Empty" is empty, and a
   layout the page promises (wrapping, a short last row, right to left) is visible in the story.
 - "When not to use" gives the test, not just the name: "Pick **Badge** when the word names a kind, not a stage".
+  The bold name goes on the bullet's first line (the guard reads one line), the test after it.
 - "You still own" lists what the screen's designer or developer must decide; say which when it is only one of them.
 - Changes and Provenance cite `docs/DECISIONS.md` with the decision in a few words; the page links the file.
 - The page explains its own words (part, story, `labels`, Not in Figma, Tested by…) in "Words on this page" at the
