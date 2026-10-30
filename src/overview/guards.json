@@ -141,7 +141,7 @@
   },
   "e2e/play.spec.ts": {
     "group": "Components behave",
-    "what": "Every story that acts itself out (the keyboard tables cite them) plays to its end without a failed step."
+    "what": "Every story that acts itself out (the keyboard tables cite them) plays to its end without a failed step; a short list known to fail today may only shrink."
   },
   "e2e/project-overview.spec.ts": {
     "group": "Back office screens",
