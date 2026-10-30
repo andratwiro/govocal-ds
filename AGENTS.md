@@ -57,6 +57,28 @@ import {ComboBox, ComboBoxItem} from 'govocal-ds/base';  // a Base part, only wh
 4. Nothing fits? Build the page from smaller Components. A missing part in the back office is a `<Gap name="…">`
    (`backoffice/src/Gap.tsx`); the system adds it on its second use.
 
+## Add a back-office screen
+
+1. **Route:** one line in `backoffice/src/routes.tsx`, at the real admin's path (`projects/:projectId/events`).
+2. **Page:** `backoffice/src/pages/<Name>.tsx`, wrapped in `Page` (`./Page`: title, line, actions, the trail of a
+   sub-page). Demo data goes in `backoffice/src/data-<area>.ts`, invented, with no real tenant. Reach the screen from
+   where the real admin does (the side nav's `nav.ts`, a link on its parent page).
+3. **Parts:** pick each from `docs/COMPONENTS.md` and read its "Not for" before using it. The usual admin list is a
+   `Panel` holding a `TableToolbar` and a `DataTable`, a row's actions in `DataTableOptions`, a create form in a
+   `Modal`, a delete in an `AlertDialog`, nothing yet in an `EmptyState`. Words residents read (an event's title, a
+   description) take every platform language: `MultilingualTextField`, as the rest of the back office.
+4. **Words and dates** are the page's own English; numbers and dates go through `useNumberFormatter` and
+   `useDateFormatter` from `govocal-ds` (`docs/API.md`, rule 11), never a fixed locale.
+5. **No new CSS** if you can help it: Stack, Inline and Grid place; what is left may only place (`docs/API.md`, "Page
+   CSS places").
+6. **A browser test** `e2e/<name>.spec.ts`: find by role and label, report axe with `a11yReport(await
+   axeViolations(page, 'main'))`. Give it a line in `src/overview/guards.json` (`tests/checks-page.test.mjs` fails
+   until it has one). Run it after the full `npm run build` (the server's root is the landing page, so
+   `build:backoffice` alone times out).
+
+Older pages break a few of these rules (`selectedKey` on a Select, hard-coded `'en-GB'` dates): the rules win, never
+copy the old page.
+
 ## Tokens: a closed set
 
 - Every `--gv-*` token is in `public/tokens.json` (DTCG, with each token's purpose; published as
@@ -74,11 +96,12 @@ import {ComboBox, ComboBoxItem} from 'govocal-ds/base';  // a Base part, only wh
 
 | Command | What it does |
 |---|---|
+| `npm ci` | Once per checkout (each worktree installs its own `node_modules`). |
 | `npm run storybook` | Storybook at http://localhost:6006, reloading on save; its MCP server at `/mcp`. |
 | `npm run typecheck` | `tsc --noEmit` over `src`, `backoffice/src`, `.storybook`, `e2e`. |
 | `npm test` | Vitest guards in `tests/` (about a second): tokens, names, the public API, the docs index. |
 | `npm run build` | Storybook, the back office and the landing page into `dist/`. |
-| `E2E_PORT=<port> npx playwright test` | Browser tests against `dist/` (build first). Pick a free port; one run at a time. |
+| `E2E_PORT=<port> npx playwright test` | Browser tests against `dist/` (the full `npm run build` first). Pick a free port; one run at a time. |
 | `E2E_PORT=<port> npm run check` | Everything in order: typecheck, unit guards, build, e2e. Stops at the first red step; its counts feed Overview › Checks. |
 | `npm run break-it` | Makes four faults on a copy of the repo and prints the check that catches each (about a minute; no build). |
 | `npm run components:index` | Regenerates `docs/COMPONENTS.md` and `public/llms.txt` from the stories, and `docs/REACT-ARIA.md` (what each part takes from React Aria) from the code. Run after any story or doc-comment change: `npm test` fails if stale. |

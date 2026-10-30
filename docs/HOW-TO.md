@@ -119,7 +119,8 @@ docs/ILLUSTRATIONS.md.
 
 **What the end-to-end tests need:**
 - Chromium, installed once: `npx playwright install chromium`.
-- A fresh `npm run build` first: they test `dist/`, not your open Storybook.
+- A fresh full `npm run build` first: they test `dist/`, not your open Storybook. `build:backoffice` alone is not
+  enough: the test server waits for the landing page at `dist/`'s root, which only the full build writes.
 - A free port. They serve `dist/` on port 4173, and **reuse whatever already answers there**. If another copy of the
   repo might be serving, pick another port: `E2E_PORT=4405 npm run test:e2e`. Run one suite at a time.
 - When a test fails after a change you meant, the test changes, not your design.
