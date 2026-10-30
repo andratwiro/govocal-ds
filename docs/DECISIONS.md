@@ -4,6 +4,27 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Project pages, second deep dive (30 Oct 2026)
+
+Calls made moving the overview and phase screens closer to the prototype with the parts the system already has.
+
+- An Information phase showed Build · Manage · Insights and "Nothing to manage here"; the prototype's header has no
+  switch → **Build only: Project header gets no `modes`, Manage and Insights lead back to Build** → it collects
+  nothing; Project header already draws no switch without modes.
+- Information's Report row (Download + Add a report) on Card → **Card's `actions` slot holding two Buttons, Download
+  disabled until a report exists, Add a report opens Reporting** → the labelled-button slot the system builder is
+  adding replaces the page's pair later; no new part from the page.
+- Volunteering's Causes forced open vs the prototype's closed row → **a closed row with three icon actions (the list,
+  Add a cause, Download volunteers) and the count; the list opens in a Modal of Volunteering rows** → the prototype's
+  list icon names no target; a dialog keeps the column short, as Attachments does.
+- Information and Volunteering emails → **Phase started only ("1 email on")** → the prototype's count; the product's
+  other emails are about inputs these methods don't collect.
+- The phase status strip opening every Build → **inside the Dates row's body, under the Date range field** → the
+  prototype's Dates row opens to the dates and where the phase stands.
+- Ideation's Moderation row: the prototype's pill is a person → **a Select of team members by role (Manager A…) and a
+  Switch for screening new inputs** → no person's name; screening is the product's own (the Manage tab's Approve /
+  Reject).
+
 ## Preview parts and the Gantt chart (30 Oct 2026, deep review 2: S10–S12)
 
 - Email preview: a Pattern (the emails are Go Vocal's) vs a Component → **a Component (Data display), generic words
@@ -862,7 +883,6 @@ dashboards, Build tab).
 - "Seems like there are no more projects" at the end vs Pagination on every list → **Pagination, six cards a page; no matches is an Empty state with one Clear action**.
 - "Copied to your drafts" as a Status badge on the card vs instant changes elsewhere → **the button turns to a disabled "Copied", and a Toast with Undo** → one feedback channel.
 - Highlighted's country and the sort as labelled field Selects vs pill and quiet Selects in panel heads → **"Country: …" pill and "Sort: …" quiet Select in the Panel heads**; the preview's facts as a Property list.
-
 
 **Tokens everywhere** (the project lead, 29 Oct: every spacing, radius, type and shadow value is a token; a design value with no token snaps to the nearest, guarded by `tests/tokens-only.test.mjs`)
 

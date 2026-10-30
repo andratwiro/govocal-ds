@@ -174,14 +174,17 @@ test('Build: the setup rows open in place and turn Reviewed; the menu rows pick 
   for (const s of ['Ideas and participant data', 'How ideas are shown', 'Rules']) await expect(setup.getByRole('list', {name: s})).toBeVisible();
 });
 
-test('Build: the phase status is a compact Banner, neutral before and after, success while live', async ({page}) => {
+test('Build: the phase status is a compact Banner in the Dates row, neutral before and after, success while live', async ({page}) => {
   const strip = (page: Page) => page.getByRole('region', {name: / setup$/}).locator('.gv-banner--compact');
   for (const [phase, tone, text] of [
     ['p2', 'neutral', 'EndedClosed on 21 Sep'],
-    ['p4', 'success', 'LiveEnds on 16 Nov'],
-    ['p5', 'neutral', 'Not startedStarts on 17 Nov']
+    ['p1', 'neutral', 'EndedClosed on 30 Aug'],
+    ['p7', 'neutral', 'Not startedStarts on 12 Jan']
   ] as const) {
     await page.goto(`/backoffice/#/projects/green-corridors/phases/${phase}/build`);
+    // Closed, the Dates row hides it (the prototype opens no strip above the setup).
+    await expect(strip(page)).toBeHidden();
+    await page.getByRole('region', {name: / setup$/}).getByRole('button', {name: /^Dates/}).click();
     await expect(strip(page)).toHaveAttribute('role', 'status');
     await expect(strip(page)).toHaveAttribute('data-tone', tone);
     await expect(strip(page)).toHaveText(text);
@@ -463,7 +466,8 @@ test('Project settings: General has the project URL with its prefix', async ({pa
 test('Build: the stage shows the phase on the Phone preview; the setup is a Panel with its sections', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p4/build');
   const phone = page.getByRole('region', {name: 'Preview'}).getByLabel('What residents see of Community vote');
-  await expect(phone.getByRole('heading', {name: 'Green Corridors for Larkvale'})).toBeVisible();
+  // The phase's own card only: no project card under it.
+  await expect(phone.getByRole('heading', {name: 'Green Corridors for Larkvale'})).toHaveCount(0);
   await expect(phone.getByText('Vote', {exact: true})).toBeVisible();
   // Phone phase card's "In the phone": the phase's number and title; the countdown bar with the method's button.
   await expect(phone.getByRole('heading', {name: '4. Community vote'})).toBeVisible();
@@ -495,7 +499,7 @@ test('a phase that has not started: Manage and Insights show the Empty state; a 
   await expect(page.getByRole('grid', {name: 'Ideas'})).toHaveCount(0);
 });
 
-test('Manage for proposals lists the Proposals rows; an information phase has nothing to manage', async ({page}) => {
+test('Manage for proposals lists the Proposals rows', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p3/manage');
   // List header's "Manage table": the header row, then each Proposals row in a row and a cell.
   const table = page.getByRole('table', {name: 'Proposals'});
@@ -503,8 +507,19 @@ test('Manage for proposals lists the Proposals rows; an information phase has no
   const rows = table.getByRole('rowgroup').nth(1).getByRole('row');
   await expect(rows).toHaveCount(5);
   await expect(rows.first()).toContainText('Car-free Sundays on Brindle Street');
+});
+
+// The prototype's Information setup: no Build / Manage / Insights switch; Attachments, the Report row, Notifications.
+test('Build of an information phase: no mode switch, the Report row and Notifications; Manage leads back to Build', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p1/manage');
-  await expect(page.getByRole('heading', {name: 'Nothing to manage here'})).toBeVisible();
+  await expect(page).toHaveURL(/phases\/p1\/build$/);
+  await expect(page.getByRole('radiogroup', {name: 'Phase view'})).toHaveCount(0);
+  const report = setup(page).locator('[data-gv="setup-card"]', {hasText: /^Report/});
+  await expect(report.getByRole('button', {name: 'Download'})).toBeDisabled();
+  await expect(setup(page).locator('[data-gv="setup-card"]', {hasText: /^Notifications/})).toContainText('1 email on');
+  await expect(setup(page).locator('[data-gv="setup-card"]', {hasText: /^Attachments/})).toBeVisible();
+  await report.getByRole('button', {name: 'Add a report'}).click();
+  await expect(page).toHaveURL(/#\/reporting$/);
 });
 
 test('Insights for ideas: the stat tiles, the dashboard cards and the recommended actions', async ({page}) => {
@@ -621,15 +636,33 @@ test('Build: the header\'s Save saves, then becomes Back to project; a change br
   await expect(page).toHaveURL(/#\/projects\/green-corridors$/);
 });
 
-test('Build of a volunteering phase: the Causes card; a cause deletes with an Undo toast', async ({page}) => {
+test('Build of a volunteering phase: Causes a closed row; its list deletes a cause with an Undo toast; Sign up, Notifications', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p7/build');
   const card = setup(page).locator('[data-gv="setup-card"]', {hasText: /^Causes/});
   await expect(card).toContainText('3 causes');
   await expect(card.getByRole('button', {name: 'Download volunteers'})).toBeDisabled();
-  await card.getByRole('button', {name: 'Delete Plant the first corridor'}).click();
+  await expect(setup(page).locator('[data-gv="setup-card"]', {hasText: /^Participant actions/})).toContainText('Sign up');
+  await expect(setup(page).locator('[data-gv="setup-card"]', {hasText: /^Notifications/})).toContainText('1 email on');
+  await expect(setup(page).locator('[data-gv="setup-card"]', {hasText: /^Attachments/})).toBeVisible();
+  await card.getByRole('button', {name: 'Show the causes'}).click();
+  const list = page.getByRole('dialog', {name: 'Causes'});
+  await list.getByRole('button', {name: 'Delete Plant the first corridor'}).click();
   await expect(card).toContainText('2 causes');
   await page.getByRole('button', {name: 'Undo'}).click();
   await expect(card).toContainText('3 causes');
+});
+
+test('Build: Moderation in Rules names a moderator by role; a common ground phone switches Before, Open and Ended', async ({page}) => {
+  await page.goto(BUILD);
+  const card = setup(page).locator('[data-gv="setup-card"]', {hasText: /^Moderation/});
+  await expect(card).toContainText('Manager A');
+  await card.getByRole('button', {name: /^Moderation/}).click();
+  await expect(card.getByRole('switch', {name: /Screen inputs/})).toBeChecked();
+  await expect(setup(page).getByRole('list', {name: 'Rules'}).locator('[data-gv="setup-card"]')).toHaveCount(3);
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p6/build');
+  const stage = page.getByRole('region', {name: 'Preview'});
+  await stage.getByRole('radio', {name: 'Open'}).click();
+  await expect(stage.getByText('What residents see while the phase is open')).toBeVisible();
 });
 
 test('the rail deletes any phase but the one on screen', async ({page}) => {

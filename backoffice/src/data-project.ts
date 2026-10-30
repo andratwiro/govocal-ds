@@ -258,13 +258,21 @@ export const IDEA_FORM = [
   {name: 'Location', type: 'Location'}
 ];
 
+/** One thing participants can do in a phase (Participant actions' rows): its row, its pill word, its access question. */
+export type ParticipantAction = {id: string; label: string; short: string; question: string; isLocked?: boolean};
+
 /** What participants can do in an ideation phase; Attending an event can't be turned off. */
-export const PARTICIPANT_ACTIONS = [
+export const PARTICIPANT_ACTIONS: readonly ParticipantAction[] = [
   {id: 'submit', label: 'Submitting inputs', short: 'Submit', question: 'Who can submit inputs?'},
   {id: 'comment', label: 'Commenting on inputs', short: 'Comment', question: 'Who can comment on inputs?'},
   {id: 'react', label: 'Reacting to inputs', short: 'React', question: 'Who can react to inputs?'},
   {id: 'event', label: 'Attending an event', short: 'Attend', question: 'Who can attend an event?', isLocked: true}
-] as const;
+];
+
+/** What participants can do in a volunteering phase: sign up for a cause. */
+export const VOLUNTEER_ACTIONS: readonly ParticipantAction[] = [
+  {id: 'signup', label: 'Signing up for a cause', short: 'Sign up', question: 'Who can sign up for a cause?'}
+];
 
 /** The views residents can switch between; List is always on. */
 export const IDEA_VIEWS = [
@@ -285,6 +293,10 @@ export const PHASE_EMAILS = [
   {id: 'stch', name: 'Status change of an input that you follow', who: 'Users who follow the input', when: 'Input status changes', on: true},
   {id: 'scrn', name: 'My input awaits screening', who: 'User who submitted the input', when: 'New input awaits screening', on: false}
 ];
+
+/** The emails a phase of each method sends: an ideation phase all of the above; an information or volunteering phase
+ * only Phase started (the prototype's "1 email on"). */
+export const emailsFor = (method: Phase['method']) => (method === 'Ideation' ? PHASE_EMAILS : PHASE_EMAILS.filter(e => e.id === 'phst'));
 
 /** A volunteering phase's causes (Build), nobody signed up yet: the phase hasn't started. */
 export const CAUSES = [
