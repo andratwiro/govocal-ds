@@ -6,7 +6,7 @@ import {Card} from '../components/gv/Card';
 const meta: Meta<typeof PanelSection> = {
   title: 'Patterns/Project page/Panel section',
   component: PanelSection,
-  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
+  tags: ['autodocs', 'not-in-figma', 'status:draft'],
   decorators: [Story => <div style={{width: 264}}><Story /></div>]
 };
 export default meta;

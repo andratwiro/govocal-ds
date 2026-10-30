@@ -21,6 +21,8 @@ export type Overview = {
   since: string;
   /** Methods running outside the timeline. */
   spotlight: TimelinePhase[];
+  /** The project's events (Phase timeline's `kind: 'event'` rows): meetings and walks residents sign up for. */
+  events: TimelinePhase[];
   /** The resident's project page: intro, then more after the participation box. */
   intro: string;
   more: string[];
@@ -32,6 +34,10 @@ export const OVERVIEWS: Record<string, Overview> = {
     weeks: [6, 11, 19, 27, 34, 48, 63, 77, 96, 118, 139, 160, 181, 197, 215],
     since: '10 Aug',
     spotlight: [{id: 's1', title: 'Resident satisfaction', status: 'in-progress', dates: '9 Oct to 18 Nov', method: 'Survey', count: '214 responses'}],
+    events: [
+      {id: 'e1', kind: 'event', title: 'Walk the corridor route', status: 'done', dates: '14 Sep'},
+      {id: 'e2', kind: 'event', title: 'Planting day briefing', status: 'upcoming', dates: '21 Nov'}
+    ],
     intro: 'More trees, safer paths and quieter streets. Help us decide where the next green corridor goes and what it should feel like.',
     more: [
       'The ideas you shared in September became 48 proposals. Vote for the ones you want to see first: the most popular go to the council in December.',
@@ -41,7 +47,7 @@ export const OVERVIEWS: Record<string, Overview> = {
   }
 };
 
-export const NO_OVERVIEW: Overview = {weeks: [], since: '', spotlight: [], intro: 'This project has no description yet.', more: [], ways: 1};
+export const NO_OVERVIEW: Overview = {weeks: [], since: '', spotlight: [], events: [], intro: 'This project has no description yet.', more: [], ways: 1};
 
 // ── Phase screen · Manage (an Ideation phase one week after publishing) ─────────────────────────────────
 // Invented ideas on invented streets. Each idea template appears on four different streets, so the list reads
@@ -286,3 +292,9 @@ export const CAUSES = [
   {id: 'c2', title: 'Water the young trees in summer', volunteers: 0},
   {id: 'c3', title: 'Photograph the route before and after', volunteers: 0}
 ];
+
+// ── Phase screen · Build: the two setup rows that pick one value from a menu (Card's `control="menu"`) ────────────
+/** What an input is called on the phase's pages (Card's "input term" story). */
+export const INPUT_TERMS = ['Idea', 'Option', 'Project', 'Question', 'Issue', 'Contribution', 'Proposal'] as const;
+/** How the ideas are sorted for residents (Card's Sorting story). */
+export const IDEA_SORTS = ['Trending', 'Most discussed', 'Random', 'Most reactions', 'Most recent', 'Oldest'] as const;

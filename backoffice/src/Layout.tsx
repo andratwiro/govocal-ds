@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Outlet, useLocation, useMatch} from 'react-router';
+import {Outlet, useLocation, useMatch, useOutletContext} from 'react-router';
 import {Bell, BookOpen, Languages, LogOut, MessageSquare, FileChartColumn, Flag, Inbox, LifeBuoy, ScrollText, User, UserCheck, Users, Building2} from 'lucide-react';
 import {AppFrame, Avatar, Button, Menu, MenuItem, MenuTrigger, NotificationList, Separator, SideNav, SideNavButton, SideNavGroup,
   SideNavHome, SideNavLink, Stack, SubmenuTrigger} from 'govocal-ds';
@@ -13,15 +13,25 @@ const SUPPORT_ICON = {kb: BookOpen, changelog: ScrollText, community: Users, por
 // The bottom group starts at Tools, as in the real admin.
 const BOTTOM_FROM = NAV.findIndex(n => n.id === 'tools');
 
+/** What a page can ask of the frame: the project screens' header toggle opens the hidden Side nav over the page. */
+export interface LayoutContext {
+  openNav: () => void;
+}
+/** The Side nav's opener, for a page whose header carries the panel toggle (the project screens). */
+export const useOpenNav = () => useOutletContext<LayoutContext>().openNav;
+
 export function Layout() {
-  // Inside a project or a phase the main nav folds to its icons (labels stay as the controls' names, and show as
-  // tooltips), as in the prototype, so the project screens get the width the Figma frames give them.
+  // Inside a project or a phase the main nav is hidden (Side nav's "Hidden" story), as in the prototype, so the project
+  // screens get the whole width; the Project header's panel toggle opens it over the page.
   const inPhase = useMatch('/projects/:projectId/phases/:phaseId/:tab');
   const inProject = useMatch('/projects/:projectId');
-  // The report view's three columns get the same width.
-  const inReport = useMatch('/reporting/report-builder/:reportId/editor');
-  const folded = !!(inPhase || inProject || inReport);
+  const hidden = !!(inPhase || inProject);
+  // The report view's three columns get the width of the folded rail (icons, labels as tooltips).
+  const folded = !!useMatch('/reporting/report-builder/:reportId/editor');
+  const [navOpen, setNavOpen] = useState(false);
   const {pathname} = useLocation();
+  // Following a link in the opened nav closes it.
+  useEffect(() => setNavOpen(false), [pathname]);
   const [notifications, setNotifications] = useState(NOTIFICATIONS);
   const [unread, setUnread] = useState(UNREAD_NOTIFICATIONS);
   const [bellOpen, setBellOpen] = useState(false);
@@ -38,8 +48,8 @@ export function Layout() {
   );
 
   return (
-    <AppFrame isNavFolded={folded} nav={
-        <SideNav aria-label="Main" isFolded={folded}>
+    <AppFrame isNavFolded={folded} className={hidden ? 'bo-frame-navless' : undefined} nav={
+        <SideNav aria-label="Main" isFolded={folded} isHidden={hidden} isOpen={navOpen} onOpenChange={setNavOpen}>
           <SideNavHome href="#/platform" />
           <SideNavGroup>{NAV.slice(0, BOTTOM_FROM).map(link)}</SideNavGroup>
           <SideNavGroup isAtBottom>
@@ -102,7 +112,7 @@ export function Layout() {
           </SideNavGroup>
         </SideNav>
       }>
-      <Outlet />
+      <Outlet context={{openNav: () => setNavOpen(true)} satisfies LayoutContext} />
     </AppFrame>
   );
 }

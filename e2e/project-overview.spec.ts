@@ -2,11 +2,11 @@ import {test, expect, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {a11yReport} from './axe';
 
-// A project's own overview (#/projects/:id), after the prototype's live project screen:
-// Project setup | Participation rail | the resident's phone preview, under the Project header's bar. The setup column is
-// a Panel (a region named by its heading, the cog in its head), so it is found as a region, no longer a complementary.
-// The bar is the Project header's "Share and Publish" story now: its panel toggle shows and hides the setup (the View
-// menu went: the rail hides itself and the preview is the stage), and the state is a Publish ▾ / ● Live ▾ menu button.
+// A project's own overview (#/projects/:id), after the prototype's live project screen, on Workspace layout:
+// the Participation rail | Project setup | the resident's phone preview, under the Project header's bar. The setup
+// column is a plain Panel (a region named by its heading, the cog in its head). The bar's panel toggle opens the
+// platform's menu (Side nav, hidden on project screens); Share ▾ opens the Access popover; the state is a Publish ▾,
+// ● Live ▾ or Archived ▾ menu button.
 const URL = '/backoffice/#/projects/green-corridors';
 
 test('the overview has its own route, heading and breadcrumb', async ({page}) => {
@@ -23,9 +23,9 @@ test('the overview has its own route, heading and breadcrumb', async ({page}) =>
   await expect(page.getByRole('button', {name: 'Save'})).toHaveCount(0);
 });
 
-test('three columns, left to right: setup, participation, preview', async ({page}) => {
+test('three columns, left to right: participation, setup, preview', async ({page}) => {
   await page.goto(URL);
-  const cols = ['Project setup', 'Participation', 'Preview'].map(n => page.getByRole('region', {name: n, exact: true}).or(page.getByRole('complementary', {name: n, exact: true})));
+  const cols = ['Participation', 'Project setup', 'Preview'].map(n => page.getByRole('region', {name: n, exact: true}).or(page.getByRole('complementary', {name: n, exact: true})));
   const xs = [];
   for (const c of cols) {
     await expect(c).toBeVisible();
@@ -75,14 +75,14 @@ test('collecting now, next actions and the folded project details', async ({page
   await expect(setup.getByRole('heading', {name: 'Before you publish'})).toHaveCount(0);
   const details = setup.getByRole('button', {name: 'Project details'});
   await expect(details).toHaveAttribute('aria-expanded', 'false');
-  await expect(setup.getByText('Visibility', {exact: true})).toBeHidden();
+  await expect(setup.getByRole('button', {name: /Set area/})).toBeHidden();
   await details.click();
   await expect(details).toHaveAttribute('aria-expanded', 'true');
-  // The details are a Property list: each label with its value.
-  const list = setup.locator('dl.gv-property-list');
-  await expect(list.getByRole('term')).toHaveText(['Dates', 'Folder', 'Visibility', 'Managers']);
-  await expect(setup.getByText('Visibility', {exact: true})).toBeVisible();
-  await expect(setup.getByText('Folder', {exact: true})).toBeVisible();
+  // The details are the project's setup steps, Card's link and pick rows.
+  const steps = setup.getByRole('list', {name: 'Setup steps'});
+  await expect(steps.getByRole('listitem')).toHaveCount(6);
+  await expect(steps.getByRole('link', {name: /Edit project page/})).toBeVisible();
+  await expect(steps.getByRole('button', {name: /Set area/})).toBeVisible();
   await setup.getByRole('link', {name: 'Message participants'}).click();
   await expect(page).toHaveURL(/#\/messaging$/);
 });
@@ -167,31 +167,38 @@ async function violations(page: Page, within?: string) {
     .map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`);
 }
 
-test('the header: its toggle hides and shows the setup, Share invites, the state menu offers the next step', async ({page}) => {
+test('the header: its toggle opens the platform menu, Share opens the Access popover, the state menu offers the next step', async ({page}) => {
   await page.goto(URL);
-  await page.getByRole('button', {name: 'Show or hide project setup'}).click();
-  await expect(page.getByRole('region', {name: 'Project setup'})).toHaveCount(0);
-  await page.getByRole('button', {name: 'Show or hide project setup'}).click();
-  await expect(page.getByRole('region', {name: 'Project setup'})).toBeVisible();
+  // The Side nav is hidden on project screens; the bar's toggle opens it over the page, Esc closes it.
+  await expect(page.getByRole('navigation', {name: 'Main'})).toHaveCount(0);
+  await page.getByRole('button', {name: 'Show the platform menu'}).click();
+  await expect(page.getByRole('navigation', {name: 'Main'}).getByRole('link', {name: 'Projects'})).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('navigation', {name: 'Main'})).toHaveCount(0);
 
+  // The Access popover recipe: invite by email (Enter), the people with access and their roles, Copy link.
   await page.getByRole('button', {name: 'Share'}).click();
-  await page.getByRole('menuitem', {name: 'Invite people'}).click();
-  await expect(page.getByRole('dialog', {name: 'Invite people'}).getByRole('textbox', {name: 'Email'})).toBeVisible();
-  await page.getByRole('button', {name: 'Cancel'}).click();
-  // Copy link is done at once: a Toast says so.
-  await page.getByRole('button', {name: 'Share'}).click();
-  await page.getByRole('menuitem', {name: 'Copy link'}).click();
+  const share = page.getByRole('dialog', {name: 'Share'});
+  await expect(share.getByRole('list', {name: 'People with access'}).getByRole('listitem')).toHaveCount(2);
+  await expect(share.getByRole('button', {name: /Role for Manager B/})).toBeVisible();
+  await share.getByRole('textbox', {name: 'Email or group'}).fill('river.walk@example.org');
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('Invitation sent')).toBeVisible();
+  await expect(share.getByRole('list', {name: 'People with access'}).getByRole('listitem')).toHaveCount(3);
+  // Copying a link is done at once: a Toast says so.
+  await share.getByRole('button', {name: 'Copy link'}).click();
   await expect(page.getByText('Link copied')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(share).toHaveCount(0);
 
-  // A published project, one week in: the next step is to archive it, after a confirmation. Project header has no
-  // archived state: the setup says it in a Banner, and Publish ▾ offers the way back.
+  // A published project, one week in: the next step is to archive it, after a confirmation. The bar then wears
+  // Project header's archived state, whose menu offers the way back.
   await page.getByRole('button', {name: /Live/}).click();
   await page.getByRole('menuitem', {name: 'Archive project'}).click();
   const confirm = page.getByRole('alertdialog', {name: 'Archive project?'});
   await confirm.getByRole('button', {name: 'Archive project'}).click();
   await expect(page.getByText('Project archived')).toBeVisible();
-  await expect(page.getByRole('region', {name: 'Project setup'}).getByRole('status')).toContainText('Archived');
-  await page.getByRole('button', {name: 'Publish'}).click();
+  await page.getByRole('button', {name: /Archived/}).click();
   await expect(page.getByRole('menuitem', {name: 'Restore to draft'})).toBeVisible();
 });
 
@@ -225,6 +232,9 @@ test('Add a phase puts a new upcoming phase on the timeline', async ({page}) => 
   await page.goto(URL);
   await page.getByRole('complementary', {name: 'Participation'}).getByRole('button', {name: 'Add a phase'}).click();
   const dialog = page.getByRole('dialog', {name: 'Add a phase'});
+  // The method picker: side tabs of kinds of method, a grid of Method cards; a card leads to the phase's title and dates.
+  await expect(dialog.getByRole('listbox', {name: 'Kinds of method'}).getByRole('option')).toHaveCount(3);
+  await dialog.getByRole('button', {name: 'Ideation and geo mapping'}).click();
   await expect(dialog.getByRole('button', {name: 'Add phase'})).toBeDisabled();
   await dialog.getByRole('textbox', {name: 'Title, English'}).fill('Walk the route');
   await dialog.getByRole('textbox', {name: 'Dates'}).fill('9 to 23 Feb');
@@ -245,7 +255,7 @@ test('a phase on the rail deletes from its row (Rail phase), and the Toast undoe
   await expect(rail.getByRole('link')).toHaveCount(7);
 });
 
-// Set area and Set topic tags open their picker under the card (Setup step's "Opens a picker" story).
+// Set area and Set topic tags open their picker under the card (Card's "Setup row · pick" story).
 test('Set topic tags: a searchable Option list; Enter ticks and it stays open; Esc closes, the card shows the value', async ({page}) => {
   await page.goto('/backoffice/#/projects/harbour-plan');
   const card = page.getByRole('button', {name: /Set topic tags/});

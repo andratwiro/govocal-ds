@@ -8,7 +8,7 @@ const WEEKS = [4, 9, 15, 22, 31, 44, 58, 79, 101, 126, 158, 190, 215];
 const meta: Meta<typeof StatCard> = {
   title: 'Patterns/Project page/Stat card',
   component: StatCard,
-  tags: ['autodocs', 'not-in-figma', 'status:draft'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   decorators: [Story => <div style={{width: 264}}><Story /></div>]
 };
 export default meta;

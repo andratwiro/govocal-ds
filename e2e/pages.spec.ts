@@ -17,7 +17,8 @@ test('Project · Build shows the phase rail and setup cards', async ({page}) => 
   await expect(rail.getByRole('link')).toHaveCount(7);
   expect(await page.locator('[data-gv="setup-card"]').count()).toBeGreaterThan(2);
   await expect(page.getByRole('radiogroup', {name: 'Phase view'}).getByRole('radio', {name: 'Build'})).toBeChecked();
-  await expect(page.getByRole('heading', {name: 'Before you publish'})).toBeVisible();
+  // The method's setup, in the work column (the project's checklist lives on the overview).
+  await expect(page.getByRole('heading', {name: 'Ideation setup'})).toBeVisible();
 });
 test('Ideation · Manage lists inputs with selectable rows', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/manage');
@@ -34,7 +35,7 @@ test('the Phases rail moves between phases on the same tab; a vote has its own M
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/manage');
   await page.getByRole('navigation', {name: 'Phases'}).getByRole('link', {name: /Community vote/}).click();
   await expect(page).toHaveURL(/phases\/p4\/manage/);
-  await expect(page.getByRole('list', {name: 'Options'}).getByRole('listitem')).toHaveCount(6);
+  await expect(page.getByRole('table', {name: 'Options'}).getByRole('rowgroup').nth(1).getByRole('row')).toHaveCount(6);
   await page.getByRole('radio', {name: 'Insights'}).click();
   await expect(page).toHaveURL(/phases\/p4\/insights/);
   await expect(page.getByRole('heading', {name: 'Live ranking'})).toBeVisible();

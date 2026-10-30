@@ -8,6 +8,8 @@ import {a11yReport} from './axe';
 const TOP = ['Dashboard', 'Projects', 'Input manager', 'Users', 'Messaging', 'Reporting', 'Community monitor', 'Inspiration hub'];
 const BOTTOM = ['Tools', 'Pages & menu', 'Settings'];
 const PHASE = '/backoffice/#/projects/green-corridors/phases/p2/build';
+// The report view keeps the folded rail; the project screens hide the nav (Side nav's "Hidden" story).
+const FOLDED = '/backoffice/#/reporting/report-builder/r1/editor';
 const nav = (page: Page) => page.getByRole('navigation', {name: 'Main'});
 
 test('items in the real admin order, with a gap before Tools', async ({page}) => {
@@ -123,8 +125,25 @@ test('every nav item still opens its page', async ({page}) => {
   }
 });
 
-test('folded inside a phase: icons only, names still accessible, badges on the icons', async ({page}) => {
+test('hidden on a project screen: the header\'s toggle opens it over the page, a link or Esc closes it', async ({page}) => {
   await page.goto(PHASE);
+  await expect(nav(page)).toHaveCount(0);
+  const toggle = page.getByRole('button', {name: 'Show the platform menu'});
+  await toggle.click();
+  // Open over the page, it has room for its labels: the open nav, not the folded rail.
+  await expect(nav(page).getByRole('link', {name: 'Projects'})).toBeVisible();
+  expect((await nav(page).boundingBox())!.width).toBeGreaterThan(64);
+  await page.keyboard.press('Escape');
+  await expect(nav(page)).toHaveCount(0);
+  await expect(toggle).toBeFocused();
+  await toggle.click();
+  await nav(page).getByRole('link', {name: 'Users'}).click();
+  await expect(page.getByRole('heading', {level: 1, name: 'Users'})).toBeVisible();
+  await expect(nav(page).getByRole('link', {name: 'Users'})).toHaveAttribute('aria-current', 'page');
+});
+
+test('folded in the report view: icons only, names still accessible, badges on the icons', async ({page}) => {
+  await page.goto(FOLDED);
   const box = await nav(page).boundingBox();
   expect(box!.width).toBeLessThan(64);
   for (const label of ['To platform', ...TOP, ...BOTTOM])
@@ -148,7 +167,7 @@ test('folded inside a phase: icons only, names still accessible, badges on the i
 test('folded: a focus nobody asked for opens no tooltip; keyboard focus does', async ({page}) => {
   // The deep dive saw "To platform" show its tooltip on load. In a headless browser that one is hover: the pointer rests
   // at 0,0, over that link. Here the page's own focus, on a row away from the pointer, opens nothing.
-  await page.goto(PHASE);
+  await page.goto(FOLDED);
   const projects = nav(page).getByRole('link', {name: 'Projects'});
   await projects.focus();
   await expect(projects).toBeFocused();
@@ -170,7 +189,7 @@ test('the sidebar is scanned by axe, open and folded, menus included', async ({p
   await settled(page);
   a11yReport(await violations(page, '[role="menu"]'));
   await page.keyboard.press('Escape');
-  await page.goto(PHASE);
+  await page.goto(FOLDED);
   a11yReport(await violations(page, 'nav[aria-label="Main"]'));
 });
 

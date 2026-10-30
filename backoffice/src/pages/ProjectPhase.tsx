@@ -1,32 +1,33 @@
-import {useMemo, useState, type Dispatch, type ReactNode, type SetStateAction} from 'react';
+import {createContext, useContext, useMemo, useState, type Dispatch, type ReactNode, type SetStateAction} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router';
-import {CalendarDays, CircleCheck, Copy, Download, ExternalLink, FileChartColumn, FileText, Inbox, Lightbulb, Link2, List, Lock, Mail,
+import {CalendarDays, CircleCheck, CircleDashed, Copy, Download, ExternalLink, FileChartColumn, FileText, Inbox, Lightbulb, Link2, List, Lock, Mail,
   Map as MapIcon, MessageSquareText, Paperclip, MapPin, Plus, Settings, Sparkles, SquarePen, Tag, Trash2, TriangleAlert, Upload, User, Users} from 'lucide-react';
-import {ACCESS_WHO_VALUE, AccessRightsModal, type AccessWho, ActionRow, ActionRowList, AppFramePanel, Avatar, Badge, Banner,
+import {ACCESS_WHO_VALUE, AccessRightsModal, type AccessWho, AppFramePanel, Avatar, Badge, Banner,
   BulkOfficialUpdate, Button, Card, type ChartColor, CommentThread, CompactButton, DashboardBars, DashboardCard,
   DashboardDemographic, DashboardList, DashboardRanking, DashboardTopics, DataTable, DataTableAddColumn,
   DataTableAssignee, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader, DataTableRow,
   DataTableStack, DataTableTags, DataTableText, DataTableThumbnail, DateRangeField, DropZone, EmptyState, FileList,
   type FileListItemData, FilterChips, type FilterFacet, FilterMenu, type FilterValue, Grid, GroupedTab, GroupedTabList,
-  GroupedTabPanel, GroupedTabs, IconButton, Inline, type Key, LineChart, ListHeader, type ListHeaderColumn, LocaleSwitcher,
-  MapCard, MapChip, type MapItem, MapOverlay, MapView, Menu, MenuItem, MenuSection, MenuTrigger, Modal,
+  GroupedTabPanel, GroupedTabs, IconButton, Illustration, type IllustrationName, type Key, LineChart, ListHeader, type ListHeaderColumn, LocaleSwitcher,
+  MapCard, MapChip, type MapItem, MapOverlay, MapView, Menu, MethodCard, MenuItem, MenuSection, MenuTrigger, Modal,
   MultilingualRichTextEditor, MultilingualTextField, type Multiloc, NotificationEmail, NotificationRow,
-  NotificationRowList, OfficialUpdate, OptionList, Pagination, Panel, PanelSection, ParticipantActionList,
-  ParticipantActionRow, ParticipantLimit, PhaseTimeline, PhoneHeader, PhoneImage, PhonePreview, PhoneStage,
-  type PostedUpdate, ProjectHeader, PropertyList, PropertyListItem, ProposalsRow, RailHeader, RailPhase, ReactionCounts,
+  NotificationRowList, OfficialUpdate, OptionList, Pagination, Panel, ParticipantActionList,
+  ParticipantActionRow, ParticipantLimit, PhaseTimeline, PhoneCard, PhoneCountdown, PhoneHeader, PhonePhaseCard, PhonePreview, PhoneStage,
+  type PostedUpdate, ProjectHeader, PropertyList, PropertyListItem, ProposalsRow, RailHeader, ReactionCounts,
   SearchField, SectionLabel, SegmentedControl, SegmentedControlItem, Select, type SelectionAction, SelectionBar,
-  SelectItem, Separator, SetupStep, SidePanel, SidePanelActions, SidePanelDecision, SidePanelRecordHead, SidePanelSection, Sparkline,
-  Stack, StatRow, StatTile, SubmenuTrigger, TableToolbar, TableToolbarHeading, TabSection, Text, TextField, type ThreadComment,
+  SelectItem, Separator, SidePanel, SidePanelActions, SidePanelDecision, SidePanelRecordHead, SidePanelSection, Sparkline,
+  Skeleton, Stack, StatCard, StatRow, StatTile, SubmenuTrigger, TableToolbar, TableToolbarHeading, TabSection, Text, TextField, type ThreadComment,
   type ThreadTab, type ThreadTarget, TileGrid, type TimelinePhase, TitleField, toast, ViewOptionList, ViewOptionRow,
-  VisuallyHidden, VolunteeringRow, VotingRow} from 'govocal-ds';
+  useNumberFormatter, VisuallyHidden, VolunteeringRow, VotingRow, WorkspaceLayout} from 'govocal-ds';
 import {Dialog, Form, Tag as TagItem, TagGroup} from 'govocal-ds/base';
 import {PICTURES} from '../pictures';
+import {useOpenNav} from '../Layout';
 // Form field summary is a recipe (a story and its CSS): the page keeps its markup and uses the recipe's stylesheet.
 import {ME, METHODS, PROJECTS, type Method, type Phase, type Project} from '../data';
 import {LOCALES} from '../data-settings';
 import {IDEAS, IDEA_ASSIGNEES, IDEA_REPLIES, IDEA_SOURCES, IDEA_STATUSES, IDEA_TAGS, AREAS, TOPICS, PHASE_FILES, SCREENING_PHASES, TEAM, addedTimeline,
   NO_OVERVIEW, OVERVIEWS, PHONE_CALL, INSIGHT_WEEKS, PARTICIPATION_WEEKS, AI_SUMMARY, VOTE_OPTIONS, VOTES_BY_DAY, VOTER_AGES,
-  VOTER_COMMUTES, PROPOSALS, IDEA_FORM, PARTICIPANT_ACTIONS, IDEA_VIEWS, PHASE_EMAILS, CAUSES,
+  VOTER_COMMUTES, PROPOSALS, IDEA_FORM, INPUT_TERMS, IDEA_SORTS, PARTICIPANT_ACTIONS, IDEA_VIEWS, PHASE_EMAILS, CAUSES,
   ideaComments, ideaInternal, ideaUpdates, timeline, type Idea, type IdeaStatus, type NewPhase} from '../data-project';
 
 
@@ -45,44 +46,88 @@ export function ProjectPhase() {
 function PhaseScreen() {
   const {projectId, phaseId, tab} = useParams();
   const navigate = useNavigate();
-  const [railOpen, setRailOpen] = useState(true);
+  const openNav = useOpenNav();
+  const [railCollapsed, setRailCollapsed] = useRailCollapsed();
   const [settings, setSettings] = useState<SettingsTab | null>(null);
   const [adding, setAdding] = useState(false);
   const [added, setAdded] = useState<NewPhase[]>([]);
   const [removed, deletePhase] = useDeletedPhases();
-  const [dirty, setDirty] = useState(false);
+  const [save, setSave] = useState<'idle' | 'saving' | 'saved'>('idle');
   const project = PROJECTS.find(p => p.id === projectId);
   if (!project) return <Navigate to="/projects" replace />;
   const phase = project.phases.find(p => p.id === phaseId) ?? project.phases[0];
-  if (phase.id !== phaseId || !TABS.includes(tab as Tab)) return <Navigate to={phaseUrl(project, phase, 'build')} replace />;
+  const tabs = tabsOf(phase);
+  if (phase.id !== phaseId || !tabs.includes(tab as Tab)) return <Navigate to={phaseUrl(project, phase, 'build')} replace />;
   const view = tab as Tab;
+  // Any change in the setup turns "Back to project" into Save again.
+  const changed = () => setSave('idle');
+  const key = `${project.id}/${phase.id}`;
+  const rail = <ProjectRail project={project} current={phase.id} added={added} onAdd={() => setAdding(true)} onHide={() => setRailCollapsed(true)}
+    removed={removed} onDelete={deletePhase} href={p => `#${phaseUrl(project, p, view)}`} />;
+
+  // Workspace layout on every tab: the rail, the tab's work column, then its stage or list. A phase that hasn't
+  // started has collected nothing: Manage and Insights show the Empty state.
+  let body: ReactNode;
+  if (view === 'build') body = <Build key={key} project={project} phase={phase} rail={rail} onSettings={setSettings} onChange={changed} />;
+  else if (phase.status === 'Draft') body = <EmptyTab phase={phase} tab={view} rail={rail} />;
+  else if (view === 'manage') {
+    body = phase.method === 'Ideation'
+      ? <Manage key={key} phase={phase} project={project} rail={rail} onAddPhase={() => setAdding(true)} />
+      : <MethodManage phase={phase} rail={rail} />;
+  } else body = <Insights key={key} project={project} phase={phase} rail={rail} />;
 
   return (
     <Grid rows="auto 1fr" gap="8" className="bo-phase">
       <VisuallyHidden elementType="h1">{project.title}</VisuallyHidden>
-      {/* Project header's bar (its "With mode switch" story): crumbs, Build · Manage · Insights, who is here, Save. Save
-          turns on once something in the setup changes. A phase that hasn't started keeps Manage and Insights open: they
-          show the Empty state. */}
-      <ProjectHeader level="phase" status={phase.status === 'Draft' ? 'draft' : 'live'} projectName={project.title} phaseName={phase.title}
-        projectHref={`#/projects/${project.id}`} onBack={() => navigate(`/projects/${project.id}`)} onTogglePanel={() => setRailOpen(o => !o)}
-        modes={TABS.map(t => ({id: t, label: label(t)}))} mode={view} onModeChange={t => navigate(phaseUrl(project, phase, t as Tab))}
+      {/* Project header's phase bar ("Tabs and unread dot", "Save states"): the panel toggle opens the platform's
+          menu; crumbs and the project's own status; the phase's tabs (a survey has no Manage), Manage's dot while
+          inputs wait unseen; who is here; Save, saving, then Back to project. */}
+      <ProjectHeader level="phase" status={project.status === 'Live' ? 'live' : 'draft'} projectName={project.title} phaseName={phase.title}
+        projectHref={`#/projects/${project.id}`} onBack={() => navigate(`/projects/${project.id}`)} onTogglePanel={openNav}
+        labels={{toggleTimeline: NAV_TOGGLE}}
+        modes={tabs.map(t => ({id: t, label: label(t), hasUnread: t === 'manage' && (phase.fresh ?? 0) > 0}))} mode={view}
+        onModeChange={t => navigate(phaseUrl(project, phase, t as Tab))}
         people={<Avatar initials={ME.slice(-1)} aria-label={`${ME} is here`} />}
-        hasChanges={dirty} onSave={() => { setDirty(false); toast('Changes saved'); }} />
-      <Inline gap="8" alignItems="stretch" wrap="nowrap" className="bo-phase-body" data-view={view}>
-        {railOpen && <ProjectRail project={project} current={phase.id} added={added} onAdd={() => setAdding(true)}
-          removed={removed} onDelete={deletePhase} href={p => `#${phaseUrl(project, p, view)}`} />}
-        {view === 'build' && <Build key={`${project.id}/${phase.id}`} project={project} phase={phase} onSettings={setSettings}
-          onChange={() => setDirty(true)} />}
-        {/* A phase that hasn't started has collected nothing: Manage and Insights show the Empty state. */}
-        {view !== 'build' && phase.status === 'Draft' && <EmptyTab phase={phase} tab={view} />}
-        {view === 'manage' && phase.status !== 'Draft' && (phase.method === 'Ideation'
-          ? <Manage key={`${project.id}/${phase.id}`} phase={phase} project={project} onAddPhase={() => setAdding(true)} />
-          : <MethodManage phase={phase} />)}
-        {view === 'insights' && phase.status !== 'Draft' && <Insights key={`${project.id}/${phase.id}`} project={project} phase={phase} />}
-      </Inline>
+        saveState={save} onSave={() => { setSave('saving'); setTimeout(() => { setSave('saved'); toast('Changes saved'); }, 600); }} />
+      <WorkspaceRail isCollapsed={railCollapsed} onCollapsedChange={setRailCollapsed}>{body}</WorkspaceRail>
       <ProjectSettings project={project} tab={settings} onTabChange={setSettings} onClose={() => setSettings(null)} />
       <AddPhase isOpen={adding} onOpenChange={setAdding} onAdd={p => setAdded(a => [...a, p])} />
     </Grid>
+  );
+}
+
+/** The header's panel toggle opens the platform's menu (Side nav's "Hidden" story) on every project screen. */
+export const NAV_TOGGLE = 'Show the platform menu';
+// A survey phase has no Manage tab: its answers are read in Insights.
+const tabsOf = (phase: Phase): readonly Tab[] => (phase.method === 'Survey' ? ['build', 'insights'] : TABS);
+
+/** The rail's collapsed state, and focus on the strip's button once it collapses (the rail's own button goes with it). */
+export function useRailCollapsed(): [boolean, (collapsed: boolean) => void] {
+  const [collapsed, setCollapsed] = useState(false);
+  const set = (next: boolean) => {
+    setCollapsed(next);
+    if (next) requestAnimationFrame(() => document.querySelector<HTMLElement>(`button[aria-label="${SHOW_RAIL}"]`)?.focus());
+  };
+  return [collapsed, set];
+}
+const SHOW_RAIL = 'Show the participation rail';
+
+/** Workspace layout's rail and the collapse it carries, handed to each tab, which fills in its column and its stage. */
+const RailState = createContext<{isCollapsed: boolean; onCollapsedChange: (c: boolean) => void}>({isCollapsed: false, onCollapsedChange: () => {}});
+export function WorkspaceRail({isCollapsed, onCollapsedChange, children}: {isCollapsed: boolean; onCollapsedChange: (c: boolean) => void;
+  children: ReactNode}) {
+  return <RailState.Provider value={{isCollapsed, onCollapsedChange}}>{children}</RailState.Provider>;
+}
+
+/** A project screen's columns: Workspace layout with the Participation rail, the tab's work column and the rest. */
+export function Workspace({rail, column, columnLabel, main = 'stage', children}: {rail: ReactNode; column?: ReactNode;
+  columnLabel?: string; main?: 'stage' | 'plain'; children: ReactNode}) {
+  const {isCollapsed, onCollapsedChange} = useContext(RailState);
+  return (
+    <WorkspaceLayout rail={rail} railLabel="Participation" isRailCollapsed={isCollapsed} onRailCollapsedChange={onCollapsedChange}
+      labels={{showRail: SHOW_RAIL}} column={column} columnLabel={columnLabel} main={main} className="bo-workspace">
+      {children}
+    </WorkspaceLayout>
   );
 }
 
@@ -96,43 +141,35 @@ export function useDeletedPhases(): [Set<string>, (p: TimelinePhase) => void] {
   return [removed, remove];
 }
 
-const RAIL_WORD = {done: 'Done', 'in-progress': 'In progress', upcoming: 'Upcoming'} as const;
-const RAIL_DOT = {done: 'completed', 'in-progress': 'live', upcoming: 'upcoming'} as const;
-
-/** The Participation rail, on the project overview and the phase screen alike: the Rail header (Add a phase, and on
- * the overview the panel toggle), the timeline, then the spotlight methods running beside it. */
+/** The Participation rail, on the project overview and the phase screens alike (Workspace layout's rail): the Rail
+ * header (Add a phase, and the button that collapses the rail), the timeline (Phase timeline, each row deletable but
+ * the phase on screen), the spotlight methods running beside it, then the project's events ("Events" story). */
 export function ProjectRail({project, href, current, added, onAdd, onHide, removed, onDelete}: {project: Project;
-  href: (p: Phase) => string; current?: string; added: NewPhase[]; onAdd: () => void; onHide?: () => void;
+  href: (p: Phase) => string; current?: string; added: NewPhase[]; onAdd: () => void; onHide: () => void;
   removed: Set<string>; onDelete: (p: TimelinePhase) => void}) {
-  const spotlight = (OVERVIEWS[project.id] ?? NO_OVERVIEW).spotlight;
+  const {spotlight, events} = OVERVIEWS[project.id] ?? NO_OVERVIEW;
   const phases = [...timeline(project, href, current), ...addedTimeline(added)].filter(p => !removed.has(p.id));
   return (
-    <AppFramePanel elementType="aside" aria-label="Participation" padding="16" className="bo-phase-rail">
-      <Stack gap="16">
-        <RailHeader title="Participation" onAdd={onAdd} onTogglePanel={onHide}
-          labels={{add: 'Add a phase', togglePanel: 'Hide the participation rail'}} />
-        <Stack elementType="nav" aria-label="Phases">
-          <SectionLabel>Timeline</SectionLabel>
-          {/* Phase timeline's rows, drawn here as Rail phases: the timeline takes no delete (Rail phase's onDelete). The
-              phase being viewed can't be deleted from its own screen. */}
-          <Stack elementType="ul" className="bo-project-rail-list">
-            {phases.map(p => (
-              <li key={p.id}>
-                <RailPhase status={RAIL_DOT[p.status]} isCurrent={p.isCurrent} href={p.href} title={p.title} chip={p.count}
-                  newCount={p.fresh} statusLabel={RAIL_WORD[p.status]} meta={`${p.dates} · ${p.method}`}
-                  onDelete={p.isCurrent ? undefined : () => onDelete(p)} />
-              </li>
-            ))}
-          </Stack>
-        </Stack>
-        {spotlight.length > 0 && (
-          <Stack>
-            <SectionLabel>Spotlight</SectionLabel>
-            <div className="bo-project-rail-list"><PhaseTimeline phases={spotlight} /></div>
-          </Stack>
-        )}
+    <Stack gap="16">
+      <RailHeader title="Participation" onAdd={onAdd} onTogglePanel={onHide}
+        labels={{add: 'Add a phase', togglePanel: 'Hide the participation rail'}} />
+      <Stack elementType="nav" aria-label="Phases">
+        <SectionLabel>Timeline</SectionLabel>
+        <PhaseTimeline phases={phases} onDelete={onDelete} />
       </Stack>
-    </AppFramePanel>
+      {spotlight.length > 0 && (
+        <Stack>
+          <SectionLabel>Spotlight</SectionLabel>
+          <PhaseTimeline phases={spotlight} />
+        </Stack>
+      )}
+      {events.length > 0 && (
+        <Stack>
+          <SectionLabel>Events</SectionLabel>
+          <PhaseTimeline phases={events} />
+        </Stack>
+      )}
+    </Stack>
   );
 }
 
@@ -148,8 +185,12 @@ export const CHECKLIST: {title: string; action: 'open' | 'expand' | 'pick'; body
 
 const pin = <MapPin aria-hidden size={16} />;
 const counted = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+/** A setup step's mark before its title (Card's `leading`): a dashed ring to do, a check once set. */
+const stepMark = (isDone: boolean) => (isDone ? <CircleCheck aria-hidden size={16} /> : <CircleDashed aria-hidden size={16} />);
+/** The chosen value as Card's pill, tinted (Card's "Setup row · pick" story). */
+const chosen = (value?: string) => (value ? [{label: value, isSelected: true}] : undefined);
 
-/** Set area, as Setup step's "Opens a picker" story: one of three choices, "Selected areas ›" a checklist of areas. */
+/** Set area, Card's pick row with a Menu: one of three choices, "Selected areas ›" a checklist of areas. */
 function SetArea({onChange}: {onChange?: () => void}) {
   const [mode, setMode] = useState<string | null>(null);
   const [areas, setAreas] = useState<Set<string>>(new Set());
@@ -157,7 +198,7 @@ function SetArea({onChange}: {onChange?: () => void}) {
   const value = mode === 'none' ? 'No specific area' : mode === 'all' ? 'All areas'
     : mode === 'selected' && names.length ? (names.length === 1 ? names[0] : counted(names.length, 'area', 'areas')) : undefined;
   return (
-    <SetupStep kind="pick" pickerKind="menu" title="Set area" value={value} isDone={value != null} picker={
+    <Card title="Set area" control="pick" pickerKind="menu" leading={stepMark(value != null)} pills={chosen(value)} picker={
       <Menu aria-label="Area" selectionMode="single" selectedKeys={mode ? [mode] : []}
         onSelectionChange={keys => { setMode(keys === 'all' ? null : [...keys].map(String)[0] ?? null); onChange?.(); }}>
         <MenuItem id="none" icon={pin} description="The project will not show when filtering by area.">No specific area</MenuItem>
@@ -175,12 +216,12 @@ function SetArea({onChange}: {onChange?: () => void}) {
   );
 }
 
-/** Set topic tags: the Option list, searchable, with its footer and Done. */
+/** Set topic tags, Card's pick row with the Option list, searchable, with its footer and Done. */
 function SetTopicTags({onChange}: {onChange?: () => void}) {
   const [tags, setTags] = useState<string[]>([]);
   return (
-    <SetupStep kind="pick" title="Set topic tags" value={tags.length ? counted(tags.length, 'tag', 'tags') : undefined}
-      isDone={tags.length > 0} picker={
+    <Card title="Set topic tags" control="pick" leading={stepMark(tags.length > 0)}
+      pills={chosen(tags.length ? counted(tags.length, 'tag', 'tags') : undefined)} picker={
         <OptionList aria-label="Topic tags" items={TOPICS.map(t => ({id: t, label: t}))} value={tags} onChange={t => { setTags(t); onChange?.(); }}
           placeholder="Search tags..." labels={{search: () => 'Search tags'}}
           selectionLabel={k => (k ? `${counted(k, 'tag', 'tags')} selected` : 'No tags selected')} />
@@ -188,91 +229,125 @@ function SetTopicTags({onChange}: {onChange?: () => void}) {
   );
 }
 
-/** One step of the setup checklist, on the phase's Build panel and the project overview alike. */
+/** One step of the project's setup, as Card's rows (its "Setup row · link" and "· pick" stories, a `leading` mark):
+ * on the project overview, before publishing and in Project details. */
 export function ChecklistStep({step, onOpen, onChange}: {step: typeof CHECKLIST[number]; onOpen: (title: string) => void;
   onChange?: () => void}): ReactNode {
   if (step.title === 'Set area') return <SetArea onChange={onChange} />;
   if (step.title === 'Set topic tags') return <SetTopicTags onChange={onChange} />;
-  if (step.action === 'expand') return <SetupStep kind="expand" title={step.title}><Text elementType="p" kind="small" color="meta">{step.body}</Text></SetupStep>;
-  return <SetupStep title={step.title} onPress={() => onOpen(step.title)} />;
+  if (step.action === 'expand') {
+    return (
+      <Card title={step.title} control="expand" leading={stepMark(false)}>
+        <Text elementType="p" kind="small" color="meta">{step.body}</Text>
+      </Card>
+    );
+  }
+  return <Card title={step.title} control="link" leading={stepMark(false)} onOpen={() => onOpen(step.title)} />;
 }
 
 // Where each checklist card leads: two open a settings tab, the rest a stub until they're drawn.
 export const CHECKLIST_TAB: Partial<Record<string, SettingsTab>> = {'Settings': 'General', 'Edit project page': 'Project page'};
 
-// "Project · Build": what residents see of the phase on the stage (the Phone preview on its Phone stage); the setup in
-// a Panel beside it, the project's publish checklist and the phase's own cards each a Panel section. An email opened
-// from the Notifications card takes the setup's place (Notification email), the email itself on the phone.
-function Build({project, phase, onSettings, onChange}: {project: Project; phase: Phase; onSettings: (tab: SettingsTab) => void;
-  onChange: () => void}) {
+// "Project · Build", after the prototype's Build tab: Workspace layout with the rail, the method's setup in the middle
+// (a plain Panel, the phase's cards in sections) and what residents see of the phase on the stage (the Phone preview
+// on its Phone stage). The project's own publish checklist lives on the overview. An email opened from the
+// Notifications card takes the setup's place (Notification email), the email itself on the phone.
+function Build({project, phase, rail, onSettings, onChange}: {project: Project; phase: Phase; rail: ReactNode;
+  onSettings: (tab: SettingsTab) => void; onChange: () => void}) {
   const [stub, setStub] = useState<string | null>(null);
   const [attaching, setAttaching] = useState(false);
   const [files, setFiles] = useState<FileListItemData[]>(PHASE_FILES);
   const [emailsOn, setEmailsOn] = useState(() => new Set(PHASE_EMAILS.filter(e => e.on).map(e => e.id)));
   const [emailId, setEmailId] = useState<string | null>(null);
-  const open = (title: string) => { const t = CHECKLIST_TAB[title]; if (t) onSettings(t); else setStub(title); };
   const setEmail = (id: string, on: boolean) => {
     setEmailsOn(s => (on ? new Set(s).add(id) : new Set([...s].filter(e => e !== id))));
     onChange();
   };
-  const call = PHONE_CALL[phase.method];
   const email = PHASE_EMAILS.find(e => e.id === emailId);
+  const column = (
+    <Panel variant="plain" title={`${phase.method} setup`}
+      actions={<IconButton aria-label="Project settings" onPress={() => onSettings('General')}><Settings aria-hidden size={16} /></IconButton>}>
+      {email ? (
+        <NotificationEmail key={email.id} name={email.name} who={email.who} when={email.when}
+          labels={{back: `Back to ${phase.method} setup`}} onBack={() => setEmailId(null)}
+          isSelected={emailsOn.has(email.id)} onChange={on => setEmail(email.id, on)}
+          replyTo="support@example.org" subject={email.name} buttonText="View it" />
+      ) : (
+        <Stack gap="8">
+          <PhaseStatus phase={phase} />
+          {phase.method === 'Ideation' ? (
+            <IdeationCards phase={phase} onOpen={setStub} onAttach={() => setAttaching(true)} files={files.length}
+              onChange={onChange} emailsOn={emailsOn} onEmailChange={setEmail} onEmailOpen={setEmailId} />
+          ) : phase.method === 'Volunteering' ? (
+            <VolunteeringCards phase={phase} onOpen={setStub} onChange={onChange} />
+          ) : (
+            <Text elementType="p" kind="small" color="meta">The {phase.method.toLowerCase()} setup cards: not in Figma yet.</Text>
+          )}
+        </Stack>
+      )}
+    </Panel>
+  );
   return (
     <>
-      <Grid elementType="section" aria-label="Preview" className="bo-phase-grow">
-        <PhoneStage caption={email ? 'The email, as residents get it' : 'What residents see while the phase is open'}>
+      <Workspace rail={rail} column={column}>
+        <Grid elementType="section" aria-label="Preview" className="bo-fill">
           {email ? (
-            <PhonePreview aria-label={`The email: ${email.name}`} header={<PhoneHeader />}>
-              <h2>{email.name}</h2>
-              <p>{email.when}: this email goes to the {email.who.toLowerCase()}.</p>
-              <Button isFullWidth>View it</Button>
-            </PhonePreview>
-          ) : (
-            <PhonePreview aria-label={`What residents see of ${phase.title}`} header={<PhoneHeader />}>
-              <PhoneImage aria-label="Project image" />
-              <h2>{project.title}</h2>
-              <p>{phase.title} · {phase.dates}</p>
-              {call && <p>{call.line}</p>}
-              <Button isFullWidth>{call?.button ?? 'Take part'}</Button>
-            </PhonePreview>
-          )}
-        </PhoneStage>
-      </Grid>
-      <Panel title="Setup" className="bo-phase-side bo-phase-setup"
-        actions={<IconButton aria-label="Project settings" onPress={() => onSettings('General')}><Settings aria-hidden size={16} /></IconButton>}>
-        {email ? (
-          <NotificationEmail key={email.id} name={email.name} who={email.who} when={email.when}
-            labels={{back: `Back to ${phase.method} setup`}} onBack={() => setEmailId(null)}
-            isSelected={emailsOn.has(email.id)} onChange={on => setEmail(email.id, on)}
-            replyTo="support@example.org" subject={email.name} buttonText="View it" />
-        ) : (
-          <Stack gap="24">
-            <PanelSection title="Before you publish" aside={`0 of ${CHECKLIST.length} ready`}>
-              <Stack elementType="ul" gap="8">
-                {CHECKLIST.map(c => (
-                  <li key={c.title} data-gv="setup-card"><ChecklistStep step={c} onOpen={open} onChange={onChange} /></li>
-                ))}
-              </Stack>
-            </PanelSection>
-            <PanelSection title={`${phase.method} setup`}>
-              <Stack gap="8">
-                <PhaseStatus phase={phase} />
-                {phase.method === 'Ideation' ? (
-                  <IdeationCards phase={phase} onOpen={setStub} onAttach={() => setAttaching(true)} files={files.length}
-                    onChange={onChange} emailsOn={emailsOn} onEmailChange={setEmail} onEmailOpen={setEmailId} />
-                ) : phase.method === 'Volunteering' ? (
-                  <VolunteeringCards phase={phase} onOpen={setStub} onChange={onChange} />
-                ) : (
-                  <Text elementType="p" kind="small" color="meta">The {phase.method.toLowerCase()} setup cards: not in Figma yet.</Text>
-                )}
-              </Stack>
-            </PanelSection>
-          </Stack>
-        )}
-      </Panel>
+            <PhoneStage caption="The email, as residents get it">
+              <PhonePreview aria-label={`The email: ${email.name}`} header={<PhoneHeader mark={LOGO} logo="Larkvale" />}>
+                <h2>{email.name}</h2>
+                <p>{email.when}: this email goes to the {email.who.toLowerCase()}.</p>
+                <Button isFullWidth>View it</Button>
+              </PhonePreview>
+            </PhoneStage>
+          ) : <PhasePhone project={project} phase={phase} />}
+        </Grid>
+      </Workspace>
       <CardStub title={stub} onClose={() => setStub(null)} />
       <Attachments isOpen={attaching} onOpenChange={setAttaching} files={files} onChange={setFiles} />
     </>
+  );
+}
+
+/** The platform's logo mark in the phone's header (Phone preview's "Logo header" story): invented, drawn inline. */
+export const LOGO = (
+  <svg viewBox="0 0 32 16" width={32} height={16} fill="currentColor" aria-hidden="true">
+    <path d="M0 16 9 4l5 6 4-5 7 11H0Z" />
+  </svg>
+);
+
+type PhoneState = 'before' | 'open' | 'ended';
+const STATE_OF: Record<Phase['status'], PhoneState> = {Draft: 'before', Live: 'open', Done: 'ended'};
+
+/** What residents see of the phase (Phone phase card's "In the phone"): its number, title and dates on the phase page,
+ * and the participation bar at the foot. A vote's stage switches the phone between Before, Open and Ended (Phone
+ * preview's "Stage toolbar"). */
+function PhasePhone({project, phase}: {project: Project; phase: Phase}) {
+  const [state, setState] = useState<PhoneState>(STATE_OF[phase.status]);
+  const call = PHONE_CALL[phase.method];
+  const number = project.phases.indexOf(phase) + 1;
+  const toolbar = phase.method === 'Voting' && (
+    <SegmentedControl aria-label="Phase state" disallowEmptySelection selectedKeys={[state]}
+      onSelectionChange={k => { const next = [...k][0]; if (next) setState(next as PhoneState); }}>
+      <SegmentedControlItem id="before">Before</SegmentedControlItem>
+      <SegmentedControlItem id="open">Open</SegmentedControlItem>
+      <SegmentedControlItem id="ended">Ended</SegmentedControlItem>
+    </SegmentedControl>
+  );
+  const range = phaseDates(phase.dates);
+  const footer = state === 'open'
+    ? <PhoneCountdown cta={call?.button ?? 'Take part'}>{phase.status === 'Live' && project.timeLeft ? project.timeLeft : 'Open now'}</PhoneCountdown>
+    : <PhoneCountdown>{state === 'before' ? (range ? `Starts on ${range[0]}` : 'Not started yet') : 'Ended'}</PhoneCountdown>;
+  return (
+    <PhoneStage caption={`What residents see ${state === 'before' ? 'before the phase opens' : state === 'open' ? 'while the phase is open' : 'once the phase has ended'}`}
+      toolbar={toolbar || undefined}>
+      <PhonePreview aria-label={`What residents see of ${phase.title}`} header={<PhoneHeader mark={LOGO} logo="Larkvale" />} surface="grey"
+        footer={footer}>
+        <PhonePhaseCard number={number} title={phase.title} dates={phase.dates}>
+          {call ? <p>{call.line}</p> : <><Skeleton /><Skeleton width="70%" /></>}
+        </PhonePhaseCard>
+        <PhoneCard><h2>{project.title}</h2></PhoneCard>
+      </PhonePreview>
+    </PhoneStage>
   );
 }
 
@@ -321,16 +396,30 @@ const DATES_HELP = 'Ideas can be posted from the first day to the last.';
 // The platform's languages (Settings' Platform configuration): every multilingual field of the project takes them.
 const LANGUAGES = LOCALES.map(l => l.id);
 
-function DatesAndTitle({phase, onChange, help}: {phase: Phase; onChange: () => void; help: string}) {
-  // Title field's "Multilingual" story: one content-language menu in the title's end drives the description under it.
+/** Where each setup row's review stands: To review until the person has opened it, then Reviewed (Card's "Setup
+ * rows" story: the page sets it from `onExpandedChange`; Card draws the look). */
+function useReviewed(): {status: (title: string) => 'to-review' | 'reviewed'; seen: (title: string) => (open: boolean) => void} {
+  const [opened, setOpened] = useState<Set<string>>(new Set());
+  return {
+    status: title => (opened.has(title) ? 'reviewed' : 'to-review'),
+    seen: title => open => { if (open) setOpened(s => (s.has(title) ? s : new Set(s).add(title))); }
+  };
+}
+type Reviewed = ReturnType<typeof useReviewed>;
+/** An expanding setup row's review props: its status, and Reviewed once opened. */
+const review = (r: Reviewed, title: string) => ({title, control: 'expand' as const, status: r.status(title), onExpandedChange: r.seen(title)});
+
+/** The phase's dates (a setup row), then its title and description straight in the column (the prototype's Build tab):
+ * the Title field with one content-language menu in its end, which drives the Multilingual rich text editor under it. */
+function DatesAndTitle({phase, onChange, help, reviewed}: {phase: Phase; onChange: () => void; help: string; reviewed: Reviewed}) {
   const [locale, setLocale] = useState(LANGUAGES[0]);
   const [title, setTitle] = useState<Multiloc>({[LANGUAGES[0]]: phase.title});
   const [description, setDescription] = useState<Multiloc>({});
   return <>
-    <li data-gv="setup-card"><Card title="Dates" isRequired summary={phase.dates} control="expand">
+    <li data-gv="setup-card"><Card {...review(reviewed, 'Dates')} isRequired pills={[{label: phase.dates, icon: CalendarDays}]}>
       <DateRangeField isRequired description={help} defaultValue={phaseRange(phase.dates)} onChange={onChange} />
     </Card></li>
-    <li data-gv="setup-card"><Card title="Title and description" isRequired control="expand" defaultExpanded>
+    <li>
       <Stack gap="8">
         <TitleField aria-label="Phase title" isRequired lang={locale} value={title[locale] ?? ''}
           onChange={text => { setTitle(t => ({...t, [locale]: text})); onChange(); }}
@@ -340,15 +429,29 @@ function DatesAndTitle({phase, onChange, help}: {phase: Phase; onChange: () => v
           )} />
         <MultilingualRichTextEditor aria-label="Phase description" placeholder="Add a short description" locales={LANGUAGES}
           locale={locale} onLocaleChange={setLocale} showLocaleSwitcher={false} value={description}
+          description="Residents read it at the top of the phase's page."
           onChange={v => { setDescription(v); onChange(); }} />
       </Stack>
-    </Card></li>
+    </li>
   </>;
+}
+
+/** A quiet label over a group of setup rows (the prototype's Build sections). */
+function SetupSection({title, children}: {title: string; children: ReactNode}) {
+  return (
+    <li>
+      <Stack gap="8" paddingBlock="8">
+        <SectionLabel>{title}</SectionLabel>
+        <Stack elementType="ul" gap="8" aria-label={title}>{children}</Stack>
+      </Stack>
+    </li>
+  );
 }
 
 function IdeationCards({phase, onOpen, onAttach, files, onChange, emailsOn, onEmailChange, onEmailOpen}: {phase: Phase;
   onOpen: (title: string) => void; onAttach: () => void; files: number; onChange: () => void; emailsOn: Set<string>;
   onEmailChange: (id: string, on: boolean) => void; onEmailOpen: (id: string) => void}) {
+  const reviewed = useReviewed();
   // Participant actions: which are on, who can take each, and whether that is set for this phase.
   const [actionsOn, setActionsOn] = useState<Record<string, boolean>>({submit: true, comment: true, react: true, event: true});
   const [disliking, setDisliking] = useState(false);
@@ -358,78 +461,91 @@ function IdeationCards({phase, onOpen, onAttach, files, onChange, emailsOn, onEm
   // Available views: List is always on; one view is the default.
   const [views, setViews] = useState<Record<string, boolean>>({list: true, map: false, perspectives: false});
   const [defaultView, setDefaultView] = useState('list');
+  // The two rows that pick one value from their menu: once picked, they are reviewed.
+  const [term, setTerm] = useState<string>(INPUT_TERMS[0]);
+  const [sort, setSort] = useState<string>(IDEA_SORTS[0]);
   const changed = <T,>(set: (v: T) => void) => (v: T) => { set(v); onChange(); };
+  const picked = (title: string, set: (v: string) => void) => (v: string) => { set(v); reviewed.seen(title)(true); onChange(); };
   const accessFor = PARTICIPANT_ACTIONS.find(a => a.id === access);
   const emailCount = emailsOn.size;
   return (
     <Stack elementType="ul" gap="8">
-      <DatesAndTitle phase={phase} onChange={onChange} help={DATES_HELP} />
+      <DatesAndTitle phase={phase} onChange={onChange} help={DATES_HELP} reviewed={reviewed} />
       <li data-gv="setup-card"><Card title="Attachments" summary={files ? `${files} ${files === 1 ? 'file' : 'files'}` : undefined}
         iconActions={[{icon: Paperclip, label: 'Add an attachment', onPress: onAttach}]} /></li>
-      <li data-gv="setup-card"><Card title="What should an input be called?" status="to-review" pills={[{label: 'Idea', icon: Lightbulb}]} control="open" onOpen={() => onOpen('What should an input be called?')} /></li>
-      <li data-gv="setup-card"><Card title="Idea form" status="to-review" pills={[{label: `${IDEA_FORM.length} questions`}]} control="expand">
-        {/* Form field summary (a recipe): the questions at a glance, one line each, Edit form under them. */}
-        <div className="gv-form-summary">
-          <ol className="gv-form-summary__list" aria-label="Idea form questions">
-            {IDEA_FORM.map((q, i) => (
-              <li key={q.name} className="gv-form-summary__question">
-                <span className="gv-form-summary__number" aria-hidden>{i + 1}</span>
-                <span className="gv-form-summary__name" title={q.name}>{q.name}</span>
-                <span className="gv-form-summary__type">{q.isRequired ? `${q.type} · Required` : q.type}</span>
-              </li>
+      <SetupSection title="Ideas and participant data">
+        <li data-gv="setup-card"><Card title="What should an input be called?" status={reviewed.status('What should an input be called?')}
+          control="menu" menuItems={INPUT_TERMS.map(t => ({id: t, label: t, icon: t === 'Idea' ? Lightbulb : undefined}))}
+          value={term} onChange={picked('What should an input be called?', setTerm)} /></li>
+        <li data-gv="setup-card"><Card {...review(reviewed, 'Idea form')} pills={[{label: `${IDEA_FORM.length} questions`}]}>
+          {/* Form field summary (a recipe): the questions at a glance, one line each, Edit form under them. */}
+          <div className="gv-form-summary">
+            <ol className="gv-form-summary__list" aria-label="Idea form questions">
+              {IDEA_FORM.map((q, i) => (
+                <li key={q.name} className="gv-form-summary__question">
+                  <span className="gv-form-summary__number" aria-hidden>{i + 1}</span>
+                  <span className="gv-form-summary__name" title={q.name}>{q.name}</span>
+                  <span className="gv-form-summary__type">{q.isRequired ? `${q.type} · Required` : q.type}</span>
+                </li>
+              ))}
+            </ol>
+            <Button variant="secondary" size={36} onPress={() => onOpen('Idea form')}>Edit form</Button>
+          </div>
+        </Card></li>
+        <li data-gv="setup-card"><Card title="Collect demographic data" status="to-set" control="link" onOpen={() => onOpen('Collect demographic data')} /></li>
+      </SetupSection>
+      <SetupSection title="How ideas are shown">
+        <li data-gv="setup-card"><Card {...review(reviewed, 'Available views')}
+          pills={firstPlus(IDEA_VIEWS.filter(v => v.id !== 'list' && views[v.id]).map(v => v.label))}>
+          <ViewOptionList>
+            {IDEA_VIEWS.map(v => (
+              <ViewOptionRow key={v.id} description={v.description} isAlwaysOn={v.id === 'list'} isSelected={views[v.id]}
+                onChange={changed((next: boolean) => {
+                  setViews(s => ({...s, [v.id]: next}));
+                  if (!next && defaultView === v.id) setDefaultView('list');
+                })}
+                isDefault={defaultView === v.id}
+                onMakeDefault={() => { setDefaultView(v.id); setViews(s => ({...s, [v.id]: true})); onChange(); }}>
+                {v.label}
+              </ViewOptionRow>
             ))}
-          </ol>
-          <Button variant="secondary" size={36} onPress={() => onOpen('Idea form')}>Edit form</Button>
-        </div>
-      </Card></li>
-      <li data-gv="setup-card"><Card title="Participant actions" control="expand"
-        pills={firstPlus(PARTICIPANT_ACTIONS.filter(a => !('isLocked' in a) && actionsOn[a.id]).map(a => a.short))}>
-        <ParticipantActionList>
-          {PARTICIPANT_ACTIONS.map(a => {
-            const locked = 'isLocked' in a && a.isLocked;
-            return [
-              <ParticipantActionRow key={a.id} value={ACCESS_WHO_VALUE[who[a.id]]} isDefault={!own[a.id]} isLocked={locked}
-                isSelected={actionsOn[a.id]} onChange={changed((v: boolean) => setActionsOn(s => ({...s, [a.id]: v})))}
-                onOpen={() => setAccess(a.id)} options={a.id === 'react' ? <ParticipantLimit onChange={onChange} /> : undefined}>
-                {a.label}
-              </ParticipantActionRow>,
-              // Disliking hangs from Reacting: a plain switch row while reacting is on.
-              a.id === 'react' && actionsOn.react && (
-                <ParticipantActionRow key="dislike" isSelected={disliking} onChange={changed(setDisliking)}>Disliking</ParticipantActionRow>
-              )
-            ];
-          })}
-        </ParticipantActionList>
-      </Card></li>
-      <li data-gv="setup-card"><Card title="Available views" control="expand"
-        pills={firstPlus(IDEA_VIEWS.filter(v => v.id !== 'list' && views[v.id]).map(v => v.label))}>
-        <ViewOptionList>
-          {IDEA_VIEWS.map(v => (
-            <ViewOptionRow key={v.id} description={v.description} isAlwaysOn={v.id === 'list'} isSelected={views[v.id]}
-              onChange={changed((next: boolean) => {
-                setViews(s => ({...s, [v.id]: next}));
-                if (!next && defaultView === v.id) setDefaultView('list');
-              })}
-              isDefault={defaultView === v.id}
-              onMakeDefault={() => { setDefaultView(v.id); setViews(s => ({...s, [v.id]: true})); onChange(); }}>
-              {v.label}
-            </ViewOptionRow>
-          ))}
-        </ViewOptionList>
-      </Card></li>
-      <li data-gv="setup-card"><Card title="Collect demographic data" status="to-set" control="open" onOpen={() => onOpen('Collect demographic data')} /></li>
-      <li data-gv="setup-card"><Card title="Sorting" status="to-review" pills={[{label: 'Trending'}]} control="open" onOpen={() => onOpen('Sorting')} /></li>
-      <li data-gv="setup-card"><Card title="Notifications" control="expand"
-        pills={[{label: emailCount ? `${emailCount} ${emailCount === 1 ? 'email' : 'emails'} on` : 'Off'}]}>
-        <NotificationRowList>
-          {PHASE_EMAILS.map(e => (
-            <NotificationRow key={e.id} who={e.who} when={e.when} isSelected={emailsOn.has(e.id)}
-              onChange={on => onEmailChange(e.id, on)} onOpen={() => onEmailOpen(e.id)}>
-              {e.name}
-            </NotificationRow>
-          ))}
-        </NotificationRowList>
-      </Card></li>
+          </ViewOptionList>
+        </Card></li>
+        <li data-gv="setup-card"><Card title="Sorting" status={reviewed.status('Sorting')} control="menu"
+          menuItems={IDEA_SORTS.map(t => ({id: t, label: t}))} value={sort} onChange={picked('Sorting', setSort)} /></li>
+      </SetupSection>
+      <SetupSection title="Rules">
+        <li data-gv="setup-card"><Card {...review(reviewed, 'Participant actions')}
+          pills={firstPlus(PARTICIPANT_ACTIONS.filter(a => !('isLocked' in a) && actionsOn[a.id]).map(a => a.short))}>
+          <ParticipantActionList>
+            {PARTICIPANT_ACTIONS.map(a => {
+              const locked = 'isLocked' in a && a.isLocked;
+              return [
+                <ParticipantActionRow key={a.id} value={ACCESS_WHO_VALUE[who[a.id]]} isDefault={!own[a.id]} isLocked={locked}
+                  isSelected={actionsOn[a.id]} onChange={changed((v: boolean) => setActionsOn(s => ({...s, [a.id]: v})))}
+                  onOpen={() => setAccess(a.id)} options={a.id === 'react' ? <ParticipantLimit onChange={onChange} /> : undefined}>
+                  {a.label}
+                </ParticipantActionRow>,
+                // Disliking hangs from Reacting: a plain switch row while reacting is on.
+                a.id === 'react' && actionsOn.react && (
+                  <ParticipantActionRow key="dislike" isSelected={disliking} onChange={changed(setDisliking)}>Disliking</ParticipantActionRow>
+                )
+              ];
+            })}
+          </ParticipantActionList>
+        </Card></li>
+        <li data-gv="setup-card"><Card {...review(reviewed, 'Notifications')}
+          pills={[{label: emailCount ? `${emailCount} ${emailCount === 1 ? 'email' : 'emails'} on` : 'Off'}]}>
+          <NotificationRowList>
+            {PHASE_EMAILS.map(e => (
+              <NotificationRow key={e.id} who={e.who} when={e.when} isSelected={emailsOn.has(e.id)}
+                onChange={on => onEmailChange(e.id, on)} onOpen={() => onEmailOpen(e.id)}>
+                {e.name}
+              </NotificationRow>
+            ))}
+          </NotificationRowList>
+        </Card></li>
+      </SetupSection>
       {accessFor && (
         <AccessRightsModal key={accessFor.id} title={accessFor.question} isOpen onOpenChange={o => !o && setAccess(null)}
           whoItems={accessFor.id === 'event' ? ['signin', 'admins'] : undefined}
@@ -452,9 +568,10 @@ function VolunteeringCards({phase, onOpen, onChange}: {phase: Phase; onOpen: (ti
     onChange();
     toast(`${gone.title} deleted`, undefined, {action: 'Undo', onAction: () => setCauses(list => [...list.slice(0, at), gone, ...list.slice(at)])});
   };
+  const reviewed = useReviewed();
   return (
     <Stack elementType="ul" gap="8">
-      <DatesAndTitle phase={phase} onChange={onChange} help="Residents can sign up from the first day to the last." />
+      <DatesAndTitle phase={phase} onChange={onChange} help="Residents can sign up from the first day to the last." reviewed={reviewed} />
       <li data-gv="setup-card"><Card title="Causes" pills={[{label: `${causes.length} ${causes.length === 1 ? 'cause' : 'causes'}`}]}
         iconActions={[
           {icon: Plus, label: 'Add a cause', tooltip: 'Add a cause', onPress: () => onOpen('Add a cause')},
@@ -548,7 +665,7 @@ const findComment = (list: ThreadComment[], id: string) => [...list, ...list.fla
 const rowOf = (id: string) =>
   document.querySelector<HTMLElement>(`[role="grid"][aria-label="Ideas"] [role="row"][data-key="${CSS.escape(id)}"]`);
 
-function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; onAddPhase: () => void}) {
+function Manage({project, phase, rail, onAddPhase}: {project: Project; phase: Phase; rail: ReactNode; onAddPhase: () => void}) {
   const screens = SCREENING_PHASES.has(`${project.id}/${phase.id}`);
   // A draft phase has collected nothing yet; a published one shows its first week of ideas. Only a phase that
   // screens has ideas waiting for approval.
@@ -686,31 +803,33 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
   // The panel's pager walks the whole filtered list; the table turns to the page the open idea is on.
   const openAt = (p: number) => { const next = shown[p - 1]; if (!next) return; setOpen(next.id); setPage(Math.ceil(p / PAGE_SIZE)); };
 
+  // The work column (Workspace layout's "With a list"): the metrics, each a filter or a view of its own, then the
+  // manager's actions as filled Cards.
+  const column = (
+    <Stack gap="16">
+      <Stack>
+        {WALKS.map(w => {
+          const count = ideas.filter(i => (w.filter ? matches(i, w.filter) : w.test!(i))).length;
+          const isOn = w.filter ? sameFilters(filters, w.filter) : walk?.key === w.key;
+          return <StatRow key={w.key} label={w.label} value={String(count)} isNew={w.key === 'new' && count > 0}
+            isStatic={count === 0} isSelected={isOn}
+            onPress={() => (w.filter ? setFilters(isOn ? {} : w.filter) : setView(isOn ? null : w))} />;
+        })}
+      </Stack>
+      <Stack elementType="ul" gap="10">
+        <li><Card variant="filled" title="Add an idea" iconActions={[{icon: Plus, label: 'Add an idea'}]} /></li>
+        <li><Card variant="filled" title="Import paper ideas" summary="Not set" iconActions={[{icon: Upload, label: 'Import paper ideas'}]} /></li>
+        <li><Card variant="filled" title="Exports" iconActions={[{icon: Download, label: 'Export ideas'}]} /></li>
+      </Stack>
+    </Stack>
+  );
+
   return (
     <>
-      <Stack elementType="aside" gap="8" aria-label="Ideas overview" className="bo-phase-side">
-        <AppFramePanel padding="8">
-          <Stack>
-            {WALKS.map(w => {
-              const count = ideas.filter(i => (w.filter ? matches(i, w.filter) : w.test!(i))).length;
-              const isOn = w.filter ? sameFilters(filters, w.filter) : walk?.key === w.key;
-              return <StatRow key={w.key} label={w.label} value={String(count)} isNew={w.key === 'new' && count > 0}
-                isStatic={count === 0} isSelected={isOn}
-                onPress={() => (w.filter ? setFilters(isOn ? {} : w.filter) : setView(isOn ? null : w))} />;
-            })}
-          </Stack>
-        </AppFramePanel>
-        <AppFramePanel padding="16">
-          <Stack elementType="ul" gap="10">
-            <li><Card variant="filled" title="Add an idea" iconActions={[{icon: Plus, label: 'Add an idea'}]} /></li>
-            <li><Card variant="filled" title="Import paper ideas" summary="Not set" iconActions={[{icon: Upload, label: 'Import paper ideas'}]} /></li>
-            <li><Card variant="filled" title="Exports" iconActions={[{icon: Download, label: 'Export ideas'}]} /></li>
-          </Stack>
-        </AppFramePanel>
-      </Stack>
+      <Workspace rail={rail} column={column} columnLabel="Ideas overview" main="plain">
       {/* The Data table's "In a panel" story: the Panel's toolbar holds the count (or the Selection bar), the collapsible
           search and the Filter menu, then the chips (the quick view first); the table; the Pagination in its foot. */}
-      <Panel title={phase.title} className="bo-phase-grow" isFlush
+      <Panel title={phase.title} className="bo-fill" isFlush
         description="Everything posted in this phase. Select ideas for batch actions; click one to open it."
         toolbar={(
           <>
@@ -815,6 +934,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
         </DataTable>
         )}
       </Panel>
+      </Workspace>
       <SidePanel label={phase.title} labels={{previous: 'Previous idea', next: 'Next idea'}} isOpen={!!idea && (mode === 'list' || reading)}
         onOpenChange={o => { if (o) return; setReading(false); if (mode === 'list') setOpen(null); }}
         position={at >= 0 ? {current: at + 1, total: shown.length} : undefined}
@@ -938,26 +1058,21 @@ const NOUN: Record<Method, string> = {
 };
 const capital = (t: string) => t[0].toUpperCase() + t.slice(1);
 
-/** The Empty state's "Manage tab" and "Insights tab" stories on the stage, its "Side panel" story beside them. */
-function EmptyTab({phase, tab}: {phase: Phase; tab: 'manage' | 'insights'}) {
+/** The Empty state's "Manage tab" and "Insights tab" stories on the stage, its "Side panel" story in the work column. */
+function EmptyTab({phase, tab, rail}: {phase: Phase; tab: 'manage' | 'insights'; rail: ReactNode}) {
   const noun = NOUN[phase.method];
-  const main = (
-    <AppFramePanel elementType="section" aria-label={label(tab)} padding="16" className="bo-phase-grow bo-phase-empty">
-      {tab === 'manage'
-        ? <EmptyState illustration="empty-notebook" title={`${capital(noun)} will appear here`}
-          description={`Once the phase starts, you can review and manage ${noun} here`} />
-        : <EmptyState illustration="empty-notebook" title="Insights will appear here"
-          description="Once the phase starts, insights will help you turn participation into clear results" />}
-    </AppFramePanel>
+  return (
+    <Workspace rail={rail} columnLabel={tab === 'manage' ? `${capital(noun)} overview` : 'Recommended actions'}
+      column={<EmptyState layout="panel" illustration="empty-notebook" headingLevel="none" title={tab === 'manage' ? `No ${noun} yet` : 'No insights yet'} />}>
+      <AppFramePanel elementType="section" aria-label={label(tab)} padding="16" className="bo-fill bo-phase-empty">
+        {tab === 'manage'
+          ? <EmptyState illustration="empty-notebook" title={`${capital(noun)} will appear here`}
+            description={`Once the phase starts, you can review and manage ${noun} here`} />
+          : <EmptyState illustration="empty-notebook" title="Insights will appear here"
+            description="Once the phase starts, insights will help you turn participation into clear results" />}
+      </AppFramePanel>
+    </Workspace>
   );
-  const side = (
-    <AppFramePanel elementType="aside" aria-label={tab === 'manage' ? `${capital(noun)} overview` : 'Recommended actions'} padding="16"
-      className="bo-phase-side">
-      <EmptyState layout="panel" illustration="empty-notebook" headingLevel="none" title={tab === 'manage' ? `No ${noun} yet` : 'No insights yet'} />
-    </AppFramePanel>
-  );
-  // The side panel keeps its place: before the list on Manage, after the dashboard on Insights.
-  return tab === 'manage' ? <>{side}{main}</> : <>{main}{side}</>;
 }
 
 // Manage for Voting and Proposals: the Panel over the method's List header and rows (Voting row, Proposals row).
@@ -973,37 +1088,45 @@ const PROPOSAL_COLUMNS: ListHeaderColumn[] = [
   {key: 'timeLeft', label: 'Time left', width: 104, isStatic: true}
 ];
 
-function MethodManage({phase}: {phase: Phase}) {
+function MethodManage({phase, rail}: {phase: Phase; rail: ReactNode}) {
   if (phase.method !== 'Voting' && phase.method !== 'Proposals') {
     return (
-      <AppFramePanel elementType="section" aria-label="Manage" padding="16" className="bo-phase-grow bo-phase-empty">
-        <EmptyState icon={<Inbox aria-hidden size={24} />} title={phase.method === 'Information' ? 'Nothing to manage here' : `${phase.method}: Manage`}
-          description={phase.method === 'Information' ? 'An information phase shares news with residents; it collects no inputs.'
-            : 'This method\'s Manage tab: not in Figma yet.'} />
-      </AppFramePanel>
+      <Workspace rail={rail}>
+        <AppFramePanel elementType="section" aria-label="Manage" padding="16" className="bo-fill bo-phase-empty">
+          <EmptyState icon={<Inbox aria-hidden size={24} />} title={phase.method === 'Information' ? 'Nothing to manage here' : `${phase.method}: Manage`}
+            description={phase.method === 'Information' ? 'An information phase shares news with residents; it collects no inputs.'
+              : 'This method\'s Manage tab: not in Figma yet.'} />
+        </AppFramePanel>
+      </Workspace>
     );
   }
   const voting = phase.method === 'Voting';
   const top = Math.max(...VOTE_OPTIONS.map(o => o.votes));
+  // List header's "Manage table" story: the header is a row of column heads, so the list is a table; each row (Voting
+  // row, Proposals row) sits in a row and a cell.
   return (
-    <Panel title={phase.title} className="bo-phase-grow" isFlush count={voting ? VOTE_OPTIONS.length : PROPOSALS.length}
-      description={voting ? 'The options residents vote on, most votes first. Votes counted on paper are added as offline votes.'
-        : 'Every proposal, most supported first. 300 votes bring an official response.'}>
-      <div role="list" aria-label={voting ? 'Options' : 'Proposals'}>
-        <ListHeader columns={voting ? VOTING_COLUMNS : PROPOSAL_COLUMNS} />
-        {voting ? VOTE_OPTIONS.map(o => (
-          <div role="listitem" key={o.title}>
-            <VotingRow title={o.title} voteCount={o.votes} fillPercent={Math.round(o.votes / top * 100)} newVoteCount={o.newVotes}
-              onlineCount={o.votes - o.offline} offlineCount={o.offline} commentCount={o.comments} newCommentCount={o.newComments} />
+    <Workspace rail={rail} main="plain">
+      <Panel title={phase.title} className="bo-fill" isFlush count={voting ? VOTE_OPTIONS.length : PROPOSALS.length}
+        description={voting ? 'The options residents vote on, most votes first. Votes counted on paper are added as offline votes.'
+          : 'Every proposal, most supported first. 300 votes bring an official response.'}>
+        <div role="table" aria-label={voting ? 'Options' : 'Proposals'}>
+          <div role="rowgroup"><ListHeader columns={voting ? VOTING_COLUMNS : PROPOSAL_COLUMNS} /></div>
+          <div role="rowgroup">
+            {voting ? VOTE_OPTIONS.map(o => (
+              <div role="row" key={o.title}><div role="cell">
+                <VotingRow title={o.title} voteCount={o.votes} fillPercent={Math.round(o.votes / top * 100)} newVoteCount={o.newVotes}
+                  onlineCount={o.votes - o.offline} offlineCount={o.offline} commentCount={o.comments} newCommentCount={o.newComments} />
+              </div></div>
+            )) : PROPOSALS.map(o => (
+              <div role="row" key={o.title}><div role="cell">
+                <ProposalsRow title={o.title} voteCount={o.votes} voteThreshold={300} statusLabel={o.status} commentCount={o.comments}
+                  isClosed={phase.status === 'Done'} daysLeft={phase.status === 'Done' ? undefined : 12} />
+              </div></div>
+            ))}
           </div>
-        )) : PROPOSALS.map(o => (
-          <div role="listitem" key={o.title}>
-            <ProposalsRow title={o.title} voteCount={o.votes} voteThreshold={300} statusLabel={o.status} commentCount={o.comments}
-              isClosed={phase.status === 'Done'} daysLeft={phase.status === 'Done' ? undefined : 12} />
-          </div>
-        ))}
-      </div>
-    </Panel>
+        </div>
+      </Panel>
+    </Workspace>
   );
 }
 
@@ -1014,19 +1137,23 @@ const statusColor: Record<IdeaStatus, ChartColor> = {
   Proposed: 'blue-2', Viewed: 'blue-3', 'Under consideration': 'blue-1', Accepted: 'agree', Rejected: 'disagree', Implemented: 'green'
 };
 
-function Insights({project, phase}: {project: Project; phase: Phase}) {
+function Insights({project, phase, rail}: {project: Project; phase: Phase; rail: ReactNode}) {
   const navigate = useNavigate();
+  const number = useNumberFormatter();
+  const percent = useNumberFormatter({style: 'percent', maximumFractionDigits: 1});
+  const weekly = `Weekly, since ${INSIGHT_WEEKS[0]}`;
   const [range, setRange] = useState<'daily' | 'weekly'>('daily');
   let body: ReactNode;
   if (phase.method === 'Voting') {
     const votes = VOTES_BY_DAY;
-    const weekly = votes.filter((_, k) => k % 7 === 6 || k === votes.length - 1);
+    const byWeek = votes.filter((_, k) => k % 7 === 6 || k === votes.length - 1);
+    // A tile with a trend is a Stat card (its "In Insights" story); the others keep their note.
     body = <>
       <Grid columns={4} gap="10">
-        <StatTile layout="with-note" label="Voters" value="517" note="updating live" />
-        <StatTile layout="with-note" label="Votes" value="1,240" note="updating live" />
-        <StatTile layout="with-note" label="Avg per voter" value="2.4" note="multiple picks" />
-        <StatTile layout="with-note" label="Participation" value="18%" note="of visitors" />
+        <StatTile layout="with-note" label="Voters" value={number.format(517)} note="updating live" />
+        <StatCard label="Votes" value={number.format(votes[votes.length - 1])} series={votes} caption={`Since ${phaseDates(phase.dates)?.[0] ?? phase.dates}`} />
+        <StatTile layout="with-note" label="Avg per voter" value={number.format(2.4)} note="multiple picks" />
+        <StatTile layout="with-note" label="Participation" value={percent.format(0.18)} note="of visitors" />
       </Grid>
       <DashboardCard kind="votes-over-time" title="Participation over time" subtitle="Votes cast · cumulative" actions={(
         <SegmentedControl size={30} aria-label="Range" disallowEmptySelection selectedKeys={[range]}
@@ -1035,7 +1162,7 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
           <SegmentedControlItem id="weekly">Weekly</SegmentedControlItem>
         </SegmentedControl>
       )}>
-        <Sparkline label="Votes cast" values={range === 'daily' ? votes : weekly} />
+        <Sparkline label="Votes cast" values={range === 'daily' ? votes : byWeek} />
       </DashboardCard>
       <DashboardCard kind="live-ranking" title="Live ranking" subtitle={`By votes · ${phase.status === 'Done' ? 'final' : 'updating live'}`}>
         <DashboardRanking items={VOTE_OPTIONS.map(o => ({title: o.title, count: o.votes}))} />
@@ -1053,13 +1180,15 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
     const total = IDEAS.length;
     const liked = [...IDEAS].sort((a, b) => b.likes - a.likes).slice(0, 3);
     body = <>
-      <Grid columns={3} gap="10">
-        <StatTile label="Visitors" value="412" />
-        <StatTile label="Phase participants" value="124" />
-        <StatTile label={capital(noun)} value={String(total)} />
-        <StatTile label="Comments" value={IDEAS.reduce((k, i) => k + i.comments, 0).toLocaleString('en-GB')} />
-        <StatTile label="Reactions" value={IDEAS.reduce((k, i) => k + i.likes + i.dislikes, 0).toLocaleString('en-GB')} />
-        <StatTile label="Participation rate" value="30.1%" />
+      <Grid columns={2} gap="10">
+        <StatCard label="Visitors" value={number.format(412)} series={PARTICIPATION_WEEKS.visitors} caption={weekly} />
+        <StatCard label="Phase participants" value={number.format(124)} series={PARTICIPATION_WEEKS.participants} caption={weekly} />
+      </Grid>
+      <Grid columns={4} gap="10">
+        <StatTile label={capital(noun)} value={number.format(total)} />
+        <StatTile label="Comments" value={number.format(IDEAS.reduce((k, i) => k + i.comments, 0))} />
+        <StatTile label="Reactions" value={number.format(IDEAS.reduce((k, i) => k + i.likes + i.dislikes, 0))} />
+        <StatTile label="Participation rate" value={percent.format(0.301)} />
       </Grid>
       <DashboardCard kind="participation-over-time" title="Participation over time">
         <LineChart showLegend xAxis={INSIGHT_WEEKS} series={[
@@ -1100,20 +1229,21 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
       </DashboardCard>
     </>;
   }
+  // The work column: Recommended actions as Card's link rows, each action's own icon at the end ("Setup row · link").
+  const column = (
+    <Panel variant="plain" title="Recommended actions">
+      <Stack elementType="ul" gap="8" aria-label="Recommended actions">
+        <li><Card title="Add a report" control="link" href="#/reporting" linkIcon={<FileChartColumn aria-hidden size={16} />} /></li>
+        <li><Card title="Share results with participants" control="link" href="#/messaging" linkIcon={<Link2 aria-hidden size={16} />} /></li>
+        <li><Card title="Get an AI Sensemaking summary" control="link" linkIcon={<Sparkles aria-hidden size={16} />}
+          onOpen={() => toast('AI summary requested', 'It appears under "What are people saying?" in a few minutes.')} /></li>
+      </Stack>
+    </Panel>
+  );
   return (
-    <>
-      <Stack elementType="section" aria-label="Insights" gap="16" className="bo-phase-grow bo-phase-insights">{body}</Stack>
-      {/* Action row's "Recommended actions" story: each action's icon at the end of its row. */}
-      <Panel title="Recommended actions" className="bo-phase-side">
-        <ActionRowList aria-label="Recommended actions">
-          <ActionRow href="#/reporting" icon={<FileChartColumn />}>Add a report</ActionRow>
-          <ActionRow href="#/messaging" icon={<Link2 />}>Share results with participants</ActionRow>
-          <ActionRow icon={<Sparkles />} onPress={() => toast('AI summary requested', 'It appears under "What are people saying?" in a few minutes.')}>
-            Get an AI Sensemaking summary
-          </ActionRow>
-        </ActionRowList>
-      </Panel>
-    </>
+    <Workspace rail={rail} column={column} main="plain">
+      <Stack elementType="section" aria-label="Insights" gap="16" className="bo-phase-insights">{body}</Stack>
+    </Workspace>
   );
 }
 
@@ -1184,31 +1314,82 @@ export function ProjectSettings({project, tab, onTabChange, onClose}: {project: 
   );
 }
 
+// The method picker's side tabs and cards (Method card's "All variants"): what each method does, from the platform's
+// Method card stories, the project templates and the phone's lines; a picture where the system has the method's illustration.
+const METHOD_GROUPS: {title: string; methods: Method[]}[] = [
+  {title: 'Gather input', methods: ['Ideation', 'Survey', 'Poll', 'Document annotation']},
+  {title: 'Shape decisions', methods: ['Voting', 'Proposals', 'Common ground']},
+  {title: 'Inform and recruit', methods: ['Information', 'Volunteering']}
+];
+const METHOD_CARD: Record<Method, {title: string; description: string; picture?: IllustrationName; features: string[]}> = {
+  Ideation: {title: 'Ideation and geo mapping', description: 'Invite participants to share input on any topic, discuss it in public and place it on a map.',
+    picture: 'ideation-map', features: ['Map pins', 'Reactions and comments', 'Grouped into themes']},
+  Survey: {title: 'Survey', description: "Understand your users' needs and thinking via a wide range of private question types.",
+    picture: 'survey-pages', features: ['Drop a pin', 'Rating and sentiment scales']},
+  Poll: {title: 'Poll', description: 'Take the pulse of public opinion on one topic.', features: []},
+  'Document annotation': {title: 'Document annotation', description: 'Participants comment on a draft document, passage by passage.',
+    picture: 'document-annotation', features: ['Inline comments']},
+  Voting: {title: 'Voting', description: 'Let residents prioritise the options, or share part of the budget across competing proposals.', features: []},
+  Proposals: {title: 'Proposals and petitions', description: 'Participants put forward proposals; each one needs enough votes before its deadline.',
+    picture: 'proposal-threshold', features: ['Vote threshold', 'Deadline']},
+  'Common ground': {title: 'Common ground', description: 'Agree, disagree or pass: see where the neighbourhood stands.', features: []},
+  Information: {title: 'Information', description: 'Shares news with residents; it collects no inputs.', features: []},
+  Volunteering: {title: 'Volunteering', description: 'Residents sign up for the causes you add, and you download who volunteered.', features: []}
+};
+
+/** Add a phase: the method picker (Modal with side tabs, a grid of Method cards), then the new phase's title and dates. */
 export function AddPhase({isOpen, onOpenChange, onAdd}: {isOpen: boolean; onOpenChange: (open: boolean) => void;
   onAdd: (phase: NewPhase) => void}) {
   const [titles, setTitles] = useState<Multiloc>({});
-  const [method, setMethod] = useState<Method>('Ideation');
+  const [method, setMethod] = useState<Method | null>(null);
+  const [group, setGroup] = useState(METHOD_GROUPS[0].title);
   const [dates, setDates] = useState('');
   // The timeline shows the title in the platform's first language: that one adds the phase; the others can follow.
   const title = titles[LANGUAGES[0]]?.trim() ?? '';
+  const open = (o: boolean) => { if (!o) setMethod(null); onOpenChange(o); };
   const add = () => {
-    if (!title) return;
+    if (!title || !method) return;
     onAdd({id: `new-${Date.now()}`, title, method, dates: dates.trim() || 'Dates not set'});
     setTitles({}); setDates('');
-    onOpenChange(false);
+    open(false);
   };
+  if (!method) {
+    return (
+      <Modal title="Add a phase" description="Pick how residents take part in it." width="wide" height="fixed" isFlush
+        isOpen={isOpen} onOpenChange={open} footer={<Button variant="secondary" size={32} slot="close">Cancel</Button>}>
+        <GroupedTabs selectedKey={group} onSelectionChange={k => setGroup(String(k))} className="bo-phase-settings">
+          <GroupedTabList aria-label="Kinds of method" className="bo-phase-settings-list">
+            <TabSection title="Methods">
+              {METHOD_GROUPS.map(g => <GroupedTab key={g.title} id={g.title}>{g.title}</GroupedTab>)}
+            </TabSection>
+          </GroupedTabList>
+          {METHOD_GROUPS.map(g => (
+            <GroupedTabPanel key={g.title} id={g.title} className="bo-phase-settings-panel">
+              <Grid columns={2} gap="16">
+                {g.methods.map(m => {
+                  const c = METHOD_CARD[m];
+                  return (
+                    <MethodCard key={m} title={c.title} description={c.description} onPress={() => setMethod(m)}
+                      media={c.picture && <Illustration name={c.picture} size={320} height={168} motion="hover" />}
+                      features={c.features.map(label => ({label}))} />
+                  );
+                })}
+              </Grid>
+            </GroupedTabPanel>
+          ))}
+        </GroupedTabs>
+      </Modal>
+    );
+  }
   return (
-    <Modal title="Add a phase" isOpen={isOpen} onOpenChange={onOpenChange}
+    <Modal title="Add a phase" description={METHOD_CARD[method].title} isOpen={isOpen} onOpenChange={open}
       footer={<>
-        <Button variant="secondary" size={32} slot="close">Cancel</Button>
+        <Button variant="secondary" size={32} onPress={() => setMethod(null)}>Back</Button>
         <Button size={32} isDisabled={!title} onPress={add}>Add phase</Button>
       </>}>
       <Form onSubmit={e => { e.preventDefault(); add(); }}>
         <Stack gap="8">
           <MultilingualTextField label="Title" isRequired locales={LANGUAGES} value={titles} onChange={setTitles} autoFocus />
-          <Select label="Method" selectedKey={method} onSelectionChange={k => setMethod(k as Method)}>
-            {METHODS.map(m => <SelectItem key={m} id={m}>{m}</SelectItem>)}
-          </Select>
           <TextField label="Dates" placeholder="e.g. 17 Nov to 7 Dec" value={dates} onChange={setDates} />
         </Stack>
       </Form>

@@ -8,7 +8,7 @@ const meta: Meta<typeof Skeleton> = {
     layout: 'centered',
     docs: {description: {component: 'Not in Figma: from the prototype (its loading placeholder).'}}
   },
-  tags: ['autodocs', 'not-in-figma', 'status:draft'],
+  tags: ['autodocs', 'not-in-figma', 'status:candidate'],
   argTypes: {
     variant: {
       control: 'radio',

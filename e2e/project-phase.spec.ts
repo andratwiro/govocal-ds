@@ -26,7 +26,7 @@ test('the Manage tab lists the phase\'s ideas with its metrics', async ({page}) 
   await expect(page.getByRole('radiogroup', {name: 'Phase view'}).getByRole('radio', {name: 'Manage'})).toBeChecked();
   await expect(count(page, IDEAS.length)).toBeVisible();
   await expect(rows(page)).toHaveCount(onPage(IDEAS.length));
-  const overview = page.getByRole('complementary', {name: 'Ideas overview'});
+  const overview = page.getByRole('region', {name: 'Ideas overview'});
   for (const m of ['Waiting for a reply', 'Unassigned', 'New ideas', 'New comments', 'Content warnings'])
     await expect(overview.getByText(m, {exact: true})).toBeVisible();
   await expect(overview.getByRole('button', {name: /Content warnings/})).toContainText(String(IDEAS.filter(i => i.warning).length));
@@ -90,7 +90,7 @@ test('the filter menu narrows the table, and its chips follow', async ({page}) =
 
 test('the metrics are filters too: Unassigned shows its chip', async ({page}) => {
   await page.goto(URL);
-  await page.getByRole('complementary', {name: 'Ideas overview'}).getByRole('button', {name: /^Unassigned/}).click();
+  await page.getByRole('region', {name: 'Ideas overview'}).getByRole('button', {name: /^Unassigned/}).click();
   await expect(chips(page).getByRole('row', {name: 'Assignee is Unassigned'})).toBeVisible();
   await expect(rows(page)).toHaveCount(onPage(IDEAS.filter(i => i.assignee === 'Unassigned').length));
   await page.getByRole('button', {name: 'Clear', exact: true}).click();
@@ -138,7 +138,9 @@ test('the Manage tab passes axe (WCAG 2.2 AA), filters on and a row selected', a
   await page.keyboard.press('Escape');
   await page.keyboard.press('Escape');
   await page.keyboard.press('Escape');
-  await rows(page).first().getByRole('checkbox').check({force: true});
+  // The checkbox's input is visually hidden under its label (see e2e/pages.spec.ts): click the visible box.
+  await rows(page).first().getByRole('gridcell').first().locator('label').click();
+  await expect(rows(page).first().getByRole('checkbox')).toBeChecked();
   a11yReport(await violations(page, '.gv-panel'));
 });
 
@@ -148,21 +150,32 @@ async function violations(page: Page, within: string) {
   return violations.map(v => `${v.id}: ${v.nodes.map(n => n.target.join(' ')).join(', ')}`);
 }
 
-test('Build: the checklist and phase cards open', async ({page}) => {
+test('Build: the setup rows open in place and turn Reviewed; the menu rows pick a value', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
-  const setup = page.getByRole('region', {name: 'Setup'});
-  await setup.getByRole('button', {name: 'Edit project page'}).click();
-  await expect(page.getByRole('dialog', {name: 'Project settings'}).getByRole('option', {name: 'Project page'})).toHaveAttribute('aria-selected', 'true');
-  await page.keyboard.press('Escape');
-  // Idea form folds out to its questions (the Form field summary recipe); Edit form opens the form.
-  await setup.getByRole('button', {name: /Idea form/}).click();
+  const setup = page.getByRole('region', {name: 'Ideation setup'});
+  // The project's own checklist lives on the overview, not on a phase.
+  await expect(setup.getByRole('heading', {name: 'Before you publish'})).toHaveCount(0);
+  // Idea form folds out to its questions (the Form field summary recipe); opened, it is Reviewed (Card's "Setup rows").
+  const form = setup.getByRole('button', {name: /Idea form/});
+  await expect(form).toContainText('To review');
+  await form.click();
+  await expect(form).toContainText('Reviewed');
   await expect(setup.getByRole('list', {name: 'Idea form questions'}).getByRole('listitem')).toHaveCount(6);
   await setup.getByRole('button', {name: 'Edit form'}).click();
   await expect(page.getByRole('dialog', {name: 'Idea form'})).toBeVisible();
+  await page.keyboard.press('Escape');
+  // What an input is called: a menu under the row; the pick shows as its pill and reviews it.
+  const term = setup.getByRole('button', {name: /What should an input be called\?/});
+  await term.click();
+  await page.getByRole('menuitemradio', {name: 'Proposal'}).click();
+  await expect(term).toContainText('Proposal');
+  await expect(term).toContainText('Reviewed');
+  // The rows sit in the prototype's sections.
+  for (const s of ['Ideas and participant data', 'How ideas are shown', 'Rules']) await expect(setup.getByRole('list', {name: s})).toBeVisible();
 });
 
 test('Build: the phase status is a compact Banner, neutral before and after, success while live', async ({page}) => {
-  const strip = (page: Page) => page.getByRole('region', {name: 'Setup'}).locator('.gv-banner--compact');
+  const strip = (page: Page) => page.getByRole('region', {name: / setup$/}).locator('.gv-banner--compact');
   for (const [phase, tone, text] of [
     ['p2', 'neutral', 'EndedClosed on 21 Sep'],
     ['p4', 'success', 'LiveEnds on 16 Nov'],
@@ -179,7 +192,7 @@ test('Build: the phase status is a compact Banner, neutral before and after, suc
 // named by its tab; arrows walk the tabs across groups.
 test('Project settings: a fixed-height Modal with a grouped side list of tabs', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
-  await page.getByRole('region', {name: 'Setup'}).getByRole('button', {name: 'Project settings'}).click();
+  await page.getByRole('region', {name: / setup$/}).getByRole('button', {name: 'Project settings'}).click();
   const dialog = page.getByRole('dialog', {name: 'Project settings'});
   await expect(dialog).toHaveAttribute('data-height', 'fixed');
   const tabs = dialog.getByRole('listbox', {name: 'Project settings'});
@@ -234,7 +247,7 @@ test('a row opens its idea in the side panel; the pager walks the list; Esc puts
 
 test('the pager counts the filtered list', async ({page}) => {
   await page.goto(URL);
-  await page.getByRole('complementary', {name: 'Ideas overview'}).getByRole('button', {name: /^Unassigned/}).click();
+  await page.getByRole('region', {name: 'Ideas overview'}).getByRole('button', {name: /^Unassigned/}).click();
   const unassigned = IDEAS.filter(i => i.assignee === 'Unassigned');
   await openRow(page, 0);
   await expect(panel(page)).toContainText(`1 of ${unassigned.length}`);
@@ -309,7 +322,7 @@ test('the side panel passes axe (WCAG 2.2 AA), reported', async ({page}) => {
 
 test('Build: the Dates card holds a Date range field; Events has one with times', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
-  const setup = page.getByRole('region', {name: 'Setup'});
+  const setup = page.getByRole('region', {name: / setup$/});
   await setup.getByRole('button', {name: /^Dates/}).click();
   // It starts on the phase's own dates (1 – 21 Sep 2026), so the end date is there to remove, not to add.
   await expect(setup.getByRole('group', {name: 'Start date'}).getByRole('spinbutton', {name: /^day/})).toHaveText('1');
@@ -329,7 +342,7 @@ test('Build: the Dates card holds a Date range field; Events has one with times'
 
 test('Build: the Attachments card opens its dialog: a drop zone, the files, Done', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
-  const setup = page.getByRole('region', {name: 'Setup'});
+  const setup = page.getByRole('region', {name: / setup$/});
   await expect(setup.locator('[data-gv="setup-card"]', {hasText: /^Attachments/})).toContainText('2 files');
   await setup.getByRole('button', {name: 'Add an attachment'}).click();
   const dialog = page.getByRole('dialog', {name: 'Attachments'});
@@ -364,7 +377,7 @@ test('the table pages by 20, and the panel\'s pager turns the page', async ({pag
 
 test('a quick view from the stats is a key-only chip; its × turns it off', async ({page}) => {
   await page.goto(URL);
-  await page.getByRole('complementary', {name: 'Ideas overview'}).getByRole('button', {name: /^New ideas/}).click();
+  await page.getByRole('region', {name: 'Ideas overview'}).getByRole('button', {name: /^New ideas/}).click();
   await expect(chips(page).getByRole('row', {name: 'New ideas'})).toBeVisible();
   await expect(count(page, IDEAS.filter(i => i.isNew).length)).toBeVisible();
   await chips(page).getByRole('button', {name: 'Remove the New ideas filter'}).click();
@@ -439,7 +452,7 @@ test('the Filter menu: Enter ticks an option and the submenu stays open; Esc clo
 
 test('Project settings: General has the project URL with its prefix', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
-  await page.getByRole('region', {name: 'Setup'}).getByRole('button', {name: 'Project settings'}).click();
+  await page.getByRole('region', {name: / setup$/}).getByRole('button', {name: 'Project settings'}).click();
   const dialog = page.getByRole('dialog', {name: 'Project settings'});
   await expect(dialog.getByRole('textbox', {name: 'Project URL'})).toHaveValue('green-corridors');
   await expect(dialog.getByText('internal.govocal.com/en/projects/')).toBeVisible();
@@ -451,17 +464,28 @@ test('Build: the stage shows the phase on the Phone preview; the setup is a Pane
   await page.goto('/backoffice/#/projects/green-corridors/phases/p4/build');
   const phone = page.getByRole('region', {name: 'Preview'}).getByLabel('What residents see of Community vote');
   await expect(phone.getByRole('heading', {name: 'Green Corridors for Larkvale'})).toBeVisible();
-  await expect(phone.getByRole('button', {name: 'Vote'})).toBeVisible();
-  const setup = page.getByRole('region', {name: 'Setup'});
-  await expect(setup.getByRole('heading', {level: 2, name: 'Setup'})).toBeVisible();
-  for (const h of ['Before you publish', 'Voting setup']) await expect(setup.getByRole('heading', {level: 3, name: h})).toBeVisible();
-  await expect(setup).toContainText('0 of 6 ready');
+  await expect(phone.getByText('Vote', {exact: true})).toBeVisible();
+  // Phone phase card's "In the phone": the phase's number and title; the countdown bar with the method's button.
+  await expect(phone.getByRole('heading', {name: '4. Community vote'})).toBeVisible();
+  // A vote's stage switches the phone between Before, Open and Ended (Phone preview's "Stage toolbar").
+  const stage = page.getByRole('region', {name: 'Preview'});
+  await stage.getByRole('radio', {name: 'Ended'}).click();
+  await expect(phone.getByText('Vote', {exact: true})).toHaveCount(0);
+  await expect(stage.getByText('What residents see once the phase has ended')).toBeVisible();
+  const setup = page.getByRole('region', {name: 'Voting setup'});
+  await expect(setup.getByRole('heading', {level: 2, name: 'Voting setup'})).toBeVisible();
+  // The setup is the work column in the middle: rail, setup, stage.
+  const xs = await Promise.all([page.getByRole('complementary', {name: 'Participation'}), setup, stage].map(async l => (await l.boundingBox())!.x));
+  expect(xs[0]).toBeLessThan(xs[1]);
+  expect(xs[1]).toBeLessThan(xs[2]);
 });
 
-test('a phase that has not started: Manage and Insights show the Empty state', async ({page}) => {
-  await page.goto('/backoffice/#/projects/green-corridors/phases/p5/manage');
-  await expect(page.getByRole('heading', {name: 'Responses will appear here'})).toBeVisible();
-  await expect(page.getByText('No responses yet')).toBeVisible();
+test('a phase that has not started: Manage and Insights show the Empty state; a survey has no Manage', async ({page}) => {
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p5/build');
+  await expect(page.getByRole('radiogroup', {name: 'Phase view'}).getByRole('radio')).toHaveText(['Build', 'Insights']);
+  await page.goto('/backoffice/#/projects/green-corridors/phases/p6/manage');
+  await expect(page.getByRole('heading', {name: 'Statements will appear here'})).toBeVisible();
+  await expect(page.getByText('No statements yet')).toBeVisible();
   await page.getByRole('radio', {name: 'Insights'}).click();
   await expect(page.getByRole('heading', {name: 'Insights will appear here'})).toBeVisible();
   await expect(page.getByText('No insights yet')).toBeVisible();
@@ -473,9 +497,12 @@ test('a phase that has not started: Manage and Insights show the Empty state', a
 
 test('Manage for proposals lists the Proposals rows; an information phase has nothing to manage', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p3/manage');
-  const list = page.getByRole('list', {name: 'Proposals'});
-  await expect(list.getByRole('listitem')).toHaveCount(5);
-  await expect(list.getByRole('listitem').first()).toContainText('Car-free Sundays on Brindle Street');
+  // List header's "Manage table": the header row, then each Proposals row in a row and a cell.
+  const table = page.getByRole('table', {name: 'Proposals'});
+  await expect(table.getByRole('columnheader').first()).toBeAttached();
+  const rows = table.getByRole('rowgroup').nth(1).getByRole('row');
+  await expect(rows).toHaveCount(5);
+  await expect(rows.first()).toContainText('Car-free Sundays on Brindle Street');
   await page.goto('/backoffice/#/projects/green-corridors/phases/p1/manage');
   await expect(page.getByRole('heading', {name: 'Nothing to manage here'})).toBeVisible();
 });
@@ -483,7 +510,12 @@ test('Manage for proposals lists the Proposals rows; an information phase has no
 test('Insights for ideas: the stat tiles, the dashboard cards and the recommended actions', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/insights');
   const dash = page.getByRole('region', {name: 'Insights'});
-  await expect(dash.locator('.gv-kpi__label')).toHaveText(['Visitors', 'Phase participants', 'Ideas', 'Comments', 'Reactions', 'Participation rate']);
+  // The tiles with a trend are Stat cards (a button each, with its sparkline); the others Stat tiles.
+  for (const l of ['Visitors', 'Phase participants'])
+    await expect(dash.getByRole('group', {name: l})).toBeVisible();
+  for (const l of ['Ideas', 'Comments', 'Reactions', 'Participation rate'])
+    await expect(dash.getByText(l, {exact: true})).toBeVisible();
+  await expect(dash.getByText('Weekly, since 16 Aug')).toHaveCount(2);
   await expect(dash.getByText(String(IDEAS.length), {exact: true}).first()).toBeVisible();
   for (const h of ['Participation over time', 'What are people saying?', 'Topic breakdown', 'Status breakdown', 'Most liked', 'Demographics and audience'])
     await expect(dash.getByRole('heading', {name: h})).toBeVisible();
@@ -513,7 +545,7 @@ test('the Insights tab passes axe (WCAG 2.2 AA), reported', async ({page}) => {
 
 // ── Build's cards on the system's Build-tab patterns, the header's Save, the rail's delete ──
 const BUILD = '/backoffice/#/projects/green-corridors/phases/p2/build';
-const setup = (page: Page) => page.getByRole('region', {name: 'Setup'});
+const setup = (page: Page) => page.getByRole('region', {name: / setup$/});
 
 test('Build: Participant actions, each opening its Access rights modal; the row says when it is set for this phase', async ({page}) => {
   await page.goto(BUILD);
@@ -555,7 +587,7 @@ test('Build: Available views and Notifications; an email opens in the setup\'s p
   await expect(email.getByRole('textbox', {name: 'Subject'})).toHaveValue('A reply on my comment');
   await expect(page.getByRole('region', {name: 'Preview'}).getByRole('group', {name: 'The email: A reply on my comment'})).toBeVisible();
   await email.getByRole('button', {name: 'Back to Ideation setup'}).click();
-  await expect(setup(page).getByRole('heading', {name: 'Before you publish'})).toBeVisible();
+  await expect(setup(page).getByRole('button', {name: /^Notifications/})).toBeVisible();
 });
 
 // Title field's "Multilingual" story: the content-language menu in the title's end drives the description under it.
@@ -574,15 +606,19 @@ test('Build: the phase title and description are multilingual, one Content langu
   await expect(menu).toHaveAccessibleName(/^FR-BE.*French \(Belgium\)/);
 });
 
-test('Build: the header\'s Save turns on with a change and off once saved', async ({page}) => {
+test('Build: the header\'s Save saves, then becomes Back to project; a change brings Save back', async ({page}) => {
   await page.goto(BUILD);
   const save = page.getByRole('button', {name: 'Save'});
-  await expect(save).toBeDisabled();
-  await setup(page).getByRole('textbox', {name: 'Phase description, English'}).fill('Where should the corridor go?');
   await expect(save).toBeEnabled();
   await save.click();
   await expect(page.getByText('Changes saved')).toBeVisible();
-  await expect(save).toBeDisabled();
+  const back = page.getByRole('button', {name: 'Back to project'});
+  await expect(back).toBeVisible();
+  await setup(page).getByRole('textbox', {name: 'Phase description, English'}).fill('Where should the corridor go?');
+  await expect(save).toBeEnabled();
+  await save.click();
+  await back.click();
+  await expect(page).toHaveURL(/#\/projects\/green-corridors$/);
 });
 
 test('Build of a volunteering phase: the Causes card; a cause deletes with an Undo toast', async ({page}) => {

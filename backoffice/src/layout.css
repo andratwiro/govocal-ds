@@ -28,10 +28,6 @@ body { margin: 0; }
 /* ── Project phase ── */
 
 .bo-phase { min-height: calc(100vh - 2 * var(--gv-space-8)); }
-.bo-phase-rail { flex: 0 0 332px; padding-block-start: var(--gv-space-24); }
-.bo-phase-side { flex: 0 0 332px; align-self: start; }
-.bo-phase-body[data-view="manage"] .bo-phase-side { flex-basis: 308px; }
-.bo-phase-grow { flex: 1; min-width: 0; align-self: stretch; }
 /* ── Settings ── */
 .bo-settings-stack { margin-block-start: var(--gv-space-24); }
 /* ── Messaging ── */
@@ -78,20 +74,12 @@ body { margin: 0; }
 .bo-pages-menu-panel { padding-block-start: var(--gv-space-16); }
 .bo-pages-menu-preview { margin: 0; padding-inline-start: var(--gv-space-20); display: grid; gap: var(--gv-space-8); }
 
-/* ── Project overview ── */
-.bo-project { position: relative; }
-.bo-project-body { min-height: 0; }
-.bo-project-setup { flex: 0 0 300px; align-self: start; }
-.bo-project-rail-list { margin-inline: calc(-1 * var(--gv-space-10)); padding-block-start: var(--gv-space-4); }
-.bo-project-rail-closed { flex: 0 0 auto; }
-
 /* ── Feedback: project settings side tabs, phase status ── */
 /* Modal's "With side tabs" story: the list and the panel each scroll on their own inside the fixed-height body. */
 .bo-phase-settings { min-height: 0; }
 .bo-phase-settings-list { flex: 0 0 200px; padding: var(--gv-space-16) var(--gv-space-12); overflow-y: auto; }
 .bo-phase-settings-panel { overflow-y: auto; padding: var(--gv-space-20) var(--gv-space-24); }
-/* ── Project phase · Build, empty tabs, method Manage, Insights ── */
-.bo-phase-setup { flex-basis: 344px; }
+/* ── Project phase · empty tabs ── */
 .bo-phase-empty { display: grid; place-items: center; }
 
 /* ── Report view ── */
@@ -133,3 +121,12 @@ body { margin: 0; }
 .bo-phase-map { block-size: 70vh; }
 .bo-phase-map-view { block-size: 100%; }
 .bo-phase-map-list { overflow: auto; block-size: 100%; }
+
+/* ── App shell: the project screens hide the Side nav (it opens over the page), so the frame gives the page every
+   column. App frame has no hidden state of its own yet: this places its columns. ── */
+.bo-frame-navless[class] { grid-template-columns: 0 minmax(0, 1fr); }
+
+/* ── Project screens: Workspace layout fills the bar's row; the preview fills the stage ── */
+.bo-workspace { min-height: 0; }
+.bo-fill { block-size: 100%; min-width: 0; }
+.bo-project-share { inline-size: 360px; max-inline-size: 100%; box-sizing: border-box; }
