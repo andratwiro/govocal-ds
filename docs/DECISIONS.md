@@ -24,6 +24,13 @@ Calls made moving the overview and phase screens closer to the prototype with th
 - Ideation's Moderation row: the prototype's pill is a person → **a Select of team members by role (Manager A…) and a
   Switch for screening new inputs** → no person's name; screening is the product's own (the Manage tab's Approve /
   Reject).
+- Ideation Manage's list in a Panel with a title and a line vs the prototype's bare "124 ideas" head → **an App frame
+  panel holding the toolbar, chips, table and pager; Idea and Status by default, Assignee, Tags, Likes and Comments
+  behind "+"** → Panel needs a title; the metrics and actions stay one column until Workspace layout stacks separate
+  panels (the system builder's). List / Map stays: ours, beyond the prototype.
+- Insights rows mixing Stat tiles and Stat cards → **one kind per row: four Stat tiles with notes on a vote, six Stat
+  tiles on ideas, in a Tile grid; "Who is voting" over the demographics; Download insights joins Recommended
+  actions** → the prototype's equal tiles; the trend lives in the chart under them.
 
 ## Preview parts and the Gantt chart (30 Oct 2026, deep review 2: S10–S12)
 

@@ -16,6 +16,14 @@ const count = (page: Page, n: number) => page.getByRole('heading', {level: 3, na
 const filterButton = (page: Page) => page.getByRole('button', {name: /^Filter ideas/});
 const chips = (page: Page) => page.getByRole('grid', {name: 'Active filters'});
 
+/** Shows a column the list keeps behind its "+" (Assignee, Tags, Likes, Comments). */
+async function showColumn(page: Page, name: string) {
+  await table(page).getByRole('button', {name: 'Add column'}).click();
+  await page.getByRole('menuitemcheckbox', {name}).click();
+  await expect(table(page).getByRole('columnheader', {name})).toBeVisible();
+  if (await page.getByRole('menu').count()) await page.keyboard.press('Escape');
+}
+
 async function tick(page: Page, facet: string, value: string) {
   await page.getByRole('menuitem', {name: new RegExp(`^${facet}`)}).hover();
   await page.getByRole('menuitemcheckbox', {name: new RegExp(`^${value}`)}).click();
@@ -33,6 +41,10 @@ test('the Manage tab lists the phase\'s ideas with its metrics', async ({page}) 
   // No filters yet: no chips, no dot.
   await expect(chips(page)).toHaveCount(0);
   await expect(filterButton(page)).toHaveAccessibleName('Filter ideas');
+  // The prototype's list head: no panel title or line; Idea and Status, the rest one "+" away.
+  await expect(page.getByText('Everything posted in this phase', {exact: false})).toHaveCount(0);
+  for (const c of ['Idea', 'Status']) await expect(table(page).getByRole('columnheader', {name: c})).toBeVisible();
+  for (const c of ['Assignee', 'Tags', 'Likes']) await expect(table(page).getByRole('columnheader', {name: c})).toHaveCount(0);
 });
 
 test('the filter menu narrows the table, and its chips follow', async ({page}) => {
@@ -141,7 +153,7 @@ test('the Manage tab passes axe (WCAG 2.2 AA), filters on and a row selected', a
   // The checkbox's input is visually hidden under its label (see e2e/pages.spec.ts): click the visible box.
   await rows(page).first().getByRole('gridcell').first().locator('label').click();
   await expect(rows(page).first().getByRole('checkbox')).toBeChecked();
-  a11yReport(await violations(page, '.gv-panel'));
+  a11yReport(await violations(page, 'section[aria-label="Collect ideas"]'));
 });
 
 async function violations(page: Page, within: string) {
@@ -390,6 +402,7 @@ test('a quick view from the stats is a key-only chip; its × turns it off', asyn
 
 test('batch Assign: a Menu with avatars', async ({page}) => {
   await page.goto(URL);
+  await showColumn(page, 'Assignee');
   await rows(page).first().getByRole('checkbox').check({force: true});
   await page.getByRole('toolbar', {name: 'Selection actions'}).getByRole('button', {name: 'Assign', exact: true}).click();
   const item = page.getByRole('menuitem', {name: 'Manager C'});
@@ -402,6 +415,7 @@ test('batch Tags: a searchable Option list; Enter ticks and the list stays open,
   await page.goto(URL);
   const first = IDEAS[0];
   const tag = ['Housing', 'Culture'].find(t => !first.tags.includes(t))!;
+  await showColumn(page, 'Tags');
   await rows(page).first().getByRole('checkbox').check({force: true});
   await page.getByRole('toolbar', {name: 'Selection actions'}).getByRole('button', {name: 'Tags', exact: true}).click();
   const search = page.getByRole('searchbox', {name: 'Filter tags'});
@@ -525,17 +539,17 @@ test('Build of an information phase: no mode switch, the Report row and Notifica
 test('Insights for ideas: the stat tiles, the dashboard cards and the recommended actions', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/insights');
   const dash = page.getByRole('region', {name: 'Insights'});
-  // The tiles with a trend are Stat cards (a button each, with its sparkline); the others Stat tiles.
-  for (const l of ['Visitors', 'Phase participants'])
-    await expect(dash.getByRole('group', {name: l})).toBeVisible();
-  for (const l of ['Ideas', 'Comments', 'Reactions', 'Participation rate'])
-    await expect(dash.getByText(l, {exact: true})).toBeVisible();
-  await expect(dash.getByText('Weekly, since 16 Aug')).toHaveCount(2);
+  // Six equal Stat tiles, one kind in the row (the prototype's ideation dashboard); the trend is the chart's.
+  for (const l of ['Visitors', 'Phase participants', 'Ideas', 'Comments', 'Reactions', 'Participation rate'])
+    await expect(dash.getByText(l, {exact: true}).first()).toBeVisible();
+  await expect(dash.locator('.gv-stat-card')).toHaveCount(0);
+  await expect(dash.getByText('Weekly, since 16 Aug')).toHaveCount(1);
   await expect(dash.getByText(String(IDEAS.length), {exact: true}).first()).toBeVisible();
   for (const h of ['Participation over time', 'What are people saying?', 'Topic breakdown', 'Status breakdown', 'Most liked', 'Demographics and audience'])
     await expect(dash.getByRole('heading', {name: h})).toBeVisible();
   const actions = page.getByRole('region', {name: 'Recommended actions'});
-  await expect(actions.getByRole('list', {name: 'Recommended actions'}).getByRole('listitem')).toHaveCount(3);
+  await expect(actions.getByRole('list', {name: 'Recommended actions'}).getByRole('listitem')).toHaveCount(4);
+  await expect(actions.getByRole('link', {name: 'Download insights'})).toBeVisible();
   await actions.getByRole('link', {name: 'Add a report'}).click();
   await expect(page).toHaveURL(/#\/reporting$/);
 });
@@ -543,7 +557,9 @@ test('Insights for ideas: the stat tiles, the dashboard cards and the recommende
 test('Insights for a vote: tiles with notes, the live ranking, who is voting, the AI banner', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p4/insights');
   const dash = page.getByRole('region', {name: 'Insights'});
-  await expect(dash.getByText('updating live').first()).toBeVisible();
+  await expect(dash.getByText('updating live', {exact: true})).toHaveCount(2);
+  await expect(dash.locator('.gv-stat-card')).toHaveCount(0);
+  await expect(dash.getByText('Who is voting')).toBeVisible();
   await expect(dash.getByRole('heading', {name: 'Live ranking'})).toBeVisible();
   await expect(dash.getByText('Rain gardens along Brindle Street')).toBeVisible();
   await expect(dash.getByText('Age group')).toBeVisible();

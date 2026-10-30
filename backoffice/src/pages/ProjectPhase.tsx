@@ -8,7 +8,7 @@ import {ACCESS_WHO_VALUE, AccessRightsModal, type AccessWho, AppFramePanel, Avat
   DataTableAssignee, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader, DataTableRow,
   DataTableStack, DataTableTags, DataTableText, DataTableThumbnail, DateRangeField, DropZone, EmptyState, FileList,
   EmailPreview, type FileListItemData, FilterChips, type FilterFacet, FilterMenu, type FilterValue, Grid, GroupedTab, GroupedTabList,
-  GroupedTabPanel, GroupedTabs, IconButton, Illustration, type IllustrationName, type Key, LineChart, ListHeader, type ListHeaderColumn, LocaleSwitcher,
+  GroupedTabPanel, GroupedTabs, IconButton, Illustration, type IllustrationName, Inline, type Key, LineChart, ListHeader, type ListHeaderColumn, LocaleSwitcher,
   MapCard, MapChip, type MapItem, MapOverlay, MapView, Menu, MethodCard, MenuItem, MenuSection, MenuTrigger, Modal,
   MultilingualRichTextEditor, MultilingualTextField, type Multiloc, NotificationEmail, NotificationRow,
   NotificationRowList, OfficialUpdate, OptionList, Pagination, Panel, ParticipantActionList,
@@ -16,7 +16,7 @@ import {ACCESS_WHO_VALUE, AccessRightsModal, type AccessWho, AppFramePanel, Avat
   type PostedUpdate, ProjectHeader, PropertyList, PropertyListItem, ProposalsRow, RailHeader, ReactionCounts,
   SearchField, SectionLabel, SegmentedControl, SegmentedControlItem, Select, type SelectionAction, SelectionBar,
   SelectItem, Separator, SidePanel, SidePanelActions, SidePanelDecision, SidePanelRecordHead, SidePanelSection, Sparkline,
-  Skeleton, Stack, StatCard, StatRow, StatTile, SubmenuTrigger, Switch, TableToolbar, TableToolbarHeading, TabSection, Text, TextField, type ThreadComment,
+  Skeleton, Stack, StatRow, StatTile, SubmenuTrigger, Switch, TableToolbar, TableToolbarHeading, TabSection, Text, TextField, type ThreadComment,
   type ThreadTab, type ThreadTarget, TileGrid, type TimelinePhase, TitleField, toast, ViewOptionList, ViewOptionRow,
   useNumberFormatter, VisuallyHidden, VolunteeringRow, VotingRow, WorkspaceLayout} from 'govocal-ds';
 import {Dialog, Form, Tag as TagItem, TagGroup} from 'govocal-ds/base';
@@ -704,8 +704,9 @@ const WALKS: Walk[] = [
   {key: 'comments', label: 'New comments', test: i => i.newComments > 0},
   {key: 'warnings', label: 'Content warnings', test: i => !!i.warning}
 ];
-// The Data table's "In a panel" story: Idea (its picture first), Assignee, Tags, Status, Likes; "+" adds Comments.
-const COLUMNS = [['comments', 'Comments']] as const;
+// The prototype's Manage list: Idea (full text, its picture first when it has one, the warning mark) and Status; "+"
+// adds Assignee, Tags, Likes and Comments.
+const COLUMNS = [['assignee', 'Assignee'], ['tags', 'Tags'], ['likes', 'Likes'], ['comments', 'Comments']] as const;
 const PAGE_SIZE = 20;
 const PICTURE_LIST = Object.values(PICTURES);
 const pictureOf = (i: Idea) => (i.hasPicture ? PICTURE_LIST[(Number(i.id.replace(/\D/g, '')) - 1) / 3 % PICTURE_LIST.length] : undefined);
@@ -903,12 +904,11 @@ function Manage({project, phase, rail, onAddPhase}: {project: Project; phase: Ph
   return (
     <>
       <Workspace rail={rail} column={column} columnLabel="Ideas overview" main="plain">
-      {/* The Data table's "In a panel" story: the Panel's toolbar holds the count (or the Selection bar), the collapsible
-          search and the Filter menu, then the chips (the quick view first); the table; the Pagination in its foot. */}
-      <Panel title={phase.title} className="bo-fill" isFlush
-        description="Everything posted in this phase. Select ideas for batch actions; click one to open it."
-        toolbar={(
-          <>
+      {/* The prototype's list: no panel head, the count heading leads. The toolbar holds the count (or the Selection
+          bar), the collapsible search and the Filter menu, then the chips (the quick view first); the table; the
+          Pagination at its foot. */}
+      <AppFramePanel elementType="section" aria-label={phase.title} padding="16" className="bo-fill">
+        <Stack gap="8">
             <TableToolbar start={(
               <SelectionBar count={n} items={actions} onClear={() => setSelected(new Set())}
                 onAction={id => (id === 'update' ? setUpdating(true) : id === 'dismiss-warnings' && dismissWarnings())}>
@@ -926,9 +926,6 @@ function Manage({project, phase, rail, onAddPhase}: {project: Project; phase: Ph
             <FilterChips aria-label="Active filters" facets={facets} value={filters} onChange={setFilters}
               metric={walk?.label} onMetricRemove={() => setView(null)} />
             {note && <Text elementType="p" kind="small" color="meta" role="status">{note}</Text>}
-          </>
-        )}
-        footer={mode === 'list' && <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Idea pages" />}>
         {/* Map: the Map view's "In the Manage tab" story, opening on all the ideas (no centre: it fits its pins). The map beside a one-column list of the same ideas (the whole
             filtered list, no pages); one open idea for both (the map's value, the list's openKey, the side panel), a
             hovered row marks its pin and a hovered pin its row. The chip counts the ideas the map can't show. */}
@@ -979,10 +976,10 @@ function Manage({project, phase, rail, onAddPhase}: {project: Project; phase: Ph
           )}>
           <DataTableHeader>
             <DataTableColumn id="text" isRowHeader allowsSorting>Idea</DataTableColumn>
-            <DataTableColumn id="assignee" allowsSorting>Assignee</DataTableColumn>
-            <DataTableColumn id="tags">Tags</DataTableColumn>
             <DataTableColumn id="status" allowsSorting>Status</DataTableColumn>
-            <DataTableColumn id="likes" align="number" allowsSorting>Likes</DataTableColumn>
+            {extra.has('assignee') && <DataTableColumn id="assignee" allowsSorting>Assignee</DataTableColumn>}
+            {extra.has('tags') && <DataTableColumn id="tags">Tags</DataTableColumn>}
+            {extra.has('likes') && <DataTableColumn id="likes" align="number" allowsSorting>Likes</DataTableColumn>}
             {extra.has('comments') && <DataTableColumn id="comments" align="number" allowsSorting>Comments</DataTableColumn>}
           </DataTableHeader>
           <DataTableBody renderEmptyState={() => (
@@ -993,15 +990,15 @@ function Manage({project, phase, rail, onAddPhase}: {project: Project; phase: Ph
               return (
                 <DataTableRow key={i.id} id={i.id} textValue={i.text} onAction={() => setOpen(i.id)}>
                   <DataTableCell>
-                    <DataTableText lines={2} leading={picture && <DataTableThumbnail src={picture} />}
+                    <DataTableText leading={picture && <DataTableThumbnail src={picture} />}
                       marks={i.warning && <TriangleAlert size={16} aria-label={`Content warning: ${i.warning}`} role="img" />}>
                       {i.text}
                     </DataTableText>
                   </DataTableCell>
-                  <DataTableCell><DataTableAssignee name={person(i.assignee)} initials={i.assignee.slice(-1)} /></DataTableCell>
-                  <DataTableCell>{i.tags.length ? <DataTableTags items={i.tags} /> : null}</DataTableCell>
                   <DataTableCell isMuted>{i.screening ? 'Waiting for approval' : i.status}</DataTableCell>
-                  <DataTableCell align="number">{i.likes}</DataTableCell>
+                  {extra.has('assignee') && <DataTableCell><DataTableAssignee name={person(i.assignee)} initials={i.assignee.slice(-1)} /></DataTableCell>}
+                  {extra.has('tags') && <DataTableCell>{i.tags.length ? <DataTableTags items={i.tags} /> : null}</DataTableCell>}
+                  {extra.has('likes') && <DataTableCell align="number">{i.likes}</DataTableCell>}
                   {extra.has('comments') && <DataTableCell align="number">{i.comments}</DataTableCell>}
                 </DataTableRow>
               );
@@ -1009,7 +1006,11 @@ function Manage({project, phase, rail, onAddPhase}: {project: Project; phase: Ph
           </DataTableBody>
         </DataTable>
         )}
-      </Panel>
+        {mode === 'list' && (
+          <Inline justifyContent="end"><Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Idea pages" /></Inline>
+        )}
+        </Stack>
+      </AppFramePanel>
       </Workspace>
       <SidePanel label={phase.title} labels={{previous: 'Previous idea', next: 'Next idea'}} isOpen={!!idea && (mode === 'list' || reading)}
         onOpenChange={o => { if (o) return; setReading(false); if (mode === 'list') setOpen(null); }}
@@ -1222,14 +1223,15 @@ function Insights({project, phase, rail}: {project: Project; phase: Phase; rail:
   if (phase.method === 'Voting') {
     const votes = VOTES_BY_DAY;
     const byWeek = votes.filter((_, k) => k % 7 === 6 || k === votes.length - 1);
-    // A tile with a trend is a Stat card (its "In Insights" story); the others keep their note.
+    // One tile kind per row (the prototype's four equal tiles): each Stat tile with its note; the votes' trend is the
+    // chart under them.
     body = <>
-      <Grid columns={4} gap="10">
+      <TileGrid minTileWidth={160} density="compact">
         <StatTile layout="with-note" label="Voters" value={number.format(517)} note="updating live" />
-        <StatCard label="Votes" value={number.format(votes[votes.length - 1])} series={votes} caption={`Since ${phaseDates(phase.dates)?.[0] ?? phase.dates}`} />
+        <StatTile layout="with-note" label="Votes" value={number.format(votes[votes.length - 1])} note="updating live" />
         <StatTile layout="with-note" label="Avg per voter" value={number.format(2.4)} note="multiple picks" />
         <StatTile layout="with-note" label="Participation" value={percent.format(0.18)} note="of visitors" />
-      </Grid>
+      </TileGrid>
       <DashboardCard kind="votes-over-time" title="Participation over time" subtitle="Votes cast · cumulative" actions={(
         <SegmentedControl size={30} aria-label="Range" disallowEmptySelection selectedKeys={[range]}
           onSelectionChange={k => { const next = [...k][0]; if (next) setRange(next as 'daily' | 'weekly'); }}>
@@ -1242,6 +1244,7 @@ function Insights({project, phase, rail}: {project: Project; phase: Phase; rail:
       <DashboardCard kind="live-ranking" title="Live ranking" subtitle={`By votes · ${phase.status === 'Done' ? 'final' : 'updating live'}`}>
         <DashboardRanking items={VOTE_OPTIONS.map(o => ({title: o.title, count: o.votes}))} />
       </DashboardCard>
+      <SectionLabel>Who is voting</SectionLabel>
       <Grid columns={2} gap="16">
         <DashboardCard kind="demographic-age"><DashboardDemographic label="Age group" items={[...VOTER_AGES]} /></DashboardCard>
         <DashboardCard kind="demographic-commute"><DashboardDemographic label="Primary commute" items={[...VOTER_COMMUTES]} /></DashboardCard>
@@ -1254,18 +1257,17 @@ function Insights({project, phase, rail}: {project: Project; phase: Phase; rail:
     const noun = NOUN[phase.method];
     const total = IDEAS.length;
     const liked = [...IDEAS].sort((a, b) => b.likes - a.likes).slice(0, 3);
+    // Six equal Stat tiles (the prototype's ideation dashboard); the weekly trend is the chart under them.
     body = <>
-      <Grid columns={2} gap="10">
-        <StatCard label="Visitors" value={number.format(412)} series={PARTICIPATION_WEEKS.visitors} caption={weekly} />
-        <StatCard label="Phase participants" value={number.format(124)} series={PARTICIPATION_WEEKS.participants} caption={weekly} />
-      </Grid>
-      <Grid columns={4} gap="10">
+      <TileGrid minTileWidth={160} density="compact">
+        <StatTile label="Visitors" value={number.format(412)} />
+        <StatTile label="Phase participants" value={number.format(124)} />
         <StatTile label={capital(noun)} value={number.format(total)} />
         <StatTile label="Comments" value={number.format(IDEAS.reduce((k, i) => k + i.comments, 0))} />
         <StatTile label="Reactions" value={number.format(IDEAS.reduce((k, i) => k + i.likes + i.dislikes, 0))} />
         <StatTile label="Participation rate" value={percent.format(0.301)} />
-      </Grid>
-      <DashboardCard kind="participation-over-time" title="Participation over time">
+      </TileGrid>
+      <DashboardCard kind="participation-over-time" title="Participation over time" subtitle={weekly}>
         <LineChart showLegend xAxis={INSIGHT_WEEKS} series={[
           {label: 'Participants', values: PARTICIPATION_WEEKS.participants}, {label: 'Visitors', values: PARTICIPATION_WEEKS.visitors}
         ]} />
@@ -1312,6 +1314,8 @@ function Insights({project, phase, rail}: {project: Project; phase: Phase; rail:
         <li><Card title="Share results with participants" control="link" href="#/messaging" linkIcon={<Link2 aria-hidden size={16} />} /></li>
         <li><Card title="Get an AI Sensemaking summary" control="link" linkIcon={<Sparkles aria-hidden size={16} />}
           onOpen={() => toast('AI summary requested', 'It appears under "What are people saying?" in a few minutes.')} /></li>
+        <li><Card title="Download insights" control="link" linkIcon={<Download aria-hidden size={16} />}
+          onOpen={() => toast('Insights downloaded', 'This dashboard, as a PDF.')} /></li>
       </Stack>
     </Panel>
   );
