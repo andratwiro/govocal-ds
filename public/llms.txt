@@ -43,7 +43,7 @@ Generic parts any admin could ship, from `govocal-ds`. Reach for one first.
 Go Vocal assemblies from `govocal-ds`, grouped by the screen they belong to; their props speak phases, methods, projects. Use one when your screen is that place.
 
 - Build tab: `AccessRights`, Form field summary, `NotificationRow`, `ParticipantActionRow`, `ViewOptionRow`
-- Project page: `ActionRow`, `PanelSection`, `PhonePhaseCard`, `PhonePreview`, `ProjectHeader`, `SetupStep`, `StatCard`
+- Project page: `ActionRow`, `MethodCard`, `PanelSection`, `PhonePhaseCard`, `PhonePreview`, `ProjectHeader`, `SetupStep`, `StatCard`
 - App shell: `AppFrame`, `NotificationList`, `SideNav`
 - Report builder: `AssistantPanel`
 - Manage tab: `CommentThread`, `OfficialUpdate`

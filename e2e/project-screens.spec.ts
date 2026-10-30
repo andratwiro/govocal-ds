@@ -165,3 +165,14 @@ test('Phase timeline: the Events section lists events as links, with no dot and 
   await expect(event).toBeFocused();
   await report(page);
 });
+
+test('Method card: one button named by its method, pressed by keyboard', async ({page}) => {
+  await page.goto(story('patterns-project-page-method-card--all-variants'));
+  const card = page.getByRole('button', {name: 'Ideation and geo mapping'});
+  await expect(card).toHaveAccessibleDescription(/share input on any topic/);
+  await card.focus();
+  await expect(card).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', {name: 'Survey'})).toBeFocused();
+  await report(page);
+});

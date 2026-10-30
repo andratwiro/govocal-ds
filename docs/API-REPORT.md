@@ -5,7 +5,7 @@ with each component's props: its own with their types, the ones passed straight 
 (React Aria's behaviour props, React's, the DOM's). An API change shows up here as a diff to review;
 `tests/api-report.test.mjs` fails while this file is stale. The convention it follows: `docs/API.md`.
 
-## `govocal-ds` (712 names)
+## `govocal-ds` (715 names)
 
 ### `ACCESS_WHO_VALUE`
 
@@ -3044,6 +3044,30 @@ Component, from `src/components/Menu.tsx`.
 ### `MenuTriggerProps`
 
 Interface, from `src/components/Menu.tsx`. The props of `MenuTrigger`, listed there.
+
+### `MethodCard`
+
+Component, from `src/patterns/MethodCard.tsx`.
+
+- `className?: string`
+- `description?: ReactNode`
+- `features?: MethodCardFeature[]`
+- `isDisabled?: boolean`
+- `media?: ReactNode`
+- `onPress?: () => void`
+- `style?: CSSProperties`
+- `title: string`
+
+### `MethodCardFeature`
+
+Interface, from `src/patterns/MethodCard.tsx`.
+
+- `isHighlighted?: boolean`
+- `label: string`
+
+### `MethodCardProps`
+
+Interface, from `src/patterns/MethodCard.tsx`. The props of `MethodCard`, listed there.
 
 ### `MissingPart`
 

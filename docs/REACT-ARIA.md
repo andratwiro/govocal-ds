@@ -6,7 +6,7 @@ Every interactive part is built on React Aria Components. This table says, per p
 what would survive a change of base library. It decides nothing: the base library is a question for developers
 (Overview › Questions for developers).
 
-**116 of 137 parts** wire behaviour from React Aria; the rest are plain React and CSS.
+**117 of 138 parts** wire behaviour from React Aria; the rest are plain React and CSS.
 
 **What comes from React Aria** (would be rewritten on another library):
 
@@ -143,15 +143,16 @@ what would survive a change of base library. It decides nothing: the base librar
 | Participation methods › Vote progress | `ProgressBar` | – | yes | yes | 4 |
 | Participation methods › Voting row | through Vote progress: `ProgressBar` | – | yes | yes | 5 |
 | Project page › Action row | `Button`, `MenuTrigger`, `ProgressBar`, `Link`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `Heading`, `Text`, `Header`, `Keyboard`; through Popover: `OverlayArrow`, `Popover` | – | – | yes | 13 |
+| Project page › Method card | `Button` | – | – | yes | 7 |
 | Project page › Panel section | `Button`, `Heading`, `Disclosure`, `DisclosurePanel` | – | – | yes | 5 |
 | Project page › Phone phase card | None: plain React and CSS | – | yes | yes | 5 |
 | Project page › Phone preview | `Button`, `Link`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | – | yes | 9 |
 | Project page › Project header | `MenuTrigger`; through Button: `Button`, `ProgressBar`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`; through Popover: `OverlayArrow`, `Popover`; through Breadcrumbs: `Breadcrumbs`, `Breadcrumb`, `Link`, `Button`; through Icon button: `Button`; through Segmented control: `ToggleButtonGroup`, `SelectionIndicator`, `ToggleButton`, `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | – | yes | 14 |
 | Project page › Setup step | `Button`, `Dialog`, `DialogTrigger`, `Disclosure`, `DisclosurePanel`, `Heading`, `MenuTrigger`; through Popover: `OverlayArrow`, `Popover` | – | – | yes | 7 |
 | Project page › Stat card | `Button` | – | yes | yes | 6 |
-| Project rail › Phase timeline | through Rail phase: `Link`, `Button`, `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 6 |
+| Project rail › Phase timeline | through Rail phase: `Link`, `Button`, `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 8 |
 | Project rail › Rail header | `Heading`; through Icon button: `Button` | – | – | yes | 5 |
-| Project rail › Rail phase | `Link`; through Icon button: `Button`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 7 |
+| Project rail › Rail phase | `Link`; through Icon button: `Button`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 8 |
 | Report builder › Assistant panel | through Button: `Button`, `ProgressBar`; through Side panel: `Dialog`, `Toolbar`, `Button`, `OverlayArrow`, `Tooltip`, `TooltipTrigger`; through Chat thread: `Button`, `ProgressBar`; through Item chip: `Button`, `VisuallyHidden`; through Prompt composer: `Button`, `FileTrigger`, `TextArea`, `TextField`, `OverlayArrow`, `Tooltip`, `TooltipTrigger`, `VisuallyHidden`; through Prompt suggestions: `Button` | – | yes | – | 9 |
 
 ## Base

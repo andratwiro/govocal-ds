@@ -68,8 +68,8 @@ Patterns                src/patterns/
   Manage tab            Comment thread · Official update
   Pages & menu          Section toggle
   Participation methods Common ground row · Proposals row · Vote progress · Volunteering row · Voting row
-  Project page          Action row · Panel section · Phone phase card · Phone preview · Project header · Setup step
-                        · Stat card
+  Project page          Access popover (recipe) · Action row · Method card · Panel section · Phone phase card
+                        · Phone preview · Project header · Setup step · Stat card
   Project rail          Phase timeline · Rail header · Rail phase
   Report builder        Assistant panel
 Back office             (empty: the whole-page stories DESIGN.md plans land here)

@@ -254,6 +254,7 @@ export {VotingRow, type VotingRowProps} from './patterns/VotingRow';
 
 // Patterns / Project page
 export {ActionRow, ActionRowList, type ActionRowProps, type ActionRowListProps} from './patterns/ActionRow';
+export {MethodCard, type MethodCardFeature, type MethodCardProps} from './patterns/MethodCard';
 export {PanelSection, type PanelSectionProps} from './patterns/PanelSection';
 export {
   PhonePreview, PhoneHeader, PhoneImage, PhoneCard, PhoneCountdown, PhoneStage, type PhonePreviewAction,

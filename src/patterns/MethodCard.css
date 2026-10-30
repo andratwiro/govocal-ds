@@ -1,0 +1,69 @@
+@import '../components/theme.css';
+
+/* The prototype's method picker card: a border-default hairline, radius 12, the picture on the light stage grey
+   (168 tall), then 16 of padding around the name (UI strong), the line (Small secondary) and the chips (6 apart). */
+.gv-method-card {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  overflow: hidden;
+  border: 1px solid var(--gv-border-default);
+  border-radius: var(--gv-radius-12);
+  background: var(--gv-surface-panel);
+  font-family: var(--gv-font-family);
+  text-align: start;
+  cursor: pointer;
+  transition: border-color var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
+
+  &[data-hovered] {
+    border-color: var(--gv-border-strong);
+  }
+
+  &[data-pressed] {
+    background: var(--gv-surface-hovered);
+  }
+
+  &[data-focus-visible] {
+    outline: var(--gv-focus-ring);
+    outline-offset: var(--gv-focus-ring-offset);
+  }
+
+  &[data-disabled] {
+    opacity: var(--gv-opacity-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.gv-method-card__media {
+  display: grid;
+  place-items: center;
+  block-size: 168px;
+  overflow: hidden;
+  background: var(--gv-surface-secondary);
+}
+
+.gv-method-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-4);
+  padding: var(--gv-space-16);
+}
+
+.gv-method-card__title {
+  font: var(--gv-type-ui-strong);
+  color: var(--gv-text-primary);
+}
+
+.gv-method-card__description {
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+}
+
+.gv-method-card__features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gv-space-6);
+  margin-block-start: var(--gv-space-8);
+}
