@@ -28,6 +28,8 @@
 Not interactive: the list itself takes no focus and no keys. A value that is a control (a Select, tags, a link) keeps
 its own keyboard; see that part's page.
 
+Behaviour from React Aria's VisuallyHidden (the "Not set" read for an empty value).
+
 ## Content
 
 - Labels: a noun, one or two words, sentence case, no colon: "Status", "Assignee", "Last active".

@@ -26,6 +26,8 @@ One line; a count shows only when its number is given, 0 included.
 
 Not interactive: the counts take no focus and no keys.
 
+Behaviour from React Aria's VisuallyHidden (each count's words, read in place of the icon and number).
+
 ## Content
 
 - Pass the real numbers; the part formats them for the page's locale ("1,284").

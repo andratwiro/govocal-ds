@@ -173,8 +173,11 @@ part's `<Name>.guide.md`) names the part to use instead.
 
 ## Components / Text
 - **Section label** `SectionLabel`: A quiet label over a group of rows: the rail's Timeline / Spotlight / Events, Insights' "Who is voting", the Create report checklist's "Project context" (Fig… Stories: All Variants, Default, As A Heading, With Icon.
+  - Not for: For a page's or a panel's title: use **Page header** or the title of **Panel**. For a heading or a line in a type style of your choosing: use **Text** with `elementType`. For the column heads of a list: use **List header**. For a titled section of a side panel with a body under it: use **Panel section**.
 - **Text** `Text` (not in Figma): Text: words in one of the system's type styles and colours, `<Text kind="small" color="meta">Posted 2 days ago</Text>` or `<Text elementType="h2" kind="body"… Stories: All Variants, Colors, Heading And Paragraph, Playground.
+  - Not for: For a quiet label over a group of rows: use **Section label**. For a page's title with its actions: use **Page header**. For words only screen readers need: use **Visually hidden**. For a link inside the words: use **Link**.
 - **Visually hidden** `VisuallyHidden` (not in Figma): Visually hidden: content for screen readers only, kept in the page's reading order. Stories: Default, Focusable.
+  - Not for: To hide something from everyone: leave it out of the page, as a closed **Side panel** or a folded **Panel section** For a name on an icon-only control: use the control's own `aria-label` (**Icon button**). For words everyone should see, however small: use **Text** (`kind="small"`).
 
 ## Patterns / App shell
 - **Notification list** `NotificationList` (not in Figma): The notifications list the admin sidebar's bell opens (the real admin's notification menu): a title with "Mark all as read", then one row per notification, n… Stories: Default, All Read, Empty.
