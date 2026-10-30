@@ -3973,6 +3973,7 @@ Component, from `src/patterns/PhonePreview.tsx`.
 - `children: ReactNode`
 - `className?: string`
 - `cta?: string`
+- `onCtaPress?: () => void`
 - `style?: CSSProperties`
 
 ### `PhoneCountdownProps`

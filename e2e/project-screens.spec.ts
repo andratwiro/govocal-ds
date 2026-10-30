@@ -152,6 +152,10 @@ test('Phone preview: a logo mark, the stage toolbar switches by keyboard, the co
   await page.keyboard.press('Enter');
   await expect(page.getByRole('radio', {name: 'Ended'})).toBeChecked();
   await expect(page.getByText('2 weeks left')).toBeInViewport();
+  // The countdown's participation button is a real button, named by its words, reached by Tab.
+  const cta = page.getByRole('button', {name: 'Vote'});
+  await cta.focus();
+  await expect(cta).toBeFocused();
   await report(page);
 });
 

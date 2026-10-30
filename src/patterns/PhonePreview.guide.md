@@ -24,20 +24,23 @@
 2. **Device**: the light, rounded phone, 343 × 683, radius 22.
 3. **Header** (optional): the platform's header pinned at the top, with its logo mark (`mark`) or a placeholder.
 4. **Screen**: white (a page or a message) or grey with white cards (a phase page), scrolling.
-5. **Footer** (optional): the participation bar (`PhoneCountdown`: the time left and the button) pinned at the bottom
+5. **Footer** (optional): the participation bar (`PhoneCountdown`: the time left and the participation button, a real
+   button named by its words) pinned at the bottom
    while the screen scrolls. A phase's screen opens with a **Phone phase card**.
 6. **Action** (optional): a smoked pill in the middle, shown on hover or keyboard focus while the screen dims.
 
 ## Behaviour
 
-The screen is inert: what a resident would press does nothing here. The phone's own action is one button or link
-that shows on hover and on keyboard focus, after the WAI-ARIA
+The screen is inert: what a resident would press does nothing here, except the countdown's participation button, a
+real button (Tab reaches it; Enter or Space calls `onCtaPress`, when given). The phone's own action is one button or
+link that shows on hover and on keyboard focus, after the WAI-ARIA
 [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/).
 
 | Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the phone's action and shows it. | `e2e/build-tab.spec.ts` |
 | Enter | Presses the action ("Edit project page"). | `play: Keyboard` |
+| Tab (to the countdown) | Moves to the participation button ("Vote"). | `e2e/project-screens.spec.ts` |
 
 ## Content
 
@@ -76,6 +79,7 @@ that says so, and the stage eye with a tooltip.
 
 ## Changes
 
+- 30 Oct 2026: the countdown's participation button is a real button (it was a plain span), with `onCtaPress`.
 - 30 Oct 2026: a logo mark in the header (`PhoneHeader mark`), a stage toolbar (`PhoneStage toolbar`) before the
   caption; a phase's screen opens with the new Phone phase card (docs/DECISIONS.md, "Project screens").
 - 30 Oct 2026: this page written; a play function proves Enter on the action.

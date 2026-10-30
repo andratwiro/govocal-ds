@@ -184,10 +184,15 @@ export interface PhoneCountdownProps extends PlacementProps {
   children: ReactNode;
   /** The participation button ("Submit your idea"); leave it out while participating isn't possible. */
   cta?: string;
+  /** Fires when the participation button is pressed (e.g. to open what a resident would see next). */
+  onCtaPress?: () => void;
 }
 
-/** The participation bar at the foot of a phase's screen: a dot and the time left, then the participation button. */
-export function PhoneCountdown({children, cta, className, style}: PhoneCountdownProps) {
+/**
+ * The participation bar at the foot of a phase's screen: a dot and the time left, then the participation button, a
+ * real button named by its words.
+ */
+export function PhoneCountdown({children, cta, onCtaPress, className, style}: PhoneCountdownProps) {
   return (
     <div className={clsx('gv-phone-countdown', className)} style={style}>
       <span className="gv-phone-countdown__when">
@@ -195,9 +200,9 @@ export function PhoneCountdown({children, cta, className, style}: PhoneCountdown
         {children}
       </span>
       {cta != null && (
-        <span className="gv-phone-countdown__cta">
+        <Button className="gv-phone-countdown__cta" onPress={onCtaPress}>
           {cta}
-        </span>
+        </Button>
       )}
     </div>
   );
