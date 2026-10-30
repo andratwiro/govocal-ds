@@ -3,7 +3,7 @@ import {
   Popover as AriaPopover,
   type PopoverProps as AriaPopoverProps
 } from 'react-aria-components/Popover';
-import type {RefObject} from 'react';
+import {useId, type RefObject} from 'react';
 import {mergeLabels} from '../labels';
 import './Coachmark.css';
 
@@ -30,7 +30,7 @@ export interface CoachmarkProps
   children: React.ReactNode;
   /** Called when "Got it" is pressed. */
   onDismiss?: () => void;
-  /** Called when "Skip" is pressed. */
+  /** Called when "Skip" or the × is pressed. */
   onSkip?: () => void;
   /** Its own words (×, Skip, Got it), over `coachmarkLabels`. */
   labels?: Partial<CoachmarkLabels>;
@@ -39,7 +39,7 @@ export interface CoachmarkProps
 /**
  * A dark onboarding bubble with a tail that points at one control and explains it once, with Skip and Got it. Not in
  * Figma: from the prototype (augur-design.html #pj-coach / .pj-coach__bubble), shown once per new PM. Got it calls
- * `onDismiss`, Skip calls `onSkip`, the × calls both; a short hint that comes back on demand is a Help popover.
+ * `onDismiss`, Skip and the × call `onSkip`; the bubble is a dialog named by its title; a short hint that comes back on demand is a Help popover.
  */
 export function Coachmark({
   title,
@@ -51,22 +51,22 @@ export function Coachmark({
   ...props
 }: CoachmarkProps) {
   const l = mergeLabels(coachmarkLabels, labels);
+  const titleId = useId();
   return (
-    <AriaPopover {...props} placement={placement} className="gv-coachmark">
+    <AriaPopover {...props} placement={placement} className="gv-coachmark" aria-labelledby={titleId}>
       <OverlayArrow className="gv-coachmark__arrow">
         <svg width={13} height={13} viewBox="0 0 13 13">
           <rect width={13} height={13} rx={2} />
         </svg>
       </OverlayArrow>
       <div className="gv-coachmark__hd">
-        <div className="gv-coachmark__title">{title}</div>
+        <div className="gv-coachmark__title" id={titleId}>{title}</div>
         <button
           type="button"
           className="gv-coachmark__x"
           aria-label={l.dismiss}
           onClick={() => {
             onSkip?.();
-            onDismiss?.();
           }}>
           <svg
             viewBox="0 0 24 24"

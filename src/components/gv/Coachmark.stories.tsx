@@ -80,7 +80,8 @@ export const Example: Story = () => {
 };
 
 /** The keyboard, proved by this story's play function (the Interactions panel): once open, focus is in the coachmark;
- * Tab walks ×, Skip and Got it and stays inside; Enter on Got it closes it and focus goes back; Esc closes it too. */
+ * Tab walks ×, Skip and Got it and stays inside; Enter on Got it closes it and focus goes back; Esc closes it too; the
+ * × skips. The bubble is a dialog named by its title. */
 export const Keyboard: Story = () => {
   const ref = useRef<HTMLSpanElement>(null);
   const [isOpen, setOpen] = useState(false);
@@ -98,22 +99,26 @@ export const Keyboard: Story = () => {
     </div>
   );
 };
+// React Aria's popover adds two hidden Dismiss buttons for screen readers; the × is the one Tab reaches.
+const closeButton = (coachmark: HTMLElement) =>
+  within(coachmark).getAllByRole('button', {name: 'Dismiss'}).find(b => b.classList.contains('gv-coachmark__x'));
+
 Keyboard.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
   const trigger = canvas.getByRole('button', {name: 'Publish project'});
   await userEvent.tab();
   await userEvent.keyboard('{Enter}');
-  const coachmark = await screen.findByRole('dialog');
+  const coachmark = await screen.findByRole('dialog', {name: 'Ready when you are'});
   await waitFor(() => expect(coachmark).toHaveFocus());
   await userEvent.tab();
-  await expect(within(coachmark).getByRole('button', {name: 'Dismiss'})).toHaveFocus();
+  await expect(closeButton(coachmark)).toHaveFocus();
   await userEvent.tab();
   await expect(within(coachmark).getByRole('button', {name: 'Skip'})).toHaveFocus();
   await userEvent.tab();
   const gotIt = within(coachmark).getByRole('button', {name: 'Got it'});
   await expect(gotIt).toHaveFocus();
   await userEvent.tab();
-  await expect(within(coachmark).getByRole('button', {name: 'Dismiss'})).toHaveFocus();
+  await expect(closeButton(coachmark)).toHaveFocus();
   await userEvent.tab({shift: true});
   await expect(gotIt).toHaveFocus();
   await userEvent.keyboard('{Enter}');
@@ -124,4 +129,12 @@ Keyboard.play = async ({canvasElement}) => {
   await screen.findByRole('dialog');
   await userEvent.keyboard('{Escape}');
   await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+  // The × skips: it calls onSkip only, never onDismiss ("Got it").
+  await waitFor(() => expect(trigger).toHaveFocus());
+  await userEvent.keyboard('{Enter}');
+  await screen.findByRole('dialog');
+  await userEvent.tab();
+  await userEvent.keyboard('{Enter}');
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+  await expect(canvas.getByText('Skipped')).toBeInTheDocument();
 };

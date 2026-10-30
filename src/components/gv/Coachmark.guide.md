@@ -20,7 +20,7 @@
 1. **Bubble**: the dark card, 266 wide.
 2. **Tail**: a small rotated square on the side facing the control (`placement`, `right` by default).
 3. **Title**: one line, in bold.
-4. **×**: closes it (named "Dismiss"); calls both `onSkip` and `onDismiss`.
+4. **×**: closes it (named "Dismiss"); calls `onSkip`, as Skip does.
 5. **Body**: a sentence or two.
 6. **Actions**: Skip (quiet) and Got it.
 
@@ -30,7 +30,8 @@ It sits 12 from the control it points at.
 
 The bubble is a dialog after the WAI-ARIA
 [Dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/): when it opens, focus moves into it and stays
-there until it closes. Got it calls `onDismiss`, Skip calls `onSkip`; the page closes it in both (`isOpen`).
+there until it closes. The dialog is named by its title. Got it calls `onDismiss`, Skip and the × call `onSkip`; the
+page closes it in both (`isOpen`).
 
 | Key | What it does | Tested by |
 | --- | --- | --- |
@@ -38,6 +39,7 @@ there until it closes. Got it calls `onDismiss`, Skip calls `onSkip`; the page c
 | Tab and Shift Tab | Move through ×, Skip and Got it, and wrap round inside the bubble. | `play: Keyboard` |
 | Enter (on Got it) | Calls `onDismiss`; once the page closes it, focus goes back to the control. | `play: Keyboard` |
 | Esc | Closes it (`onOpenChange(false)`). | `play: Keyboard` |
+| Enter (on ×) | Calls `onSkip`, never `onDismiss`. | `play: Keyboard` |
 
 ## Content
 
@@ -75,6 +77,8 @@ to close, and a tail that follows its placement in both directions.
 
 ## Changes
 
+- 30 Oct 2026: the bubble is named by its title; the × calls `onSkip` only, no longer `onDismiss` ("Got it") too
+  (docs/DECISIONS.md, "Small fixes").
 - 30 Oct 2026: this page written; its doc comment now says what it is for; a play function proves the keyboard table.
 - 30 Oct 2026: its 12 to the trigger is the one outer margin kept (docs/DECISIONS.md, "Compose without CSS").
 - 29 Oct 2026: the white focus ring on the dark fill is a 2px inverse border (docs/DECISIONS.md, "Token names").
