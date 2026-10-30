@@ -114,9 +114,11 @@ test('multilingual rich text editor: the switcher picks the language the editor 
   await open(page, 'components-forms-multilingual-rich-text-editor--invalid');
   await expect(page.getByRole('radio', {name: /^ES-ES/})).toBeChecked();
   await expect(page.getByRole('textbox', {name: 'Description, Spanish (Spain)'})).toHaveValue('');
-  await expect(page.getByRole('alert')).toHaveText('Add the text in Spanish (Spain)');
-  await page.getByRole('textbox', {name: 'Description, Spanish (Spain)'}).fill('Añade una breve introducción');
-  await expect(page.getByRole('alert')).toHaveCount(0);
+  const spanish = page.getByRole('textbox', {name: 'Description, Spanish (Spain)'});
+  // The error is the editor's own field error (no separate alert since the editor took isInvalid and errorMessage).
+  await expect(spanish).toHaveAccessibleDescription('Add the text in Spanish (Spain)');
+  await spanish.fill('Añade una breve introducción');
+  await expect(page.getByText('Add the text in Spanish (Spain)')).toHaveCount(0);
   await chip(page, 'EN').click();
   await expect(page.getByRole('textbox', {name: 'Description, English'})).toHaveValue(/^Add a short introduction here/);
   await report(page, '#storybook-root');
