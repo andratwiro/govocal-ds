@@ -2,10 +2,10 @@
 
 ## When to use
 
-- For the big name at the top of an editor: a phase's title in its setup card, the platform's name in Settings.
+- For the big name at the top of an editor: a phase's title in its setup card.
 - When the title is required and should say so in the field (`isRequired` draws the Required marker at its end).
 - With `localeSwitcher` when the title is written in each of the platform's languages: a Locale switcher menu sits in
-  the field's end and can drive the description under it too.
+  the field's end and drives the description under it too (the phase's "Title and description" card).
 
 ## When not to use
 

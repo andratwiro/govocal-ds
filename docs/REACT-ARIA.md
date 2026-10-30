@@ -63,15 +63,15 @@ what would survive a change of base library. It decides nothing: the base librar
 | Forms › Date range field | through `components/Button`, `components/DatePicker`, `components/TimeField` | – | yes | yes | 8 |
 | Forms › Drop zone | `DropZone`, `FileTrigger`, `Button` | `DropZoneProps` | – | yes | 6 |
 | Forms › Locale switcher | `RadioGroup`, `Radio`, `Select`, `SelectValue`, `Button`, `VisuallyHidden` through `components/Popover`, `components/ListBox` | – | yes | yes | 7 |
-| Forms › Multilingual rich text editor | through `components/Form`, `components/gv/RichTextEditor`, `components/gv/MultilingualTextField` | – | yes | yes | 5 |
+| Forms › Multilingual rich text editor | through `components/Form`, `components/gv/RichTextEditor`, `components/gv/MultilingualTextField` | – | yes | yes | 6 |
 | Forms › Multilingual text field | `Input`, `TextArea`, `TextField` through `components/Form`, `components/gv/LocaleSwitcher` | `TextFieldProps` | yes | yes | 12 |
 | Forms › Number field | `Group`, `Input`, `NumberField` through `components/Button`, `components/Form` | `NumberFieldProps` | yes | yes | 4 |
 | Forms › Option list | `Autocomplete` through `components/Menu`, `components/SearchField` | – | yes | yes | 10 |
 | Forms › Radio group | `RadioGroup`, `RadioField`, `RadioButton` through `components/Form` | `RadioGroupProps` | – | yes | 2 |
 | Forms › Required marker | None: plain React and CSS | – | – | yes | 3 |
-| Forms › Rich text editor | `TextField`, `TextArea` through `components/gv/RichTextToolbar` | – | – | yes | 3 |
-| Forms › Rich text toolbar | `Button`, `Toolbar` through `components/gv/RichTextToolbarButton` | – | – | yes | 2 |
-| Forms › Rich text toolbar button | `ToggleButton` | `ToggleButtonProps` | – | yes | 4 |
+| Forms › Rich text editor | `TextField`, `TextArea` through `components/gv/RichTextToolbar` | – | – | yes | 4 |
+| Forms › Rich text toolbar | `Button`, `Toolbar` through `components/gv/RichTextToolbarButton` | – | – | yes | 3 |
+| Forms › Rich text toolbar button | `ToggleButton` | `ToggleButtonProps` | – | yes | 5 |
 | Forms › Search field | `Button`, `Input`, `SearchField` through `components/Form`, `components/Tooltip` | `SearchFieldProps` | – | yes | 9 |
 | Forms › Select | `Select`, `SelectValue`, `Autocomplete` through `components/Button`, `components/ListBox`, `components/Popover`, `components/SearchField` | – | yes | yes | 12 |
 | Forms › Switch | `SwitchField`, `SwitchButton` through `components/Form` | `SwitchFieldProps` | – | yes | 6 |

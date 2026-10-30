@@ -1,3 +1,4 @@
+import {expect, userEvent, within} from 'storybook/test';
 import {RichTextToolbarButton} from './RichTextToolbarButton';
 import {Bold, Italic, List, Link, Image, SquarePlay} from 'lucide-react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
@@ -59,4 +60,22 @@ export const Selected: Story = {
 
 export const Disabled: Story = {
   args: {'aria-label': 'Bold', isDisabled: true, children: <Bold aria-hidden size={14} strokeWidth={1.75} />}
+};
+
+/** The keyboard, proved by this story's play function: Tab reaches the tool; Space and Enter press it in and out. */
+export const Keyboard: Story = {
+  render: () => (
+    <RichTextToolbarButton aria-label="Bold">
+      <Bold aria-hidden size={14} strokeWidth={1.75} />
+    </RichTextToolbarButton>
+  ),
+  play: async ({canvasElement}) => {
+    const tool = within(canvasElement).getByRole('button', {name: 'Bold'});
+    await userEvent.tab();
+    await expect(tool).toHaveFocus();
+    await userEvent.keyboard(' ');
+    await expect(tool).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.keyboard('{Enter}');
+    await expect(tool).toHaveAttribute('aria-pressed', 'false');
+  }
 };

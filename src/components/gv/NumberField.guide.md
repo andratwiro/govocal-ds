@@ -67,6 +67,6 @@ the page's language, and the description and error read with it.
 
 ## Changes
 
-- 30 Oct 2026: this page written, with its doc comment; a play function proves the keyboard table.
+- 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: moved up from Base to Components › Forms, with a side label position and a prefix slot (Voting's €
   budget fields).

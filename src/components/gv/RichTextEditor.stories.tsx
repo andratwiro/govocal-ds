@@ -1,3 +1,4 @@
+import {expect, userEvent, within} from 'storybook/test';
 import {useState} from 'react';
 import {RichTextEditor} from './RichTextEditor';
 import type {Meta, StoryObj} from '@storybook/react-vite';
@@ -49,4 +50,24 @@ export const Empty: Story = {
 
 export const Filled: Story = {
   render: () => <Controlled />
+};
+
+/** The keyboard, proved by this story's play function: Tab lands on the toolbar, the next Tab in the text, where
+ * typing writes. */
+export const Keyboard: Story = {
+  render: () => (
+    <div style={{width: 444}}>
+      <RichTextEditor aria-label="Project description" />
+    </div>
+  ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Bold'})).toHaveFocus();
+    await userEvent.tab();
+    const text = canvas.getByRole('textbox', {name: 'Project description'});
+    await expect(text).toHaveFocus();
+    await userEvent.keyboard('Tell residents how to take part.');
+    await expect(text).toHaveValue('Tell residents how to take part.');
+  }
 };

@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {fn} from 'storybook/test';
+import {expect, fn, userEvent, waitFor, within} from 'storybook/test';
 import type {Multiloc} from './LocaleSwitcher';
 import {MultilingualRichTextEditor} from './MultilingualRichTextEditor';
 
@@ -77,4 +77,21 @@ function ControlledEditor() {
 /** The page holds the Multiloc (`value` / `onChange`). */
 export const Controlled: Story = {
   render: () => <ControlledEditor />
+};
+
+/** The keyboard, proved by this story's play function: Tab lands on the shown language, the right arrow picks the
+ * next one and the editor follows; Tab goes on into the editor. */
+export const Keyboard: Story = {
+  args: {defaultValue: intro},
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('radio', {name: /^EN\b/})).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+    await waitFor(() => expect(canvas.getByRole('radio', {name: /^ES-ES\b/})).toBeChecked());
+    const spanish = canvas.getByRole('textbox', {name: 'Description, Spanish (Spain)'});
+    await expect(spanish).toHaveValue('');
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Bold'})).toHaveFocus();
+  }
 };

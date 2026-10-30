@@ -69,7 +69,7 @@ and error wired to it. Behaviour from React Aria's TextField.
 
 ## Changes
 
-- 30 Oct 2026: this page written, with its doc comment; a play function proves the keyboard table.
+- 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: the help and the error take the row beside the counter (they were a word wide); the counter's numbers
   follow the locale.
 - 29 Oct 2026: moved up from Base to Components › Forms, with the prefix, counter and read-only stories.
