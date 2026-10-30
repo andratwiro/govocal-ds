@@ -180,8 +180,10 @@ part's `<Name>.guide.md`) names the part to use instead.
   - Not for: To hide something from everyone: leave it out of the page, as a closed **Side panel** or a folded **Panel section** For a name on an icon-only control: use the control's own `aria-label` (**Icon button**). For words everyone should see, however small: use **Text** (`kind="small"`).
 
 ## Patterns / App shell
-- **Notification list** `NotificationList` (not in Figma): The notifications list the admin sidebar's bell opens (the real admin's notification menu): a title with "Mark all as read", then one row per notification, n… Stories: Default, All Read, Empty.
-- **Side nav** `SideNav` (not in Figma): The back office's main dark sidebar of links and menu buttons; folds to icons. Stories: Open, Folded.
+- **Notification list** `NotificationList` (not in Figma): The notifications list the admin sidebar's bell opens (the real admin's notification menu): a title with "Mark all as read", then one row per notification, n… Stories: Default, All Read, Empty, Keyboard.
+  - Not for: For a passing confirmation of something the admin just did: use **Toast**. For a message about the page in front of them: use **Banner**. For the emails a phase sends participants: use **Notification row**. For a long, filterable list of records: use **Data table**.
+- **Side nav** `SideNav` (not in Figma): The back office's main dark sidebar of links and menu buttons; folds to icons. Stories: Open, Folded, Keyboard.
+  - Not for: To switch between views or sections inside a page: use **Tabs**. For the phases of a project: use **Phase timeline** or **Rail phase** in the project rail. To show where the page sits in the hierarchy: use **Breadcrumbs**. For a list of actions: use **Menu** (opened from a `SideNavButton` with `hasMenu`).
 
 ## Patterns / Build tab
 - **Access rights** `AccessRights` (not in Figma): Who can take one participant action: following the platform's defaults (read-only, with Override) or set for this phase. Stories: All Variants, Using Defaults, Override, Security Requirements, Two Choices, In The Modal, Modal.

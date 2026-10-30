@@ -1,4 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, userEvent, within} from 'storybook/test';
 import {useState} from 'react';
 import {FileChartColumn, Inbox, MessageSquare} from 'lucide-react';
 import {NotificationList, type NotificationItem} from './NotificationList';
@@ -28,3 +29,26 @@ export const Default: Story = {
 export const AllRead: Story = {name: 'All read', args: {items: ITEMS.map(i => ({...i, isUnread: false})), onMarkAllRead: () => {}}};
 
 export const Empty: Story = {args: {items: []}};
+
+/**
+ * The keys the list takes: Tab reaches "Mark all as read", then each notification that leads somewhere; Enter on
+ * "Mark all as read" clears every unread dot. Its play function proves the component page's keyboard table.
+ */
+export const Keyboard: Story = {
+  render: () => {
+    const [items, setItems] = useState(ITEMS);
+    return <NotificationList items={items} onMarkAllRead={() => setItems(is => is.map(i => ({...i, isUnread: false})))} />;
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getAllByRole('img', {name: 'Unread'})).toHaveLength(2);
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Mark all as read'})).toHaveFocus();
+    await userEvent.tab();
+    await expect(canvas.getByRole('link', {name: 'A resident commented on your input'})).toHaveFocus();
+    await userEvent.tab({shift: true});
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.queryAllByRole('img', {name: 'Unread'})).toHaveLength(0);
+    await expect(canvas.getByRole('button', {name: 'Mark all as read'})).toHaveFocus();
+  }
+};

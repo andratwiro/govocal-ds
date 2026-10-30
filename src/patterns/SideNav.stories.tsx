@@ -1,4 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {Bell, FolderKanban, Inbox, LayoutDashboard, LifeBuoy, Settings, Users} from 'lucide-react';
 import {SideNav, SideNavGroup, SideNavHome, SideNavLink, SideNavButton} from './SideNav';
 import {Avatar} from '../components/gv/Avatar';
@@ -40,3 +41,36 @@ export const Open: Story = {name: 'Default', render: () => <div style={{width: 2
 
 /** The 52px icon rail inside a project: names stay accessible and show as tooltips; counts sit on the icons. */
 export const Folded: Story = {render: () => <div style={{width: 52}}><SideNav aria-label="Main" isFolded><Items /></SideNav></div>};
+
+/**
+ * The keys the rail takes, folded: Tab walks the rows in order and each shows its name as a tooltip; Enter on a row
+ * with a menu opens it, Esc closes it and puts focus back on the row. Its play function proves the component page's
+ * keyboard table.
+ */
+export const Keyboard: Story = {
+  render: () => <div style={{width: 52}}><SideNav aria-label="Main" isFolded><Items /></SideNav></div>,
+  play: async ({canvasElement}) => {
+    const nav = within(canvasElement).getByRole('navigation', {name: 'Main'});
+    await userEvent.tab();
+    await expect(within(nav).getByRole('link', {name: 'To platform'})).toHaveFocus();
+    await waitFor(() => expect(screen.getByRole('tooltip', {name: 'To platform'})).toBeVisible());
+    await userEvent.tab();
+    await expect(within(nav).getByRole('link', {name: 'Dashboard'})).toHaveFocus();
+    await waitFor(() => expect(screen.getByRole('tooltip', {name: 'Dashboard'})).toBeVisible());
+    for (const name of [/^Projects/, /^Input manager/, /^Users/, /^Settings/]) {
+      await userEvent.tab();
+      await expect(within(nav).getByRole('link', {name})).toHaveFocus();
+    }
+    await userEvent.tab();
+    await expect(within(nav).getByRole('button', {name: /^Notifications/})).toHaveFocus();
+    await userEvent.tab();
+    const account = within(nav).getByRole('button', {name: /^Sam Rivera/});
+    await expect(account).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    const menu = await screen.findByRole('menu', {name: 'Account'});
+    await waitFor(() => expect(within(menu).getByRole('menuitem', {name: 'My profile'})).toHaveFocus());
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
+    await waitFor(() => expect(account).toHaveFocus());
+  }
+};

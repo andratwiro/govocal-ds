@@ -118,8 +118,8 @@ what would survive a change of base library. It decides nothing: the base librar
 
 | Part | Behaviour from React Aria's … | Props straight through | Locale | CSS | Stories |
 |---|---|---|---|---|---|
-| App shell › Notification list | `Link` through `components/Button` | – | – | yes | 3 |
-| App shell › Side nav | `Button`, `Link` through `components/Tooltip` | – | yes | yes | 2 |
+| App shell › Notification list | `Link` through `components/Button` | – | – | yes | 4 |
+| App shell › Side nav | `Button`, `Link` through `components/Tooltip` | – | yes | yes | 3 |
 | Build tab › Access rights | `Button`, `Disclosure`, `DisclosurePanel`, `DisclosureGroup`, `Heading` through `components/Button`, `components/Link`, `components/RadioGroup`, `components/Select`, `components/Switch`, `components/gv/AlertDialog`, `components/gv/ChoiceCard` | – | yes | yes | 7 |
 | Build tab › Notification row | `Button` through `components/Switch`, `components/TextField`, `components/gv/RichTextEditor` | – | yes | yes | 5 |
 | Build tab › Participant action row | `Button` through `components/NumberField`, `components/RadioGroup`, `components/Switch` | – | yes | yes | 6 |
