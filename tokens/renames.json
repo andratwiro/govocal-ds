@@ -50,7 +50,7 @@
       "figmaId": "VariableID:1:81",
       "why": "split by property: the checked fill, its border, its tick"
     },
-    {"from": "--gv-control-toggle-on", "to": "--gv-surface-inverse", "figmaId": "VariableID:1:82", "merge": true, "why": "merge with a value change, slate 750 into neutral 900: a Switch that is on is near-black (docs/DECISIONS.md); the project lead's rule, tokens win"},
+    {"from": "--gv-control-toggle-on", "to": "--gv-surface-inverse", "why": "Figma renamed control/toggle-on to surface/inverse on neutral/900 (30 Oct); before that a merge with a value change, slate 750 into neutral 900: a Switch that is on is near-black (docs/DECISIONS.md); the project lead's rule, tokens win"},
     {"from": "--gv-control-toggle-off", "to": "--gv-surface-neutral-strong", "figmaId": "VariableID:1:83", "why": "an intent: the solid neutral fill (a Switch that is off, an upcoming phase's dot)"},
     {"from": "--gv-control-knob", "to": "--gv-surface-panel", "figmaId": "VariableID:1:84", "merge": true, "why": "merge, same value"},
     {
@@ -115,7 +115,7 @@
     {"from": "--gv-space-18", "to": "--gv-space-16", "figmaId": "VariableID:1:102", "merge": true, "snap": true, "why": "base 4: 18 snaps to 16"},
     {"from": "--gv-space-22", "to": "--gv-space-24", "figmaId": "VariableID:1:103", "merge": true, "snap": true, "why": "base 4: 22 snaps to 24"},
     {"from": "--gv-space-25", "to": "--gv-space-24", "figmaId": "VariableID:1:105", "merge": true, "snap": true, "why": "base 4: 25 snaps to 24"},
-    {"from": "--gv-space-44", "to": "--gv-space-40", "figmaId": "VariableID:20:38", "merge": true, "snap": true, "why": "base 4: 44 snaps to 40"},
+    {"from": "--gv-space-44", "to": "--gv-space-40", "snap": true, "why": "base 4: 44 snaps to 40; Figma renamed space/44 to space/40 (30 Oct)"},
     {"from": "--gv-space-1", "drop": "1px", "scale": "--gv-space-2", "figmaId": "VariableID:1:89", "why": "an offset, not spacing: a raw 1px on positions and margins; space-2 in a padding or gap"},
     {"from": "--gv-space-3", "drop": "3px", "scale": "--gv-space-4", "figmaId": "VariableID:1:91", "why": "an offset, not spacing: a raw 3px on positions and margins; space-4 in a padding or gap"},
     {"from": "--gv-radius-3", "to": "--gv-radius-4", "figmaId": "VariableID:1:108", "merge": true, "snap": true, "why": "radius on 2, 4, 6, 8, 10, 12, 14, 22: 3 snaps to 4"},

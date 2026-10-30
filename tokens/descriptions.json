@@ -109,5 +109,7 @@
   "--gv-type-small": "Captions and meta: card titles, To review and Required, rail labels. 12/16 Regular.",
   "--gv-shadow-raised": "Something that rests on a surface: a card, a menu, a popover, a selected segment's rest state.",
   "--gv-shadow-raised-strong": "A raised shape a step stronger: the selected item of a Segmented control.",
-  "--gv-shadow-overlay": "Something that floats over the page: a modal, the side panel, a dialog."
+  "--gv-shadow-overlay": "Something that floats over the page: a modal, the side panel, a dialog.",
+  "--gv-surface-inverse": "The near-black fill that inverts the page: a Switch that is on, a selected toggle button. Text and icons on it are text-inverse and icon-inverse.",
+  "--gv-space-40": "A section's padding on a page, an empty state's room."
 }

@@ -100,11 +100,6 @@
       "$value": "{color.green.400}",
       "$description": "The solid success fill: the tick in a success Toast."
     },
-    "inverse": {
-      "$type": "color",
-      "$value": "{color.neutral.900}",
-      "$description": "The near-black fill that inverts the page: a Switch that is on, a selected toggle button. Text and icons on it are text-inverse and icon-inverse."
-    },
     "disabled": {
       "$type": "color",
       "$value": "{color.neutral.25}",
@@ -395,11 +390,6 @@
     }
   },
   "space": {
-    "40": {
-      "$type": "dimension",
-      "$value": {"value": 40, "unit": "px"},
-      "$description": "Not in Figma yet (Figma has 44; code snapped it to 40, what the prototype drew): a section's padding on a page, an empty state's room."
-    },
     "64": {
       "$type": "dimension",
       "$value": {"value": 64, "unit": "px"},
