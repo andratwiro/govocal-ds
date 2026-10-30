@@ -57,6 +57,7 @@ the scale (`e2e/map.spec.ts`).
 - A legend's words name what each tone means on this map ("Accepted", "Rejected"); colour is never the only clue.
 - The zoom buttons, the cluster's name ("12 pins: zoom in"), the map surface's name and the error line ("The map can't
   be shown here.") come through `labels` in other languages; counts follow the locale.
+- The card's meta line joins its parts with " · "; `MapCard`'s `labels.meta` joins them another way.
 
 ## Accessibility
 
@@ -87,6 +88,7 @@ controls that swap sides right to left while the map doesn't mirror.
 
 ## Changes
 
+- 30 Oct 2026: `MapCard`'s meta line is joined by `labels.meta` (it was a fixed " · ").
 - 30 Oct 2026: this page written.
 - 29 Oct 2026: its words come through `labels`.
 - 29 Oct 2026: built as Map view: the engine behind an interface (MapLibre by default, loaded on demand), engine-free

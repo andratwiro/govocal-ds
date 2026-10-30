@@ -1,5 +1,6 @@
 import {useCallback, useMemo, useRef, useState, type ReactNode} from 'react';
-import {useLocale, type Key} from 'react-aria-components';
+import type {Key} from 'react-aria-components';
+import {useDateFormatter, useNumberFormatter} from '../format';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {
@@ -56,7 +57,12 @@ const PEOPLE = [
 ];
 type Person = (typeof PEOPLE)[number];
 
-const date = (iso: string) => new Date(iso).toLocaleDateString('en-GB', {day: 'numeric', month: 'long', year: 'numeric'});
+// A date in the story's locale (the Locale toolbar), as the parts format theirs: "2 October 2026", "2. Oktober 2026".
+function When({iso, isShort}: {iso: string; isShort?: boolean}) {
+  const format = useDateFormatter(isShort ? {day: 'numeric', month: 'short', timeZone: 'UTC'}
+    : {day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC'});
+  return <>{format.format(new Date(iso))}</>;
+}
 
 function sortPeople(list: Person[], sort: SortDescriptor) {
   const key = sort.column as keyof Person;
@@ -94,7 +100,7 @@ function PeopleTable({initialSort, selectable, initialSelection = [], empty, sho
             <DataTableCell><DataTablePerson name={p.name} initials={p.initials} sub={p.email} /></DataTableCell>
             <DataTableCell>{p.role}</DataTableCell>
             <DataTableCell align="number">{p.ideas}</DataTableCell>
-            <DataTableCell>{date(p.joined)}</DataTableCell>
+            <DataTableCell><When iso={p.joined} /></DataTableCell>
             <DataTableCell align="options">
               <DataTableOptions aria-label={`Options for ${p.name}`}>
                 <MenuItem>Add to group</MenuItem>
@@ -243,8 +249,7 @@ function UsersTable({rows, empty, busy, pageSize}: {
 }) {
   const [page, setPage] = useState(1);
   const shown = pageSize ? rows.slice((page - 1) * pageSize, page * pageSize) : rows;
-  const {locale} = useLocale();
-  const count = new Intl.NumberFormat(locale).format(rows.length);
+  const count = useNumberFormatter().format(rows.length);
   return (
     <div style={{maxWidth: 900}}>
       <Panel title="Registered users" isFlush toolbar={<TableToolbar heading={`${count} ${rows.length === 1 ? 'user' : 'users'}`} />}
@@ -387,7 +392,6 @@ export const NoPermission: Story = {
 
 // ── Cells: thumbnails, assignees, tags, the Projects list ─────────────────────────────────────────
 const FEW = MANAGE_IDEAS.slice(0, 6);
-const shortDate = (iso: string) => new Date(iso).toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
 // Nobody sorts after every name, whichever the direction.
 const byAssignee = (a: ManageIdea, b: ManageIdea, sign: number) =>
   !a.assignee || !b.assignee ? Number(!a.assignee) - Number(!b.assignee) : sign * a.assignee.localeCompare(b.assignee);
@@ -413,7 +417,7 @@ export const WithThumbnails: Story = {
               <DataTableCell>
                 <DataTableText lines={2} leading={i.picture && <DataTableThumbnail src={i.picture} />}>{i.title}</DataTableText>
               </DataTableCell>
-              <DataTableCell isMuted>{shortDate(i.published)}</DataTableCell>
+              <DataTableCell isMuted><When iso={i.published} isShort /></DataTableCell>
               <DataTableCell align="number">{i.likes}</DataTableCell>
             </DataTableRow>
           ))}
@@ -725,7 +729,7 @@ function ManagePanel() {
                 <DataTableCell isMuted><span style={{whiteSpace: 'nowrap'}}>{i.status}</span></DataTableCell>
                 <DataTableCell align="number">{i.likes}</DataTableCell>
                 {extra.has('comments') && <DataTableCell align="number">{i.comments}</DataTableCell>}
-                {extra.has('published') && <DataTableCell isMuted><span style={{whiteSpace: 'nowrap'}}>{shortDate(i.published)}</span></DataTableCell>}
+                {extra.has('published') && <DataTableCell isMuted><span style={{whiteSpace: 'nowrap'}}><When iso={i.published} isShort /></span></DataTableCell>}
               </DataTableRow>
             ))}
           </DataTableBody>
@@ -798,7 +802,7 @@ function BulkAndOpen() {
         {idea && (
           <SidePanelSection>
             <SidePanelRecordHead author={idea.author}
-              date={new Date(idea.published).toLocaleDateString('en-GB', {day: 'numeric', month: 'long', year: 'numeric'})}>
+              date={<When iso={idea.published} />}>
               {idea.title}
             </SidePanelRecordHead>
           </SidePanelSection>
@@ -826,7 +830,7 @@ const USER_ACTIONS = [
   {id: 'group', label: 'Add to group', icon: <UserPlus aria-hidden size={16} />},
   {id: 'export', label: 'Export', icon: <Download aria-hidden size={16} />}
 ];
-const usersWord = (n: number) => `${n.toLocaleString('en-GB')} ${n === 1 ? 'user' : 'users'}`;
+const usersWord = (n: number, number: Intl.NumberFormat) => `${number.format(n)} ${n === 1 ? 'user' : 'users'}`;
 
 function PersonCells({person}: {person: ListPerson}) {
   return (
@@ -834,7 +838,7 @@ function PersonCells({person}: {person: ListPerson}) {
       <DataTableCell><DataTablePerson name={person.name} initials={person.initials} sub={person.email} /></DataTableCell>
       <DataTableCell>{person.role}</DataTableCell>
       <DataTableCell align="number">{person.ideas}</DataTableCell>
-      <DataTableCell>{person.joinedLabel}</DataTableCell>
+      <DataTableCell><When iso={person.joined} /></DataTableCell>
       <DataTableCell align="options">
         <DataTableOptions aria-label={`Options for ${person.name}`}>
           <MenuItem>Add to group</MenuItem>
@@ -846,13 +850,14 @@ function PersonCells({person}: {person: ListPerson}) {
 }
 
 function VirtualPeople() {
-  // Generated once per mount (a few milliseconds), dates formatted with it, not in each row.
+  // Generated once per mount (a few milliseconds); each rendered row writes its date in the story's locale.
   const people = useMemo(() => inventPeople(5000), []);
   const [sort, setSort] = useState<SortDescriptor>({column: 'name', direction: 'ascending'});
   const [selected, setSelected] = useState<Set<Key>>(new Set());
   const [open, setOpen] = useState<string | null>(null);
   const [said, setSaid] = useState('Click a row to open the person; tick boxes for bulk actions.');
   const rows = useMemo(() => sortList(people, String(sort.column), sort.direction), [people, sort]);
+  const number = useNumberFormatter();
   const at = open == null ? -1 : rows.findIndex(p => p.id === open);
   const person = at >= 0 ? rows[at] : undefined;
   return (
@@ -862,8 +867,8 @@ function VirtualPeople() {
           toolbar={(
             <TableToolbar start={(
               <SelectionBar count={selected.size} items={USER_ACTIONS} onClear={() => setSelected(new Set())}
-                onAction={id => setSaid(`${id === 'export' ? 'Export' : 'Add to group'}: ${usersWord(selected.size)}`)}>
-                <TableToolbarHeading>{usersWord(rows.length)}</TableToolbarHeading>
+                onAction={id => setSaid(`${id === 'export' ? 'Export' : 'Add to group'}: ${usersWord(selected.size, number)}`)}>
+                <TableToolbarHeading>{usersWord(rows.length, number)}</TableToolbarHeading>
               </SelectionBar>
             )} />
           )}>
@@ -896,7 +901,7 @@ function VirtualPeople() {
             <PropertyList aria-label="Details">
               <PropertyListItem label="Role">{person.role}</PropertyListItem>
               <PropertyListItem label="Ideas">{person.ideas}</PropertyListItem>
-              <PropertyListItem label="Joined">{person.joinedLabel}</PropertyListItem>
+              <PropertyListItem label="Joined"><When iso={person.joined} /></PropertyListItem>
             </PropertyList>
           </SidePanelSection>
         )}
@@ -938,9 +943,10 @@ function LoadingMore() {
     }, 400);
   }, []);
   const hasMore = people.length < TOTAL;
+  const number = useNumberFormatter();
   return (
     <div style={{boxSizing: 'border-box', padding: 24, maxWidth: 968}}>
-      <Panel title="Registered users" isFlush toolbar={<TableToolbar heading={`${people.length} of ${usersWord(TOTAL)} loaded`} />}>
+      <Panel title="Registered users" isFlush toolbar={<TableToolbar heading={`${number.format(people.length)} of ${usersWord(TOTAL, number)} loaded`} />}>
         <DataTable aria-label="Users" isVirtualized rowLines={2} style={{height: 480}}>
           <DataTableHeader>
             <DataTableColumn id="name" isRowHeader width="2fr">Name</DataTableColumn>

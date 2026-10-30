@@ -4,6 +4,7 @@ import type {Key} from 'react-aria-components';
 import {List, Map as MapIcon} from 'lucide-react';
 import {Button} from '../Button';
 import {SearchField} from '../SearchField';
+import {expect, within} from 'storybook/test';
 import {MapView, MapCard, MapChip, MapLegend, MapOverlay, type LatLng} from './MapView';
 import {Banner} from './Banner';
 import {Panel} from './Panel';
@@ -227,5 +228,22 @@ export const InTheManageTab: Story = {
         </Panel>
       </div>
     );
+  }
+};
+
+/** An open pin's card on its own: the meta line's parts are joined by `labels.meta` (" · " in English), so a page can
+ * join them its own way. */
+export const Card: Story = {
+  render: () => (
+    <div style={{display: 'grid', gap: 16, width: 280}}>
+      <MapCard title="Benches by the lagoon" status="Accepted" details={['2 likes', '0 comments']} location="The ring road" />
+      <MapCard title="Benches by the lagoon" status="Accepted" details={['2 likes', '0 comments']} location="The ring road"
+        headingLevel={4} labels={{meta: parts => parts.join(', ')}} />
+    </div>
+  ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText('Accepted · 2 likes · 0 comments')).toBeVisible();
+    await expect(canvas.getByText('Accepted, 2 likes, 0 comments')).toBeVisible();
   }
 };

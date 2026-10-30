@@ -477,12 +477,21 @@ export function MapPin({
   );
 }
 
+/** The words Map card says itself (docs/API.md rule 11). */
+export interface MapCardLabels {
+  /** The meta line, given its parts (the status, then the details): "Accepted · 2 likes · 0 comments". */
+  meta: (parts: string[]) => string;
+}
+
+/** Map card's English words; a page passes its own over them with `labels`. */
+export const mapCardLabels: MapCardLabels = {meta: parts => parts.join(' · ')};
+
 export interface MapCardProps {
   /** The item's title, as a heading. */
   title: string;
   /** Its status ("Accepted"), first on the meta line. */
   status?: string;
-  /** More of the meta line after the status: counts, a date ("2 likes", "0 comments"), joined by " · ". */
+  /** More of the meta line after the status: counts, a date ("2 likes", "0 comments"), joined by `labels.meta`. */
   details?: string[];
   /** Where it is, in words ("The ring road"). */
   location?: string;
@@ -492,6 +501,8 @@ export interface MapCardProps {
   actions?: ReactNode;
   /** The title's heading level. @default 3 */
   headingLevel?: 2 | 3 | 4 | 5 | 6;
+  /** Its own words (how the meta line is joined), over `mapCardLabels`. */
+  labels?: Partial<MapCardLabels>;
   /** Places the card; never paints it. */
   className?: string;
   /** Places the part, like `className`. */
@@ -502,9 +513,10 @@ export interface MapCardProps {
  * The card of an open map pin: the item's title, a meta line (status · counts) and where it is, with an optional
  * picture and actions. The Map shows it above the pin; it works anywhere a small item summary floats. Not in Figma.
  */
-export function MapCard({title, status, details = [], location, media, actions, headingLevel = 3, className, style}: MapCardProps) {
+export function MapCard({title, status, details = [], location, media, actions, headingLevel = 3, labels, className, style}: MapCardProps) {
   const Heading = `h${headingLevel}` as const;
-  const meta = [status, ...details].filter(Boolean).join(' · ');
+  const parts = [status, ...details].filter((part): part is string => Boolean(part));
+  const meta = parts.length ? mergeLabels(mapCardLabels, labels).meta(parts) : '';
   return (
     <section className={clsx('gv-map-card', className)} style={style} aria-label={title}>
       {media && <div className="gv-map-card__media">{media}</div>}

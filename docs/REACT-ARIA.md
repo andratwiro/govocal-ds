@@ -52,7 +52,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Data display › List header | through `components/gv/Checkbox` | – | – | yes | 10 |
 | Data display › List header cell | `Button` | – | – | yes | 8 |
 | Data display › List row | through `components/gv/Checkbox` | – | – | yes | 6 |
-| Data display › Map view | `Button` | – | yes | yes | 10 |
+| Data display › Map view | `Button` | – | yes | yes | 11 |
 | Data display › Property list | `VisuallyHidden` | – | – | yes | 3 |
 | Data display › Reaction counts | `VisuallyHidden` | – | yes | yes | 4 |
 | Data display › Stat row | `Link`, `ToggleButton` | – | – | yes | 7 |

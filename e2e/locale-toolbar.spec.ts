@@ -36,3 +36,10 @@ test('Arabic runs right to left, from the Locale or from the old Direction link'
     await expect(page.locator('html'), globals).toHaveAttribute('lang', 'ar-SA');
   }
 });
+
+test('Data table stories write dates and counts in the chosen locale', async ({page}) => {
+  await open(page, 'components-tables-lists-data-table--default', 'locale:de-DE');
+  await expect(page.getByRole('grid').getByText('2. Oktober 2026')).toBeVisible();
+  await open(page, 'components-tables-lists-data-table--default');
+  await expect(page.getByRole('grid').getByText('2 October 2026')).toBeVisible();
+});

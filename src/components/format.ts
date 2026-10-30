@@ -9,9 +9,9 @@ import {useLocale} from 'react-aria-components/I18nProvider';
  */
 
 // Intl formatters are slow to build and every row of a table asks for one: one per locale and options.
-const cache = new Map<string, Intl.NumberFormat | Intl.ListFormat>();
+const cache = new Map<string, Intl.NumberFormat | Intl.ListFormat | Intl.DateTimeFormat>();
 
-function cached<T extends Intl.NumberFormat | Intl.ListFormat>(key: string, make: () => T): T {
+function cached<T extends Intl.NumberFormat | Intl.ListFormat | Intl.DateTimeFormat>(key: string, make: () => T): T {
   let formatter = cache.get(key) as T | undefined;
   if (!formatter) {
     formatter = make();
@@ -24,6 +24,16 @@ function cached<T extends Intl.NumberFormat | Intl.ListFormat>(key: string, make
 export function useNumberFormatter(options?: Intl.NumberFormatOptions): Intl.NumberFormat {
   const {locale} = useLocale();
   return cached(`number|${locale}|${JSON.stringify(options ?? {})}`, () => new Intl.NumberFormat(locale, options));
+}
+
+/**
+ * Dates as the locale writes them, as React Aria's useDateFormatter:
+ * `useDateFormatter({day: 'numeric', month: 'long', year: 'numeric'}).format(date)` → "2 October 2026" (en-GB),
+ * "2. Oktober 2026" (de-DE).
+ */
+export function useDateFormatter(options?: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
+  const {locale} = useLocale();
+  return cached(`date|${locale}|${JSON.stringify(options ?? {})}`, () => new Intl.DateTimeFormat(locale, options));
 }
 
 /**

@@ -5,7 +5,7 @@ with each component's props: its own with their types, the ones passed straight 
 (React Aria's behaviour props, React's, the DOM's). An API change shows up here as a diff to review;
 `tests/api-report.test.mjs` fails while this file is stale. The convention it follows: `docs/API.md`.
 
-## `govocal-ds` (670 names)
+## `govocal-ds` (672 names)
 
 ### `ACCESS_WHO_VALUE`
 
@@ -2630,11 +2630,26 @@ Component, from `src/components/gv/MapView.tsx`.
 - `className?: string`
 - `details?: string[]`
 - `headingLevel?: 2 | 3 | 4 | 5 | 6`
+- `labels?: Partial<MapCardLabels>`
 - `location?: string`
 - `media?: ReactNode`
 - `status?: string`
 - `style?: CSSProperties`
 - `title: string`
+
+### `mapCardLabels`
+
+Value, from `src/components/gv/MapView.tsx`.
+
+```ts
+MapCardLabels
+```
+
+### `MapCardLabels`
+
+Interface, from `src/components/gv/MapView.tsx`.
+
+- `meta: (parts: string[]) => string`
 
 ### `MapCardProps`
 

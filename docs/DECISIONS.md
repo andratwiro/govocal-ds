@@ -33,6 +33,14 @@ Calls made fixing the bugs the component-page writers found (benchmark-gaps plan
 - Participant limit said "likes" while its doc comment said reactions → **"Number of reactions per participant",
   "Maximum reactions", and "reaction" in the word list** → the back office says Reactions (dashboards) and Reacting to
   inputs (the action), and the word list had no entry for it.
+- Data table's stories formatted dates and counts in a fixed 'en-GB', so the Locale toolbar changed nothing → **the
+  system's own formatters (`src/components/format.ts`, which gains `useDateFormatter`), the same React Aria locale the
+  parts read** → React Aria's `useDateFormatter` lives in a package the system doesn't depend on (react-aria-components
+  re-exports only `useLocale`), and format.ts already rebuilds its number and list formatters on it. The invented
+  people no longer carry an English date label.
+- Map card joined its meta line with a hard-coded " · " → **a `labels.meta` function given the parts, " · " by
+  default** → a list format would put "and" before the last count; the dot is a separator the page may want to change,
+  which is rule 11's "joins".
 
 ## Report parts (30 Oct 2026)
 

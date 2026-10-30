@@ -86,6 +86,7 @@ column and its direction, which rows are ticked, the open row (`aria-current`), 
 
 ## Changes
 
+- 30 Oct 2026: the stories write dates and counts in the Locale toolbar's locale (they were fixed to English).
 - 30 Oct 2026: this page written; its doc comment now says what it is for, and a play function proves the keyboard
   table.
 - 29 Oct 2026: `isVirtualized`, `rowLines` and `onLoadMore` for long lists (docs/DECISIONS.md, "Long lists").

@@ -13,19 +13,17 @@ export interface ListPerson {
   role: PersonRole;
   /** Ideas posted. */
   ideas: number;
-  /** ISO date joined, and the same date as a reader sees it ("12 June 2025"). */
+  /** ISO date joined; a story writes it in its locale. */
   joined: string;
-  joinedLabel: string;
 }
 
 const DAY = 86_400_000;
 const LAST = Date.UTC(2026, 9, 28);
-const LABEL = new Intl.DateTimeFormat('en-GB', {day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC'});
 
 /**
  * `count` invented people, numbered from `from`: every 50th an admin, every 10th a project manager, the rest
  * residents. A seeded sequence gives each their ideas and joining date (up to four years back), so the list is the same
- * on every load. Five thousand take a few milliseconds: dates are formatted here, once, not in every row's render.
+ * on every load. Five thousand take a few milliseconds; a row writes its date in the story's locale when it renders.
  */
 export function inventPeople(count: number, from = 1): ListPerson[] {
   const people: ListPerson[] = new Array(count);
@@ -43,8 +41,7 @@ export function inventPeople(count: number, from = 1): ListPerson[] {
       email: `user${n}@example.org`,
       role,
       ideas: (seed >>> 11) % 40,
-      joined: joined.toISOString().slice(0, 10),
-      joinedLabel: LABEL.format(joined)
+      joined: joined.toISOString().slice(0, 10)
     };
   }
   return people;

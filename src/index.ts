@@ -298,7 +298,9 @@ export {listHeaderLabels, type ListHeaderLabels} from './components/gv/ListHeade
 export {listHeaderCellLabels, type ListHeaderCellLabels} from './components/gv/ListHeaderCell';
 export {listRowLabels, type ListRowLabels} from './components/gv/ListRow';
 export {localeSwitcherLabels, type LocaleSwitcherLabels} from './components/gv/LocaleSwitcher';
-export {mapViewLabels, type MapViewLabels, mapLegendLabels, type MapLegendLabels} from './components/gv/MapView';
+export {
+  mapViewLabels, type MapViewLabels, mapLegendLabels, type MapLegendLabels, mapCardLabels, type MapCardLabels
+} from './components/gv/MapView';
 export {missingPartLabels, type MissingPartLabels} from './components/gv/MissingPart';
 export {modalLabels, type ModalLabels} from './components/gv/Modal';
 export {
