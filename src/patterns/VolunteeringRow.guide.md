@@ -31,9 +31,10 @@ A hairline under each row but the last.
 
 ## Behaviour
 
-The Manage row is not interactive. The Build row's Edit and Delete are buttons, after the WAI-ARIA
+The Manage row is not interactive; its goal bar reads as a progress bar named "Volunteer goal for <title>" that says
+the share reached ("60% of the goal"). The Build row's Edit and Delete are buttons, after the WAI-ARIA
 [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/), each showing its tooltip on focus. Behaviour from
-React Aria's Button and Tooltip, through Icon button and Tooltip.
+React Aria's ProgressBar (the goal bar), and Button and Tooltip through Icon button and Tooltip.
 
 | Key | What it does | Checked by |
 | --- | --- | --- |
@@ -45,8 +46,8 @@ React Aria's Button and Tooltip, through Icon button and Tooltip.
 - The title names the cause as a job people sign up for: "Tree-planting weekends", "Photograph the park".
 - The description says what volunteers do, in one line: "Help plant shade trees along the park promenade."
 - `percent` is the goal reached, 0–100; the count is a number, written in the page's locale.
-- "N signed up", "No sign-ups yet", "volunteer" / "volunteers", Edit and Delete (named "Edit <title>") come in through
-  `labels`.
+- "N signed up", "No sign-ups yet", "volunteer" / "volunteers", Edit and Delete (named "Edit <title>"), and the goal
+  bar's name and words ("Volunteer goal for <title>", "60% of the goal") come in through `labels`.
 
 ## Accessibility
 
@@ -55,7 +56,6 @@ hidden from screen readers, the count as text.
 
 **You still own:**
 - Asking before Delete, or an Undo toast after it: the row only reports the press.
-- Saying the goal in words where it matters: the Manage bar's share isn't read out.
 - The list's heading (the Causes card's title).
 
 ## Related
@@ -70,11 +70,12 @@ hidden from screen readers, the count as text.
 - Built by agents from Figma ("Volunteering row", the Manage row) and the designer's prototype (the Causes card for
   the Build layout, Not in Figma).
 - Reviewed by a person: not yet.
-- Known limits: the Manage bar is drawn, not a progress bar, so screen readers don't hear the share of the goal; the
-  back office uses only the Build layout.
+- Known limits: the back office uses only the Build layout.
 
 ## Changes
 
+- 30 Oct 2026: the Manage goal bar is a progress bar, named for the cause, that says the share of the goal
+  (`labels.goal`, `labels.goalReached`).
 - 30 Oct 2026: this page written, its doc comment added; a play function proves Edit and Delete by keyboard.
 - 29 Oct 2026: its words come in through `labels`; numbers follow the locale.
 - 29 Oct 2026: the Build variant is `layout="build"` (where it sits), not `variant` (docs/DECISIONS.md, "Public API and

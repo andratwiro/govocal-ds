@@ -25,7 +25,7 @@ export const proposalsRowLabels: ProposalsRowLabels = {
   needsAttention: 'Needs attention',
   votesFor: title => `Votes for ${title}`,
   closed: 'Closed',
-  daysLeft: (count, n) => `${n} days left`
+  daysLeft: (count, n) => (count === 1 ? `${n} day left` : `${n} days left`)
 };
 
 export interface ProposalsRowProps extends PlacementProps {

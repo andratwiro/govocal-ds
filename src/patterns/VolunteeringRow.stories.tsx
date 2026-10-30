@@ -160,3 +160,17 @@ Keyboard.play = async ({canvasElement}) => {
   await userEvent.keyboard(' ');
   await expect(canvas.getByRole('status')).toHaveTextContent('Delete pressed');
 };
+
+/** Manage: the goal bar is a progress bar, named for the cause, that says the share of the goal reached. */
+export const GoalBar: Story = () => (
+  <div style={{width: 500}}>
+    <VolunteeringRow title="Photograph the park" description="Before-and-after shots for the final report."
+      volunteerCount={6} percent={60} />
+  </div>
+);
+GoalBar.storyName = 'Goal bar';
+GoalBar.play = async ({canvasElement}) => {
+  const bar = within(canvasElement).getByRole('progressbar', {name: 'Volunteer goal for Photograph the park'});
+  await expect(bar).toHaveAttribute('aria-valuenow', '60');
+  await expect(bar).toHaveAttribute('aria-valuetext', '60% of the goal');
+};

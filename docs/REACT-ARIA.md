@@ -130,10 +130,10 @@ what would survive a change of base library. It decides nothing: the base librar
 | Manage tab › Official update | `TextArea`, `TextField` through `components/Button`, `components/TextField`, `components/gv/Modal` | – | yes | yes | 5 |
 | Pages & menu › Section toggle | through `components/Switch` | – | – | yes | 5 |
 | Participation methods › Common ground row | through `components/gv/Checkbox` | – | yes | yes | 7 |
-| Participation methods › Proposals row | through `patterns/VoteProgress` | – | yes | yes | 5 |
-| Participation methods › Volunteering row | through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 7 |
+| Participation methods › Proposals row | through `patterns/VoteProgress` | – | yes | yes | 6 |
+| Participation methods › Volunteering row | `ProgressBar` through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 8 |
 | Participation methods › Vote progress | `ProgressBar` | – | yes | yes | 4 |
-| Participation methods › Voting row | through `patterns/VoteProgress` | – | yes | yes | 4 |
+| Participation methods › Voting row | through `patterns/VoteProgress` | – | yes | yes | 5 |
 | Project page › Action row | `Button`, `MenuTrigger`, `ProgressBar`, `Link` through `components/Menu` | – | – | yes | 13 |
 | Project page › Panel section | `Button`, `Heading`, `Disclosure`, `DisclosurePanel` | – | – | yes | 5 |
 | Project page › Phone preview | `Button`, `Link` through `components/Tooltip` | – | – | yes | 6 |

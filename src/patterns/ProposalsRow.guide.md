@@ -33,8 +33,8 @@ Not interactive: the row takes no focus and does nothing when pressed. The vote 
 
 - The title is the proposal's as the resident wrote it.
 - The status is a few words, sentence case: "Gathering support", "Threshold reached", "Official response".
-- Counts are numbers, written in the page's locale; "N new", "N days left", "Closed" and the bar's name come in
-  through `labels`.
+- Counts are numbers, written in the page's locale; "N new", "N days left" ("1 day left"), "Closed" and the bar's name
+  come in through `labels`; `daysLeft` gets the count, for the language's plural rules.
 - Write the threshold once, above the list, in words the admin can act on ("300 votes bring an official response").
 
 ## Accessibility
@@ -45,7 +45,6 @@ thumbnail hidden from screen readers.
 **You still own:**
 - The **List header** above the rows, and a list around them (`role="list"` and a name, as the back office does).
 - A way to open the proposal, if the list needs one: the row has none.
-- `labels.daysLeft` that handles one day: the English default says "1 days left".
 
 ## Related
 
@@ -58,10 +57,11 @@ thumbnail hidden from screen readers.
 
 - Built by agents from Figma ("Proposals row": Open, Closed, New, New · warning) and the designer's prototype.
 - Reviewed by a person: not yet.
-- Known limits: the default "N days left" has no singular ("1 days left"); the row can't be selected or opened.
+- Known limits: the row can't be selected or opened.
 
 ## Changes
 
+- 30 Oct 2026: one day left says "1 day left", not "1 days left".
 - 30 Oct 2026: this page written.
 - 29 Oct 2026: its words come in through `labels`; numbers follow the locale.
 - 29 Oct 2026: used on the Proposals Manage tab, a Panel over the List header and rows (docs/DECISIONS.md, "Back

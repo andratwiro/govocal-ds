@@ -32,7 +32,7 @@ export interface VotingRowProps extends PlacementProps {
   hasWarning?: boolean;
   /** Votes the option has so far. */
   voteCount: number;
-  /** The bar fill, 0-100, relative to the option with the most votes. */
+  /** The bar fill, 0-100, relative to the option with the most votes: `votes / top × 100`, unrounded. */
   fillPercent: number;
   /** Unseen votes since the admin's last visit. */
   newVoteCount?: number;
@@ -69,9 +69,10 @@ export function VotingRow({
   style
 }: VotingRowProps) {
   const l = mergeLabels(votingRowLabels, labels);
-  // Vote progress scales the bar by the leading option's count: recover it from this row's relative fill.
+  // Vote progress scales the bar by the leading option's count: recover it from this row's relative fill, unrounded, so
+  // the bar and its value read exactly `fillPercent`.
   const number = useNumberFormatter();
-  const maxCount = fillPercent > 0 ? Math.round((voteCount * 100) / fillPercent) : Math.max(voteCount, 1);
+  const maxCount = fillPercent > 0 ? (voteCount * 100) / fillPercent : Math.max(voteCount, 1);
   return (
     <div className={clsx('gv-list-row-voting', className)} style={style}>
       <div className="gv-list-row-voting__cells">

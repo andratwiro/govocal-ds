@@ -31,7 +31,7 @@ Not interactive: the row takes no focus and does nothing when pressed. The vote 
 ## Content
 
 - The title is the option's name as residents see it ("Green Corridors for Riverside").
-- `fillPercent` is the bar against the leader: `votes / top × 100`, rounded.
+- `fillPercent` is the bar against the leader: `votes / top × 100`; pass it unrounded.
 - Counts are numbers, written in the page's locale; "N new" and the bar's name come in through `labels`.
 - `voteCount` is online plus offline.
 
@@ -55,11 +55,13 @@ thumbnail hidden from screen readers.
 
 - Built by agents from Figma ("Voting row": Default, New, New · warning) and the designer's prototype.
 - Reviewed by a person: not yet.
-- Known limits: the bar's scale is recovered from `fillPercent` (the leader's count is worked back from this row's
-  share), so a rounded `fillPercent` can make two equal bars differ by a pixel; the row can't be selected or opened.
+- Known limits: the bar's scale is worked back from `fillPercent` (the leader's count isn't passed); the row can't be
+  selected or opened.
 
 ## Changes
 
+- 30 Oct 2026: the bar's scale is worked back from `fillPercent` unrounded, so the bar and its value read
+  `fillPercent` exactly.
 - 30 Oct 2026: this page written.
 - 29 Oct 2026: its words come in through `labels`; numbers follow the locale.
 - 29 Oct 2026: used on the Voting Manage tab, a Panel over the List header and rows (docs/DECISIONS.md, "Back office

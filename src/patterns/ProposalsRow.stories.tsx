@@ -1,4 +1,6 @@
+import {expect, within} from 'storybook/test';
 import {ProposalsRow} from './ProposalsRow';
+import {PICTURES} from '../stories/images';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof ProposalsRow> = {
@@ -17,7 +19,7 @@ const meta: Meta<typeof ProposalsRow> = {
 export default meta;
 type Story = StoryFn<typeof ProposalsRow>;
 
-const THUMB = 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=64&auto=format&fit=crop';
+const THUMB = PICTURES.park;
 
 const Frame = ({children}: {children: React.ReactNode}) => (
   <div style={{width: 764, background: 'var(--gv-surface-panel)'}}>{children}</div>
@@ -127,3 +129,16 @@ export const Open: Story = () => (
     />
   </Frame>
 );
+
+/** The last day: the time left agrees with the count ("1 day left"); `labels.daysLeft` takes the count for other
+ * languages' plural rules. */
+export const LastDay: Story = () => (
+  <Frame>
+    <ProposalsRow title="Repair the lagoon railings" thumbnail={THUMB} voteCount={288} voteThreshold={300}
+      statusLabel="Gathering support" commentCount={3} daysLeft={1} />
+  </Frame>
+);
+LastDay.storyName = 'Last day';
+LastDay.play = async ({canvasElement}) => {
+  await expect(within(canvasElement).getByText('1 day left')).toBeVisible();
+};

@@ -5753,6 +5753,8 @@ Interface, from `src/patterns/VolunteeringRow.tsx`.
 - `deleteTip: string`
 - `edit: (title: string) => string`
 - `editTip: string`
+- `goal: (title: string) => string`
+- `goalReached: (percent: string) => string`
 - `noSignUps: string`
 - `signedUp: CountLabel`
 - `volunteers: CountLabel`

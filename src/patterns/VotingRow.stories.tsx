@@ -1,4 +1,6 @@
+import {expect, within} from 'storybook/test';
 import {VotingRow} from './VotingRow';
+import {PICTURES} from '../stories/images';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof VotingRow> = {
@@ -17,7 +19,7 @@ const meta: Meta<typeof VotingRow> = {
 export default meta;
 type Story = StoryFn<typeof VotingRow>;
 
-const THUMB = 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=64&auto=format&fit=crop';
+const THUMB = PICTURES.park;
 
 const Frame = ({children}: {children: React.ReactNode}) => (
   <div style={{width: 764, background: 'var(--gv-surface-panel)'}}>{children}</div>
@@ -108,3 +110,17 @@ export const NewWarning: Story = () => (
   </Frame>
 );
 NewWarning.storyName = 'New · warning';
+
+/** One vote against the leader's two and a half: the bar is `fillPercent` exactly (40%), not a scale rounded on the
+ * way. */
+export const SmallCounts: Story = () => (
+  <Frame>
+    <VotingRow title="Benches by the lagoon" thumbnail={THUMB} voteCount={1} fillPercent={40} onlineCount={1}
+      offlineCount={0} commentCount={0} />
+  </Frame>
+);
+SmallCounts.storyName = 'Small counts';
+SmallCounts.play = async ({canvasElement}) => {
+  const bar = within(canvasElement).getByRole('progressbar', {name: 'Votes for Benches by the lagoon'});
+  await expect(Number(bar.getAttribute('aria-valuenow')) / Number(bar.getAttribute('aria-valuemax'))).toBeCloseTo(0.4, 5);
+};

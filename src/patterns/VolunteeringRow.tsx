@@ -1,10 +1,11 @@
 'use client';
+import {ProgressBar} from 'react-aria-components/ProgressBar';
 import {SquarePen, Trash2} from 'lucide-react';
 import {IconButton} from '../components/gv/IconButton';
 import {Tooltip, TooltipTrigger} from '../components/Tooltip';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
-import {useNumberFormatter} from '../components/format';
+import {useNumberFormatter, usePercentFormatter} from '../components/format';
 import {mergeLabels, type CountLabel} from '../components/labels';
 import './VolunteeringRow.css';
 
@@ -24,6 +25,10 @@ export interface VolunteeringRowLabels {
   deleteTip: string;
   /** Manage: the word under the count ("volunteers"); the count itself is drawn above it. */
   volunteers: CountLabel;
+  /** Manage: the goal bar's name, given the cause's title. */
+  goal: (title: string) => string;
+  /** Manage: what the goal bar says, given the share reached as the locale writes it ("60%"). */
+  goalReached: (percent: string) => string;
 }
 
 /** Volunteering row's English words; a page passes its own over them with `labels`. */
@@ -34,7 +39,9 @@ export const volunteeringRowLabels: VolunteeringRowLabels = {
   delete: title => `Delete ${title}`,
   editTip: 'Edit',
   deleteTip: 'Delete',
-  volunteers: count => (count === 1 ? 'volunteer' : 'volunteers')
+  volunteers: count => (count === 1 ? 'volunteer' : 'volunteers'),
+  goal: title => `Volunteer goal for ${title}`,
+  goalReached: percent => `${percent} of the goal`
 };
 
 export interface VolunteeringRowProps extends PlacementProps {
@@ -66,7 +73,7 @@ export interface VolunteeringRowProps extends PlacementProps {
    * @default false
    */
   isLast?: boolean;
-  /** Its own words (the sign-ups line, Edit, Delete, "volunteers"), over `volunteeringRowLabels`. */
+  /** Its own words (the sign-ups line, Edit, Delete, "volunteers", the goal bar), over `volunteeringRowLabels`. */
   labels?: Partial<VolunteeringRowLabels>;
 }
 
@@ -108,6 +115,7 @@ export function VolunteeringRow({
 }: VolunteeringRowProps) {
   const l = mergeLabels(volunteeringRowLabels, labels);
   const number = useNumberFormatter();
+  const formatPercent = usePercentFormatter();
   if (layout === 'build') {
     return (
       <div className={clsx('gv-cause-row', className)} style={style} data-layout="build" data-last={isLast || undefined}>
@@ -139,9 +147,10 @@ export function VolunteeringRow({
       <div className="gv-cause-row__cause">
         <div className="gv-cause-row__title">{title}</div>
         <div className="gv-cause-row__desc">{description}</div>
-        <div className="gv-cause-row__bar">
-          <div className="gv-cause-row__fill" style={{width: `${percent}%`}} />
-        </div>
+        <ProgressBar className="gv-cause-row__bar" value={percent} aria-label={l.goal(title)}
+          valueLabel={l.goalReached(formatPercent(percent))}>
+          <div className="gv-cause-row__fill" style={{width: `${Math.min(100, Math.max(0, percent))}%`}} />
+        </ProgressBar>
       </div>
       <div className="gv-cause-row__volunteers">
         <div className="gv-cause-row__count">{number.format(volunteerCount)}</div>
