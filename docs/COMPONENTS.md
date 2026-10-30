@@ -130,8 +130,8 @@ part's `<Name>.guide.md`) names the part to use instead.
   - Not for: For one setting with a status and a control: use **Card**. For a bare table with no head: Data table's `framed` is enough (**Data table**). To show one record beside a list: use **Side panel**. For the page's own title and actions: use **Page header**. For a dashboard's chart in a frame: use **Dashboard card**.
 - **Stack** `Stack` (not in Figma): Stack: parts one under another, a spacing token apart, with no CSS of your own. Stories: Page Column, Form Fields, Aligned.
   - Not for: For parts side by side in a row: use **Inline**. For a page's distinct regions in columns (a list beside its detail): use **Grid**. For many like tiles that wrap to the width: use **Tile grid**. For a line between groups: add a **Divider**; a Stack's gap is space, not a line. For a frame with a head around the parts: use **Panel** or **Card**.
-- **Tile grid** `TileGrid` (not in Figma): Tile grid: tiles in as many equal columns as fit, each at least `minTileWidth` wide, wrapping onto new rows, one column on a narrow screen. Stories: Stat Tiles, Gallery, Panels.
-  - Not for: For a page's distinct regions in named columns (a list beside its detail): use **Grid**. For one column of parts: use **Stack**; for one row, **Inline**. For tabular data: use **Data table**.
+- **Tile grid** `TileGrid` (not in Figma): Tile grid: tiles of one kind in as many equal columns as fit, each at least a set width (160, 220, 280 or 360px), wrapping onto new rows, and one column when… Stories: Stat Tiles, Gallery, Panels, Row Or Gallery.
+  - Not for: For a few different regions with their own widths, such as a list beside its detail: use **Grid**. Two panels of For parts one under the other: use **Stack**. For a few parts in one row that keep their own widths (buttons, For rows and columns of data: use **Data table**.
 
 ## Components / Navigation
 - **Breadcrumbs** `Breadcrumbs`: Breadcrumbs. Stories: All Variants, Project, Phase Draft, Phase Live, Keyboard.

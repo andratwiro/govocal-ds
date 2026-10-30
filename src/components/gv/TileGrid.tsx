@@ -35,8 +35,8 @@ export interface TileGridProps {
 }
 
 /**
- * Tile grid: tiles in as many equal columns as fit, each at least `minTileWidth` wide, wrapping onto new rows, one
- * column on a narrow screen. Not in Figma: the back office's Stat tile rows, card galleries and side-by-side panels.
+ * Tile grid: tiles of one kind in as many equal columns as fit, each at least a set width (160, 220, 280 or 360px),
+ * wrapping onto new rows, and one column when the grid is narrower than that width. Not in Figma: the back office's Stat tile rows, card galleries and side-by-side panels.
  * Distinct regions placed in named columns (a list beside its detail) are a Grid; one column of parts a Stack.
  *
  * ```tsx
