@@ -73,8 +73,8 @@ timer that waits while it is focused or hovered, a named ×, and focus that neve
 
 - Built by AI agents from React Aria's toast and the prototype's undo snackbar (icon and Undo action; Not in Figma).
 - Reviewed by a person: not yet.
-- Known limits: React Aria's toast is marked unstable (`UNSTABLE_Toast`), so its API may change; one action per toast;
-  no error or warning look.
+- Known limits: React Aria 1.22 still marks its toast unstable (`UNSTABLE_Toast`, `UNSTABLE_ToastRegion`,
+  `UNSTABLE_ToastQueue`), so its API may change; one action per toast; no error or warning look.
 
 ## Changes
 
