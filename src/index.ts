@@ -145,7 +145,7 @@ export {Link, type LinkProps} from './components/Link';
 export {Pagination, type PageItem, type PaginationProps} from './components/gv/Pagination';
 export {
   Tabs, TabList, Tab, TabPanels, TabPanel, GroupedTabs, GroupedTabList, TabSection, GroupedTab, GroupedTabPanel,
-  type TabStatus, type TabProps, type GroupedTabsProps, type GroupedTabListProps, type TabSectionProps,
+  type TabStatus, type TabsProps, type TabProps, type GroupedTabsProps, type GroupedTabListProps, type TabSectionProps,
   type GroupedTabProps, type GroupedTabPanelProps
 } from './components/Tabs';
 

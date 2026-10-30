@@ -6,7 +6,7 @@ import {
   type TabListProps,
   type TabProps as RACTabProps,
   Tab as RACTab,
-  type TabsProps,
+  type TabsProps as RACTabsProps,
   TabPanels as RACTabPanels,
   type TabPanelProps,
   TabPanel as RACTabPanel,
@@ -39,8 +39,23 @@ import './Tabs.css';
  *
  * A `className` (or `style`) places the part; it is added to React Aria's own class, never instead of it.
  */
-export function Tabs({className, ...props}: TabsProps) {
-  return <RACTabs {...props} className={composeRenderProps(className, c => clsx('react-aria-Tabs gv-base-tabs', c))} />;
+export function Tabs({className, panelPadding = 'flush', ...props}: TabsProps) {
+  return (
+    <RACTabs
+      {...props}
+      className={composeRenderProps(className, c => clsx('react-aria-Tabs gv-base-tabs', `gv-base-tabs--panel-${panelPadding}`, c))} />
+  );
+}
+
+export interface TabsProps extends RACTabsProps {
+  /**
+   * The room around each panel's content. `flush` (the default): 12 above and below, none at the sides, so the
+   * content lines up with the tab list and with a page that has no tabs (vertical tabs: 12 after the list, none above,
+   * so the content's top lines up with the first tab). `inset`: 12 all round, for a panel that is its own box.
+   * `none`: no room; the content places itself.
+   * @default 'flush'
+   */
+  panelPadding?: 'flush' | 'inset' | 'none';
 }
 
 /** The row (or, `orientation="vertical"` on Tabs, the column) of `Tab`s. Name it with `aria-label`. */

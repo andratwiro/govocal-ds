@@ -169,6 +169,34 @@ export const WithIcons: Story = {name: 'With icons', render: () => <div style={{
  */
 export const WithStatusDots: Story = {name: 'With status dots', render: () => <div style={{width: 640}}>{withStatusDots}</div>};
 
+const paddingExample = (panelPadding: 'flush' | 'inset' | 'none') => (
+  <Tabs defaultSelectedKey="participants" panelPadding={panelPadding}>
+    <TabList aria-label={`Audience, ${panelPadding}`}>
+      <Tab id="participants">Participants</Tab>
+      <Tab id="demographics">Demographics</Tab>
+    </TabList>
+    <TabPanels>
+      <TabPanel id="participants">{panel('The panel\'s first line starts under the first tab\'s edge.')}</TabPanel>
+      <TabPanel id="demographics">{panel('Age, gender and where participants live.')}</TabPanel>
+    </TabPanels>
+  </Tabs>
+);
+
+/**
+ * `panelPadding`: `flush` (the default) lines the content up with the tab list, so a page reads the same with and
+ * without tabs; `inset` is 12 all round, for a panel that is its own box; `none` leaves the room to the content.
+ */
+export const PanelPadding: Story = {
+  name: 'Panel padding',
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 32, width: 640}}>
+      <div>{label('Flush (default)')}{paddingExample('flush')}</div>
+      <div>{label('Inset')}{paddingExample('inset')}</div>
+      <div>{label('None')}{paddingExample('none')}</div>
+    </div>
+  )
+};
+
 /** `orientation="vertical"`: a side list beside the panel, the chosen tab on the light grey. Arrow up and down move. */
 export const Vertical: Story = {render: () => <div style={{width: 640}}>{vertical}</div>};
 

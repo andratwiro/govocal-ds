@@ -23,7 +23,7 @@ describe('Tabs: the TabPanels contract', () => {
     const html = renderToStaticMarkup(h(Tabs, {defaultSelectedKey: 'all', className: 'page-tabs'},
       h(TabList, {'aria-label': 'R', className: 'page-list'}, h(Tab, {id: 'all', className: 'page-tab'}, 'All')),
       h(TabPanels, {className: 'page-panels'}, h(TabPanel, {id: 'all', className: 'page-panel'}, 'A'))));
-    for (const c of ['react-aria-Tabs gv-base-tabs page-tabs', 'react-aria-TabList gv-base-tab-list page-list',
+    for (const c of ['react-aria-Tabs gv-base-tabs gv-base-tabs--panel-flush page-tabs', 'react-aria-TabList gv-base-tab-list page-list',
       'react-aria-Tab gv-base-tab page-tab', 'react-aria-TabPanels gv-base-tab-panels page-panels',
       'react-aria-TabPanel gv-base-tab-panel page-panel']) expect(html).toContain(`class="${c}"`);
   });

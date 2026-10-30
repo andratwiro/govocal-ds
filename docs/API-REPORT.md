@@ -5,7 +5,7 @@ with each component's props: its own with their types, the ones passed straight 
 (React Aria's behaviour props, React's, the DOM's). An API change shows up here as a diff to review;
 `tests/api-report.test.mjs` fails while this file is stale. The convention it follows: `docs/API.md`.
 
-## `govocal-ds` (717 names)
+## `govocal-ds` (718 names)
 
 ### `ACCESS_WHO_VALUE`
 
@@ -5674,6 +5674,7 @@ Interface, from `src/components/Tabs.tsx`. The props of `Tab`, listed there.
 
 Component, from `src/components/Tabs.tsx`.
 
+- `panelPadding?: 'flush' | 'inset' | 'none'`
 - Passed through from @react-types/shared (76): `aria-describedby`, `aria-details`, `aria-label`, `aria-labelledby`, `dir`, `disabledKeys`, `hidden`, `id`, `inert`, `lang`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`
 - Passed through from react-aria (2): `keyboardActivation`, `orientation`
 - Passed through from react-aria-components (5): `children`, `className`, `render`, `slot`, `style`
@@ -5689,6 +5690,10 @@ Component, from `src/components/Tabs.tsx`.
 ### `TabSectionProps`
 
 Interface, from `src/components/Tabs.tsx`. The props of `TabSection`, listed there.
+
+### `TabsProps`
+
+Interface, from `src/components/Tabs.tsx`. The props of `Tabs`, listed there.
 
 ### `TabStatus`
 

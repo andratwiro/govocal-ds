@@ -97,7 +97,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Navigation › Breadcrumbs | `Breadcrumbs`, `Breadcrumb`, `Link`; through Icon button: `Button` | `BreadcrumbsProps` | – | yes | 5 |
 | Navigation › Link | `Link` | `LinkProps` | – | yes | 2 |
 | Navigation › Pagination | `Button` | – | yes | yes | 8 |
-| Navigation › Tabs | `Tabs`, `TabList`, `Tab`, `TabPanels`, `TabPanel`, `SelectionIndicator`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `Header`, `VisuallyHidden` | – | yes | yes | 10 |
+| Navigation › Tabs | `Tabs`, `TabList`, `Tab`, `TabPanels`, `TabPanel`, `SelectionIndicator`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `Header`, `VisuallyHidden` | `TabsProps` | yes | yes | 11 |
 | Overlays › Alert dialog | `Heading`, `Dialog`; through Modal: `Modal`; through Button: `Button`, `ProgressBar`; through Text field: `Input`, `TextField`, `TextArea`, `Group`, `Form`, `Label`, `FieldError`, `Button`, `Text` | – | yes | yes | 6 |
 | Overlays › Coachmark | `OverlayArrow`, `Popover` | `PopoverProps` | – | yes | 3 |
 | Overlays › Help popover | `Heading`, `Dialog`, `DialogTrigger`; through Popover: `OverlayArrow`, `Popover`; through Button: `Button`, `ProgressBar`; through Icon button: `Button` | – | – | yes | 4 |

@@ -22,7 +22,8 @@
 2. **Tabs** (`Tab`): the words, with an optional 16 icon before them, a count "(18)" or a status dot after them; the
    chosen tab strong on a 2px line.
 3. **Panels** (`TabPanels`, then a `TabPanel` per tab with the same `id`): only the chosen one is drawn; the height
-   eases between panels.
+   eases between panels. `panelPadding`: `flush` (default) puts 12 above and below the content and none at the
+   sides, so it lines up with the tab list and with a page without tabs; `inset` is 12 all round; `none` is nothing.
 4. **Group headings** (grouped side list only): small headings that never take focus.
 
 ## Behaviour
@@ -72,6 +73,8 @@ by their tabs, counts and dots read as part of the tab's name, and a grouped sid
 
 ## Changes
 
+- 30 Oct 2026: `panelPadding` (`flush` by default, `inset`, `none`): a panel's content no longer sits 12 in from
+  the tab list's edge (docs/DECISIONS.md, "Deep review 2: system parts").
 - 30 Oct 2026: this page written; a play function proves Tab, the arrows, Home and End.
 - 29 Oct 2026: a `TabPanel` outside `TabPanels` warns in development; a caller's class is added to React Aria's, not
   put in its place (docs/DECISIONS.md, "Composition contracts in code").

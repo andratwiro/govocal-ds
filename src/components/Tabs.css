@@ -224,6 +224,19 @@
   box-sizing: border-box;
 }
 
+.gv-base-tabs--panel-flush[data-orientation='vertical'] > .gv-base-tab-panels > .gv-base-tab-panel {
+  padding: 0;
+  padding-inline-start: var(--gv-space-12);
+}
+
+.gv-base-tabs--panel-inset > .gv-base-tab-panels > .gv-base-tab-panel {
+  padding: var(--gv-space-12);
+}
+
+.gv-base-tabs--panel-none > .gv-base-tab-panels > .gv-base-tab-panel {
+  padding: 0;
+}
+
 .gv-base-tab-panels {
   position: relative;
   height: var(--tab-panel-height);
@@ -232,8 +245,10 @@
   overflow: clip;
 }
 
+/* Panel padding (Tabs panelPadding): flush lines the content up with the tab list and the page; inset is the old 12
+   all round; none leaves it to the content. */
 .gv-base-tab-panel {
-  padding: var(--gv-space-12);
+  padding: var(--gv-space-12) 0;
   border-radius: var(--gv-radius-8);
   outline: none;
   box-sizing: border-box;
