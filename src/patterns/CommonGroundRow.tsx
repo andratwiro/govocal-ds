@@ -43,9 +43,9 @@ export interface CommonGroundRowProps extends PlacementProps {
 }
 
 /**
- * The content of one Common Ground list row: Statement · Assignee · Likes · Agree ·
- * Reactions, between a leading 28px checkbox slot and a trailing 28px slot, as in the
- * prototype's Manage table. Pair it with `ListHeader` (pass `selectAll`).
+ * One statement's row in a Common Ground phase's Manage list, in five columns: Statement, Assignee, Likes, Agree and
+ * Reactions, between a 28px space for its checkbox and a 28px space at the end (as in the prototype's Manage table).
+ * Pair it with `ListHeader` (pass `selectAll`).
  */
 export function CommonGroundRow({
   statement,
