@@ -3,8 +3,8 @@ import {useNavigate, useParams} from 'react-router';
 import {CircleCheck, Mail, Send, Smartphone} from 'lucide-react';
 import {Badge, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty,
   DataTableHeader, DataTablePerson, DataTableRow, Divider, FilterChips, type FilterFacet, FilterMenu, type FilterValue,
-  Pagination, Panel, PhonePreview, RichTextEditor, SearchField, Select, SelectItem, StatTile, TableToolbar, Text,
-  TextArea, TextField, toast} from 'govocal-ds';
+  Pagination, Panel, PhonePreview, RichTextEditor, SearchField, Select, SelectItem, Stack, StatTile, TableToolbar, Text,
+  TextArea, TextField, TileGrid, toast} from 'govocal-ds';
 import {Label} from 'govocal-ds/base';
 import {CUSTOM_EMAILS, GROUP_SIZES, GROUPS, RECIPIENTS, SENDER, type CustomEmail} from '../data-messaging';
 import {Gap} from '../Gap';
@@ -64,22 +64,22 @@ export function EmailComposer() {
             <Mail aria-hidden size={16} />Send a preview</Button>
           <Button variant="primary" size={32} onPress={() => save('Sent')}><Send aria-hidden size={16} />Send now</Button>
         </>}>
-        <div className="bo-messaging-fields">
-          <div className="bo-messaging-pair">
+        <Stack gap="16">
+          <TileGrid minTileWidth={220}>
             <TextField label="From" defaultValue={SENDER.from} />
             <TextField label="Replies should go to" defaultValue={SENDER.replyTo} />
-          </div>
+          </TileGrid>
           <Select label="To" selectedKey={to} onSelectionChange={k => setTo(String(k))} description={`${n(GROUP_SIZES[to])} recipients`}>
             {GROUPS.map(g => <SelectItem key={g} id={g}>{g}</SelectItem>)}
           </Select>
           <Divider />
           <TextField label="Subject" placeholder="Add a subject line" value={subject} onChange={setSubject} />
-          <div className="bo-messaging-field">
+          <Stack gap="4">
             <Label aria-hidden>Email message</Label>
             <RichTextEditor aria-label="Email message" placeholder="Write your message" value={body} onChange={setBody}
               isBold={bold} onBoldChange={setBold} isItalic={italic} onItalicChange={setItalic} isList={list} onListChange={setList} />
-          </div>
-        </div>
+          </Stack>
+        </Stack>
       </Panel>
     </Page>
   );
@@ -141,17 +141,17 @@ export function EmailStats() {
   return (
     <Page title={email.subject} crumbs={MESSAGING_CRUMB}
       description={<>Sent {email.date} to {email.to}{email.project && <> · Project: {email.project}</>}</>}>
-      <div className="bo-messaging-stack">
+      <Stack gap="16">
         <SectionHeading>How it did</SectionHeading>
-        <div className="bo-messaging-kpis">
+        <TileGrid minTileWidth={160} density="compact">
           <StatTile label="Recipients" value={n(sent)} layout="tall" />
           <StatTile label="Delivered" value={n(delivered)} note={`${n(sent - delivered)} bounced`} />
           <StatTile label="Opened" value={`${email.opened ?? 0}%`} note={`${n(pctOf(email.opened))} people`} />
           <StatTile label="Clicked" value={`${email.clicked ?? 0}%`} note={`${n(pctOf(email.clicked))} people`} />
-        </div>
+        </TileGrid>
         <SectionHeading>Who got it</SectionHeading>
         <RecipientList sent={sent} />
-      </div>
+      </Stack>
     </Page>
   );
 }
@@ -168,7 +168,7 @@ export function SmsComposer() {
   return (
     <Page title="New SMS" crumbs={MESSAGING_CRUMB}>
       <SectionHeading>Message and preview</SectionHeading>
-      <div className="bo-messaging-split">
+      <TileGrid minTileWidth={360} className="bo-messaging-split">
         {/* The same composer as a new email (Panel's "In a composer" story): the form in the body, the actions in the foot. */}
         <Panel title="Write a text message" headingLevel={3}
           footer={<>
@@ -178,29 +178,29 @@ export function SmsComposer() {
             <Button variant="primary" size={32} isDisabled={!body.trim()}
               onPress={() => { toast('SMS sent', `To ${to}`); navigate('/messaging'); }}><Send aria-hidden size={16} />Send now</Button>
           </>}>
-          <div className="bo-messaging-fields">
+          <Stack gap="16">
             <Select label="To" selectedKey={to} onSelectionChange={k => setTo(String(k))}
               description={`Only the ${n(Math.round(GROUP_SIZES[to] * 0.4))} people with a phone number get it.`}>
               {GROUPS.map(g => <SelectItem key={g} id={g}>{g}</SelectItem>)}
             </Select>
-            <div className="bo-messaging-field">
+            <Stack gap="4">
               <TextArea label="Message" placeholder="Write your message" value={body} onChange={setBody} />
               <Text kind="small" color="meta" aria-live="polite">
                 {body.length} / {SMS_LENGTH * parts} characters · {parts} SMS per recipient
               </Text>
-            </div>
+            </Stack>
             {parts > 1 && <Banner tone="warning">This message is sent in {parts} parts, and each part costs a credit for every recipient.</Banner>}
-          </div>
+          </Stack>
         </Panel>
         <PhonePreview aria-label="SMS preview">
           <Gap name="SMS bubble">
-            <div className="bo-messaging-sms">
+            <Stack gap="4" padding="12">
               <Text kind="small" color="meta">Text message · now</Text>
-              <p>{body || 'Your message shows here.'}</p>
-            </div>
+              <Text elementType="p" kind="ui">{body || 'Your message shows here.'}</Text>
+            </Stack>
           </Gap>
         </PhonePreview>
-      </div>
+      </TileGrid>
     </Page>
   );
 }

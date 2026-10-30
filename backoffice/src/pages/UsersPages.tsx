@@ -2,9 +2,9 @@ import {useState} from 'react';
 import {useParams} from 'react-router';
 import {Download, MailX, RotateCw, SearchX, Send, ShieldCheck, ShieldOff, Trash2, UserX, Users as UsersIcon} from 'lucide-react';
 import {Avatar, Badge, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
-  DataTableOptions, DataTablePerson, DataTableRow, EmptyState, MenuItem, Pagination, Panel, PropertyList,
-  PropertyListItem, SearchField, Select, SelectItem, Separator, StatTile, Tab, TableToolbar, TabList, TabPanel,
-  TabPanels, Tabs, Text, TextArea, toast} from 'govocal-ds';
+  DataTableOptions, DataTablePerson, DataTableRow, EmptyState, Inline, MenuItem, Pagination, Panel, PropertyList,
+  PropertyListItem, SearchField, Select, SelectItem, Separator, Stack, StatTile, Tab, TableToolbar, TabList, TabPanel,
+  TabPanels, Tabs, Text, TextArea, TileGrid, toast} from 'govocal-ds';
 import {Meter} from 'govocal-ds/base';
 import {INVITATIONS, PARTICIPATION, SEATS, SEATS_A_MONTH_AGO, type Invitation, type Person, type Role} from '../data-users';
 import {ago, date, groupStore, initials, PAGE_SIZE, peopleStore} from './Users';
@@ -41,15 +41,15 @@ function InviteForm({onSend}: {onSend: (emails: string[], role: Role) => void}) 
   return (
     <Panel title="Invite by email" description="Each address gets a link to sign up, with the role and group you choose."
       footer={(
-        <div className="bo-users-buttons">
+        <Inline gap="8">
           <Text kind="small" color="meta">{list.length === 1 ? '1 address' : `${list.length} addresses`}</Text>
           <Button variant="primary" size={32} isDisabled={list.length === 0} onPress={send}>{icon(Send)}Send invites</Button>
-        </div>
+        </Inline>
       )}>
-      <div className="bo-users-form">
+      <Stack gap="16" className="bo-users-form">
         <TextArea label="Email addresses" description="Separate addresses with a comma or a new line."
           placeholder="name@example.org, other@example.org" value={emails} onChange={setEmails} />
-        <div className="bo-users-pair">
+        <TileGrid minTileWidth={220}>
           <Select label="Role" selectedKey={role} onSelectionChange={k => setRole(k as Role)}>
             {ROLES.map(r => <SelectItem key={r.role} id={r.role} textValue={r.role} description={r.note}>{r.role}</SelectItem>)}
           </Select>
@@ -58,10 +58,10 @@ function InviteForm({onSend}: {onSend: (emails: string[], role: Role) => void}) 
               <SelectItem key={g.id} id={g.id} icon={icon(UsersIcon)}>{g.label}</SelectItem>
             ))}
           </Select>
-        </div>
+        </TileGrid>
         <TextArea label="Invitation message" description="Added to the invitation email, above the button to sign up."
           value={message} onChange={setMessage} />
-      </div>
+      </Stack>
     </Panel>
   );
 }
@@ -104,8 +104,8 @@ function InvitationTable({invitations, onResend, onDelete}: {
             {shown.map(i => (
               <DataTableRow key={i.id} id={i.id} textValue={i.email}>
                 <DataTableCell>{i.email}</DataTableCell>
-                <DataTableCell><span className="bo-users-nowrap">{i.role}</span></DataTableCell>
-                <DataTableCell><span className="bo-users-nowrap">{i.invited}</span></DataTableCell>
+                <DataTableCell>{i.role}</DataTableCell>
+                <DataTableCell>{i.invited}</DataTableCell>
                 {/* A status of an invitation, not of a project: a Badge (outlined while it waits). */}
                 <DataTableCell><Badge variant={i.status === 'Pending' ? 'outlined' : 'filled'}>{i.status}</Badge></DataTableCell>
                 <DataTableCell align="options">
@@ -179,8 +179,8 @@ function PeopleTable({label, people, empty}: {label: string; people: Person[]; e
             {shown.map(p => (
               <DataTableRow key={p.id} id={p.id} textValue={p.name} href={`#/users/${p.id}`}>
                 <DataTableCell><DataTablePerson name={p.name} initials={initials(p.name)} sub={p.email} /></DataTableCell>
-                <DataTableCell><span className="bo-users-nowrap">{p.role}</span></DataTableCell>
-                <DataTableCell><span className="bo-users-nowrap">{date(p.joined)}</span></DataTableCell>
+                <DataTableCell>{p.role}</DataTableCell>
+                <DataTableCell>{date(p.joined)}</DataTableCell>
               </DataTableRow>
             ))}
           </DataTableBody>
@@ -204,9 +204,9 @@ export function SeatsOverview() {
   return (
     <Page title="Seats overview" crumbs={USERS_CRUMB}
       description="Your plan includes a number of admin and manager seats. Everyone else takes part for free.">
-      <div className="bo-users-stack">
+      <Stack gap="16">
         {/* Stat tiles with their trend and, behind the help icon, what counts (Stat tile's "With trend", "With info"). */}
-        <div className="bo-users-kpis">
+        <TileGrid minTileWidth={160} density="compact">
           <StatTile label="Admin seats used" value={admins.length} note={`of ${SEATS.admins} in your plan`}
             trend={trend(admins.length, SEATS_A_MONTH_AGO.admins)} info="Every platform admin takes one admin seat." />
           <StatTile label="Admin seats available" value={SEATS.admins - admins.length} layout="tall"
@@ -216,15 +216,15 @@ export function SeatsOverview() {
             info="Every project, folder or space manager takes one manager seat." />
           <StatTile label="Manager seats available" value={SEATS.managers - managers.length} layout="tall"
             info="Manager seats left in your plan before it needs more." />
-        </div>
-        <div className="bo-users-pair">
+        </TileGrid>
+        <TileGrid minTileWidth={220}>
           <Meter label="Admin seats" value={admins.length} maxValue={SEATS.admins} valueLabel={`${admins.length} of ${SEATS.admins}`} />
           <Meter label="Manager seats" value={managers.length} maxValue={SEATS.managers} valueLabel={`${managers.length} of ${SEATS.managers}`} />
-        </div>
+        </TileGrid>
         <Banner tone="info">Need more seats? Your Go Vocal success manager can add them to your plan.</Banner>
         <PeopleTable label="Admins" people={admins} empty="No admins hold a seat" />
         <PeopleTable label="Managers" people={managers} empty="No managers hold a seat" />
-      </div>
+      </Stack>
     </Page>
   );
 }
@@ -261,10 +261,10 @@ export function UserProfile() {
     <Page title={person.name} crumbs={USERS_CRUMB}
       actions={<Button variant="secondary" size={32} onPress={toggleAdmin}>{icon(admin ? ShieldOff : ShieldCheck)}
         {admin ? 'Remove platform admin rights' : 'Make platform admin'}</Button>}>
-      <div className="bo-users-stack">
+      <Stack gap="16">
         {/* The facts as a Property list (label · value rows), the person's Avatar beside them. */}
         <Panel title="Profile">
-          <div className="bo-users-profile">
+          <Inline gap="16" alignItems="start" wrap="nowrap">
             <Avatar initials={initials(person.name)} />
             <PropertyList>
               <PropertyListItem label="Email" emptyLabel="No email">{person.email ?? 'No email (signed up by phone)'}</PropertyListItem>
@@ -273,22 +273,22 @@ export function UserProfile() {
               <PropertyListItem label="Last active" emptyLabel="Not since joining">{ago(person.lastActive)}</PropertyListItem>
               <PropertyListItem label="Groups" emptyLabel="In no group">
                 {groups.length > 0 && (
-                  <span className="bo-users-badges">{groups.map(g => <Badge key={g.id} variant="value">{g.label}</Badge>)}</span>
+                  <Inline elementType="span" gap="4">{groups.map(g => <Badge key={g.id} variant="value">{g.label}</Badge>)}</Inline>
                 )}
               </PropertyListItem>
             </PropertyList>
-          </div>
+          </Inline>
         </Panel>
         {/* A count of 0 is a tile like the others (Stat tile's Empty story): the band keeps its shape. */}
         <Panel title="Participation" description="What this user did on the platform, across every project.">
-          <div className="bo-users-kpis">
+          <TileGrid minTileWidth={160} density="compact">
             <StatTile label="Ideas" value={done.ideas} />
             <StatTile label="Comments" value={done.comments} />
             <StatTile label="Votes" value={done.votes} />
             <StatTile label="Projects" value={done.projects} info="Projects this user took part in, in any phase." />
-          </div>
+          </TileGrid>
         </Panel>
-      </div>
+      </Stack>
     </Page>
   );
 }

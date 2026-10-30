@@ -54,47 +54,22 @@ body { margin: 0; }
 /* ── Settings ── */
 .bo-settings-stack { margin-block-start: var(--gv-space-24); }
 /* ── Messaging ── */
-.bo-messaging-intro { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--gv-space-16); margin-block: var(--gv-space-16); }
-.bo-messaging-intro p { margin: 0; }
-.bo-messaging-stack { display: grid; gap: var(--gv-space-16); }
-.bo-messaging-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: var(--gv-space-16); align-items: start; }
-.bo-messaging-nowrap { white-space: nowrap; }
+.bo-messaging-intro { margin-block: var(--gv-space-16); }
+.bo-messaging-split { align-items: start; }
 .bo-messaging-lists { margin-block-start: var(--gv-space-16); }
-.bo-messaging-fields { display: grid; gap: var(--gv-space-16); }
-.bo-messaging-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--gv-space-16); }
-.bo-messaging-field { display: grid; gap: var(--gv-space-4); }
-.bo-messaging-groups { display: grid; gap: var(--gv-space-16); }
-.bo-messaging-group { display: grid; }
-.bo-messaging-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--gv-space-12); }
-.bo-messaging-mailhead { display: grid; grid-template-columns: auto 1fr; gap: var(--gv-space-4) var(--gv-space-12); margin: 0; }
-.bo-messaging-mailhead dd { margin: 0; }
-.bo-messaging-mailbody { display: grid; gap: var(--gv-space-12); justify-items: start; padding-block: var(--gv-space-8); }
-.bo-messaging-mailbody p { margin: 0; }
+.bo-messaging-mailhead { margin: 0; }
 .bo-messaging-scroll { overflow-x: auto; }
-.bo-messaging-sms { display: grid; gap: var(--gv-space-4); padding: var(--gv-space-12); }
-.bo-messaging-sms p { margin: 0; }
 /* ── Users ── */
-.bo-users-actions { display: flex; align-items: center; gap: var(--gv-space-8); }
-.bo-users-side { display: grid; gap: var(--gv-space-12); align-content: start; }
-.bo-users-groups-head { display: flex; align-items: center; justify-content: space-between; gap: var(--gv-space-8); }
-.bo-users-groups-head .bo-section-title { margin: var(--gv-space-12) 0 0; }
-.bo-users-option { display: flex; align-items: center; gap: var(--gv-space-8); width: 100%; }
+.bo-users-groups-title { margin-block-start: var(--gv-space-12); }
+.bo-users-option { width: 100%; }
 .bo-users-option-label { flex: 1; }
-.bo-users-nowrap { white-space: nowrap; }
 .bo-users-scroll { overflow-x: auto; }
 /* The Users list: as tall as its rows, up to most of the window; the virtualised table fills it and scrolls inside. */
 .bo-users-rows { display: flex; flex-direction: column; max-block-size: 70vh; }
 .bo-users-table { flex: 1 1 auto; min-block-size: 0; }
-.bo-users-form { display: grid; gap: var(--gv-space-16); max-width: 640px; }
-.bo-users-modal { display: grid; gap: var(--gv-space-16); }
-.bo-users-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--gv-space-16); }
-.bo-users-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-16); }
+.bo-users-form { max-width: 640px; }
 .bo-users-panel { padding-block-start: var(--gv-space-16); }
-.bo-users-stack { display: grid; gap: var(--gv-space-16); }
-.bo-users-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--gv-space-12); }
-.bo-users-profile { display: flex; align-items: flex-start; gap: var(--gv-space-16); }
 .bo-users-note { padding: var(--gv-space-12) var(--gv-space-20) 0; }
-.bo-users-badges { display: flex; flex-wrap: wrap; gap: var(--gv-space-4); }
 /* ── Tools ── */
 .bo-tools-item { display: flex; }
 .bo-tools-art { display: grid; place-items: center; height: 132px; }
@@ -139,18 +114,6 @@ body { margin: 0; }
 .bo-project-rail-list { margin-inline: calc(-1 * var(--gv-space-10)); padding-block-start: var(--gv-space-4); }
 .bo-project-rail-closed { flex: 0 0 auto; }
 
-/* ── First clicks: Users, Messaging, Reporting ── */
-
-.bo-users-form { display: grid; gap: var(--gv-space-16); max-width: 640px; }
-.bo-users-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--gv-space-16); }
-.bo-users-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gv-space-8); }
-.bo-users-panel { padding-block-start: var(--gv-space-16); }
-.bo-users-stack { display: grid; gap: var(--gv-space-16); }
-.bo-users-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--gv-space-12); }
-.bo-users-profile { display: flex; align-items: flex-start; gap: var(--gv-space-16); }
-.bo-messaging-scroll { overflow-x: auto; }
-.bo-messaging-sms { display: grid; gap: var(--gv-space-4); padding: var(--gv-space-12); }
-.bo-messaging-sms p { margin: 0; }
 /* ── Feedback: project settings side tabs, phase status ── */
 /* Modal's "With side tabs" story: the list and the panel each scroll on their own inside the fixed-height body. */
 .bo-phase-settings { min-height: 0; }

@@ -2,10 +2,10 @@ import {useMemo, useState} from 'react';
 import {useNavigate} from 'react-router';
 import {BarChart3, CircleCheck, Clock, Copy, Mail, MessageSquare, Pencil, Plus, Send, Trash2} from 'lucide-react';
 import {AlertDialog, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty,
-  DataTableHeader, DataTableOptions, DataTableRow, DataTableStack, Divider, EmptyState, FilterChips, type FilterFacet,
+  DataTableHeader, DataTableOptions, DataTableRow, DataTableStack, Divider, EmptyState, FilterChips, Grid, Inline, type FilterFacet,
   FilterMenu, type FilterValue, MenuItem, NotificationEmail, NotificationRow, NotificationRowList, Pagination, Panel,
   RichTextEditor, SearchField, SectionLabel, Select, SelectItem, StatTile, StatusBadge, Tab, TableToolbar, TabList,
-  TabPanel, TabPanels, Tabs, Text, TextField, toast} from 'govocal-ds';
+  Stack, TabPanel, TabPanels, Tabs, Text, TextField, TileGrid, toast} from 'govocal-ds';
 import {Label} from 'govocal-ds/base';
 import {AUTOMATED, GROUP_SIZES, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
 import {Gap, GapLegend} from '../Gap';
@@ -95,7 +95,7 @@ function CustomEmailTable({emails, onAction, onCreate}: {
             <DataTableStack isStrong sub={<>To: {e.to}{e.project && <> · Project: {e.project}</>}</>}>{e.subject}</DataTableStack>
           </DataTableCell>
           <DataTableCell><StatusBadge status={e.status === 'Sent' ? 'live' : 'draft'}>{e.status}</StatusBadge></DataTableCell>
-          <DataTableCell><span className="bo-messaging-nowrap">{e.date}</span></DataTableCell>
+          <DataTableCell>{e.date}</DataTableCell>
           <DataTableCell align="number">{pct(e.opened)}</DataTableCell>
           <DataTableCell align="number">{pct(e.clicked)}</DataTableCell>
           <DataTableCell align="options">
@@ -144,23 +144,23 @@ function DraftComposer({email, onSave, onSend, onCancel}: {
           <Mail aria-hidden size={16} />Send a preview</Button>
         <Button variant="primary" size={32} onPress={() => onSend(patch())}><Send aria-hidden size={16} />Send now</Button>
       </>}>
-        <div className="bo-messaging-fields">
-          <div className="bo-messaging-pair">
+        <Stack gap="16">
+          <TileGrid minTileWidth={220}>
             <TextField label="From" defaultValue={SENDER.from} />
             <TextField label="Replies should go to" defaultValue={SENDER.replyTo} />
-          </div>
+          </TileGrid>
           <Select label="To" selectedKey={to} onSelectionChange={k => setTo(String(k))}
             description={`${n(GROUP_SIZES[to] ?? 0)} recipients`}>
             {GROUPS.map(g => <SelectItem key={g} id={g}>{g}</SelectItem>)}
           </Select>
           <Divider />
           <TextField label="Subject" value={subject} onChange={setSubject} />
-          <div className="bo-messaging-field">
+          <Stack gap="4">
             <Label aria-hidden>Email message</Label>
             <RichTextEditor aria-label="Email message" placeholder="Write your message" value={body} onChange={setBody}
               isBold={bold} onBoldChange={setBold} isItalic={italic} onItalicChange={setItalic} isList={list} onListChange={setList} />
-          </div>
-        </div>
+          </Stack>
+        </Stack>
     </Panel>
   );
 }
@@ -212,7 +212,7 @@ function CustomEmails() {
   };
   return (
     <>
-      <div className="bo-messaging-stack bo-messaging-lists">
+      <Stack gap="16" className="bo-messaging-lists">
         {sent && <Banner tone="success" onDismiss={() => confirmSent(undefined)}>{sent}</Banner>}
         <CustomEmailTable emails={emails} onAction={onAction} onCreate={() => navigate('/messaging/emails/custom/new')} />
         {draft
@@ -221,7 +221,7 @@ function CustomEmails() {
             <EmptyState layout="panel" isFramed headingLevel="none" icon={<Pencil aria-hidden size={24} />}
               title="No draft open" description="Choose Edit on a draft to open it here." />
           )}
-      </div>
+      </Stack>
       <AlertDialog tone="danger" title="Delete this draft?" confirmLabel="Delete draft" isOpen={deleting !== null}
         onOpenChange={o => { if (!o) setDeleting(null); }} onConfirm={remove}>
         <p>{deleting?.subject} will be deleted.</p>
@@ -240,15 +240,15 @@ const ALL_AUTOMATED = AUTOMATED.flatMap(g => g.types.flatMap(t => t.emails));
  */
 function AutomatedList({on, setOn, onEdit}: {on: Record<string, boolean>; setOn: (e: AutomatedEmail, v: boolean) => void; onEdit: (id: string) => void}) {
   return (
-    <div className="bo-messaging-stack">
+    <Stack gap="16">
       {AUTOMATED.map(g => {
         const all = g.types.flatMap(t => t.emails);
         const count = all.filter(e => on[e.id]).length;
         return (
           <Panel key={g.role} title={g.role} headingLevel={3} description={`${count} of ${all.length} emails on`}>
-            <div className="bo-messaging-groups">
+            <Stack gap="16">
               {g.types.map(t => (
-                <div key={t.type} className="bo-messaging-group">
+                <Stack key={t.type}>
                   <SectionLabel headingLevel={4}>{t.type}</SectionLabel>
                   <NotificationRowList aria-label={`${g.role}: ${t.type}`}>
                     {t.emails.map(e => (
@@ -258,13 +258,13 @@ function AutomatedList({on, setOn, onEdit}: {on: Record<string, boolean>; setOn:
                       </NotificationRow>
                     ))}
                   </NotificationRowList>
-                </div>
+                </Stack>
               ))}
-            </div>
+            </Stack>
           </Panel>
         );
       })}
-    </div>
+    </Stack>
   );
 }
 
@@ -273,17 +273,19 @@ function EmailPreview({email}: {email: AutomatedEmail}) {
   return (
     <Gap name="Email preview">
       <dl className="bo-messaging-mailhead">
-        <Text elementType="dt" kind="small" color="meta">To</Text><dd>{email.who}</dd>
-        <Text elementType="dt" kind="small" color="meta">From</Text><dd>{SENDER.from}</dd>
-        <Text elementType="dt" kind="small" color="meta">Reply-To</Text><dd>{SENDER.replyTo}</dd>
-        <Text elementType="dt" kind="small" color="meta">Subject</Text><dd>{email.subject}</dd>
+        <Grid columns="auto 1fr" rowGap="4" columnGap="12">
+          <Text elementType="dt" kind="small" color="meta">To</Text><Text elementType="dd" kind="ui">{email.who}</Text>
+          <Text elementType="dt" kind="small" color="meta">From</Text><Text elementType="dd" kind="ui">{SENDER.from}</Text>
+          <Text elementType="dt" kind="small" color="meta">Reply-To</Text><Text elementType="dd" kind="ui">{SENDER.replyTo}</Text>
+          <Text elementType="dt" kind="small" color="meta">Subject</Text><Text elementType="dd" kind="ui">{email.subject}</Text>
+        </Grid>
       </dl>
       <Divider />
-      <div className="bo-messaging-mailbody">
+      <Stack gap="12" alignItems="start" paddingBlock="8">
         <strong>{email.title || email.subject}</strong>
-        {email.intro && <p>{email.intro}</p>}
+        {email.intro && <Text elementType="p" kind="ui">{email.intro}</Text>}
         {email.button && <span><Button variant="primary" size={32}>{email.button}</Button></span>}
-      </div>
+      </Stack>
     </Gap>
   );
 }
@@ -303,11 +305,11 @@ function AutomatedEmails() {
   const current = ALL_AUTOMATED.find(e => e.id === editing);
   return (
     <>
-      <div className="bo-messaging-intro">
+      <Inline gap="16" justifyContent="space-between" className="bo-messaging-intro">
         <Text elementType="p" kind="small" color="meta">Emails sent automatically when something happens on the platform. Turn one off, or open it to edit its content.</Text>
-      </div>
+      </Inline>
       <GapLegend names={['Email preview']} />
-      <div className="bo-messaging-split">
+      <TileGrid minTileWidth={360} className="bo-messaging-split">
         {current
           ? (
             <NotificationEmail key={current.id} name={current.name} who={current.who} when={current.trigger}
@@ -328,7 +330,7 @@ function AutomatedEmails() {
             : <EmptyState layout="panel" headingLevel="none" icon={<Mail aria-hidden size={24} />} title="No email open"
               description="Open an email that is on to edit it and see it here." />}
         </Panel>
-      </div>
+      </TileGrid>
     </>
   );
 }
@@ -341,13 +343,13 @@ function Sms() {
   const used = SMS_BALANCE.usedCampaigns + SMS_BALANCE.usedTests;
   const {current, pageCount, setPage, shown} = usePages(SMS, PAGE_SIZE);
   return (
-    <div className="bo-messaging-stack bo-messaging-lists">
-      <div className="bo-messaging-kpis">
+    <Stack gap="16" className="bo-messaging-lists">
+      <TileGrid minTileWidth={160} density="compact">
         <StatTile label="SMS credits remaining" value={n(SMS_BALANCE.purchased - used)} note={`of ${n(SMS_BALANCE.purchased)} credits purchased`} />
         <StatTile label="SMS campaigns" value={n(SMS_BALANCE.usedCampaigns)} layout="tall" />
         <StatTile label="Test messages" value={n(SMS_BALANCE.usedTests)} layout="tall" />
         <StatTile label="Total used" value={n(used)} layout="tall" />
-      </div>
+      </TileGrid>
       <Banner>A message too long for one SMS is sent in several parts, and each part costs a credit for every recipient.</Banner>
       <Panel title="SMS campaigns" headingLevel={3} description="Send text messages to your participants." isFlush
         actions={<Button variant="primary" size={32} onPress={() => navigate('/messaging/texting/new')}><Plus aria-hidden size={16} />Create SMS</Button>}
@@ -364,7 +366,7 @@ function Sms() {
               <DataTableRow key={s.id} id={s.id} textValue={s.label}>
                 <DataTableCell><DataTableStack isStrong sub={s.body}>{s.label}</DataTableStack></DataTableCell>
                 <DataTableCell><StatusBadge status={s.status === 'Sent' ? 'live' : 'draft'}>{s.status}</StatusBadge></DataTableCell>
-                <DataTableCell><span className="bo-messaging-nowrap">{s.date}</span></DataTableCell>
+                <DataTableCell>{s.date}</DataTableCell>
                 <DataTableCell align="number">{s.delivered == null ? '—' : n(s.delivered)}</DataTableCell>
                 <DataTableCell align="number">{s.failed == null ? '—' : n(s.failed)}</DataTableCell>
               </DataTableRow>))}
@@ -372,7 +374,7 @@ function Sms() {
           </DataTable>
         </div>
       </Panel>
-    </div>
+    </Stack>
   );
 }
 

@@ -3,9 +3,9 @@ import {useNavigate, useParams} from 'react-router';
 import {Ban, ChartColumn, Download, Mail, Pencil, Plus, SearchX, ShieldCheck, ShieldOff, Trash2, UserMinus, UserPlus,
   Users as UsersIcon, Zap} from 'lucide-react';
 import {AlertDialog, Banner, Button, ChoiceCard, DataTable, DataTableBody, DataTableCell, DataTableColumn,
-  DataTableHeader, DataTableOptions, DataTablePerson, DataTableRow, DataTableStack, EmptyState, type Key, Menu,
+  DataTableHeader, DataTableOptions, DataTablePerson, DataTableRow, DataTableStack, EmptyState, Inline, type Key, Menu,
   MenuItem, Modal, MultilingualTextField, type Multiloc, Panel, RadioGroup, SearchField, Select, type SelectionAction,
-  SelectionBar, SelectItem, Separator, TableToolbar, TableToolbarHeading, Text, TextField, toast, toKeySet,
+  SelectionBar, SelectItem, Separator, Stack, TableToolbar, TableToolbarHeading, Text, TextField, toast, toKeySet,
   VisuallyHidden} from 'govocal-ds';
 import {ListBox, ListBoxItem} from 'govocal-ds/base';
 import {LOCALES} from '../data-settings';
@@ -80,11 +80,11 @@ function compare(a: Person, b: Person, column: string) {
 
 function Count({label, count, icon, kind}: {label: string; count: number; icon?: ReactNode; kind?: string}) {
   return (
-    <span className="bo-users-option">
+    <Inline elementType="span" gap="8" wrap="nowrap" className="bo-users-option">
       {icon}
       <span className="bo-users-option-label">{label}{kind && <VisuallyHidden> ({kind})</VisuallyHidden>}</span>
       <Text kind="small" color="meta" slot={null}>{count}</Text>
-    </span>
+    </Inline>
   );
 }
 
@@ -96,16 +96,16 @@ function Sidebar({view, setView, all, people, onAddGroup}: {
   const groups = all.filter(g => g.label.toLowerCase().includes(query.toLowerCase()));
   const pick = (keys: Selection) => keys !== 'all' && keys.size > 0 && setView(String([...keys][0]));
   return (
-    <aside className="bo-users-side">
+    <Stack elementType="aside" gap="12">
       <ListBox aria-label="Users" selectionMode="single" selectedKeys={[view]} onSelectionChange={pick}>
         {SEGMENTS.map(s => (
           <ListBoxItem key={s.id} id={s.id} textValue={s.label}><Count label={s.label} count={inView(s.id, all, people).length} /></ListBoxItem>
         ))}
       </ListBox>
-      <div className="bo-users-groups-head">
-        <h2 className="bo-section-title" id="bo-users-groups">Groups</h2>
+      <Inline gap="8" wrap="nowrap" justifyContent="space-between">
+        <Text elementType="h2" kind="body" isStrong color="primary" id="bo-users-groups" className="bo-users-groups-title">Groups</Text>
         <Button variant="quiet" size={32} onPress={onAddGroup}><Plus aria-hidden size={16} />Add a new group</Button>
-      </div>
+      </Inline>
       <SearchField aria-label="Search groups" placeholder="Search groups" value={query} onChange={setQuery} />
       <ListBox aria-labelledby="bo-users-groups" selectionMode="single" selectedKeys={[view]} onSelectionChange={pick}
         renderEmptyState={() => <Text elementType="p" kind="small" color="meta" slot={null}>No groups match.</Text>}>
@@ -120,7 +120,7 @@ function Sidebar({view, setView, all, people, onAddGroup}: {
         })}
       </ListBox>
       <Button variant="primary" size={36} onPress={() => navigate('/users/invitations')}><Mail aria-hidden size={16} />Invite users</Button>
-    </aside>
+    </Stack>
   );
 }
 
@@ -225,8 +225,8 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
     <Panel title={title} description={view === 'all' ? DESCRIPTION : undefined} isFlush toolbar={toolbar}
       actions={group && (
         <>
-          <Button variant="quiet" size={32} onPress={onEditGroup}><Pencil aria-hidden size={16} />Edit Group</Button>
-          <Button variant="quiet" tone="danger" size={32} onPress={onDeleteGroup}><Trash2 aria-hidden size={16} />Delete Group</Button>
+          <Button variant="quiet" size={32} onPress={onEditGroup}><Pencil aria-hidden size={16} />Edit group</Button>
+          <Button variant="quiet" tone="danger" size={32} onPress={onDeleteGroup}><Trash2 aria-hidden size={16} />Delete group</Button>
         </>
       )}>
       {/* A smart group says why its list can't be edited by hand (the Banner's info tone). */}
@@ -283,10 +283,10 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
 function HeaderActions() {
   const navigate = useNavigate();
   return (
-    <span className="bo-users-actions">
+    <Inline elementType="span" gap="8" wrap="nowrap">
       <Button variant="secondary" size={32} onPress={() => navigate('/users/seats')}><ShieldCheck aria-hidden size={16} />Seats overview</Button>
       <Button variant="secondary" size={32} onPress={() => navigate('/dashboard/users')}><ChartColumn aria-hidden size={16} />User insights</Button>
-    </span>
+    </Inline>
   );
 }
 
@@ -299,7 +299,7 @@ const KINDS = [
   {kind: 'smart' as const, title: 'Create a smart group', note: 'Users who meet its rules join it by themselves.'}
 ];
 
-/** Add a new group (choose the kind, then name it) and Edit Group (rename it): one modal, two starts. */
+/** Add a new group (choose the kind, then name it) and Edit group (rename it): one modal, two starts. */
 function GroupModal({editing, onClose, onSave}: {
   editing?: Group; onClose: () => void; onSave: (label: string, kind: Group['kind']) => void;
 }) {
@@ -307,7 +307,7 @@ function GroupModal({editing, onClose, onSave}: {
   const [names, setNames] = useState<Multiloc>(editing ? {[LANGUAGES[0]]: editing.label} : {});
   // The list shows the name in the platform's first language.
   const name = names[LANGUAGES[0]] ?? '';
-  const title = editing ? 'Edit Group' : 'Add a new group';
+  const title = editing ? 'Edit group' : 'Add a new group';
   const footer = (
     <>
       <Button variant="quiet" size={32} onPress={onClose}>Cancel</Button>
@@ -316,7 +316,7 @@ function GroupModal({editing, onClose, onSave}: {
   );
   return (
     <Modal title={title} isOpen onOpenChange={open => !open && onClose()} footer={footer}>
-      <div className="bo-users-modal">
+      <Stack gap="16">
       {/* The kinds are Choice cards in a RadioGroup (Choice card's stories); a smart group's rules open under its
           card once it is chosen (the card's `revealed` slot). */}
       {!editing && (
@@ -334,7 +334,7 @@ function GroupModal({editing, onClose, onSave}: {
         </RadioGroup>
       )}
       {kind && <MultilingualTextField label="Name of the group" isRequired locales={LANGUAGES} value={names} onChange={setNames} autoFocus />}
-      </div>
+      </Stack>
     </Modal>
   );
 }
@@ -361,12 +361,12 @@ function AddToGroupModal({person, groups, onClose, onAdd}: {
         <Button variant="quiet" size={32} onPress={onClose}>Cancel</Button>
         <Button variant="primary" size={32} isDisabled={!groupId} onPress={() => groupId && onAdd(groupId)}>Add to group</Button>
       </>}>
-      <div className="bo-users-modal">
+      <Stack gap="16">
         <p>Add {person.name} to a manual group.</p>
         <Select label="Group" selectedKey={groupId} onSelectionChange={k => setGroupId(String(k))}>
           {manual.map(g => <SelectItem key={g.id} id={g.id}>{g.label}</SelectItem>)}
         </Select>
-      </div>
+      </Stack>
     </Modal>
   );
 }

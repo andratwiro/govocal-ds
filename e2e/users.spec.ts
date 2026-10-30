@@ -47,11 +47,11 @@ test('the list is a Panel: head, toolbar with the count and search, the table, n
   // The one count follows the search.
   await toolbar.getByRole('searchbox', {name: 'Search users'}).fill('admin');
   await expect(toolbar.getByRole('heading', {level: 3, name: '2 users'})).toBeVisible();
-  // A group's page carries Edit Group and Delete Group in the head.
+  // A group's page carries Edit group and Delete group in the head.
   await page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Youth panel/}).click();
   const group = page.getByRole('region', {name: 'Youth panel'});
-  await expect(group.locator('.gv-panel__actions').getByRole('button', {name: 'Edit Group'})).toBeVisible();
-  await expect(group.locator('.gv-panel__actions').getByRole('button', {name: 'Delete Group'})).toBeVisible();
+  await expect(group.locator('.gv-panel__actions').getByRole('button', {name: 'Edit group'})).toBeVisible();
+  await expect(group.locator('.gv-panel__actions').getByRole('button', {name: 'Delete group'})).toBeVisible();
 });
 
 test('one list, no pages: scrolling draws later rows under the pinned header, the page stays put', async ({page}) => {
@@ -263,18 +263,18 @@ test('Add a new group: choose normal or smart, name it, and it joins the list wi
   await expect(toast(page).first()).toContainText('Group created');
 });
 
-test('a group has its own page: its members, Edit Group to rename it, Delete Group with a confirmation', async ({page}) => {
+test('a group has its own page: its members, Edit group to rename it, Delete group with a confirmation', async ({page}) => {
   await page.goto('/backoffice/#/users');
   await page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Youth panel/}).click();
   await expect(page).toHaveURL(/#\/users\/groups\/youth$/);
   await expect(page.getByRole('grid', {name: 'Youth panel'}).getByRole('row')).toHaveCount(4);
-  await page.getByRole('button', {name: 'Edit Group'}).click();
-  const modal = page.getByRole('dialog', {name: 'Edit Group'});
+  await page.getByRole('button', {name: 'Edit group'}).click();
+  const modal = page.getByRole('dialog', {name: 'Edit group'});
   await modal.getByRole('textbox', {name: 'Name of the group, English'}).fill('Youth council');
   await modal.getByRole('button', {name: 'Save group'}).click();
   await expect(page.getByRole('grid', {name: 'Youth council'})).toBeVisible();
-  // Delete Group confirms in an Alert dialog: no ×, focus on Cancel, Esc cancels; then Delete group deletes.
-  const deleteGroup = page.getByRole('button', {name: 'Delete Group'});
+  // Delete group confirms in an Alert dialog: no ×, focus on Cancel, Esc cancels; then Delete group deletes.
+  const deleteGroup = page.getByRole('button', {name: 'Delete group'});
   await deleteGroup.click();
   const confirm = page.getByRole('alertdialog', {name: 'Delete this group?'});
   await expect(confirm).toBeVisible();
