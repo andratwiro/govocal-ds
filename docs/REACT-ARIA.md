@@ -72,7 +72,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Forms › Option list | `Autocomplete`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`; through Content: `Heading`, `Text`, `Header`, `Keyboard`; through Search field: `Button`, `Input`, `SearchField`, `Form`, `Label`, `FieldError`, `Text`, `OverlayArrow`, `Tooltip`, `TooltipTrigger`; through Button: `Button`, `ProgressBar` | – | yes | yes | 10 |
 | Forms › Radio group | `RadioGroup`, `RadioField`, `RadioButton`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `RadioGroupProps` | – | yes | 2 |
 | Forms › Required marker | None: plain React and CSS | – | – | yes | 3 |
-| Forms › Rich text editor | `TextField`, `TextArea`; through Rich text toolbar: `Button`, `Separator`, `ToggleButton`, `ToggleButtonGroup`, `Toolbar` | – | – | yes | 4 |
+| Forms › Rich text editor | `TextField`, `TextArea`; through Rich text toolbar: `Button`, `Separator`, `ToggleButton`, `ToggleButtonGroup`, `Toolbar` | – | – | yes | 7 |
 | Forms › Rich text toolbar | `Button`, `Separator`, `ToggleButton`, `ToggleButtonGroup`, `Toolbar` | – | – | yes | 7 |
 | Forms › Rich text toolbar button | `ToggleButton` | `ToggleButtonProps` | – | yes | 5 |
 | Forms › Search field | `Button`, `Input`, `SearchField`; through Form: `Form`, `Label`, `FieldError`, `Text`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | `SearchFieldProps` | – | yes | 9 |

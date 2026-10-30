@@ -221,3 +221,20 @@ test('sortable list: a row moves by dragging its handle', async ({page}) => {
   await page.mouse.up();
   await expect.poll(async () => (await list.getByRole('row').allTextContents())[0]).toContain('Took part');
 });
+
+test('rich text editor, inline: no border or toolbar, the type around it, grows as you type', async ({page}) => {
+  await open(page, 'components-forms-rich-text-editor--inline');
+  const field = page.getByRole('textbox', {name: 'Summary'});
+  await expect(field).toHaveAttribute('placeholder', 'Type here, or ask the assistant to write this part');
+  await expect(page.getByRole('toolbar')).toHaveCount(0);
+  await expect(field).toHaveCSS('border-top-width', '0px');
+  await expect(field).toHaveCSS('font-size', '13px');
+  const before = (await field.boundingBox())!.height;
+  await page.keyboard.press('Tab');
+  await expect(field).toBeFocused();
+  await page.keyboard.type('One line.\nTwo lines.\nThree lines.');
+  await expect.poll(async () => (await field.boundingBox())!.height).toBeGreaterThan(before);
+  await open(page, 'components-forms-rich-text-editor--inline-in-a-block');
+  await expect(page.getByRole('textbox', {name: 'Section heading'})).toHaveCSS('font-size', '28px');
+  await report(page);
+});

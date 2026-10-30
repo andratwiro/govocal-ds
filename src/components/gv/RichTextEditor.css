@@ -47,3 +47,27 @@
 .gv-editor__area[data-focused] {
   outline: none;
 }
+
+/*
+ * Inline (not in Figma; the report prototype's text typed on the page): no border, no toolbar, no ring; the text takes
+ * the type and colour around it (a document's heading or body) and the area grows with it (field-sizing), from one
+ * line. The placeholder keeps the placeholder grey.
+ */
+.gv-editor[data-variant='inline'] {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+
+  &:focus-within {
+    box-shadow: none;
+  }
+
+  .gv-editor__area {
+    min-height: 0;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    field-sizing: content;
+  }
+}

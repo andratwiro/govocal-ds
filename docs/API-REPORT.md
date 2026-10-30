@@ -3182,6 +3182,7 @@ Component, from `src/components/gv/MultilingualRichTextEditor.tsx`.
 - `showLocaleSwitcher?: boolean`
 - `style?: CSSProperties`
 - `value?: Multiloc | null`
+- `variant?: 'boxed' | 'inline'`
 
 ### `multilingualRichTextEditorLabels`
 
@@ -4541,6 +4542,7 @@ Component, from `src/components/gv/RichTextEditor.tsx`.
 - `placeholder?: string`
 - `style?: CSSProperties`
 - `value?: string`
+- `variant?: 'boxed' | 'inline'`
 
 ### `richTextEditorLabels`
 
