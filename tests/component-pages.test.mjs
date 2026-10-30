@@ -13,42 +13,8 @@ import {APG, OPTIONAL, SECTIONS, WRITTEN, boldNames, bullets, keyboardRows, pars
 // 77 Components and 24 Patterns (the plan's 83 counted the 29 Oct tree, before Link, Radio group, Checkbox group,
 // the Tables & lists and Text groups, the multilingual and map parts, and Stack, Inline and Grid).
 //
-// A part is written when its guide exists; a guide that exists must be complete. Nobody edits a shared list: the
-// parts with no guide are "not written yet", and WRITTEN_LATER below only freezes who may still be missing, so a part
-// added after today arrives with its page. Delete WRITTEN_LATER once every guide is written.
-
-/** Parts with no guide on 30 Oct 2026. Never add to it; a new part ships with its guide. */
-const WRITTEN_LATER = new Set([
-  // Components / Actions
-  'Compact button', 'Icon button', 'Menu', 'Segmented control',
-  // Components / Charts
-  'Bar row', 'Chart', 'Dashboard card', 'Legend row', 'Statement row',
-  // Components / Data display
-  'Avatar', 'File list', 'Illustration', 'List header', 'List header cell', 'List row', 'Map view', 'Property list',
-  'Reaction counts', 'Stat row', 'Stat tile',
-  // Components / Forms
-  'Checkbox', 'Checkbox group', 'Choice card', 'Date range field', 'Drop zone', 'Locale switcher',
-  'Multilingual rich text editor', 'Multilingual text field', 'Number field', 'Option list', 'Radio group',
-  'Required marker', 'Rich text editor', 'Rich text toolbar', 'Rich text toolbar button', 'Search field', 'Select',
-  'Switch', 'Tag picker', 'Text field', 'Title field',
-  // Components / Layout & containers (Stack, Inline and Grid landed the same night, just before this guard)
-  'App provider', 'Card', 'Divider', 'Page header', 'Panel', 'Tile grid', 'Stack', 'Inline', 'Grid',
-  // Components / Navigation
-  'Breadcrumbs', 'Link', 'Pagination', 'Tabs',
-  // Components / Overlays
-  'Alert dialog', 'Coachmark', 'Help popover', 'Modal', 'Tooltip',
-  // Components / Status & feedback
-  'Badge', 'Banner', 'Empty state', 'New dot', 'Review status', 'Skeleton', 'Status badge', 'Toast',
-  // Components / Tables & lists
-  'Table toolbar', 'Filter chips', 'Filter menu', 'Selection bar',
-  // Components / Text
-  'Section label', 'Text', 'Visually hidden',
-  // Patterns
-  'Notification list', 'Side nav', 'Access rights', 'Form field summary', 'Notification row', 'Participant action row',
-  'View option row', 'Comment thread', 'Official update', 'Section toggle', 'Common ground row', 'Proposals row',
-  'Volunteering row', 'Vote progress', 'Voting row', 'Action row', 'Panel section', 'Phone preview', 'Project header',
-  'Setup step', 'Stat card', 'Phase timeline', 'Rail header', 'Rail phase'
-]);
+// Every part has its guide (all written on 30 Oct 2026), and a guide must be complete: a new part arrives with its
+// page.
 
 function parts() {
   const out = [];
@@ -175,7 +141,7 @@ describe('component pages', () => {
   });
 
   it('every part is written, or was waiting on 30 Oct 2026', () => {
-    const missing = all.filter(p => !existsSync(p.guide) && !WRITTEN_LATER.has(p.name)).map(p => p.title);
+    const missing = all.filter(p => !existsSync(p.guide)).map(p => p.title);
     expect(missing, 'write its <Name>.guide.md (docs/HOW-TO.md, "Write a component page")').toEqual([]);
   });
 
