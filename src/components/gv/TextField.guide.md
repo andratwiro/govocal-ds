@@ -10,7 +10,8 @@
 ## When not to use
 
 - For the big name at the top of an editor (a project's or a phase's title): use **Title field**.
-- For a text people write in each of the platform's languages: use **Multilingual text field**.
+- For a text people write in each of the platform's languages: use **Multilingual text field**. Anything residents
+  read is such a text: a project's, a phase's or an event's title, a description.
 - For formatted text (bold, lists, links): use **Rich text editor**.
 - For a number: use **Number field**.
 - To search or filter a list: use **Search field**.
