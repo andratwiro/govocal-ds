@@ -1,3 +1,4 @@
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import type {ReactNode} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {Tag} from 'lucide-react';
@@ -111,4 +112,25 @@ export const RightToLeft: Story = {
   name: 'Right to left',
   globals: {direction: 'rtl'},
   render: () => <Demo items={TAGS} icon={tag} countLabel={ideas} defaultValue={['Cycling', 'Safety']} />
+};
+
+/** The keyboard on a pick-one list, proved by this story's play function: Tab moves into the list, the down arrow
+ * moves to the next option and Enter chooses it. (Pick several and the search: `e2e/selectors.spec.ts`.) No Esc here:
+ * in a popover, Esc is the popover's (Tag picker's page). */
+export const Keyboard: Story = {
+  render: () => <Demo label="Status" selectionMode="single" isSearchable={false} items={STATUSES} />,
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const active = () => document.activeElement as HTMLElement | null;
+    await userEvent.tab();
+    await waitFor(() => expect(active()?.getAttribute('role')).toBe('menuitemradio'));
+    const first = active()!;
+    await userEvent.keyboard('{ArrowDown}');
+    await waitFor(() => expect(active()).not.toBe(first));
+    const second = active()!;
+    await expect(second.getAttribute('role')).toBe('menuitemradio');
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(second).toHaveAttribute('aria-checked', 'true'));
+    await expect(canvas.getAllByRole('menuitemradio').filter(o => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
+  }
 };

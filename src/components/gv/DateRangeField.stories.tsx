@@ -1,3 +1,4 @@
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {useState} from 'react';
 import {DateRangeField} from './DateRangeField';
 import type {Meta, StoryObj} from '@storybook/react-vite';
@@ -62,5 +63,27 @@ export const Controlled: Story = {
         </output>
       </div>
     );
+  }
+};
+
+/** The keyboard, proved by this story's play function: the up arrow steps the focused part of a date; Enter on "Add end
+ * date" shows the end date; Enter on its × takes it away again. */
+export const Keyboard: Story = {
+  args: {label: 'Dates', defaultValue: {start: '2026-11-02'}},
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const start = canvas.getByRole('group', {name: 'Dates, start date'});
+    const part = within(start).getAllByRole('spinbutton')[0];
+    const before = Number(part.getAttribute('aria-valuenow'));
+    part.focus();
+    await userEvent.keyboard('{ArrowUp}');
+    await waitFor(() => expect(Number(part.getAttribute('aria-valuenow'))).not.toBe(before));
+    canvas.getByRole('button', {name: 'Add end date'}).focus();
+    await userEvent.keyboard('{Enter}');
+    await expect(await canvas.findByRole('group', {name: 'Dates, end date'})).toBeVisible();
+    canvas.getByRole('button', {name: 'Remove the end date'}).focus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(canvas.queryByRole('group', {name: 'Dates, end date'})).toBeNull());
+    await expect(canvas.getByRole('button', {name: 'Add end date'})).toBeVisible();
   }
 };

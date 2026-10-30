@@ -59,14 +59,14 @@ what would survive a change of base library. It decides nothing: the base librar
 | Data display › Stat tile | `VisuallyHidden` through `components/gv/HelpPopover` | – | – | yes | 9 |
 | Forms › Checkbox | through `components/Checkbox` | `CheckboxFieldProps` | – | yes | 8 |
 | Forms › Checkbox group | `CheckboxGroup` through `components/Form` | `CheckboxGroupProps` | – | yes | 2 |
-| Forms › Choice card | `RadioField`, `RadioButton`, `CheckboxField`, `CheckboxButton` through `components/gv/SectionLabel` | `RadioFieldProps` | – | yes | 5 |
-| Forms › Date range field | through `components/Button`, `components/DatePicker`, `components/TimeField` | – | yes | yes | 7 |
-| Forms › Drop zone | `DropZone`, `FileTrigger`, `Button` | `DropZoneProps` | – | yes | 5 |
+| Forms › Choice card | `RadioField`, `RadioButton`, `CheckboxField`, `CheckboxButton` through `components/gv/SectionLabel` | `RadioFieldProps` | – | yes | 6 |
+| Forms › Date range field | through `components/Button`, `components/DatePicker`, `components/TimeField` | – | yes | yes | 8 |
+| Forms › Drop zone | `DropZone`, `FileTrigger`, `Button` | `DropZoneProps` | – | yes | 6 |
 | Forms › Locale switcher | `RadioGroup`, `Radio`, `Select`, `SelectValue`, `Button`, `VisuallyHidden` through `components/Popover`, `components/ListBox` | – | yes | yes | 7 |
 | Forms › Multilingual rich text editor | through `components/Form`, `components/gv/RichTextEditor`, `components/gv/MultilingualTextField` | – | yes | yes | 5 |
 | Forms › Multilingual text field | `Input`, `TextArea`, `TextField` through `components/Form`, `components/gv/LocaleSwitcher` | `TextFieldProps` | yes | yes | 12 |
 | Forms › Number field | `Group`, `Input`, `NumberField` through `components/Button`, `components/Form` | `NumberFieldProps` | yes | yes | 4 |
-| Forms › Option list | `Autocomplete` through `components/Menu`, `components/SearchField` | – | yes | yes | 9 |
+| Forms › Option list | `Autocomplete` through `components/Menu`, `components/SearchField` | – | yes | yes | 10 |
 | Forms › Radio group | `RadioGroup`, `RadioField`, `RadioButton` through `components/Form` | `RadioGroupProps` | – | yes | 2 |
 | Forms › Required marker | None: plain React and CSS | – | – | yes | 3 |
 | Forms › Rich text editor | `TextField`, `TextArea` through `components/gv/RichTextToolbar` | – | – | yes | 3 |

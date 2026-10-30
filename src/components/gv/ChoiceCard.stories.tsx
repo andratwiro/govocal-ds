@@ -1,3 +1,4 @@
+import {expect, userEvent, within} from 'storybook/test';
 import {Lightbulb, Vote, MessageSquareText, Sparkles} from 'lucide-react';
 import {RadioGroup} from '../RadioGroup';
 import {CheckboxGroup} from '../CheckboxGroup';
@@ -130,4 +131,31 @@ export const LongList: Story = {
       </div>
     </div>
   )
+};
+
+/** The keyboard on checkbox tiles, proved by this story's play function: each tile is its own Tab stop and Space
+ * ticks or unticks it. (Radio tiles are one stop with the arrow keys: `e2e/forms.spec.ts`.) */
+export const Keyboard: Story = {
+  render: () => (
+    <div style={{width: 360}}>
+      <CheckboxGroup aria-label="Report contents" defaultValue={['overview']}>
+        <ChoiceCardCheckbox value="overview" description="Title, description and cover image.">Project overview</ChoiceCardCheckbox>
+        <ChoiceCardCheckbox value="build" description="Dates, participant counts and attachments.">Build phase</ChoiceCardCheckbox>
+      </CheckboxGroup>
+    </div>
+  ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const overview = canvas.getByRole('checkbox', {name: /Project overview/});
+    const build = canvas.getByRole('checkbox', {name: /Build phase/});
+    await userEvent.tab();
+    await expect(overview).toHaveFocus();
+    await userEvent.tab();
+    await expect(build).toHaveFocus();
+    await userEvent.keyboard(' ');
+    await expect(build).toBeChecked();
+    await expect(overview).toBeChecked();
+    await userEvent.keyboard(' ');
+    await expect(build).not.toBeChecked();
+  }
 };

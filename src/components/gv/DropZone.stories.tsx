@@ -1,3 +1,5 @@
+import {Button} from '../Button';
+import {expect, userEvent, within} from 'storybook/test';
 import {DropZone} from './DropZone';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
@@ -52,4 +54,30 @@ export const Compact: Story = {
     acceptedFileTypes: ['image/png', 'image/jpeg']
   },
   decorators: [Story => <div style={{width: 370}}><Story /></div>]
+};
+
+/** The keyboard, proved by this story's play function: Tab reaches the zone, which is one button; a disabled zone is
+ * skipped. */
+export const Keyboard: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16, width: 370}}>
+      <DropZone />
+      <DropZone isDisabled>Drop a cover image here</DropZone>
+      <Button variant="secondary">Next</Button>
+    </div>
+  ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const zone = canvas.getByRole('button', {name: /Drop a file here or browse/});
+    const disabled = canvas.getByRole('button', {name: /Drop a cover image here/});
+    const next = canvas.getByRole('button', {name: 'Next'});
+    let reached = false;
+    for (let i = 0; i < 6 && document.activeElement !== next; i++) {
+      await userEvent.tab();
+      if (document.activeElement === zone) reached = true;
+      await expect(disabled).not.toHaveFocus();
+    }
+    await expect(reached).toBe(true);
+    await expect(next).toHaveFocus();
+  }
 };
