@@ -1,9 +1,1 @@
-{
- "backoffice/src/layout.css": [
-  ".bo-community-monitor-questions: list-style",
-  ".bo-dashboard-nowrap: white-space",
-  ".bo-inputs-published: white-space",
-  ".bo-section-title: color",
-  ".bo-section-title: font"
- ]
-}
+{}

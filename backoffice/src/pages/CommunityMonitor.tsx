@@ -2,10 +2,10 @@ import {useState, type ReactNode} from 'react';
 import {ArrowLeft, ArrowRight, Download, Eye, Plus, Upload, Pencil, FileText, ShieldCheck} from 'lucide-react';
 import {AlertDialog, Avatar, Badge, Banner, BarRow, Button, Checkbox, CheckboxGroup, ChoiceCard, DashboardCard,
   DashboardDemographic, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableOptions,
-  DataTablePerson, DataTableRow, DataTableStack, Divider, DropZone, EmptyState, FileList, HelpPopover, LegendRow,
+  DataTablePerson, DataTableRow, DataTableStack, Divider, DropZone, EmptyState, FileList, Grid, Inline, LegendRow,
   LineChart, MenuItem, Modal, NumberField, Pagination, Panel, PropertyList, PropertyListItem, Radio, RadioGroup, Select,
-  SelectItem, Sparkline, StatRow, StatTile, StatusBadge, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Text,
-  TextField, toast} from 'govocal-ds';
+  SelectItem, Sparkline, Stack, StatRow, StatTile, StatusBadge, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Text,
+  TextField, TileGrid, toast} from 'govocal-ds';
 import {CANDIDATES, CATEGORIES, CURRENT, MANAGERS, POPUP_CONDITIONS, POPUP_SHOWN, QUARTERS, QUESTIONS, REPORTS, RESPONDENTS,
   SENTIMENT, SURVEY_ACCESS, WHO, type Report} from '../data-community-monitor';
 import {Page} from './Page';
@@ -41,7 +41,7 @@ function distribution(avg: number) {
 /** The real admin's ← Q4 2026 → picker and View button, as the system's buttons and Select. */
 function QuarterPicker({quarter, onChange, show, onViewSurvey}: {quarter: number; onChange: (q: number) => void; show: boolean; onViewSurvey: () => void}) {
   return (
-    <div className="bo-community-monitor-actions">
+    <Inline gap="8">
       {show && <>
       <Button variant="secondary" size={32} aria-label="Previous quarter" isDisabled={quarter === 0}
         onPress={() => onChange(quarter - 1)}><ArrowLeft aria-hidden size={16} /></Button>
@@ -52,15 +52,15 @@ function QuarterPicker({quarter, onChange, show, onViewSurvey}: {quarter: number
         onPress={() => onChange(quarter + 1)}><ArrowRight aria-hidden size={16} /></Button>
       </>}
       <Button variant="primary" size={32} onPress={onViewSurvey}><Eye aria-hidden size={16} /> View survey</Button>
-    </div>
+    </Inline>
   );
 }
 
-function ScoreTile({label, scores, quarter}: {label: ReactNode; scores: number[]; quarter: number}) {
+function ScoreTile({label, info, scores, quarter}: {label: ReactNode; info?: ReactNode; scores: number[]; quarter: number}) {
   const now = scores[quarter];
   const note = quarter === 0 ? 'First quarter' : `${signed(now - scores[quarter - 1])} vs ${QUARTERS[quarter - 1]}`;
   return (
-    <StatTile label={label} value={score(now)} note={quarter === CURRENT ? `${note} · updating live` : note} />
+    <StatTile label={label} info={info} value={score(now)} note={quarter === CURRENT ? `${note} · updating live` : note} />
   );
 }
 
@@ -70,22 +70,21 @@ function LiveMonitor({quarter}: {quarter: number}) {
   const avg = questionScore(question, quarter);
   const dist = distribution(avg);
   return (
-    <div className="bo-community-monitor-body">
+    <Stack gap="16" className="bo-community-monitor-body">
       {quarter === CURRENT && (
         <Banner>{QUARTERS[quarter]} is still collecting answers: scores update as residents respond.</Banner>
       )}
-      <div className="bo-community-monitor-kpis">
-        <ScoreTile scores={HEALTH} quarter={quarter} label={<span className="bo-community-monitor-label">Health score
-          <HelpPopover title="Health score">The average of the three category scores: every sentiment question, from 1 (very
-            dissatisfied) to 5 (very satisfied).</HelpPopover></span>} />
+      <TileGrid minTileWidth={160} density="compact">
+        <ScoreTile scores={HEALTH} quarter={quarter} label="Health score"
+          info="The average of the three category scores: every sentiment question, from 1 (very dissatisfied) to 5 (very satisfied)." />
         {CATEGORIES.map(c => <ScoreTile key={c.id} label={c.label} scores={c.scores} quarter={quarter} />)}
-      </div>
+      </TileGrid>
       <DashboardCard kind="participation-over-time" title="Health score over time"
         subtitle="Average of every sentiment question · per quarter">
         <LineChart xAxis={shown} max={5} series={[{label: 'Health score', values: HEALTH.slice(0, quarter + 1), color: 'line-primary'}]} />
       </DashboardCard>
-      <h2 className="bo-section-title">Questions by category</h2>
-      <div className="bo-community-monitor-stack">
+      <Text elementType="h2" kind="body" isStrong color="primary" className="bo-community-monitor-heading">Questions by category</Text>
+      <Stack gap="16">
         {CATEGORIES.map(c => {
           const rows = QUESTIONS.map((qn, i) => ({qn, i})).filter(r => r.qn.category === c.id);
           return (
@@ -105,15 +104,17 @@ function LiveMonitor({quarter}: {quarter: number}) {
               {QUESTIONS.map((qn, i) => <SelectItem key={qn.title} id={String(i)}>{`${i + 1}. ${qn.title}`}</SelectItem>)}
             </Select>
           }>
-          <DashboardDemographic label={`${question + 1}. ${QUESTIONS[question].title}`}
-            items={SENTIMENT.map((s, k) => ({label: s.label, percent: dist[k], color: s.color}))} />
-          <div className="bo-community-monitor-stats">
-            <StatRow isStatic label="Average" value={score(avg)} />
-            <StatRow isStatic label="Responses" value={n(RESPONDENTS[quarter])} />
-          </div>
+          <Stack gap="16">
+            <DashboardDemographic label={`${question + 1}. ${QUESTIONS[question].title}`}
+              items={SENTIMENT.map((s, k) => ({label: s.label, percent: dist[k], color: s.color}))} />
+            <Grid columns={2} gap="8">
+              <StatRow isStatic label="Average" value={score(avg)} />
+              <StatRow isStatic label="Responses" value={n(RESPONDENTS[quarter])} />
+            </Grid>
+          </Stack>
         </DashboardCard>
-      </div>
-    </div>
+      </Stack>
+    </Stack>
   );
 }
 
@@ -122,31 +123,31 @@ function Participants({quarter}: {quarter: number}) {
   const rate = Math.round((RESPONDENTS[quarter] / POPUP_SHOWN[quarter]) * 100);
   const allTime = RESPONDENTS.slice(0, quarter + 1).reduce((a, b) => a + b, 0);
   return (
-    <div className="bo-community-monitor-body">
-      <div className="bo-community-monitor-kpis">
+    <Stack gap="16" className="bo-community-monitor-body">
+      <TileGrid minTileWidth={160} density="compact">
         <StatTile label="Respondents" value={n(RESPONDENTS[quarter])} note={quarter === CURRENT ? 'updating live' : QUARTERS[quarter]}>
           <Sparkline label="Respondents per quarter" xAxis={shown} values={RESPONDENTS.slice(0, quarter + 1)} height={34} showGrid={false} />
         </StatTile>
         <StatTile label="Popup shown" value={n(POPUP_SHOWN[quarter])} note="times this quarter" />
         <StatTile label="Response rate" value={`${rate}%`} note="of residents shown the popup" />
         <StatTile label="Respondents to date" value={n(allTime)} note={`since ${QUARTERS[0]}`} />
-      </div>
+      </TileGrid>
       <DashboardCard kind="participation-over-time" title="Respondents over time" subtitle="People who answered · per quarter">
-        <LineChart xAxis={shown} series={[{label: 'Respondents', values: RESPONDENTS.slice(0, quarter + 1), color: 'line-primary'}]} />
-        <div className="bo-community-monitor-rows">
+        <Stack gap="12">
+          <LineChart xAxis={shown} series={[{label: 'Respondents', values: RESPONDENTS.slice(0, quarter + 1), color: 'line-primary'}]} />
           <LegendRow color="--gv-chart-line-primary" label="Respondents" value={`${n(RESPONDENTS[quarter])} in ${QUARTERS[quarter]}`} />
-        </div>
+        </Stack>
       </DashboardCard>
-      <h2 className="bo-section-title">Who is answering</h2>
+      <Text elementType="h2" kind="body" isStrong color="primary" className="bo-community-monitor-heading">Who is answering</Text>
       <Banner>From registration fields. Groups with fewer than 5 respondents are hidden, and no answer is shown next to who gave it.</Banner>
-      <div className="bo-community-monitor-cards">
+      <TileGrid minTileWidth={360} className="bo-community-monitor-cards">
         {WHO.map(w => (
           <DashboardCard key={w.label} kind="demographic-age" aria-label={w.label}>
             <DashboardDemographic label={w.label} items={w.items} />
           </DashboardCard>
         ))}
-      </div>
-    </div>
+      </TileGrid>
+    </Stack>
   );
 }
 
@@ -155,22 +156,22 @@ function SurveyModal({isOpen, onOpenChange}: {isOpen: boolean; onOpenChange: (o:
   return (
     <Modal title="Community monitor survey" width="wide" isOpen={isOpen} onOpenChange={onOpenChange}
       footer={<Button variant="secondary" slot="close">Close</Button>}>
-      <div className="bo-community-monitor-modal">
+      <Stack gap="12">
         <Text elementType="p" kind="small" color="meta">How residents see it: a short popup, eleven questions, each answered on the same five-point scale.</Text>
         {CATEGORIES.map(c => (
-          <section key={c.id} className="bo-community-monitor-modal" aria-label={c.label}>
-            <h3 className="bo-section-title">{c.label}</h3>
-            <ol className="bo-community-monitor-questions">
+          <Stack elementType="section" key={c.id} gap="12" aria-label={c.label}>
+            <Text elementType="h3" kind="body" isStrong color="primary" className="bo-community-monitor-heading">{c.label}</Text>
+            <Stack elementType="ol" gap="8">
               {QUESTIONS.map((q, i) => ({q, i})).filter(r => r.q.category === c.id).map(({q, i}) => (
                 <li key={q.title}>{`${i + 1}. ${q.title}`}</li>
               ))}
-            </ol>
-          </section>
+            </Stack>
+          </Stack>
         ))}
         <RadioGroup label="Every question is answered on this scale (try it)" orientation="horizontal">
           {SENTIMENT.map(s => <Radio key={s.label} value={s.label}>{s.label}</Radio>)}
         </RadioGroup>
-      </div>
+      </Stack>
     </Modal>
   );
 }
@@ -182,7 +183,7 @@ function ReportModal({report, onClose}: {report: Report | null; onClose: () => v
     <Modal title={report?.title ?? 'Report'} width="wide" isOpen={report !== null} onOpenChange={o => { if (!o) onClose(); }}
       footer={<Button variant="secondary" slot="close">Close</Button>}>
       {report && (
-        <div className="bo-community-monitor-modal">
+        <Stack gap="12">
           <PropertyList aria-label="About this report">
             <PropertyListItem label="Status">
               <StatusBadge status={report.published ? 'live' : 'draft'}>{report.published ? 'Published' : 'Draft'}</StatusBadge>
@@ -190,14 +191,14 @@ function ReportModal({report, onClose}: {report: Report | null; onClose: () => v
             <PropertyListItem label="Quarter">{report.quarter}</PropertyListItem>
             <PropertyListItem label="Updated">{report.updated}</PropertyListItem>
           </PropertyList>
-          <div className="bo-community-monitor-kpis">
+          <TileGrid minTileWidth={160} density="compact">
             <StatTile label="Health score" value={score(HEALTH[q])} note={report.quarter} />
             <StatTile label="Respondents" value={n(RESPONDENTS[q])} note={`${Math.round((RESPONDENTS[q] / POPUP_SHOWN[q]) * 100)}% response rate`} />
-          </div>
+          </TileGrid>
           <DashboardCard title="Scores by category" subtitle={report.quarter}>
             {CATEGORIES.map(c => <BarRow key={c.id} label={c.label} percent={(c.scores[q] / 5) * 100} value={score(c.scores[q])} />)}
           </DashboardCard>
-        </div>
+        </Stack>
       )}
     </Modal>
   );
@@ -218,13 +219,13 @@ function CreateReportModal({isOpen, onOpenChange, onCreate}: {isOpen: boolean; o
         <Button variant="secondary" slot="close">Cancel</Button>
         <Button variant="primary" onPress={create}>Create</Button>
       </>}>
-      <div className="bo-community-monitor-modal">
+      <Stack gap="12">
         <TextField label="Report title" value={title} onChange={setTitle} placeholder="e.g. Q4 2026 results" />
         <Select label="Quarter" selectedKey={quarter} onSelectionChange={k => setQuarter(String(k))}>
           {QUARTERS.map(q => <SelectItem key={q} id={q}>{q}</SelectItem>)}
         </Select>
         <Text elementType="p" kind="small" color="meta">The report starts as a draft with this quarter's scores; publish it when it reads right.</Text>
-      </div>
+      </Stack>
     </Modal>
   );
 }
@@ -254,7 +255,7 @@ function Reports() {
   };
   const create = <Button variant="primary" size={32} onPress={() => setCreating(true)}><Plus aria-hidden size={16} />Create report</Button>;
   return (
-    <div className="bo-community-monitor-body">
+    <Stack gap="16" className="bo-community-monitor-body">
       <Panel title="Reports" headingLevel={3} count={reports.length} isFlush actions={create}
         description="Reports built from the monitor's quarterly results."
         footer={reports.length > 0 && <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Report pages" />}>
@@ -302,7 +303,7 @@ function Reports() {
         }}>
         {deleting?.title} goes for good, with any text you wrote in it. The monitor's results stay.
       </AlertDialog>
-    </div>
+    </Stack>
   );
 }
 
@@ -314,17 +315,17 @@ function EditSurveyModal({isOpen, onOpenChange, onSave}: {isOpen: boolean; onOpe
         <Button variant="secondary" slot="close">Cancel</Button>
         <Button variant="primary" onPress={() => { onSave(); onOpenChange(false); }}>Save</Button>
       </>}>
-      <div className="bo-community-monitor-modal">
+      <Stack gap="12">
         <Banner tone="warning">Changing a question's wording starts a new comparison: earlier quarters keep the old wording.</Banner>
         {CATEGORIES.map(c => (
-          <section key={c.id} className="bo-community-monitor-modal" aria-label={c.label}>
-            <h3 className="bo-section-title">{c.label}</h3>
+          <Stack elementType="section" key={c.id} gap="12" aria-label={c.label}>
+            <Text elementType="h3" kind="body" isStrong color="primary" className="bo-community-monitor-heading">{c.label}</Text>
             {QUESTIONS.map((q, i) => ({q, i})).filter(r => r.q.category === c.id).map(({q, i}) => (
               <TextField key={q.title} label={`Question ${i + 1}`} defaultValue={q.title} />
             ))}
-          </section>
+          </Stack>
         ))}
-      </div>
+      </Stack>
     </Modal>
   );
 }
@@ -339,12 +340,12 @@ function ImportModal({isOpen, onOpenChange, onImport}: {isOpen: boolean; onOpenC
         <Button variant="secondary" slot="close">Cancel</Button>
         <Button variant="primary" isDisabled={!file} onPress={() => { if (file) onImport(file); shut(false); }}>Import</Button>
       </>}>
-      <div className="bo-community-monitor-modal">
+      <Stack gap="12">
         <Text elementType="p" kind="small" color="meta">Answers collected on paper or at an event: fill in the template, one row per respondent, then upload it.</Text>
-        <div className="bo-community-monitor-buttons">
+        <Inline gap="8">
           <Button variant="secondary" size={32} onPress={() => toast('Template downloaded', 'community-monitor-template.xlsx')}>
             <Download aria-hidden size={16} />Download the template</Button>
-        </div>
+        </Inline>
         {file ? (
           <FileList aria-label="File to import" items={[{id: file, name: file, meta: file.endsWith('.csv') ? 'CSV' : 'XLSX'}]}
             onDelete={() => setFile(null)} />
@@ -353,7 +354,7 @@ function ImportModal({isOpen, onOpenChange, onImport}: {isOpen: boolean; onOpenC
             onSelect={files => setFile(files?.[0]?.name ?? null)}
             onDrop={() => setFile('answers.xlsx')} />
         )}
-      </div>
+      </Stack>
     </Modal>
   );
 }
@@ -369,12 +370,12 @@ function AddManagerModal({isOpen, onOpenChange, options, onAdd}: {isOpen: boolea
         <Button variant="secondary" slot="close">Cancel</Button>
         <Button variant="primary" isDisabled={!person} onPress={() => { if (person) onAdd(person); onOpenChange(false); }}>Add</Button>
       </>}>
-      <div className="bo-community-monitor-modal">
+      <Stack gap="12">
         <Text elementType="p" kind="small" color="meta">Managers can edit the survey and its permissions, see the answers and create reports.</Text>
         <Select label="Person" selectedKey={person} onSelectionChange={k => setPerson(k === null ? null : String(k))}>
           {options.map(o => <SelectItem key={o} id={o} icon={<Avatar size={16} initials={initials(o)} />}>{o}</SelectItem>)}
         </Select>
-      </div>
+      </Stack>
     </Modal>
   );
 }
@@ -417,7 +418,7 @@ function Settings() {
       </TabList>
       <TabPanels>
       <TabPanel id="Survey">
-        <div className="bo-community-monitor-body">
+        <Stack gap="16" className="bo-community-monitor-body">
           <Panel title="Survey" headingLevel={3} description="Eleven sentiment questions, shown to residents in a short popup."
             actions={<>
               <Button variant="secondary" size={32} onPress={show('import')}><Upload aria-hidden size={16} />Import answers</Button>
@@ -428,26 +429,26 @@ function Settings() {
               Open for responses
             </Switch>
           </Panel>
-        </div>
+        </Stack>
       </TabPanel>
       <TabPanel id="Popup">
-        <div className="bo-community-monitor-body">
+        <Stack gap="16" className="bo-community-monitor-body">
           <Panel title="Popup settings" headingLevel={3} description="When residents see the survey."
             footer={<Button variant="primary" size={32} aria-label="Save popup settings" isDisabled={!dirty}
               onPress={() => { setDirty(false); toast('Popup settings saved'); }}>Save</Button>}>
-            <div className="bo-community-monitor-section">
+            <Stack gap="16" alignItems="start">
               <CheckboxGroup label="Under what conditions can the popup appear?" value={conditions}
                 onChange={v => { setConditions(v); touch(); }}>
                 {POPUP_CONDITIONS.map(c => <Checkbox key={c.id} value={c.id}>{c.label}</Checkbox>)}
               </CheckboxGroup>
               <NumberField label="Popup frequency (0 to 100)" description="The share of eligible visits that show the popup. The default is 100."
                 minValue={0} maxValue={100} value={frequency} onChange={v => { setFrequency(v); touch(); }} />
-            </div>
+            </Stack>
           </Panel>
-        </div>
+        </Stack>
       </TabPanel>
       <TabPanel id="Access rights">
-        <div className="bo-community-monitor-body">
+        <Stack gap="16" className="bo-community-monitor-body">
           <Panel title="Who can respond" headingLevel={3} description="Changes apply at once.">
             <RadioGroup label="Who can take the survey?" value={access} onChange={changeAccess}>
               {SURVEY_ACCESS.map(a => <ChoiceCard key={a.id} value={a.id} description={a.description}>{a.label}</ChoiceCard>)}
@@ -461,10 +462,10 @@ function Settings() {
               Anonymize all user data
             </Switch>
           </Panel>
-        </div>
+        </Stack>
       </TabPanel>
       <TabPanel id="Managers">
-        <div className="bo-community-monitor-body">
+        <Stack gap="16" className="bo-community-monitor-body">
           <Panel title="Managers" headingLevel={3} count={managers.length} isFlush
             description="Admins and these community monitor managers see the results and edit the survey."
             actions={<Button variant="secondary" size={32} onPress={show('manager')}><Plus aria-hidden size={16} />Add a manager</Button>}>
@@ -492,7 +493,7 @@ function Settings() {
               </DataTable>
             )}
           </Panel>
-        </div>
+        </Stack>
       </TabPanel>
       </TabPanels>
     </Tabs>

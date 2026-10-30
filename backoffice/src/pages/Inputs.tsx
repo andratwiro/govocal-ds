@@ -2,9 +2,9 @@ import {useEffect, useMemo, useState} from 'react';
 type Key = string | number;
 type Selection = 'all' | Set<Key>;
 import {AlertDialog, Avatar, Badge, CommentThread, DataTable, DataTableBody, DataTableCell, DataTableColumn,
-  DataTableEmpty, DataTableHeader, DataTableRow, DataTableStack, IconButton, Link, Menu, MenuItem, MenuTrigger, NewDot,
+  DataTableEmpty, DataTableHeader, DataTableRow, DataTableStack, Grid, IconButton, Inline, Link, Menu, MenuItem, MenuTrigger, NewDot,
   OfficialUpdate, Pagination, PropertyList, PropertyListItem, ReactionCounts, SearchField, Select, type SelectionAction,
-  SelectionBar, SelectItem, Separator, SidePanel, type SidePanelAction, SidePanelActions, SidePanelRecordHead, SidePanelSection, StatusBadge,
+  SelectionBar, SelectItem, Separator, SidePanel, type SidePanelAction, SidePanelActions, SidePanelRecordHead, SidePanelSection, Stack, StatusBadge,
   Switch, Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, TagPicker, Text, type ThreadTab,
   type ThreadTarget, toast, Tooltip, TooltipTrigger} from 'govocal-ds';
 import {ListBox, ListBoxItem} from 'govocal-ds/base';
@@ -202,42 +202,42 @@ export function Inputs() {
 
   return (
     <Page title="Input manager" description="Give feedback, add tags and move input from one project to another.">
-      <div className="bo-filters bo-inputs-toolbar">
+      <Inline gap="16" paddingBlock="16">
         <Select variant="quiet" aria-label="Assignee" selectedKey={assignee} onSelectionChange={k => setAssignee(String(k))}>
           <SelectItem id="any">Any administrator</SelectItem>
           <SelectItem id="me">Assigned to me</SelectItem>
           <SelectItem id="none">Unassigned</SelectItem>
         </Select>
         <Switch isSelected={needsFeedback} onChange={setNeedsFeedback}>
-          <span className="bo-inputs-switch-label">Only show inputs that need feedback <Badge>{waiting}</Badge></span>
+          <Inline elementType="span" gap="8" wrap="nowrap">Only show inputs that need feedback <Badge>{waiting}</Badge></Inline>
         </Switch>
         <span className="bo-push" />
         <SearchField aria-label="Search inputs" placeholder="Search" value={query} onChange={setQuery} />
-      </div>
-      <div className="bo-inputs-body">
+      </Inline>
+      <Stack gap="16">
         <Tabs defaultSelectedKey="projects" onSelectionChange={() => setSelected(new Set())}>
           <TabList aria-label="Filter by">
             <Tab id="projects">Projects</Tab><Tab id="topics">Topics</Tab><Tab id="status">Status</Tab>
           </TabList>
           <TabPanels>
-          <TabPanel id="projects">
-            <div className="bo-inputs-filter-panel">
+          <TabPanel id="projects" className="bo-inputs-tab">
+            <Stack gap="12" alignItems="start">
               <ListBox aria-label="Projects" orientation="horizontal" selectionMode="single" disallowEmptySelection selectedKeys={[project]}
                 onSelectionChange={k => setProject(String([...k][0]))}>
                 <ListBoxItem id="all">All projects</ListBoxItem>
                 {PROJECTS.filter(p => inputs.some(i => i.project === p.id)).map(p => <ListBoxItem key={p.id} id={p.id}>{p.title}</ListBoxItem>)}
               </ListBox>
               <Link href="#/projects">Edit projects</Link>
-            </div>
+            </Stack>
           </TabPanel>
-          <TabPanel id="topics">
+          <TabPanel id="topics" className="bo-inputs-tab">
             <ListBox aria-label="Topics" orientation="horizontal" selectionMode="single" disallowEmptySelection selectedKeys={[topic]}
               onSelectionChange={k => setTopic(String([...k][0]))}>
               <ListBoxItem id="all">All topics</ListBoxItem>
               {TOPICS.map(t => <ListBoxItem key={t} id={t}>{t}</ListBoxItem>)}
             </ListBox>
           </TabPanel>
-          <TabPanel id="status">
+          <TabPanel id="status" className="bo-inputs-tab">
             <ListBox aria-label="Statuses" orientation="horizontal" selectionMode="single" disallowEmptySelection selectedKeys={[status]}
               onSelectionChange={k => setStatus(String([...k][0]))}>
               <ListBoxItem id="all">All statuses</ListBoxItem>
@@ -246,8 +246,8 @@ export function Inputs() {
           </TabPanel>
           </TabPanels>
         </Tabs>
-        <div className="bo-inputs-main">
-          <div className="bo-inputs-list">
+        <Grid gap="16" alignItems="start" className="bo-inputs-main">
+          <Stack gap="12">
             {/* The Data table's "In a panel" toolbar: the count (the Selection bar while rows are checked), the export. */}
             <TableToolbar aria-label="Input tools" start={(
               <SelectionBar aria-label="Bulk actions" count={selected.size} items={bulkActions}
@@ -286,10 +286,10 @@ export function Inputs() {
                     <DataTableCell textValue={i.title}>
                       {/* The prototype's title over a quiet sub-line: the input's project (still a link) and tags. */}
                       <DataTableStack isStrong sub={<><Link href={`#/projects/${i.project}`}>{title(i.project)}</Link> · {i.tags.join(', ')}</>}>
-                        <span className="bo-inputs-title-line">
+                        <Inline elementType="span" gap="6" wrap="nowrap">
                           {i.title}
                           {FLAGGED.has(i.id) && <TriangleAlert aria-label="Content warning" size={14} />}
-                        </span>
+                        </Inline>
                       </DataTableStack>
                     </DataTableCell>
                     <DataTableCell textValue={i.status}><StatusBadge status={statusState(i.status)}>{i.status}</StatusBadge></DataTableCell>
@@ -301,16 +301,16 @@ export function Inputs() {
                     <DataTableCell align="number">{i.likes}</DataTableCell>
                     <DataTableCell align="number">{i.dislikes}</DataTableCell>
                     <DataTableCell textValue={i.published}>
-                      <span className="bo-inputs-published">
+                      <Inline elementType="span" gap="6" wrap="nowrap">
                         {isNew(i.published) && <NewDot aria-label="New input" />}{i.published}
-                      </span>
+                      </Inline>
                     </DataTableCell>
                   </DataTableRow>))}
                 </DataTableBody>
               </DataTable>
             </div>
             <Pagination page={current} pageCount={pages} onPageChange={setPage} aria-label="Input pages" />
-          </div>
+          </Stack>
           {preview && (
             <div className="bo-inputs-side">
               <SidePanel isInline label={title(preview.project)} aria-label={`Input: ${preview.title}`}
@@ -321,8 +321,8 @@ export function Inputs() {
               </SidePanel>
             </div>
           )}
-        </div>
-      </div>
+        </Grid>
+      </Stack>
       <AlertDialog tone="danger" title={toDelete?.length === 1 ? 'Delete this input?' : 'Delete these inputs?'}
         isOpen={toDelete !== null} onOpenChange={o => !o && setToDelete(null)}
         confirmLabel={`Delete ${toDelete?.length === 1 ? 'input' : `${toDelete?.length} inputs`}`} onConfirm={deleteChosen}>

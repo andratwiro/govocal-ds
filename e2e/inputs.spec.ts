@@ -219,7 +219,7 @@ test('the Side panel sits inline in a column beside the list, and the row checkb
   await expect(side.getByRole('dialog', {name: 'Input: Bike lane by the school'})).toBeVisible();
   await expect(page.locator('[data-missing-part="Side panel"]')).toHaveCount(0);
   // Beside the table, not over it.
-  const [list, box] = [await page.locator('.bo-inputs-list').boundingBox(), await side.boundingBox()];
+  const [list, box] = [await page.getByRole('toolbar', {name: 'Input tools'}).boundingBox(), await side.boundingBox()];
   expect(box!.x).toBeGreaterThanOrEqual(list!.x + list!.width);
   // Bulk checkboxes and the panel live side by side: checking a row leaves the open input open.
   await inputRows(page).nth(0).locator('.indicator').click();
@@ -253,7 +253,7 @@ test('the export menu sits in the Table toolbar beside the count, and each expor
 
 test('the selectors: pills in the rows and the panel, avatars on the assignees, a quiet Assignee filter', async ({page}) => {
   await page.goto('/backoffice/#/inputs');
-  await expect(page.locator('.bo-inputs-toolbar .react-aria-Select').first()).toHaveAttribute('data-variant', 'quiet');
+  await expect(page.locator('.react-aria-Select').filter({hasText: 'Any administrator'})).toHaveAttribute('data-variant', 'quiet');
   const rowPick = page.locator('.react-aria-Select').filter({has: page.getByRole('button', {name: /Assignee for More trees on Elm Lane/})});
   await expect(rowPick).toHaveAttribute('data-variant', 'pill');
   await expect(rowPick).toHaveAttribute('data-size', '22');

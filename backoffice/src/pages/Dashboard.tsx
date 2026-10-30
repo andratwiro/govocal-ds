@@ -4,9 +4,9 @@ import {ArrowRight, CalendarDays, Download, Eye, FolderOpen, Zap} from 'lucide-r
 import {Badge, Banner, BarRow, Button, ChartLegend, DashboardBars, DashboardCard, type DashboardCardKind,
   DashboardDemographic, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader,
   DataTableRow, DataTableStack, DataTableText, DateRangeField, EmptyState, FilterChips, type FilterFacet, FilterMenu,
-  type FilterValue, IconButton, LineChart, Link, Menu, MenuItem, MenuTrigger, Pagination, Panel, SearchField,
-  SegmentedControl, SegmentedControlItem, Select, SelectionBar, SelectItem, Sparkline, StatRow, StatTile, StatusBadge,
-  Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, Text, toast,
+  type FilterValue, Grid, IconButton, Inline, LineChart, Link, Menu, MenuItem, MenuTrigger, Pagination, Panel, SearchField,
+  SegmentedControl, SegmentedControlItem, Select, SelectionBar, SelectItem, Sparkline, Stack, StatRow, StatTile,
+  StatusBadge, Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, Text, TileGrid, toast,
   VisuallyHidden} from 'govocal-ds';
 import {Meter} from 'govocal-ds/base';
 import {DASHBOARD, PROJECTS} from '../data';
@@ -62,10 +62,10 @@ function DownloadMenu({title}: {title: string}) {
 function DashCard({title, type, control, legend, footer, children}: {
   title: string; type?: DashboardCardKind; control?: ReactNode; legend?: ReactNode; footer?: ReactNode; children: ReactNode;
 }) {
-  const action = <span className="bo-dashboard-card-actions">{control}<DownloadMenu title={title} /></span>;
+  const action = <Inline elementType="span" gap="8" wrap="nowrap">{control}<DownloadMenu title={title} /></Inline>;
   return (
     <DashboardCard kind={type} title={title} actions={action} legend={legend} footer={footer}>
-      <div className="bo-dashboard-body">{children}</div>
+      <Stack gap="16" className="bo-dashboard-body">{children}</Stack>
     </DashboardCard>
   );
 }
@@ -73,9 +73,9 @@ function DashCard({title, type, control, legend, footer, children}: {
 /** Three figures side by side (Events, Invitations, Emails, Internal adoption): static Stat rows. */
 function StatTrio({items}: {items: [string, string][]}) {
   return (
-    <div className="bo-dashboard-stats">
+    <Grid columns={3} gap="8">
       {items.map(([label, value]) => <StatRow key={label} isStatic label={label} value={value} />)}
-    </div>
+    </Grid>
   );
 }
 
@@ -85,7 +85,7 @@ type FilterState = {project: string; setProject: (p: string) => void; preset: st
  * gv Date range field, the resolution as a Segmented control at the end. */
 function Filters({project, setProject, preset, setPreset}: FilterState) {
   return (
-    <div className="bo-dashboard-filters">
+    <Inline gap="12" paddingBlock="16">
       <Select variant="pill" aria-label="Project" prefix="Project:" isSearchable selectedKey={project}
         onSelectionChange={k => k != null && setProject(String(k))}>
         <SelectItem id={ALL} icon={<FolderOpen aria-hidden size={16} />}>All projects</SelectItem>
@@ -102,7 +102,7 @@ function Filters({project, setProject, preset, setPreset}: FilterState) {
         <SegmentedControlItem id="weeks">Weeks</SegmentedControlItem>
         <SegmentedControlItem id="months">Months</SegmentedControlItem>
       </SegmentedControl>
-    </div>
+    </Inline>
   );
 }
 
@@ -117,10 +117,10 @@ function narrow(h: Headline, project: string): Headline {
 
 function Section({id, title, children}: {id: string; title: string; children: ReactNode}) {
   return (
-    <section aria-labelledby={`bo-dashboard-${id}`} className="bo-dashboard-section">
-      <h2 id={`bo-dashboard-${id}`} className="bo-section-title">{title}</h2>
+    <Stack elementType="section" gap="16" aria-labelledby={`bo-dashboard-${id}`}>
+      <Text elementType="h2" id={`bo-dashboard-${id}`} kind="body" isStrong color="primary">{title}</Text>
       {children}
-    </section>
+    </Stack>
   );
 }
 
@@ -129,10 +129,10 @@ function People({project}: {project: string}) {
   const part = narrow(rawPart, project);
   return (
     <Section id="people" title="People">
-      <div className="bo-dashboard-kpis">
+      <TileGrid minTileWidth={160} density="compact">
         <HeadlineTile {...reg} note={project === ALL ? undefined : 'Platform-wide'} />
         <HeadlineTile {...part} />
-      </div>
+      </TileGrid>
       <DashCard title="Registrations and participants" type="participation-over-time">
         <LineChart xAxis={MONTHS} showLegend series={[{label: part.label, values: part.series}, {label: reg.label, values: reg.series}]} />
       </DashCard>
@@ -161,20 +161,20 @@ function Participation({project}: {project: string}) {
   const tagMax = Math.max(...tags.map(t => t.value));
   return (
     <Section id="participation" title="Projects and participation">
-      <div className="bo-dashboard-kpis">{headlines.map(d => <HeadlineTile key={d.label} {...d} />)}</div>
-      <div className="bo-dashboard-cards">
+      <TileGrid minTileWidth={160} density="compact">{headlines.map(d => <HeadlineTile key={d.label} {...d} />)}</TileGrid>
+      <TileGrid minTileWidth={360} className="bo-dashboard-cards">
         <DashCard title="Participation over time" type="participation-over-time">
           <LineChart xAxis={MONTHS} showLegend series={[{label: inputs.label, values: inputs.series}, {label: comments.label, values: comments.series}]} />
         </DashCard>
-        <div className="bo-dashboard-stack">
+        <Stack gap="16">
           <DashCard title="Participation per project" control={<MetricSelect value={projectMetric} onChange={setProjectMetric} />}>
             {projects.map(p => <BarRow key={p.label} label={p.label} percent={pct(p.value, projectMax)} value={n(p.value)} />)}
           </DashCard>
           <DashCard title="Participation per tag" control={<MetricSelect value={tagMetric} onChange={setTagMetric} />}>
             {tags.map(t => <BarRow key={t.label} label={t.label} percent={pct(t.value, tagMax)} value={n(t.value)} />)}
           </DashCard>
-        </div>
-      </div>
+        </Stack>
+      </TileGrid>
     </Section>
   );
 }
@@ -185,8 +185,8 @@ function Management() {
   const adoptionTotal = ADOPTION.admins.total + ADOPTION.managers.total;
   return (
     <Section id="management" title="Management">
-      <div className="bo-dashboard-cards">
-        <div className="bo-dashboard-stack">
+      <TileGrid minTileWidth={360} className="bo-dashboard-cards">
+        <Stack gap="16">
           <DashCard title="Input status" type="status-breakdown" footer={(
             <Link href="#/inputs" className="bo-dashboard-more">Go to Input Manager <ArrowRight aria-hidden size={16} /></Link>
           )}>
@@ -199,8 +199,8 @@ function Management() {
           <DashCard title="Events">
             <StatTrio items={[['Total events added', n(EVENTS.added)], ['Upcoming', n(EVENTS.upcoming)], ['Completed', n(EVENTS.completed)]]} />
           </DashCard>
-        </div>
-        <div className="bo-dashboard-stack">
+        </Stack>
+        <Stack gap="16">
           <DashCard title="Emails">
             <StatTrio items={[['Total emails sent', n(EMAILS.automated.total + EMAILS.custom.total)],
               ['Automated emails', n(EMAILS.automated.total)], ['Custom emails', n(EMAILS.custom.total)]]} />
@@ -217,8 +217,8 @@ function Management() {
             <Text elementType="p" kind="small" color="meta">Active in the last 30 days</Text>
             <LineChart xAxis={MONTHS} showLegend series={[{label: 'Active admins', values: ADOPTION.admins.series}, {label: 'Active project managers', values: ADOPTION.managers.series}]} />
           </DashCard>
-        </div>
-      </div>
+        </Stack>
+      </TileGrid>
     </Section>
   );
 }
@@ -229,25 +229,25 @@ function UsersTab({project}: {project: string}) {
   const part = narrow(rawPart, project);
   const areaMax = Math.max(...USERS.area.map(a => a.count));
   return (
-    <div className="bo-dashboard-tab">
-      <div className="bo-dashboard-kpis">
+    <Stack gap="16" className="bo-dashboard-tab">
+      <TileGrid minTileWidth={160} density="compact">
         <HeadlineTile {...reg} />
         <HeadlineTile {...part} />
         <StatTile label="Active users" value={n(USERS.active)} note="Took part in the last 90 days" />
-      </div>
+      </TileGrid>
       <DashCard title="Participants timeline" type="participation-over-time">
         <Banner tone="info">Participation numbers may not be fully accurate, as some data is captured in an external survey that is not tracked.</Banner>
         <LineChart xAxis={MONTHS} showLegend series={[{label: part.label, values: part.series}, {label: reg.label, values: reg.series}]} />
       </DashCard>
-      <div className="bo-dashboard-cards">
+      <TileGrid minTileWidth={360} className="bo-dashboard-cards">
         <DashCard title="Gender" type="demographic-age"><DashboardDemographic label="Share of participants" items={USERS.gender} /></DashCard>
         <DashCard title="Age" type="demographic-age"><DashboardDemographic label="Share of participants" items={USERS.age} /></DashCard>
         <DashCard title="Area">
           {USERS.area.map(a => <BarRow key={a.label} label={a.label} percent={pct(a.count, areaMax)} value={n(a.count)} />)}
         </DashCard>
         <DashCard title="Education" type="demographic-age"><DashboardDemographic label="Share of participants" items={USERS.education} /></DashCard>
-      </div>
-    </div>
+      </TileGrid>
+    </Stack>
   );
 }
 
@@ -255,21 +255,21 @@ function UsersTab({project}: {project: string}) {
 function VisitorsTab() {
   const sourceMax = Math.max(...VISITORS.sources.map(s => s.count));
   return (
-    <div className="bo-dashboard-tab">
-      <div className="bo-dashboard-kpis">
+    <Stack gap="16" className="bo-dashboard-tab">
+      <TileGrid minTileWidth={160} density="compact">
         {VISITORS.kpis.map(k => <StatTile key={k.label} label={k.label} value={k.value} note={k.note} />)}
-      </div>
+      </TileGrid>
       <DashCard title="Visitors over time" type="visitors-over-time">
         <LineChart xAxis={MONTHS} showLegend series={[{label: 'Visitors', values: VISITORS.visitors}, {label: 'Visits', values: VISITORS.visits}]} />
       </DashCard>
-      <div className="bo-dashboard-cards">
+      <TileGrid minTileWidth={360} className="bo-dashboard-cards">
         <DashCard title="Traffic sources">
           {VISITORS.sources.map(s => <BarRow key={s.label} label={s.label} percent={pct(s.count, sourceMax)} value={n(s.count)} />)}
         </DashCard>
         <DashCard title="Language" type="demographic-age"><DashboardDemographic label="Share of visits" items={VISITORS.language} /></DashCard>
         <DashCard title="Device types" type="demographic-age"><DashboardDemographic label="Share of visits" items={VISITORS.devices} /></DashCard>
-      </div>
-    </div>
+      </TileGrid>
+    </Stack>
   );
 }
 
@@ -278,26 +278,26 @@ function VisitorsTab() {
 function RepresentativenessTab() {
   const legend = <ChartLegend variant="square" align="start" items={[{label: 'Participants', color: 'bar'}, {label: 'Reference population', color: 'pass'}]} />;
   return (
-    <div className="bo-dashboard-tab">
-      <div className="bo-dashboard-kpis">
+    <Stack gap="16" className="bo-dashboard-tab">
+      <TileGrid minTileWidth={160} density="compact">
         <StatTile label="Representativeness score" value={`${REPRESENTATION.score}%`} note="How closely participants match the population" />
         <StatTile label="Fields compared" value={String(REPRESENTATION.fields.length)} note="With reference data" />
         <StatTile label="Users with data" value={`${REPRESENTATION.withData}%`} note="Filled in the registration fields" />
-      </div>
-      <div className="bo-dashboard-cards">
+      </TileGrid>
+      <TileGrid minTileWidth={360} className="bo-dashboard-cards">
         {REPRESENTATION.fields.map(f => (
           <DashCard key={f.field} title={f.field} legend={legend}>
             {f.rows.map(r => (
-              <div key={r.label} className="bo-dashboard-pair">
+              <Stack key={r.label} gap="2">
                 <BarRow label={r.label} percent={r.users} value={`${r.users}%`} />
                 <BarRow label={<VisuallyHidden>{r.label}, reference population</VisuallyHidden>} percent={r.population}
                   value={`${r.population}%`} barColor="--gv-chart-pass" />
-              </div>
+              </Stack>
             ))}
           </DashCard>
         ))}
-      </div>
-    </div>
+      </TileGrid>
+    </Stack>
   );
 }
 
@@ -370,7 +370,7 @@ function ParticipationFeed() {
                 <DataTableCell><Badge>{f.type}</Badge></DataTableCell>
                 <DataTableCell><DataTableText lines={2}>{f.content}</DataTableText></DataTableCell>
                 <DataTableCell isMuted>{f.project}</DataTableCell>
-                <DataTableCell isMuted><span className="bo-dashboard-nowrap">{f.date}</span></DataTableCell>
+                <DataTableCell isMuted>{f.date}</DataTableCell>
                 <DataTableCell align="options">
                   {show === 'new'
                     ? <Button variant="quiet" size={32} aria-label={`Mark as viewed: ${f.content}`}
@@ -429,7 +429,7 @@ function ManagementFeed() {
         <DataTableBody renderEmptyState={() => <DataTableEmpty>No results</DataTableEmpty>}>
           {shown.map(m => (
             <DataTableRow key={m.id} id={m.id} textValue={m.item}>
-              <DataTableCell isMuted><span className="bo-dashboard-nowrap">{m.date}</span></DataTableCell>
+              <DataTableCell isMuted>{m.date}</DataTableCell>
               <DataTableCell>{m.user}</DataTableCell>
               <DataTableCell><DataTableStack sub={m.kind}>{m.item}</DataTableStack></DataTableCell>
               <DataTableCell><Badge>{m.action}</Badge></DataTableCell>
@@ -455,17 +455,19 @@ export function Dashboard() {
         <TabList aria-label="Dashboard sections">{SECTIONS.map(s => <Tab key={s.slug} id={s.slug}>{s.label}</Tab>)}</TabList>
         <TabPanels>
         <TabPanel id="overview">
-          {filters}
-          <People project={project} />
-          <Participation project={project} />
-          <Management />
+          <Stack gap="24">
+            {filters}
+            <People project={project} />
+            <Participation project={project} />
+            <Management />
+          </Stack>
         </TabPanel>
         <TabPanel id="users"><SectionHeading>Users</SectionHeading>{filters}<UsersTab project={project} /></TabPanel>
         <TabPanel id="visitors"><SectionHeading>Visitors</SectionHeading>{filters}<VisitorsTab /></TabPanel>
         <TabPanel id="representativeness"><SectionHeading>Representativeness</SectionHeading><RepresentativenessTab /></TabPanel>
         {/* The feeds are Panels: their h2 is the Panel's title. */}
-        <TabPanel id="participation-feed"><div className="bo-dashboard-tab"><ParticipationFeed /></div></TabPanel>
-        <TabPanel id="management-feed"><div className="bo-dashboard-tab"><ManagementFeed /></div></TabPanel>
+        <TabPanel id="participation-feed"><Stack className="bo-dashboard-tab"><ParticipationFeed /></Stack></TabPanel>
+        <TabPanel id="management-feed"><Stack className="bo-dashboard-tab"><ManagementFeed /></Stack></TabPanel>
         </TabPanels>
       </Tabs>
     </Page>
