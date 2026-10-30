@@ -1,4 +1,5 @@
-import {createContext, useContext, useMemo, useState, type Dispatch, type ReactNode, type SetStateAction} from 'react';
+import {createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore, type Dispatch, type ReactNode,
+  type SetStateAction} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router';
 import {CalendarDays, CircleCheck, CircleDashed, Copy, Download, ExternalLink, FileChartColumn, FileText, Inbox, Lightbulb, Link2, List, Lock, Mail,
   Map as MapIcon, MessageSquareText, Paperclip, MapPin, Plus, Settings, Sparkles, SquarePen, Tag, Trash2, TriangleAlert, Upload, User, Users} from 'lucide-react';
@@ -19,16 +20,16 @@ import {ACCESS_WHO_VALUE, AccessRightsModal, type AccessWho, AppFramePanel, Avat
   Skeleton, Stack, StatRow, StatTile, SubmenuTrigger, Switch, TableToolbar, TableToolbarHeading, TabSection, Text, TextField, type ThreadComment,
   type ThreadTab, type ThreadTarget, TileGrid, type TimelinePhase, TitleField, toast, ViewOptionList, ViewOptionRow,
   useNumberFormatter, VisuallyHidden, VolunteeringRow, VotingRow, WorkspaceLayout} from 'govocal-ds';
-import {Dialog, Form, Tag as TagItem, TagGroup} from 'govocal-ds/base';
+import {Dialog, Tag as TagItem, TagGroup} from 'govocal-ds/base';
 import {PICTURES} from '../pictures';
 import {useOpenNav} from '../Layout';
 // Form field summary is a recipe (a story and its CSS): the page keeps its markup and uses the recipe's stylesheet.
-import {ME, METHODS, PROJECTS, type Method, type Phase, type Project} from '../data';
+import {ME, PROJECTS, type Method, type Phase, type Project} from '../data';
 import {LOCALES} from '../data-settings';
 import {IDEAS, IDEA_ASSIGNEES, IDEA_REPLIES, IDEA_SOURCES, IDEA_STATUSES, IDEA_TAGS, AREAS, TOPICS, PHASE_FILES, SCREENING_PHASES, TEAM, addedTimeline,
   NO_OVERVIEW, OVERVIEWS, PHONE_CALL, INSIGHT_WEEKS, PARTICIPATION_WEEKS, AI_SUMMARY, VOTE_OPTIONS, VOTES_BY_DAY, VOTER_AGES,
   VOTER_COMMUTES, PROPOSALS, IDEA_FORM, INPUT_TERMS, IDEA_SORTS, PARTICIPANT_ACTIONS, VOLUNTEER_ACTIONS, IDEA_VIEWS, emailsFor, CAUSES,
-  ideaComments, ideaInternal, ideaUpdates, timeline, type Idea, type IdeaStatus, type NewPhase, type ParticipantAction} from '../data-project';
+  ideaComments, ideaInternal, ideaUpdates, timeline, asPhase, type Idea, type IdeaStatus, type NewPhase, type ParticipantAction} from '../data-project';
 
 
 // The phase screen, from the Figma frames "Project · Build" and "Ideation · Manage (data)" (Screens WIP):
@@ -37,6 +38,25 @@ const TABS = ['build', 'manage', 'insights'] as const;
 type Tab = typeof TABS[number];
 const label = (t: string) => t[0].toUpperCase() + t.slice(1);
 const phaseUrl = (project: Project, phase: Phase, tab: Tab) => `/projects/${project.id}/phases/${phase.id}/${tab}`;
+
+// Phases added from the method picker, per project, for the whole visit: the overview and every phase screen share
+// them, so picking a method can open the new phase's Build at once.
+const addedPhases = new Map<string, NewPhase[]>();
+const addedListeners = new Set<() => void>();
+const NO_PHASES: NewPhase[] = [];
+export function useAddedPhases(projectId: string): [NewPhase[], (p: NewPhase) => void] {
+  const list = useSyncExternalStore(
+    on => { addedListeners.add(on); return () => { addedListeners.delete(on); }; },
+    () => addedPhases.get(projectId) ?? NO_PHASES
+  );
+  const add = (p: NewPhase) => {
+    addedPhases.set(projectId, [...(addedPhases.get(projectId) ?? []), p]);
+    addedListeners.forEach(on => on());
+  };
+  return [list, add];
+}
+/** Whether a new phase's Build has its title and dates (Save waits for them), by phase id. */
+const ReadyContext = createContext<(id: string, ready: boolean) => void>(() => {});
 
 export function ProjectPhase() {
   // One state per project: a phase added on one project's rail stays there.
@@ -50,12 +70,17 @@ function PhaseScreen() {
   const [railCollapsed, setRailCollapsed] = useRailCollapsed();
   const [settings, setSettings] = useState<SettingsTab | null>(null);
   const [adding, setAdding] = useState(false);
-  const [added, setAdded] = useState<NewPhase[]>([]);
+  const [added] = useAddedPhases(projectId ?? '');
+  const [ready, setReady] = useState<Record<string, boolean>>({});
   const [removed, deletePhase] = useDeletedPhases();
   const [save, setSave] = useState<'idle' | 'saving' | 'saved'>('idle');
   const project = PROJECTS.find(p => p.id === projectId);
   if (!project) return <Navigate to="/projects" replace />;
-  const phase = project.phases.find(p => p.id === phaseId) ?? project.phases[0];
+  const phases = [...project.phases, ...added.map(asPhase)];
+  const phase = phases.find(p => p.id === phaseId) ?? phases[0];
+  // A phase just added from the picker: Save stays off until its title and dates are set.
+  const isNew = added.some(p => p.id === phase.id);
+  const canSave = !isNew || ready[phase.id];
   const tabs = tabsOf(phase);
   if (phase.id !== phaseId || !tabs.includes(tab as Tab)) return <Navigate to={phaseUrl(project, phase, 'build')} replace />;
   const view = tab as Tab;
@@ -68,7 +93,7 @@ function PhaseScreen() {
   // Workspace layout on every tab: the rail, the tab's work column, then its stage or list. A phase that hasn't
   // started has collected nothing: Manage and Insights show the Empty state.
   let body: ReactNode;
-  if (view === 'build') body = <Build key={key} project={project} phase={phase} rail={rail} onSettings={setSettings} onChange={changed} />;
+  if (view === 'build') body = <Build key={key} project={project} phase={phase} number={phases.indexOf(phase) + 1} rail={rail} onSettings={setSettings} onChange={changed} />;
   else if (phase.status === 'Draft') body = <EmptyTab phase={phase} tab={view} rail={rail} />;
   else if (view === 'manage') {
     body = phase.method === 'Ideation'
@@ -82,16 +107,18 @@ function PhaseScreen() {
       {/* Project header's phase bar ("Tabs and unread dot", "Save states"): the panel toggle opens the platform's
           menu; crumbs and the project's own status; the phase's tabs (a survey has no Manage), Manage's dot while
           inputs wait unseen; who is here; Save, saving, then Back to project. */}
-      <ProjectHeader level="phase" status={project.status === 'Live' ? 'live' : 'draft'} projectName={project.title} phaseName={phase.title}
+      <ProjectHeader level="phase" status={project.status === 'Live' ? 'live' : 'draft'} projectName={project.title} phaseName={phase.title || phase.method}
         projectHref={`#/projects/${project.id}`} onBack={() => navigate(`/projects/${project.id}`)} onTogglePanel={openNav}
         labels={{toggleTimeline: NAV_TOGGLE}}
         modes={tabs.length > 1 ? tabs.map(t => ({id: t, label: label(t), hasUnread: t === 'manage' && (phase.fresh ?? 0) > 0})) : undefined} mode={view}
         onModeChange={t => navigate(phaseUrl(project, phase, t as Tab))}
         people={<Avatar initials={ME.slice(-1)} aria-label={`${ME} is here`} />}
-        saveState={save} onSave={() => { setSave('saving'); setTimeout(() => { setSave('saved'); toast('Changes saved'); }, 600); }} />
-      <WorkspaceRail isCollapsed={railCollapsed} onCollapsedChange={setRailCollapsed}>{body}</WorkspaceRail>
+        saveState={canSave ? save : undefined} onSave={() => { setSave('saving'); setTimeout(() => { setSave('saved'); toast('Changes saved'); }, 600); }} />
+      <ReadyContext.Provider value={(id, r) => setReady(all => (all[id] === r ? all : {...all, [id]: r}))}>
+        <WorkspaceRail isCollapsed={railCollapsed} onCollapsedChange={setRailCollapsed}>{body}</WorkspaceRail>
+      </ReadyContext.Provider>
       <ProjectSettings project={project} tab={settings} onTabChange={setSettings} onClose={() => setSettings(null)} />
-      <AddPhase isOpen={adding} onOpenChange={setAdding} onAdd={p => setAdded(a => [...a, p])} />
+      <AddPhase project={project} isOpen={adding} onOpenChange={setAdding} />
     </Grid>
   );
 }
@@ -150,7 +177,7 @@ export function ProjectRail({project, href, current, added, onAdd, onHide, remov
   href: (p: Phase) => string; current?: string; added: NewPhase[]; onAdd: () => void; onHide: () => void;
   removed: Set<string>; onDelete: (p: TimelinePhase) => void}) {
   const {spotlight, events} = OVERVIEWS[project.id] ?? NO_OVERVIEW;
-  const phases = [...timeline(project, href, current), ...addedTimeline(added)].filter(p => !removed.has(p.id));
+  const phases = [...timeline(project, href, current), ...addedTimeline(added, p => href(asPhase(p)), current)].filter(p => !removed.has(p.id));
   return (
     <Stack gap="16">
       <RailHeader title="Participation" onAdd={onAdd} onTogglePanel={onHide}
@@ -259,7 +286,7 @@ export const CHECKLIST_TAB: Partial<Record<string, SettingsTab>> = {'Settings': 
 // (a plain Panel, the phase's cards in sections) and what residents see of the phase on the stage (the Phone preview
 // on its Phone stage). The project's own publish checklist lives on the overview. An email opened from the
 // Notifications card takes the setup's place (Notification email), the email itself on the phone.
-function Build({project, phase, rail, onSettings, onChange}: {project: Project; phase: Phase; rail: ReactNode;
+function Build({project, phase, number, rail, onSettings, onChange}: {project: Project; phase: Phase; number: number; rail: ReactNode;
   onSettings: (tab: SettingsTab) => void; onChange: () => void}) {
   const [stub, setStub] = useState<string | null>(null);
   const [attaching, setAttaching] = useState(false);
@@ -288,9 +315,7 @@ function Build({project, phase, rail, onSettings, onChange}: {project: Project; 
           {phase.method === 'Ideation' ? <IdeationCards {...common} />
           : phase.method === 'Volunteering' ? <VolunteeringCards {...common} />
           : phase.method === 'Information' ? <InformationCards {...common} />
-          : (
-            <Text elementType="p" kind="small" color="meta">The {phase.method.toLowerCase()} setup cards: not in Figma yet.</Text>
-          )}
+          : <FirstCards {...common} />}
         </Stack>
       )}
     </Panel>
@@ -304,7 +329,7 @@ function Build({project, phase, rail, onSettings, onChange}: {project: Project; 
               logo={LOGO} logoLabel="Larkvale" title={email.name} headingLevel={2} buttonText="View it" defaultDevice="phone">
               <p>{email.when}: this email goes to the {email.who.toLowerCase()}.</p>
             </EmailPreview>
-          ) : <PhasePhone project={project} phase={phase} />}
+          ) : <PhasePhone project={project} phase={phase} number={number} />}
         </Grid>
       </Workspace>
       <CardStub title={stub} onClose={() => setStub(null)} />
@@ -326,10 +351,9 @@ const STATE_OF: Record<Phase['status'], PhoneState> = {Draft: 'before', Live: 'o
 /** What residents see of the phase (Phone phase card's "In the phone"): its number, title and dates on the phase page,
  * and the participation bar at the foot. A vote's or a common ground's stage switches the phone between Before, Open
  * and Ended (Phone preview's "Stage toolbar"). */
-function PhasePhone({project, phase}: {project: Project; phase: Phase}) {
+function PhasePhone({project, phase, number}: {project: Project; phase: Phase; number: number}) {
   const [state, setState] = useState<PhoneState>(STATE_OF[phase.status]);
   const call = PHONE_CALL[phase.method];
-  const number = project.phases.indexOf(phase) + 1;
   const toolbar = (phase.method === 'Voting' || phase.method === 'Common ground') && (
     <SegmentedControl aria-label="Phase state" disallowEmptySelection selectedKeys={[state]}
       onSelectionChange={k => { const next = [...k][0]; if (next) setState(next as PhoneState); }}>
@@ -386,6 +410,7 @@ function phaseRange(dates: string): {start: string; end: string} | undefined {
 
 function PhaseStatus({phase}: {phase: Phase}) {
   const range = phaseDates(phase.dates);
+  if (!phase.dates) return null;
   if (phase.status === 'Live') return <Banner density="compact" tone="success" title="Live">{range ? `Ends on ${range[1]}` : phase.dates}</Banner>;
   if (phase.status === 'Done') return <Banner density="compact" tone="neutral" title="Ended">{range ? `Closed on ${range[1]}` : phase.dates}</Banner>;
   return <Banner density="compact" tone="neutral" title="Not started">{range ? `Starts on ${range[0]}` : phase.dates}</Banner>;
@@ -419,17 +444,22 @@ function DatesAndTitle({phase, onChange, help, reviewed}: {phase: Phase; onChang
   const [locale, setLocale] = useState(LANGUAGES[0]);
   const [title, setTitle] = useState<Multiloc>({[LANGUAGES[0]]: phase.title});
   const [description, setDescription] = useState<Multiloc>({});
+  const [hasDates, setHasDates] = useState(phaseRange(phase.dates) != null);
+  const setReady = useContext(ReadyContext);
+  const ready = hasDates && !!title[LANGUAGES[0]]?.trim();
+  useEffect(() => setReady(phase.id, ready), [phase.id, ready, setReady]);
   return <>
-    <li data-gv="setup-card"><Card {...review(reviewed, 'Dates')} isRequired pills={[{label: phase.dates, icon: CalendarDays}]}>
+    <li data-gv="setup-card"><Card {...review(reviewed, 'Dates')} isRequired pills={phase.dates ? [{label: phase.dates, icon: CalendarDays}] : undefined}>
       {/* The prototype's Dates row opens to the fields and where the phase stands ("Finished 11 days ago"). */}
       <Stack gap="8">
-        <DateRangeField isRequired description={help} defaultValue={phaseRange(phase.dates)} onChange={onChange} />
+        <DateRangeField isRequired description={help} defaultValue={phaseRange(phase.dates)}
+          onChange={v => { setHasDates(v != null); onChange(); }} />
         <PhaseStatus phase={phase} />
       </Stack>
     </Card></li>
     <li>
       <Stack gap="8">
-        <TitleField aria-label="Phase title" isRequired lang={locale} value={title[locale] ?? ''}
+        <TitleField aria-label="Phase title" placeholder="Add a title" isRequired lang={locale} value={title[locale] ?? ''}
           onChange={text => { setTitle(t => ({...t, [locale]: text})); onChange(); }}
           localeSwitcher={(
             <LocaleSwitcher kind="menu" aria-label="Content language" locales={LANGUAGES} locale={locale}
@@ -605,6 +635,18 @@ function IdeationCards({phase, onOpen, onChange, files, onAttach, screens, ...em
         <ModerationCard reviewed={reviewed} screens={screens} onChange={onChange} />
         <NotificationsCard reviewed={reviewed} {...emails} />
       </SetupSection>
+    </Stack>
+  );
+}
+
+/** A method whose own setup isn't built yet: the rows every setup opens with (dates, title, description, Attachments). */
+function FirstCards({phase, onChange, files, onAttach}: SetupCommon) {
+  const reviewed = useReviewed();
+  return (
+    <Stack elementType="ul" gap="8">
+      <DatesAndTitle phase={phase} onChange={onChange} help="Residents can take part from the first day to the last." reviewed={reviewed} />
+      <AttachmentsCard files={files} onAttach={onAttach} />
+      <li><Text elementType="p" kind="small" color="meta">The rest of the {phase.method.toLowerCase()} setup: not built yet.</Text></li>
     </Stack>
   );
 }
@@ -1398,85 +1440,64 @@ export function ProjectSettings({project, tab, onTabChange, onClose}: {project: 
   );
 }
 
-// The method picker's side tabs and cards (Method card's "All variants"): what each method does, from the platform's
-// Method card stories, the project templates and the phone's lines; a picture where the system has the method's illustration.
+// The method picker, after the prototype's "New participation method": side tabs of the three kinds, each a grid of
+// Method cards (a method can sit in two kinds); what each does, from the platform's Method card stories, the project
+// templates and the phone's lines; a picture where the system has the method's illustration.
 const METHOD_GROUPS: {title: string; methods: Method[]}[] = [
-  {title: 'Gather input', methods: ['Ideation', 'Survey', 'Poll', 'Document annotation']},
-  {title: 'Shape decisions', methods: ['Voting', 'Proposals', 'Common ground']},
+  {title: 'Gather input', methods: ['Ideation', 'Survey', 'Proposals', 'Document annotation']},
+  {title: 'Shape decisions', methods: ['Voting', 'Document annotation', 'Proposals', 'Common ground']},
   {title: 'Inform and recruit', methods: ['Information', 'Volunteering']}
 ];
-const METHOD_CARD: Record<Method, {title: string; description: string; picture?: IllustrationName; features: string[]}> = {
+const METHOD_CARD: Record<Method, {title: string; description: string; picture?: IllustrationName; features: {label: string; isHighlighted?: boolean}[]}> = {
   Ideation: {title: 'Ideation and geo mapping', description: 'Invite participants to share input on any topic, discuss it in public and place it on a map.',
-    picture: 'ideation-map', features: ['Map pins', 'Reactions and comments', 'Grouped into themes']},
+    picture: 'ideation-map', features: [{label: 'Map pins'}, {label: 'Reactions and comments'}, {label: 'Grouped into themes'}]},
   Survey: {title: 'Survey', description: "Understand your users' needs and thinking via a wide range of private question types.",
-    picture: 'survey-pages', features: ['Drop a pin', 'Rating and sentiment scales']},
+    picture: 'survey-pages', features: [{label: 'Surveys can run in parallel with other methods', isHighlighted: true}, {label: 'Drop a pin'},
+      {label: 'Rating and sentiment scales'}]},
   Poll: {title: 'Poll', description: 'Take the pulse of public opinion on one topic.', features: []},
   'Document annotation': {title: 'Document annotation', description: 'Participants comment on a draft document, passage by passage.',
-    picture: 'document-annotation', features: ['Inline comments']},
+    picture: 'document-annotation', features: [{label: 'Inline comments'}]},
   Voting: {title: 'Voting', description: 'Let residents prioritise the options, or share part of the budget across competing proposals.', features: []},
   Proposals: {title: 'Proposals and petitions', description: 'Participants put forward proposals; each one needs enough votes before its deadline.',
-    picture: 'proposal-threshold', features: ['Vote threshold', 'Deadline']},
+    picture: 'proposal-threshold', features: [{label: 'Vote threshold'}, {label: 'Deadline'}]},
   'Common ground': {title: 'Common ground', description: 'Agree, disagree or pass: see where the neighbourhood stands.', features: []},
-  Information: {title: 'Information', description: 'Shares news with residents; it collects no inputs.', features: []},
-  Volunteering: {title: 'Volunteering', description: 'Residents sign up for the causes you add, and you download who volunteered.', features: []}
+  Information: {title: 'Sharing', description: 'Shares news with residents; it collects no inputs.', features: []},
+  Volunteering: {title: 'Recruiting', description: 'Residents sign up for the causes you add, and you download who volunteered.', features: []}
 };
 
-/** Add a phase: the method picker (Modal with side tabs, a grid of Method cards), then the new phase's title and dates. */
-export function AddPhase({isOpen, onOpenChange, onAdd}: {isOpen: boolean; onOpenChange: (open: boolean) => void;
-  onAdd: (phase: NewPhase) => void}) {
-  const [titles, setTitles] = useState<Multiloc>({});
-  const [method, setMethod] = useState<Method | null>(null);
+/** Add a phase: the method picker (Modal with side tabs, a grid of Method cards). Picking a method adds the phase at
+ * once and opens its Build, where its dates and title wait, marked required. */
+export function AddPhase({project, isOpen, onOpenChange}: {project: Project; isOpen: boolean; onOpenChange: (open: boolean) => void}) {
+  const navigate = useNavigate();
+  const [, add] = useAddedPhases(project.id);
   const [group, setGroup] = useState(METHOD_GROUPS[0].title);
-  const [dates, setDates] = useState('');
-  // The timeline shows the title in the platform's first language: that one adds the phase; the others can follow.
-  const title = titles[LANGUAGES[0]]?.trim() ?? '';
-  const open = (o: boolean) => { if (!o) setMethod(null); onOpenChange(o); };
-  const add = () => {
-    if (!title || !method) return;
-    onAdd({id: `new-${Date.now()}`, title, method, dates: dates.trim() || 'Dates not set'});
-    setTitles({}); setDates('');
-    open(false);
+  const pick = (method: Method) => {
+    const phase: NewPhase = {id: `new-${Date.now()}`, title: '', method, dates: ''};
+    add(phase);
+    onOpenChange(false);
+    navigate(`/projects/${project.id}/phases/${phase.id}/build`);
   };
-  if (!method) {
-    return (
-      <Modal title="Add a phase" description="Pick how residents take part in it." width="wide" height="fixed" isFlush
-        isOpen={isOpen} onOpenChange={open} footer={<Button variant="secondary" size={32} slot="close">Cancel</Button>}>
-        <GroupedTabs selectedKey={group} onSelectionChange={k => setGroup(String(k))} className="bo-phase-settings">
-          <GroupedTabList aria-label="Kinds of method" className="bo-phase-settings-list">
-            <TabSection title="Methods">
-              {METHOD_GROUPS.map(g => <GroupedTab key={g.title} id={g.title}>{g.title}</GroupedTab>)}
-            </TabSection>
-          </GroupedTabList>
-          {METHOD_GROUPS.map(g => (
-            <GroupedTabPanel key={g.title} id={g.title} className="bo-phase-settings-panel">
-              <Grid columns={2} gap="16">
-                {g.methods.map(m => {
-                  const c = METHOD_CARD[m];
-                  return (
-                    <MethodCard key={m} title={c.title} description={c.description} onPress={() => setMethod(m)}
-                      media={c.picture && <Illustration name={c.picture} size={320} height={168} motion="hover" />}
-                      features={c.features.map(label => ({label}))} />
-                  );
-                })}
-              </Grid>
-            </GroupedTabPanel>
-          ))}
-        </GroupedTabs>
-      </Modal>
-    );
-  }
   return (
-    <Modal title="Add a phase" description={METHOD_CARD[method].title} isOpen={isOpen} onOpenChange={open}
-      footer={<>
-        <Button variant="secondary" size={32} onPress={() => setMethod(null)}>Back</Button>
-        <Button size={32} isDisabled={!title} onPress={add}>Add phase</Button>
-      </>}>
-      <Form onSubmit={e => { e.preventDefault(); add(); }}>
-        <Stack gap="8">
-          <MultilingualTextField label="Title" isRequired locales={LANGUAGES} value={titles} onChange={setTitles} autoFocus />
-          <TextField label="Dates" placeholder="e.g. 17 Nov to 7 Dec" value={dates} onChange={setDates} />
-        </Stack>
-      </Form>
+    <Modal title="New participation method" width="wide" height="fixed" isFlush isOpen={isOpen} onOpenChange={onOpenChange}>
+      <GroupedTabs selectedKey={group} onSelectionChange={k => setGroup(String(k))} className="bo-phase-settings">
+        <GroupedTabList aria-label="Kinds of method" className="bo-phase-settings-list">
+          {METHOD_GROUPS.map(g => <GroupedTab key={g.title} id={g.title}>{g.title}</GroupedTab>)}
+        </GroupedTabList>
+        {METHOD_GROUPS.map(g => (
+          <GroupedTabPanel key={g.title} id={g.title} className="bo-phase-settings-panel">
+            <Grid columns={2} gap="16">
+              {g.methods.map(m => {
+                const c = METHOD_CARD[m];
+                return (
+                  <MethodCard key={m} title={c.title} description={c.description} onPress={() => pick(m)}
+                    media={c.picture && <Illustration name={c.picture} size={320} height={168} motion="hover" />}
+                    features={c.features} />
+                );
+              })}
+            </Grid>
+          </GroupedTabPanel>
+        ))}
+      </GroupedTabs>
     </Modal>
   );
 }

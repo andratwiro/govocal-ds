@@ -243,21 +243,33 @@ test('the settings cog opens the project settings, tab by tab', async ({page}) =
   await expect(dialog.getByRole('row', {name: 'Cycling'})).toBeVisible();
 });
 
-test('Add a phase puts a new upcoming phase on the timeline', async ({page}) => {
+test('Add a phase: the method picker; picking a method opens the new phase\'s Build, Save off until it has a title and dates', async ({page}) => {
   await page.goto(URL);
   await page.getByRole('complementary', {name: 'Participation'}).getByRole('button', {name: 'Add a phase'}).click();
-  const dialog = page.getByRole('dialog', {name: 'Add a phase'});
-  // The method picker: side tabs of kinds of method, a grid of Method cards; a card leads to the phase's title and dates.
-  await expect(dialog.getByRole('listbox', {name: 'Kinds of method'}).getByRole('option')).toHaveCount(3);
-  await dialog.getByRole('button', {name: 'Ideation and geo mapping'}).click();
-  await expect(dialog.getByRole('button', {name: 'Add phase'})).toBeDisabled();
-  await dialog.getByRole('textbox', {name: 'Title, English'}).fill('Walk the route');
-  await dialog.getByRole('textbox', {name: 'Dates'}).fill('9 to 23 Feb');
-  await dialog.getByRole('button', {name: 'Add phase'}).click();
+  const dialog = page.getByRole('dialog', {name: 'New participation method'});
+  // The prototype's picker: three kinds of method, no heading over them, no footer.
+  const kinds = dialog.getByRole('listbox', {name: 'Kinds of method'});
+  await expect(kinds.getByRole('option')).toHaveText(['Gather input', 'Shape decisions', 'Inform and recruit']);
+  for (const m of ['Ideation and geo mapping', 'Survey', 'Proposals and petitions', 'Document annotation'])
+    await expect(dialog.getByRole('button', {name: m})).toBeVisible();
+  await expect(dialog.getByRole('button', {name: 'Cancel'})).toHaveCount(0);
+  await kinds.getByRole('option', {name: 'Inform and recruit'}).click();
+  await expect(dialog.getByRole('button', {name: 'Sharing'})).toBeVisible();
+  await dialog.getByRole('button', {name: 'Recruiting'}).click();
   await expect(dialog).toHaveCount(0);
+  await expect(page).toHaveURL(/#\/projects\/green-corridors\/phases\/new-\d+\/build$/);
   const rail = page.getByRole('navigation', {name: 'Phases'});
-  await expect(rail).toContainText('Walk the route');
-  await expect(rail).toContainText('Upcoming · 9 to 23 Feb · Ideation');
+  await expect(rail).toContainText('Upcoming · No dates yet · Volunteering');
+  const setup = page.getByRole('region', {name: 'Volunteering setup'});
+  await expect(setup.getByRole('textbox', {name: 'Phase title'})).toHaveValue('');
+  await expect(page.getByRole('button', {name: 'Save'})).toBeDisabled();
+  await setup.getByRole('textbox', {name: 'Phase title'}).fill('Plant the corridor');
+  // Still no dates: Save waits.
+  await expect(page.getByRole('button', {name: 'Save'})).toBeDisabled();
+  // Back on the overview, the phase is still on the rail.
+  await page.getByRole('link', {name: 'Green Corridors for Larkvale'}).click();
+  await expect(page).toHaveURL(/#\/projects\/green-corridors$/);
+  await expect(page.getByRole('navigation', {name: 'Phases'})).toContainText('Volunteering');
 });
 
 test('a phase on the rail deletes from its row (Rail phase), and the Toast undoes it', async ({page}) => {

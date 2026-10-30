@@ -448,7 +448,7 @@ test('batch Copy to phase: tick several phases, the menu stays open; Add phase f
   await expect(page.getByText('1 idea copied to Community vote.')).toBeVisible();
   await expect(menu.getByRole('separator')).toHaveCount(1);
   await menu.getByRole('menuitem', {name: 'Add phase'}).click();
-  await expect(page.getByRole('dialog', {name: 'Add a phase'})).toBeVisible();
+  await expect(page.getByRole('dialog', {name: 'New participation method'})).toBeVisible();
 });
 
 test('the Filter menu: Enter ticks an option and the submenu stays open; Esc closes', async ({page}) => {

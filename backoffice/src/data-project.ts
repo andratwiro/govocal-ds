@@ -149,9 +149,16 @@ export const IDEAS: Idea[] = Array.from({length: 124}, (_, n) => {
 });
 
 /** A phase added from the rail's "Add a phase" form: upcoming, with no screen of its own yet. */
+/** A phase added from the method picker: no title or dates yet (its Build asks for them). */
 export type NewPhase = {id: string; title: string; method: Phase['method']; dates: string};
-export const addedTimeline = (added: NewPhase[]): TimelinePhase[] =>
-  added.map(p => ({id: p.id, title: p.title, status: 'upcoming', dates: p.dates, method: METHOD_WORD[p.method] ?? p.method}));
+/** Added phases on the rail: an untitled one reads as its method, as the prototype's rail shows it. */
+export const addedTimeline = (added: NewPhase[], href?: (p: NewPhase) => string, currentId?: string): TimelinePhase[] =>
+  added.map(p => {
+    const method = METHOD_WORD[p.method] ?? p.method;
+    return {id: p.id, title: p.title || method, status: 'upcoming', dates: p.dates || 'No dates yet', method, href: href?.(p), isCurrent: p.id === currentId};
+  });
+/** An added phase as the phase screen reads it: a draft. */
+export const asPhase = (p: NewPhase): Phase => ({id: p.id, title: p.title, method: p.method, status: 'Draft', dates: p.dates});
 
 // ── Phase screen · Manage side panel ─────────────────────────────────────────────────────────────────
 /** Phases that screen new ideas ("projectId/phaseId"): a waiting idea opens on Approve / Reject. */

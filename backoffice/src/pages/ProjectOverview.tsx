@@ -7,9 +7,9 @@ import {ActionRow, AlertDialog, Avatar, AvatarGroup, Badge, Button, Card, Divide
 import {Dialog, DialogTrigger, Form, Popover} from 'govocal-ds/base';
 import {useOpenNav} from '../Layout';
 import {ME, PROJECTS, type Project} from '../data';
-import {NO_OVERVIEW, OVERVIEWS, type NewPhase, type Overview} from '../data-project';
+import {NO_OVERVIEW, OVERVIEWS, type Overview} from '../data-project';
 import {AddPhase, CHECKLIST, CHECKLIST_TAB, CardStub, ChecklistStep, LOGO, NAV_TOGGLE, ProjectRail, ProjectSettings, Workspace,
-  WorkspaceRail, useDeletedPhases, useRailCollapsed, type SettingsTab} from './ProjectPhase';
+  WorkspaceRail, useAddedPhases, useDeletedPhases, useRailCollapsed, type SettingsTab} from './ProjectPhase';
 
 // The project's publication status: one next step from each state, asked first (an Alert dialog).
 type PubStatus = 'Draft' | 'Published' | 'Archived';
@@ -35,7 +35,7 @@ function Overview({projectId}: {projectId?: string}) {
   const [railCollapsed, setRailCollapsed] = useRailCollapsed();
   const [settings, setSettings] = useState<SettingsTab | null>(null);
   const [adding, setAdding] = useState(false);
-  const [added, setAdded] = useState<NewPhase[]>([]);
+  const [added] = useAddedPhases(projectId ?? '');
   const [removed, deletePhase] = useDeletedPhases();
   const [confirm, setConfirm] = useState<PubStatus | null>(null);
   const [dirty, setDirty] = useState(false);
@@ -85,7 +85,7 @@ function Overview({projectId}: {projectId?: string}) {
         </Workspace>
       </WorkspaceRail>
       <ProjectSettings project={project} tab={settings} onTabChange={setSettings} onClose={() => setSettings(null)} />
-      <AddPhase isOpen={adding} onOpenChange={setAdding} onAdd={p => setAdded(a => [...a, p])} />
+      <AddPhase project={project} isOpen={adding} onOpenChange={setAdding} />
       <AlertDialog title={confirm ? `${NEXT[status].label}?` : ''} isOpen={confirm !== null} onOpenChange={v => { if (!v) setConfirm(null); }}
         confirmLabel={NEXT[status].label} onConfirm={() => { if (confirm) { setStatus(confirm); toast(DONE[confirm]); } setConfirm(null); }}>
         <Text elementType="p" kind="small" color="meta">

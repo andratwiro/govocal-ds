@@ -41,6 +41,16 @@ Calls made moving the overview and phase screens closer to the prototype with th
   published project has finished.
 - Share popover: 30 of padding (the popover's 6 plus the starter Dialog's 24) vs the prototype's ≈14 → **a flush
   Dialog with the content's own 8** → the popover's 6 + 8 on the spacing scale.
+- The method picker: our groups, Poll, a Cancel footer and a title-and-dates step vs the prototype's → **"New
+  participation method": Gather input (Ideation and geo mapping, Survey, Proposals and petitions, Document
+  annotation), Shape decisions (Voting, Document annotation, Proposals and petitions, Common ground), Inform and
+  recruit (Sharing, Recruiting); no footer; a pick adds the phase and opens its Build, its dates and title empty and
+  required, Save off until both are set** → structure follows the prototype. Poll leaves the picker (the prototype
+  has none; whether it stays a method is a product call). Cards without an illustration stay without one until the
+  system draws them. Added phases live for the visit, shared by the overview and the phase screens.
+- A method whose setup isn't built (Proposals, Voting, Survey, Common ground, Document annotation) showed one line →
+  **the rows every setup opens with (Dates, title, description, Attachments), then the line** → a new phase of any
+  method can be named and dated; each method's own rows come with its package.
 
 ## Preview parts and the Gantt chart (30 Oct 2026, deep review 2: S10–S12)
 
