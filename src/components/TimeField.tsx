@@ -16,7 +16,7 @@ export interface TimeFieldProps<T extends TimeValue> extends AriaTimeFieldProps<
   errorMessage?: string | ((validation: ValidationResult) => string);
 }
 
-/** Typed time entry in segments (hour, minute); React Aria's TimeField. Use it beside a date field when a time of day matters. */
+/** Typed time entry in segments (hour, minute) (React Aria's TimeField): use it beside a date field when a time of day matters. */
 export function TimeField<T extends TimeValue>({
   label,
   description,

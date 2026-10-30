@@ -8,7 +8,7 @@ import './Form.css';
 import clsx from 'clsx';
 import {keepClass, ownClass} from './className';
 
-/** A form wrapper that shows validation errors on its fields; React Aria's Form. For the shape of an invalid form, see Form validation. */
+/** A form wrapper that shows validation errors on its fields (React Aria's Form): for the shape of an invalid form, see Form validation. */
 export function Form(props: FormProps) {
   return <RACForm {...props} className={clsx('react-aria-Form gv-base-form', props.className)} />;
 }

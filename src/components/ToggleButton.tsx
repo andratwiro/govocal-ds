@@ -16,7 +16,7 @@ export interface ToggleButtonProps extends RACToggleButtonProps {
   variant?: 'primary' | 'secondary' | 'quiet';
 }
 
-/** A button that stays pressed or not, such as bold; React Aria's ToggleButton. For choosing one view among a few, use Segmented control. */
+/** A button that stays pressed or not, such as bold (React Aria's ToggleButton): for choosing one view among a few, use Segmented control. */
 export function ToggleButton(props: ToggleButtonProps) {
   return (
     <RACToggleButton

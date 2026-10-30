@@ -19,7 +19,7 @@ import './ListBox.css';
 import {keepClass, ownClass} from './className';
 import clsx from 'clsx';
 
-/** A list of options to pick one or several from, always in view; React Aria's ListBox. In a popover, use Option list or Select. */
+/** A list of options to pick one or several from, always in view (React Aria's ListBox): in a popover, use Option list or Select. */
 export function ListBox<T>({children, ...props}: ListBoxProps<T>) {
   return <AriaListBox {...props} className={keepClass(props.className, 'gv-base-list-box')}>{children}</AriaListBox>;
 }

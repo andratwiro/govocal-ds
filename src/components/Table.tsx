@@ -31,7 +31,7 @@ import './Table.css';
 import {keepClass} from './className';
 import clsx from 'clsx';
 
-/** A table with sortable columns and row selection; React Aria's Table. For lists of records in pages, use Data table. */
+/** A table with sortable columns and row selection (React Aria's Table): for lists of records in pages, use Data table. */
 export function Table(props: TableProps) {
   return <AriaTable {...props} className={keepClass(props.className, 'gv-base-table')} />;
 }

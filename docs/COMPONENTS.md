@@ -218,7 +218,7 @@ part's `<Name>.guide.md`) names the part to use instead.
 - **Rail phase** `RailPhase` (not in Figma): A phase in the project rail. Stories: All Variants, Upcoming, Live, Completed, Meta Only, With Delete.
 
 ## Patterns / Recipes
-- **Form validation** `Form` (not in Figma): A form wrapper that shows validation errors on its fields; Stories: All Invalid, Submit To Validate.
+- **Form validation** `Form` (not in Figma): A form wrapper that shows validation errors on its fields (React Aria's Form): for the shape of an invalid form, see Form validation. Stories: All Invalid, Submit To Validate.
 - **Integration seams** (not in Figma): Integration seams, a recipe: the four places where the system stops and an app starts (a router, a form library, translated words, data that loads or fails),… Stories: Router Link, Form Library Field, Translated Strings, Table Loading Error Data.
 
 ## Patterns / Report builder
@@ -228,29 +228,29 @@ part's `<Name>.guide.md`) names the part to use instead.
 ## Base
 React Aria parts painted with the tokens. Primitives: don't use them directly in pages; prefer the Components entry; when a page truly needs one, import it from `govocal-ds/base`.
 
-- **Calendar** `Calendar` (primitive): A month grid to pick one date; Stories: Example.
-- **Checkbox** `Checkbox` (primitive; hidden: a Component replaces it): One tick box with a label; Stories: Example.
-- **ColorField** `ColorField` (primitive): A text field to type a colour as hex; Stories: Example.
-- **ColorSwatch** `ColorSwatch` (primitive): A small square showing one colour; Stories: Example.
-- **DateField** `DateField` (primitive): Typed date entry in segments (day, month, year); Stories: Example.
-- **DatePicker** `DatePicker` (primitive): A date field with a button that opens a Calendar; Stories: Example.
-- **DateRangePicker** `DateRangePicker` (primitive): A start and end date in one field with a RangeCalendar; Stories: Example.
-- **Dialog** `Dialog` (primitive; hidden: a Component replaces it): The content of a pop-up dialog (title, body, close); Stories: Example.
-- **Disclosure** `Disclosure` (primitive): One heading that shows or hides a panel; Stories: Example.
-- **DisclosureGroup** `DisclosureGroup` (primitive): A stack of Disclosures where one or several are open; Stories: Example.
-- **Form** `Form` (primitive): A form wrapper that shows validation errors on its fields; Stories: Example.
-- **GridList** `GridList` (primitive): A list or grid of selectable, keyboard-friendly items with actions; Stories: Example, Sections.
-- **ListBox** `ListBox` (primitive): A list of options to pick one or several from, always in view; Stories: Example, Sections.
-- **Meter** `Meter` (primitive): A bar showing a value within a known range, such as space used; Stories: Example.
-- **Modal** `Modal` (primitive; hidden: a Component replaces it): The dimmed overlay and box that holds a Dialog; Stories: Example.
-- **Popover** `Popover` (primitive): A floating panel anchored to a button; Stories: Example.
-- **RangeCalendar** `RangeCalendar` (primitive): A month grid to pick a start and end date; Stories: Example.
-- **Table** `Table` (primitive; hidden: a Component replaces it): A table with sortable columns and row selection; Stories: Example.
-- **TagGroup** `TagGroup` (primitive): A row of tags that can be selected or removed; Stories: Example.
-- **TimeField** `TimeField` (primitive): Typed time entry in segments (hour, minute); Stories: Example.
-- **ToggleButton** `ToggleButton` (primitive): A button that stays pressed or not, such as bold; Stories: Example.
-- **Toolbar** `Toolbar` (primitive): A row of controls moved through with the arrow keys; Stories: Example.
-- **Tree** `Tree` (primitive): A nested list that expands and collapses, with selectable rows; Stories: Example.
+- **Calendar** `Calendar` (primitive): A month grid to pick one date (React Aria's Calendar): for a date in a form, use DatePicker or Date range field. Stories: Example.
+- **Checkbox** `Checkbox` (primitive; hidden: a Component replaces it): One tick box with a label (React Aria's Checkbox): in pages use the Checkbox component, or Checkbox group for several options. Stories: Example.
+- **ColorField** `ColorField` (primitive): A text field to type a colour as hex (React Aria's ColorField): use it for a colour setting, with ColorSwatch to show the result. Stories: Example.
+- **ColorSwatch** `ColorSwatch` (primitive): A small square showing one colour (React Aria's ColorSwatch): pair it with ColorField when a person picks a colour. Stories: Example.
+- **DateField** `DateField` (primitive): Typed date entry in segments (day, month, year) (React Aria's DateField): for picking from a grid too, use DatePicker. Stories: Example.
+- **DatePicker** `DatePicker` (primitive): A date field with a button that opens a Calendar (React Aria's DatePicker): for a start and an end, use Date range field. Stories: Example.
+- **DateRangePicker** `DateRangePicker` (primitive): A start and end date in one field with a RangeCalendar (React Aria's DateRangePicker): prefer Date range field, where the end may stay empty. Stories: Example.
+- **Dialog** `Dialog` (primitive; hidden: a Component replaces it): The content of a pop-up dialog (title, body, close) (React Aria's Dialog): use Modal for a form, or Alert dialog to confirm a risky action. Stories: Example.
+- **Disclosure** `Disclosure` (primitive): One heading that shows or hides a panel (React Aria's Disclosure): use Section toggle or Switch with revealed fields for a page section. Stories: Example.
+- **DisclosureGroup** `DisclosureGroup` (primitive): A stack of Disclosures where one or several are open (React Aria's DisclosureGroup): use it for a short run of show/hide panels. Stories: Example.
+- **Form** `Form` (primitive): A form wrapper that shows validation errors on its fields (React Aria's Form): for the shape of an invalid form, see Form validation. Stories: Example.
+- **GridList** `GridList` (primitive): A list or grid of selectable, keyboard-friendly items with actions (React Aria's GridList): for picking from options, use Option list or ListBox. Stories: Example, Sections.
+- **ListBox** `ListBox` (primitive): A list of options to pick one or several from, always in view (React Aria's ListBox): in a popover, use Option list or Select. Stories: Example, Sections.
+- **Meter** `Meter` (primitive): A bar showing a value within a known range, such as space used (React Aria's Meter): for votes against a threshold, use Vote progress. Stories: Example.
+- **Modal** `Modal` (primitive; hidden: a Component replaces it): The dimmed overlay and box that holds a Dialog (React Aria's Modal): for a titled box with footer buttons, use the Modal component. Stories: Example.
+- **Popover** `Popover` (primitive): A floating panel anchored to a button (React Aria's Popover): for help text use Help popover, for options use Select or Option list. Stories: Example.
+- **RangeCalendar** `RangeCalendar` (primitive): A month grid to pick a start and end date (React Aria's RangeCalendar): for a date in a form, use Date range field. Stories: Example.
+- **Table** `Table` (primitive; hidden: a Component replaces it): A table with sortable columns and row selection (React Aria's Table): for lists of records in pages, use Data table. Stories: Example.
+- **TagGroup** `TagGroup` (primitive): A row of tags that can be selected or removed (React Aria's TagGroup): for the tags on an item with "+ Add tag", use Tag picker. Stories: Example.
+- **TimeField** `TimeField` (primitive): Typed time entry in segments (hour, minute) (React Aria's TimeField): use it beside a date field when a time of day matters. Stories: Example.
+- **ToggleButton** `ToggleButton` (primitive): A button that stays pressed or not, such as bold (React Aria's ToggleButton): for choosing one view among a few, use Segmented control. Stories: Example.
+- **Toolbar** `Toolbar` (primitive): A row of controls moved through with the arrow keys (React Aria's Toolbar): for text formatting, use Rich text toolbar. Stories: Example.
+- **Tree** `Tree` (primitive): A nested list that expands and collapses, with selectable rows (React Aria's Tree): use it for folders or hierarchies. Stories: Example.
 
 ## Not in Figma yet
 Tagged `not-in-figma` in their stories (71): Activity feed, Alert dialog, App provider, Banner, Card, Chat message, Chat progress, Chat thread, Checkbox group, Choice card, Coachmark, Data table, Date range field, Empty state, File list, Grid, Help popover, Illustration, Inline, Item chip, Link, Locale switcher, Map view, Menu, Multilingual rich text editor, Multilingual text field, Option list, Page header, Pagination, Panel, Prompt composer, Prompt suggestions, Property list, Radio group, Reaction counts, Search field, Select, Side panel, Skeleton, Stack, Table toolbar, Tabs, Tag picker, Text, Tile grid, Toast, Tooltip, Visually hidden, Access rights, Action row, Assistant panel, Comment thread, Filter chips, Filter menu, Form field summary, Notification list, Notification row, Official update, Panel section, Participant action row, Phase timeline, Phone preview, Rail phase, Section toggle, Selection bar, Side nav, Stat card, View option row, Volunteering row, Form validation, Integration seams.

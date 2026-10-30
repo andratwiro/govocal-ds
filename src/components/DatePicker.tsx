@@ -21,7 +21,7 @@ export interface DatePickerProps<T extends DateValue> extends AriaDatePickerProp
   errorMessage?: string | ((validation: ValidationResult) => string);
 }
 
-/** A date field with a button that opens a Calendar; React Aria's DatePicker. For a start and an end, use Date range field. */
+/** A date field with a button that opens a Calendar (React Aria's DatePicker): for a start and an end, use Date range field. */
 export function DatePicker<T extends DateValue>({
   label,
   description,

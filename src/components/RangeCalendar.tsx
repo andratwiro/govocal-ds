@@ -19,7 +19,7 @@ export interface RangeCalendarProps<T extends DateValue> extends AriaRangeCalend
   errorMessage?: string;
 }
 
-/** A month grid to pick a start and end date; React Aria's RangeCalendar. For a date in a form, use Date range field. */
+/** A month grid to pick a start and end date (React Aria's RangeCalendar): for a date in a form, use Date range field. */
 export function RangeCalendar<T extends DateValue>({
   errorMessage,
   ...props

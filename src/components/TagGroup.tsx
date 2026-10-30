@@ -24,7 +24,7 @@ export interface TagGroupProps<T>
   errorMessage?: string;
 }
 
-/** A row of tags that can be selected or removed; React Aria's TagGroup. For the tags on an item with "+ Add tag", use Tag picker. */
+/** A row of tags that can be selected or removed (React Aria's TagGroup): for the tags on an item with "+ Add tag", use Tag picker. */
 export function TagGroup<T>({
   label,
   description,

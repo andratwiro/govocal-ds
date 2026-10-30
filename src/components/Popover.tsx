@@ -17,7 +17,7 @@ export interface PopoverProps extends Omit<AriaPopoverProps, 'children'> {
   showArrow?: boolean;
 }
 
-/** A floating panel anchored to a button; React Aria's Popover. For help text use Help popover, for options use Select or Option list. */
+/** A floating panel anchored to a button (React Aria's Popover): for help text use Help popover, for options use Select or Option list. */
 export function Popover({children, showArrow = true, ...props}: PopoverProps) {
   return (
     <AriaPopover {...props} className={keepClass(props.className, 'gv-base-popover')}>

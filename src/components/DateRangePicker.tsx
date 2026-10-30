@@ -21,7 +21,7 @@ export interface DateRangePickerProps<T extends DateValue> extends AriaDateRange
   errorMessage?: string | ((validation: ValidationResult) => string);
 }
 
-/** A start and end date in one field with a RangeCalendar; React Aria's DateRangePicker. Prefer Date range field, where the end may stay empty. */
+/** A start and end date in one field with a RangeCalendar (React Aria's DateRangePicker): prefer Date range field, where the end may stay empty. */
 export function DateRangePicker<T extends DateValue>({
   label,
   description,
