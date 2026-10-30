@@ -38,10 +38,21 @@ export interface ToastMessage {
 
 /** The app's one toast queue, which the one `ToastRegion` draws. Pages call `toast()`; `queue` is for what `toast()`
  * doesn't cover (closing a toast early: `queue.close(key)`, clearing: `queue.clear()`). */
+/**
+ * True while the person presses a toast's own Undo or ×. While a view transition runs, the browser sends every click
+ * on the page to the transition's snapshot, so for the slide's ~200 ms after Undo a press on the page went nowhere.
+ * The updates a toast's own buttons make skip the slide: the toast just goes, and the next one just comes.
+ */
+let pressingToast = false;
+const toastPress = {
+  onPressStart: () => { pressingToast = true; },
+  onPressEnd: () => { setTimeout(() => { pressingToast = false; }); }
+};
+
 export const queue = new ToastQueue<ToastMessage>({
-  // Wrap state updates in a CSS view transition.
+  // Wrap state updates in a CSS view transition, but not those a toast's own Undo or × make.
   wrapUpdate(fn) {
-    if (typeof document !== 'undefined' && 'startViewTransition' in document) {
+    if (!pressingToast && typeof document !== 'undefined' && 'startViewTransition' in document) {
       const transition = document.startViewTransition(() => {
         flushSync(fn);
       });
@@ -120,6 +131,7 @@ export function ToastRegion({className, style, labels}: ToastRegionProps = {}) {
               {action && (
                 <RACButton
                   className="toast-action"
+                  {...toastPress}
                   onPress={() => {
                     queue.close(toast.key);
                     onAction?.();
@@ -128,7 +140,7 @@ export function ToastRegion({className, style, labels}: ToastRegionProps = {}) {
                 </RACButton>
               )}
             </RACToastContent>
-            <Button slot="close" aria-label={l.close} variant="quiet">
+            <Button slot="close" aria-label={l.close} variant="quiet" {...toastPress}>
               <X size={16} />
             </Button>
           </Toast>

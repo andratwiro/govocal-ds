@@ -1,4 +1,4 @@
-import {useEffect, type ComponentType} from 'react';
+import {useEffect, useState, type ComponentType} from 'react';
 import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {Toast, ToastRegion, queue, toast} from '../Toast';
 import {Button} from '../Button';
@@ -108,6 +108,31 @@ export const WithUndo: Story = {
       return () => queue.close(key);
     }, []);
     return <ToastRegion />;
+  }
+};
+
+/** Undo, then carry on: the page takes a click the moment Undo is pressed, while the toasts still slide
+ * (`e2e/toast.spec.ts` clicks Save straight after Undo). */
+export const UndoThenCarryOn: Story = {
+  name: 'Undo, then carry on',
+  render: function Render() {
+    const [saves, setSaves] = useState(0);
+    useEffect(() => {
+      queue.clear();
+      const key = queue.add({
+        title: 'Tag deleted',
+        action: 'Undo',
+        onAction: () => queue.add({title: 'Tag restored', icon: null}, {timeout: 5000})
+      });
+      return () => queue.close(key);
+    }, []);
+    return (
+      <div style={{display: 'grid', gap: 8, justifyItems: 'start'}}>
+        <Button onPress={() => setSaves(n => n + 1)}>Save</Button>
+        <output>{saves ? 'Saved' : 'Not saved'}</output>
+        <ToastRegion />
+      </div>
+    );
   }
 };
 

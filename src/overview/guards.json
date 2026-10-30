@@ -211,6 +211,10 @@
     "group": "Components behave",
     "what": "Tabs include a count and status dot in their name, and grouped side tabs skip headings and let arrow keys cross groups."
   },
+  "e2e/toast.spec.ts": {
+    "group": "Components behave",
+    "what": "Right after a toast's Undo, a click on the page still lands: the toast's slide never swallows it."
+  },
   "e2e/tools.spec.ts": {
     "group": "Back office screens",
     "what": "The back office's Tools page shows one card per tool; tokens, webhooks and the Esri key can be created, edited and deleted with a confirmation."

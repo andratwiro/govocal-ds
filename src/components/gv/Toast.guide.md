@@ -41,7 +41,8 @@ when it appears, after the WAI-ARIA [Alert pattern](https://www.w3.org/WAI/ARIA/
 | Enter (on the action) | Closes the toast and runs the action: Undo takes the change back. | `play: Keyboard` |
 | Enter (on the ×) | Closes the toast. | `play: Keyboard` |
 
-A toast doesn't leave while it has focus or the pointer is over it (React Aria pauses its timer).
+A toast doesn't leave while it has focus or the pointer is over it (React Aria pauses its timer). Closing a toast from
+its own buttons skips the slide, so the next click on the page lands at once.
 
 ## Content
 
@@ -78,6 +79,8 @@ timer that waits while it is focused or hovered, a named ×, and focus that neve
 
 ## Changes
 
+- 30 Oct 2026: a click right after Undo reaches the page (the slide no longer swallows it for ~200 ms) (docs/DECISIONS.md,
+  "Small fixes").
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: the ×'s name comes through `labels` (App provider's).
 - 29 Oct 2026: `AppProvider` renders the one region and `toast()` shows a toast from anywhere; Toast's `body` became
