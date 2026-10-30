@@ -29,6 +29,11 @@ Calls made emptying the play check's known-red list: 18 play functions whose com
   chips' play holds Delete while focus moves on: a key released in the same instant lands before React Aria places
   focus, which a hand can't do.
 - The known-red list is deleted, not left empty: it existed only for these 18.
+- The Option list Esc flake (Set topic tags, the panel's tags): React Aria unmounts a popover when its exit animations
+  finish and ignores one that is cancelled; the popover's exit was a transition, and a list growing as its search
+  empties flips the popover to the other side mid-exit, which retargets (cancels) it. The popover then stayed, invisible,
+  holding focus: two quick Escs did it 3 times in 4 → **the exit is a keyframe animation (Base Popover's CSS), which a
+  flip doesn't cancel** → a part bug a person could meet, not a test's; 0 in 22 after.
 
 ## The report view on the new parts (30 Oct 2026)
 

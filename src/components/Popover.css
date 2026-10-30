@@ -33,10 +33,18 @@
     stroke-width: 2px;
   }
 
-  &[data-entering],
-  &[data-exiting] {
+  &[data-entering] {
     transform: var(--origin);
     opacity: 0;
+  }
+
+  /* Leaving is a keyframe animation, not the transition. React Aria unmounts the popover once its exit animations
+     finish, and a transition retargeted mid-exit is cancelled instead: a list that grows as its search empties flips
+     the popover to the other side, its --origin changes, and the exit never ends (an invisible popover that keeps
+     focus; two quick Escs did it). An animation rides out the change. */
+  &[data-exiting] {
+    transition: none;
+    animation: gv-popover-exit var(--gv-motion-duration-fast) var(--gv-motion-easing-standard) forwards;
   }
 
   &[data-placement='top'] {
@@ -81,5 +89,12 @@
     .gv-base-overlay-arrow svg {
       transform: rotate(-90deg);
     }
+  }
+}
+
+@keyframes gv-popover-exit {
+  to {
+    transform: var(--origin);
+    opacity: 0;
   }
 }
