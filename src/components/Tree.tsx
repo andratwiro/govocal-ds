@@ -7,7 +7,7 @@ import {
   type TreeItemContentProps,
   type TreeItemContentRenderProps,
   type TreeItemProps as AriaTreeItemProps,
-  type TreeProps,
+  type TreeProps as AriaTreeProps,
   TreeLoadMoreItem as AriaTreeLoadMoreItem,
   type TreeLoadMoreItemProps,
   TreeSection as AriaTreeSection,
@@ -21,13 +21,29 @@ import './Tree.css';
 import {keepClass} from './className';
 import clsx from 'clsx';
 
-/** A nested list that expands and collapses, with selectable rows (React Aria's Tree): use it for folders or hierarchies. */
-export function Tree<T>(props: TreeProps<T>) {
-  return <AriaTree {...props} className={keepClass(props.className, 'gv-base-tree')} />;
+export interface TreeProps<T> extends AriaTreeProps<T> {
+  /**
+   * No frame of its own: no border or radius, the full width of what holds it, for a tree inside a Panel (the report's
+   * outline in a flush Panel body). Its rows line up with the Panel's head.
+   *
+   * @default false
+   */
+  isFlush?: boolean;
+}
+
+/** A tree of rows that open and close (React Aria's Tree): an outline, folders. `isFlush` drops its frame inside a Panel;
+ * a row's `trailing` puts a page number or a count at its end. */
+export function Tree<T>({isFlush, ...props}: TreeProps<T>) {
+  return <AriaTree {...props} className={keepClass(props.className, 'gv-base-tree')} data-flush={isFlush || undefined} />;
+}
+
+export interface TreeItemContentOwnProps {
+  /** At the row's end, in small grey figures: a page number, a count. */
+  trailing?: React.ReactNode;
 }
 
 export function TreeItemContent(
-  props: Omit<TreeItemContentProps, 'children'> & {children?: React.ReactNode}
+  props: Omit<TreeItemContentProps, 'children'> & TreeItemContentOwnProps & {children?: React.ReactNode}
 ) {
   return (
     <AriaTreeItemContent>
@@ -45,23 +61,24 @@ export function TreeItemContent(
             <ChevronRight />
           </Button>
           {props.children}
+          {props.trailing != null && <span className="gv-base-tree-item__trailing">{props.trailing}</span>}
         </>
       )}
     </AriaTreeItemContent>
   );
 }
 
-export interface TreeItemProps extends Partial<AriaTreeItemProps> {
+export interface TreeItemProps extends Partial<AriaTreeItemProps>, TreeItemContentOwnProps {
   title?: React.ReactNode;
 }
 
-export function TreeItem(props: TreeItemProps) {
+export function TreeItem({trailing, ...props}: TreeItemProps) {
   let textValue = typeof props.title === 'string' ? props.title : '';
   return (
     <AriaTreeItem textValue={textValue} {...props} className={keepClass(props.className, 'gv-base-tree-item')}>
       {props.title != null ? (
         <>
-          <TreeItemContent>{props.title}</TreeItemContent>
+          <TreeItemContent trailing={trailing}>{props.title}</TreeItemContent>
           {props.children}
         </>
       ) : (
@@ -87,4 +104,3 @@ export function TreeSection(props: React.ComponentProps<typeof AriaTreeSection>)
 export function TreeHeader(props: React.ComponentProps<typeof AriaTreeHeader>) {
   return <AriaTreeHeader {...props} className={clsx('react-aria-TreeHeader gv-base-tree-header', props.className)} />;
 }
-export type {TreeProps};

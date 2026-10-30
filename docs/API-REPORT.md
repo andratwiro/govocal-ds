@@ -6750,6 +6750,7 @@ Interface, from `react-aria-components`. The props of `Toolbar`, listed there.
 
 Component, from `src/components/Tree.tsx`.
 
+- `isFlush?: boolean`
 - Passed through from @react-types/shared (85): `aria-describedby`, `aria-details`, `aria-label`, `aria-labelledby`, `defaultExpandedKeys`, `defaultSelectedKeys`, `dir`, `disabledKeys`, `disallowEmptySelection`, `expandedKeys`, `hidden`, `id`, `inert`, `items`, `lang`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onExpandedChange`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onScroll`, `onScrollCapture`, `onSelectionChange`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `selectedKeys`, `selectionMode`, `suppressHydrationWarning`, `translate`
 - Passed through from react-aria (5): `autoFocus`, `escapeKeyBehavior`, `keyboardNavigationBehavior`, `onAction`, `shouldSelectOnPressUp`
 - Passed through from react-aria-components (10): `children`, `className`, `dependencies`, `disabledBehavior`, `dragAndDropHooks`, `render`, `renderEmptyState`, `selectionBehavior`, `slot`, `style`
@@ -6766,6 +6767,7 @@ Component, from `src/components/Tree.tsx`.
 Component, from `src/components/Tree.tsx`.
 
 - `title?: React.ReactNode` (no description)
+- `trailing?: React.ReactNode`
 - Passed through from @react-types/shared (86): `dir`, `download`, `hidden`, `href`, `hrefLang`, `inert`, `lang`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onHoverChange`, `onHoverEnd`, `onHoverStart`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onPress`, `onPressChange`, `onPressEnd`, `onPressStart`, `onPressUp`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `ping`, `referrerPolicy`, `rel`, `routerOptions`, `suppressHydrationWarning`, `target`, `translate`
 - Passed through from react-aria (3): `allowsArrowNavigation`, `focusMode`, `hasChildItems`
 - Passed through from react-aria-components (10): `aria-label`, `children`, `className`, `id`, `isDisabled`, `onAction`, `render`, `style`, `textValue`, `value`
@@ -6775,6 +6777,7 @@ Component, from `src/components/Tree.tsx`.
 Component, from `src/components/Tree.tsx`.
 
 - `children?: React.ReactNode` (no description)
+- `trailing?: React.ReactNode`
 
 ### `TreeItemProps`
 
@@ -6791,7 +6794,7 @@ Component, from `src/components/Tree.tsx`.
 
 ### `TreeProps`
 
-Interface, from `react-aria-components`. The props of `Tree`, listed there.
+Interface, from `src/components/Tree.tsx`. The props of `Tree`, listed there.
 
 ### `TreeSection`
 

@@ -174,4 +174,4 @@ what would survive a change of base library. It decides nothing: the base librar
 | TimeField | `TimeField`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text`; through DateField: `DateField`, `DateInput`, `DateSegment`, `Form`, `Label`, `FieldError`, `Button`, `Text` | `TimeFieldProps` | yes | yes | 1 |
 | ToggleButton | `ToggleButton` | `ToggleButtonProps` | – | yes | 1 |
 | Toolbar | `Toolbar` | – | – | yes | 1 |
-| Tree | `Button`, `Tree`, `TreeItem`, `TreeItemContent`, `TreeLoadMoreItem`, `TreeSection`, `TreeHeader`; through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Text`; through Progress circle: `ProgressBar` | – | – | yes | 1 |
+| Tree | `Button`, `Tree`, `TreeItem`, `TreeItemContent`, `TreeLoadMoreItem`, `TreeSection`, `TreeHeader`; through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Text`; through Progress circle: `ProgressBar` | `TreeProps` | – | yes | 2 |

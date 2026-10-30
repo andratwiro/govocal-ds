@@ -34,6 +34,16 @@
     outline-offset: -1px;
   }
 
+  /* Flush (`isFlush`): no frame, the full width of its Panel; 12 in, so a row's words line up with the Panel head's 20. */
+  &[data-flush] {
+    width: 100%;
+    max-height: none;
+    padding: var(--gv-space-8) var(--gv-space-12);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
   &[data-empty] {
     align-items: center;
     justify-content: center;
@@ -115,6 +125,16 @@
 
   .gv-base-button:not([slot]) {
     margin-left: auto;
+  }
+
+  /* A page number or a count at the row's end. */
+  .gv-base-tree-item__trailing {
+    flex: none;
+    margin-inline-start: auto;
+    padding-inline-end: var(--gv-space-4);
+    font: var(--gv-type-small);
+    font-variant-numeric: tabular-nums;
+    color: var(--gv-text-tertiary);
   }
 
   &[data-allows-dragging] {
