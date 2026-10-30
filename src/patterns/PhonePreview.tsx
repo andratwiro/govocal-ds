@@ -123,18 +123,30 @@ export function PhonePreview({
   );
 }
 
-/** The platform header inside the phone: a logo placeholder and the menu icon (the preview is inert). */
+/** The platform header inside the phone: the platform's logo mark (or a placeholder) and the menu icon (inert). */
 export interface PhoneHeaderProps extends PlacementProps {
-  /** The logo placeholder's name. @default `labels.logo` ("Platform logo") */
+  /** The logo's name, read for the mark or the placeholder. @default `labels.logo` ("Platform logo") */
   logo?: string;
+  /**
+   * The platform's logo mark: an `<img>` or an SVG, drawn 24 tall at the start (the prototype's phone header). Without
+   * it, a grey placeholder holds its place.
+   */
+  mark?: ReactNode;
   /** Its own words, over `phonePreviewLabels`. */
   labels?: Partial<PhonePreviewLabels>;
 }
 
-export function PhoneHeader({logo, labels, className, style}: PhoneHeaderProps) {
+export function PhoneHeader({logo, mark, labels, className, style}: PhoneHeaderProps) {
+  const name = logo ?? mergeLabels(phonePreviewLabels, labels).logo;
   return (
-    <div className={clsx('gv-phone-header', className)} style={style}>
-      <span className="gv-phone-header__logo" role="img" aria-label={logo ?? mergeLabels(phonePreviewLabels, labels).logo} />
+    <div className={clsx('gv-phone-header', className)} style={style} data-mark={mark != null || undefined}>
+      {mark != null ? (
+        <span className="gv-phone-header__mark" role="img" aria-label={name}>
+          {mark}
+        </span>
+      ) : (
+        <span className="gv-phone-header__logo" role="img" aria-label={name} />
+      )}
       <Menu className="gv-phone-header__menu" aria-hidden size={18} />
     </div>
   );
@@ -198,12 +210,20 @@ export interface PhoneStageProps extends PlacementProps {
   caption?: ReactNode;
   /** The eye in the stage's top corner: opens the participant's view in another tab. */
   onOpen?: () => void;
+  /**
+   * The stage's toolbar in the bottom corner, before the caption: a Segmented control that switches what the phone
+   * shows (Voting's Before · Open · Ended).
+   */
+  toolbar?: ReactNode;
   /** Its own words (the eye's name and tooltip), over `phonePreviewLabels`. */
   labels?: Partial<PhonePreviewLabels>;
 }
 
-/** The grey stage the phone stands on (prototype `#view-project` preview pane): the phone centred, the eye, the caption. */
-export function PhoneStage({children, caption, onOpen, labels, className, style}: PhoneStageProps) {
+/**
+ * The grey stage the phone stands on (prototype `#view-project` preview pane): the phone centred, the eye at the top
+ * end, and at the bottom end an optional toolbar and caption.
+ */
+export function PhoneStage({children, caption, onOpen, toolbar, labels, className, style}: PhoneStageProps) {
   const {open} = mergeLabels(phonePreviewLabels, labels);
   return (
     <div className={clsx('gv-phone-stage', className)} style={style}>
@@ -218,7 +238,12 @@ export function PhoneStage({children, caption, onOpen, labels, className, style}
         </span>
       )}
       {children}
-      {caption != null && <p className="gv-phone-stage__caption">{caption}</p>}
+      {(toolbar != null || caption != null) && (
+        <div className="gv-phone-stage__foot">
+          {toolbar != null && <div className="gv-phone-stage__toolbar">{toolbar}</div>}
+          {caption != null && <p className="gv-phone-stage__caption">{caption}</p>}
+        </div>
+      )}
     </div>
   );
 }

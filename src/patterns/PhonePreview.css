@@ -151,6 +151,20 @@
   background: var(--gv-surface-pressed);
 }
 
+/* The platform's logo mark (the prototype's phone header): 24 tall, its own width. */
+.gv-phone-header__mark {
+  display: inline-flex;
+  align-items: center;
+  block-size: var(--gv-space-24);
+  color: var(--gv-icon-primary);
+
+  > :is(img, svg) {
+    display: block;
+    block-size: 100%;
+    inline-size: auto;
+  }
+}
+
 .gv-phone-header__menu {
   color: var(--gv-icon-primary);
 }
@@ -231,10 +245,17 @@
   inset-inline-end: var(--gv-space-16);
 }
 
-.gv-phone-stage__caption {
+/* The bottom end: the toolbar (a state switch), then the caption, 8 apart. */
+.gv-phone-stage__foot {
   position: absolute;
   inset-block-end: var(--gv-space-16);
   inset-inline-end: var(--gv-space-16);
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+}
+
+.gv-phone-stage__caption {
   display: inline-flex;
   align-items: center;
   margin: 0;

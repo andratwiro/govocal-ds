@@ -3961,6 +3961,7 @@ Component, from `src/patterns/PhonePreview.tsx`.
 - `className?: string`
 - `labels?: Partial<PhonePreviewLabels>`
 - `logo?: string`
+- `mark?: ReactNode`
 - `style?: CSSProperties`
 
 ### `PhoneHeaderProps`
@@ -4067,6 +4068,7 @@ Component, from `src/patterns/PhonePreview.tsx`.
 - `labels?: Partial<PhonePreviewLabels>`
 - `onOpen?: () => void`
 - `style?: CSSProperties`
+- `toolbar?: ReactNode`
 
 ### `PhoneStageProps`
 

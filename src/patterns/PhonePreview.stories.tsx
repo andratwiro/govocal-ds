@@ -7,6 +7,15 @@ import {AvatarGroup} from '../components/gv/Avatar';
 import {Banner} from '../components/gv/Banner';
 import {Skeleton} from '../components/gv/Skeleton';
 import {PhoneCard, PhoneCountdown, PhoneHeader, PhoneImage, PhonePreview, PhoneStage} from './PhonePreview';
+import {PhonePhaseCard} from './PhonePhaseCard';
+import {SegmentedControl, SegmentedControlItem} from '../components/gv/SegmentedControl';
+
+/* Invented: a platform's logo mark (two peaks), drawn in the icon colour. */
+const MARK = (
+  <svg viewBox="0 0 32 16" width={32} height={16} fill="currentColor" aria-hidden="true">
+    <path d="M0 16 9 4l5 6 4-5 7 11H0Z" />
+  </svg>
+);
 
 const meta: Meta<typeof PhonePreview> = {
   title: 'Patterns/Project page/Phone preview',
@@ -166,3 +175,48 @@ export const Keyboard: Story = {
     await expect(canvas.getByRole('status')).toHaveTextContent('Edit project page opened');
   }
 };
+
+/** Not in Figma (the prototype's phone): the platform's logo mark in the header, in place of the placeholder. */
+export const LogoHeader: Story = {
+  name: 'Logo header',
+  render: () => (
+    <PhonePreview aria-label="What residents see" header={<PhoneHeader mark={MARK} logo="Larkvale" />} surface="grey">
+      {phase}
+    </PhonePreview>
+  )
+};
+
+function VotingStage() {
+  return (
+    <div style={{blockSize: 860, padding: 'var(--gv-space-16)'}}>
+      <PhoneStage onOpen={() => {}} caption="What residents see while the phase is open"
+        toolbar={
+          <SegmentedControl aria-label="Phase state" defaultSelectedKeys={['open']} disallowEmptySelection>
+            <SegmentedControlItem id="before">Before</SegmentedControlItem>
+            <SegmentedControlItem id="open">Open</SegmentedControlItem>
+            <SegmentedControlItem id="ended">Ended</SegmentedControlItem>
+          </SegmentedControl>
+        }>
+        <PhonePreview aria-label="What residents see" header={<PhoneHeader mark={MARK} logo="Larkvale" />} surface="grey"
+          footer={<PhoneCountdown cta="Vote">2 weeks left</PhoneCountdown>}>
+          <PhonePhaseCard number={4} title="Community vote" dates="19 Oct 2026 – 16 Nov 2026">
+            <Skeleton width="100%" height={8} />
+            <Skeleton width="72%" height={8} />
+          </PhonePhaseCard>
+          <SkeletonCard tall />
+          <SkeletonCard />
+        </PhonePreview>
+      </PhoneStage>
+    </div>
+  );
+}
+
+/**
+ * Not in Figma (the prototype's Voting stage): the eye at the top end; at the bottom end a toolbar that switches the
+ * preview between Before, Open and Ended, then the caption. The phone opens with the Phone phase card and keeps the
+ * countdown pinned at its foot while the page scrolls.
+ */
+export const StageToolbar: Story = {name: 'Stage toolbar', parameters: {layout: 'fullscreen'}, render: () => <VotingStage />};
+
+/** The stage right to left: the eye and the toolbar at the left. */
+export const RightToLeft: Story = {name: 'Right to left', parameters: {layout: 'fullscreen'}, globals: {direction: 'rtl'}, render: () => <VotingStage />};

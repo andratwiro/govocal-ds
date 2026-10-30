@@ -19,11 +19,13 @@
 
 ## Anatomy
 
-1. **Stage** (`PhoneStage`): the grey ground, the eye at the top end, the caption at the bottom end.
+1. **Stage** (`PhoneStage`): the grey ground, the eye at the top end; at the bottom end an optional toolbar (a
+   Segmented control: Voting's Before · Open · Ended) and the caption.
 2. **Device**: the light, rounded phone, 343 × 683, radius 22.
-3. **Header** (optional): the platform's header pinned at the top.
+3. **Header** (optional): the platform's header pinned at the top, with its logo mark (`mark`) or a placeholder.
 4. **Screen**: white (a page or a message) or grey with white cards (a phase page), scrolling.
-5. **Footer** (optional): the participation bar pinned at the bottom.
+5. **Footer** (optional): the participation bar (`PhoneCountdown`: the time left and the button) pinned at the bottom
+   while the screen scrolls. A phase's screen opens with a **Phone phase card**.
 6. **Action** (optional): a smoked pill in the middle, shown on hover or keyboard focus while the screen dims.
 
 ## Behaviour
@@ -74,6 +76,8 @@ that says so, and the stage eye with a tooltip.
 
 ## Changes
 
+- 30 Oct 2026: a logo mark in the header (`PhoneHeader mark`), a stage toolbar (`PhoneStage toolbar`) before the
+  caption; a phase's screen opens with the new Phone phase card (docs/DECISIONS.md, "Project screens").
 - 30 Oct 2026: this page written; a play function proves Enter on the action.
 - 29 Oct 2026: its words come in through `labels`.
 - 29 Oct 2026: the prototype's light device, a grey screen with cards, a countdown bar, an empty screen and a hover and

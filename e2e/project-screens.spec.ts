@@ -141,3 +141,16 @@ test('Phone phase card: a numbered phase heading and its dates, first on the pho
   await expect(page.getByText('28 Sep 2026 – 18 Oct 2026')).toBeVisible();
   await report(page);
 });
+
+test('Phone preview: a logo mark, the stage toolbar switches by keyboard, the countdown stays pinned', async ({page}) => {
+  await page.goto(story('patterns-project-page-phone-preview--stage-toolbar'));
+  await expect(page.getByRole('img', {name: 'Larkvale'})).toBeVisible();
+  const open = page.getByRole('radio', {name: 'Open'});
+  await expect(open).toBeChecked();
+  await open.focus();
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('radio', {name: 'Ended'})).toBeChecked();
+  await expect(page.getByText('2 weeks left')).toBeInViewport();
+  await report(page);
+});

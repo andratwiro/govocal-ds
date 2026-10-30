@@ -145,7 +145,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Project page › Action row | `Button`, `MenuTrigger`, `ProgressBar`, `Link`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `Heading`, `Text`, `Header`, `Keyboard`; through Popover: `OverlayArrow`, `Popover` | – | – | yes | 13 |
 | Project page › Panel section | `Button`, `Heading`, `Disclosure`, `DisclosurePanel` | – | – | yes | 5 |
 | Project page › Phone phase card | None: plain React and CSS | – | yes | yes | 5 |
-| Project page › Phone preview | `Button`, `Link`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | – | yes | 6 |
+| Project page › Phone preview | `Button`, `Link`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | – | yes | 9 |
 | Project page › Project header | `MenuTrigger`; through Button: `Button`, `ProgressBar`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`; through Popover: `OverlayArrow`, `Popover`; through Breadcrumbs: `Breadcrumbs`, `Breadcrumb`, `Link`, `Button`; through Icon button: `Button`; through Segmented control: `ToggleButtonGroup`, `SelectionIndicator`, `ToggleButton`, `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | – | yes | 14 |
 | Project page › Setup step | `Button`, `Dialog`, `DialogTrigger`, `Disclosure`, `DisclosurePanel`, `Heading`, `MenuTrigger`; through Popover: `OverlayArrow`, `Popover` | – | – | yes | 7 |
 | Project page › Stat card | `Button` | – | yes | yes | 6 |
