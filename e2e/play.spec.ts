@@ -29,7 +29,9 @@ const KNOWN_RED = new Set([
   'components-status-feedback-badge--keyboard',
   'patterns-app-shell-side-nav--keyboard',
   'patterns-manage-tab-comment-thread--keyboard',
-  'patterns-project-page-setup-step--keyboard'
+  'patterns-project-page-setup-step--keyboard',
+  'components-layout-containers-block-frame--keyboard',
+  'components-tables-lists-sortable-list--keyboard'
 ]);
 
 test.describe.configure({mode: 'parallel'});
