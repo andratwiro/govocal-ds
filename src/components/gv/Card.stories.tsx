@@ -1,4 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {
   CircleAlert,
   CircleHelp,
@@ -285,5 +286,37 @@ export const WithMediaFilled: Story = {
     summary: 'Survey',
     media: <img src={PICTURES.library} alt="" />,
     control: 'open'
+  }
+};
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Tab reaches a card's header; Enter or
+ * Space opens and closes an expanding card; Enter on a menu card opens its values, and Esc closes them back onto the
+ * header. */
+export const Keyboard: Story = {
+  render: () => (
+    <div style={{display: 'grid', gap: 12, width: 444}}>
+      <Card {...required} />
+      <Card {...reviewPillDropdown} />
+    </div>
+  ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const dates = canvas.getByRole('button', {name: /^Dates/});
+    await userEvent.tab();
+    await expect(dates).toHaveFocus();
+    await expect(dates).toHaveAttribute('aria-expanded', 'false');
+    await userEvent.keyboard('{Enter}');
+    await expect(dates).toHaveAttribute('aria-expanded', 'true');
+    await expect(canvas.getByText('Collect ideas runs from 12 January to 28 February 2027.')).toBeVisible();
+    await userEvent.keyboard(' ');
+    await expect(dates).toHaveAttribute('aria-expanded', 'false');
+    await userEvent.tab();
+    const sorting = canvas.getByRole('button', {name: /^Sorting/});
+    await expect(sorting).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await screen.findByRole('menu', {name: 'Sorting'});
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
+    await waitFor(() => expect(sorting).toHaveFocus());
   }
 };

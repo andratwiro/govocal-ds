@@ -73,6 +73,7 @@ const INTERACTIVE_ARIA = /^(Button|Link|Menu|Dialog|Modal|Popover|Tooltip|Table|
 /** Parts the scan below calls interactive whose own page has no keys to tell, each with its reason. */
 const NOT_INTERACTIVE = new Map([
   ['App provider', 'it renders the toast region, whose keys are Toast\'s page'],
+  ['Panel', 'its count Badge is never removable; the actions and body it holds keep their own keys'],
 ]);
 
 function names(spec) {

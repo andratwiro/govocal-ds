@@ -72,7 +72,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Forms › Text field | `Input`, `TextField`, `TextArea`, `Group` through `components/Form` | `TextFieldProps` | yes | yes | 5 |
 | Forms › Title field | `Input`, `TextField` through `components/Form`, `components/gv/LocaleSwitcher` | `TextFieldProps` | yes | yes | 6 |
 | Layout & containers › App provider | through `components/Toast` | – | – | – | 2 |
-| Layout & containers › Card | `Button`, `Disclosure`, `DisclosurePanel`, `Heading`, `Menu`, `MenuItem`, `MenuTrigger` through `components/Popover`, `components/Tooltip`, `components/RadioGroup`, `components/Switch` | – | – | yes | 29 |
+| Layout & containers › Card | `Button`, `Disclosure`, `DisclosurePanel`, `Heading`, `Menu`, `MenuItem`, `MenuTrigger` through `components/Popover`, `components/Tooltip`, `components/RadioGroup`, `components/Switch` | – | – | yes | 30 |
 | Layout & containers › Divider | `Separator` | `SeparatorProps` | – | yes | 3 |
 | Layout & containers › Grid | None: plain React and CSS | – | – | yes | 3 |
 | Layout & containers › Inline | None: plain React and CSS | – | – | yes | 3 |
