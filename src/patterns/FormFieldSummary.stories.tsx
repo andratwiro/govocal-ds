@@ -7,8 +7,8 @@ import {Card} from '../components/gv/Card';
 import './FormFieldSummary.css';
 
 /**
- * A recipe, not a component (NAMING: a pattern used on one page): a form's questions at a glance, in a phase's Idea
- * form or Proposal form card, with Edit form under them. Copy the markup and FormFieldSummary.css into the page; it
+ * A form's questions at a glance, in a phase's Idea form or Proposal form card, with Edit form under them. A recipe,
+ * not a component: a pattern only one page uses so far, so there is nothing to import (docs/NAMING.md). Copy the markup and FormFieldSummary.css into the page; it
  * becomes a component when a second page needs it. Not in Figma.
  */
 const meta: Meta = {
@@ -42,7 +42,7 @@ const IDEA_FORM: Question[] = [
   {name: 'Location', type: 'Location'}
 ];
 
-/* An idea form with questions of its own: past six, the rest is counted. */
+/* An idea form with questions an admin added: past six, the rest is counted. */
 const LONG_FORM: Question[] = [
   ...IDEA_FORM.slice(0, 2),
   {
@@ -99,12 +99,13 @@ export const AllVariants: Story = {
 /** The form a new ideation phase starts with: six questions, two required. */
 export const Default: Story = {render: () => <FormFieldSummary questions={IDEA_FORM} />};
 
-/** Questions of its own: one line each, and past six the rest is counted ("4 more"); the whole form is in Edit form. */
+/** A form with questions an admin added: one line each, and past six the rest is counted ("4 more"); the whole form is in Edit form. */
 export const WithMore: Story = {name: 'With more', render: () => <FormFieldSummary questions={LONG_FORM} />};
 
 /**
- * In an ideation phase's Idea form card, reviewed, under the input term card ("Idea"). Closed, the card counts the
- * questions ("6 questions").
+ * In an ideation phase's Build tab: the Idea form card, open, under the card that names what inputs are called
+ * ("Idea"). Both are marked Reviewed. Press the Idea form's header to close it: closed, it shows the count pill
+ * ("6 questions") in place of the questions.
  */
 export const InACard: Story = {
   name: 'In a card',
