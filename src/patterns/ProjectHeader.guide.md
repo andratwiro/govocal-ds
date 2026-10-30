@@ -20,7 +20,7 @@
 2. **Crumbs**: the parent and the project, or ← the project and the phase with its status badge.
 3. **Mode switch** (phase, with `modes`): a Segmented control in the middle; modes that can't open yet are off.
 4. **People** (optional): an Avatar, or an Avatar group when others edit the same phase.
-5. **Actions**: Share ▾ and Publish ▾ / ● Live ▾ on the project, or Save.
+5. **Actions**: Share ▾ and Publish ▾ / ● Live ▾ / Archived ▾ on the project, or Save.
 
 The crumb frame is 48 tall; the bar is full width.
 
@@ -67,11 +67,12 @@ badge in words, a mode switch read as one choice, and menu buttons whose menus r
 
 - Built by AI agents from Figma ("Project header", its three levels) and the designer's prototype (the full bar).
 - Reviewed by a person: not yet.
-- Known limits: no archived state (the page says it in a Banner and Publish ▾ offers the way back); a phase has no
-  Share.
+- Known limits: a phase has no Share.
 
 ## Changes
 
+- 30 Oct 2026: `status="archived"`: Archived ▾ in place of Publish, with the way back in its menu (docs/DECISIONS.md, "Small
+  fixes").
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: its words come in through `labels`.
 - 29 Oct 2026: one status word, `status`; the bar is built into the header, switched on by the bar's props

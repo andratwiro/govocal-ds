@@ -4085,7 +4085,7 @@ Component, from `src/patterns/ProjectHeader.tsx`.
 - `projectName: string`
 - `publishMenu?: ReactNode`
 - `shareMenu?: ReactNode`
-- `status?: 'draft' | 'live'`
+- `status?: 'draft' | 'live' | 'archived'`
 - `style?: CSSProperties`
 
 ### `projectHeaderLabels`
@@ -4100,6 +4100,7 @@ ProjectHeaderLabels
 
 Interface, from `src/patterns/ProjectHeader.tsx`.
 
+- `archived: string`
 - `backToProject: (project: string) => string`
 - `breadcrumb: string`
 - `draft: string`

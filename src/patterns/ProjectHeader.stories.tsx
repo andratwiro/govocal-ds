@@ -2,7 +2,7 @@ import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {Text} from 'react-aria-components/Text';
-import {Archive, CalendarClock, Link2, Rocket, UserPlus} from 'lucide-react';
+import {Archive, CalendarClock, Link2, Rocket, RotateCcw, UserPlus} from 'lucide-react';
 import {MenuItem} from '../components/Menu';
 import {Avatar, AvatarGroup} from '../components/gv/Avatar';
 import {ProjectHeader, type ProjectHeaderMode} from './ProjectHeader';
@@ -183,5 +183,31 @@ export const Keyboard: Story = {
     await waitFor(() => expect(share).toHaveFocus());
     await userEvent.tab();
     await expect(canvas.getByRole('button', {name: 'Publish'})).toHaveFocus();
+  }
+};
+const archivedMenu = (
+  <MenuItem id="restore" textValue="Restore to draft"><RotateCcw aria-hidden /><Text className="react-aria-Text gv-base-text" slot="label">Restore to draft</Text></MenuItem>
+);
+
+/** An archived project: residents can still read it but no longer take part. The bar says Archived ▾, whose menu
+ * restores it; a phase of it wears the Archived badge. The play function opens the menu. */
+export const Archived: Story = {
+  decorators: [onApp],
+  parameters: {layout: 'padded'},
+  args: {people: me, shareMenu, status: 'archived', publishMenu: archivedMenu, onTogglePanel: () => {}},
+  render: args => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--gv-space-16)'}}>
+      <ProjectHeader {...args} />
+      <ProjectHeader level="phase" status="archived" projectName={args.projectName} phaseName={args.phaseName} />
+    </div>
+  ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.queryByRole('button', {name: /Publish/})).toBeNull();
+    await userEvent.click(canvas.getByRole('button', {name: 'Archived'}));
+    const restore = await screen.findByRole('menuitem', {name: 'Restore to draft'});
+    await waitFor(() => expect(restore).toBeVisible());
+    await userEvent.keyboard('{Escape}');
+    await expect(canvas.getAllByText('Archived')).toHaveLength(2);
   }
 };

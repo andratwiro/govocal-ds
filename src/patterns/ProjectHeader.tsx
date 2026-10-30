@@ -1,7 +1,7 @@
 'use client';
 import type {ReactNode} from 'react';
 import {MenuTrigger} from 'react-aria-components/Menu';
-import {PanelLeft} from 'lucide-react';
+import {Archive, PanelLeft} from 'lucide-react';
 import {Button} from '../components/Button';
 import {Menu} from '../components/Menu';
 import {Popover} from '../components/Popover';
@@ -34,6 +34,8 @@ export interface ProjectHeaderLabels extends Pick<BreadcrumbsLabels, 'live' | 'd
   publish: string;
   /** The mode switch's name (Build, Manage, Insights). */
   phaseView: string;
+  /** An archived project's state: the bar's menu button, a phase's badge. */
+  archived: string;
 }
 
 /** Project header's English words; a page passes its own over them with `labels`. */
@@ -48,7 +50,8 @@ export const projectHeaderLabels: ProjectHeaderLabels = {
   publish: 'Publish',
   live: 'Live',
   draft: 'Draft',
-  phaseView: 'Phase view'
+  phaseView: 'Phase view',
+  archived: 'Archived'
 };
 
 export interface ProjectHeaderMode {
@@ -69,10 +72,12 @@ export interface ProjectHeaderProps extends PlacementProps {
    */
   level?: 'project' | 'phase';
   /**
-   * Draft or live. On a phase: the Status badge after the crumbs (default `draft`). On the project: the bar's
-   * Publish ▾ (`draft`, primary) or ● Live ▾ (`live`) menu button; given, the header becomes the bar.
+   * Draft, live or archived. On a phase: the Status badge after the crumbs (default `draft`; archived wears the grey
+   * badge). On the project: the bar's Publish ▾ (`draft`, primary), ● Live ▾ (`live`) or Archived ▾ (`archived`,
+   * residents can read it but no longer take part; its menu restores it) menu button; given, the header becomes the
+   * bar.
    */
-  status?: 'draft' | 'live';
+  status?: 'draft' | 'live' | 'archived';
   /** The project's name: the current crumb on the project level, the parent link on a phase. */
   projectName: string;
   /** The phase's name (phase levels only). */
@@ -111,7 +116,7 @@ export interface ProjectHeaderProps extends PlacementProps {
   hasChanges?: boolean;
   /** Shows Save (always on a phase, while there are changes on the project). */
   onSave?: () => void;
-  /** The Publish / Live menu's items (`MenuItem`s). */
+  /** The Publish / Live / Archived menu's items (`MenuItem`s). */
   publishMenu?: ReactNode;
   /** Project level: Share ▾ and its items (`MenuItem`s). */
   shareMenu?: ReactNode;
@@ -184,14 +189,15 @@ export function ProjectHeader({
       ) : (
         <Breadcrumbs
           variant="editor"
-          status={status ?? 'draft'}
+          status={status === 'live' ? 'live' : 'draft'}
           items={[
             {key: 'project', label: projectName, href: projectHref, onPress: onBack},
             {key: 'phase', label: phaseName}
           ]}
           onTogglePanel={onTogglePanel}
           onBack={onBack}
-          labels={{togglePanel: l.toggleTimeline, back: l.backToProject(projectName), live: l.live, draft: l.draft}}
+          labels={{togglePanel: l.toggleTimeline, back: l.backToProject(projectName), live: l.live,
+            draft: status === 'archived' ? l.archived : l.draft}}
         />
       )}
     </nav>
@@ -225,6 +231,12 @@ export function ProjectHeader({
           <MenuButton label={l.live} variant="secondary" menu={publishMenu}>
             <span className="gv-project-header__live" aria-hidden="true" />
             {l.live}
+          </MenuButton>
+        )}
+        {status === 'archived' && (
+          <MenuButton label={l.archived} variant="secondary" menu={publishMenu}>
+            <Archive aria-hidden size={16} />
+            {l.archived}
           </MenuButton>
         )}
       </>
