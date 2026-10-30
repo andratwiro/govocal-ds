@@ -335,7 +335,7 @@ benchmark asks that a screen be composed from parts with no CSS of its own.
   them changes the look: Coachmark's 12 to its trigger (React Aria places the overlay, so it never meets a page's
   layout) and Phone preview's picture bleeding to the screen's edges.
 - Grid on a narrow screen → **keeps its columns; tiles that should wrap are a Tile grid** → the back office is a
-  desktop admin; responsive areas wait for a page that needs them.
+  desktop admin, desktop only: the project lead decided (30 Oct 2026) not to make it work at phone width.
 - The back office's own paint with no part to carry it (the grey ground and body type, the white page bar and project
   columns, the Gap's dashed frame) vs keeping it in `layout.css` → **two parts: the App frame pattern (the Side nav's
   column and the page on `surface-app`, in UI type and the body colour; App frame panel for a white, rounded region
@@ -991,7 +991,7 @@ Calls made building the project screens' parts from the back office's deep dive 
 
 Calls made moving the back office's overview and phase screens onto the project-screen parts (plan Task 8, accept).
 
-- The prototype's overview order (Project setup | Participation | stage) vs Workspace layout's (rail | work column | main) → **the Participation rail at the start on all four screens, Project setup in the work column** → Workspace layout exists so the screens line up; the rail in one place is what the deep dive asked for ("every screen drifted").
+- The prototype's overview order (Project setup | Participation | stage) vs Workspace layout's (rail | work column | main) → **the overview follows the prototype: Project setup first, then the Participation rail, then the stage; the phase screens keep the rail first** → the project lead's call (30 Oct 2026): structure follows the prototype.
 - The header's panel toggle showing the setup column vs opening the platform's menu → **it opens the hidden Side nav over the page on every project screen; the rail's own button collapses the rail to Workspace layout's strip** → the deep dive's app shell row and the small-fixes builder's Side nav `isHidden`; App frame has no hidden state yet, so the page places its columns (`.bo-frame-navless`).
 - The Access popover recipe's own stylesheet (it paints names, emails, the owner's word) vs page CSS that only places → **the popover rebuilt from Stack, Inline, Text, Avatar, Badge and Select; the page CSS keeps only its 360 width** → `tests/backoffice-paints.json` stays `{}`.
 - The project checklist on the phase's Build tab vs only on the overview → **only on the overview: "Before you publish" while a draft, the same Card rows folded under Project details once published** (the Property list of facts goes) → deep dive §1.2: the prototype's Project details is a disclosure of setup rows.
