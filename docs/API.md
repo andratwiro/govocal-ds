@@ -247,7 +247,10 @@ for every Component, Pattern and painted starter part:
 - **No one-off word props.** `closeLabel`, `cancelLabel`, `itemName` and the like are `labels` keys (point 9).
 - **Numbers, lists and dates follow the locale:** React Aria's, set by `AppProvider`'s `locale` (the browser's
   language when nothing sets one). Never a fixed locale, never `toLocaleString()`. Inside the system,
-  `src/components/format.ts` (`useNumberFormatter`, `usePercentFormatter`, `useListFormatter`) does it.
+  `src/components/format.ts` (`useNumberFormatter`, `useDateFormatter`, `usePercentFormatter`, `useListFormatter`)
+  does it. A page does the same with `useNumberFormatter` and `useDateFormatter` from `govocal-ds`
+  (`useDateFormatter({dateStyle: 'medium', timeStyle: 'short'}).formatRange(start, end)`), never `new Intl.…(undefined)`
+  or a fixed `'en-GB'`.
 
 ```tsx
 import {AppProvider, FilterChips, type FilterChipsLabels} from 'govocal-ds';
