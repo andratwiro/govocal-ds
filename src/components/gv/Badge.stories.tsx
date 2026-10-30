@@ -105,7 +105,8 @@ export const Removable: Story = () => {
   );
 };
 
-/** The keyboard: Tab moves from one removable badge's × to the next; Enter or Space removes that badge. */
+/** The keyboard: Tab moves from one removable badge's × to the next; Enter or Space removes that badge, and focus
+ * moves to the next badge's ×. */
 export const Keyboard: Story = () => {
   const [tags, setTags] = useState(['Cycling', 'Safety', 'Public space']);
   return (
@@ -122,9 +123,10 @@ Keyboard.play = async ({canvasElement}) => {
   await expect(canvas.getByRole('button', {name: 'Remove Safety'})).toHaveFocus();
   await userEvent.keyboard('{Enter}');
   await waitFor(() => expect(canvas.queryByText('Safety')).toBeNull());
+  await waitFor(() => expect(canvas.getByRole('button', {name: 'Remove Public space'})).toHaveFocus());
   await userEvent.tab({shift: true});
   await expect(canvas.getByRole('button', {name: 'Remove Cycling'})).toHaveFocus();
   await userEvent.keyboard(' ');
   await waitFor(() => expect(canvas.queryByText('Cycling')).toBeNull());
-  await expect(canvas.getByText('Public space')).toBeVisible();
+  await waitFor(() => expect(canvas.getByRole('button', {name: 'Remove Public space'})).toHaveFocus());
 };

@@ -1,4 +1,4 @@
-import type {ReactNode} from 'react';
+import {useRef, type ReactNode} from 'react';
 import {Button} from 'react-aria-components/Button';
 import {X} from 'lucide-react';
 import clsx from 'clsx';
@@ -30,7 +30,8 @@ export interface BadgeProps extends PlacementProps {
   variant?: 'filled' | 'outlined' | 'value' | 'count';
   /**
    * Adds a × that removes the badge (a tag on an input); the badge takes the outlined look. Several removable tags
-   * together are a `TagPicker`, which adds arrow keys between them and Backspace.
+   * together are a `TagPicker`, which adds arrow keys between them and Backspace. When the badge goes, focus moves to
+   * the next removable badge beside it, else the one before; with none left, the page places focus (its field).
    */
   onRemove?: () => void;
   /**
@@ -44,14 +45,25 @@ export interface BadgeProps extends PlacementProps {
 
 /** A small rounded label, e.g. a content type, a status, a chosen value or a count. Display-only unless removable. */
 export function Badge({icon, children, variant = 'filled', onRemove, isSelected, labels, className, style}: BadgeProps) {
+  const ref = useRef<HTMLSpanElement>(null);
   const name = mergeLabels(badgeLabels, labels)
     .remove(typeof children === 'string' || typeof children === 'number' ? String(children) : undefined);
+  // Removing the focused × would drop focus to the page: hand it to a neighbour once the badge has really gone.
+  const remove = () => {
+    const pill = ref.current;
+    const xs = pill?.parentElement
+      ? [...pill.parentElement.querySelectorAll<HTMLElement>(':scope > .gv-pill > .gv-pill__remove')] : [];
+    const i = xs.findIndex(x => pill?.contains(x));
+    const next = xs[i + 1] ?? xs[i - 1];
+    onRemove?.();
+    requestAnimationFrame(() => { if (pill && !pill.isConnected && next?.isConnected) next.focus(); });
+  };
   return (
-    <span className={clsx('gv-pill', className)} style={style} data-variant={onRemove ? 'outlined' : variant} data-removable={onRemove ? true : undefined} data-selected={isSelected || undefined}>
+    <span ref={ref} className={clsx('gv-pill', className)} style={style} data-variant={onRemove ? 'outlined' : variant} data-removable={onRemove ? true : undefined} data-selected={isSelected || undefined}>
       {icon}
       <span className="gv-pill__label">{children}</span>
       {onRemove && (
-        <Button className="gv-pill__remove" aria-label={name} onPress={onRemove}>
+        <Button className="gv-pill__remove" aria-label={name} onPress={remove}>
           <X aria-hidden size={12} />
         </Button>
       )}

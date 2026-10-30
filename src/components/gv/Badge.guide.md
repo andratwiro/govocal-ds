@@ -37,7 +37,7 @@ button, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patt
 | Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves focus to the next badge's ×. | `play: Keyboard` |
-| Enter | Removes the badge whose × has focus. | `play: Keyboard` |
+| Enter | Removes the badge whose × has focus; focus moves to the next badge's × (the one before at the end). | `play: Keyboard` |
 | Space | Removes the badge, as Enter. | `play: Keyboard` |
 
 ## Content
@@ -75,6 +75,7 @@ for what it removes.
 
 ## Changes
 
+- 30 Oct 2026: removing a badge hands focus to its neighbour's × instead of dropping it to the page.
 - 30 Oct 2026: `isSelected`, the teal tint for a chosen or reviewed value (a reviewed Card's pills).
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: the remove ×'s name comes through `labels`.
