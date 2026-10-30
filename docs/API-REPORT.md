@@ -5,7 +5,7 @@ with each component's props: its own with their types, the ones passed straight 
 (React Aria's behaviour props, React's, the DOM's). An API change shows up here as a diff to review;
 `tests/api-report.test.mjs` fails while this file is stale. The convention it follows: `docs/API.md`.
 
-## `govocal-ds` (704 names)
+## `govocal-ds` (712 names)
 
 ### `ACCESS_WHO_VALUE`
 
@@ -3980,6 +3980,37 @@ Component, from `src/patterns/PhonePreview.tsx`.
 
 Interface, from `src/patterns/PhonePreview.tsx`. The props of `PhoneImage`, listed there.
 
+### `PhonePhaseCard`
+
+Component, from `src/patterns/PhonePhaseCard.tsx`.
+
+- `children?: ReactNode`
+- `className?: string`
+- `dates?: ReactNode`
+- `headingLevel?: 2 | 3 | 4`
+- `labels?: Partial<PhonePhaseCardLabels>`
+- `number?: number`
+- `style?: CSSProperties`
+- `title: string`
+
+### `phonePhaseCardLabels`
+
+Value, from `src/patterns/PhonePhaseCard.tsx`.
+
+```ts
+PhonePhaseCardLabels
+```
+
+### `PhonePhaseCardLabels`
+
+Interface, from `src/patterns/PhonePhaseCard.tsx`.
+
+- `number: (n: string) => string`
+
+### `PhonePhaseCardProps`
+
+Interface, from `src/patterns/PhonePhaseCard.tsx`. The props of `PhonePhaseCard`, listed there.
+
 ### `PhonePreview`
 
 Component, from `src/patterns/PhonePreview.tsx`.
@@ -6188,6 +6219,41 @@ Interface, from `src/patterns/VotingRow.tsx`.
 ### `VotingRowProps`
 
 Interface, from `src/patterns/VotingRow.tsx`. The props of `VotingRow`, listed there.
+
+### `WorkspaceLayout`
+
+Component, from `src/components/gv/WorkspaceLayout.tsx`.
+
+- `children?: ReactNode`
+- `className?: string`
+- `column?: ReactNode`
+- `columnLabel?: string`
+- `defaultRailCollapsed?: boolean`
+- `isRailCollapsed?: boolean`
+- `labels?: Partial<WorkspaceLayoutLabels>`
+- `main?: 'stage' | 'plain'`
+- `onRailCollapsedChange?: (isCollapsed: boolean) => void`
+- `rail?: ReactNode`
+- `railLabel?: string`
+- `style?: CSSProperties`
+
+### `workspaceLayoutLabels`
+
+Value, from `src/components/gv/WorkspaceLayout.tsx`.
+
+```ts
+WorkspaceLayoutLabels
+```
+
+### `WorkspaceLayoutLabels`
+
+Interface, from `src/components/gv/WorkspaceLayout.tsx`.
+
+- `showRail: string`
+
+### `WorkspaceLayoutProps`
+
+Interface, from `src/components/gv/WorkspaceLayout.tsx`. The props of `WorkspaceLayout`, listed there.
 
 ### `ZOOM_STEPS`
 

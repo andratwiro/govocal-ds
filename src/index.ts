@@ -260,6 +260,7 @@ export {
   type PhonePreviewProps, type PhoneHeaderProps, type PhoneImageProps, type PhoneCardProps, type PhoneCountdownProps,
   type PhoneStageProps
 } from './patterns/PhonePreview';
+export {PhonePhaseCard, type PhonePhaseCardProps} from './patterns/PhonePhaseCard';
 export {ProjectHeader, type ProjectHeaderMode, type ProjectHeaderProps} from './patterns/ProjectHeader';
 export {SetupStep, type SetupStepProps} from './patterns/SetupStep';
 export {StatCard, type StatCardProps} from './patterns/StatCard';
@@ -372,6 +373,7 @@ export {
   participantActionListLabels, type ParticipantActionListLabels
 } from './patterns/ParticipantActionRow';
 export {phaseTimelineLabels, type PhaseTimelineLabels} from './patterns/PhaseTimeline';
+export {phonePhaseCardLabels, type PhonePhaseCardLabels} from './patterns/PhonePhaseCard';
 export {phonePreviewLabels, type PhonePreviewLabels} from './patterns/PhonePreview';
 export {projectHeaderLabels, type ProjectHeaderLabels} from './patterns/ProjectHeader';
 export {proposalsRowLabels, type ProposalsRowLabels} from './patterns/ProposalsRow';

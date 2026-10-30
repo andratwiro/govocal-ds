@@ -1,0 +1,36 @@
+@import '../components/theme.css';
+
+/* The prototype's phase card in the phone: white, radius 10, padding 16 (like Phone card); the numbered title in the
+   phase colour at Title size, the dates under it in the tertiary grey, then the body 16 below. The phase colour has
+   no token of its own: it is the success green the prototype draws a running phase in. */
+.gv-phone-phase-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-4);
+  padding: var(--gv-space-16);
+  border-radius: var(--gv-radius-10);
+  background: var(--gv-surface-panel);
+  box-shadow: var(--gv-shadow-raised);
+  font-family: var(--gv-font-family);
+}
+
+.gv-phone-phase-card__title {
+  margin: 0;
+  font: var(--gv-type-title);
+  color: var(--gv-text-success);
+}
+
+.gv-phone-phase-card__dates {
+  margin: 0;
+  font: var(--gv-type-body);
+  color: var(--gv-text-tertiary);
+}
+
+.gv-phone-phase-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-8);
+  margin-block-start: var(--gv-space-12);
+  font: var(--gv-type-body);
+  color: var(--gv-text-body);
+}

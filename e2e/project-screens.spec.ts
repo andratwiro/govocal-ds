@@ -134,3 +134,10 @@ test('Workspace layout: named regions; the rail collapses to a strip whose butto
   await page.keyboard.press('Enter');
   await expect(page.getByRole('complementary', {name: 'Participation'})).toBeVisible();
 });
+
+test('Phone phase card: a numbered phase heading and its dates, first on the phone', async ({page}) => {
+  await page.goto(story('patterns-project-page-phone-phase-card--in-the-phone'));
+  await expect(page.getByRole('heading', {name: '3. Shortlist proposals'})).toBeVisible();
+  await expect(page.getByText('28 Sep 2026 – 18 Oct 2026')).toBeVisible();
+  await report(page);
+});

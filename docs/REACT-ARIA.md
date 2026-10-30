@@ -6,7 +6,7 @@ Every interactive part is built on React Aria Components. This table says, per p
 what would survive a change of base library. It decides nothing: the base library is a question for developers
 (Overview › Questions for developers).
 
-**115 of 135 parts** wire behaviour from React Aria; the rest are plain React and CSS.
+**116 of 137 parts** wire behaviour from React Aria; the rest are plain React and CSS.
 
 **What comes from React Aria** (would be rewritten on another library):
 
@@ -92,6 +92,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Layout & containers › Panel | through Badge: `Button` | – | yes | yes | 9 |
 | Layout & containers › Stack | None: plain React and CSS | – | – | yes | 3 |
 | Layout & containers › Tile grid | None: plain React and CSS | – | – | yes | 4 |
+| Layout & containers › Workspace layout | through Icon button: `Button` | – | – | yes | 6 |
 | Layout & containers › Zoom bar | `Button`, `Toolbar` | – | yes | yes | 9 |
 | Navigation › Breadcrumbs | `Breadcrumbs`, `Breadcrumb`, `Link`; through Icon button: `Button` | `BreadcrumbsProps` | – | yes | 5 |
 | Navigation › Link | `Link` | `LinkProps` | – | yes | 2 |
@@ -143,6 +144,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Participation methods › Voting row | through Vote progress: `ProgressBar` | – | yes | yes | 5 |
 | Project page › Action row | `Button`, `MenuTrigger`, `ProgressBar`, `Link`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `Heading`, `Text`, `Header`, `Keyboard`; through Popover: `OverlayArrow`, `Popover` | – | – | yes | 13 |
 | Project page › Panel section | `Button`, `Heading`, `Disclosure`, `DisclosurePanel` | – | – | yes | 5 |
+| Project page › Phone phase card | None: plain React and CSS | – | yes | yes | 5 |
 | Project page › Phone preview | `Button`, `Link`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | – | yes | 6 |
 | Project page › Project header | `MenuTrigger`; through Button: `Button`, `ProgressBar`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`; through Popover: `OverlayArrow`, `Popover`; through Breadcrumbs: `Breadcrumbs`, `Breadcrumb`, `Link`, `Button`; through Icon button: `Button`; through Segmented control: `ToggleButtonGroup`, `SelectionIndicator`, `ToggleButton`, `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | – | yes | 14 |
 | Project page › Setup step | `Button`, `Dialog`, `DialogTrigger`, `Disclosure`, `DisclosurePanel`, `Heading`, `MenuTrigger`; through Popover: `OverlayArrow`, `Popover` | – | – | yes | 7 |
