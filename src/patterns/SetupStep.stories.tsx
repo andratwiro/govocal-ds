@@ -155,8 +155,9 @@ export const Keyboard: Story = {
     const area = canvas.getByRole('button', {name: /Set area/});
     await expect(area).toHaveFocus();
     await userEvent.keyboard('{Enter}');
-    const menu = await screen.findByRole('menu', {name: 'Area'});
-    await expect(menu).toBeVisible();
+    // The menu opens in a portal, outside the canvas; React Aria names it by its trigger. It fades in.
+    const menu = await screen.findByRole('menu', {name: /Set area/});
+    await waitFor(() => expect(menu).toBeVisible());
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
     await waitFor(() => expect(area).toHaveFocus());

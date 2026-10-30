@@ -93,8 +93,10 @@ export const Keyboard: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
+    // React Aria draws a list's rows a moment after the list: wait for them before Tab.
+    const first = await canvas.findByRole('row', {name: /consultation-summary\.pdf/});
     await userEvent.tab();
-    await expect(canvas.getByRole('row', {name: /consultation-summary\.pdf/})).toHaveFocus();
+    await expect(first).toHaveFocus();
     await userEvent.keyboard('{ArrowDown}');
     const row = canvas.getByRole('row', {name: /street\.webp/});
     await expect(row).toHaveFocus();

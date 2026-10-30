@@ -193,7 +193,8 @@ export const Keyboard: Story = {
   render: () => <div style={{width: 640}}>{underline}</div>,
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const participants = canvas.getByRole('tab', {name: 'Participants'});
+    // React Aria draws the tabs a moment after the list: wait for them before Tab.
+    const participants = await canvas.findByRole('tab', {name: 'Participants'});
     await userEvent.tab();
     await expect(participants).toHaveFocus();
     await userEvent.keyboard('{ArrowRight}');

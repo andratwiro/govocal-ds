@@ -166,7 +166,7 @@ export const WithASubmenuChecklist: Story = () => (
 WithASubmenuChecklist.storyName = 'With a submenu checklist';
 
 /** The keyboard, proved by this story's play function (the Interactions panel): Enter on the button opens the menu on
- * its first item; ↓ ↑ move; → opens a submenu and ← closes it; Esc closes the menu and puts focus back on the button. */
+ * its chosen item (here Selected areas), else its first; ↓ ↑ move; → opens a submenu and ← closes it; Esc closes the menu and puts focus back on the button. */
 export const Keyboard: Story = () => (
   <MenuTrigger>
     <Button variant="secondary" hasMenu>{icon(MapPin)}Area</Button>
@@ -179,20 +179,24 @@ Keyboard.play = async ({canvasElement}) => {
   await expect(trigger).toHaveFocus();
   await userEvent.keyboard('{Enter}');
   const menu = await screen.findByRole('menu', {name: 'Area'});
-  const none = within(menu).getByRole('menuitemradio', {name: /^No specific area/});
-  await waitFor(() => expect(none).toHaveFocus());
-  await userEvent.keyboard('{ArrowDown}');
-  await expect(within(menu).getByRole('menuitemradio', {name: /^All areas/})).toHaveFocus();
-  await userEvent.keyboard('{ArrowUp}');
-  await expect(none).toHaveFocus();
-  await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+  // React Aria opens a menu on its chosen item.
   const selected = within(menu).getByRole('menuitem', {name: /^Selected areas/});
+  await waitFor(() => expect(selected).toHaveFocus());
+  await userEvent.keyboard('{ArrowUp}');
+  const all = within(menu).getByRole('menuitemradio', {name: /^All areas/});
+  await expect(all).toHaveFocus();
+  await userEvent.keyboard('{ArrowUp}');
+  await expect(within(menu).getByRole('menuitemradio', {name: /^No specific area/})).toHaveFocus();
+  await userEvent.keyboard('{ArrowDown}');
+  await expect(all).toHaveFocus();
+  await userEvent.keyboard('{ArrowDown}');
   await expect(selected).toHaveFocus();
   await userEvent.keyboard('{ArrowRight}');
-  const areas = await screen.findByRole('menu', {name: 'Areas'});
+  // A submenu is named by its row (React Aria labels it by the trigger), not by its own aria-label.
+  const areas = await screen.findByRole('menu', {name: /^Selected areas/});
   await waitFor(() => expect(within(areas).getByRole('menuitemcheckbox', {name: 'Harbour'})).toHaveFocus());
   await userEvent.keyboard('{ArrowLeft}');
-  await waitFor(() => expect(screen.queryByRole('menu', {name: 'Areas'})).toBeNull());
+  await waitFor(() => expect(areas).not.toBeInTheDocument());
   await expect(selected).toHaveFocus();
   await userEvent.keyboard('{Escape}');
   await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());

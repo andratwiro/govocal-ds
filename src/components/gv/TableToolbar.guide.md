@@ -31,7 +31,8 @@ all of them, the arrow keys between them.
 
 | Key | What it does | Tested by |
 | --- | --- | --- |
-| Tab | Moves focus into the tools, onto the first; the next Tab leaves them. | `play: Keyboard` |
+| Tab | Moves focus into the tools, onto the first. | `play: Keyboard` |
+| Tab (in the tools) | Leaves them. | `e2e/toolbars.spec.ts` |
 | → and ← | Move between the tools. | `play: Keyboard` |
 | ← and → (in the search field) | Move the caret; only at the field's edge do they move to the next tool. | `e2e/table.spec.ts` |
 
@@ -70,6 +71,7 @@ toolbar with arrow keys, and a search field whose arrows move the caret before t
 
 ## Changes
 
+- 30 Oct 2026: Tab leaving the tools is checked in a browser; the play function can't press it.
 - 30 Oct 2026: this page written; a play function proves Tab and the arrows between tools.
 - 29 Oct 2026: moved to Components › Tables & lists with the rest of the list kit (docs/DECISIONS.md, "Structure: one
   place for each part").

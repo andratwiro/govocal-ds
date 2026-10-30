@@ -31,7 +31,8 @@ arrows inside.
 
 | Key | What it does | Tested by |
 | --- | --- | --- |
-| Tab | Lands on the first tool; the next Tab leaves the toolbar. | `play: Keyboard` |
+| Tab | Lands on the first tool. | `play: Keyboard` |
+| Tab (on a tool) | Leaves the toolbar. | `e2e/toolbars.spec.ts` |
 | Right arrow, Left arrow | Move between the tools. | `play: Keyboard` |
 | Enter | Presses the tool: a toggle goes in or out. | `play: Keyboard` |
 
@@ -65,6 +66,7 @@ icon buttons.
 
 ## Changes
 
+- 30 Oct 2026: Tab leaving the toolbar is checked in a browser; the play function can't press it.
 - 30 Oct 2026: `isDisabled` turns every tool off (the editor's disabled state).
 - 30 Oct 2026: a `floating` variant with a block-type segment and an `actions` slot, for a report's text blocks
   (docs/DECISIONS.md, "Report parts"); `play: FloatingKeyboard` proves its segment's keys.

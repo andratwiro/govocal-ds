@@ -68,7 +68,8 @@ export const Keyboard: Story = {
     const account = within(nav).getByRole('button', {name: /^Sam Rivera/});
     await expect(account).toHaveFocus();
     await userEvent.keyboard('{Enter}');
-    const menu = await screen.findByRole('menu', {name: 'Account'});
+    // The menu opens in a portal, outside the canvas; React Aria names it by its trigger.
+    const menu = await screen.findByRole('menu', {name: /Sam Rivera/});
     await waitFor(() => expect(within(menu).getByRole('menuitem', {name: 'My profile'})).toHaveFocus());
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());

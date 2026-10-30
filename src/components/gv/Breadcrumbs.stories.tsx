@@ -90,7 +90,8 @@ export const Keyboard: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const projects = canvas.getByRole('link', {name: 'Projects'});
+    // React Aria draws the crumbs a moment after the trail: wait for them before Tab.
+    const projects = await canvas.findByRole('link', {name: 'Projects'});
     await userEvent.tab();
     await expect(projects).toHaveFocus();
     await expect(canvas.getByText('Green Corridors for Riverside')).toHaveAttribute('aria-current', 'page');

@@ -4,6 +4,32 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Red plays (30 Oct 2026)
+
+Calls made emptying the play check's known-red list: 18 play functions whose component pages cited them as proof.
+
+- Badge: removing the focused tag dropped focus to the page, against a page that promises Tab and Enter → **the next
+  removable badge beside it takes focus (else the one before); with none left the page places it** → a keyboard user
+  keeps their place, as Tag picker already does.
+- Block frame: Esc on a tool only closed the tool's tooltip (React Aria's tooltip takes Esc at the document and stops
+  it), so stepping out took two presses → **the frame listens for Esc on the window, before the tooltip** → the page
+  promises one Esc deselects and puts focus back on the block.
+- Filter chips: React Aria's tag group puts every chip's × in the Tab order, the page promised one Tab stop → **the ×
+  leaves the Tab order; Delete removes from the keyboard, the × from a pointer** → the Grid pattern the page cites.
+- Menu: the page said Enter opens on the first item; React Aria opens on the chosen item → **the page says so** →
+  React Aria and the APG agree.
+- A menu inside a trigger is named by its trigger (React Aria's `aria-labelledby` beats the menu's own `aria-label`) →
+  **the plays find menus by the trigger's words; the parts are unchanged** → the names read well ("Sorting To review
+  Trending"); the dead `aria-label`s are a note for developers, not a bug a person meets.
+- Tab out of a React Aria Toolbar can't be pressed in a play function: Storybook's bundled userEvent moves on from where
+  Tab was pressed, not from the last tool the Toolbar sends it to → **those rows (Rich text toolbar, Rich text editor,
+  Table toolbar) cite a real-keyboard spec, `e2e/toolbars.spec.ts`** → proof that matches what a browser does.
+- Most of the rest were timing: React Aria draws a collection's items a moment after the collection, so a play that
+  pressed Tab or queried rows at once found nothing → **plays wait for the items (`findBy*`, `waitFor`)**. Filter
+  chips' play holds Delete while focus moves on: a key released in the same instant lands before React Aria places
+  focus, which a hand can't do.
+- The known-red list is deleted, not left empty: it existed only for these 18.
+
 ## The report view on the new parts (30 Oct 2026)
 
 Calls made moving the back office's report view onto Page stage, Block frame, Figure, Quote, Sortable list, Stat

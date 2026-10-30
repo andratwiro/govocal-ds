@@ -60,8 +60,10 @@ export const Filled: Story = {
   render: () => <Controlled />
 };
 
-/** The keys: Tab lands on the toolbar, the next Tab in the writing area, where typing writes. Try the keys here; an
- * automated test presses them too (the Interactions panel). */
+/** The keys: Tab lands on the toolbar, the next Tab in the writing area, where typing writes. Try the keys here; the
+ * play function presses the first Tab (the Interactions panel), a browser test the rest (e2e/toolbars.spec.ts):
+ * Storybook's userEvent moves on from where Tab was pressed, so it can't follow React Aria's Toolbar, which sends Tab
+ * out from its last tool. */
 export const Keyboard: Story = {
   render: () => (
     <div style={{width: 444}}>
@@ -72,11 +74,8 @@ export const Keyboard: Story = {
     const canvas = within(canvasElement);
     await userEvent.tab();
     await expect(canvas.getByRole('button', {name: 'Bold'})).toHaveFocus();
-    await userEvent.tab();
-    const text = canvas.getByRole('textbox', {name: 'Project description'});
-    await expect(text).toHaveFocus();
-    await userEvent.keyboard('Tell residents how to take part.');
-    await expect(text).toHaveValue('Tell residents how to take part.');
+    await userEvent.keyboard('{ArrowRight}');
+    await expect(canvas.getByRole('button', {name: 'Italic'})).toHaveFocus();
   }
 };
 

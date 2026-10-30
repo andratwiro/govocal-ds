@@ -46,7 +46,9 @@ export const Default: Story = {
 };
 
 /** The keyboard, proved by this story's play function: Tab lands on the first tool (the toolbar is one Tab stop); the
- * right and left arrows move between tools; Enter presses one; the next Tab leaves the toolbar. */
+ * right and left arrows move between tools; Enter presses one. The next Tab leaves the toolbar, checked in a browser
+ * (e2e/toolbars.spec.ts): Storybook's userEvent moves on from where Tab was pressed, so it can't follow React Aria's Toolbar, which sends Tab
+ * out from its last tool. */
 export const Keyboard: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'start'}}>
@@ -65,8 +67,6 @@ export const Keyboard: Story = {
     await expect(canvas.getByRole('button', {name: 'Italic'})).toHaveFocus();
     await userEvent.keyboard('{ArrowLeft}');
     await expect(bold).toHaveFocus();
-    await userEvent.tab();
-    await expect(canvas.getByRole('button', {name: 'After the toolbar'})).toHaveFocus();
   }
 };
 

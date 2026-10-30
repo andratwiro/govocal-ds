@@ -141,7 +141,7 @@
   },
   "e2e/play.spec.ts": {
     "group": "Components behave",
-    "what": "Every story that acts itself out (the keyboard tables cite them) plays to its end without a failed step; a short list known to fail today may only shrink."
+    "what": "Every story that acts itself out (the keyboard tables cite them) plays to its end without a failed step."
   },
   "e2e/project-overview.spec.ts": {
     "group": "Back office screens",
@@ -218,6 +218,10 @@
   "e2e/toast.spec.ts": {
     "group": "Components behave",
     "what": "Right after a toast's Undo, a click on the page still lands: the toast's slide never swallows it."
+  },
+  "e2e/toolbars.spec.ts": {
+    "group": "Components behave",
+    "what": "Tab leaves a toolbar from any of its tools, with a real keyboard: the rich text toolbar, the rich text editor (into its writing area) and the table toolbar."
   },
   "e2e/tools.spec.ts": {
     "group": "Back office screens",

@@ -317,7 +317,9 @@ export const Keyboard: Story = {
     const sorting = canvas.getByRole('button', {name: /^Sorting/});
     await expect(sorting).toHaveFocus();
     await userEvent.keyboard('{Enter}');
-    await screen.findByRole('menu', {name: 'Sorting'});
+    // The menu is named by its trigger, so its name carries the trigger's value too.
+    const menu = await screen.findByRole('menu', {name: /^Sorting/});
+    await waitFor(() => expect(within(menu).getByRole('menuitemradio', {name: 'Trending'})).toHaveFocus());
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
     await waitFor(() => expect(sorting).toHaveFocus());

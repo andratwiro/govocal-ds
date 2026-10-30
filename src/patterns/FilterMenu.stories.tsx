@@ -79,14 +79,15 @@ export const Keyboard: Story = {
     await expect(within(facets).getByRole('menuitem', {name: /^Status/})).toHaveFocus();
     await userEvent.keyboard('{ArrowUp}');
     await userEvent.keyboard('{ArrowRight}');
-    const options = await screen.findByRole('menu', {name: 'Source'});
+    // A submenu is named by its row (React Aria labels it by the trigger), not by its own aria-label.
+    const options = await screen.findByRole('menu', {name: /^Source/});
     const online = within(options).getByRole('menuitemcheckbox', {name: /^Online/});
     await waitFor(() => expect(online).toHaveFocus());
     await userEvent.keyboard('{Enter}');
     await expect(online).toHaveAttribute('aria-checked', 'true');
-    await expect(screen.getByRole('menu', {name: 'Source'})).toBeInTheDocument();
+    await expect(options).toBeInTheDocument();
     await userEvent.keyboard('{ArrowLeft}');
-    await waitFor(() => expect(screen.queryByRole('menu', {name: 'Source'})).toBeNull());
+    await waitFor(() => expect(options).not.toBeInTheDocument());
     await expect(source).toHaveFocus();
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());

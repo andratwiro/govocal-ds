@@ -81,6 +81,8 @@ export const Keyboard: Story = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
     const rows = () => canvas.getAllByRole('row').map(r => r.textContent);
+    // React Aria draws the rows a moment after the list: wait for them.
+    await canvas.findAllByRole('row');
     await expect(rows()[0]).toContain('Participants');
     const handle = canvas.getByRole('button', {name: 'Move 3,600 Participants'});
     handle.focus();

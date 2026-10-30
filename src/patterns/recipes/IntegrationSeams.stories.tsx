@@ -293,7 +293,8 @@ export const TableLoadingErrorData: Story = {
     await expect(canvas.getByRole('status')).toHaveTextContent('Loading ideas…');
     await userEvent.click(await canvas.findByRole('button', {name: 'Try again'}, {timeout: 3000}));
     const table = await canvas.findByRole('grid', {name: 'Ideas'}, {timeout: 3000});
-    await expect(within(table).getAllByRole('row')).toHaveLength(IDEAS.length + 1);
+    // React Aria draws the rows a moment after the table.
+    await waitFor(() => expect(within(table).getAllByRole('row')).toHaveLength(IDEAS.length + 1));
     await expect(within(table).getByRole('rowheader', {name: 'Bike lane by the school'})).toBeVisible();
   }
 };

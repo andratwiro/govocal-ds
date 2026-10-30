@@ -43,8 +43,9 @@ same in every browser.
 
 | Key | What it does | Tested by |
 | --- | --- | --- |
-| Tab | Lands on the toolbar (one stop for all its buttons), then the next Tab goes into the writing area. | `play: Keyboard` |
-| Typing | Writes in the writing area. | `play: Keyboard` |
+| Tab | Lands on the toolbar (one stop for all its buttons). | `play: Keyboard` |
+| Tab (on the toolbar) | Goes into the writing area. | `e2e/toolbars.spec.ts` |
+| Typing | Writes in the writing area. | `e2e/toolbars.spec.ts` |
 
 The arrow keys inside the toolbar are on the **Rich text toolbar** page.
 
@@ -86,6 +87,7 @@ that say when they are on (they look pressed and screen readers hear "pressed").
 
 ## Changes
 
+- 30 Oct 2026: Tab into the writing area and typing are checked in a browser; the play function can't press them.
 - 30 Oct 2026: `lang`, `dir`, `description`, `isInvalid` with `errorMessage`, and `isDisabled` (docs/DECISIONS.md, "Small
   fixes").
 - 30 Oct 2026: an `inline` variant for text typed on a report's page (docs/DECISIONS.md, "Report parts").

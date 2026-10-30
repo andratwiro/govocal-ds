@@ -37,7 +37,7 @@ stop for the button; inside the menu the arrow keys move and typing a letter jum
 
 | Key | What it does | Tested by |
 | --- | --- | --- |
-| Enter (on the button) | Opens the menu with focus on its first item. | `play: Keyboard` |
+| Enter (on the button) | Opens the menu with focus on its chosen item, or its first item when none is chosen. | `play: Keyboard` |
 | ↓ and ↑ | Move to the next or previous item. | `play: Keyboard` |
 | → (on an item with a submenu) | Opens the submenu with focus on its first item. | `play: Keyboard` |
 | ← (in a submenu) | Closes the submenu and goes back to its row. | `play: Keyboard` |

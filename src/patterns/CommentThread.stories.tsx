@@ -201,8 +201,10 @@ export const Keyboard: Story = {
   render: () => at512(<DemoThread comments={COMMENTS} internal={INTERNAL} />),
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
+    // React Aria draws the tabs a moment after the list: wait for them before Tab.
+    const comments = await canvas.findByRole('tab', {name: 'Comments (5)'});
     await userEvent.tab();
-    await expect(canvas.getByRole('tab', {name: 'Comments (5)'})).toHaveFocus();
+    await expect(comments).toHaveFocus();
     await userEvent.keyboard('{ArrowRight}');
     const internal = canvas.getByRole('tab', {name: 'Internal conversation (2)'});
     await expect(internal).toHaveFocus();

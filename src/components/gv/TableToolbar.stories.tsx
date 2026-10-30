@@ -84,7 +84,9 @@ export const RightToLeft: Story = {
 };
 
 /** The keyboard, proved by this story's play function (the Interactions panel): Tab enters the tools once, on the
- * first; → and ← move between them; the next Tab leaves the tools. */
+ * first; → and ← move between them. The next Tab leaves the tools, checked in a browser (e2e/toolbars.spec.ts):
+ * Storybook's userEvent moves on from where Tab was pressed, so it can't follow React Aria's Toolbar, which sends Tab
+ * out from its last tool. */
 export const Keyboard: Story = {
   render: () => <Demo initial={{status: ['Proposed', 'Viewed']}} />,
   play: async ({canvasElement}) => {
@@ -98,7 +100,5 @@ export const Keyboard: Story = {
     await expect(filter).toHaveFocus();
     await userEvent.keyboard('{ArrowLeft}');
     await expect(search).toHaveFocus();
-    await userEvent.tab();
-    await expect(tools).not.toContainElement(canvasElement.ownerDocument.activeElement as HTMLElement);
   }
 };
