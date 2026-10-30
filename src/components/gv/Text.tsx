@@ -10,7 +10,12 @@ export type TextKind = 'title' | 'body' | 'ui' | 'small' | 'stat';
 /** A text colour, by emphasis: primary (the words that matter), secondary, meta (a record's date and author), tertiary. */
 export type TextColor = 'primary' | 'secondary' | 'meta' | 'tertiary';
 
-export interface TextProps extends Omit<RACTextProps, 'className' | 'style' | 'color'> {
+export interface TextProps extends Omit<RACTextProps, 'className' | 'style' | 'color' | 'slot'> {
+  /**
+   * The slot it fills inside a React Aria part (`'description'` in a List box item). `null` opts out of the part's
+   * slots, for a Text of its own inside one (a count at the end of a list row).
+   */
+  slot?: string | null;
   /**
    * The type style: `title` (a page's or dialog's title), `body` (reading text), `ui` (labels and controls), `small`
    * (meta lines, captions), `stat` (a figure). Left out, the text takes its look from around it (a slot inside a
@@ -34,11 +39,13 @@ export interface TextProps extends Omit<RACTextProps, 'className' | 'style' | 'c
  * or `<Text elementType="h2" kind="body" isStrong>Where people stand</Text>`. It has no margins. It is React Aria's
  * Text underneath, so it also fills a part's slot (`<Text slot="description">`), as the plain one does.
  */
-export function Text({kind, isStrong, color, className, ...props}: TextProps) {
+export function Text({kind, isStrong, color, className, slot, ...props}: TextProps) {
   const painted = kind != null || color != null;
   return (
     <RACText
       {...props}
+      // React Aria reads a null slot as "no slot"; its prop type only says string.
+      slot={slot as string | undefined}
       className={clsx('react-aria-Text gv-base-text', painted && 'gv-text', className)}
       data-kind={kind}
       data-strong={(kind && isStrong) || undefined}

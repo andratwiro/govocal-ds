@@ -20,7 +20,8 @@
   background: var(--gv-surface-panel);
   box-shadow: var(--gv-shadow-overlay);
   overflow: hidden;
-  font-family: var(--gv-font-family);
+  /* Its words in UI type, whatever the page around it sets (a floating panel sits outside the page). */
+  font: var(--gv-type-ui);
   color: var(--gv-text-primary);
   animation: gv-side-panel-in var(--gv-motion-duration-slow) var(--gv-motion-easing-enter);
 

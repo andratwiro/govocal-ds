@@ -154,6 +154,7 @@ export {Tooltip, TooltipTrigger, type TooltipProps, type TooltipTriggerProps} fr
 export {Badge, type BadgeProps} from './components/gv/Badge';
 export {Banner, type BannerTone, type BannerProps} from './components/gv/Banner';
 export {EmptyState, type EmptyStateProps} from './components/gv/EmptyState';
+export {MissingPart, type MissingPartProps} from './components/gv/MissingPart';
 export {NewDot, type NewDotProps} from './components/gv/NewDot';
 export {ReviewStatus, type ReviewStatusProps} from './components/gv/ReviewStatus';
 export {Skeleton, type SkeletonProps} from './components/gv/Skeleton';
@@ -192,6 +193,7 @@ export {
 } from './components/Content';
 
 // Patterns / App shell
+export {AppFrame, AppFramePanel, type AppFrameProps, type AppFramePanelProps} from './patterns/AppFrame';
 export {NotificationList, type NotificationItem, type NotificationListProps} from './patterns/NotificationList';
 export {
   SideNav, SideNavGroup, SideNavHome, SideNavLink, SideNavButton, type SideNavProps, type SideNavGroupProps,
@@ -296,6 +298,7 @@ export {listHeaderCellLabels, type ListHeaderCellLabels} from './components/gv/L
 export {listRowLabels, type ListRowLabels} from './components/gv/ListRow';
 export {localeSwitcherLabels, type LocaleSwitcherLabels} from './components/gv/LocaleSwitcher';
 export {mapViewLabels, type MapViewLabels, mapLegendLabels, type MapLegendLabels} from './components/gv/MapView';
+export {missingPartLabels, type MissingPartLabels} from './components/gv/MissingPart';
 export {modalLabels, type ModalLabels} from './components/gv/Modal';
 export {
   multilingualFieldLabels, type MultilingualFieldLabels

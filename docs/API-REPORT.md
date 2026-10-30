@@ -5,7 +5,7 @@ with each component's props: its own with their types, the ones passed straight 
 (React Aria's behaviour props, React's, the DOM's). An API change shows up here as a diff to review;
 `tests/api-report.test.mjs` fails while this file is stale. The convention it follows: `docs/API.md`.
 
-## `govocal-ds` (659 names)
+## `govocal-ds` (667 names)
 
 ### `ACCESS_WHO_VALUE`
 
@@ -330,6 +330,39 @@ Interface, from `src/components/gv/AlertDialog.tsx`.
 ### `AlertDialogProps`
 
 Interface, from `src/components/gv/AlertDialog.tsx`. The props of `AlertDialog`, listed there.
+
+### `AppFrame`
+
+Component, from `src/patterns/AppFrame.tsx`.
+
+- `children: ReactNode`
+- `className?: string`
+- `isNavFolded?: boolean`
+- `nav: ReactNode`
+- `style?: CSSProperties`
+
+### `AppFramePanel`
+
+Component, from `src/patterns/AppFrame.tsx`.
+
+- `aria-label?: string`
+- `aria-labelledby?: string`
+- `children?: ReactNode`
+- `className?: string`
+- `elementType?: 'div' | 'section' | 'aside' | 'header' | 'nav'`
+- `id?: string`
+- `padding?: Space`
+- `paddingBlock?: Space`
+- `paddingInline?: Space`
+- `style?: CSSProperties`
+
+### `AppFramePanelProps`
+
+Interface, from `src/patterns/AppFrame.tsx`. The props of `AppFramePanel`, listed there.
+
+### `AppFrameProps`
+
+Interface, from `src/patterns/AppFrame.tsx`. The props of `AppFrame`, listed there.
 
 ### `AppProvider`
 
@@ -2859,6 +2892,35 @@ Component, from `src/components/Menu.tsx`.
 
 Interface, from `src/components/Menu.tsx`. The props of `MenuTrigger`, listed there.
 
+### `MissingPart`
+
+Component, from `src/components/gv/MissingPart.tsx`.
+
+- `children: ReactNode`
+- `className?: string`
+- `isInline?: boolean`
+- `labels?: Partial<MissingPartLabels>`
+- `name: string`
+- `style?: CSSProperties`
+
+### `missingPartLabels`
+
+Value, from `src/components/gv/MissingPart.tsx`.
+
+```ts
+MissingPartLabels
+```
+
+### `MissingPartLabels`
+
+Interface, from `src/components/gv/MissingPart.tsx`.
+
+- `missing: (name: string) => string`
+
+### `MissingPartProps`
+
+Interface, from `src/components/gv/MissingPart.tsx`. The props of `MissingPart`, listed there.
+
 ### `Modal`
 
 Component, from `src/components/gv/Modal.tsx`.
@@ -5269,11 +5331,12 @@ Component, from `src/components/gv/Text.tsx`.
 - `elementType?: string`
 - `isStrong?: boolean`
 - `kind?: TextKind`
+- `slot?: string | null`
 - `style?: CSSProperties`
 - Passed through from react-aria-components (1): `render`
 - Passed through: 53 of react's AriaAttributes
 - Passed through: 160 of react's DOMAttributes
-- Passed through: 48 of react's HTMLAttributes
+- Passed through: 47 of react's HTMLAttributes
 
 ### `TextArea`
 

@@ -1,0 +1,25 @@
+@import '../theme.css';
+
+/* Missing part: the back office's gap frame. A 1px dashed control-grey border, radius 8, 12 in, its label in Small
+   tertiary over the stand-in, 8 apart. Inline: only a dashed outline 2 outside, radius 4, the content left as it is. */
+.gv-missing-part {
+  display: grid;
+  gap: var(--gv-space-8);
+  padding: var(--gv-space-12);
+  border: 1px dashed var(--gv-border-control);
+  border-radius: var(--gv-radius-8);
+
+  &[data-inline] {
+    display: inline-block;
+    padding: 0;
+    border: 0;
+    outline: 1px dashed var(--gv-border-control);
+    outline-offset: 2px;
+    border-radius: var(--gv-radius-4);
+  }
+}
+
+.gv-missing-part__label {
+  font: var(--gv-type-small);
+  color: var(--gv-text-tertiary);
+}

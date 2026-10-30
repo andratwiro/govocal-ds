@@ -29,7 +29,7 @@ Generic parts any admin could ship, from `govocal-ds`. Reach for one first.
 - Data display: `ActivityFeed`, `Avatar`, `FileList`, `Illustration`, `ListHeader`, `ListHeaderCell`, `ListRow`, `MapView`, `PropertyList`, `ReactionCounts`, `StatRow`, `StatTile`
 - Overlays: `AlertDialog`, `Coachmark`, `HelpPopover`, `Modal`, `SidePanel`, `Tooltip`
 - Layout & containers: `AppProvider`, `Card`, `Divider`, `Grid`, `Inline`, `PageHeader`, `Panel`, `Stack`, `TileGrid`
-- Status & feedback: `Badge`, `Banner`, `EmptyState`, `NewDot`, `ReviewStatus`, `Skeleton`, `StatusBadge`, `Toast`
+- Status & feedback: `Badge`, `Banner`, `EmptyState`, `MissingPart`, `NewDot`, `ReviewStatus`, `Skeleton`, `StatusBadge`, `Toast`
 - Charts: `BarRow`, Chart (`LineChart`), `DashboardCard`, `LegendRow`, `StatementRow`
 - Navigation: `Breadcrumbs`, `Link`, `Pagination`, `Tabs`
 - Actions: `Button`, `CompactButton`, `IconButton`, `Menu`, `SegmentedControl`
@@ -44,10 +44,10 @@ Go Vocal assemblies from `govocal-ds`, grouped by the screen they belong to; the
 
 - Build tab: `AccessRights`, Form field summary, `NotificationRow`, `ParticipantActionRow`, `ViewOptionRow`
 - Project page: `ActionRow`, `PanelSection`, `PhonePreview`, `ProjectHeader`, `SetupStep`, `StatCard`
+- App shell: `AppFrame`, `NotificationList`, `SideNav`
 - Report builder: `AssistantPanel`
 - Manage tab: `CommentThread`, `OfficialUpdate`
 - Participation methods: `CommonGroundRow`, `ProposalsRow`, `VolunteeringRow`, `VoteProgress`, `VotingRow`
-- App shell: `NotificationList`, `SideNav`
 - Project rail: `PhaseTimeline`, `RailHeader`, `RailPhase`
 - Pages & menu: `SectionToggle`
 - Recipes: Form validation, Integration seams

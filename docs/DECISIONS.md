@@ -149,6 +149,19 @@ benchmark asks that a screen be composed from parts with no CSS of its own.
   layout) and Phone preview's picture bleeding to the screen's edges.
 - Grid on a narrow screen → **keeps its columns; tiles that should wrap are a Tile grid** → the back office is a
   desktop admin; responsive areas wait for a page that needs them.
+- The back office's own paint with no part to carry it (the grey ground and body type, the white page bar and project
+  columns, the Gap's dashed frame) vs keeping it in `layout.css` → **two parts: the App frame pattern (the Side nav's
+  column and the page on `surface-app`, in UI type and the body colour; App frame panel for a white, rounded region
+  with no border or head) and the Missing part component (the Gap's frame, "Missing: <name>", or a dashed outline
+  inline)** → zero paint left in back-office CSS; both are what every back-office page already drew, now with a page
+  each. Missing part follows the prototyping placeholders other systems ship (a named, dashed stand-in).
+- A Modal or a floating Side panel took its type size from the page's `body` (portalled there) → **both set UI type on
+  their root, as Popover and Dialog already do** → a host that sets no body type still gets the system's.
+- Text inside a React Aria item that isn't one of its slots (a count at the end of a List box row) → **Text takes
+  `slot={null}`** → React Aria's way out of a part's slots; the prop type said string only.
+- The back office's page bar: a local bar with a body-strong title vs Page header → **Page header (Title type, the trail
+  to the parents above it, the line about the page inside the head) in an App frame panel** → one page head; the bar
+  keeps its white look.
 
 ## Words, locale and edge cases (30 Oct 2026)
 

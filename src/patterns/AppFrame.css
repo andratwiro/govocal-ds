@@ -1,0 +1,40 @@
+@import '../components/theme.css';
+
+/* App frame (the real admin's layout): the Side nav's column (224, or the 52 rail) and the page beside it on the app's
+   grey ground, 8 in, as tall as the window at least. The page's words default to UI type in the body text colour. */
+.gv-app-frame {
+  display: grid;
+  grid-template-columns: 224px minmax(0, 1fr);
+  min-block-size: 100vh;
+  background: var(--gv-surface-app);
+
+  &[data-folded] {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+}
+
+/* Sticky, so the dark nav runs the window's full height on pages taller than it. */
+.gv-app-frame__nav {
+  position: sticky;
+  inset-block-start: 0;
+  block-size: 100vh;
+}
+
+.gv-app-frame__main {
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--gv-space-8);
+  font: var(--gv-type-ui);
+  color: var(--gv-text-body);
+}
+
+/* App frame panel: a white, rounded region of the frame with no border; its padding comes from the TSX's props. */
+.gv-app-frame-panel {
+  box-sizing: border-box;
+  min-inline-size: 0;
+  margin: 0;
+  padding-block: var(--gv-app-frame-panel-padding-block, 0);
+  padding-inline: var(--gv-app-frame-panel-padding-inline, 0);
+  border-radius: var(--gv-radius-12);
+  background: var(--gv-surface-panel);
+}

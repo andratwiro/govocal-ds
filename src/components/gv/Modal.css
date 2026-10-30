@@ -20,7 +20,8 @@
   max-width: 100%;
   max-height: min(640px, 88vh);
   outline: none;
-  font-family: var(--gv-font-family);
+  /* Its words in UI type, whatever the page around it sets (it is portalled to the body). */
+  font: var(--gv-type-ui);
   color: var(--gv-text-body);
 
   &[data-width='wide'] {

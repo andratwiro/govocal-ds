@@ -6,7 +6,7 @@ Every interactive part is built on React Aria Components. This table says, per p
 what would survive a change of base library. It decides nothing: the base library is a question for developers
 (Overview › Questions for developers).
 
-**111 of 127 parts** wire behaviour from React Aria; the rest are plain React and CSS.
+**111 of 129 parts** wire behaviour from React Aria; the rest are plain React and CSS.
 
 **What comes from React Aria** (would be rewritten on another library):
 
@@ -100,6 +100,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Status & feedback › Badge | `Button` | – | – | yes | 8 |
 | Status & feedback › Banner | `Link` through `components/gv/IconButton` | – | – | yes | 13 |
 | Status & feedback › Empty state | None: plain React and CSS | – | – | yes | 10 |
+| Status & feedback › Missing part | None: plain React and CSS | – | – | yes | 2 |
 | Status & feedback › New dot | None: plain React and CSS | – | – | yes | 2 |
 | Status & feedback › Review status | None: plain React and CSS | – | – | yes | 4 |
 | Status & feedback › Skeleton | None: plain React and CSS | – | – | yes | 5 |
@@ -118,6 +119,7 @@ what would survive a change of base library. It decides nothing: the base librar
 
 | Part | Behaviour from React Aria's … | Props straight through | Locale | CSS | Stories |
 |---|---|---|---|---|---|
+| App shell › App frame | None: plain React and CSS | – | – | yes | 2 |
 | App shell › Notification list | `Link` through `components/Button` | – | – | yes | 4 |
 | App shell › Side nav | `Button`, `Link` through `components/Tooltip` | – | yes | yes | 3 |
 | Build tab › Access rights | `Button`, `Disclosure`, `DisclosurePanel`, `DisclosureGroup`, `Heading` through `components/Button`, `components/Link`, `components/RadioGroup`, `components/Select`, `components/Switch`, `components/gv/AlertDialog`, `components/gv/ChoiceCard` | – | yes | yes | 8 |
