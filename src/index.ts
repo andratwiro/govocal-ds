@@ -118,7 +118,7 @@ export {TitleField, type TitleFieldProps} from './components/gv/TitleField';
 
 // Components / Layout & containers
 export {AppProvider, type AppProviderProps} from './components/gv/AppProvider';
-export {useNumberFormatter} from './components/format';
+export {useDateFormatter, useNumberFormatter} from './components/format';
 export {
   BlockFrame, BlockInsertLine, type BlockFrameProps, type BlockInsertLineProps
 } from './components/gv/BlockFrame';

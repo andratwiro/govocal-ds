@@ -5,7 +5,7 @@ import {AlertDialog, Avatar, Badge, Banner, BarRow, Button, Checkbox, CheckboxGr
   DataTablePerson, DataTableRow, DataTableStack, Divider, DropZone, EmptyState, FileList, Grid, Inline, LegendRow,
   LineChart, MenuItem, Modal, NumberField, Pagination, Panel, PropertyList, PropertyListItem, Radio, RadioGroup, Select,
   SelectItem, Sparkline, Stack, StatRow, StatTile, StatusBadge, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Text,
-  TextField, TileGrid, toast} from 'govocal-ds';
+  TextField, TileGrid, toast, useNumberFormatter} from 'govocal-ds';
 import {CANDIDATES, CATEGORIES, CURRENT, MANAGERS, POPUP_CONDITIONS, POPUP_SHOWN, QUARTERS, QUESTIONS, REPORTS, RESPONDENTS,
   SENTIMENT, SURVEY_ACCESS, WHO, type Report} from '../data-community-monitor';
 import {Page} from './Page';
@@ -14,7 +14,6 @@ import {SectionHeading} from '../SectionHeading';
 const SECTIONS = ['Live monitor', 'Participants', 'Reports', 'Settings'];
 /** "Manager B" → "MB". */
 const initials = (name: string) => name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-const n = (v: number) => v.toLocaleString('en');
 const score = (v: number) => `${v.toFixed(1)} / 5`;
 const mean = (vs: number[]) => Math.round((vs.reduce((a, b) => a + b, 0) / vs.length) * 10) / 10;
 const signed = (raw: number) => { const v = Math.round(raw * 10) / 10; return `${v > 0 ? '+' : v < 0 ? '−' : '±'}${Math.abs(v).toFixed(1)}`; };
@@ -65,6 +64,7 @@ function ScoreTile({label, info, scores, quarter}: {label: ReactNode; info?: Rea
 }
 
 function LiveMonitor({quarter}: {quarter: number}) {
+  const {format: n} = useNumberFormatter();
   const [question, setQuestion] = useState(0);
   const shown = QUARTERS.slice(0, quarter + 1);
   const avg = questionScore(question, quarter);
@@ -119,6 +119,7 @@ function LiveMonitor({quarter}: {quarter: number}) {
 }
 
 function Participants({quarter}: {quarter: number}) {
+  const {format: n} = useNumberFormatter();
   const shown = QUARTERS.slice(0, quarter + 1);
   const rate = Math.round((RESPONDENTS[quarter] / POPUP_SHOWN[quarter]) * 100);
   const allTime = RESPONDENTS.slice(0, quarter + 1).reduce((a, b) => a + b, 0);
@@ -178,6 +179,7 @@ function SurveyModal({isOpen, onOpenChange}: {isOpen: boolean; onOpenChange: (o:
 
 /** A report opened: the quarter's headline scores, as the report's first page. */
 function ReportModal({report, onClose}: {report: Report | null; onClose: () => void}) {
+  const {format: n} = useNumberFormatter();
   const q = report ? Math.max(0, QUARTERS.indexOf(report.quarter)) : CURRENT;
   return (
     <Modal title={report?.title ?? 'Report'} width="wide" isOpen={report !== null} onOpenChange={o => { if (!o) onClose(); }}

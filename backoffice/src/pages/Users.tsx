@@ -6,7 +6,7 @@ import {AlertDialog, Banner, Button, ChoiceCard, DataTable, DataTableBody, DataT
   DataTableHeader, DataTableOptions, DataTablePerson, DataTableRow, DataTableStack, EmptyState, Inline, type Key, Menu,
   MenuItem, Modal, MultilingualTextField, type Multiloc, Panel, RadioGroup, SearchField, Select, type SelectionAction,
   SelectionBar, SelectItem, Separator, Stack, TableToolbar, TableToolbarHeading, Text, TextField, toast, toKeySet,
-  VisuallyHidden} from 'govocal-ds';
+  VisuallyHidden, useNumberFormatter} from 'govocal-ds';
 import {ListBox, ListBoxItem} from 'govocal-ds/base';
 import {LOCALES} from '../data-settings';
 import {ALL_PEOPLE, GROUPS, SEGMENTS, SMART_RULES, type Person} from '../data-users';
@@ -20,7 +20,7 @@ type Sort = {column: 'name' | 'lastActive' | 'joined'; direction: 'ascending' | 
 
 // The admin's other user lists page (docs/DECISIONS.md); the Users list itself is virtualised.
 export const PAGE_SIZE = 10;
-export const usersWord = (n: number) => `${n.toLocaleString('en-GB')} ${n === 1 ? 'user' : 'users'}`;
+export const usersWord = (count: number, n: (v: number) => string) => `${n(count)} ${count === 1 ? 'user' : 'users'}`;
 
 const DESCRIPTION = 'Get an overview of all the people and organisations that registered on the platform. ' +
   'Add a selection of users to Manual groups or Smart groups.';
@@ -162,6 +162,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
   onRowAction: (p: Member, a: RowAction) => void; onAddToGroup: (ids: string[], groupId: string) => void;
   onRemoveFromGroup: (ids: string[]) => void;
 }) {
+  const {format: n} = useNumberFormatter();
   const group = groups.find(g => g.id === view);
   const title = SEGMENTS.find(s => s.id === view)?.label ?? group?.label ?? '';
   const [query, setQuery] = useState('');
@@ -189,7 +190,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
   const act = useRef(onRowAction);
   act.current = onRowAction;
   const onAct = useCallback((p: Member, a: RowAction) => act.current(p, a), []);
-  const exportUsers = (n: number) => toast('Export started', `${usersWord(n)} in users.xlsx`);
+  const exportUsers = (count: number) => toast('Export started', `${usersWord(count, n)} in users.xlsx`);
 
   const manualGroup = group?.kind === 'manual';
   const actions: SelectionAction[] = [
@@ -213,7 +214,7 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
     <TableToolbar aria-label="User tools" start={(
       <SelectionBar count={count} items={actions} onAction={onBulk}
         onClear={() => setSelected(new Set())}>
-        <TableToolbarHeading>{usersWord(rows.length)}</TableToolbarHeading>
+        <TableToolbarHeading>{usersWord(rows.length, n)}</TableToolbarHeading>
       </SelectionBar>
     )}>
       <Button variant="quiet" size={32} onPress={() => exportUsers(all.length)}><Download aria-hidden size={16} />Export all</Button>

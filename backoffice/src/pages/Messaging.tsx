@@ -5,7 +5,7 @@ import {AlertDialog, Banner, Button, DataTable, DataTableBody, DataTableCell, Da
   DataTableHeader, DataTableOptions, DataTableRow, DataTableStack, Divider, EmptyState, FilterChips, Grid, Inline, type FilterFacet,
   FilterMenu, type FilterValue, MenuItem, NotificationEmail, NotificationRow, NotificationRowList, Pagination, Panel,
   RichTextEditor, SearchField, SectionLabel, Select, SelectItem, StatTile, StatusBadge, Tab, TableToolbar, TabList,
-  Stack, TabPanel, TabPanels, Tabs, Text, TextField, TileGrid, toast} from 'govocal-ds';
+  Stack, TabPanel, TabPanels, Tabs, Text, TextField, TileGrid, toast, useNumberFormatter} from 'govocal-ds';
 import {Label} from 'govocal-ds/base';
 import {AUTOMATED, GROUP_SIZES, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
 import {Gap, GapLegend} from '../Gap';
@@ -13,10 +13,9 @@ import {Page} from './Page';
 import {emailStore, sentText, usePages} from './MessagingPages';
 import {SectionHeading} from '../SectionHeading';
 
-const n = (v: number) => v.toLocaleString('en');
 const pct = (v?: number) => (v == null ? '—' : `${v}%`);
-const emailsWord = (v: number) => `${n(v)} ${v === 1 ? 'email' : 'emails'}`;
-const smsWord = (v: number) => `${n(v)} ${v === 1 ? 'message' : 'messages'}`;
+const emailsWord = (v: number, n: (v: number) => string) => `${n(v)} ${v === 1 ? 'email' : 'emails'}`;
+const smsWord = (v: number, n: (v: number) => string) => `${n(v)} ${v === 1 ? 'message' : 'messages'}`;
 
 /** The custom emails as state, written through to the shared store (so the composer's route sees them). */
 function useEmails() {
@@ -47,6 +46,7 @@ const emailFacets = (emails: CustomEmail[]): FilterFacet[] => [
 function CustomEmailTable({emails, onAction, onCreate}: {
   emails: CustomEmail[]; onAction: (e: CustomEmail, a: RowAction) => void; onCreate: () => void;
 }) {
+  const {format: n} = useNumberFormatter();
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<FilterValue>({});
   const facets = useMemo(() => emailFacets(emails), [emails]);
@@ -72,8 +72,8 @@ function CustomEmailTable({emails, onAction, onCreate}: {
     <Panel title="Custom emails" headingLevel={3} description="Send out custom emails and check statistics." isFlush
       actions={create}
       toolbar={<>
-        <TableToolbar aria-label="Email tools" headingLevel={4} heading={emailsWord(rows.length)}>
-          <FilterMenu aria-label="Filter emails" facets={facets} value={filters} onChange={fresh(setFilters)} countLabel={emailsWord} />
+        <TableToolbar aria-label="Email tools" headingLevel={4} heading={emailsWord(rows.length, n)}>
+          <FilterMenu aria-label="Filter emails" facets={facets} value={filters} onChange={fresh(setFilters)} countLabel={v => emailsWord(v, n)} />
           <SearchField aria-label="Search emails" placeholder="Search" value={query} onChange={fresh(setQuery)} />
         </TableToolbar>
         <FilterChips aria-label="Active filters" facets={facets} value={filters} onChange={fresh(setFilters)} />
@@ -125,6 +125,7 @@ function DraftComposer({email, onSave, onSend, onCancel}: {
   email: CustomEmail; onSave: (patch: Partial<CustomEmail>) => void; onSend: (patch: Partial<CustomEmail>) => void;
   onCancel: () => void;
 }) {
+  const {format: n} = useNumberFormatter();
   const [to, setTo] = useState(email.to);
   const [subject, setSubject] = useState(email.subject);
   const [body, setBody] = useState(email.body);
@@ -168,6 +169,7 @@ function DraftComposer({email, onSave, onSend, onCancel}: {
 let copies = 0;
 
 function CustomEmails() {
+  const {format: n} = useNumberFormatter();
   const navigate = useNavigate();
   const [emails, setEmails] = useEmails();
   const [draftId, setDraftId] = useState(emails.find(e => e.status === 'Draft' && e.body)?.id);
@@ -198,7 +200,7 @@ function CustomEmails() {
     if (!draft) return;
     update(draft.id, {...patch, status: 'Sent', date: '29 Oct 2026, just now', opened: 0, clicked: 0});
     const to = patch.to ?? draft.to;
-    confirmSent(sentText(patch.subject ?? draft.subject, GROUP_SIZES[to] ?? 0));
+    confirmSent(sentText(patch.subject ?? draft.subject, GROUP_SIZES[to] ?? 0, n));
     setDraftId(undefined);
   };
   // Delete asks first, then offers Undo too (as Projects).
@@ -339,6 +341,7 @@ function AutomatedEmails() {
 
 /** The credits as Stat tiles, then the campaigns in the list shape every admin table shares. */
 function Sms() {
+  const {format: n} = useNumberFormatter();
   const navigate = useNavigate();
   const used = SMS_BALANCE.usedCampaigns + SMS_BALANCE.usedTests;
   const {current, pageCount, setPage, shown} = usePages(SMS, PAGE_SIZE);
@@ -353,7 +356,7 @@ function Sms() {
       <Banner>A message too long for one SMS is sent in several parts, and each part costs a credit for every recipient.</Banner>
       <Panel title="SMS campaigns" headingLevel={3} description="Send text messages to your participants." isFlush
         actions={<Button variant="primary" size={32} onPress={() => navigate('/messaging/texting/new')}><Plus aria-hidden size={16} />Create SMS</Button>}
-        toolbar={<TableToolbar aria-label="SMS tools" headingLevel={4} heading={smsWord(SMS.length)} />}
+        toolbar={<TableToolbar aria-label="SMS tools" headingLevel={4} heading={smsWord(SMS.length, n)} />}
         footer={<Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="SMS pages" />}>
         <div className="bo-messaging-scroll">
           <DataTable aria-label="SMS campaigns">

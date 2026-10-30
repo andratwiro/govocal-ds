@@ -2,7 +2,7 @@ import {useMemo, useState} from 'react';
 import {BadgeCheck, Check, Copy, ExternalLink, Globe, Lightbulb, SearchX, Sparkles, Tag, Users} from 'lucide-react';
 import {Avatar, Badge, Banner, Button, Card, EmptyState, FilterChips, type FilterFacet, FilterMenu, type FilterValue,
   IconButton, Link, Modal, Pagination, Panel, PropertyList, PropertyListItem, SearchField, Select, SelectItem,
-  Inline, Stack, TableToolbar, Text, TileGrid, toast} from 'govocal-ds';
+  Inline, Stack, TableToolbar, Text, TileGrid, toast, useNumberFormatter, useDateFormatter} from 'govocal-ds';
 import {COUNTRIES, LIBRARY, METHODS, PHASE_TITLES, POPULATIONS, SORTS, TOPICS, type Country, type LibraryProject} from '../data-inspiration-hub';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
@@ -52,7 +52,8 @@ function sortBy(list: LibraryProject[], sort: string) {
 
 // The prototype's project card (.gv-pcard): image on top, title, then the platform line, the methods and the action.
 function ProjectCard({project, highlighted, copied, onCopy, onOpen}: {project: LibraryProject; highlighted?: boolean; copied: boolean; onCopy: () => void; onOpen: () => void}) {
-  const participants = project.participants.toLocaleString('en');
+  const {format: n} = useNumberFormatter();
+  const participants = n(project.participants);
   return (
     <Card
       layout="stacked"
@@ -87,10 +88,11 @@ function ProjectCard({project, highlighted, copied, onCopy, onOpen}: {project: L
   );
 }
 
-const longDate = (iso: string) => new Date(`${iso}T12:00:00`).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
 
 /** The project's preview: what it asked, its facts as a Property list, how (its phases, one per method). */
 function ProjectPreview({project, copied, onCopy, onClose}: {project: LibraryProject | null; copied: boolean; onCopy: () => void; onClose: () => void}) {
+  const {format: n} = useNumberFormatter();
+  const longDate = useDateFormatter({day: 'numeric', month: 'short', year: 'numeric'});
   return (
     <Modal title={project?.title ?? 'Project'} width="wide" isOpen={project !== null} onOpenChange={o => { if (!o) onClose(); }}
       footer={<>
@@ -107,10 +109,10 @@ function ProjectPreview({project, copied, onCopy, onClose}: {project: LibraryPro
               <Inline gap="6"><Avatar initials={initials(project.platform)} size={24} />{project.platform}</Inline>
             </PropertyListItem>
             <PropertyListItem label="Country">{project.country}</PropertyListItem>
-            <PropertyListItem label="Participants">{`${project.participants.toLocaleString('en')} participants`}</PropertyListItem>
+            <PropertyListItem label="Participants">{`${n(project.participants)} participants`}</PropertyListItem>
             <PropertyListItem label="Topic">{project.topic}</PropertyListItem>
             <PropertyListItem label="Population">{project.population}</PropertyListItem>
-            <PropertyListItem label="Started">{longDate(project.start)}</PropertyListItem>
+            <PropertyListItem label="Started">{longDate.format(new Date(`${project.start}T12:00:00`))}</PropertyListItem>
           </PropertyList>
           <Text elementType="h3" kind="body" isStrong color="primary">Phases</Text>
           <Stack elementType="ol" gap="8">

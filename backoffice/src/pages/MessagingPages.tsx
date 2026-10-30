@@ -4,7 +4,7 @@ import {CircleCheck, Mail, Send, Smartphone} from 'lucide-react';
 import {Badge, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty,
   DataTableHeader, DataTablePerson, DataTableRow, Divider, FilterChips, type FilterFacet, FilterMenu, type FilterValue,
   Pagination, Panel, PhonePreview, RichTextEditor, SearchField, Select, SelectItem, Stack, StatTile, TableToolbar, Text,
-  TextArea, TextField, TileGrid, toast} from 'govocal-ds';
+  TextArea, TextField, TileGrid, toast, useNumberFormatter} from 'govocal-ds';
 import {Label} from 'govocal-ds/base';
 import {CUSTOM_EMAILS, GROUP_SIZES, GROUPS, RECIPIENTS, SENDER, type CustomEmail} from '../data-messaging';
 import {Gap} from '../Gap';
@@ -14,7 +14,6 @@ import {SectionHeading} from '../SectionHeading';
 // Messaging's first clicks, each on its own route as in the real admin: a new email, a sent email's
 // statistics, a new SMS.
 const MESSAGING_CRUMB = [{key: 'messaging', label: 'Messaging', href: '#/messaging'}];
-const n = (v: number) => v.toLocaleString('en');
 
 /**
  * The custom emails, with the ones sent here on top, and the last "sent" confirmation: they outlive a change of
@@ -31,12 +30,13 @@ export function usePages<T>(rows: T[], size: number) {
 }
 
 /** The "sent" confirmation's text (the Banner's Success story). */
-export const sentText = (subject: string, recipients: number) =>
+export const sentText = (subject: string, recipients: number, n: (v: number) => string) =>
   `Your email “${subject}” was sent to ${n(recipients)} recipients.`;
 
 // ── New email (the prototype's compose card: header, fields, footer of actions; Panel's "In a composer" story) ──
 
 export function EmailComposer() {
+  const {format: n} = useNumberFormatter();
   const navigate = useNavigate();
   const [to, setTo] = useState(GROUPS[0]);
   const [subject, setSubject] = useState('');
@@ -49,7 +49,7 @@ export function EmailComposer() {
       date: status === 'Sent' ? '29 Oct 2026, just now' : 'Edited 29 Oct 2026', ...(status === 'Sent' ? {opened: 0, clicked: 0} : {})};
     emailStore.emails = [email, ...emailStore.emails];
     // Sent: the list shows a success Banner; a saved draft gets the toast.
-    if (status === 'Sent') emailStore.sent = sentText(email.subject, GROUP_SIZES[to] ?? 0);
+    if (status === 'Sent') emailStore.sent = sentText(email.subject, GROUP_SIZES[to] ?? 0, n);
     else toast('Draft saved', email.subject);
     navigate('/messaging');
   };
@@ -90,10 +90,11 @@ export function EmailComposer() {
 const RECIPIENT_STATUSES = ['Clicked', 'Opened', 'Delivered', 'Bounced'] as const;
 const RECIPIENT_FACETS: FilterFacet[] = [{id: 'status', label: 'Status', icon: <CircleCheck aria-hidden size={16} />,
   items: RECIPIENT_STATUSES.map(st => ({id: st, label: st, count: RECIPIENTS.filter(r => r.status === st).length}))}];
-const recipientsWord = (v: number) => `${n(v)} ${v === 1 ? 'recipient' : 'recipients'}`;
+const recipientsWord = (v: number, n: (v: number) => string) => `${n(v)} ${v === 1 ? 'recipient' : 'recipients'}`;
 
 /** Who got it, in the list shape every admin table shares: count, filter and search over the table, pages below. */
 function RecipientList({sent}: {sent: number}) {
+  const {format: n} = useNumberFormatter();
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<FilterValue>({});
   const q = query.trim().toLowerCase();
@@ -104,8 +105,8 @@ function RecipientList({sent}: {sent: number}) {
   return (
     <Panel title="Recipients" headingLevel={3} description={`A sample of the ${n(sent)} people it went to.`} isFlush
       toolbar={<>
-        <TableToolbar aria-label="Recipient tools" headingLevel={4} heading={recipientsWord(rows.length)}>
-          <FilterMenu aria-label="Filter recipients" facets={RECIPIENT_FACETS} value={filters} onChange={fresh(setFilters)} countLabel={recipientsWord} />
+        <TableToolbar aria-label="Recipient tools" headingLevel={4} heading={recipientsWord(rows.length, n)}>
+          <FilterMenu aria-label="Filter recipients" facets={RECIPIENT_FACETS} value={filters} onChange={fresh(setFilters)} countLabel={v => recipientsWord(v, n)} />
           <SearchField aria-label="Search recipients" placeholder="Search" value={query} onChange={fresh(setQuery)} />
         </TableToolbar>
         <FilterChips aria-label="Active filters" facets={RECIPIENT_FACETS} value={filters} onChange={fresh(setFilters)} />
@@ -132,6 +133,7 @@ function RecipientList({sent}: {sent: number}) {
 }
 
 export function EmailStats() {
+  const {format: n} = useNumberFormatter();
   const {emailId} = useParams();
   const email = emailStore.emails.find(e => e.id === emailId);
   if (!email) return <Page title="Email not found" crumbs={MESSAGING_CRUMB}><Text elementType="p" kind="small" color="meta">This email does not exist.</Text></Page>;
@@ -161,6 +163,7 @@ export function EmailStats() {
 const SMS_LENGTH = 160;
 
 export function SmsComposer() {
+  const {format: n} = useNumberFormatter();
   const navigate = useNavigate();
   const [to, setTo] = useState(GROUPS[0]);
   const [body, setBody] = useState('');

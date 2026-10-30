@@ -7,7 +7,7 @@ import {Badge, Banner, BarRow, Button, ChartLegend, DashboardBars, DashboardCard
   type FilterValue, Grid, IconButton, Inline, LineChart, Link, Menu, MenuItem, MenuTrigger, Pagination, Panel, SearchField,
   SegmentedControl, SegmentedControlItem, Select, SelectionBar, SelectItem, Sparkline, Stack, StatRow, StatTile,
   StatusBadge, Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, Text, TileGrid, toast,
-  VisuallyHidden} from 'govocal-ds';
+  VisuallyHidden, useNumberFormatter} from 'govocal-ds';
 import {Meter} from 'govocal-ds/base';
 import {DASHBOARD, PROJECTS} from '../data';
 import {MONTHS, PER_TAG, STATUS_BREAKDOWN, EMAILS, INVITATIONS, EVENTS, ADOPTION, DATE_PRESETS, METRICS, PROJECT_METRICS,
@@ -27,7 +27,6 @@ const SECTIONS = [
 ];
 const ALL = 'all';
 const PAGE_SIZE = 10;
-const n = (v: number) => v.toLocaleString('en');
 const pct = (part: number, whole: number) => Math.round((part / whole) * 100);
 const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const itemsWord = (k: number) => `${k} ${k === 1 ? 'item' : 'items'}`;
@@ -37,6 +36,7 @@ type Headline = {label: string; value: number; last30: number; series: number[]}
 
 /** The real admin's stat card, in the prototype's look: a Stat tile with its trend under the number. */
 function HeadlineTile({label, value, last30, series, note}: Headline & {note?: string}) {
+  const {format: n} = useNumberFormatter();
   return (
     <StatTile label={label} value={n(value)} note={note ?? `Last 30 days: +${n(last30)}`}>
       <Sparkline label={`${label} per month`} xAxis={MONTHS} values={series} height={34} showGrid={false} />
@@ -150,6 +150,7 @@ function MetricSelect({value, onChange}: {value: Metric; onChange: (m: Metric) =
 }
 
 function Participation({project}: {project: string}) {
+  const {format: n} = useNumberFormatter();
   const headlines = DASHBOARD.participation.map(h => narrow(h, project));
   const [inputs, comments] = headlines;
   const [projectMetric, setProjectMetric] = useState<Metric>('Inputs');
@@ -180,6 +181,7 @@ function Participation({project}: {project: string}) {
 }
 
 function Management() {
+  const {format: n} = useNumberFormatter();
   const s = DASHBOARD.inputStatus;
   const total = STATUS_BREAKDOWN.reduce((a, b) => a + b.count, 0);
   const adoptionTotal = ADOPTION.admins.total + ADOPTION.managers.total;
@@ -225,6 +227,7 @@ function Management() {
 
 /** Users: the prototype's Demographics screen (participants timeline, then one card per registration field). */
 function UsersTab({project}: {project: string}) {
+  const {format: n} = useNumberFormatter();
   const [reg, rawPart] = DASHBOARD.people;
   const part = narrow(rawPart, project);
   const areaMax = Math.max(...USERS.area.map(a => a.count));
@@ -253,6 +256,7 @@ function UsersTab({project}: {project: string}) {
 
 /** Visitors: the prototype's Traffic screen (four KPIs, the line, then sources, languages and devices). */
 function VisitorsTab() {
+  const {format: n} = useNumberFormatter();
   const sourceMax = Math.max(...VISITORS.sources.map(s => s.count));
   return (
     <Stack gap="16" className="bo-dashboard-tab">
