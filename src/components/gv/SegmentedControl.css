@@ -39,6 +39,13 @@
     font: var(--gv-type-ui-strong);
     color: var(--gv-text-primary);
   }
+
+  /* A mode that can't open yet (Manage and Insights before the phase is published; the prototype's
+     .pj-hseg__b.is-disabled): the disabled grey, no pointer. */
+  &[data-disabled] {
+    color: var(--gv-text-disabled);
+    cursor: default;
+  }
 }
 
 .gv-segment-indicator {
@@ -92,6 +99,10 @@
     &[data-selected] {
       font: var(--gv-type-small);
       color: var(--gv-text-primary);
+    }
+
+    &[data-disabled] {
+      color: var(--gv-text-disabled);
     }
   }
 

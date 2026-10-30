@@ -28,3 +28,17 @@ test('segmented control: the unread dot tells what it stands for on hover and on
   await expect(page.getByRole('tooltip')).toHaveText('18 new ideas');
   await expect(manage).toHaveAccessibleDescription('18 new ideas');
 });
+
+test('segmented control: a disabled segment draws its own quiet look and can\'t be picked', async ({page}) => {
+  await open(page, 'components-actions-segmented-control--disabled');
+  const manage = page.getByRole('radio', {name: 'Manage'});
+  await expect(manage).toBeDisabled();
+  const disabled = await page.evaluate(() => {
+    const probe = document.createElement('span');
+    probe.style.color = 'var(--gv-text-disabled)';
+    document.body.append(probe);
+    return getComputedStyle(probe).color;
+  });
+  await expect(manage).toHaveCSS('color', disabled);
+  await expect(manage).toHaveCSS('cursor', 'default');
+});

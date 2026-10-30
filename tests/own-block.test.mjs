@@ -38,7 +38,6 @@ export const REACH_INS = {
   'src/patterns/NotificationRow.css': ['.react-aria-SwitchField'],
   'src/patterns/ParticipantActionRow.css': ['.gv-number-field-wrap', '.react-aria-Label', '.react-aria-NumberField',
     '.react-aria-RadioGroup', '.react-aria-SwitchField'],
-  'src/patterns/ProjectHeader.css': ['.gv-segment'],
   'src/patterns/SetupStep.css': ['.gv-option-list', '.gv-pill', '.gv-pill__label', '.react-aria-Popover'],
   'src/patterns/ViewOptionRow.css': ['.react-aria-Button', '.react-aria-Link', '.react-aria-SwitchField']
 };

@@ -34,7 +34,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Actions › Compact button | `Button` | `ButtonProps` | – | yes | 6 |
 | Actions › Icon button | `Button` | `ButtonProps` | – | yes | 7 |
 | Actions › Menu | `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger`; through Popover: `OverlayArrow`, `Popover`; through Progress circle: `ProgressBar`; through Content: `Heading`, `Text`, `Header`, `Keyboard` | – | – | yes | 7 |
-| Actions › Segmented control | `ToggleButtonGroup`, `SelectionIndicator`, `ToggleButton`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | `ToggleButtonGroupProps` | – | yes | 8 |
+| Actions › Segmented control | `ToggleButtonGroup`, `SelectionIndicator`, `ToggleButton`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | `ToggleButtonGroupProps` | – | yes | 9 |
 | AI › Chat message | through Button: `Button`, `ProgressBar`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger`; through Icon button: `Button`; through Visually hidden: `VisuallyHidden` | – | – | yes | 12 |
 | AI › Chat progress | through Visually hidden: `VisuallyHidden` | – | – | yes | 6 |
 | AI › Chat thread | through Button: `Button`, `ProgressBar` | – | – | yes | 8 |

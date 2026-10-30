@@ -56,6 +56,18 @@ export const AllVariants: Story = {
   )
 };
 
+/** A mode that can't open yet (Manage and Insights before the phase is published): quiet in the disabled grey, and
+ * skipped by the arrow keys. */
+export const Disabled: Story = {
+  render: () => (
+    <SegmentedControl aria-label="Phase view" defaultSelectedKeys={['build']} disallowEmptySelection>
+      <SegmentedControlItem id="build">Build</SegmentedControlItem>
+      <SegmentedControlItem id="manage" isDisabled>Manage</SegmentedControlItem>
+      <SegmentedControlItem id="insights" isDisabled>Insights</SegmentedControlItem>
+    </SegmentedControl>
+  )
+};
+
 export const Build: Story = {
   render: () => (
     <SegmentedControl defaultSelectedKeys={['build']} selectionMode="single">

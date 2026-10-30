@@ -60,10 +60,3 @@
   border-radius: var(--gv-radius-full);
   background: var(--gv-text-success-strong);
 }
-
-/* A mode that can't open yet (Manage and Insights before the phase is published): quiet, as the prototype's
-   .pj-hseg__b.is-disabled. Segmented control draws no disabled look of its own yet. */
-.gv-project-header .gv-segment[data-disabled] {
-  color: var(--gv-text-disabled);
-  cursor: default;
-}
