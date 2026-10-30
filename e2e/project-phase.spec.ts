@@ -29,7 +29,7 @@ test('the Manage tab lists the phase\'s ideas with its metrics', async ({page}) 
   const overview = page.getByRole('complementary', {name: 'Ideas overview'});
   for (const m of ['Waiting for a reply', 'Unassigned', 'New ideas', 'New comments', 'Content warnings'])
     await expect(overview.getByText(m, {exact: true})).toBeVisible();
-  await expect(overview.getByRole('link', {name: /Content warnings/})).toContainText(String(IDEAS.filter(i => i.warning).length));
+  await expect(overview.getByRole('button', {name: /Content warnings/})).toContainText(String(IDEAS.filter(i => i.warning).length));
   // No filters yet: no chips, no dot.
   await expect(chips(page)).toHaveCount(0);
   await expect(filterButton(page)).toHaveAccessibleName('Filter ideas');
@@ -90,7 +90,7 @@ test('the filter menu narrows the table, and its chips follow', async ({page}) =
 
 test('the metrics are filters too: Unassigned shows its chip', async ({page}) => {
   await page.goto(URL);
-  await page.getByRole('link', {name: /^Unassigned/}).click();
+  await page.getByRole('complementary', {name: 'Ideas overview'}).getByRole('button', {name: /^Unassigned/}).click();
   await expect(chips(page).getByRole('row', {name: 'Assignee is Unassigned'})).toBeVisible();
   await expect(rows(page)).toHaveCount(onPage(IDEAS.filter(i => i.assignee === 'Unassigned').length));
   await page.getByRole('button', {name: 'Clear', exact: true}).click();
@@ -234,7 +234,7 @@ test('a row opens its idea in the side panel; the pager walks the list; Esc puts
 
 test('the pager counts the filtered list', async ({page}) => {
   await page.goto(URL);
-  await page.getByRole('link', {name: /^Unassigned/}).click();
+  await page.getByRole('complementary', {name: 'Ideas overview'}).getByRole('button', {name: /^Unassigned/}).click();
   const unassigned = IDEAS.filter(i => i.assignee === 'Unassigned');
   await openRow(page, 0);
   await expect(panel(page)).toContainText(`1 of ${unassigned.length}`);
@@ -364,7 +364,7 @@ test('the table pages by 20, and the panel\'s pager turns the page', async ({pag
 
 test('a quick view from the stats is a key-only chip; its × turns it off', async ({page}) => {
   await page.goto(URL);
-  await page.getByRole('link', {name: /^New ideas/}).click();
+  await page.getByRole('complementary', {name: 'Ideas overview'}).getByRole('button', {name: /^New ideas/}).click();
   await expect(chips(page).getByRole('row', {name: 'New ideas'})).toBeVisible();
   await expect(count(page, IDEAS.filter(i => i.isNew).length)).toBeVisible();
   await chips(page).getByRole('button', {name: 'Remove the New ideas filter'}).click();

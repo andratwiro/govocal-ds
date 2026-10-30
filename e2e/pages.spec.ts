@@ -27,7 +27,7 @@ test('Ideation · Manage lists inputs with selectable rows', async ({page}) => {
   await first.getByRole('gridcell').first().locator('label').click();
   await expect(first).toHaveAttribute('aria-selected', 'true');
   await expect(first.getByRole('checkbox')).toBeChecked();
-  await expect(page.getByRole('link', {name: /Waiting for a reply/})).toBeVisible();
+  await expect(page.getByRole('button', {name: /Waiting for a reply/})).toBeVisible();
 });
 // Every method has a Manage tab now (Voting and Proposals list their rows), so the rail keeps the tab it is on.
 test('the Phases rail moves between phases on the same tab; a vote has its own Manage and Insights', async ({page}) => {

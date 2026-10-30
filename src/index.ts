@@ -322,6 +322,7 @@ export {
   sidePanelLabels, type SidePanelLabels, sidePanelRecordHeadLabels, type SidePanelRecordHeadLabels,
   sidePanelActionsLabels, type SidePanelActionsLabels
 } from './components/gv/SidePanel';
+export {statRowLabels, type StatRowLabels} from './components/gv/StatRow';
 export {statTileLabels, type StatTileLabels} from './components/gv/StatTile';
 export {statementRowLabels, type StatementRowLabels} from './components/gv/StatementRow';
 export {tableToolbarLabels, type TableToolbarLabels} from './components/gv/TableToolbar';

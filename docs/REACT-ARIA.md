@@ -55,7 +55,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Data display › Map view | `Button` | – | yes | yes | 10 |
 | Data display › Property list | `VisuallyHidden` | – | – | yes | 3 |
 | Data display › Reaction counts | `VisuallyHidden` | – | yes | yes | 4 |
-| Data display › Stat row | `Link` | – | – | yes | 7 |
+| Data display › Stat row | `Link`, `ToggleButton` | – | – | yes | 7 |
 | Data display › Stat tile | `VisuallyHidden` through `components/gv/HelpPopover` | – | – | yes | 9 |
 | Forms › Checkbox | through `components/Checkbox` | `CheckboxFieldProps` | – | yes | 8 |
 | Forms › Checkbox group | `CheckboxGroup` through `components/Form` | `CheckboxGroupProps` | – | yes | 2 |

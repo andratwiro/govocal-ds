@@ -71,20 +71,22 @@ export const Static: Story = () => (
 export const Selected: Story = () => (
   <div style={{display: 'flex', flexDirection: 'column', width: 292}}>
     <StatRow label="Waiting for a reply" value="40" isSelected onPress={() => {}} />
-    <StatRow label="Unassigned" value="48" onPress={() => {}} />
-    <StatRow label="New ideas" value="18" isNew onPress={() => {}} />
-    <StatRow label="New comments" value="33" onPress={() => {}} />
+    <StatRow label="Unassigned" value="48" isSelected={false} onPress={() => {}} />
+    <StatRow label="New ideas" value="18" isNew isSelected={false} onPress={() => {}} />
+    <StatRow label="New comments" value="33" isSelected={false} onPress={() => {}} />
   </div>
 );
 
-/** The keyboard: Tab moves from row to row (a static row is skipped), Enter presses the focused one, here turning its
- * filter on (`isSelected`, read as the current item). */
+/** The keyboard: Tab moves from row to row (a static row is skipped). A filter row (`isSelected` passed) is a toggle
+ * button: Enter or Space presses it, turning its filter on or off, and it says whether it is pressed. The new dot's
+ * name comes through `labels`. */
 export const Keyboard: Story = () => {
   const [on, setOn] = useState<string | null>(null);
   const rows = [['Waiting for a reply', '40'], ['Unassigned', '48']];
   return (
     <div style={{display: 'flex', flexDirection: 'column', width: 292}}>
       <StatRow label="Total ideas" value="124" isStatic />
+      <StatRow label="Nuevas ideas" value="18" isNew isStatic labels={{new: 'Nuevo'}} />
       {rows.map(([label, value]) => (
         <StatRow key={label} label={label} value={value} isSelected={on === label}
           onPress={() => setOn(o => (o === label ? null : label))} />
@@ -94,15 +96,19 @@ export const Keyboard: Story = () => {
 };
 Keyboard.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
-  const waiting = canvas.getByRole('link', {name: /Waiting for a reply/});
-  const unassigned = canvas.getByRole('link', {name: /Unassigned/});
+  await expect(canvas.getByRole('img', {name: 'Nuevo'})).toBeVisible();
+  const waiting = canvas.getByRole('button', {name: /Waiting for a reply/});
+  const unassigned = canvas.getByRole('button', {name: /Unassigned/});
+  await expect(waiting).toHaveAttribute('aria-pressed', 'false');
   await userEvent.tab();
   await expect(waiting).toHaveFocus();
   await userEvent.keyboard('{Enter}');
-  await expect(waiting).toHaveAttribute('aria-current', 'true');
+  await expect(waiting).toHaveAttribute('aria-pressed', 'true');
   await userEvent.tab();
   await expect(unassigned).toHaveFocus();
-  await userEvent.keyboard('{Enter}');
-  await expect(unassigned).toHaveAttribute('aria-current', 'true');
-  await expect(waiting).not.toHaveAttribute('aria-current');
+  await userEvent.keyboard(' ');
+  await expect(unassigned).toHaveAttribute('aria-pressed', 'true');
+  await expect(waiting).toHaveAttribute('aria-pressed', 'false');
+  await userEvent.keyboard(' ');
+  await expect(unassigned).toHaveAttribute('aria-pressed', 'false');
 };

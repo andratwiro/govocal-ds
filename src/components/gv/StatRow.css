@@ -11,6 +11,11 @@
   box-sizing: border-box;
   padding: var(--gv-space-8);
   border-radius: var(--gv-radius-8);
+  margin: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  text-align: start;
   text-decoration: none;
   color: inherit;
   cursor: default;
@@ -22,7 +27,7 @@
   cursor: pointer;
 
   &[data-hovered],
-  &[data-current] {
+  &[data-selected] {
     background: var(--gv-surface-hovered);
 
     .gv-stat-row__chevron {

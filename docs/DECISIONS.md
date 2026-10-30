@@ -14,6 +14,11 @@ Calls made fixing the bugs the component-page writers found (benchmark-gaps plan
   with `onPress`; List header is the row (`role="row"`)** → `aria-sort` is only valid on a column head, which needs a
   row, which needs a table: the list a List header heads is now a table, as WAI-ARIA's sortable table example; a head
   that does nothing must not take focus.
+- Stat row as a filter (the phase's Manage metrics: `isSelected` and `onPress`) was a link with `aria-current`, so Space
+  did nothing and "current" said the wrong thing → **with `isSelected` passed at all (`true` or `false`) the row is a
+  React Aria ToggleButton (`aria-pressed`); without it, a link as before** → the row turns a filter on and off, which
+  is a toggle, not a navigation; keying the switch on whether `isSelected` is given keeps every linking row unchanged.
+  The New dot's name comes through `labels` (rule 11).
 
 ## Report parts (30 Oct 2026)
 
