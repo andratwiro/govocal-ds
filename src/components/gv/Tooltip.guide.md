@@ -42,6 +42,8 @@ its control has keyboard focus or the pointer on it, and the control is describe
 | Tab (onto a disabled action with a tooltip) | Focus still lands on it and the tooltip says why it is off. | `e2e/build-tab.spec.ts` |
 
 Hover shows it too, once the pointer has moved over the page (`e2e/sidebar.spec.ts`, `e2e/segmented-control.spec.ts`).
+A focus the page makes itself before any key (a route or a dialog focusing its first control on load)
+opens no tooltip (`play: Focus on load`, `e2e/sidebar.spec.ts`).
 
 ## Content
 
@@ -75,12 +77,13 @@ control (`aria-describedby`), hides on Esc, and keeps its words in view up to 32
 - **Built by:** AI agents, from the prototype (its GVTooltip: the 120 ms delay, the 320 maximum, the hugging box, the
   tail on step cards). Not in Figma.
 - **Reviewed by a person:** not yet.
-- **Known limits:** it doesn't open on the very first focus when that focus is set from code rather than by a key
-  (the plan's small fixes list it); its dark fill is a primitive colour waiting for a semantic token
+- **Known limits:** its dark fill is a primitive colour waiting for a semantic token
   (`tests/paint.test.mjs`).
 
 ## Changes
 
+- 30 Oct 2026: no tooltip on a focus the page makes before any key: the side nav's "To platform" no longer opens on
+  load (docs/DECISIONS.md, "Small fixes").
 - 30 Oct 2026: this page written; Tooltip got its first doc comment; a play function proves Tab and Esc.
 - 29 Oct 2026: its fill is allowlisted as a primitive until the designer names a token (docs/DECISIONS.md, "Token
   names").

@@ -6,7 +6,7 @@ import {
   TooltipTrigger as AriaTooltipTrigger,
   type TooltipTriggerComponentProps as TooltipTriggerProps
 } from 'react-aria-components/Tooltip';
-import {useCallback} from 'react';
+import {useCallback, useState} from 'react';
 import './Tooltip.css';
 import {keepClass} from './className';
 
@@ -72,8 +72,37 @@ export function Tooltip({children, showArrow, className, ...props}: TooltipProps
   );
 }
 
-/** The prototype shows a tooltip 120 ms after the pointer arrives and hides it as soon as it leaves. */
-export function TooltipTrigger({delay = 120, closeDelay = 0, ...props}: TooltipTriggerProps) {
-  return <AriaTooltipTrigger delay={delay} closeDelay={closeDelay} {...props} />;
+/**
+ * Whether the person has pressed a key since the page loaded. Until then a focus is the page's own (a route or a
+ * dialog focusing its first control), and React Aria, which has seen no input yet, treats it as keyboard focus and
+ * would show that control's tooltip on load. A pointer press makes React Aria's focus a pointer one, which opens
+ * nothing, so only keys count; a mouse move doesn't (Chromium sends one on load).
+ */
+let hasKey = false;
+function seen() {
+  hasKey = true;
+  document.removeEventListener('keydown', seen, true);
+}
+if (typeof document !== 'undefined') document.addEventListener('keydown', seen, {capture: true, passive: true});
+
+/** React Aria opens on focus inside the focus event and on hover from a timer, so the event in flight tells them apart. */
+function openedByFocus() {
+  const event = typeof window === 'undefined' ? undefined : window.event;
+  return !!event && event.type.startsWith('focus');
+}
+
+/**
+ * The prototype shows a tooltip 120 ms after the pointer arrives and hides it as soon as it leaves. It opens on
+ * keyboard focus or hover only: never on a focus the page makes before any input (the side nav's "To platform" on
+ * load).
+ */
+export function TooltipTrigger({delay = 120, closeDelay = 0, isOpen, defaultOpen = false, onOpenChange, ...props}: TooltipTriggerProps) {
+  const [ownOpen, setOwnOpen] = useState(defaultOpen);
+  const change = (next: boolean) => {
+    if (next && !hasKey && openedByFocus()) return;
+    if (isOpen === undefined) setOwnOpen(next);
+    onOpenChange?.(next);
+  };
+  return <AriaTooltipTrigger delay={delay} closeDelay={closeDelay} {...props} isOpen={isOpen ?? ownOpen} onOpenChange={change} />;
 }
 export type {TooltipTriggerProps};

@@ -145,6 +145,20 @@ test('folded inside a phase: icons only, names still accessible, badges on the i
   await expect(page.getByRole('menu', {name: 'Support'})).toBeVisible();
 });
 
+test('folded: a focus nobody asked for opens no tooltip; keyboard focus does', async ({page}) => {
+  // The deep dive saw "To platform" show its tooltip on load. In a headless browser that one is hover: the pointer rests
+  // at 0,0, over that link. Here the page's own focus, on a row away from the pointer, opens nothing.
+  await page.goto(PHASE);
+  const projects = nav(page).getByRole('link', {name: 'Projects'});
+  await projects.focus();
+  await expect(projects).toBeFocused();
+  await page.waitForTimeout(400);
+  await expect(page.getByRole('tooltip', {name: 'Projects'})).toHaveCount(0);
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Shift+Tab');
+  await expect(page.getByRole('tooltip', {name: 'Projects'})).toBeVisible();
+});
+
 test('the sidebar is scanned by axe, open and folded, menus included', async ({page}) => {
   await page.goto('/backoffice/#/dashboard');
   a11yReport(await violations(page, 'nav[aria-label="Main"]'));

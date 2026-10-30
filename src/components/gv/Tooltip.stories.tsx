@@ -1,6 +1,7 @@
 import {Tooltip, TooltipTrigger} from '../Tooltip';
 import {Button} from '../Button';
 import {Save} from 'lucide-react';
+import {useEffect, useRef} from 'react';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 
@@ -84,4 +85,32 @@ Keyboard.play = async ({canvasElement}) => {
   await userEvent.tab();
   await expect(canvas.getByRole('button', {name: 'Share'})).toHaveFocus();
   await waitFor(() => expect(screen.queryByRole('tooltip')).toBeNull());
+};
+
+/** A page that moves focus itself on load (a dialog's first field, a route's first link) shows no tooltip: it opens on
+ * keyboard focus or hover only, never on a focus nobody asked for. The play function proves it: focus lands on Save
+ * with no tooltip; Tab away and back shows it. */
+export const FocusOnLoad: StoryFn<typeof Tooltip> = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => ref.current?.querySelector('button')?.focus(), []);
+  return (
+    <div ref={ref} style={{display: 'flex', gap: 8, paddingTop: 48}}>
+      <TooltipTrigger>
+        <Button aria-label="Save"><Save aria-hidden size={16} /></Button>
+        <Tooltip>Save</Tooltip>
+      </TooltipTrigger>
+      <Button variant="secondary">Share</Button>
+    </div>
+  );
+};
+FocusOnLoad.storyName = 'Focus on load';
+FocusOnLoad.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  const save = canvas.getByRole('button', {name: 'Save'});
+  await waitFor(() => expect(save).toHaveFocus());
+  await new Promise(resolve => setTimeout(resolve, 400));
+  await expect(screen.queryByRole('tooltip')).toBeNull();
+  await userEvent.tab();
+  await userEvent.tab({shift: true});
+  await waitFor(() => expect(screen.getByRole('tooltip')).toHaveTextContent('Save'));
 };
