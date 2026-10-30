@@ -4,6 +4,7 @@
 [data-chart-color='line-primary'] { --chart-color: var(--gv-chart-line-primary); }
 [data-chart-color='line-secondary'] { --chart-color: var(--gv-chart-line-secondary); }
 [data-chart-color='bar'] { --chart-color: var(--gv-chart-bar); }
+[data-chart-color='highlight'] { --chart-color: var(--gv-chart-highlight); }
 [data-chart-color='agree'] { --chart-color: var(--gv-chart-agree); }
 [data-chart-color='disagree'] { --chart-color: var(--gv-chart-disagree); }
 [data-chart-color='pass'] { --chart-color: var(--gv-chart-pass); }

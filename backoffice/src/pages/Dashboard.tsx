@@ -295,7 +295,7 @@ function RepresentativenessTab() {
               <Stack key={r.label} gap="2">
                 <BarRow label={r.label} percent={r.users} value={`${r.users}%`} />
                 <BarRow label={<VisuallyHidden>{r.label}, reference population</VisuallyHidden>} percent={r.population}
-                  value={`${r.population}%`} barColor="--gv-chart-pass" />
+                  value={`${r.population}%`} barColor="pass" />
               </Stack>
             ))}
           </DashCard>

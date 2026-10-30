@@ -22,7 +22,8 @@
 
 1. **Label**: the category's name, one line (or two with `labelLines={2}`), then cut off.
 2. **Track**: the thin grey bar across the middle.
-3. **Fill**: the share, in `--gv-chart-bar` or the chart colour of a status (`barColor`).
+3. **Fill**: the share, in a chart colour by name (`barColor`): `bar` by default, `pass` for the rest, `highlight` for
+   the one a finding names, or a status's (`blue-2`).
 4. **Value** (optional): the words at the end, such as "18% · 6"; a dash when the row has no data.
 5. **Detail card** (with `detail`, Not in Figma): the exact count and share over the fill's end, on hover.
 
@@ -75,6 +76,8 @@ value as text, and a fill that is never the only carrier of the number.
 
 ## Changes
 
+- 30 Oct 2026: `barColor` takes a chart colour name (`'pass'`, `'highlight'`), not a token string; the old
+  `'--gv-chart-pass'` form still works until the next release.
 - 30 Oct 2026: this page written.
 - 29 Oct 2026: two-line label, a row with no value cell, hover darkens the bar and `detail` gives the exact numbers.
 - 29 Oct 2026: chosen over a second chart library for the Audience bars: no pie charts, one chart system

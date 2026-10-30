@@ -144,7 +144,7 @@ function Bars({block, lang}: {block: Extract<Block, {kind: 'bars'}>; lang: Lang}
         {rows.map(r => r.value === undefined
           ? <BarRow key={r.label} label={<>{r.label} <Text kind="small" color="meta">{r.missing}</Text></>} />
           : <BarRow key={r.label} label={r.label} percent={(r.value / max) * 100} value={block.showValues ? n(r.value) : ''}
-              barColor={r.named ? '--gv-chart-bar' : '--gv-chart-pass'} />)}
+              barColor={r.named ? 'bar' : 'pass'} />)}
       </Stack>
     </BlockFigure>
   );
@@ -163,7 +163,7 @@ function Comparison({block, lang}: {block: Extract<Block, {kind: 'compare'}>; la
               {g.rows.map(r => (
                 <BarRow key={r.label} label={r.label} percent={(r.percent / max) * 100}
                   value={block.showCounts ? `${r.percent}% · ${r.count}` : `${r.percent}%`}
-                  barColor={r.named ? '--gv-chart-bar' : '--gv-chart-pass'} />
+                  barColor={r.named ? 'bar' : 'pass'} />
               ))}
             </Stack>
           </Fragment>

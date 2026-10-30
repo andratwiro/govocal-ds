@@ -41,7 +41,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | AI › Item chip | `Button`; through Visually hidden: `VisuallyHidden` | – | – | yes | 10 |
 | AI › Prompt composer | `Button`, `FileTrigger`, `TextArea`, `TextField`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger`; through Item chip: `VisuallyHidden` | – | – | yes | 12 |
 | AI › Prompt suggestions | `Button` | – | – | yes | 7 |
-| Charts › Bar row | `VisuallyHidden` | – | – | yes | 6 |
+| Charts › Bar row | `VisuallyHidden` | – | yes | yes | 6 |
 | Charts › Chart | None: plain React and CSS | – | yes | yes | 11 |
 | Charts › Dashboard card | `Button`; through Bar row: `VisuallyHidden`; through Reaction counts: `VisuallyHidden` | – | yes | yes | 14 |
 | Charts › Figure | None: plain React and CSS | – | – | yes | 5 |

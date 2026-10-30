@@ -20,8 +20,8 @@ type Story = StoryFn<typeof BarRow>;
 /** Figma's rows, then the additions: a two-line label, no value, and the hover card (`detail`). */
 export const AllVariants: Story = () => (
   <div style={{display: 'flex', flexDirection: 'column', gap: 4, width: 420}}>
-    <BarRow label="Proposed" percent={18} value="18% · 6" barColor="--gv-chart-blue-2" />
-    <BarRow label="Under consideration" percent={45} value="45% · 15" barColor="--gv-chart-blue-3" />
+    <BarRow label="Proposed" percent={18} value="18% · 6" barColor="blue-2" />
+    <BarRow label="Under consideration" percent={45} value="45% · 15" barColor="blue-3" />
     <BarRow label="Not selected" />
     <BarRow label="Green spaces, trees and shade along the river" percent={33} labelLines={2} />
     <BarRow label="Riverside Park" percent={72} value="1,284" detail="1,284 of 3,410 inputs · 38%" />
@@ -30,7 +30,7 @@ export const AllVariants: Story = () => (
 
 export const Default: Story = () => (
   <div style={{width: 420}}>
-    <BarRow label="Proposed" percent={18} value="18% · 6" barColor="--gv-chart-blue-2" />
+    <BarRow label="Proposed" percent={18} value="18% · 6" barColor="blue-2" />
   </div>
 );
 

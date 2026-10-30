@@ -33,7 +33,7 @@ const ROUTES = [
 const Bars = ({rows = ROUTES}: {rows?: typeof ROUTES}) => (
   <Stack gap="8">
     {rows.map(r => <BarRow key={r.label} label={r.label} percent={(r.share / 38) * 100} value={`${r.share}%`}
-      barColor={r.named ? '--gv-chart-bar' : '--gv-chart-pass'} />)}
+      barColor={r.named ? 'bar' : 'pass'} />)}
   </Stack>
 );
 

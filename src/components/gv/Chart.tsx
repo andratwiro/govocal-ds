@@ -6,10 +6,10 @@ import {mergeLabels} from '../labels';
 
 /**
  * The chart palette, one name per `--gv-chart-*` token. Anything that draws data (lines, bars,
- * swatches) takes one of these, never a raw colour.
+ * swatches) takes one of these, never a raw colour. `highlight` is the one thing a finding names, in the accent.
  */
 export type ChartColor =
-  | 'line-primary' | 'line-secondary' | 'bar'
+  | 'line-primary' | 'line-secondary' | 'bar' | 'highlight'
   | 'agree' | 'disagree' | 'pass'
   | 'blue-1' | 'blue-2' | 'blue-3' | 'blue-4' | 'blue-5'
   | 'green' | 'olive' | 'terracotta';

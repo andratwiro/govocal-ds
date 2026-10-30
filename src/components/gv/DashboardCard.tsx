@@ -180,7 +180,7 @@ export function DashboardBars({items, className, style}: DashboardBarsProps) {
             label={b.label}
             percent={Math.max(0, Math.min(100, b.percent))}
             value={`${percent(b.percent)}${b.count != null ? ` · ${number.format(b.count)}` : ''}`}
-            barColor={`--gv-chart-${b.color ?? 'bar'}`}
+            barColor={b.color ?? 'bar'}
           />
         </li>
       ))}

@@ -562,7 +562,7 @@ type BannerTone = keyof typeof TONE_ICON
 
 Component, from `src/components/gv/BarRow.tsx`.
 
-- `barColor?: string`
+- `barColor?: ChartColor | `--gv-chart-${ChartColor}``
 - `className?: string`
 - `detail?: string`
 - `label: ReactNode`
@@ -861,7 +861,7 @@ Component, from `src/components/gv/Card.tsx`.
 Type, from `src/components/gv/Chart.tsx`.
 
 ```ts
-type ChartColor = | 'line-primary' | 'line-secondary' | 'bar' | 'agree' | 'disagree' | 'pass' | 'blue-1' | 'blue-2' | 'blue-3' | 'blue-4' | 'blue-5' | 'green' | 'olive' | 'terracotta'
+type ChartColor = | 'line-primary' | 'line-secondary' | 'bar' | 'highlight' | 'agree' | 'disagree' | 'pass' | 'blue-1' | 'blue-2' | 'blue-3' | 'blue-4' | 'blue-5' | 'green' | 'olive' | 'terracotta'
 ```
 
 ### `chartLabels`

@@ -3,6 +3,7 @@ import type {CSSProperties, ReactNode} from 'react';
 import {VisuallyHidden} from 'react-aria-components/VisuallyHidden';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
+import type {ChartColor} from './Chart';
 import './Chart.css';
 import './BarRow.css';
 
@@ -19,12 +20,13 @@ export interface BarRowProps extends PlacementProps {
    */
   value?: string;
   /**
-   * The bar fill's colour, as a `--gv-*` token name. Defaults to the shared bar colour;
-   * pass a `--gv-chart-*` token to match a status.
+   * The bar fill's colour, a chart colour name: `bar` (the shared bar colour), `pass` (the grey of the rest),
+   * `highlight` (the one a finding names), or a status's (`blue-2`). The old `--gv-chart-*` token string
+   * (`'--gv-chart-pass'`) still works until the next release; use the name.
    *
-   * @default '--gv-chart-bar'
+   * @default 'bar'
    */
-  barColor?: string;
+  barColor?: ChartColor | `--gv-chart-${ChartColor}`;
   /**
    * The label's lines before it cuts off: 1 (Figma) or 2, for a narrow column of longer names ("Green spaces / and
    * shade" in the AI summary's Top themes).
@@ -42,9 +44,11 @@ export interface BarRowProps extends PlacementProps {
  * One row of a ranking: a label, a bar sized by its share and a value; stack rows in order (status breakdown, Top themes).
  * Figma's "Bar row". Hover darkens the bar; a `detail` card gives the exact numbers.
  */
-export function BarRow({label, percent, value, barColor = '--gv-chart-bar', labelLines = 1, detail, className, style}: BarRowProps) {
+export function BarRow({label, percent, value, barColor = 'bar', labelLines = 1, detail, className, style}: BarRowProps) {
   const isEmpty = percent === undefined;
   const share = Math.max(0, Math.min(100, percent ?? 0));
+  // A name, or (until the next release) the old token string.
+  const token = barColor.startsWith('--') ? barColor : `--gv-chart-${barColor}`;
 
   return (
     <div className={clsx('gv-bar-row', className)} style={style} data-empty={isEmpty || undefined} data-lines={labelLines === 2 ? 2 : undefined}>
@@ -55,7 +59,7 @@ export function BarRow({label, percent, value, barColor = '--gv-chart-bar', labe
       <div className="gv-bar-row__bar">
         <div className="gv-bar-row__track">
           {!isEmpty && (
-            <div className="gv-bar-row__fill" style={{width: `${share}%`, '--bar-color': `var(${barColor})`} as CSSProperties} />
+            <div className="gv-bar-row__fill" style={{width: `${share}%`, '--bar-color': `var(${token})`} as CSSProperties} />
           )}
         </div>
         {detail && !isEmpty && (

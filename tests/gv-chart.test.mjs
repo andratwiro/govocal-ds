@@ -53,3 +53,18 @@ describe('a point in words (the value card and the keyboard explorer)', () => {
     expect(nearestIndex(0.7, 1)).toBe(0);
   });
 });
+
+describe('Bar row: barColor takes a chart colour name', async () => {
+  const {createElement: h} = await import('react');
+  const {renderToStaticMarkup} = await import('react-dom/server');
+  const {BarRow} = await import('../src/components/gv/BarRow.tsx');
+  const fill = props => renderToStaticMarkup(h(BarRow, {label: 'Parks', percent: 40, value: '40%', ...props}));
+  it('a name paints with its --gv-chart-* token; highlight is the accent', () => {
+    expect(fill({barColor: 'highlight'})).toContain('--bar-color:var(--gv-chart-highlight)');
+    expect(fill({barColor: 'pass'})).toContain('--bar-color:var(--gv-chart-pass)');
+    expect(fill({})).toContain('--bar-color:var(--gv-chart-bar)');
+  });
+  it('the old token string still works for one release', () => {
+    expect(fill({barColor: '--gv-chart-pass'})).toContain('--bar-color:var(--gv-chart-pass)');
+  });
+});
