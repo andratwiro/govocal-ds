@@ -2,7 +2,7 @@ import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {FilterChips} from './FilterChips';
-import type {FilterValue} from './FilterMenu';
+import {FilterMenu, type FilterValue} from './FilterMenu';
 import {IDEA_FACETS} from './FilterMenu.stories';
 
 function Demo({initial, showClear, metric: initialMetric}: {initial: FilterValue; showClear?: boolean; metric?: string}) {
@@ -77,5 +77,29 @@ export const Keyboard: Story = {
     await expect(canvas.getByRole('button', {name: 'Clear'})).toHaveFocus();
     await userEvent.keyboard('{Enter}');
     await expect(canvas.getByText('No filter on: the bar is gone.')).toBeInTheDocument();
+  }
+};
+
+/** Beside its Filter menu (the Manage tab's toolbar). When the last chip goes (its ×, Delete or Clear) while it holds
+ * focus, focus goes to the Filter menu's button rather than falling to the page; the play function proves it. */
+export const WithAFilterMenu: Story = {
+  name: 'With a filter menu',
+  render: function Render() {
+    const [value, setValue] = useState<FilterValue>({tags: ['Cycling']});
+    return (
+      <div style={{width: 720, display: 'flex', alignItems: 'center', gap: 8}}>
+        <FilterMenu facets={IDEA_FACETS} value={value} onChange={setValue} />
+        <FilterChips facets={IDEA_FACETS} value={value} onChange={setValue} />
+      </div>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await userEvent.tab();
+    await expect(canvas.getByRole('row', {name: /^Tags/})).toHaveFocus();
+    await userEvent.keyboard('{Delete}');
+    await waitFor(() => expect(canvas.queryByRole('row')).toBeNull());
+    await waitFor(() => expect(canvas.getByRole('button', {name: 'Filter'})).toHaveFocus());
   }
 };

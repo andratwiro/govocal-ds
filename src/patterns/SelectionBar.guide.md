@@ -34,6 +34,9 @@ between the actions.
 | Enter | Presses the focused action (or opens its menu). | `play: Keyboard` |
 | Enter (on ×) | Clears the selection; the bar gives way to the count. | `play: Keyboard` |
 
+When the bar gives way while it holds focus (the ×, or an action that clears the selection), focus goes to the list
+or table near it, never to the page (`play: With a table`).
+
 ## Content
 
 - Actions are a verb or the field they set, one or two words: "Status", "Assign", "Tags", "Copy to phase", "Add to
@@ -70,6 +73,8 @@ buttons announced as such, and a named ×.
 
 ## Changes
 
+- 30 Oct 2026: leaving with focus inside, it puts focus on the table near it instead of the page (docs/DECISIONS.md,
+  "Small fixes").
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: moved from Patterns to Components › Tables & lists (docs/DECISIONS.md, "Structure: one place for each
   part").

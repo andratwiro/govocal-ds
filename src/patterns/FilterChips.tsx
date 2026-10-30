@@ -6,6 +6,7 @@ import {activeFacets, type FilterFacet, type FilterValue} from './FilterMenu';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
 import {useListFormatter} from '../components/format';
+import {COLLECTION, nearest, useFocusOnLeave} from '../components/useFocusOnLeave';
 import {mergeLabels, type CountLabel} from '../components/labels';
 import './FilterChips.css';
 
@@ -58,7 +59,8 @@ const METRIC = '__metric';
  * The bar under a list's toolbar that shows each filter that is on as a chip, "Assignee is Manager A ×" (the prototype's
  * `.pj-infbar`, after Linear): "is any of" and the values joined by "or" once several are ticked, on a light grey strip
  * with "Clear" at the end. The × (or Delete / Backspace on a focused chip) turns that facet off. A React Aria TagGroup, so
- * the arrows move between chips. Renders nothing while no filter is on. Share `value` with `FilterMenu` and the two
+ * the arrows move between chips. Renders nothing while no filter is on; when the last one goes with focus on it, focus
+ * moves to the Filter menu's button beside it. Share `value` with `FilterMenu` and the two
  * stay in sync. A `metric` (a quick view from the stats row) leads the bar as a chip with its name only. Not in Figma
  * yet.
  */
@@ -70,6 +72,9 @@ export function FilterChips({
   const l = mergeLabels(filterChipsLabels, labels);
   const list = useListFormatter({type: 'disjunction', style: 'short'});
   const on = activeFacets(facets, value);
+  // Leaving with focus inside (the last chip removed, or Clear), focus goes to the Filter menu beside it, else the list.
+  const ref = useFocusOnLeave(on.length > 0 || !!metric,
+    from => nearest(from, '.gv-filter-menu__trigger button') ?? nearest(from, COLLECTION));
   if (on.length === 0 && !metric) return null;
   const remove = (ids: Iterable<string | number>) => {
     const keys = [...ids].map(String);
@@ -85,7 +90,7 @@ export function FilterChips({
     if (on.length) onChange({});
   };
   return (
-    <div className={clsx('gv-filter-chips', className)} style={style}>
+    <div ref={ref} className={clsx('gv-filter-chips', className)} style={style}>
       <TagGroup aria-label={label ?? l.filters} onRemove={keys => remove(keys)} className="gv-filter-chips__group">
         <TagList className="gv-filter-chips__list">
           {metric && (

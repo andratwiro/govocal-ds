@@ -9,6 +9,7 @@ import {Popover} from '../components/Popover';
 import {IconButton} from '../components/gv/IconButton';
 import {useNumberFormatter} from '../components/format';
 import {mergeLabels, type CountLabel} from '../components/labels';
+import {COLLECTION, nearest, useFocusOnLeave} from '../components/useFocusOnLeave';
 import './SelectionBar.css';
 
 /** The words Selection bar says itself (docs/API.md rule 11). */
@@ -70,16 +71,19 @@ export interface SelectionBarProps {
  * "2 selected", then one secondary button per item and a × that clears the selection. An item opens its own menu, or
  * calls its `onPress` and the bar's `onAction`. With nothing selected it shows `children` instead (the list's count heading, a quiet
  * "Export all"), so the tools beside it never move. A React Aria Toolbar: Tab enters it once and the arrows move
- * between actions. On the phase Manage tab, the Input manager and Users. Not in Figma yet.
+ * between actions. When it gives way while it holds focus, focus goes to the list or table near it, never to the
+ * page. On the phase Manage tab, the Input manager and Users. Not in Figma yet.
  */
 export function SelectionBar({
   count, items, onAction, onClear, children, 'aria-label': label, labels, className, style
 }: SelectionBarProps) {
   const l = mergeLabels(selectionBarLabels, labels);
   const number = useNumberFormatter();
+  // Leaving with focus inside (× or an action cleared the selection), focus goes to the list the bar acts on.
+  const ref = useFocusOnLeave(count > 0, from => nearest(from, COLLECTION));
   if (count === 0) return <>{children}</>;
   return (
-    <Toolbar aria-label={label ?? l.actions} className={clsx('gv-selection-bar', className)} style={style}>
+    <Toolbar ref={ref} aria-label={label ?? l.actions} className={clsx('gv-selection-bar', className)} style={style}>
       <span className="gv-selection-bar__count" role="status">{l.selected(count, number.format(count))}</span>
       {items.map(a => a.menu ? (
         <MenuTrigger key={a.id}>

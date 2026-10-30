@@ -1,9 +1,10 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {expect, userEvent, within} from 'storybook/test';
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {CircleCheck, Copy, Download, MessageSquareText, Tag, TriangleAlert, User, Users} from 'lucide-react';
 import {Button} from '../components/Button';
 import {Menu, MenuItem} from '../components/Menu';
+import {DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableRow} from '../components/gv/DataTable';
 import {SelectionBar, type SelectionAction} from './SelectionBar';
 
 const ic = (Icon: typeof Tag) => <Icon aria-hidden size={16} />;
@@ -97,5 +98,45 @@ export const Keyboard: Story = {
     await userEvent.keyboard('{Enter}');
     await expect(canvas.queryByRole('toolbar')).toBeNull();
     await expect(canvas.getByRole('button', {name: 'Select an idea'})).toBeInTheDocument();
+  }
+};
+
+const IDEAS = [
+  {id: 'shade', title: 'Shade sails over the Lagoon playground'},
+  {id: 'bike', title: 'Bike lane by the school'},
+  {id: 'trees', title: 'More trees on Elm Lane'}
+];
+
+/** Over the table it acts on. When the bar leaves while it holds focus (× or an action clears the selection), focus
+ * goes to that table rather than falling to the page; the play function proves it. */
+export const WithATable: Story = {
+  name: 'With a table',
+  render: function Render() {
+    const [selected, setSelected] = useState<Set<string>>(new Set(['bike']));
+    return (
+      <section style={{display: 'grid', gap: 12, width: 720}}>
+        <SelectionBar count={selected.size} items={USER_ACTIONS} onClear={() => setSelected(new Set())}>
+          <h3 style={{margin: 0, font: 'var(--gv-type-title)'}}>3 ideas</h3>
+        </SelectionBar>
+        <DataTable aria-label="Ideas" selectionMode="multiple" selectedKeys={selected}
+          onSelectionChange={k => setSelected(new Set(k === 'all' ? IDEAS.map(i => i.id) : [...k].map(String)))}>
+          <DataTableHeader>
+            <DataTableColumn isRowHeader>Idea</DataTableColumn>
+          </DataTableHeader>
+          <DataTableBody>
+            {IDEAS.map(i => (
+              <DataTableRow key={i.id} id={i.id} textValue={i.title}><DataTableCell>{i.title}</DataTableCell></DataTableRow>
+            ))}
+          </DataTableBody>
+        </DataTable>
+      </section>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole('grid', {name: 'Ideas'});
+    await userEvent.click(canvas.getByRole('button', {name: 'Clear selection'}));
+    await waitFor(() => expect(canvas.queryByRole('toolbar')).toBeNull());
+    await waitFor(() => expect(table.contains(document.activeElement)).toBe(true));
   }
 };

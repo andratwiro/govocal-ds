@@ -48,6 +48,9 @@ chip itself does nothing when pressed (it doesn't open the Filter menu).
 | Delete or Backspace | Turns the focused chip's filter off; focus moves to the next chip, or the previous one if it was the last. | `play: Keyboard` |
 | Enter (on Clear) | Turns every filter off; the strip goes. | `play: Keyboard` |
 
+When the strip goes while it holds focus (the last chip removed, or Clear), focus moves to the Filter menu's button
+beside it, or else the table, never to the page (`play: With a filter menu`).
+
 ## Content
 
 - The chip reads as a sentence: facet, operator, values. Facet names and values are written once, for the Filter menu,
@@ -90,6 +93,8 @@ Backspace to remove, each × named for its facet, and values joined in the page'
 
 ## Changes
 
+- 30 Oct 2026: when the last chip goes with focus on it, focus moves to the Filter menu's button (docs/DECISIONS.md,
+  "Small fixes").
 - 30 Oct 2026: values join with "or" in every language (Arabic and French said "and" before); the page reworded after
   a fresh-eyes read.
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
