@@ -137,6 +137,7 @@ export {type PaddingProps, type Space} from './components/space';
 export {Stack, type StackProps} from './components/gv/Stack';
 export {TileGrid, type TileGridProps} from './components/gv/TileGrid';
 export {ZoomBar, ZOOM_STEPS, type ZoomBarProps} from './components/gv/ZoomBar';
+export {WorkspaceLayout, type WorkspaceLayoutProps} from './components/gv/WorkspaceLayout';
 
 // Components / Navigation
 export {Breadcrumbs, type BreadcrumbItem, type BreadcrumbsProps} from './components/gv/Breadcrumbs';
@@ -386,6 +387,7 @@ export {
 export {volunteeringRowLabels, type VolunteeringRowLabels} from './patterns/VolunteeringRow';
 export {voteProgressLabels, type VoteProgressLabels} from './patterns/VoteProgress';
 export {votingRowLabels, type VotingRowLabels} from './patterns/VotingRow';
+export {workspaceLayoutLabels, type WorkspaceLayoutLabels} from './components/gv/WorkspaceLayout';
 
 // Placement: every part with a DOM root takes className and style; they place it (grid area, width, margin,
 // alignment) and never paint it.

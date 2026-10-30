@@ -121,3 +121,16 @@ test('Rail header: the title is a heading and the buttons say what they do', asy
   await expect(page.getByRole('button', {name: 'Hide the participation rail'})).toBeVisible();
   await report(page);
 });
+
+test('Workspace layout: named regions; the rail collapses to a strip whose button opens it again by keyboard', async ({page}) => {
+  await page.goto(story('components-layout-containers-workspace-layout--build'));
+  await expect(page.getByRole('complementary', {name: 'Participation'})).toBeVisible();
+  await expect(page.getByRole('region', {name: 'Proposals setup'})).toBeVisible();
+  await report(page);
+  await page.getByRole('button', {name: 'Hide the participation rail'}).click();
+  await expect(page.getByRole('complementary', {name: 'Participation'})).toHaveCount(0);
+  const show = page.getByRole('button', {name: 'Show panel'});
+  await show.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('complementary', {name: 'Participation'})).toBeVisible();
+});

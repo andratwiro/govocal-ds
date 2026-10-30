@@ -54,7 +54,7 @@ Components              src/components/gv/
                         · Multilingual rich text editor · Multilingual text field · Number field · Option list
                         · Radio group · Required marker · Rich text editor · Rich text toolbar · Rich text toolbar button
                         · Search field · Select · Switch · Tag picker · Text field · Title field
-  Layout & containers   App provider · Card · Divider · Page header · Panel · Tile grid
+  Layout & containers   App provider · Card · Divider · Page header · Panel · Tile grid · Workspace layout
   Navigation            Breadcrumbs · Link · Pagination · Tabs
   Overlays              Alert dialog · Coachmark · Help popover · Modal · Side panel · Tooltip
   Status & feedback     Badge · Banner · Empty state · New dot · Review status · Skeleton · Status badge · Toast

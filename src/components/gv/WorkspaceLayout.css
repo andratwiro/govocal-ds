@@ -1,0 +1,56 @@
+@import '../theme.css';
+
+/* Workspace layout (the prototype's project screens): rail 300 | work column 480 | the rest, 8 apart. The rail and
+   the column are white panels, radius 12; the stage is the light stage grey. A collapsed rail is a 44 strip. */
+.gv-workspace {
+  display: flex;
+  align-items: stretch;
+  gap: var(--gv-space-8);
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  font-family: var(--gv-font-family);
+}
+
+.gv-workspace__rail,
+.gv-workspace__column {
+  box-sizing: border-box;
+  min-height: 0;
+  overflow: auto;
+  border-radius: var(--gv-radius-12);
+  background: var(--gv-surface-panel);
+}
+
+.gv-workspace__rail {
+  flex: 0 0 300px;
+  padding: var(--gv-space-24) var(--gv-space-16) var(--gv-space-16);
+}
+
+.gv-workspace__strip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 44px;
+  box-sizing: border-box;
+  padding-block: var(--gv-space-16);
+  border-radius: var(--gv-radius-12);
+  background: var(--gv-surface-panel);
+}
+
+.gv-workspace__column {
+  flex: 0 1 480px;
+  min-width: 0;
+  padding: var(--gv-space-16);
+}
+
+.gv-workspace__main {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  border-radius: var(--gv-radius-12);
+
+  &[data-main='stage'] {
+    background: var(--gv-surface-secondary);
+  }
+}
