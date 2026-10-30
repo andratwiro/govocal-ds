@@ -28,7 +28,7 @@ body { margin: 0; }
 /* ── Project phase ── */
 
 .bo-phase { min-height: calc(100vh - 2 * var(--gv-space-8)); }
-.bo-phase-rail { flex: 0 0 300px; padding-block-start: var(--gv-space-24); }
+.bo-phase-rail { flex: 0 0 332px; padding-block-start: var(--gv-space-24); }
 .bo-phase-side { flex: 0 0 332px; align-self: start; }
 .bo-phase-body[data-view="manage"] .bo-phase-side { flex-basis: 308px; }
 .bo-phase-grow { flex: 1; min-width: 0; align-self: stretch; }
