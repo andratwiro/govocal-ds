@@ -39,6 +39,7 @@ function Overview({projectId}: {projectId?: string}) {
   const [removed, deletePhase] = useDeletedPhases();
   const [confirm, setConfirm] = useState<PubStatus | null>(null);
   const [dirty, setDirty] = useState(false);
+  const [editing, setEditing] = useState(false);
   // Who can find the live project, and who can open it (the Live menu).
   const [find, setFind] = useState<Key>('public');
   const [open, setOpen] = useState<Key>('everyone');
@@ -79,11 +80,12 @@ function Overview({projectId}: {projectId?: string}) {
           <Grid elementType="section" aria-label="Preview" className="bo-fill">
             {/* Phone preview's "On the stage": the phone's own action edits the project page. */}
             <PhoneStage caption="What residents see on the project page">
-              <Phone project={project} o={o} onEdit={() => setSettings('Project page')} />
+              <Phone project={project} o={o} onEdit={() => setEditing(true)} />
             </PhoneStage>
           </Grid>
         </Workspace>
       </WorkspaceRail>
+      <CardStub title={editing ? 'Edit project page' : null} onClose={() => setEditing(false)} />
       <ProjectSettings project={project} tab={settings} onTabChange={setSettings} onClose={() => setSettings(null)} />
       <AddPhase project={project} isOpen={adding} onOpenChange={setAdding} />
       <AlertDialog title={confirm ? `${NEXT[status].label}?` : ''} isOpen={confirm !== null} onOpenChange={v => { if (!v) setConfirm(null); }}
@@ -219,7 +221,7 @@ function Setup({project, o, live, draft, onSettings, onChange}: {project: Projec
   );
   return (
     <Panel variant="plain" title="Project setup"
-      actions={<IconButton aria-label="Project settings" onPress={() => onSettings('General')}><Settings aria-hidden size={16} /></IconButton>}>
+      actions={<IconButton aria-label="Project settings" onPress={() => onSettings('General information')}><Settings aria-hidden size={16} /></IconButton>}>
       <Stack gap="24">
         {live && (
           <>

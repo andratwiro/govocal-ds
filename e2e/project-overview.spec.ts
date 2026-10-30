@@ -131,12 +131,11 @@ test('the phone preview shows what a resident sees', async ({page}) => {
   await expect(preview.getByRole('heading', {name: 'Green Corridors for Larkvale'})).toBeVisible();
   await expect(preview.getByRole('button', {name: /Participate · 3 ways/})).toBeVisible();
   await expect(preview.getByText('215 participants')).toBeVisible();
-  // The Phone stage's caption, and the phone's own action: Edit project page opens that settings tab.
+  // The Phone stage's caption, and the phone's own action: Edit project page (the page editor isn't drawn yet).
   await expect(preview.getByText('What residents see on the project page')).toBeVisible();
   await preview.getByRole('group', {name: 'What residents see'}).hover();
   await preview.getByRole('button', {name: 'Edit project page'}).click();
-  await expect(page.getByRole('dialog', {name: 'Project settings'}).getByRole('option', {name: 'Project page'}))
-    .toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('dialog', {name: 'Edit project page'})).toBeVisible();
 });
 
 test('the overview passes axe (WCAG 2.2 AA)', async ({page}) => {
@@ -226,21 +225,27 @@ test('the rail header hides the rail; the folded rail brings it back', async ({p
   await expect(page.getByRole('navigation', {name: 'Phases'})).toBeVisible();
 });
 
-test('the settings cog opens the project settings, tab by tab', async ({page}) => {
+test('the settings cog opens the project settings: the prototype\'s four tabs, General information filled', async ({page}) => {
   await page.goto(URL);
   await page.getByRole('region', {name: 'Project setup'}).getByRole('button', {name: 'Project settings'}).click();
-  const dialog = page.getByRole('dialog', {name: 'Project settings'});
-  // Grouped tabs (Tabs' "Vertical with group headings"): a list of tabs under Project, Participation and Inputs.
+  const dialog = page.getByRole('dialog', {name: 'Settings'});
+  // Grouped tabs (Tabs' "Vertical with group headings"): Project › General information, Resources; Inputs › Tags, Perspectives.
   const tabs = dialog.getByRole('listbox', {name: 'Project settings'});
-  for (const t of ['General', 'Project page', 'Input tags', 'Access rights', 'Audience', 'Messaging', 'Files', 'Events'])
-    await expect(tabs.getByRole('option', {name: t})).toBeVisible();
-  for (const g of ['Project', 'Participation', 'Inputs']) await expect(tabs.getByText(g, {exact: true})).toBeVisible();
-  // The title is a Multilingual text field: English filled, the other platform languages marked empty.
-  await expect(dialog.getByRole('textbox', {name: 'Title, English'})).toHaveValue('Green Corridors for Larkvale');
-  await expect(dialog.getByRole('radiogroup', {name: 'Language of Title'}).getByRole('radio', {name: /^FR-BE/}))
-    .toHaveAccessibleName(/empty, required$/);
-  await tabs.getByRole('option', {name: 'Input tags'}).click();
+  await expect(tabs.getByRole('option')).toHaveText(['General information', 'Resources', 'Tags', 'Perspectives']);
+  for (const g of ['Project', 'Inputs']) await expect(tabs.getByText(g, {exact: true})).toBeVisible();
+  // The name is a Multilingual text field: English filled, the other platform languages marked empty.
+  await expect(dialog.getByRole('textbox', {name: 'Project name, English'})).toHaveValue('Green Corridors for Larkvale');
+  await expect(dialog.getByRole('textbox', {name: 'Slug'})).toHaveValue('green-corridors');
+  await expect(dialog.getByText('If you change the URL, links to the page using the old URL will no longer work.')).toBeVisible();
+  await expect(dialog.getByRole('button', {name: /City centre.*Space|Space.*City centre/})).toBeVisible();
+  await expect(dialog.getByText('not in Figma yet')).toHaveCount(0);
+  await tabs.getByRole('option', {name: 'Tags'}).click();
   await expect(dialog.getByRole('row', {name: 'Cycling'})).toBeVisible();
+  await dialog.getByRole('textbox', {name: 'New tag'}).fill('Trees');
+  await dialog.getByRole('button', {name: 'Add tag'}).click();
+  await expect(dialog.getByRole('row', {name: 'Trees'})).toBeVisible();
+  await tabs.getByRole('option', {name: 'Resources'}).click();
+  await expect(dialog.getByRole('grid', {name: 'Resources'}).or(dialog.getByRole('list', {name: 'Resources'}))).toBeVisible();
 });
 
 test('Add a phase: the method picker; picking a method opens the new phase\'s Build, Save off until it has a title and dates', async ({page}) => {

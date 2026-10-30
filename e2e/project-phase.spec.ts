@@ -208,19 +208,19 @@ test('Build: the phase status is a compact Banner in the Dates row, neutral befo
 test('Project settings: a fixed-height Modal with a grouped side list of tabs', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
   await page.getByRole('region', {name: / setup$/}).getByRole('button', {name: 'Project settings'}).click();
-  const dialog = page.getByRole('dialog', {name: 'Project settings'});
+  const dialog = page.getByRole('dialog', {name: 'Settings'});
   await expect(dialog).toHaveAttribute('data-height', 'fixed');
   const tabs = dialog.getByRole('listbox', {name: 'Project settings'});
-  await expect(tabs.getByRole('option')).toHaveCount(8);
+  await expect(tabs.getByRole('option')).toHaveCount(4);
   // The side list sits beside the panel, not above it.
   const list = await tabs.boundingBox();
-  const panel = await dialog.getByRole('group', {name: 'General'}).boundingBox();
+  const panel = await dialog.getByRole('group', {name: 'General information'}).boundingBox();
   expect(panel!.x).toBeGreaterThanOrEqual(list!.x + list!.width - 1);
-  await tabs.getByRole('option', {name: 'Access rights'}).click();
-  await expect(dialog.getByRole('group', {name: 'Access rights'})).toBeVisible();
+  await tabs.getByRole('option', {name: 'Resources'}).click();
+  await expect(dialog.getByRole('group', {name: 'Resources'})).toBeVisible();
   // Arrow down from the last tab of a group moves into the next group.
   await page.keyboard.press('ArrowDown');
-  await expect(tabs.getByRole('option', {name: 'Audience'})).toHaveAttribute('aria-selected', 'true');
+  await expect(tabs.getByRole('option', {name: 'Tags'})).toHaveAttribute('aria-selected', 'true');
   await dialog.getByRole('button', {name: 'Save'}).click();
   await expect(dialog).toHaveCount(0);
 });
@@ -335,7 +335,7 @@ test('the side panel passes axe (WCAG 2.2 AA), reported', async ({page}) => {
   a11yReport(await violations(page, '.gv-side-panel'));
 });
 
-test('Build: the Dates card holds a Date range field; Events has one with times', async ({page}) => {
+test('Build: the Dates card holds a Date range field', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
   const setup = page.getByRole('region', {name: / setup$/});
   await setup.getByRole('button', {name: /^Dates/}).click();
@@ -344,15 +344,6 @@ test('Build: the Dates card holds a Date range field; Events has one with times'
   await expect(setup.getByRole('group', {name: 'End date'}).getByRole('spinbutton', {name: /^day/})).toHaveText('21');
   await expect(setup.getByRole('button', {name: 'Remove the end date'})).toBeVisible();
 
-  await setup.getByRole('button', {name: 'Project settings'}).click();
-  const dialog = page.getByRole('dialog', {name: 'Project settings'});
-  await dialog.getByRole('option', {name: 'Events'}).click();
-  const events = dialog.getByRole('group', {name: 'Events'});
-  await expect(events.getByRole('group', {name: 'Event dates, start date'})).toBeVisible();
-  // The time fields come with a date: type a start date and its time field appears.
-  await events.getByRole('group', {name: 'Event dates, start date'}).getByRole('spinbutton').first().click();
-  await page.keyboard.type('11022026');
-  await expect(events.getByRole('group', {name: 'Event dates, start time'})).toBeVisible();
 });
 
 test('Build: the Attachments card opens its dialog: a drop zone, the files, Done', async ({page}) => {
@@ -470,8 +461,8 @@ test('the Filter menu: Enter ticks an option and the submenu stays open; Esc clo
 test('Project settings: General has the project URL with its prefix', async ({page}) => {
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
   await page.getByRole('region', {name: / setup$/}).getByRole('button', {name: 'Project settings'}).click();
-  const dialog = page.getByRole('dialog', {name: 'Project settings'});
-  await expect(dialog.getByRole('textbox', {name: 'Project URL'})).toHaveValue('green-corridors');
+  const dialog = page.getByRole('dialog', {name: 'Settings'});
+  await expect(dialog.getByRole('textbox', {name: 'Slug'})).toHaveValue('green-corridors');
   await expect(dialog.getByText('internal.govocal.com/en/projects/')).toBeVisible();
 });
 

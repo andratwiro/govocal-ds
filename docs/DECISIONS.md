@@ -51,6 +51,11 @@ Calls made moving the overview and phase screens closer to the prototype with th
 - A method whose setup isn't built (Proposals, Voting, Survey, Common ground, Document annotation) showed one line →
   **the rows every setup opens with (Dates, title, description, Attachments), then the line** → a new phase of any
   method can be named and dated; each method's own rows come with its package.
+- Project settings: 8 tabs each ending "not in Figma yet" vs the prototype's "Settings" → **Project › General
+  information (Project name, the URL slug with its prefix and warning, Space and Folder), Resources (the project's
+  files); Inputs › Tags (remove, add), Perspectives (what the view does, then an Empty state)** → the prototype's four
+  tabs, each doing something; Events, access and messaging live elsewhere in the admin. The phone's Edit project page
+  opens the page editor's stub, as the checklist's row does.
 
 ## Preview parts and the Gantt chart (30 Oct 2026, deep review 2: S10–S12)
 

@@ -26,6 +26,7 @@ import {useOpenNav} from '../Layout';
 // Form field summary is a recipe (a story and its CSS): the page keeps its markup and uses the recipe's stylesheet.
 import {ME, PROJECTS, type Method, type Phase, type Project} from '../data';
 import {LOCALES} from '../data-settings';
+import {FOLDERS, SPACES} from '../data-projects';
 import {IDEAS, IDEA_ASSIGNEES, IDEA_REPLIES, IDEA_SOURCES, IDEA_STATUSES, IDEA_TAGS, AREAS, TOPICS, PHASE_FILES, SCREENING_PHASES, TEAM, addedTimeline,
   NO_OVERVIEW, OVERVIEWS, PHONE_CALL, INSIGHT_WEEKS, PARTICIPATION_WEEKS, AI_SUMMARY, VOTE_OPTIONS, VOTES_BY_DAY, VOTER_AGES,
   VOTER_COMMUTES, PROPOSALS, IDEA_FORM, INPUT_TERMS, IDEA_SORTS, PARTICIPANT_ACTIONS, VOLUNTEER_ACTIONS, IDEA_VIEWS, emailsFor, CAUSES,
@@ -279,8 +280,8 @@ export function ChecklistStep({step, onOpen, onChange, isPublished}: {step: type
   return <Card title={step.title} control="link" leading={leading(false)} onOpen={() => onOpen(step.title)} />;
 }
 
-// Where each checklist card leads: two open a settings tab, the rest a stub until they're drawn.
-export const CHECKLIST_TAB: Partial<Record<string, SettingsTab>> = {'Settings': 'General', 'Edit project page': 'Project page'};
+// Where each checklist card leads: Settings opens its tab, the rest a stub until they're drawn.
+export const CHECKLIST_TAB: Partial<Record<string, SettingsTab>> = {'Settings': 'General information'};
 
 // "Project · Build", after the prototype's Build tab: Workspace layout with the rail, the method's setup in the middle
 // (a plain Panel, the phase's cards in sections) and what residents see of the phase on the stage (the Phone preview
@@ -304,7 +305,7 @@ function Build({project, phase, number, rail, onSettings, onChange}: {project: P
     emails, emailsOn, onEmailChange: setEmail, onEmailOpen: setEmailId};
   const column = (
     <Panel variant="plain" title={`${phase.method} setup`}
-      actions={<IconButton aria-label="Project settings" onPress={() => onSettings('General')}><Settings aria-hidden size={16} /></IconButton>}>
+      actions={<IconButton aria-label="Project settings" onPress={() => onSettings('General information')}><Settings aria-hidden size={16} /></IconButton>}>
       {email ? (
         <NotificationEmail key={email.id} name={email.name} who={email.who} when={email.when}
           labels={{back: `Back to ${phase.method} setup`}} onBack={() => setEmailId(null)}
@@ -1374,37 +1375,41 @@ function Insights({project, phase, rail}: {project: Project; phase: Phase; rail:
 }
 
 // ── Project settings, Add a phase, and the stub behind a Build card ─────────────────────────────────────────────
-// The settings cog opens the project's settings in a wide modal with side tabs, as the prototype's project settings.
-export const SETTINGS_TABS = ['General', 'Project page', 'Input tags', 'Access rights', 'Audience', 'Messaging', 'Files', 'Events'] as const;
+// The settings cog opens the prototype's project "Settings": a wide modal with side tabs in two groups.
+export const SETTINGS_TABS = ['General information', 'Resources', 'Tags', 'Perspectives'] as const;
 export type SettingsTab = typeof SETTINGS_TABS[number];
 // The side list's groups (Tabs' "Vertical with group headings" story).
 const SETTINGS_GROUPS: {title: string; tabs: SettingsTab[]}[] = [
-  {title: 'Project', tabs: ['General', 'Project page', 'Files', 'Events']},
-  {title: 'Participation', tabs: ['Access rights', 'Audience', 'Messaging']},
-  {title: 'Inputs', tabs: ['Input tags']}
+  {title: 'Project', tabs: ['General information', 'Resources']},
+  {title: 'Inputs', tabs: ['Tags', 'Perspectives']}
 ];
 const SETTINGS_ICON: Record<SettingsTab, typeof Settings> = {
-  'General': Settings, 'Project page': FileText, 'Input tags': Tag, 'Access rights': Lock, 'Audience': Users,
-  'Messaging': Mail, 'Files': Paperclip, 'Events': CalendarDays
+  'General information': Settings, 'Resources': Paperclip, 'Tags': Tag, 'Perspectives': Sparkles
 };
-const SETTINGS_ABOUT: Record<SettingsTab, string> = {
-  'General': 'The project title, its folder and its dates.',
-  'Project page': 'What residents read on the project page: the image, the intro and the sections under it.',
-  'Input tags': 'The tags managers give ideas, used by the Manage filters.',
-  'Access rights': 'Who can see the project and who can take part.',
-  'Audience': 'The groups and places this project is for.',
-  'Messaging': 'The emails residents get when the project or a phase starts.',
-  'Files': 'Files residents can download from the project page.',
-  'Events': 'Meetings and walks residents can sign up for.'
-};
+const NO_FOLDER = 'No folder';
+
+/** One block of a settings tab: its heading over its fields, a hairline under all but the last. */
+function SettingsBlock({title, children}: {title: string; children: ReactNode}) {
+  return (
+    <Stack elementType="section" gap="8" aria-label={title}>
+      <Text elementType="h3" kind="body" isStrong color="primary">{title}</Text>
+      {children}
+    </Stack>
+  );
+}
 
 export function ProjectSettings({project, tab, onTabChange, onClose}: {project: Project; tab: SettingsTab | null;
   onTabChange: (tab: SettingsTab) => void; onClose: () => void}) {
+  const space = SPACES.find(sp => sp.projects.includes(project.id))?.name ?? SPACES[0].name;
+  const [files, setFiles] = useState<FileListItemData[]>(PHASE_FILES);
+  const [tags, setTags] = useState<string[]>([...IDEA_TAGS]);
+  const [newTag, setNewTag] = useState('');
+  const addTag = () => { const t = newTag.trim(); if (t && !tags.includes(t)) setTags(all => [...all, t]); setNewTag(''); };
   return (
     // Modal's "With side tabs": a fixed height, an unpadded body, the grouped side list beside the panel.
-    <Modal title="Project settings" width="wide" height="fixed" isFlush isOpen={tab !== null}
+    <Modal title="Settings" width="wide" height="fixed" isFlush isOpen={tab !== null}
       onOpenChange={o => { if (!o) onClose(); }} footer={<Button size={32} slot="close">Save</Button>}>
-      <GroupedTabs selectedKey={tab ?? 'General'} onSelectionChange={k => onTabChange(k as SettingsTab)} className="bo-phase-settings">
+      <GroupedTabs selectedKey={tab ?? 'General information'} onSelectionChange={k => onTabChange(k as SettingsTab)} className="bo-phase-settings">
         <GroupedTabList aria-label="Project settings" className="bo-phase-settings-list">
           {SETTINGS_GROUPS.map(g => (
             <TabSection key={g.title} title={g.title}>
@@ -1415,26 +1420,56 @@ export function ProjectSettings({project, tab, onTabChange, onClose}: {project: 
             </TabSection>
           ))}
         </GroupedTabList>
-        {SETTINGS_TABS.map(t => (
-          <GroupedTabPanel key={t} id={t} className="bo-phase-settings-panel">
-            <Stack gap="8">
-              <Text elementType="h3" kind="body" isStrong color="primary">{t}</Text>
-              <Text elementType="p" kind="small" color="meta">{SETTINGS_ABOUT[t]}</Text>
-              {t === 'General' && <>
-                <MultilingualTextField label="Title" isRequired locales={LANGUAGES} defaultValue={{[LANGUAGES[0]]: project.title}} />
-                <TextField label="Project URL" prefix="internal.govocal.com/en/projects/" defaultValue={project.id} />
-              </>}
-              {t === 'Events' && <>
-                <MultilingualTextField label="Event title" placeholder="e.g. Walk along the corridor" locales={LANGUAGES} />
-                <DateRangeField label="Event dates" showTime />
-              </>}
-              {t === 'Input tags' && (
-                <TagGroup label="Tags" items={IDEA_TAGS.map(id => ({id}))}>{item => <TagItem id={item.id}>{item.id}</TagItem>}</TagGroup>
-              )}
-              <Text elementType="p" kind="small" color="meta">The rest of this tab: not in Figma yet.</Text>
-            </Stack>
-          </GroupedTabPanel>
-        ))}
+        <GroupedTabPanel id="General information" className="bo-phase-settings-panel">
+          <Stack gap="24">
+            <SettingsBlock title="Project name">
+              <MultilingualTextField aria-label="Project name" isRequired locales={LANGUAGES} defaultValue={{[LANGUAGES[0]]: project.title}} />
+            </SettingsBlock>
+            <Separator />
+            <SettingsBlock title="Project URL">
+              <TextField label="Slug" prefix="internal.govocal.com/en/projects/" defaultValue={project.id}
+                description="If you change the URL, links to the page using the old URL will no longer work." />
+            </SettingsBlock>
+            <Separator />
+            <SettingsBlock title="Project context">
+              <Select label="Space" defaultValue={space}>
+                {SPACES.map(sp => <SelectItem key={sp.name} id={sp.name}>{sp.name}</SelectItem>)}
+              </Select>
+              <Select label="Folder" defaultValue={project.folder ?? NO_FOLDER}>
+                {[NO_FOLDER, ...FOLDERS.map(f => f.name)].map(f => <SelectItem key={f} id={f}>{f}</SelectItem>)}
+              </Select>
+            </SettingsBlock>
+          </Stack>
+        </GroupedTabPanel>
+        <GroupedTabPanel id="Resources" className="bo-phase-settings-panel">
+          <SettingsBlock title="Resources">
+            <Text elementType="p" kind="small" color="meta">Files residents can download from the project page.</Text>
+            <DropZone density="compact" acceptedFileTypes={['*']} allowsMultiple onSelect={list => list && setFiles(f => [...f,
+              ...[...list].map((file, k) => ({id: `r${Date.now()}-${k}`, name: file.name, meta: `${Math.max(1, Math.round(file.size / 1024))} KB`}))])}>
+              Drop a file here or browse
+            </DropZone>
+            <FileList aria-label="Resources" items={files} onDelete={item => setFiles(f => f.filter(x => x.id !== item.id))} />
+          </SettingsBlock>
+        </GroupedTabPanel>
+        <GroupedTabPanel id="Tags" className="bo-phase-settings-panel">
+          <SettingsBlock title="Tags">
+            <Text elementType="p" kind="small" color="meta">The tags managers give inputs, used by the Manage filters.</Text>
+            <TagGroup aria-label="Tags" items={tags.map(id => ({id}))} onRemove={keys => setTags(all => all.filter(t => !keys.has(t)))}>
+              {item => <TagItem id={item.id}>{item.id}</TagItem>}
+            </TagGroup>
+            <Inline gap="8" wrap="nowrap">
+              <TextField aria-label="New tag" placeholder="New tag" value={newTag} onChange={setNewTag} className="bo-push" />
+              <Button variant="secondary" size={32} isDisabled={!newTag.trim()} onPress={addTag}><Plus aria-hidden size={16} />Add tag</Button>
+            </Inline>
+          </SettingsBlock>
+        </GroupedTabPanel>
+        <GroupedTabPanel id="Perspectives" className="bo-phase-settings-panel">
+          <SettingsBlock title="Perspectives">
+            <Text elementType="p" kind="small" color="meta">{IDEA_VIEWS.find(v => v.id === 'perspectives')?.description}</Text>
+            <EmptyState layout="panel" headingLevel="none" illustration="empty-notebook" title="No perspectives yet"
+              description="They appear once the project's inputs gather around emerging topics." />
+          </SettingsBlock>
+        </GroupedTabPanel>
       </GroupedTabs>
     </Modal>
   );
