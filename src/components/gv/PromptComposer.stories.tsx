@@ -53,6 +53,23 @@ export const FileError: Story = {
   args: {onFiles: fn(), onAttach: undefined, fileError: 'This file is over 25 MB. Attach a smaller one.'}
 };
 
+/**
+ * Files dragged over the box (a screen that takes files, `onFiles`): it lights up in the AI tint and says "Drop to
+ * attach" until they leave or drop. The look shows only while files are over it, so the story drags one in.
+ */
+export const DropTarget: Story = {
+  name: 'Drop target',
+  args: {onFiles: fn(), onAttach: undefined},
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(new File(['%PDF'], 'Council priorities 2026.pdf', {type: 'application/pdf'}));
+    canvas.getByRole('textbox', {name: 'Ask the assistant'})
+      .dispatchEvent(new DragEvent('dragenter', {bubbles: true, cancelable: true, dataTransfer}));
+    await waitFor(() => expect(canvas.getByText('Drop to attach')).toBeInTheDocument());
+  }
+};
+
 /** Switched off, when the assistant isn't available on the account: field and buttons off, the box faded. The screen says why around it (Assistant panel's "off" state). */
 export const Disabled: Story = {args: {isDisabled: true}};
 

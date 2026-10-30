@@ -32,7 +32,7 @@
 5. **Bar**: the paperclip at the start (only when attaching is possible), and a round 32px button at the end: grey
    while there is nothing to send, black ("ink") when there is, and a stop square while the assistant works.
 
-While files are dragged over it, the box lights up in the AI tint and says "Drop to attach" (no story shows it yet).
+While files are dragged over it, the box lights up in the AI tint and says "Drop to attach" (the Drop target story).
 
 ## Behaviour
 
@@ -84,9 +84,10 @@ named for what it does, focus kept in the field after send and stop, and a file 
 - **Built by:** AI agents, for the report builder's assistant column (the back office's deep dive). Not in Figma:
   design with the stories.
 - **Reviewed by a person:** not yet.
-- **Known limits:** no story for the drag-over look; files can't be sent without words.
+- **Known limits:** files can't be sent without words.
 
 ## Changes
 
+- 30 Oct 2026: a Drop target story shows the look while files are dragged over the box.
 - 30 Oct 2026: the Working story shows the field emptied after a send; the page reworded after a fresh-eyes read.
 - 30 Oct 2026: built (empty, ready, working, context, attachments, drag-over, file error, disabled), with this page.

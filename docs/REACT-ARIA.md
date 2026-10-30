@@ -39,7 +39,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | AI › Chat progress | through Visually hidden: `VisuallyHidden` | – | – | yes | 6 |
 | AI › Chat thread | through Button: `Button`, `ProgressBar` | – | – | yes | 8 |
 | AI › Item chip | `Button`; through Visually hidden: `VisuallyHidden` | – | – | yes | 10 |
-| AI › Prompt composer | `Button`, `FileTrigger`, `TextArea`, `TextField`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger`; through Item chip: `VisuallyHidden` | – | – | yes | 11 |
+| AI › Prompt composer | `Button`, `FileTrigger`, `TextArea`, `TextField`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger`; through Item chip: `VisuallyHidden` | – | – | yes | 12 |
 | AI › Prompt suggestions | `Button` | – | – | yes | 7 |
 | Charts › Bar row | `VisuallyHidden` | – | – | yes | 6 |
 | Charts › Chart | None: plain React and CSS | – | yes | yes | 11 |
