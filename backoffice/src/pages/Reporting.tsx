@@ -3,8 +3,8 @@ import {useNavigate} from 'react-router';
 import {Copy, FileText, LayoutGrid, Pencil, Plus, SearchX, Sparkles, Trash2} from 'lucide-react';
 import {AlertDialog, Badge, Banner, Button, CheckboxGroup, ChoiceCard, ChoiceCardCheckbox, ChoiceCardGroupHeading,
   DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableOptions, DataTableRow, EmptyState,
-  MenuItem, Modal, Pagination, Panel, RadioGroup, SearchField, SegmentedControl, SegmentedControlItem, Separator, Tab,
-  TableToolbar, TabList, TabPanel, TabPanels, Tabs, Text, TextField, toast} from 'govocal-ds';
+  Grid, Inline, MenuItem, Modal, Pagination, Panel, RadioGroup, SearchField, SegmentedControl, SegmentedControlItem, Separator, Tab,
+  TableToolbar, TabList, TabPanel, TabPanels, Tabs, Stack, Text, TextField, toast} from 'govocal-ds';
 import {CONTENTS, CONTENT_GROUPS, REPORTS, type Report} from '../data-reporting';
 import {Page} from './Page';
 
@@ -41,14 +41,14 @@ function ReportTable({label, reports, onAction}: {label: string; reports: Report
           {reports.map(r => (
             <DataTableRow key={r.id} id={r.id} textValue={r.title} href={editorHref(r)}>
               <DataTableCell>
-                <span className="bo-reporting-title">
+                <Inline elementType="span" gap="8">
                   <span>{r.title}</span>
                   {r.isNew && <Badge>New</Badge>}
                   {r.kind === 'progress' && <Badge>Progress</Badge>}
-                </span>
+                </Inline>
               </DataTableCell>
-              <DataTableCell><span className="bo-reporting-nowrap">{r.created}</span></DataTableCell>
-              <DataTableCell><Text kind="small" color="meta" className="bo-reporting-nowrap">{modified(r.modifiedDays)}</Text></DataTableCell>
+              <DataTableCell>{r.created}</DataTableCell>
+              <DataTableCell><Text kind="small" color="meta">{modified(r.modifiedDays)}</Text></DataTableCell>
               <DataTableCell align="options">
                 {/* Row menus put their icons in Menu's icon slot; the removing item after a separator (Users, Tools). */}
                 <DataTableOptions aria-label={`Actions for ${r.title}`} onAction={k => onAction(r, k as RowAction)}>
@@ -125,8 +125,8 @@ function CreateReportModal({onClose, onCreate}: {onClose: () => void; onCreate: 
   );
   return (
     <Modal title="Create a report" width="wide" isOpen onOpenChange={open => !open && onClose()} footer={footer}>
-      <div className="bo-reporting-create">
-        <div className="bo-reporting-form">
+      <Grid columns={2} gap="24" alignItems="start">
+        <Stack gap="16">
           <Text elementType="p" kind="small" color="meta">Turn a project's results into a report you can share. Start from scratch, pick a template, or let the assistant draft it from your data.</Text>
           <TextField label="Report title" placeholder="Larkvale park renewal: project report" value={title} onChange={setTitle} autoFocus />
           {/* One pick: Choice cards in a RadioGroup (Choice card's "With icon" story). */}
@@ -135,8 +135,8 @@ function CreateReportModal({onClose, onCreate}: {onClose: () => void; onCreate: 
               <ChoiceCard key={t.id} value={t.id} media={icon(t.media)} description={t.description}>{t.label}</ChoiceCard>
             ))}
           </RadioGroup>
-        </div>
-        <div className="bo-reporting-form">
+        </Stack>
+        <Stack gap="16">
           {/* The Choice card's "Checkbox group with group headings": the contents under their group's heading. */}
           <CheckboxGroup label="Report contents" defaultValue={CONTENTS.filter(c => c.on).map(c => c.id)}>
             <Text slot="description" elementType="p" kind="small" color="meta">Choose what this report covers. Each becomes one or more pages.</Text>
@@ -147,16 +147,16 @@ function CreateReportModal({onClose, onCreate}: {onClose: () => void; onCreate: 
               ))
             ])}
           </CheckboxGroup>
-          <div className="bo-reporting-field">
+          <Stack gap="8" alignItems="start">
             <Text kind="small" color="meta" aria-hidden>Length</Text>
             <SegmentedControl aria-label="Length" selectionMode="single" disallowEmptySelection defaultSelectedKeys={['standard']}>
               <SegmentedControlItem id="short">Short</SegmentedControlItem>
               <SegmentedControlItem id="standard">Standard</SegmentedControlItem>
               <SegmentedControlItem id="detailed">Detailed</SegmentedControlItem>
             </SegmentedControl>
-          </div>
-        </div>
-      </div>
+          </Stack>
+        </Stack>
+      </Grid>
     </Modal>
   );
 }

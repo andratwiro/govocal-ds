@@ -103,7 +103,7 @@ test('creating a report starts blank: title, template, contents, then the report
   }
   await contents.getByText('Demographics').click();
   await expect(contents.getByRole('checkbox', {name: /Demographics/})).toBeChecked();
-  a11yReport(await axeViolations(page, '.bo-reporting-create'));
+  a11yReport(await axeViolations(page, '[role="dialog"]'));
   await expect(builder.getByRole('radiogroup', {name: 'Length'})).toBeVisible();
   await tpl.getByText('Create with AI').click();
   await expect(tpl.getByRole('radio', {name: /^Create with AI/})).toBeChecked();
