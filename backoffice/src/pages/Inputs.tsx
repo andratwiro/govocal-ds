@@ -3,10 +3,10 @@ type Key = string | number;
 type Selection = 'all' | Set<Key>;
 import {AlertDialog, Avatar, Badge, CommentThread, DataTable, DataTableBody, DataTableCell, DataTableColumn,
   DataTableEmpty, DataTableHeader, DataTableRow, DataTableStack, IconButton, Link, Menu, MenuItem, MenuTrigger, NewDot,
-  OfficialUpdate, Pagination, PropertyList, PropertyListItem, queue, ReactionCounts, SearchField, Select,
-  type SelectionAction, SelectionBar, SelectItem, Separator, SidePanel, type SidePanelAction, SidePanelActions,
-  SidePanelSection, StatusBadge, Switch, Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs,
-  TagPicker, type ThreadTab, type ThreadTarget, ToastRegion, Tooltip, TooltipTrigger} from 'govocal-ds';
+  OfficialUpdate, Pagination, PropertyList, PropertyListItem, ReactionCounts, SearchField, Select, type SelectionAction,
+  SelectionBar, SelectItem, Separator, SidePanel, type SidePanelAction, SidePanelActions, SidePanelRecordHead, SidePanelSection, StatusBadge,
+  Switch, Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, TagPicker, Text, type ThreadTab,
+  type ThreadTarget, toast, Tooltip, TooltipTrigger} from 'govocal-ds';
 import {ListBox, ListBoxItem} from 'govocal-ds/base';
 import {CircleCheck, Download, ExternalLink, SquarePen, Trash2, TriangleAlert, User} from 'lucide-react';
 import {ASSIGNEES, ME, PROJECTS, STATUSES} from '../data';
@@ -41,21 +41,21 @@ function AssigneeSelect({input, label, onChange}: {input: ManagedInput; label: s
 const countOf = (thread: ManagedInput['thread']) => thread.reduce((n, c) => n + 1 + (c.replies?.length ?? 0), 0);
 const ME_INITIALS = `M${ME.slice(-1)}`;
 const TAG_OPTIONS = TOPICS.map(t => ({id: t, label: t}));
-type Patch = (id: string, patch: Partial<ManagedInput>, toast: string, body?: string) => void;
+type Patch = (id: string, patch: Partial<ManagedInput>, title: string, body?: string) => void;
 
 /** The open input in the Side panel (the Comment thread's "In a side panel" story): its title and words, its
  * reactions and quick actions, its properties, its official updates, then the thread. Every change applies at once,
  * with an Undo toast: the panel has no Save. */
 function InputPanel({input, patch, onDelete}: {input: ManagedInput; patch: Patch; onDelete: () => void}) {
-  const notYet = (what: string) => () => queue.add({title: `${what}: not in Figma yet`, icon: null}, {timeout: 5000});
+  const notYet = (what: string) => () => toast(`${what}: not in Figma yet`, undefined, {icon: null});
   const quick: SidePanelAction[] = [
     {id: 'edit', label: 'Edit', icon: <SquarePen aria-hidden size={16} />, onPress: notYet('Editing an input')},
     {id: 'view', label: 'View on the site', icon: <ExternalLink aria-hidden size={16} />, onPress: notYet('The input on the site')},
     {id: 'delete', label: 'Delete', icon: <Trash2 aria-hidden size={16} />, onPress: onDelete}
   ];
   // A post lands at once (no toast); Delete and Dismiss warning apply at once with an Undo toast.
-  const setThread = (key: 'thread' | 'internal', list: ManagedInput['thread'], toast = '') =>
-    patch(input.id, {[key]: list, ...(key === 'thread' ? {comments: countOf(list)} : {})}, toast);
+  const setThread = (key: 'thread' | 'internal', list: ManagedInput['thread'], title = '') =>
+    patch(input.id, {[key]: list, ...(key === 'thread' ? {comments: countOf(list)} : {})}, title);
   const post = (text: string, {tab, replyTo}: ThreadTarget) => {
     const key = tab === 'internal' ? 'internal' : 'thread';
     const c = {id: `${input.id}-p${Date.now()}`, author: ME, initials: ME_INITIALS, time: 'Just now', text};
@@ -73,16 +73,14 @@ function InputPanel({input, patch, onDelete}: {input: ManagedInput; patch: Patch
   return (
     <>
       <SidePanelSection>
-        <div className="bo-inputs-record">
-          <h2 className="bo-section-title">{input.title}</h2>
-          <p>{input.body}</p>
-          <p className="bo-note bo-inputs-record-meta">
-            <span>Posted by {input.author} · Registered user</span><span>{input.published}</span>
-          </p>
-        </div>
-        <SidePanelActions items={quick}>
-          <ReactionCounts likes={input.likes} dislikes={input.dislikes} comments={input.comments} />
-        </SidePanelActions>
+        <SidePanelRecordHead title={input.title} author={input.author} authorRole="Registered user" date={input.published}
+          actions={(
+            <SidePanelActions items={quick}>
+              <ReactionCounts likes={input.likes} dislikes={input.dislikes} comments={input.comments} />
+            </SidePanelActions>
+          )}>
+          {input.body}
+        </SidePanelRecordHead>
       </SidePanelSection>
       <SidePanelSection>
         <PropertyList aria-label="Input details">
@@ -160,12 +158,12 @@ export function Inputs() {
   const sortDescriptor = {column: sort, direction: sort === 'title' ? 'ascending' : 'descending'} as const;
   const change: Change = (id, patch) => setInputs(list => list.map(i => i.id === id ? {...i, ...patch} : i));
   // A change from the panel or a row applies at once; its toast can undo it (the panel has no Save).
-  const patch: Patch = (id, next, toast, body) => {
+  const patch: Patch = (id, next, title, body) => {
     const before = inputs.find(i => i.id === id);
     if (!before) return;
     const undo = Object.fromEntries(Object.keys(next).map(k => [k, before[k as keyof ManagedInput]])) as Partial<ManagedInput>;
     change(id, next);
-    if (toast) queue.add({title: toast, description: body, action: 'Undo', onAction: () => change(id, undo)}, {timeout: 6000});
+    if (title) toast(title, body, {action: 'Undo', onAction: () => change(id, undo), timeout: 6000});
   };
   const changeSelected = (patch: Partial<ManagedInput>) =>
     setInputs(list => list.map(i => selected.has(i.id) ? {...i, ...patch} : i));
@@ -175,13 +173,10 @@ export function Inputs() {
     if (open && gone.has(open)) setOpen(null);
     setSelected(s => new Set([...s].filter(k => !gone.has(String(k)))));
     setToDelete(null);
-    queue.add({title: gone.size === 1 ? '1 input deleted' : `${gone.size} inputs deleted`}, {timeout: 5000});
+    toast(gone.size === 1 ? '1 input deleted' : `${gone.size} inputs deleted`);
   };
   const select = (keys: Selection) => setSelected(keys === 'all' ? new Set(shown.map(i => i.id)) : new Set(keys));
-  const exportFile = (key: Key) => queue.add({
-    title: key === 'inputs' ? 'Exporting all inputs' : key === 'comments' ? 'Exporting all comments' : `Exporting ${selected.size} inputs`,
-    description: 'The .xlsx file downloads when it is ready.'
-  }, {timeout: 5000});
+  const exportFile = (key: Key) => toast(key === 'inputs' ? 'Exporting all inputs' : key === 'comments' ? 'Exporting all comments' : `Exporting ${selected.size} inputs`, 'The .xlsx file downloads when it is ready.');
   const preview = inputs.find(i => i.id === open);
   // The pager walks the filtered, sorted list across its pages; the table turns to the open input's page.
   const at = preview ? rows.findIndex(i => i.id === preview.id) : -1;
@@ -333,7 +328,6 @@ export function Inputs() {
         confirmLabel={`Delete ${toDelete?.length === 1 ? 'input' : `${toDelete?.length} inputs`}`} onConfirm={deleteChosen}>
         <p>{toDelete?.length === 1 ? 'The input' : `The ${toDelete?.length} selected inputs`} and their comments will be deleted. This cannot be undone.</p>
       </AlertDialog>
-      <ToastRegion />
     </Page>
   );
 }

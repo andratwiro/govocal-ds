@@ -1,8 +1,8 @@
 import {createRoot} from 'react-dom/client';
 import {RouterProvider} from 'react-router';
-import {LucideProvider} from 'lucide-react';
+import {AppProvider} from 'govocal-ds';
 import {router} from './routes';
 import 'govocal-ds/tokens.css';
 import './layout.css';
-// Figma and the prototype draw icons at 1.75 (Lucide's default is 2); an explicit strokeWidth still wins.
-createRoot(document.getElementById('root')!).render(<LucideProvider strokeWidth={1.75}><RouterProvider router={router} /></LucideProvider>);
+// The App provider renders the one Toast region (pages call toast()) and draws Lucide icons at the system's 1.75.
+createRoot(document.getElementById('root')!).render(<AppProvider><RouterProvider router={router} /></AppProvider>);

@@ -1,5 +1,5 @@
-import {Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
-  DataTableRow} from 'govocal-ds';
+import {Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableRow,
+  Text} from 'govocal-ds';
 import {INPUTS, USERS} from '../data';
 import type {NavItem} from '../nav';
 import {Page} from './Page';
@@ -10,7 +10,7 @@ export function Placeholder({item}: {item: NavItem}) {
   const cols = item.id === 'users' ? ['Name', 'Email', 'Role', 'Joined'] : ['Title', 'Author', 'Votes', 'Status'];
   return (
     <Page title={item.label} actions={<Button variant="primary" size={32}>New</Button>}>
-      <p className="bo-note">Shallow page: layout and components only, invented data.</p>
+      <Text elementType="p" kind="small" color="meta">Shallow page: layout and components only, invented data.</Text>
       <DataTable aria-label={item.label} isFramed>
         <DataTableHeader>{cols.map((c, i) => <DataTableColumn key={c} isRowHeader={i === 0}>{c}</DataTableColumn>)}</DataTableHeader>
         <DataTableBody>{rows.map((r, i) => (

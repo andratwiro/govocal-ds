@@ -143,7 +143,7 @@ test('home Edit opens the homepage builder: sections on and off, then Save', asy
   await save.click();
   await expect(toast(page).filter({hasText: 'Homepage saved'})).toBeVisible();
   await expect(save).toBeDisabled();
-  await expect(page.locator('[data-gap="Homepage preview"]')).toBeVisible();
+  await expect(page.locator('[data-missing-part="Homepage preview"]')).toBeVisible();
   await page.getByRole('navigation', {name: 'Breadcrumbs'}).getByRole('link', {name: 'Pages & menu'}).click();
   await expect(page.getByRole('heading', {level: 1, name: 'Pages & menu'})).toBeVisible();
 });
@@ -217,6 +217,6 @@ test('a custom page\'s Edit and View open the page; an unknown page says so', as
 
 test('pages & menu names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/pages-menu');
-  const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
+  const gaps = await page.locator('[data-missing-part]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-missing-part')))]);
   expect(gaps).toEqual(expect.arrayContaining(['Drag-and-drop reordering']));
 });

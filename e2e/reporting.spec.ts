@@ -124,10 +124,10 @@ test('the Create a report dialog cancels back to the list', async ({page}) => {
 
 test('the report list has no gaps; the report view names its own (e2e/report-view.spec.ts)', async ({page}) => {
   await page.goto('/backoffice/#/reporting');
-  await expect(page.locator('[data-gap]')).toHaveCount(0);
+  await expect(page.locator('[data-missing-part]')).toHaveCount(0);
   await page.goto('/backoffice/#/reporting/report-builder/r2/editor');
   await expect(page.getByRole('region', {name: 'Report pages'})).toBeVisible();
-  const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
+  const gaps = await page.locator('[data-missing-part]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-missing-part')))]);
   expect(gaps).toEqual(expect.arrayContaining(['Page stage', 'Figure', 'Chat']));
   expect(gaps).not.toContain('Slide stage');
 });

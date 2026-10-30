@@ -60,7 +60,7 @@ test('sortable columns reorder the inputs', async ({page}) => {
 
 test('input manager names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/inputs');
-  const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
+  const gaps = await page.locator('[data-missing-part]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-missing-part')))]);
   // Badge and Pagination now come from the system.
   expect(gaps).toEqual([]);
 });
@@ -217,7 +217,7 @@ test('the Side panel sits inline in a column beside the list, and the row checkb
   await inputRows(page).filter({hasText: 'Bike lane by the school'}).getByText('Bike lane by the school').click();
   const side = page.locator('.gv-side-panel[data-inline]');
   await expect(side.getByRole('dialog', {name: 'Input: Bike lane by the school'})).toBeVisible();
-  await expect(page.locator('[data-gap="Side panel"]')).toHaveCount(0);
+  await expect(page.locator('[data-missing-part="Side panel"]')).toHaveCount(0);
   // Beside the table, not over it.
   const [list, box] = [await page.locator('.bo-inputs-list').boundingBox(), await side.boundingBox()];
   expect(box!.x).toBeGreaterThanOrEqual(list!.x + list!.width);

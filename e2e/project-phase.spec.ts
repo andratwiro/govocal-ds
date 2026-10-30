@@ -311,8 +311,10 @@ test('Build: the Dates card holds a Date range field; Events has one with times'
   await page.goto('/backoffice/#/projects/green-corridors/phases/p2/build');
   const setup = page.getByRole('region', {name: 'Setup'});
   await setup.getByRole('button', {name: /^Dates/}).click();
-  await expect(setup.getByRole('group', {name: 'Start date'})).toBeVisible();
-  await expect(setup.getByRole('button', {name: 'Add end date'})).toBeVisible();
+  // It starts on the phase's own dates (1 – 21 Sep 2026), so the end date is there to remove, not to add.
+  await expect(setup.getByRole('group', {name: 'Start date'}).getByRole('spinbutton', {name: /^day/})).toHaveText('1');
+  await expect(setup.getByRole('group', {name: 'End date'}).getByRole('spinbutton', {name: /^day/})).toHaveText('21');
+  await expect(setup.getByRole('button', {name: 'Remove the end date'})).toBeVisible();
 
   await setup.getByRole('button', {name: 'Project settings'}).click();
   const dialog = page.getByRole('dialog', {name: 'Project settings'});

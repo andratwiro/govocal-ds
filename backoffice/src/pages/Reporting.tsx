@@ -3,8 +3,8 @@ import {useNavigate} from 'react-router';
 import {Copy, FileText, LayoutGrid, Pencil, Plus, SearchX, Sparkles, Trash2} from 'lucide-react';
 import {AlertDialog, Badge, Banner, Button, CheckboxGroup, ChoiceCard, ChoiceCardCheckbox, ChoiceCardGroupHeading,
   DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableOptions, DataTableRow, EmptyState,
-  MenuItem, Modal, Pagination, Panel, queue, RadioGroup, SearchField, SegmentedControl, SegmentedControlItem, Separator,
-  Tab, TableToolbar, TabList, TabPanel, TabPanels, Tabs, TextField, ToastRegion} from 'govocal-ds';
+  MenuItem, Modal, Pagination, Panel, RadioGroup, SearchField, SegmentedControl, SegmentedControlItem, Separator, Tab,
+  TableToolbar, TabList, TabPanel, TabPanels, Tabs, Text, TextField, toast} from 'govocal-ds';
 import {CONTENTS, CONTENT_GROUPS, REPORTS, type Report} from '../data-reporting';
 import {Page} from './Page';
 
@@ -15,9 +15,6 @@ const modified = (d: number) => `Modified ${d} ${d === 1 ? 'day' : 'days'} ago`;
 const editorHref = (r: Report) => `#/reporting/report-builder/${r.id}/editor`;
 const icon = (Icon: typeof Plus) => <Icon aria-hidden size={16} />;
 
-/** Instant changes say so in a Toast with Undo (docs/DECISIONS.md). */
-const toast = (title: string, description: string, undo: () => void) =>
-  queue.add({title, description, action: 'Undo', onAction: undo}, {timeout: 5000});
 
 // ── Report list: a tab per view, each a Panel over the Data table (the list shape of every admin screen) ────────
 
@@ -51,7 +48,7 @@ function ReportTable({label, reports, onAction}: {label: string; reports: Report
                 </span>
               </DataTableCell>
               <DataTableCell><span className="bo-reporting-nowrap">{r.created}</span></DataTableCell>
-              <DataTableCell><span className="bo-note bo-reporting-nowrap">{modified(r.modifiedDays)}</span></DataTableCell>
+              <DataTableCell><Text kind="small" color="meta" className="bo-reporting-nowrap">{modified(r.modifiedDays)}</Text></DataTableCell>
               <DataTableCell align="options">
                 {/* Row menus put their icons in Menu's icon slot; the removing item after a separator (Users, Tools). */}
                 <DataTableOptions aria-label={`Actions for ${r.title}`} onAction={k => onAction(r, k as RowAction)}>
@@ -130,7 +127,7 @@ function CreateReportModal({onClose, onCreate}: {onClose: () => void; onCreate: 
     <Modal title="Create a report" width="wide" isOpen onOpenChange={open => !open && onClose()} footer={footer}>
       <div className="bo-reporting-create">
         <div className="bo-reporting-form">
-          <p className="bo-note">Turn a project's results into a report you can share. Start from scratch, pick a template, or let the assistant draft it from your data.</p>
+          <Text elementType="p" kind="small" color="meta">Turn a project's results into a report you can share. Start from scratch, pick a template, or let the assistant draft it from your data.</Text>
           <TextField label="Report title" placeholder="Larkvale park renewal: project report" value={title} onChange={setTitle} autoFocus />
           {/* One pick: Choice cards in a RadioGroup (Choice card's "With icon" story). */}
           <RadioGroup label="Report template" value={template} onChange={v => setTemplate(v as Template)}>
@@ -142,7 +139,7 @@ function CreateReportModal({onClose, onCreate}: {onClose: () => void; onCreate: 
         <div className="bo-reporting-form">
           {/* The Choice card's "Checkbox group with group headings": the contents under their group's heading. */}
           <CheckboxGroup label="Report contents" defaultValue={CONTENTS.filter(c => c.on).map(c => c.id)}>
-            <p className="bo-note">Choose what this report covers. Each becomes one or more pages.</p>
+            <Text slot="description" elementType="p" kind="small" color="meta">Choose what this report covers. Each becomes one or more pages.</Text>
             {CONTENT_GROUPS.map(g => [
               <ChoiceCardGroupHeading key={g}>{g}</ChoiceCardGroupHeading>,
               ...CONTENTS.filter(c => c.group === g).map(c => (
@@ -151,7 +148,7 @@ function CreateReportModal({onClose, onCreate}: {onClose: () => void; onCreate: 
             ])}
           </CheckboxGroup>
           <div className="bo-reporting-field">
-            <span className="bo-note" aria-hidden>Length</span>
+            <Text kind="small" color="meta" aria-hidden>Length</Text>
             <SegmentedControl aria-label="Length" selectionMode="single" disallowEmptySelection defaultSelectedKeys={['standard']}>
               <SegmentedControlItem id="short">Short</SegmentedControlItem>
               <SegmentedControlItem id="standard">Standard</SegmentedControlItem>
@@ -178,14 +175,14 @@ export function Reporting() {
     const copy: Report = {...r, id: `${r.id}-copy-${Date.now()}`, title: `${r.title} (copy)`, created: '29/10/2026',
       modifiedDays: 0, owner: 'you', isNew: true};
     setReports(rs => { const i = rs.findIndex(x => x.id === r.id); return [...rs.slice(0, i + 1), copy, ...rs.slice(i + 1)]; });
-    toast('Report duplicated', copy.title, () => setReports(rs => rs.filter(x => x.id !== copy.id)));
+    toast('Report duplicated', copy.title, {action: 'Undo', onAction: () => setReports(rs => rs.filter(x => x.id !== copy.id))});
   };
   // Delete asks first, then offers Undo too (Projects).
   const destroy = (r: Report) => {
     const at = reports.findIndex(x => x.id === r.id);
     setReports(rs => rs.filter(x => x.id !== r.id));
     setDeleting(null);
-    toast('Report deleted', r.title, () => putBack(r, at));
+    toast('Report deleted', r.title, {action: 'Undo', onAction: () => putBack(r, at)});
   };
   const create = () => setCreating(true);
 
@@ -198,7 +195,7 @@ export function Reporting() {
         </TabList>
         <TabPanels>
           {TABS.map(t => (
-            <TabPanel key={t.id} id={t.id} className="react-aria-TabPanel bo-reporting-view">
+            <TabPanel key={t.id} id={t.id} className="bo-reporting-view">
               <ReportPanel tab={t} reports={reports} onAction={onAction} onCreate={create} />
             </TabPanel>
           ))}
@@ -216,7 +213,6 @@ export function Reporting() {
           {deleting.title} leaves every list, and its web link stops working.
         </AlertDialog>
       )}
-      <ToastRegion />
     </Page>
   );
 }

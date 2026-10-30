@@ -3,7 +3,7 @@ import {Navigate, useNavigate, useParams} from 'react-router';
 import {Archive, ChevronUp, Info, Link, PanelLeft, Rocket, RotateCcw, Settings, UserPlus} from 'lucide-react';
 import {ActionRow, ActionRowList, AlertDialog, Avatar, AvatarGroup, Banner, Button, Divider, IconButton, MenuItem,
   Modal, Panel, PanelSection, PhoneHeader, PhoneImage, PhonePreview, PhoneStage, ProjectHeader, PropertyList,
-  PropertyListItem, queue, StatCard, TextField, ToastRegion} from 'govocal-ds';
+  PropertyListItem, StatCard, Text, TextField, toast, VisuallyHidden} from 'govocal-ds';
 import {ME, PROJECTS, type Project} from '../data';
 import {NO_OVERVIEW, OVERVIEWS, type NewPhase, type Overview} from '../data-project';
 import {AddPhase, CHECKLIST, CHECKLIST_TAB, CardStub, ChecklistStep, ProjectRail, ProjectSettings, useDeletedPhases,
@@ -19,7 +19,6 @@ const NEXT: Record<PubStatus, {to: PubStatus; label: string}> = {
 const NEXT_ICON = {Draft: Rocket, Published: Archive, Archived: RotateCcw};
 const DONE: Record<PubStatus, string> = {Draft: 'Project back in draft', Published: 'Project published', Archived: 'Project archived'};
 // Copying a link or sending an invitation is done at once: a Toast says so.
-const toast = (title: string) => queue.add({title}, {timeout: 5000});
 
 // A project's own page, after the prototype's live project screen: the Project header's bar over three columns,
 // Project setup | the Participation rail | what a resident sees on a phone.
@@ -49,7 +48,7 @@ function Overview({projectId}: {projectId?: string}) {
 
   return (
     <div className="bo-phase bo-project">
-      <h1 className="bo-visually-hidden">{project.title}</h1>
+      <VisuallyHidden elementType="h1">{project.title}</VisuallyHidden>
       {/* Project header's "Share and Publish" story: the setup toggle and crumbs, who is here, Share ▾, then Publish ▾
           (a draft; an archived project too, whose menu restores it) or ● Live ▾. Unsaved setup: one Save instead. */}
       <ProjectHeader projectName={project.title} parentHref="#/projects" onTogglePanel={() => setSetupOpen(v => !v)}
@@ -94,13 +93,12 @@ function Overview({projectId}: {projectId?: string}) {
       </Modal>
       <AlertDialog title={confirm ? `${NEXT[status].label}?` : ''} isOpen={confirm !== null} onOpenChange={v => { if (!v) setConfirm(null); }}
         confirmLabel={NEXT[status].label} onConfirm={() => { if (confirm) { setStatus(confirm); toast(DONE[confirm]); } setConfirm(null); }}>
-        <p className="bo-note bo-phase-flush">
+        <Text elementType="p" kind="small" color="meta">
           {status === 'Draft' ? 'Residents can see the project and take part as soon as it is published.'
             : status === 'Published' ? 'Residents can still read the project, but can no longer take part.'
             : 'The project goes back to draft: only managers can see it.'}
-        </p>
+        </Text>
       </AlertDialog>
-      <ToastRegion />
     </div>
   );
 }

@@ -160,7 +160,7 @@ test('sorting by name orders the rows, and pressing again flips them', async ({p
 
 test('users names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/users');
-  const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
+  const gaps = await page.locator('[data-missing-part]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-missing-part')))]);
   expect(gaps).toEqual([]);
 });
 
@@ -225,7 +225,7 @@ test('Invite users opens the invitations page: invite by email, then the list of
   await page.getByRole('textbox', {name: 'Email addresses'}).fill('new1@example.org, new2@example.org');
   for (const f of ['Role', 'Add to a group']) await expect(page.getByRole('button', {name: new RegExp(f)}).first()).toBeVisible();
   await page.getByRole('textbox', {name: 'Invitation message'}).fill('Join us on the platform.');
-  a11yReport(await axeOn(page, '.bo-page'));
+  a11yReport(await axeOn(page, 'main'));
   await page.getByRole('button', {name: 'Send invites'}).click();
   await expect(toast(page).first()).toContainText('2 invitations sent');
   await tabs.getByRole('tab', {name: 'All invitations'}).click();
@@ -299,7 +299,7 @@ test('Seats overview shows seats used and available, with the admins and manager
   }
   await expect(page.getByRole('grid', {name: 'Admins'}).getByRole('row')).toHaveCount(3);
   await expect(page.getByRole('grid', {name: 'Managers'}).getByRole('row', {name: /Manager C/})).toBeVisible();
-  a11yReport(await axeOn(page, '.bo-page'));
+  a11yReport(await axeOn(page, 'main'));
   await page.getByRole('link', {name: 'Users'}).first().click();
   await expect(page).toHaveURL(/#\/users$/);
 });
@@ -321,7 +321,7 @@ test('a row opens the user profile: name, email, role, joined and participation'
   await expect(page.getByText('June 12, 2025')).toBeVisible();
   const done = page.getByRole('region', {name: 'Participation'});
   for (const k of ['Ideas', 'Comments', 'Votes', 'Projects']) await expect(done.getByText(k, {exact: true})).toBeVisible();
-  a11yReport(await axeOn(page, '.bo-page'));
+  a11yReport(await axeOn(page, 'main'));
   await page.getByRole('button', {name: 'Make platform admin'}).click();
   await expect(toast(page).first()).toContainText('Manager C is now a platform admin');
 });

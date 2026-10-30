@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react';
 import {Outlet, useLocation, useMatch} from 'react-router';
 import {Bell, BookOpen, Languages, LogOut, MessageSquare, FileChartColumn, Flag, Inbox, LifeBuoy, ScrollText, User, UserCheck, Users, Building2} from 'lucide-react';
-import {Avatar, Button, Menu, MenuItem, MenuTrigger, NotificationList, Separator, SideNav, SideNavButton, SideNavGroup,
-  SideNavHome, SideNavLink, SubmenuTrigger} from 'govocal-ds';
+import {AppFrame, Avatar, Button, Menu, MenuItem, MenuTrigger, NotificationList, Separator, SideNav, SideNavButton, SideNavGroup,
+  SideNavHome, SideNavLink, Stack, SubmenuTrigger} from 'govocal-ds';
 import {Dialog, DialogTrigger, Popover} from 'govocal-ds/base';
 import {NAV} from './nav';
 import {ME, INPUTS_NEEDING_FEEDBACK, UNREAD_NOTIFICATIONS, NOTIFICATIONS, OLDER_NOTIFICATIONS, LOCALES, SUPPORT_LINKS, type SidebarNotification} from './data-sidebar';
@@ -38,9 +38,7 @@ export function Layout() {
   );
 
   return (
-    <div className={folded ? 'bo-app bo-phase-shell' : 'bo-app'}>
-      {/* Sticky, so the dark nav runs the window's full height on pages taller than it. */}
-      <div className="bo-app-nav">
+    <AppFrame isNavFolded={folded} nav={
         <SideNav aria-label="Main" isFolded={folded}>
           <SideNavHome href="#/platform" />
           <SideNavGroup>{NAV.slice(0, BOTTOM_FROM).map(link)}</SideNavGroup>
@@ -51,7 +49,7 @@ export function Layout() {
                 count={unread || undefined} countLabel={`${unread} unread`} />
               <Popover placement="end bottom" showArrow={false}>
                 <Dialog aria-label="Notifications">
-                  <div className="bo-shell-notifications">
+                  <Stack gap="4">
                     <NotificationList
                       items={notifications.map(n => {
                         const Icon = KIND_ICON[n.kind];
@@ -64,7 +62,7 @@ export function Layout() {
                         Show older notifications
                       </Button>
                     )}
-                  </div>
+                  </Stack>
                 </Dialog>
               </Popover>
             </DialogTrigger>
@@ -103,8 +101,8 @@ export function Layout() {
             </MenuTrigger>
           </SideNavGroup>
         </SideNav>
-      </div>
-      <main className="bo-main"><Outlet /></main>
-    </div>
+      }>
+      <Outlet />
+    </AppFrame>
   );
 }

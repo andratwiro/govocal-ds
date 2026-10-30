@@ -5,10 +5,10 @@ import {ArrowDown, ArrowUp, Bold, CalendarDays, ChartBar, ChartColumn, ChartLine
   SeparatorHorizontal, Send, Sparkles, Trash2, Type, X, ZoomIn, ZoomOut, Folder, LayoutGrid, FileType} from 'lucide-react';
 import {Avatar, Badge, Banner, BarRow, Button, type ChartColor, ChartLegend, type ChartLegendItem, ChoiceCard,
   DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableRow, Divider, EmptyState,
-  IconButton, LineChart, Menu, MenuItem, MenuTrigger, Modal, MultilingualTextField, Panel, PropertyList, PropertyListItem, queue, RadioGroup,
-  RichTextToolbarButton, SegmentedControl, SegmentedControlItem, Select, SelectItem, SidePanel, SidePanelSection,
-  Skeleton, StatTile, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Text, TextArea, TextField, ToastRegion, Tooltip,
-  TooltipTrigger} from 'govocal-ds';
+  IconButton, LineChart, Menu, MenuItem, MenuTrigger, Modal, MultilingualTextField, Panel, PropertyList,
+  PropertyListItem, RadioGroup, RichTextToolbarButton, SegmentedControl, SegmentedControlItem, Select, SelectItem,
+  SidePanel, SidePanelSection, Skeleton, StatTile, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Text, TextArea,
+  TextField, toast, Tooltip, TooltipTrigger} from 'govocal-ds';
 import {Disclosure, DisclosureGroup, DisclosureHeader, DisclosurePanel, GridList, GridListHeader, GridListItem,
   GridListSection, Toolbar, Tree, TreeItem, TreeItemContent} from 'govocal-ds/base';
 import {REPORTS} from '../data-reporting';
@@ -26,8 +26,6 @@ import {Page} from './Page';
 
 const GAPS = ['Page stage', 'Block frame', 'Figure', 'Quote', 'Map', 'Chat', 'Activity feed', 'Sortable list'];
 const n = (v: number) => v.toLocaleString('en');
-const toast = (title: string, description?: string, undo?: () => void) =>
-  queue.add({title, description, ...(undo ? {action: 'Undo', onAction: undo} : {})}, {timeout: 6000});
 
 const KIND: Record<BlockKind, {label: string; icon: typeof Type}> = {
   title: {label: 'Title page', icon: FileText},
@@ -118,13 +116,13 @@ function FigureStandIn({figure, lang, legend, truncation, showFinding = true, sh
     <Gap name="Figure">
       <figure className="bo-report-figure">
         {showFinding && <h4 className="bo-report-finding">{words(figure, lang, 'finding')}</h4>}
-        <p className="bo-note">{words(figure, lang, 'measure')}</p>
+        <Text elementType="p" kind="small" color="meta">{words(figure, lang, 'measure')}</Text>
         <div className="bo-report-figure-body">{children}</div>
         {legend}
         <figcaption className="bo-report-foot">
-          {truncation && <span className="bo-note">{truncation}</span>}
-          {note && <span className="bo-note">{note}</span>}
-          {showSource && <span className="bo-note">Source: {figure.source}</span>}
+          {truncation && <Text kind="small" color="meta">{truncation}</Text>}
+          {note && <Text kind="small" color="meta">{note}</Text>}
+          {showSource && <Text kind="small" color="meta">Source: {figure.source}</Text>}
         </figcaption>
       </figure>
     </Gap>
@@ -143,7 +141,7 @@ function Bars({block, lang}: {block: Extract<Block, {kind: 'bars'}>; lang: Lang}
     <FigureStandIn figure={block.figure} lang={lang} truncation={cut}>
       <div className="bo-report-bars">
         {rows.map(r => r.value === undefined
-          ? <BarRow key={r.label} label={<>{r.label} <span className="bo-note">{r.missing}</span></>} />
+          ? <BarRow key={r.label} label={<>{r.label} <Text kind="small" color="meta">{r.missing}</Text></>} />
           : <BarRow key={r.label} label={r.label} percent={(r.value / max) * 100} value={block.showValues ? n(r.value) : ''}
               barColor={r.named ? '--gv-chart-bar' : '--gv-chart-pass'} />)}
       </div>
@@ -179,13 +177,13 @@ function Quotes({block, lang}: {block: Extract<Block, {kind: 'quotes'}>; lang: L
     <FigureStandIn figure={block.figure} lang={lang}>
       <div className="bo-report-quotes" data-layout={block.layout}>
         {block.quotes.map(q => (
-          <Gap key={q.author} name="Quote">
+          <Gap key={q.author} name="Quote" className="bo-report-start">
             <blockquote className="bo-report-quote">
               <Badge variant="outlined">{q.tag}</Badge>
               <p>“{q.words}”</p>
               <footer className="bo-report-person">
                 {block.showFaces && <Avatar initials={q.initials} size={28} />}
-                <span className="bo-report-person-text"><span>{q.author}</span><span className="bo-note">{q.meta}</span></span>
+                <span className="bo-report-person-text"><span>{q.author}</span><Text kind="small" color="meta">{q.meta}</Text></span>
               </footer>
             </blockquote>
           </Gap>
@@ -212,21 +210,21 @@ function MapBlock({block, lang}: {block: Extract<Block, {kind: 'map'}>; lang: La
     <FigureStandIn figure={block.figure} lang={lang} legend={
       <div className="bo-report-legends">
         {block.shade !== 'none' && (
-          <div className="bo-report-legend"><span className="bo-note">Districts: {SHADES[block.shade]}</span>
+          <div className="bo-report-legend"><Text kind="small" color="meta">Districts: {SHADES[block.shade]}</Text>
             <ChartLegend align="start" variant="square" items={steps.map((s, i) => ({label: s, color: `blue-${i + 1}` as ChartColor}))} /></div>
         )}
         {layers.length > 0 && (
-          <div className="bo-report-legend"><span className="bo-note">On top</span><ChartLegend align="start" items={layers} /></div>
+          <div className="bo-report-legend"><Text kind="small" color="meta">On top</Text><ChartLegend align="start" items={layers} /></div>
         )}
       </div>
     }>
       <Gap name="Map">
         <div className="bo-report-map">
-          <p className="bo-note">
+          <Text elementType="p" kind="small" color="meta">
             8 districts{block.shade !== 'none' ? `, shaded by ${SHADES[block.shade].toLowerCase()}` : ''}
             {block.layers.ideas ? `; 386 idea pins${tag.id !== 'none' ? `, those tagged ${tag.label.toLowerCase()} highlighted` : ''}` : ''}
             {block.streets ? '; over the street map' : ''}.
-          </p>
+          </Text>
         </div>
       </Gap>
     </FigureStandIn>
@@ -265,7 +263,7 @@ function BlockBody({block, lang, nums, pageOf, blocks, reportTitle}: {
     case 'title':
       return (
         <div className="bo-report-title-page">
-          <p className="bo-note">{block.kicker}</p>
+          <Text elementType="p" kind="small" color="meta">{block.kicker}</Text>
           <div className="bo-report-title-words">
             <h2 className="bo-report-title">{block.title || reportTitle}</h2>
             <p>{block.subtitle}</p>
@@ -283,13 +281,13 @@ function BlockBody({block, lang, nums, pageOf, blocks, reportTitle}: {
             {outlineOf(blocks).filter(o => o.block.kind === 'section').map(({block: s, children}) => (
               <li key={s.id}>
                 <span className="bo-report-toc-row">
-                  <span className="bo-note">{nums.get(s.id)}</span><span>{(s as Extract<Block, {kind: 'section'}>).heading}</span>
-                  <span className="bo-note">{pageOf.get(s.id)}</span>
+                  <Text kind="small" color="meta">{nums.get(s.id)}</Text><span>{(s as Extract<Block, {kind: 'section'}>).heading}</span>
+                  <Text kind="small" color="meta">{pageOf.get(s.id)}</Text>
                 </span>
                 {block.showSub && children.filter(c => c.kind === 'text' && c.heading).map(c => (
                   <span key={c.id} className="bo-report-toc-row" data-sub>
-                    <span /><span className="bo-note">{(c as Extract<Block, {kind: 'text'}>).heading}</span>
-                    <span className="bo-note">{pageOf.get(c.id)}</span>
+                    <span /><Text kind="small" color="meta">{(c as Extract<Block, {kind: 'text'}>).heading}</Text>
+                    <Text kind="small" color="meta">{pageOf.get(c.id)}</Text>
                   </span>
                 ))}
               </li>
@@ -302,7 +300,7 @@ function BlockBody({block, lang, nums, pageOf, blocks, reportTitle}: {
       const body = lang === 'fr' && block.fr?.body ? block.fr.body : block.body;
       return (
         <div className="bo-report-text">
-          <p className="bo-note">{nums.get(block.id)}</p>
+          <Text elementType="p" kind="small" color="meta">{nums.get(block.id)}</Text>
           <h3 className="bo-report-heading">{heading}</h3>
           {block.bullets?.length
             ? <ul className="bo-report-bullets">{block.bullets.map(t => <li key={t}>{t}</li>)}</ul>
@@ -323,7 +321,7 @@ function BlockBody({block, lang, nums, pageOf, blocks, reportTitle}: {
     case 'space': return <div className="bo-report-space" data-size={block.size} />;
     case 'divider': return <Divider />;
     case 'break':
-      return <div className="bo-report-break"><Divider /><span className="bo-note">Page break</span><Divider /></div>;
+      return <div className="bo-report-break"><Divider /><Text kind="small" color="meta">Page break</Text><Divider /></div>;
     case 'numbers': return <Numbers block={block} />;
     case 'bars': return <Bars block={block} lang={lang} />;
     case 'compare': return <Comparison block={block} lang={lang} />;
@@ -442,7 +440,7 @@ function BlockFrame({block, isSelected, onSelect, onDeselect, actions, children}
       data-selected={isSelected || undefined} data-kind={block.kind}
       onClickCapture={() => !isSelected && onSelect()} onKeyDown={onKeyDown} onKeyDownCapture={onKeyDownCapture}>
       {isSelected ? (
-        <Gap name="Block frame">
+        <Gap name="Block frame" className="bo-report-frame">
           <div className="bo-report-chrome">
             <Badge variant="value">{block.name}</Badge>
             <BlockToolbar block={block} actions={actions} />
@@ -461,9 +459,9 @@ function OutlineRow({block, num, page}: {block: Block; num?: string; page?: numb
   return (
     <TreeItemContent>
       <span className="bo-report-row">
-        {num ? <span className="bo-note">{num}</span> : <Icon aria-hidden size={16} />}
+        {num ? <Text kind="small" color="meta">{num}</Text> : <Icon aria-hidden size={16} />}
         <span className="bo-report-row-name">{block.name}</span>
-        {page !== undefined && <span className="bo-note">{page}</span>}
+        {page !== undefined && <Text kind="small" color="meta">{page}</Text>}
       </span>
     </TreeItemContent>
   );
@@ -501,7 +499,7 @@ function Outline({blocks, nums, pageOf, selected, onSelect, onAdd}: {
         </Tree>
       ) : (
         <div className="bo-report-stack">
-          <p className="bo-note">No widgets in this report yet.</p>
+          <Text elementType="p" kind="small" color="meta">No widgets in this report yet.</Text>
           <Button variant="secondary" size={32} onPress={onAdd}><Plus aria-hidden size={16} />Add widget</Button>
         </div>
       )}
@@ -536,7 +534,7 @@ function Library({onAdd, onClose}: {onAdd: (kind: BlockKind) => void; onClose: (
                   <GridListItem key={it.kind} id={`${g.group}:${it.kind}`} textValue={it.label}>
                     <span className="bo-report-widget">
                       <Icon aria-hidden size={16} />
-                      <span className="bo-report-widget-text"><span>{it.label}</span><Text slot="description" className="bo-note">{it.description}</Text></span>
+                      <span className="bo-report-widget-text"><span>{it.label}</span><Text slot="description" kind="small" color="meta">{it.description}</Text></span>
                     </span>
                   </GridListItem>
                 );
@@ -557,13 +555,13 @@ function Assistant({messages, suggestions, onAsk}: {messages: Message[]; suggest
   const [draft, setDraft] = useState('');
   const send = () => { if (draft.trim()) { onAsk(draft.trim()); setDraft(''); } };
   return (
-    <Gap name="Chat">
+    <Gap name="Chat" className="bo-report-start">
       <div className="bo-report-chat">
         <ol className="bo-report-messages" aria-label="Conversation" aria-live="polite">
           {messages.map((m, i) => (
             <li key={i} className="bo-report-message" data-from={m.from}>
               {m.from === 'you' ? <Badge>{m.text}</Badge> : <p>{m.text}</p>}
-              {m.meta && <span className="bo-note">{m.meta}</span>}
+              {m.meta && <Text kind="small" color="meta">{m.meta}</Text>}
             </li>
           ))}
         </ol>
@@ -586,7 +584,7 @@ function Assistant({messages, suggestions, onAsk}: {messages: Message[]; suggest
 function HistoryFeed({entries, onRestore}: {entries: HistoryEntry[]; onRestore: (e: HistoryEntry) => void}) {
   const days = [...new Set(entries.map(e => e.day))];
   return (
-    <Gap name="Activity feed">
+    <Gap name="Activity feed" className="bo-report-start">
       {days.map(d => (
         <SidePanelSection key={d} title={d}>
           <ol className="bo-report-feed">
@@ -595,10 +593,10 @@ function HistoryFeed({entries, onRestore}: {entries: HistoryEntry[]; onRestore: 
                 <Avatar initials={e.initials} size={28} />
                 <div className="bo-report-entry-body">
                   <p><strong>{e.who}</strong> {e.what}</p>
-                  <span className="bo-note">{e.when}{e.current ? ' · Showing now' : ''}</span>
+                  <Text kind="small" color="meta">{e.when}{e.current ? ' · Showing now' : ''}</Text>
                   {e.prompt && <blockquote className="bo-report-prompt"><p>“{e.prompt}”</p></blockquote>}
                   {e.blocks && <span className="bo-report-chips">{e.blocks.map(b => <Badge key={b} variant="outlined">{b}</Badge>)}</span>}
-                  {e.detail && <span className="bo-note">{e.detail}</span>}
+                  {e.detail && <Text kind="small" color="meta">{e.detail}</Text>}
                   {!e.current && <Button variant="quiet" size={32} onPress={() => onRestore(e)}>Restore this version</Button>}
                 </div>
               </li>
@@ -647,7 +645,7 @@ function Pick<K extends string>({label, value, options, onChange}: {label: strin
 function Settings({block, lang, patch}: {block: Block; lang: Lang; patch: (p: Partial<Block>) => void}) {
   const figure = 'figure' in block && block.figure
     ? <FigureFields block={block as Block & {figure: Figure}} lang={lang} onChange={figure => patch({figure} as Partial<Block>)} /> : null;
-  const written = <p className="bo-note">Written by the assistant from platform data on 2 October 2026. The bars named in the finding are highlighted; the rest stay grey.</p>;
+  const written = <Text elementType="p" kind="small" color="meta">Written by the assistant from platform data on 2 October 2026. The bars named in the finding are highlighted; the rest stay grey.</Text>;
   switch (block.kind) {
     case 'title':
       return (
@@ -660,7 +658,7 @@ function Settings({block, lang, patch}: {block: Block; lang: Lang; patch: (p: Pa
     case 'contents':
       return (
         <SidePanelSection>
-          <p className="bo-note">The contents follow the sections: their numbers and pages update as the report changes.</p>
+          <Text elementType="p" kind="small" color="meta">The contents follow the sections: their numbers and pages update as the report changes.</Text>
           <Switch isSelected={block.showSub} onChange={showSub => patch({showSub})}>List the text headings under each section</Switch>
         </SidePanelSection>
       );
@@ -671,7 +669,7 @@ function Settings({block, lang, patch}: {block: Block; lang: Lang; patch: (p: Pa
       const set = (k: 'heading' | 'body', v: string) => patch(lang === 'en' ? {[k]: v} : {fr: {...fr, [k]: v}} as Partial<Block>);
       return (
         <SidePanelSection>
-          <p className="bo-note">Edit the words here; the block’s toolbar on the page sets bold, italic and a list.</p>
+          <Text elementType="p" kind="small" color="meta">Edit the words here; the block’s toolbar on the page sets bold, italic and a list.</Text>
           {/* The heading in every report language; the page's editing-language Select picks the one shown. */}
           <MultilingualTextField label={block.kind === 'section' ? 'Section heading' : 'Heading (optional)'}
             locales={REPORT_LOCALES} locale={lang} showLocaleSwitcher={false}
@@ -698,9 +696,9 @@ function Settings({block, lang, patch}: {block: Block; lang: Lang; patch: (p: Pa
     case 'break':
       return (
         <SidePanelSection>
-          <p className="bo-note">{block.kind === 'break'
+          <Text elementType="p" kind="small" color="meta">{block.kind === 'break'
             ? 'A page break starts a new page here. It has nothing to set: move or delete it from its toolbar.'
-            : 'A divider draws a line between parts of a page. It has nothing to set: move or delete it from its toolbar.'}</p>
+            : 'A divider draws a line between parts of a page. It has nothing to set: move or delete it from its toolbar.'}</Text>
         </SidePanelSection>
       );
     case 'numbers':
@@ -714,7 +712,7 @@ function Settings({block, lang, patch}: {block: Block; lang: Lang; patch: (p: Pa
             </RadioGroup>
           </SidePanelSection>
           <SidePanelSection title={`Numbers · ${block.items.length} of 4`}>
-            <Gap name="Sortable list">
+            <Gap name="Sortable list" className="bo-report-start">
               <DisclosureGroup>
                 {block.items.map((it, i) => {
                   const set = (k: 'label' | 'value' | 'note', v: string) =>
@@ -864,7 +862,7 @@ function DataTab({block, onSource, onRefresh}: {block: Block; onSource: (s: Sour
           <span className="bo-report-row">
             <Icon aria-hidden size={16} />
             <span className="bo-report-row-name">{s.name}</span>
-            {s.kind !== 'project' && <span className="bo-note">{all(s.children ?? []).filter(c => c.kind === 'project').length}</span>}
+            {s.kind !== 'project' && <Text kind="small" color="meta">{all(s.children ?? []).filter(c => c.kind === 'project').length}</Text>}
           </span>
         </TreeItemContent>
         {s.children?.map(renderNode)}
@@ -906,7 +904,7 @@ export function ReportView() {
   if (!title) {
     return (
       <Page title="Report not found" crumbs={[{key: 'reporting', label: 'Reporting', href: '#/reporting'}]}>
-        <p className="bo-note">This report does not exist.</p>
+        <Text elementType="p" kind="small" color="meta">This report does not exist.</Text>
       </Page>
     );
   }
@@ -977,7 +975,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
     setSelected(null);
     touched();
     if (next) focusBlock(next.id);
-    toast(`${gone.name} deleted`, undefined, () => { insert(gone, at); setSelected(gone.id); focusBlock(gone.id); });
+    toast(`${gone.name} deleted`, undefined, {action: 'Undo', onAction: () => { insert(gone, at); setSelected(gone.id); focusBlock(gone.id); }});
   };
   const move = (id: string, d: -1 | 1) => {
     const at = blocks.findIndex(b => b.id === id);
@@ -994,7 +992,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
     setSelected(copy.id);
     touched();
     focusBlock(copy.id, 'duplicate');
-    toast(`${copy.name} duplicated`, 'The copy is right under it.', () => { setBlocks(bs => bs.filter(b => b.id !== copy.id)); setSelected(id); });
+    toast(`${copy.name} duplicated`, 'The copy is right under it.', {action: 'Undo', onAction: () => { setBlocks(bs => bs.filter(b => b.id !== copy.id)); setSelected(id); }});
   };
   const add = (kind: BlockKind) => {
     const b = newBlock(kind);
@@ -1004,7 +1002,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
     select(b.id);
     touched();
     focusBlock(b.id);
-    toast(`${KIND[kind].label} added`, undefined, () => { setBlocks(bs => bs.filter(x => x.id !== b.id)); setSelected(null); });
+    toast(`${KIND[kind].label} added`, undefined, {action: 'Undo', onAction: () => { setBlocks(bs => bs.filter(x => x.id !== b.id)); setSelected(null); }});
   };
 
   const runGenerate = () => {
@@ -1028,7 +1026,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
       patch(summary.id, {bullets: before.slice(0, 3)} as Partial<Block>);
       setMessages(m => [...m, you, {from: 'assistant', text: `I cut the executive summary from ${before.length} points to 3, keeping the findings with the strongest evidence.`, meta: '1 section changed. The version before is kept.'}]);
       setHistory(h => [{id: `h-${Date.now()}`, day: 'Today', who: 'Assistant', initials: 'AI', what: 'changed the report', when: 'Today, just now · asked by you', prompt: text, blocks: [summary.name]}, ...h.map(e => ({...e, current: false}))]);
-      toast('The assistant changed 1 section', undefined, () => patch(summary.id, {bullets: before} as Partial<Block>));
+      toast('The assistant changed 1 section', undefined, {action: 'Undo', onAction: () => patch(summary.id, {bullets: before} as Partial<Block>)});
       return;
     }
     if (/remove the reach/i.test(text) && reach) {
@@ -1038,7 +1036,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
       setBlocks(bs => bs.filter(b => !cut.includes(b)));
       touched();
       setMessages(m => [...m, you, {from: 'assistant', text: `I removed the Reach section and its ${cut.length - 1} widgets. The contents and page numbers follow.`, meta: `${cut.length} widgets removed. The version before is kept.`}]);
-      toast('The assistant removed 1 section', undefined, () => setBlocks(bs => [...bs.slice(0, at), ...cut, ...bs.slice(at)]));
+      toast('The assistant removed 1 section', undefined, {action: 'Undo', onAction: () => setBlocks(bs => [...bs.slice(0, at), ...cut, ...bs.slice(at)])});
       return;
     }
     setMessages(m => [...m, you, {from: 'assistant', text: 'Who took part is in section 05: 3,600 identifiable participants, with recorded rates highest in North Quarter. Two districts are suppressed or have no data, and the report says why.', meta: 'Nothing changed.'}]);
@@ -1076,8 +1074,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
           </Select>
           <MenuTrigger placement="bottom end">
             <Button variant="secondary" size={32} hasMenu><Download aria-hidden size={16} />Download</Button>
-            <Menu aria-label="Download" onAction={k => toast(k === 'pdf' ? 'Preparing the PDF' : 'Preparing the Word file',
-              `${title}.${k === 'pdf' ? 'pdf' : 'docx'} downloads when it is ready.`)}>
+            <Menu aria-label="Download" onAction={k => toast(k === 'pdf' ? 'Preparing the PDF' : 'Preparing the Word file', `${title}.${k === 'pdf' ? 'pdf' : 'docx'} downloads when it is ready.`)}>
               <MenuItem id="pdf" icon={<FileText size={16} />}>PDF</MenuItem>
               <MenuItem id="word" icon={<Type size={16} />} badge={<Badge variant="outlined">Beta</Badge>}>Word</MenuItem>
             </Menu>
@@ -1091,19 +1088,19 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
           : <Outline blocks={blocks} nums={nums} pageOf={pageOf} selected={selected} onSelect={select} onAdd={() => setLibrary(true)} />}
 
         <section className="bo-report-canvas" aria-label="Report pages">
-          <Gap name="Page stage">
+          <Gap name="Page stage" className="bo-report-stage-frame">
             <Toolbar aria-label="Zoom and pages" className="bo-report-pagebar">
               <TooltipTrigger>
                 <IconButton aria-label="Zoom out" isDisabled={zoom === ZOOMS[0]} onPress={() => { setFit(false); setZoom(ZOOMS[Math.max(0, ZOOMS.indexOf(zoom) - 1)]); }}><ZoomOut aria-hidden size={16} /></IconButton>
                 <Tooltip placement="bottom">Zoom out</Tooltip>
               </TooltipTrigger>
-              <span className="bo-note" aria-live="polite">{fit ? 'Fit' : `${zoom}%`}</span>
+              <Text kind="small" color="meta" aria-live="polite">{fit ? 'Fit' : `${zoom}%`}</Text>
               <TooltipTrigger>
                 <IconButton aria-label="Zoom in" isDisabled={zoom === ZOOMS[ZOOMS.length - 1]} onPress={() => { setFit(false); setZoom(ZOOMS[Math.min(ZOOMS.length - 1, ZOOMS.indexOf(zoom) + 1)]); }}><ZoomIn aria-hidden size={16} /></IconButton>
                 <Tooltip placement="bottom">Zoom in</Tooltip>
               </TooltipTrigger>
               <Button variant="quiet" size={32} aria-pressed={fit} onPress={() => setFit(f => !f)}>Fit</Button>
-              <span className="bo-note">{pages.length ? `Page ${Math.min(page, pages.length)} of ${pages.length}` : 'No pages'}</span>
+              <Text kind="small" color="meta">{pages.length ? `Page ${Math.min(page, pages.length)} of ${pages.length}` : 'No pages'}</Text>
             </Toolbar>
             <div ref={stage} className="bo-report-stage" onScroll={onScroll}>
               <div className="bo-report-sheets" data-zoom={fit ? undefined : zoom} data-fit={fit || undefined}>
@@ -1126,7 +1123,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
                         </BlockFrame>
                       ))}
                     </div>
-                    {i > 0 && <p className="bo-note bo-report-sheet-foot"><span>{title}</span><span>{i + 1}</span></p>}
+                    {i > 0 && <Text elementType="p" kind="small" color="meta" className="bo-report-sheet-foot"><span>{title}</span><span>{i + 1}</span></Text>}
                   </article>
                 )) : (
                   <article className="bo-report-sheet" aria-label="Page 1">
@@ -1153,7 +1150,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
                 </div>
               ) : undefined}>
               {right === 'history' ? (
-                <HistoryFeed entries={history} onRestore={e => toast('Version restored', `The report is back as it was ${e.when.split(' · ')[0].toLowerCase()}.`, () => {})} />
+                <HistoryFeed entries={history} onRestore={e => toast('Version restored', `The report is back as it was ${e.when.split(' · ')[0].toLowerCase()}.`, {action: 'Undo', onAction: () => {}})} />
               ) : block ? (
                 DATA_KINDS.includes(block.kind) ? (
                   <Tabs key={block.id}>
@@ -1165,7 +1162,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
                       <TabPanel id="settings"><Settings block={block} lang={lang} patch={p => patch(block.id, p)} /></TabPanel>
                       <TabPanel id="data">
                         <DataTab block={block} onSource={setSource}
-                          onRefresh={() => toast('Data refreshed', `${block.name} now shows today’s numbers.`, () => {})} />
+                          onRefresh={() => toast('Data refreshed', `${block.name} now shows today’s numbers.`, {action: 'Undo', onAction: () => {}})} />
                       </TabPanel>
                     </TabPanels>
                   </Tabs>
@@ -1186,7 +1183,7 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
         </>}>
         <div className="bo-report-stack">
           <p>The assistant writes a first version from the <strong>6 projects across 3 spaces</strong> in {REPORT.folder}: a summary, the numbers, the charts and what happens next. You can change everything afterwards.</p>
-          <p className="bo-note">It takes a few minutes. You can leave this page while it runs.</p>
+          <Text elementType="p" kind="small" color="meta">It takes a few minutes. You can leave this page while it runs.</Text>
         </div>
       </Modal>
 
@@ -1201,11 +1198,10 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
               <PropertyListItem label="Coverage">{source.coverage}</PropertyListItem>
               <PropertyListItem label="Counted">Submitted surveys, ideas and votes linked to participant accounts</PropertyListItem>
             </PropertyList>
-            <p className="bo-note">The project’s own screens hold the records and their export.</p>
+            <Text elementType="p" kind="small" color="meta">The project’s own screens hold the records and their export.</Text>
           </div>
         )}
       </Modal>
-      <ToastRegion />
     </Page>
   );
 }

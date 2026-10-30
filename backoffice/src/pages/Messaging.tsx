@@ -4,8 +4,8 @@ import {BarChart3, CircleCheck, Clock, Copy, Mail, MessageSquare, Pencil, Plus, 
 import {AlertDialog, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty,
   DataTableHeader, DataTableOptions, DataTableRow, DataTableStack, Divider, EmptyState, FilterChips, type FilterFacet,
   FilterMenu, type FilterValue, MenuItem, NotificationEmail, NotificationRow, NotificationRowList, Pagination, Panel,
-  queue, RichTextEditor, SearchField, SectionLabel, Select, SelectItem, StatTile, StatusBadge, Tab, TableToolbar,
-  TabList, TabPanel, TabPanels, Tabs, TextField, ToastRegion} from 'govocal-ds';
+  RichTextEditor, SearchField, SectionLabel, Select, SelectItem, StatTile, StatusBadge, Tab, TableToolbar, TabList,
+  TabPanel, TabPanels, Tabs, Text, TextField, toast} from 'govocal-ds';
 import {Label} from 'govocal-ds/base';
 import {AUTOMATED, GROUP_SIZES, GROUPS, SENDER, SMS, SMS_BALANCE, type AutomatedEmail, type CustomEmail} from '../data-messaging';
 import {Gap, GapLegend} from '../Gap';
@@ -15,10 +15,6 @@ import {SectionHeading} from '../SectionHeading';
 
 const n = (v: number) => v.toLocaleString('en');
 const pct = (v?: number) => (v == null ? '—' : `${v}%`);
-const toast = (title: string, description?: string) => queue.add({title, description}, {timeout: 5000});
-/** An instant change says so with Undo (docs/DECISIONS.md). */
-const undoable = (title: string, description: string, onUndo: () => void) =>
-  queue.add({title, description, action: 'Undo', onAction: onUndo}, {timeout: 5000});
 const emailsWord = (v: number) => `${n(v)} ${v === 1 ? 'email' : 'emails'}`;
 const smsWord = (v: number) => `${n(v)} ${v === 1 ? 'message' : 'messages'}`;
 
@@ -190,7 +186,7 @@ function CustomEmails() {
       const copy: CustomEmail = {...e, id: `${e.id}-copy-${++copies}`, subject: `Copy of ${e.subject}`, status: 'Draft',
         date: 'Edited 29 Oct 2026', opened: undefined, clicked: undefined};
       insertAt(copy, emails.findIndex(x => x.id === e.id) + 1);
-      undoable('Email duplicated', `${copy.subject} is a draft.`, () => setEmails(list => list.filter(x => x.id !== copy.id)));
+      toast('Email duplicated', `${copy.subject} is a draft.`, {action: 'Undo', onAction: () => setEmails(list => list.filter(x => x.id !== copy.id))});
     }
   };
   const save = (patch: Partial<CustomEmail>) => {
@@ -211,7 +207,7 @@ function CustomEmails() {
     const gone = deleting;
     const at = emails.findIndex(e => e.id === gone.id);
     setEmails(list => list.filter(e => e.id !== gone.id));
-    undoable('Draft deleted', gone.subject, () => insertAt(gone, at));
+    toast('Draft deleted', gone.subject, {action: 'Undo', onAction: () => insertAt(gone, at)});
     setDeleting(null);
   };
   return (
@@ -277,10 +273,10 @@ function EmailPreview({email}: {email: AutomatedEmail}) {
   return (
     <Gap name="Email preview">
       <dl className="bo-messaging-mailhead">
-        <dt className="bo-note">To</dt><dd>{email.who}</dd>
-        <dt className="bo-note">From</dt><dd>{SENDER.from}</dd>
-        <dt className="bo-note">Reply-To</dt><dd>{SENDER.replyTo}</dd>
-        <dt className="bo-note">Subject</dt><dd>{email.subject}</dd>
+        <Text elementType="dt" kind="small" color="meta">To</Text><dd>{email.who}</dd>
+        <Text elementType="dt" kind="small" color="meta">From</Text><dd>{SENDER.from}</dd>
+        <Text elementType="dt" kind="small" color="meta">Reply-To</Text><dd>{SENDER.replyTo}</dd>
+        <Text elementType="dt" kind="small" color="meta">Subject</Text><dd>{email.subject}</dd>
       </dl>
       <Divider />
       <div className="bo-messaging-mailbody">
@@ -302,13 +298,13 @@ function AutomatedEmails() {
   const write = (id: string, v: boolean) => setOnMap(m => ({...m, [id]: v}));
   const setOn = (e: AutomatedEmail, v: boolean) => {
     write(e.id, v);
-    undoable(v ? 'Email on' : 'Email off', `${e.name} ${v ? 'goes out again' : 'is no longer sent'}.`, () => write(e.id, !v));
+    toast(v ? 'Email on' : 'Email off', `${e.name} ${v ? 'goes out again' : 'is no longer sent'}.`, {action: 'Undo', onAction: () => write(e.id, !v)});
   };
   const current = ALL_AUTOMATED.find(e => e.id === editing);
   return (
     <>
       <div className="bo-messaging-intro">
-        <p className="bo-note">Emails sent automatically when something happens on the platform. Turn one off, or open it to edit its content.</p>
+        <Text elementType="p" kind="small" color="meta">Emails sent automatically when something happens on the platform. Turn one off, or open it to edit its content.</Text>
       </div>
       <GapLegend names={['Email preview']} />
       <div className="bo-messaging-split">
@@ -398,7 +394,6 @@ export function Messaging() {
           {CHANNELS.map(c => <TabPanel key={c.id} id={c.id}><SectionHeading>{c.label}</SectionHeading>{c.body}</TabPanel>)}
         </TabPanels>
       </Tabs>
-      <ToastRegion />
     </Page>
   );
 }

@@ -1,6 +1,6 @@
 import {ArrowRight, Lock} from 'lucide-react';
 import {useNavigate} from 'react-router';
-import {Badge, Button, Card, HelpPopover, Panel, StatusBadge} from 'govocal-ds';
+import {Badge, Button, Card, HelpPopover, Inline, Panel, Stack, StatusBadge, Text, TileGrid} from 'govocal-ds';
 import {TOOLS, type Tool} from '../data-tools';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
@@ -14,24 +14,24 @@ function ToolCard({tool}: {tool: Tool}) {
       layout="stacked"
       title={tool.title}
       actions={<HelpPopover title={tool.title}><p>{tool.help}</p></HelpPopover>}>
-      <div className="bo-tools-body">
-        <Gap name="Tool illustration" inline>
-          <span className="bo-tools-art"><Icon aria-hidden size={40} strokeWidth={1.5} /></span>
+      <Stack gap="12">
+        <Gap name="Tool illustration" inline className="bo-tools-art">
+          <Icon aria-hidden size={40} strokeWidth={1.5} />
         </Gap>
-        <div className="bo-tools-tags">
+        <Inline gap="8">
           <Badge>{tool.category}</Badge>
           {tool.status && <StatusBadge status={tool.status.state}>{tool.status.label}</StatusBadge>}
           {tool.locked && <Badge icon={<Lock aria-hidden size={14} />}>Not in your plan</Badge>}
-        </div>
-        <p className="bo-tools-text">{tool.description}</p>
-        <div className="bo-tools-actions">
+        </Inline>
+        <Text elementType="p" kind="ui">{tool.description}</Text>
+        <Inline gap="16" className="bo-tools-actions">
           <Button variant={tool.locked ? 'secondary' : 'primary'} size={32} isDisabled={tool.locked}
             onPress={() => tool.route && navigate(`/tools/${tool.route}`)}>
             {tool.action}{!tool.locked && <ArrowRight aria-hidden size={16} />}
           </Button>
           {tool.learnMore && <HelpPopover title={tool.title} triggerText="Learn more"><p>{tool.learnMore}</p></HelpPopover>}
-        </div>
-      </div>
+        </Inline>
+      </Stack>
     </Card>
   );
 }
@@ -39,14 +39,14 @@ function ToolCard({tool}: {tool: Tool}) {
 export function Tools() {
   return (
     <Page title="Tools" description="Integrations, embeds and add-ons that work alongside the platform.">
-      <div className="bo-tools-stack">
+      <Stack gap="16">
         <Panel title="All tools" count={TOOLS.length} description="Open a tool to set it up. The help icon says what each one does.">
-          <ul className="bo-tools-grid" aria-label="Tools">
+          <TileGrid elementType="ul" layout="gallery" aria-label="Tools">
             {TOOLS.map(t => <li key={t.id} className="bo-tools-item"><ToolCard tool={t} /></li>)}
-          </ul>
+          </TileGrid>
         </Panel>
         <GapLegend names={['tool illustrations']} />
-      </div>
+      </Stack>
     </Page>
   );
 }

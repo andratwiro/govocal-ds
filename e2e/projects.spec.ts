@@ -34,7 +34,7 @@ test('projects follows the real admin: views, filters, a full project table', as
 // The head's action follows the tab, as in the real admin: New project, New folder, New space.
 test('the page head offers the open tab\'s action', async ({page}) => {
   await page.goto('/backoffice/#/projects');
-  const head = page.locator('.bo-page-bar');
+  const head = page.locator('main header').first();
   await expect(head.getByRole('button', {name: 'New project'})).toBeVisible();
   await page.getByRole('tab', {name: 'Folders'}).click();
   await expect(head.getByRole('button', {name: 'New folder'})).toBeVisible();
@@ -103,22 +103,22 @@ test('rows use the Data table cells, Status badge and icon button; New project o
 
 test('projects names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/projects');
-  const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
+  const gaps = await page.locator('[data-missing-part]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-missing-part')))]);
   // The project thumbnail is the Data table's DataTableThumbnail now.
   // Arrange projects reorders with buttons until the system has drag and drop.
   expect(gaps).toEqual([]);
   // Templates are Choice cards with their method's tile in the media slot: no "Template image" gap any more.
   await page.getByRole('tab', {name: 'Arrange projects'}).click();
-  await expect(page.locator('[data-gap="Drag-and-drop reordering"]').first()).toBeVisible();
+  await expect(page.locator('[data-missing-part="Drag-and-drop reordering"]').first()).toBeVisible();
   // The Calendar lists the month's projects where the real admin draws a timeline; templates have no image yet.
   await page.getByRole('tab', {name: 'Calendar'}).click();
-  await expect(page.locator('[data-gap="Project timeline"]')).toBeVisible();
+  await expect(page.locator('[data-missing-part="Project timeline"]')).toBeVisible();
   await page.getByRole('button', {name: 'New project'}).click();
   await page.getByRole('menuitem', {name: 'Use a template'}).click();
   const gallery = page.getByRole('dialog', {name: 'Start from a template'});
   await expect(gallery.locator('.gv-choice-card')).toHaveCount(9);
   await expect(gallery.locator('.gv-choice-card .gv-data-table__tile').first()).toBeVisible();
-  await expect(page.locator('[data-gap="Template image"]')).toHaveCount(0);
+  await expect(page.locator('[data-missing-part="Template image"]')).toHaveCount(0);
 });
 
 // ── First clicks: the list's own controls (the overview and phase screens are their own specs) ──
@@ -130,7 +130,7 @@ const undo = (page: import('@playwright/test').Page, title: string) =>
 const axe = async (page: import('@playwright/test').Page, selector: string) => {
   // The Gap marker's own label is scaffolding of the demo, not the page: it is left out of the check.
   await settled(page);
-  const {violations} = await new AxeBuilder({page}).include(selector).exclude('.bo-gap-label')
+  const {violations} = await new AxeBuilder({page}).include(selector).exclude('.gv-missing-part__label')
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
   a11yReport(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`));
 };
@@ -292,7 +292,7 @@ test('Folders, Spaces, Calendar and Arrange projects tabs show their views', asy
   await expect(page.getByRole('grid', {name: 'October 2026'}).getByRole('row').nth(1)).toContainText('Green Corridors for Larkvale');
   await page.getByRole('button', {name: 'Next month'}).click();
   await expect(page.getByRole('heading', {name: 'November 2026'})).toBeVisible();
-  await axe(page, '.bo-page');
+  await axe(page, 'main');
   // Before the first project starts, the month is an Empty state.
   for (let i = 0; i < 4; i++) await page.getByRole('button', {name: 'Previous month'}).click();
   await expect(page.getByText('No projects run in July 2026')).toBeVisible();

@@ -1,22 +1,20 @@
 import type {ReactNode} from 'react';
-import {type BreadcrumbItem, Breadcrumbs} from 'govocal-ds';
+import {AppFramePanel, type BreadcrumbItem, Breadcrumbs, PageHeader, Stack} from 'govocal-ds';
 
-/** A back-office page, as the prototype draws it: a white bar with the title (a sub-page's trail ends in it) and the
- * actions, then the page's modules on the grey canvas. */
+/** A back-office page, as the prototype draws it: a white bar with the Page header (a sub-page's trail above its
+ * title, the actions at the end, the line about the page under it), then the page's modules on the grey ground. */
 export function Page({title, description, actions, crumbs, children}: {
-  title: string; description?: ReactNode; actions?: ReactNode; crumbs?: BreadcrumbItem[]; children: ReactNode;
+  title: string; description?: ReactNode; actions?: ReactNode;
+  /** The parent pages; the trail ends on this page's title, as Page header's own example does. */
+  crumbs?: BreadcrumbItem[]; children: ReactNode;
 }) {
   return (
-    <div className="bo-page">
-      <header className="bo-page-bar">
-        {crumbs ? <>
-          <nav aria-label="Breadcrumbs"><Breadcrumbs items={[...crumbs, {key: 'current', label: title}]} /></nav>
-          <h1 className="bo-visually-hidden">{title}</h1>
-        </> : <h1>{title}</h1>}
-        {actions && <div className="bo-actions">{actions}</div>}
-      </header>
-      {description && <p className="bo-note bo-page-description">{description}</p>}
+    <Stack gap="8">
+      <AppFramePanel paddingInline="16" paddingBlock="12">
+        <PageHeader title={title} description={description} actions={actions}
+          breadcrumbs={crumbs && <Breadcrumbs items={[...crumbs, {key: 'current', label: title}]} />} />
+      </AppFramePanel>
       {children}
-    </div>
+    </Stack>
   );
 }

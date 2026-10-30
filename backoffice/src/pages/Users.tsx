@@ -3,9 +3,10 @@ import {useNavigate, useParams} from 'react-router';
 import {Ban, ChartColumn, Download, Mail, Pencil, Plus, SearchX, ShieldCheck, ShieldOff, Trash2, UserMinus, UserPlus,
   Users as UsersIcon, Zap} from 'lucide-react';
 import {AlertDialog, Banner, Button, ChoiceCard, DataTable, DataTableBody, DataTableCell, DataTableColumn,
-  DataTableHeader, DataTableOptions, DataTablePerson, DataTableRow, DataTableStack, EmptyState, type Key, Menu, MenuItem,
-  Modal, MultilingualTextField, type Multiloc, Panel, queue, RadioGroup, SearchField, Select, type SelectionAction, SelectionBar, SelectItem, Separator,
-  TableToolbar, TableToolbarHeading, TextField, toKeySet, ToastRegion} from 'govocal-ds';
+  DataTableHeader, DataTableOptions, DataTablePerson, DataTableRow, DataTableStack, EmptyState, type Key, Menu,
+  MenuItem, Modal, MultilingualTextField, type Multiloc, Panel, RadioGroup, SearchField, Select, type SelectionAction,
+  SelectionBar, SelectItem, Separator, TableToolbar, TableToolbarHeading, Text, TextField, toast, toKeySet,
+  VisuallyHidden} from 'govocal-ds';
 import {ListBox, ListBoxItem} from 'govocal-ds/base';
 import {LOCALES} from '../data-settings';
 import {ALL_PEOPLE, GROUPS, SEGMENTS, SMART_RULES, type Person} from '../data-users';
@@ -43,9 +44,6 @@ function usePeople() {
   const setPeople = (f: (p: Member[]) => Member[]) => set(peopleStore.people = f(peopleStore.people));
   return [people, setPeople] as const;
 }
-/** Instant changes say so in a Toast; the ones that can be taken back carry Undo (docs/DECISIONS.md). */
-export const toast = (title: string, description?: string, undo?: () => void) =>
-  queue.add({title, description, ...(undo && {action: 'Undo', onAction: undo})}, {timeout: 5000});
 const icon = (Icon: typeof Plus) => <Icon aria-hidden size={16} />;
 
 // "Resident E" → "RE".
@@ -84,8 +82,8 @@ function Count({label, count, icon, kind}: {label: string; count: number; icon?:
   return (
     <span className="bo-users-option">
       {icon}
-      <span className="bo-users-option-label">{label}{kind && <span className="bo-visually-hidden"> ({kind})</span>}</span>
-      <span className="bo-note">{count}</span>
+      <span className="bo-users-option-label">{label}{kind && <VisuallyHidden> ({kind})</VisuallyHidden>}</span>
+      <Text kind="small" color="meta" slot={null}>{count}</Text>
     </span>
   );
 }
@@ -110,7 +108,7 @@ function Sidebar({view, setView, all, people, onAddGroup}: {
       </div>
       <SearchField aria-label="Search groups" placeholder="Search groups" value={query} onChange={setQuery} />
       <ListBox aria-labelledby="bo-users-groups" selectionMode="single" selectedKeys={[view]} onSelectionChange={pick}
-        renderEmptyState={() => <p className="bo-note">No groups match.</p>}>
+        renderEmptyState={() => <Text elementType="p" kind="small" color="meta" slot={null}>No groups match.</Text>}>
         {groups.map(g => {
           const Icon = g.kind === 'smart' ? Zap : UsersIcon;
           return (
@@ -408,19 +406,19 @@ export function Users() {
   const save = (label: string, kind: Group['kind']) => {
     if (modal === 'edit' && group) {
       setGroups(gs => gs.map(g => (g.id === group.id ? {...g, label} : g)));
-      queue.add({title: 'Group saved'}, {timeout: 5000});
+      toast('Group saved');
     } else {
       let id = slug(label);
       while (groups.some(g => g.id === id)) id += '-2';
       setGroups(gs => [...gs, {id, label, kind, members: []}]);
-      queue.add({title: 'Group created', description: label}, {timeout: 5000});
+      toast('Group created', label);
       navigate(`/users/groups/${id}`);
     }
     setModal(null);
   };
   const remove = () => {
     setGroups(gs => gs.filter(g => g.id !== group!.id));
-    queue.add({title: 'Group deleted'}, {timeout: 5000});
+    toast('Group deleted');
     setModal(null); setSegment('all'); navigate('/users');
   };
   const addToGroup = (ids: string[], groupId: string) => {
@@ -429,8 +427,7 @@ export function Users() {
     const added = ids.filter(id => !target.members.includes(id));
     const members = (f: (m: string[]) => string[]) => setGroups(gs => gs.map(g => (g.id === groupId ? {...g, members: f(g.members)} : g)));
     members(m => [...m, ...added]);
-    toast(ids.length === 1 ? `1 user added to ${target.label}` : `${ids.length} users added to ${target.label}`, undefined,
-      () => members(m => m.filter(id => !added.includes(id))));
+    toast(ids.length === 1 ? `1 user added to ${target.label}` : `${ids.length} users added to ${target.label}`, undefined, {action: 'Undo', onAction: () => members(m => m.filter(id => !added.includes(id)))});
     setAsk(null);
   };
   // Out of a manual group at once, with Undo (the group's own list, its row menu or the Selection bar).
@@ -438,8 +435,7 @@ export function Users() {
     if (!group) return;
     const before = group.members;
     setGroups(gs => gs.map(g => (g.id === group.id ? {...g, members: g.members.filter(m => !ids.includes(m))} : g)));
-    toast(ids.length === 1 ? `1 user removed from ${group.label}` : `${ids.length} users removed from ${group.label}`, undefined,
-      () => setGroups(gs => gs.map(g => (g.id === group.id ? {...g, members: before} : g))));
+    toast(ids.length === 1 ? `1 user removed from ${group.label}` : `${ids.length} users removed from ${group.label}`, undefined, {action: 'Undo', onAction: () => setGroups(gs => gs.map(g => (g.id === group.id ? {...g, members: before} : g)))});
   };
   const setRole = (id: string, role: Person['role']) => setPeople(ps => ps.map(p => (p.id === id ? {...p, role} : p)));
   const setBlocked = (id: string, blocked: boolean) => setPeople(ps => ps.map(p => (p.id === id ? {...p, blocked} : p)));
@@ -448,14 +444,13 @@ export function Users() {
     if (a === 'ungroup') { removeFromGroup([person.id]); return; }
     if (a === 'unblock') {
       setBlocked(person.id, false);
-      toast(`${person.name} is unblocked`, 'They can sign in and take part again.', () => setBlocked(person.id, true));
+      toast(`${person.name} is unblocked`, 'They can sign in and take part again.', {action: 'Undo', onAction: () => setBlocked(person.id, true)});
       return;
     }
     // As on the profile page: the admin rights go on and off from the same item, at once, with Undo.
     const admin = person.role === 'Platform admin';
     setRole(person.id, admin ? 'Registered user' : 'Platform admin');
-    toast(admin ? `${person.name} is no longer a platform admin` : `${person.name} is now a platform admin`, undefined,
-      () => setRole(person.id, person.role));
+    toast(admin ? `${person.name} is no longer a platform admin` : `${person.name} is now a platform admin`, undefined, {action: 'Undo', onAction: () => setRole(person.id, person.role)});
   };
   const confirm = () => {
     if (!ask) return;
@@ -489,7 +484,6 @@ export function Users() {
       {(ask?.kind === 'block' || ask?.kind === 'delete') && (
         <ConfirmUserModal person={ask.person} kind={ask.kind} onClose={() => setAsk(null)} onConfirm={confirm} />
       )}
-      <ToastRegion />
     </Page>
   );
 }

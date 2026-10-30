@@ -3,18 +3,15 @@ import {ArrowLeft, ArrowRight, Download, Eye, Plus, Upload, Pencil, FileText, Sh
 import {AlertDialog, Avatar, Badge, Banner, BarRow, Button, Checkbox, CheckboxGroup, ChoiceCard, DashboardCard,
   DashboardDemographic, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableOptions,
   DataTablePerson, DataTableRow, DataTableStack, Divider, DropZone, EmptyState, FileList, HelpPopover, LegendRow,
-  LineChart, MenuItem, Modal, NumberField, Pagination, Panel, PropertyList, PropertyListItem, queue, Radio, RadioGroup,
-  Select, SelectItem, Sparkline, StatRow, StatTile, StatusBadge, Switch, Tab, TabList, TabPanel, TabPanels, Tabs,
-  TextField, ToastRegion} from 'govocal-ds';
+  LineChart, MenuItem, Modal, NumberField, Pagination, Panel, PropertyList, PropertyListItem, Radio, RadioGroup, Select,
+  SelectItem, Sparkline, StatRow, StatTile, StatusBadge, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Text,
+  TextField, toast} from 'govocal-ds';
 import {CANDIDATES, CATEGORIES, CURRENT, MANAGERS, POPUP_CONDITIONS, POPUP_SHOWN, QUARTERS, QUESTIONS, REPORTS, RESPONDENTS,
   SENTIMENT, SURVEY_ACCESS, WHO, type Report} from '../data-community-monitor';
 import {Page} from './Page';
 import {SectionHeading} from '../SectionHeading';
 
 const SECTIONS = ['Live monitor', 'Participants', 'Reports', 'Settings'];
-/** Instant changes say so in a Toast; the ones that can be taken back carry Undo (docs/DECISIONS.md). */
-const toast = (title: string, description?: string, undo?: () => void) =>
-  queue.add({title, description, ...(undo && {action: 'Undo', onAction: undo})}, {timeout: 5000});
 /** "Manager B" → "MB". */
 const initials = (name: string) => name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 const n = (v: number) => v.toLocaleString('en');
@@ -159,7 +156,7 @@ function SurveyModal({isOpen, onOpenChange}: {isOpen: boolean; onOpenChange: (o:
     <Modal title="Community monitor survey" width="wide" isOpen={isOpen} onOpenChange={onOpenChange}
       footer={<Button variant="secondary" slot="close">Close</Button>}>
       <div className="bo-community-monitor-modal">
-        <p className="bo-note">How residents see it: a short popup, eleven questions, each answered on the same five-point scale.</p>
+        <Text elementType="p" kind="small" color="meta">How residents see it: a short popup, eleven questions, each answered on the same five-point scale.</Text>
         {CATEGORIES.map(c => (
           <section key={c.id} className="bo-community-monitor-modal" aria-label={c.label}>
             <h3 className="bo-section-title">{c.label}</h3>
@@ -226,7 +223,7 @@ function CreateReportModal({isOpen, onOpenChange, onCreate}: {isOpen: boolean; o
         <Select label="Quarter" selectedKey={quarter} onSelectionChange={k => setQuarter(String(k))}>
           {QUARTERS.map(q => <SelectItem key={q} id={q}>{q}</SelectItem>)}
         </Select>
-        <p className="bo-note">The report starts as a draft with this quarter's scores; publish it when it reads right.</p>
+        <Text elementType="p" kind="small" color="meta">The report starts as a draft with this quarter's scores; publish it when it reads right.</Text>
       </div>
     </Modal>
   );
@@ -251,7 +248,7 @@ function Reports() {
     if (key === 'open') setOpen(r);
     if (key === 'publish') {
       setPublished(r, !r.published);
-      toast(r.published ? 'Report unpublished' : 'Report published', r.title, () => setPublished(r, r.published));
+      toast(r.published ? 'Report unpublished' : 'Report published', r.title, {action: 'Undo', onAction: () => setPublished(r, r.published)});
     }
     if (key === 'delete') setDeleting(r);
   };
@@ -343,7 +340,7 @@ function ImportModal({isOpen, onOpenChange, onImport}: {isOpen: boolean; onOpenC
         <Button variant="primary" isDisabled={!file} onPress={() => { if (file) onImport(file); shut(false); }}>Import</Button>
       </>}>
       <div className="bo-community-monitor-modal">
-        <p className="bo-note">Answers collected on paper or at an event: fill in the template, one row per respondent, then upload it.</p>
+        <Text elementType="p" kind="small" color="meta">Answers collected on paper or at an event: fill in the template, one row per respondent, then upload it.</Text>
         <div className="bo-community-monitor-buttons">
           <Button variant="secondary" size={32} onPress={() => toast('Template downloaded', 'community-monitor-template.xlsx')}>
             <Download aria-hidden size={16} />Download the template</Button>
@@ -373,7 +370,7 @@ function AddManagerModal({isOpen, onOpenChange, options, onAdd}: {isOpen: boolea
         <Button variant="primary" isDisabled={!person} onPress={() => { if (person) onAdd(person); onOpenChange(false); }}>Add</Button>
       </>}>
       <div className="bo-community-monitor-modal">
-        <p className="bo-note">Managers can edit the survey and its permissions, see the answers and create reports.</p>
+        <Text elementType="p" kind="small" color="meta">Managers can edit the survey and its permissions, see the answers and create reports.</Text>
         <Select label="Person" selectedKey={person} onSelectionChange={k => setPerson(k === null ? null : String(k))}>
           {options.map(o => <SelectItem key={o} id={o} icon={<Avatar size={16} initials={initials(o)} />}>{o}</SelectItem>)}
         </Select>
@@ -400,22 +397,22 @@ function Settings() {
   const shut = (o: boolean) => { if (!o) setModal(null); };
   const toggleOpen = (on: boolean) => {
     setOpen(on);
-    toast(on ? 'Survey open for responses' : 'Survey closed', on ? 'The popup shows again.' : 'No new answers come in.', () => setOpen(!on));
+    toast(on ? 'Survey open for responses' : 'Survey closed', on ? 'The popup shows again.' : 'No new answers come in.', {action: 'Undo', onAction: () => setOpen(!on)});
   };
   const changeAccess = (id: string) => {
     const before = access;
     setAccess(id);
-    toast('Access updated', SURVEY_ACCESS.find(a => a.id === id)?.label, () => setAccess(before));
+    toast('Access updated', SURVEY_ACCESS.find(a => a.id === id)?.label, {action: 'Undo', onAction: () => setAccess(before)});
   };
   const removeManager = (m: string) => {
     const before = managers;
     setManagers(list => list.filter(x => x !== m));
-    toast('Manager removed', m, () => setManagers(before));
+    toast('Manager removed', m, {action: 'Undo', onAction: () => setManagers(before)});
   };
   return (
     <>
     <Tabs defaultSelectedKey="Survey">
-      <TabList aria-label="Settings sections" className="react-aria-TabList bo-community-monitor-subtabs">
+      <TabList aria-label="Settings sections" className="bo-community-monitor-subtabs">
         {SETTINGS.map(t => <Tab key={t} id={t}>{t}</Tab>)}
       </TabList>
       <TabPanels>
@@ -531,7 +528,6 @@ export function CommunityMonitor() {
         </TabPanels>
       </Tabs>
       <SurveyModal isOpen={survey} onOpenChange={setSurvey} />
-      <ToastRegion />
     </Page>
   );
 }

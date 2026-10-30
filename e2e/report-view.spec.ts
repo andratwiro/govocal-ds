@@ -226,7 +226,7 @@ test('version history opens in the side panel and Esc closes it', async ({page})
   await page.getByRole('button', {name: /^Saved 10:19 by you/}).click();
   const history = page.getByRole('dialog', {name: 'Version history'});
   await expect(history).toBeVisible();
-  await expect(history.locator('[data-gap="Activity feed"]')).toBeVisible();
+  await expect(history.locator('[data-missing-part="Activity feed"]')).toBeVisible();
   await expect(history.getByText('Manager A').first()).toBeVisible();
   await history.getByRole('button', {name: 'Restore this version'}).first().click();
   await expect(toast(page, 'Version restored')).toBeVisible();
@@ -274,7 +274,7 @@ test('a new blank report is empty until the assistant generates it', async ({pag
 test('the report view names the parts the system lacks', async ({page}) => {
   await page.goto(URL);
   const seen = new Set<string>();
-  const collect = async () => (await page.locator('[data-gap]').evaluateAll(els => els.map(e => e.getAttribute('data-gap')!)))
+  const collect = async () => (await page.locator('[data-missing-part]').evaluateAll(els => els.map(e => e.getAttribute('data-missing-part')!)))
     .forEach(g => seen.add(g));
   await collect();
   await block(page, /Platform participation/).click();

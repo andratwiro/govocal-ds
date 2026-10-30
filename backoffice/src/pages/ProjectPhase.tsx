@@ -9,18 +9,18 @@ import {ACCESS_WHO_VALUE, AccessRightsModal, type AccessWho, ActionRow, ActionRo
   DataTableStack, DataTableTags, DataTableText, DataTableThumbnail, DateRangeField, DropZone, EmptyState, FileList,
   type FileListItemData, FilterChips, type FilterFacet, FilterMenu, type FilterValue, GroupedTab, GroupedTabList,
   GroupedTabPanel, GroupedTabs, IconButton, type Key, LineChart, ListHeader, type ListHeaderColumn, LocaleSwitcher,
-  MapCard, MapChip, type MapItem, MapOverlay, MapView, Menu, MenuItem, MenuSection, MultilingualRichTextEditor,
-  MultilingualTextField, type Multiloc,
-  MenuTrigger, Modal, NotificationEmail, NotificationRow, NotificationRowList, OfficialUpdate, OptionList, Pagination,
-  Panel, PanelSection, ParticipantActionList, ParticipantActionRow, ParticipantLimit, PhaseTimeline, PhoneHeader,
-  PhoneImage, PhonePreview, PhoneStage, type PostedUpdate, ProjectHeader, PropertyList, PropertyListItem, ProposalsRow,
-  queue, RailHeader, RailPhase, ReactionCounts, SearchField, SectionLabel, SegmentedControl, SegmentedControlItem,
-  Select, type SelectionAction, SelectionBar, SelectItem, Separator, SetupStep, SidePanel, SidePanelActions,
-  SidePanelDecision, SidePanelSection, Sparkline, StatRow, StatTile, SubmenuTrigger, TableToolbar, TableToolbarHeading,
-  TabSection, TextField, type ThreadComment, type ThreadTab, type ThreadTarget, type TimelinePhase, TitleField,
-  ToastRegion, ViewOptionList, ViewOptionRow, VolunteeringRow, VotingRow} from 'govocal-ds';
+  MapCard, MapChip, type MapItem, MapOverlay, MapView, Menu, MenuItem, MenuSection, MenuTrigger, Modal,
+  MultilingualRichTextEditor, MultilingualTextField, type Multiloc, NotificationEmail, NotificationRow,
+  NotificationRowList, OfficialUpdate, OptionList, Pagination, Panel, PanelSection, ParticipantActionList,
+  ParticipantActionRow, ParticipantLimit, PhaseTimeline, PhoneHeader, PhoneImage, PhonePreview, PhoneStage,
+  type PostedUpdate, ProjectHeader, PropertyList, PropertyListItem, ProposalsRow, RailHeader, RailPhase, ReactionCounts,
+  SearchField, SectionLabel, SegmentedControl, SegmentedControlItem, Select, type SelectionAction, SelectionBar,
+  SelectItem, Separator, SetupStep, SidePanel, SidePanelActions, SidePanelDecision, SidePanelRecordHead, SidePanelSection, Sparkline,
+  StatRow, StatTile, SubmenuTrigger, TableToolbar, TableToolbarHeading, TabSection, Text, TextField, type ThreadComment,
+  type ThreadTab, type ThreadTarget, type TimelinePhase, TitleField, toast, ViewOptionList, ViewOptionRow,
+  VisuallyHidden, VolunteeringRow, VotingRow} from 'govocal-ds';
 import {Dialog, Form, Tag as TagItem, TagGroup} from 'govocal-ds/base';
-import {PICTURES} from '../../../src/stories/images';
+import {PICTURES} from '../pictures';
 // Form field summary is a recipe (a story and its CSS): the page keeps its markup and uses the recipe's stylesheet.
 import {ME, METHODS, PROJECTS, type Method, type Phase, type Project} from '../data';
 import {LOCALES} from '../data-settings';
@@ -59,7 +59,7 @@ function PhaseScreen() {
 
   return (
     <div className="bo-phase" data-rail={railOpen ? 'open' : 'closed'}>
-      <h1 className="bo-visually-hidden">{project.title}</h1>
+      <VisuallyHidden elementType="h1">{project.title}</VisuallyHidden>
       {/* Project header's bar (its "With mode switch" story): crumbs, Build · Manage · Insights, who is here, Save. Save
           turns on once something in the setup changes. A phase that hasn't started keeps Manage and Insights open: they
           show the Empty state. */}
@@ -67,7 +67,7 @@ function PhaseScreen() {
         projectHref={`#/projects/${project.id}`} onBack={() => navigate(`/projects/${project.id}`)} onTogglePanel={() => setRailOpen(o => !o)}
         modes={TABS.map(t => ({id: t, label: label(t)}))} mode={view} onModeChange={t => navigate(phaseUrl(project, phase, t as Tab))}
         people={<Avatar initials={ME.slice(-1)} aria-label={`${ME} is here`} />}
-        hasChanges={dirty} onSave={() => { setDirty(false); queue.add({title: 'Changes saved'}, {timeout: 5000}); }} />
+        hasChanges={dirty} onSave={() => { setDirty(false); toast('Changes saved'); }} />
       <div className="bo-phase-body" data-view={view}>
         {railOpen && <ProjectRail project={project} current={phase.id} added={added} onAdd={() => setAdding(true)}
           removed={removed} onDelete={deletePhase} href={p => `#${phaseUrl(project, p, view)}`} />}
@@ -82,7 +82,6 @@ function PhaseScreen() {
       </div>
       <ProjectSettings project={project} tab={settings} onTabChange={setSettings} onClose={() => setSettings(null)} />
       <AddPhase isOpen={adding} onOpenChange={setAdding} onAdd={p => setAdded(a => [...a, p])} />
-      <ToastRegion />
     </div>
   );
 }
@@ -92,7 +91,7 @@ export function useDeletedPhases(): [Set<string>, (p: TimelinePhase) => void] {
   const [removed, setRemoved] = useState<Set<string>>(new Set());
   const remove = (p: TimelinePhase) => {
     setRemoved(s => new Set(s).add(p.id));
-    undoToast(`${p.title} deleted`, () => setRemoved(s => new Set([...s].filter(id => id !== p.id))));
+    toast(`${p.title} deleted`, undefined, {action: 'Undo', onAction: () => setRemoved(s => new Set([...s].filter(id => id !== p.id)))});
   };
   return [removed, remove];
 }
@@ -192,7 +191,7 @@ export function ChecklistStep({step, onOpen, onChange}: {step: typeof CHECKLIST[
   onChange?: () => void}): ReactNode {
   if (step.title === 'Set area') return <SetArea onChange={onChange} />;
   if (step.title === 'Set topic tags') return <SetTopicTags onChange={onChange} />;
-  if (step.action === 'expand') return <SetupStep kind="expand" title={step.title}><p className="bo-note bo-phase-flush">{step.body}</p></SetupStep>;
+  if (step.action === 'expand') return <SetupStep kind="expand" title={step.title}><Text elementType="p" kind="small" color="meta">{step.body}</Text></SetupStep>;
   return <SetupStep title={step.title} onPress={() => onOpen(step.title)} />;
 }
 
@@ -262,7 +261,7 @@ function Build({project, phase, onSettings, onChange}: {project: Project; phase:
                 ) : phase.method === 'Volunteering' ? (
                   <VolunteeringCards phase={phase} onOpen={setStub} onChange={onChange} />
                 ) : (
-                  <p className="bo-note bo-phase-flush">The {phase.method.toLowerCase()} setup cards: not in Figma yet.</p>
+                  <Text elementType="p" kind="small" color="meta">The {phase.method.toLowerCase()} setup cards: not in Figma yet.</Text>
                 )}
               </div>
             </PanelSection>
@@ -283,6 +282,25 @@ function phaseDates(dates: string): [string, string] | null {
   const [start, end] = parts;
   // "1 to 21 Sep": the start borrows the end's month.
   return [/^\d+$/.test(start) ? `${start} ${end.replace(/^\d+\s+/, '').replace(/\s+\d{4}$/, '')}` : start, end];
+}
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/** The phase's dates as the Date range field takes them, "YYYY-MM-DD". A date without its year falls in the demo's
+ * season, August 2026 to July 2027 (its today is late October 2026). */
+function phaseRange(dates: string): {start: string; end: string} | undefined {
+  const range = phaseDates(dates);
+  if (!range) return undefined;
+  const iso = (words: string) => {
+    const [, day, month, year] = words.match(/^(\d{1,2})\s+([A-Z][a-z]{2})(?:\s+(\d{4}))?$/) ?? [];
+    const m = MONTHS.indexOf(month);
+    if (!day || m < 0) return undefined;
+    const y = year ? Number(year) : m >= 7 ? 2026 : 2027;
+    return `${y}-${String(m + 1).padStart(2, '0')}-${day.padStart(2, '0')}`;
+  };
+  // "01 Apr – 30 Apr 2027": the start borrows the end's year.
+  const end = iso(range[1]);
+  const start = iso(/\d{4}$/.test(range[0]) || !/\d{4}$/.test(range[1]) ? range[0] : `${range[0]} ${range[1].slice(-4)}`);
+  return start && end ? {start, end} : undefined;
 }
 
 function PhaseStatus({phase}: {phase: Phase}) {
@@ -308,8 +326,7 @@ function DatesAndTitle({phase, onChange, help}: {phase: Phase; onChange: () => v
   const [description, setDescription] = useState<Multiloc>({});
   return <>
     <li data-gv="setup-card"><Card title="Dates" isRequired summary={phase.dates} control="expand">
-      {/* Date range field: it can't start on the phase's dates yet (it takes date objects the back office can't make). */}
-      <DateRangeField isRequired description={help} onChange={onChange} />
+      <DateRangeField isRequired description={help} defaultValue={phaseRange(phase.dates)} onChange={onChange} />
     </Card></li>
     <li data-gv="setup-card"><Card title="Title and description" isRequired control="expand" defaultExpanded>
       <div className="bo-phase-stack">
@@ -431,7 +448,7 @@ function VolunteeringCards({phase, onOpen, onChange}: {phase: Phase; onOpen: (ti
     const at = causes.findIndex(c => c.id === id), gone = causes[at];
     setCauses(list => list.filter(c => c.id !== id));
     onChange();
-    undoToast(`${gone.title} deleted`, () => setCauses(list => [...list.slice(0, at), gone, ...list.slice(at)]));
+    toast(`${gone.title} deleted`, undefined, {action: 'Undo', onAction: () => setCauses(list => [...list.slice(0, at), gone, ...list.slice(at)])});
   };
   return (
     <ul className="bo-phase-stack">
@@ -504,8 +521,6 @@ type IdeaPin = MapItem & {idea: Idea};
 const countsOf = (i: Idea) => [`${i.likes} ${i.likes === 1 ? 'like' : 'likes'}`, `${i.comments} ${i.comments === 1 ? 'comment' : 'comments'}`];
 
 // A change in the side panel (or the Selection bar's Official update) applies at once; its toast can undo it.
-const undoToast = (title: string, undo: () => void, body?: string) =>
-  queue.add({title, description: body, action: 'Undo', onAction: undo}, {timeout: 6000});
 
 type Thread = {comments: ThreadComment[]; internal: ThreadComment[]};
 type Restore = (list: ThreadComment[]) => ThreadComment[];
@@ -600,14 +615,14 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
     if (!before) return;
     const undo = Object.fromEntries(Object.keys(change).map(k => [k, before[k as keyof Idea]])) as Partial<Idea>;
     setIdeas(list => list.map(i => (i.id === id ? {...i, ...change} : i)));
-    undoToast(title, () => setIdeas(list => list.map(i => (i.id === id ? {...i, ...undo} : i))));
+    toast(title, undefined, {action: 'Undo', onAction: () => setIdeas(list => list.map(i => (i.id === id ? {...i, ...undo} : i)))});
   };
   const remove = (id: string) => {
     const index = ideas.findIndex(i => i.id === id);
     const gone = ideas[index];
     setOpen(null);
     setIdeas(list => list.filter(i => i.id !== id));
-    undoToast('Idea deleted', () => setIdeas(list => [...list.slice(0, index), gone, ...list.slice(index)]));
+    toast('Idea deleted', undefined, {action: 'Undo', onAction: () => setIdeas(list => [...list.slice(0, index), gone, ...list.slice(index)])});
   };
   const setThread = (id: string, tab: ThreadTab, change: (list: ThreadComment[]) => ThreadComment[]) =>
     setThreads(all => ({...all, [id]: {...all[id], [tab]: change(all[id][tab])}}));
@@ -664,7 +679,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
   const dismissWarnings = () => {
     const before = Object.fromEntries(pickedIdeas.map(i => [i.id, i.warning]));
     edit(i => ({...i, warning: undefined}));
-    undoToast(`Warnings dismissed on ${ideasWord(n)}`, () => setIdeas(list => list.map(i => (i.id in before ? {...i, warning: before[i.id]} : i))));
+    toast(`Warnings dismissed on ${ideasWord(n)}`, undefined, {action: 'Undo', onAction: () => setIdeas(list => list.map(i => (i.id in before ? {...i, warning: before[i.id]} : i)))});
   };
   // The panel's pager walks the whole filtered list; the table turns to the page the open idea is on.
   const openAt = (p: number) => { const next = shown[p - 1]; if (!next) return; setOpen(next.id); setPage(Math.ceil(p / PAGE_SIZE)); };
@@ -711,7 +726,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
             </TableToolbar>
             <FilterChips aria-label="Active filters" facets={facets} value={filters} onChange={setFilters}
               metric={walk?.label} onMetricRemove={() => setView(null)} />
-            {note && <p role="status" className="bo-note bo-phase-flush">{note}</p>}
+            {note && <Text elementType="p" kind="small" color="meta" role="status">{note}</Text>}
           </>
         )}
         footer={mode === 'list' && <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Idea pages" />}>
@@ -814,20 +829,18 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
                   </Button>
                 </SidePanelDecision>
               )}
-              {/* The record's head: no Side panel part for it yet (the stories draw it inline). */}
-              <p className="bo-phase-flush">{idea.text}</p>
-              <p className="bo-note bo-phase-record-meta">
-                <span>Posted by <strong>{idea.author}</strong></span>
-                <span>{idea.date}</span>
-              </p>
-              <SidePanelActions items={[
-                {id: 'edit', label: 'Edit', icon: icon(SquarePen)},
-                {id: 'view', label: 'View on the site', icon: icon(ExternalLink)},
-                {id: 'delete', label: 'Delete', icon: icon(Trash2), onPress: () => remove(idea.id)}
-              ]}>
-                <ReactionCounts likes={idea.likes} dislikes={idea.dislikes}
-                  comments={threads[idea.id].comments.reduce((k, c) => k + 1 + (c.replies?.length ?? 0), 0)} />
-              </SidePanelActions>
+              <SidePanelRecordHead author={idea.author} date={idea.date} actions={(
+                <SidePanelActions items={[
+                  {id: 'edit', label: 'Edit', icon: icon(SquarePen)},
+                  {id: 'view', label: 'View on the site', icon: icon(ExternalLink)},
+                  {id: 'delete', label: 'Delete', icon: icon(Trash2), onPress: () => remove(idea.id)}
+                ]}>
+                  <ReactionCounts likes={idea.likes} dislikes={idea.dislikes}
+                    comments={threads[idea.id].comments.reduce((k, c) => k + 1 + (c.replies?.length ?? 0), 0)} />
+                </SidePanelActions>
+              )}>
+                {idea.text}
+              </SidePanelRecordHead>
             </SidePanelSection>
             <SidePanelSection>
               <PropertyList aria-label="Idea details">
@@ -863,7 +876,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
                   <MenuTrigger>
                     <Button variant="quiet" size={32} hasMenu>Copy to phase</Button>
                     <Menu aria-label="Copy to phase"
-                      onAction={k => queue.add({title: `Copied to ${otherPhases.find(p => p.id === k)?.title}`}, {timeout: 5000})}>
+                      onAction={k => toast(`Copied to ${otherPhases.find(p => p.id === k)?.title}`)}>
                       {otherPhases.map(p => <MenuItem key={p.id} id={p.id}>{p.title}</MenuItem>)}
                     </Menu>
                   </MenuTrigger>
@@ -874,8 +887,7 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
               <OfficialUpdate updates={updates[idea.id]} onPublish={({text, name}) => {
                 const id = idea.id, update = {id: `u${Date.now()}`, text, by: name || undefined, date: 'Today'};
                 setUpdates(all => ({...all, [id]: [update, ...all[id]]}));
-                undoToast('Official update published', () => setUpdates(all => ({...all, [id]: all[id].filter(u => u.id !== update.id)})),
-                  'The author and everyone following this idea will see it.');
+                toast('Official update published', 'The author and everyone following this idea will see it.', {action: 'Undo', onAction: () => setUpdates(all => ({...all, [id]: all[id].filter(u => u.id !== update.id)}))});
               }} />
             </SidePanelSection>
             <SidePanelSection>
@@ -889,12 +901,12 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
                 onDelete={(cid, tab) => {
                   const id = idea.id, [next, restore] = without(threads[id][tab], cid);
                   setThread(id, tab, () => next);
-                  undoToast('Comment deleted', () => setThread(id, tab, restore));
+                  toast('Comment deleted', undefined, {action: 'Undo', onAction: () => setThread(id, tab, restore)});
                 }}
                 onDismissWarning={cid => {
                   const id = idea.id, was = findComment(threads[id].comments, cid)?.warning;
                   setThread(id, 'comments', l => withWarning(l, cid, undefined));
-                  undoToast('Content warning dismissed', () => setThread(id, 'comments', l => withWarning(l, cid, was)));
+                  toast('Content warning dismissed', undefined, {action: 'Undo', onAction: () => setThread(id, 'comments', l => withWarning(l, cid, was))});
                 }} />
             </SidePanelSection>
           </>
@@ -905,10 +917,10 @@ function Manage({project, phase, onAddPhase}: {project: Project; phase: Phase; o
         const update = {id: `u${Date.now()}`, text, by: name || undefined, date: 'Today'};
         setIdeas(list => list.map(i => (ids.includes(i.id) ? {...i, replied: true} : i)));
         setUpdates(all => ({...all, ...Object.fromEntries(ids.map(id => [id, [update, ...all[id]]]))}));
-        undoToast(`Official update sent to ${ideasWord(ids.length)}`, () => {
+        toast(`Official update sent to ${ideasWord(ids.length)}`, 'The authors and everyone following them will see it.', {action: 'Undo', onAction: () => {
           setIdeas(list => list.map(i => (i.id in before ? {...i, replied: before[i.id]} : i)));
           setUpdates(all => ({...all, ...Object.fromEntries(ids.map(id => [id, all[id].filter(u => u.id !== update.id)]))}));
-        }, 'The authors and everyone following them will see it.');
+        }});
       }} />
     </>
   );
@@ -1091,8 +1103,7 @@ function Insights({project, phase}: {project: Project; phase: Phase}) {
         <ActionRowList aria-label="Recommended actions">
           <ActionRow href="#/reporting" icon={<FileChartColumn />}>Add a report</ActionRow>
           <ActionRow href="#/messaging" icon={<Link2 />}>Share results with participants</ActionRow>
-          <ActionRow icon={<Sparkles />} onPress={() => queue.add({title: 'AI summary requested',
-            description: 'It appears under "What are people saying?" in a few minutes.'}, {timeout: 5000})}>
+          <ActionRow icon={<Sparkles />} onPress={() => toast('AI summary requested', 'It appears under "What are people saying?" in a few minutes.')}>
             Get an AI Sensemaking summary
           </ActionRow>
         </ActionRowList>
@@ -1147,7 +1158,7 @@ export function ProjectSettings({project, tab, onTabChange, onClose}: {project: 
           <GroupedTabPanel key={t} id={t} className="bo-phase-settings-panel">
             <div className="bo-phase-stack">
               <h3 className="bo-section-title bo-phase-flush">{t}</h3>
-              <p className="bo-note bo-phase-flush">{SETTINGS_ABOUT[t]}</p>
+              <Text elementType="p" kind="small" color="meta">{SETTINGS_ABOUT[t]}</Text>
               {t === 'General' && <>
                 <MultilingualTextField label="Title" isRequired locales={LANGUAGES} defaultValue={{[LANGUAGES[0]]: project.title}} />
                 <TextField label="Project URL" prefix="internal.govocal.com/en/projects/" defaultValue={project.id} />
@@ -1159,7 +1170,7 @@ export function ProjectSettings({project, tab, onTabChange, onClose}: {project: 
               {t === 'Input tags' && (
                 <TagGroup label="Tags" items={IDEA_TAGS.map(id => ({id}))}>{item => <TagItem id={item.id}>{item.id}</TagItem>}</TagGroup>
               )}
-              <p className="bo-note bo-phase-flush">The rest of this tab: not in Figma yet.</p>
+              <Text elementType="p" kind="small" color="meta">The rest of this tab: not in Figma yet.</Text>
             </div>
           </GroupedTabPanel>
         ))}
@@ -1225,7 +1236,7 @@ export function CardStub({title, onClose}: {title: string | null; onClose: () =>
   return (
     <Modal title={title ?? ''} isOpen={title !== null} onOpenChange={o => { if (!o) onClose(); }}
       footer={<Button size={32} slot="close">Done</Button>}>
-      <p className="bo-note bo-phase-flush">{title}: not in Figma yet.</p>
+      <Text elementType="p" kind="small" color="meta">{title}: not in Figma yet.</Text>
     </Modal>
   );
 }

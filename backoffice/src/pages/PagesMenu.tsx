@@ -2,8 +2,8 @@ import {useState} from 'react';
 import {useNavigate} from 'react-router';
 import {ArrowDown, ArrowUp, Eye, FileText, GripVertical, Lock, Pencil, Plus, Trash2, X} from 'lucide-react';
 import {AlertDialog, Badge, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
-  DataTableOptions, DataTableRow, DataTableStack, EmptyState, IconButton, Menu, MenuItem, MenuTrigger, Panel, queue,
-  Switch, Tab, TabList, TabPanel, TabPanels, Tabs, ToastRegion} from 'govocal-ds';
+  DataTableOptions, DataTableRow, DataTableStack, EmptyState, IconButton, Menu, MenuItem, MenuTrigger, Panel, Switch,
+  Tab, TabList, TabPanel, TabPanels, Tabs, toast} from 'govocal-ds';
 import {MENU_ENTRIES, MENU_START, PAGE_META, PAGES_START, type MenuEntry} from '../data-pages-menu';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
@@ -20,9 +20,6 @@ function useStored<K extends keyof typeof store>(key: K) {
   return [value, update] as const;
 }
 
-/** Instant changes say so in a Toast, with Undo where they can be taken back (docs/DECISIONS.md). */
-const toast = (title: string, undo?: () => void) =>
-  queue.add({title, ...(undo && {action: 'Undo', onAction: undo})}, {timeout: 5000});
 
 type Update = (f: (v: string[]) => string[]) => void;
 
@@ -40,11 +37,11 @@ function MenuTab({menu, setMenu, pages}: {menu: string[]; setMenu: Update; pages
   const remove = (item: MenuEntry) => {
     const at = menu.indexOf(item.id);
     setMenu(m => m.filter(id => id !== item.id));
-    toast(`${item.label} removed from the menu`, () => setMenu(m => [...m.slice(0, at), item.id, ...m.slice(at)]));
+    toast(`${item.label} removed from the menu`, undefined, {action: 'Undo', onAction: () => setMenu(m => [...m.slice(0, at), item.id, ...m.slice(at)])});
   };
   const add = (id: string) => {
     setMenu(m => [...m, id]);
-    toast(`${entry(id).label} added to the menu`, () => setMenu(m => m.filter(x => x !== id)));
+    toast(`${entry(id).label} added to the menu`, undefined, {action: 'Undo', onAction: () => setMenu(m => m.filter(x => x !== id))});
   };
   const edit = (item: MenuEntry) =>
     navigate(item.kind === 'home' ? '/pages-menu/homepage-builder' : `/pages-menu/navbar-items/edit/${item.id}`);
@@ -111,8 +108,7 @@ function PagesTab({menu, setMenu, pages, setPages}: {menu: string[]; setMenu: Up
   const [deleting, setDeleting] = useState<MenuEntry | null>(null);
   const showInMenu = (page: MenuEntry, on: boolean) => {
     setMenu(m => on ? [...m, page.id] : m.filter(x => x !== page.id));
-    toast(on ? `${page.label} added to the menu` : `${page.label} removed from the menu`,
-      () => setMenu(m => on ? m.filter(x => x !== page.id) : [...m, page.id]));
+    toast(on ? `${page.label} added to the menu` : `${page.label} removed from the menu`, undefined, {action: 'Undo', onAction: () => setMenu(m => on ? m.filter(x => x !== page.id) : [...m, page.id])});
   };
   const remove = (page: MenuEntry) => {
     setPages(p => p.filter(x => x !== page.id));
@@ -191,15 +187,14 @@ export function PagesMenu() {
           <Tab id="pages" count={pages.length}>Pages</Tab>
         </TabList>
         <TabPanels>
-          <TabPanel id="menu" className="react-aria-TabPanel bo-pages-menu-panel">
+          <TabPanel id="menu" className="bo-pages-menu-panel">
             <MenuTab menu={menu} setMenu={setMenu} pages={pages} />
           </TabPanel>
-          <TabPanel id="pages" className="react-aria-TabPanel bo-pages-menu-panel">
+          <TabPanel id="pages" className="bo-pages-menu-panel">
             <PagesTab menu={menu} setMenu={setMenu} pages={pages} setPages={setPages} />
           </TabPanel>
         </TabPanels>
       </Tabs>
-      <ToastRegion />
     </Page>
   );
 }

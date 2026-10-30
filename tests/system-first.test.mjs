@@ -10,9 +10,6 @@ const src = files('backoffice/src');
 const ALLOWED_PACKAGES = new Set(['react', 'react-dom/client', 'react-router', 'lucide-react']);
 // The system's public entry points (package.json exports). `npm run api:imports` moves deep imports onto them.
 const ENTRY_POINTS = new Set(['govocal-ds', 'govocal-ds/base', 'govocal-ds/tokens.css']);
-// Story fixtures (src/stories/) a page still borrows; a follow-up gives the back office its own pictures, then this
-// goes.
-const BORROWED = new Set(['src/stories/images']);
 
 describe('back office uses only the system', () => {
   it('imports the system only through govocal-ds, govocal-ds/base and govocal-ds/tokens.css', () => {
@@ -22,14 +19,14 @@ describe('back office uses only the system', () => {
         const spec = m[1] ?? m[2];
         if (spec.startsWith('.')) {
           const target = relative('.', resolve(f, '..', spec));
-          if (!target.startsWith('backoffice/src') && !BORROWED.has(target)) bad.push(`${f}: ${spec}`);
+          if (!target.startsWith('backoffice/src')) bad.push(`${f}: ${spec}`);
         } else if (!ALLOWED_PACKAGES.has(spec) && !ENTRY_POINTS.has(spec)) bad.push(`${f}: ${spec}`);
       }
     }
     expect(bad, 'run `npm run api:imports`').toEqual([]);
   });
-  it('borrows no story data: only the pictures BORROWED names, until it has its own', () => {
-    const data = src.filter(f => /\.(ts|tsx)$/.test(f) && /from\s+['"][^'"]*src\/stories\/data/.test(readFileSync(f, 'utf8')));
+  it('borrows no story data or pictures: it has its own (backoffice/src/pictures)', () => {
+    const data = src.filter(f => /\.(ts|tsx)$/.test(f) && /from\s+['"][^'"]*src\/stories\//.test(readFileSync(f, 'utf8')));
     expect(data).toEqual([]);
   });
   it('has one CSS file, layout only, tokens only', () => {

@@ -95,8 +95,9 @@ test('the Filter menu narrows the gallery, shows chips, and an Empty state clear
 
 test('inspiration hub names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/inspiration-hub');
-  const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
-  expect(gaps).toEqual(expect.arrayContaining(['Project image', 'Quote']));
+  const gaps = await page.locator('[data-missing-part]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-missing-part')))]);
+  // The project's image is Card media now; the highlight's quote is still missing.
+  expect(gaps).toEqual(['Quote']);
 });
 
 // ── The first clicks: a card opens a preview of its project ──

@@ -97,7 +97,7 @@ test('automated emails are grouped by recipient, switch on and off with Undo, an
   await expect(page.getByRole('region', {name: 'Residents', exact: true})).toHaveCount(0);
   const preview = page.getByRole('region', {name: 'Preview'});
   await expect(preview.getByRole('button', {name: 'Send me a test email'})).toBeVisible();
-  await expect(preview.locator('[data-gap="Email preview"]')).toContainText('New comment on your input');
+  await expect(preview.locator('[data-missing-part="Email preview"]')).toContainText('New comment on your input');
   // ← goes back to the list.
   await editor.getByRole('button', {name: 'Back to automated emails'}).click();
   await expect(editor).toHaveCount(0);
@@ -124,7 +124,7 @@ test('messaging names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/messaging');
   await page.getByRole('tab', {name: 'Automated emails'}).click();
   await page.getByRole('button', {name: 'Edit Comment on your input'}).click();
-  const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
+  const gaps = await page.locator('[data-missing-part]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-missing-part')))]);
   expect(gaps).toEqual(expect.arrayContaining(['Email preview']));
 });
 
@@ -170,7 +170,7 @@ test('a sent email row opens its statistics: recipients, opened, clicked, and wh
   await expect(recipients.getByRole('heading', {level: 4, name: '1 recipient'})).toBeVisible();
   await expect(grid.getByRole('row', {name: /Resident F/})).toContainText('Bounced');
   await expect(recipients.locator('.gv-panel__foot').getByRole('navigation', {name: 'Recipient pages'})).toBeVisible();
-  const {violations} = await new AxeBuilder({page}).include('.bo-page')
+  const {violations} = await new AxeBuilder({page}).include('main')
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
   a11yReport(violations.map(v => `${v.id}: ${v.nodes.map(n => n.target).join(', ')}`));
   await page.getByRole('navigation', {name: 'Breadcrumbs'}).getByRole('link', {name: 'Messaging'}).click();
@@ -192,7 +192,7 @@ test('Create SMS opens the SMS composer with a character count and a phone previ
   await expect(page.getByRole('group', {name: 'SMS preview'})).toContainText('The library is open late');
   await page.getByRole('button', {name: 'Send test SMS'}).click();
   await expect(page.locator('.react-aria-Toast').first()).toContainText('Test SMS sent');
-  const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
+  const gaps = await page.locator('[data-missing-part]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-missing-part')))]);
   expect(gaps).toEqual(['SMS bubble']);
 });
 

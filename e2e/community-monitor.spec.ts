@@ -76,7 +76,7 @@ test('the health score explains itself in a Help popover', async ({page}) => {
 
 test('community monitor has no gaps left', async ({page}) => {
   await page.goto('/backoffice/#/community-monitor');
-  await expect(page.locator('[data-gap]')).toHaveCount(0);
+  await expect(page.locator('[data-missing-part]')).toHaveCount(0);
 });
 
 test('the quarter picker shows only on the results sections', async ({page}) => {

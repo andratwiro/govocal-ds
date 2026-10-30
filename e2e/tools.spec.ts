@@ -203,8 +203,8 @@ test('widget: the settings, with the preview named as a gap', async ({page}) => 
 
 test('tools names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/tools');
-  const gaps = await page.locator('[data-gap]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-gap')))]);
+  const gaps = await page.locator('[data-missing-part]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-missing-part')))]);
   expect(gaps).toEqual(expect.arrayContaining(['Tool illustration']));
   await page.goto('/backoffice/#/tools/widgets');
-  await expect(page.locator('[data-gap="Widget preview"]')).toBeVisible();
+  await expect(page.locator('[data-missing-part="Widget preview"]')).toBeVisible();
 });

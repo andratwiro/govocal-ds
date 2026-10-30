@@ -1,8 +1,8 @@
 import {useState} from 'react';
 import {FileText, MapPin, Pencil, Plus, Tag, Trash2, CircleDot} from 'lucide-react';
 import {AlertDialog, Badge, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
-  DataTableOptions, DataTableRow, DataTableStack, EmptyState, MenuItem, Modal, Panel, queue, RichTextEditor, Select,
-  SelectItem, TextArea, TextField} from 'govocal-ds';
+  DataTableOptions, DataTableRow, DataTableStack, EmptyState, MenuItem, Modal, Panel, RichTextEditor, Select,
+  SelectItem, TextArea, TextField, toast} from 'govocal-ds';
 import {ColorField, ColorSwatch} from 'govocal-ds/base';
 import {AREAS, INPUT_STATUS_CATEGORIES, INPUT_STATUSES, PLATFORM_TAGS, POLICIES, PROPOSAL_STATUS_CATEGORIES,
   PROPOSAL_STATUSES, type SettingsItem} from '../data-settings';
@@ -12,9 +12,6 @@ import {AREAS, INPUT_STATUS_CATEGORIES, INPUT_STATUSES, PLATFORM_TAGS, POLICIES,
 
 const icon = (Icon: typeof Plus) => <Icon aria-hidden size={16} />;
 
-/** Instant changes and saves say so in a Toast, with Undo where they can be taken back (docs/DECISIONS.md). */
-export const toast = (title: string, undo?: () => void) =>
-  queue.add({title, ...(undo && {action: 'Undo', onAction: undo})}, {timeout: 5000});
 
 // The lists as changed here outlive a switch of tab (the tab panels unmount), until a reload, so Undo still lands.
 const store: Record<string, SettingsItem[]> = {
@@ -77,7 +74,7 @@ function ItemList({config}: {config: ListConfig}) {
     if (editing === 'new') {
       const id = `new-${config.id}-${Date.now()}`;
       setItems(xs => [...xs, {...d, id}]);
-      toast(`${d.name} added`, () => setItems(xs => xs.filter(x => x.id !== id)));
+      toast(`${d.name} added`, undefined, {action: 'Undo', onAction: () => setItems(xs => xs.filter(x => x.id !== id))});
     } else {
       setItems(xs => xs.map(x => x.id === d.id ? d : x));
       toast(`${d.name} saved`);
@@ -88,7 +85,7 @@ function ItemList({config}: {config: ListConfig}) {
     const at = store[config.id].findIndex(x => x.id === item.id);
     setItems(xs => xs.filter(x => x.id !== item.id));
     setDeleting(null);
-    toast(`${item.name} deleted`, () => setItems(xs => [...xs.slice(0, at), item, ...xs.slice(at)]));
+    toast(`${item.name} deleted`, undefined, {action: 'Undo', onAction: () => setItems(xs => [...xs.slice(0, at), item, ...xs.slice(at)])});
   };
   const add = (variant: 'primary' | 'secondary') => (
     <Button variant={variant} size={32} onPress={() => setEditing('new')}>{icon(Plus)}{config.add}</Button>

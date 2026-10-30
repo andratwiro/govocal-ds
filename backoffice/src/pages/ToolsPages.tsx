@@ -3,8 +3,7 @@ import {useNavigate} from 'react-router';
 import {Bot, Copy, Download, KeyRound, Pencil, Plus, Trash2, Webhook} from 'lucide-react';
 import {AlertDialog, Banner, Button, Checkbox, CheckboxGroup, DataTable, DataTableBody, DataTableCell, DataTableColumn,
   DataTableHeader, DataTableOptions, DataTableRow, DataTableTags, EmptyState, HelpPopover, IconButton, MenuItem, Modal,
-  NumberField, Panel, queue, Select, SelectItem, StatusBadge, Switch, TextArea, TextField,
-  ToastRegion} from 'govocal-ds';
+  NumberField, Panel, Select, SelectItem, StatusBadge, Switch, Text, TextArea, TextField, toast} from 'govocal-ds';
 import {API_TOKENS, MCP_CLIENTS, POWER_BI_TEMPLATES, WEBHOOK_EVENTS, WEBHOOK_PROJECTS, WEBHOOKS,
   type ApiToken, type WebhookItem} from '../data-tools';
 import {Gap} from '../Gap';
@@ -39,7 +38,7 @@ export function PublicApiTokens() {
   const remove = (t: ApiToken) => {
     setTokens(ts => ts.filter(x => x.id !== t.id));
     setDeleting(null);
-    queue.add({title: 'Token deleted', description: t.name}, {timeout: 5000});
+    toast('Token deleted', t.name);
   };
   const createButton = (variant: 'primary' | 'secondary') => (
     <Button variant={variant} size={32} onPress={() => setOpen(true)}><Plus aria-hidden size={16} />Create new token</Button>
@@ -108,7 +107,6 @@ export function PublicApiTokens() {
         confirmLabel="Delete token" onConfirm={() => { if (deleting) remove(deleting); }}>
         <p>Integrations that use {deleting?.name} stop working at once. This cannot be undone.</p>
       </AlertDialog>
-      <ToastRegion />
     </Page>
   );
 }
@@ -151,17 +149,17 @@ export function Webhooks() {
   const save = (d: Draft) => {
     if (editing === 'new') {
       setHooks(h => [...h, {...d, id: `w${h.length + 1}-${d.name}`}]);
-      queue.add({title: 'Webhook created', description: d.name}, {timeout: 5000});
+      toast('Webhook created', d.name);
     } else if (editing) {
       setHooks(h => h.map(x => x.id === editing.id ? {...d, id: x.id} : x));
-      queue.add({title: 'Webhook updated', description: d.name}, {timeout: 5000});
+      toast('Webhook updated', d.name);
     }
     setEditing(null);
   };
   const remove = (w: WebhookItem) => {
     setHooks(hs => hs.filter(x => x.id !== w.id));
     setDeleting(null);
-    queue.add({title: 'Webhook deleted', description: w.name}, {timeout: 5000});
+    toast('Webhook deleted', w.name);
   };
   const createButton = (variant: 'primary' | 'secondary') => (
     <Button variant={variant} size={32} onPress={() => setEditing('new')}><Plus aria-hidden size={16} />Create webhook</Button>
@@ -214,7 +212,6 @@ export function Webhooks() {
         confirmLabel="Delete webhook" onConfirm={() => { if (deleting) remove(deleting); }}>
         <p>{deleting?.name} stops receiving events. This cannot be undone.</p>
       </AlertDialog>
-      <ToastRegion />
     </Page>
   );
 }
@@ -224,7 +221,7 @@ export function EsriIntegration() {
   const [connected, setConnected] = useState(false);
   const save = () => {
     setConnected(true);
-    queue.add({title: 'API key saved', description: 'Maps in projects can now import layers from ArcGIS Online.'}, {timeout: 5000});
+    toast('API key saved', 'Maps in projects can now import layers from ArcGIS Online.');
   };
   return (
     <Page title="Esri Maps" crumbs={TOOLS_CRUMB}
@@ -236,7 +233,6 @@ export function EsriIntegration() {
           <TextField label="Esri API key" placeholder="Paste API key here" value={key} onChange={setKey} />
         </div>
       </Panel>
-      <ToastRegion />
     </Page>
   );
 }
@@ -255,7 +251,7 @@ export function PowerBi() {
             <Panel key={t.id} title={t.title}
               footer={(
                 <Button variant="secondary" size={32}
-                  onPress={() => queue.add({title: 'Download started', description: `${t.title}: ${t.file}`}, {timeout: 5000})}>
+                  onPress={() => toast('Download started', `${t.title}: ${t.file}`)}>
                   <Download aria-hidden size={16} />{t.button}
                 </Button>
               )}>
@@ -264,7 +260,6 @@ export function PowerBi() {
           ))}
         </div>
       </div>
-      <ToastRegion />
     </Page>
   );
 }
@@ -274,7 +269,7 @@ export function McpAuthorizations() {
   const [revoking, setRevoking] = useState<string | null>(null);
   const target = clients.find(c => c.id === revoking);
   const revoke = () => {
-    if (target) queue.add({title: 'Access revoked', description: target.name}, {timeout: 5000});
+    if (target) toast('Access revoked', target.name);
     setClients(cs => cs.filter(c => c.id !== revoking));
     setRevoking(null);
   };
@@ -312,7 +307,6 @@ export function McpAuthorizations() {
         confirmLabel="Revoke access" onConfirm={revoke}>
         <p>{target?.name} loses its access. It will need to be re-authorized before it can connect again.</p>
       </AlertDialog>
-      <ToastRegion />
     </Page>
   );
 }
@@ -327,7 +321,7 @@ export function Widget() {
       <div className="bo-tools-split">
         <Panel title="Settings" description="What the widget shows."
           footer={(
-            <Button variant="secondary" size={32} onPress={() => queue.add({title: 'Embed code copied'}, {timeout: 5000})}>
+            <Button variant="secondary" size={32} onPress={() => toast('Embed code copied')}>
               <Copy aria-hidden size={16} />Copy embed code
             </Button>
           )}>
@@ -339,11 +333,10 @@ export function Widget() {
         </Panel>
         <Panel title="Preview" description="The widget as it shows on another website.">
           <Gap name="Widget preview">
-            <p className="bo-note">{count} project cards{header ? ', under a header' : ''}.</p>
+            <Text elementType="p" kind="small" color="meta">{count} project cards{header ? ', under a header' : ''}.</Text>
           </Gap>
         </Panel>
       </div>
-      <ToastRegion />
     </Page>
   );
 }

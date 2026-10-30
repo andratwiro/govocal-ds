@@ -1,10 +1,10 @@
 import {useState} from 'react';
 import {Button, Checkbox, CheckboxGroup, ChoiceCard, DropZone, FileList, type FileListItemData, MultilingualTextField,
   type Multiloc, NumberField, Panel, RadioGroup, Select, SelectItem, Switch, Tab, TabList, TabPanel, TabPanels, Tabs,
-  TextArea, TextField, ToastRegion} from 'govocal-ds';
+  TextArea, TextField, toast} from 'govocal-ds';
 import {ColorField} from 'govocal-ds/base';
 import {APPROVERS, LOCALES, PLATFORM_NAME} from '../data-settings';
-import {AreasTab, PoliciesTab, StatusesTab, TagsTab, toast} from './SettingsLists';
+import {AreasTab, PoliciesTab, StatusesTab, TagsTab} from './SettingsLists';
 import {Page} from './Page';
 import {SectionHeading} from '../SectionHeading';
 
@@ -30,7 +30,7 @@ function InstantSwitch({label, description, start}: {label: string; description:
   const [on, setOn] = useState(start);
   const change = (v: boolean) => {
     setOn(v);
-    toast(`${label} turned ${v ? 'on' : 'off'}`, () => setOn(!v));
+    toast(`${label} turned ${v ? 'on' : 'off'}`, undefined, {action: 'Undo', onAction: () => setOn(!v)});
   };
   return <Switch isSelected={on} onChange={change} description={description}>{label}</Switch>;
 }
@@ -96,7 +96,7 @@ function UserNameDisplay() {
   const change = (v: string) => {
     const was = style;
     setStyle(v as keyof typeof NAME_STYLES);
-    toast(`Generated names now read as ${NAME_STYLES[v as keyof typeof NAME_STYLES].toLowerCase()} names`, () => setStyle(was));
+    toast(`Generated names now read as ${NAME_STYLES[v as keyof typeof NAME_STYLES].toLowerCase()} names`, undefined, {action: 'Undo', onAction: () => setStyle(was)});
   };
   return (
     <Panel title="User name display (for users with email confirmed only)" headingLevel={3}
@@ -150,7 +150,7 @@ function ImageUpload({title, description, noun}: {title: string; description: st
     <Panel title={title} headingLevel={3} description={description}>
       <div className="bo-settings-fields">
         <FileList aria-label={title} items={file ? [file] : []} emptyLabel={`No ${noun.toLowerCase()} yet`}
-          onDelete={() => { const was = file; setFile(null); toast(`${noun} removed`, () => setFile(was)); }} />
+          onDelete={() => { const was = file; setFile(null); toast(`${noun} removed`, undefined, {action: 'Undo', onAction: () => setFile(was)}); }} />
         <DropZone acceptedFileTypes={['image/*']} onSelect={files => take(files?.[0])}
           onDrop={async e => { const i = e.items.find(x => x.kind === 'file'); if (i && i.kind === 'file') take(await i.getFile()); }} />
       </div>
@@ -206,7 +206,6 @@ export function Settings() {
           <TabPanel id="policies"><SectionHeading>Policies</SectionHeading><PoliciesTab /></TabPanel>
         </TabPanels>
       </Tabs>
-      <ToastRegion />
     </Page>
   );
 }

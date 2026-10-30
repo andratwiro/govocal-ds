@@ -4,9 +4,10 @@ import {ArrowRight, CalendarDays, Download, Eye, FolderOpen, Zap} from 'lucide-r
 import {Badge, Banner, BarRow, Button, ChartLegend, DashboardBars, DashboardCard, type DashboardCardKind,
   DashboardDemographic, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty, DataTableHeader,
   DataTableRow, DataTableStack, DataTableText, DateRangeField, EmptyState, FilterChips, type FilterFacet, FilterMenu,
-  type FilterValue, IconButton, LineChart, Link, Menu, MenuItem, MenuTrigger, Pagination, Panel, queue, SearchField,
+  type FilterValue, IconButton, LineChart, Link, Menu, MenuItem, MenuTrigger, Pagination, Panel, SearchField,
   SegmentedControl, SegmentedControlItem, Select, SelectionBar, SelectItem, Sparkline, StatRow, StatTile, StatusBadge,
-  Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, ToastRegion} from 'govocal-ds';
+  Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, Text, toast,
+  VisuallyHidden} from 'govocal-ds';
 import {Meter} from 'govocal-ds/base';
 import {DASHBOARD, PROJECTS} from '../data';
 import {MONTHS, PER_TAG, STATUS_BREAKDOWN, EMAILS, INVITATIONS, EVENTS, ADOPTION, DATE_PRESETS, METRICS, PROJECT_METRICS,
@@ -45,10 +46,7 @@ function HeadlineTile({label, value, last30, series, note}: Headline & {note?: s
 
 /** Every dashboard card's download icon: a menu of formats, then a toast saying the file is on its way. */
 function DownloadMenu({title}: {title: string}) {
-  const start = (format: string) => queue.add(
-    {title: 'Download started', description: `${slugify(title)}.${format.toLowerCase()}`},
-    {timeout: 5000}
-  );
+  const start = (format: string) => toast('Download started', `${slugify(title)}.${format.toLowerCase()}`);
   return (
     <MenuTrigger>
       <IconButton aria-label={`Download ${title.toLowerCase()} data`}><Download aria-hidden size={16} /></IconButton>
@@ -216,7 +214,7 @@ function Management() {
             <StatTrio items={[['Admins', `${ADOPTION.admins.active30} of ${ADOPTION.admins.total}`],
               ['Project managers', `${ADOPTION.managers.active30} of ${ADOPTION.managers.total}`],
               ['Total', `${ADOPTION.admins.active30 + ADOPTION.managers.active30} of ${adoptionTotal}`]]} />
-            <p className="bo-note">Active in the last 30 days</p>
+            <Text elementType="p" kind="small" color="meta">Active in the last 30 days</Text>
             <LineChart xAxis={MONTHS} showLegend series={[{label: 'Active admins', values: ADOPTION.admins.series}, {label: 'Active project managers', values: ADOPTION.managers.series}]} />
           </DashCard>
         </div>
@@ -292,7 +290,7 @@ function RepresentativenessTab() {
             {f.rows.map(r => (
               <div key={r.label} className="bo-dashboard-pair">
                 <BarRow label={r.label} percent={r.users} value={`${r.users}%`} />
-                <BarRow label={<span className="bo-visually-hidden">{r.label}, reference population</span>} percent={r.population}
+                <BarRow label={<VisuallyHidden>{r.label}, reference population</VisuallyHidden>} percent={r.population}
                   value={`${r.population}%`} barColor="--gv-chart-pass" />
               </div>
             ))}
@@ -324,11 +322,7 @@ function ParticipationFeed() {
   const markViewed = (ids: string[]) => {
     setViewed(prev => new Set([...prev, ...ids]));
     setSelected(new Set());
-    queue.add({
-      title: ids.length === 1 ? 'Marked as viewed' : `${itemsWord(ids.length)} marked as viewed`,
-      action: 'Undo',
-      onAction: () => setViewed(prev => { const next = new Set(prev); ids.forEach(id => next.delete(id)); return next; })
-    }, {timeout: 6000});
+    toast(ids.length === 1 ? 'Marked as viewed' : `${itemsWord(ids.length)} marked as viewed`, undefined, {action: 'Undo', onAction: () => setViewed(prev => { const next = new Set(prev); ids.forEach(id => next.delete(id)); return next; }), timeout: 6000});
   };
   const switchTo = (v: 'new' | 'viewed') => { setShow(v); setPage(1); setSelected(new Set()); };
 
@@ -474,7 +468,6 @@ export function Dashboard() {
         <TabPanel id="management-feed"><div className="bo-dashboard-tab"><ManagementFeed /></div></TabPanel>
         </TabPanels>
       </Tabs>
-      <ToastRegion />
     </Page>
   );
 }

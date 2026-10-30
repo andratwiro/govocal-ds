@@ -6,9 +6,9 @@ import {ArrowDown, ArrowUp, Calendar, Asterisk, ChartColumn, ChevronDown, Chevro
 import {AlertDialog, Avatar, Badge, Button, ChoiceCard, DataTable, DataTableAssignee, DataTableBody, DataTableCell,
   DataTableColumn, DataTableEmpty, DataTableHeader, DataTableOptions, DataTableRow, DataTableStack, DataTableThumbnail,
   EmptyState, FilterChips, type FilterFacet, FilterMenu, type FilterValue, IconButton, Link, Menu, MenuItem,
-  MenuTrigger, Modal, Pagination, Panel, queue, RadioGroup, SearchField, Select, SelectItem, StatusBadge, Tab,
-  TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, TextArea, TextField,
-  ToastRegion, MultilingualTextField, type Multiloc} from 'govocal-ds';
+  MenuTrigger, Modal, MultilingualTextField, type Multiloc, Pagination, Panel, RadioGroup, SearchField, Select,
+  SelectItem, StatusBadge, Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, Text, TextArea,
+  TextField, toast, VisuallyHidden} from 'govocal-ds';
 import {DatePicker, DateRangePicker, ToggleButton} from 'govocal-ds/base';
 import {LOCALES} from '../data-settings';
 import {PROJECTS, type Project} from '../data';
@@ -99,8 +99,8 @@ function Managers({names}: {names?: string[]}) {
   return (
     <span className="bo-projects-person" title={names?.length ? names.join(', ') : undefined}>
       <DataTableAssignee name={first} emptyLabel={NO_MANAGER} size={28} />
-      {rest.length > 0 && <span className="bo-note"><span aria-hidden>+{rest.length}</span>
-        <span className="bo-visually-hidden">and {rest.join(', ')}</span></span>}
+      {rest.length > 0 && <Text kind="small" color="meta"><span aria-hidden>+{rest.length}</span>
+        <VisuallyHidden>and {rest.join(', ')}</VisuallyHidden></Text>}
     </span>
   );
 }
@@ -124,7 +124,7 @@ function ProjectTable({rows, onRowAction}: {rows: Project[]; onRowAction: (p: Pr
     <DataTable aria-label="Projects">
       <DataTableHeader>
         <DataTableColumn isRowHeader>Project</DataTableColumn>
-        <DataTableColumn align="number"><span className="bo-projects-icon-head"><Users aria-hidden size={16} /><span className="bo-visually-hidden">Participants</span></span></DataTableColumn>
+        <DataTableColumn align="number"><span className="bo-projects-icon-head"><Users aria-hidden size={16} /><VisuallyHidden>Participants</VisuallyHidden></span></DataTableColumn>
         <DataTableColumn>Phase</DataTableColumn><DataTableColumn>Managers</DataTableColumn><DataTableColumn>Visibility</DataTableColumn>
         <DataTableColumn>Start</DataTableColumn><DataTableColumn>End</DataTableColumn>
         <DataTableColumn align="options" showLabel={false}>Actions</DataTableColumn>
@@ -189,7 +189,7 @@ function ScratchModal({folders, spaces, onClose, onCreate}: {folders: FolderRow[
           <Select variant="pill" aria-label="Folder" prefix="Folder:" isSearchable searchPlaceholder="Search folders"
             selectedKey={folder} onSelectionChange={k => setFolder(String(k))}>{folderItems(folders, true)}</Select>
         </div>
-        <p className="bo-note">Both are optional. The project opens as an untitled draft: name it from its overview.</p>
+        <Text elementType="p" kind="small" color="meta">Both are optional. The project opens as an untitled draft: name it from its overview.</Text>
       </div>
     </Modal>
   );
@@ -208,7 +208,7 @@ function TemplateGallery({onClose, onUse}: {onClose: () => void; onUse: (templat
       footer={footer('Use template', () => chosen && onUse(chosen), !chosen || !list.some(t => t.title === chosen))}>
       <div className="bo-projects-gallery">
         <div className="bo-projects-gallery-head">
-          <p className="bo-note">{list.length} templates available</p>
+          <Text elementType="p" kind="small" color="meta">{list.length} templates available</Text>
           <SearchField aria-label="Search the templates" placeholder="Search the templates" value={query} onChange={setQuery} />
         </div>
         {list.length ? (
@@ -473,36 +473,31 @@ export function Projects() {
     // The chosen Space keeps the new draft: it shows in the Spaces view.
     if (space) setSpaces(list => list.map(s => (s.name === space ? {...s, projects: [...s.projects, project.id]} : s)));
     close();
-    queue.add({title: 'Project created',
-      description: `${title} is a draft until you publish it${space ? `, in the ${space} space` : ''}.`}, {timeout: 5000});
+    toast('Project created', `${title} is a draft until you publish it${space ? `, in the ${space} space` : ''}.`);
   };
   // Instant changes say so in a Toast with Undo (docs/DECISIONS.md); Delete asks first, then offers Undo too.
   const onRowAction = (p: Project, a: RowAction) => {
     if (a !== 'duplicate') return setDialog({kind: a, project: p});
     const copy = {...draft(`Copy of ${p.title}`, p.folder), managers: p.managers, access: p.access};
     add(copy, p.id);
-    queue.add({title: 'Project duplicated', description: `${copy.title} is a draft.`, action: 'Undo',
-      onAction: () => remove(copy.id)}, {timeout: 5000});
+    toast('Project duplicated', `${copy.title} is a draft.`, {action: 'Undo', onAction: () => remove(copy.id)});
   };
   const moveTo = (p: Project, folder?: string) => {
     update(p.id, {folder});
     close();
-    queue.add({title: folder ? `Moved to ${folder}` : 'Taken out of its folder', description: p.title, action: 'Undo',
-      onAction: () => update(p.id, {folder: p.folder})}, {timeout: 5000});
+    toast(folder ? `Moved to ${folder}` : 'Taken out of its folder', p.title, {action: 'Undo', onAction: () => update(p.id, {folder: p.folder})});
   };
   const destroy = (p: Project) => {
     const at = projects.findIndex(x => x.id === p.id);
     remove(p.id);
     close();
-    queue.add({title: 'Project deleted', description: p.title, action: 'Undo',
-      onAction: () => setProjects(list => [...list.slice(0, at), p, ...list.slice(at)])}, {timeout: 5000});
+    toast('Project deleted', p.title, {action: 'Undo', onAction: () => setProjects(list => [...list.slice(0, at), p, ...list.slice(at)])});
   };
   const named = (kind: 'folder' | 'space', name: string) => {
     if (kind === 'folder') setFolders(list => [...list, {name, status: 'Draft', managers: []}]);
     else setSpaces(list => [...list, {name, projects: [], managers: []}]);
     close();
-    queue.add({title: kind === 'folder' ? 'Folder created' : 'Space created',
-      description: `${name} is in the ${kind === 'folder' ? 'Folders' : 'Spaces'} view.`}, {timeout: 5000});
+    toast(kind === 'folder' ? 'Folder created' : 'Space created', `${name} is in the ${kind === 'folder' ? 'Folders' : 'Spaces'} view.`);
   };
 
   // The head's action follows the tab, as in the real admin: New project, New folder, New space.
@@ -550,7 +545,7 @@ export function Projects() {
           ))}
         </TabList>
         <TabPanels>
-          <TabPanel id="Projects" className="react-aria-TabPanel bo-projects-view">
+          <TabPanel id="Projects" className="bo-projects-view">
             {/* Numbered pages in place of "Scroll down to load more" (docs/DECISIONS.md). */}
             <Panel title="All projects" description="Open a project to set it up, or use its menu to copy, move or delete it."
               isFlush toolbar={toolbar}
@@ -558,16 +553,16 @@ export function Projects() {
               <ProjectTable rows={shown} onRowAction={onRowAction} />
             </Panel>
           </TabPanel>
-          <TabPanel id="Folders" className="react-aria-TabPanel bo-projects-view">
+          <TabPanel id="Folders" className="bo-projects-view">
             <GroupPanel title="Folders" description="Folders group projects on the platform, each with its own page."
               word={foldersWord} rows={folders} inside={f => projects.filter(p => p.folder === f.name)} status={f => f.status} />
           </TabPanel>
-          <TabPanel id="Spaces" className="react-aria-TabPanel bo-projects-view">
+          <TabPanel id="Spaces" className="bo-projects-view">
             <GroupPanel title="Spaces" description="Spaces group projects across folders for the admins who manage them."
               word={spacesWord} rows={spaces} inside={s => projects.filter(p => s.projects.includes(p.id))} />
           </TabPanel>
-          <TabPanel id="Calendar" className="react-aria-TabPanel bo-projects-view"><CalendarView projects={projects} /></TabPanel>
-          <TabPanel id="Arrange projects" className="react-aria-TabPanel bo-projects-view"><ArrangeView projects={projects} /></TabPanel>
+          <TabPanel id="Calendar" className="bo-projects-view"><CalendarView projects={projects} /></TabPanel>
+          <TabPanel id="Arrange projects" className="bo-projects-view"><ArrangeView projects={projects} /></TabPanel>
         </TabPanels>
       </Tabs>
 
@@ -578,7 +573,6 @@ export function Projects() {
         <NameModal kind={dialog.kind} onClose={close} onCreate={name => named(dialog.kind as 'folder' | 'space', name)} />}
       {dialog?.kind === 'move' && <MoveModal project={dialog.project} folders={folders} onClose={close} onMove={f => moveTo(dialog.project, f)} />}
       {dialog?.kind === 'delete' && <DeleteModal project={dialog.project} onClose={close} onDelete={() => destroy(dialog.project)} />}
-      <ToastRegion />
     </Page>
   );
 }

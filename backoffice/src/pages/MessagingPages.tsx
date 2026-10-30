@@ -3,8 +3,8 @@ import {useNavigate, useParams} from 'react-router';
 import {CircleCheck, Mail, Send, Smartphone} from 'lucide-react';
 import {Badge, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableEmpty,
   DataTableHeader, DataTablePerson, DataTableRow, Divider, FilterChips, type FilterFacet, FilterMenu, type FilterValue,
-  Pagination, Panel, PhonePreview, queue, RichTextEditor, SearchField, Select, SelectItem, StatTile, TableToolbar,
-  TextArea, TextField, ToastRegion} from 'govocal-ds';
+  Pagination, Panel, PhonePreview, RichTextEditor, SearchField, Select, SelectItem, StatTile, TableToolbar, Text,
+  TextArea, TextField, toast} from 'govocal-ds';
 import {Label} from 'govocal-ds/base';
 import {CUSTOM_EMAILS, GROUP_SIZES, GROUPS, RECIPIENTS, SENDER, type CustomEmail} from '../data-messaging';
 import {Gap} from '../Gap';
@@ -15,7 +15,6 @@ import {SectionHeading} from '../SectionHeading';
 // statistics, a new SMS.
 const MESSAGING_CRUMB = [{key: 'messaging', label: 'Messaging', href: '#/messaging'}];
 const n = (v: number) => v.toLocaleString('en');
-const toast = (title: string, description?: string) => queue.add({title, description}, {timeout: 5000});
 
 /**
  * The custom emails, with the ones sent here on top, and the last "sent" confirmation: they outlive a change of
@@ -82,7 +81,6 @@ export function EmailComposer() {
           </div>
         </div>
       </Panel>
-      <ToastRegion />
     </Page>
   );
 }
@@ -136,7 +134,7 @@ function RecipientList({sent}: {sent: number}) {
 export function EmailStats() {
   const {emailId} = useParams();
   const email = emailStore.emails.find(e => e.id === emailId);
-  if (!email) return <Page title="Email not found" crumbs={MESSAGING_CRUMB}><p className="bo-note">This email does not exist.</p></Page>;
+  if (!email) return <Page title="Email not found" crumbs={MESSAGING_CRUMB}><Text elementType="p" kind="small" color="meta">This email does not exist.</Text></Page>;
   const sent = GROUP_SIZES[email.to] ?? 0;
   const delivered = Math.round(sent * 0.98);
   const pctOf = (p?: number) => Math.round(delivered * (p ?? 0) / 100);
@@ -187,9 +185,9 @@ export function SmsComposer() {
             </Select>
             <div className="bo-messaging-field">
               <TextArea label="Message" placeholder="Write your message" value={body} onChange={setBody} />
-              <span className="bo-note" aria-live="polite">
+              <Text kind="small" color="meta" aria-live="polite">
                 {body.length} / {SMS_LENGTH * parts} characters · {parts} SMS per recipient
-              </span>
+              </Text>
             </div>
             {parts > 1 && <Banner tone="warning">This message is sent in {parts} parts, and each part costs a credit for every recipient.</Banner>}
           </div>
@@ -197,13 +195,12 @@ export function SmsComposer() {
         <PhonePreview aria-label="SMS preview">
           <Gap name="SMS bubble">
             <div className="bo-messaging-sms">
-              <span className="bo-note">Text message · now</span>
+              <Text kind="small" color="meta">Text message · now</Text>
               <p>{body || 'Your message shows here.'}</p>
             </div>
           </Gap>
         </PhonePreview>
       </div>
-      <ToastRegion />
     </Page>
   );
 }

@@ -1,5 +1,5 @@
 import {useLocation} from 'react-router';
-import {Banner, Link} from 'govocal-ds';
+import {Banner, Link, PageHeader, Stack, Text} from 'govocal-ds';
 
 // Where "To platform" (and the account menu) lead: a stand-in for the resident site, outside the back office.
 export function Platform() {
@@ -9,13 +9,11 @@ export function Platform() {
     : search.includes('customer-portal') ? 'The customer portal opens here for admins.'
     : null;
   return (
-    <main className="bo-platform">
-      <div className="bo-page">
-        <header className="bo-page-bar"><h1>Resident site (placeholder)</h1></header>
-        {note && <Banner>{note}</Banner>}
-        <p className="bo-note">The back office demo has no resident site: this page stands in for it.</p>
-        <Link href="#/dashboard">Back to the back office</Link>
-      </div>
-    </main>
+    <Stack elementType="main" gap="12" alignItems="start" paddingBlock="24" paddingInline="32">
+      <PageHeader title="Resident site (placeholder)" />
+      {note && <Banner>{note}</Banner>}
+      <Text elementType="p" kind="small" color="meta">The back office demo has no resident site: this page stands in for it.</Text>
+      <Link href="#/dashboard">Back to the back office</Link>
+    </Stack>
   );
 }

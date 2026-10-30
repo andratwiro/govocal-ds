@@ -4,10 +4,10 @@ import {Download, MailX, RotateCw, SearchX, Send, ShieldCheck, ShieldOff, Trash2
 import {Avatar, Badge, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
   DataTableOptions, DataTablePerson, DataTableRow, EmptyState, MenuItem, Pagination, Panel, PropertyList,
   PropertyListItem, SearchField, Select, SelectItem, Separator, StatTile, Tab, TableToolbar, TabList, TabPanel,
-  TabPanels, Tabs, TextArea, ToastRegion} from 'govocal-ds';
+  TabPanels, Tabs, Text, TextArea, toast} from 'govocal-ds';
 import {Meter} from 'govocal-ds/base';
 import {INVITATIONS, PARTICIPATION, SEATS, SEATS_A_MONTH_AGO, type Invitation, type Person, type Role} from '../data-users';
-import {ago, date, groupStore, initials, PAGE_SIZE, peopleStore, toast} from './Users';
+import {ago, date, groupStore, initials, PAGE_SIZE, peopleStore} from './Users';
 import {Page} from './Page';
 
 // The Users page's first clicks, each on its own route as in the real admin: invitations, seats, a profile.
@@ -42,7 +42,7 @@ function InviteForm({onSend}: {onSend: (emails: string[], role: Role) => void}) 
     <Panel title="Invite by email" description="Each address gets a link to sign up, with the role and group you choose."
       footer={(
         <div className="bo-users-buttons">
-          <span className="bo-note">{list.length === 1 ? '1 address' : `${list.length} addresses`}</span>
+          <Text kind="small" color="meta">{list.length === 1 ? '1 address' : `${list.length} addresses`}</Text>
           <Button variant="primary" size={32} isDisabled={list.length === 0} onPress={send}>{icon(Send)}Send invites</Button>
         </div>
       )}>
@@ -138,7 +138,7 @@ export function UserInvitations() {
   const remove = (i: Invitation) => {
     const at = invitations.indexOf(i);
     setInvitations(list => list.filter(x => x.id !== i.id));
-    toast('Invitation deleted', i.email, () => setInvitations(list => [...list.slice(0, at), i, ...list.slice(at)]));
+    toast('Invitation deleted', i.email, {action: 'Undo', onAction: () => setInvitations(list => [...list.slice(0, at), i, ...list.slice(at)])});
   };
   return (
     <Page title="Invitations" crumbs={USERS_CRUMB}
@@ -156,7 +156,6 @@ export function UserInvitations() {
         </div></TabPanel>
         </TabPanels>
       </Tabs>
-      <ToastRegion />
     </Page>
   );
 }
@@ -256,8 +255,7 @@ export function UserProfile() {
   const toggleAdmin = () => {
     const was = role!;
     setRole(admin ? 'Registered user' : 'Platform admin');
-    toast(admin ? `${person.name} is no longer a platform admin` : `${person.name} is now a platform admin`, undefined,
-      () => setRole(was));
+    toast(admin ? `${person.name} is no longer a platform admin` : `${person.name} is now a platform admin`, undefined, {action: 'Undo', onAction: () => setRole(was)});
   };
   return (
     <Page title={person.name} crumbs={USERS_CRUMB}
@@ -291,7 +289,6 @@ export function UserProfile() {
           </div>
         </Panel>
       </div>
-      <ToastRegion />
     </Page>
   );
 }

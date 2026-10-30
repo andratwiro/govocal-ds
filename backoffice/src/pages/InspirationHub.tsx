@@ -1,8 +1,8 @@
 import {useMemo, useState} from 'react';
 import {BadgeCheck, Check, Copy, ExternalLink, Globe, Lightbulb, SearchX, Sparkles, Tag, Users} from 'lucide-react';
 import {Avatar, Badge, Banner, Button, Card, EmptyState, FilterChips, type FilterFacet, FilterMenu, type FilterValue,
-  IconButton, Link, Modal, Pagination, Panel, PropertyList, PropertyListItem, queue, SearchField, Select, SelectItem,
-  TableToolbar, ToastRegion} from 'govocal-ds';
+  IconButton, Link, Modal, Pagination, Panel, PropertyList, PropertyListItem, SearchField, Select, SelectItem,
+  Inline, Stack, TableToolbar, Text, TileGrid, toast} from 'govocal-ds';
 import {COUNTRIES, LIBRARY, METHODS, PHASE_TITLES, POPULATIONS, SORTS, TOPICS, type Country, type LibraryProject} from '../data-inspiration-hub';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
@@ -52,41 +52,37 @@ function sortBy(list: LibraryProject[], sort: string) {
 
 // The prototype's project card (.gv-pcard): image on top, title, then the platform line, the methods and the action.
 function ProjectCard({project, highlighted, copied, onCopy, onOpen}: {project: LibraryProject; highlighted?: boolean; copied: boolean; onCopy: () => void; onOpen: () => void}) {
-  const Art = project.art;
+  const participants = project.participants.toLocaleString('en');
   return (
     <Card
       layout="stacked"
-      title={<Link onPress={onOpen} className="bo-inspiration-hub-title">{project.title}</Link>}
+      media={<img src={project.picture} alt="" />}
+      title={<Link onPress={onOpen}>{project.title}</Link>}
       actions={<IconButton aria-label={`Preview: ${project.title}`} onPress={onOpen}><ExternalLink aria-hidden size={16} /></IconButton>}>
-      <div className="bo-inspiration-hub-body">
-        <Gap name="Project image" inline>
-          <span className="bo-inspiration-hub-art">
-            <Art aria-hidden size={40} strokeWidth={1.5} />
-            {highlighted && <span className="bo-inspiration-hub-stamp"><BadgeCheck aria-label="Highlighted" size={20} /></span>}
-          </span>
-        </Gap>
-        <div className="bo-inspiration-hub-meta">
-          <span className="bo-inspiration-hub-platform">
+      <Stack gap="12">
+        <Inline gap="8" justifyContent="space-between">
+          <Inline gap="6">
             <Avatar initials={initials(project.platform)} size={24} />
-            <span className="bo-note">{project.platform} · {project.country}</span>
-          </span>
-          <span className="bo-inspiration-hub-platform bo-note" aria-label={`${project.participants.toLocaleString('en')} participants`}>
-            <Users aria-hidden size={14} />{project.participants.toLocaleString('en')}
-          </span>
-        </div>
+            <Text kind="small" color="meta">{project.platform} · {project.country}</Text>
+          </Inline>
+          <Text kind="small" color="meta" aria-label={`${participants} participants`}>
+            <Inline elementType="span" gap="6"><Users aria-hidden size={14} />{participants}</Inline>
+          </Text>
+        </Inline>
         {highlighted && project.highlight && (
           <Gap name="Quote" inline><blockquote className="bo-inspiration-hub-quote">{project.highlight}</blockquote></Gap>
         )}
-        <div className="bo-inspiration-hub-tags">
+        <Inline gap="8">
+          {highlighted && <Badge icon={<BadgeCheck aria-hidden size={14} />}>Highlighted</Badge>}
           {project.methods.map(m => <Badge key={m}>{m}</Badge>)}
-        </div>
-        <div className="bo-inspiration-hub-actions">
+        </Inline>
+        <Inline gap="12">
           <Button variant="secondary" size={32} isDisabled={copied} onPress={onCopy}>
             {copied ? <Check aria-hidden size={16} /> : <Copy aria-hidden size={16} />}{copied ? 'Copied' : 'Copy project'}
           </Button>
-          {copied && <span className="bo-note">In your drafts</span>}
-        </div>
-      </div>
+          {copied && <Text kind="small" color="meta">In your drafts</Text>}
+        </Inline>
+      </Stack>
     </Card>
   );
 }
@@ -104,11 +100,11 @@ function ProjectPreview({project, copied, onCopy, onClose}: {project: LibraryPro
         </Button>
       </>}>
       {project && (
-        <div className="bo-inspiration-hub-preview">
-          <p>{project.summary}</p>
+        <Stack gap="12">
+          <Text elementType="p" kind="ui">{project.summary}</Text>
           <PropertyList aria-label="About this project">
             <PropertyListItem label="Platform">
-              <span className="bo-inspiration-hub-platform"><Avatar initials={initials(project.platform)} size={24} />{project.platform}</span>
+              <Inline gap="6"><Avatar initials={initials(project.platform)} size={24} />{project.platform}</Inline>
             </PropertyListItem>
             <PropertyListItem label="Country">{project.country}</PropertyListItem>
             <PropertyListItem label="Participants">{`${project.participants.toLocaleString('en')} participants`}</PropertyListItem>
@@ -116,15 +112,15 @@ function ProjectPreview({project, copied, onCopy, onClose}: {project: LibraryPro
             <PropertyListItem label="Population">{project.population}</PropertyListItem>
             <PropertyListItem label="Started">{longDate(project.start)}</PropertyListItem>
           </PropertyList>
-          <h3 className="bo-section-title">Phases</h3>
-          <ol className="bo-inspiration-hub-phases">
+          <Text elementType="h3" kind="body" isStrong color="primary">Phases</Text>
+          <Stack elementType="ol" gap="8">
             {project.methods.map((m, i) => (
-              <li key={m} className="bo-inspiration-hub-phase">
-                <span className="bo-note">{`Phase ${i + 1}`}</span><span>{PHASE_TITLES[m]}</span><Badge>{m}</Badge>
-              </li>
+              <Inline key={m} elementType="li" gap="12">
+                <Text kind="small" color="meta">{`Phase ${i + 1}`}</Text><span>{PHASE_TITLES[m]}</span><Badge>{m}</Badge>
+              </Inline>
             ))}
-          </ol>
-        </div>
+          </Stack>
+        </Stack>
       )}
     </Modal>
   );
@@ -151,11 +147,11 @@ export function InspirationHub() {
   // Copying is instant: the card says so, and a Toast offers Undo.
   const copy = (p: LibraryProject) => {
     setCopied(prev => new Set(prev).add(p.id));
-    queue.add({title: 'Copied to your drafts', description: p.title, action: 'Undo', onAction: () => setCopied(prev => {
+    toast('Copied to your drafts', p.title, {action: 'Undo', onAction: () => setCopied(prev => {
       const next = new Set(prev);
       next.delete(p.id);
       return next;
-    })}, {timeout: 5000});
+    })});
   };
   const card = (p: LibraryProject, highlighted?: boolean) => (
     <li key={p.id} className="bo-inspiration-hub-item">
@@ -164,18 +160,18 @@ export function InspirationHub() {
   );
 
   const toolbar = (
-    <div className="bo-inspiration-hub-toolbar">
+    <Stack gap="8">
       <TableToolbar aria-label="Project tools" heading={projectsWord(rows.length)}>
         <SearchField aria-label="Search projects" placeholder="Search projects" value={query} onChange={fresh(setQuery)} />
         <FilterMenu aria-label="Filter projects" facets={FACETS} value={filters} onChange={fresh(setFilters)} countLabel={projectsWord} />
       </TableToolbar>
       <FilterChips aria-label="Active filters" facets={FACETS} value={filters} onChange={fresh(setFilters)} />
-    </div>
+    </Stack>
   );
 
   return (
     <Page title="Inspiration hub" description="Browse projects on other platforms for inspiration, and copy one to start your own.">
-      <div className="bo-inspiration-hub-stack">
+      <Stack gap="16">
         <Banner>Projects on your platform can show up here for other platforms. To keep one out, contact your success manager.</Banner>
 
         <Panel title="Highlighted" headingLevel={2} description="Picked by the Go Vocal team, with a word on why."
@@ -186,9 +182,9 @@ export function InspirationHub() {
             </Select>
           }>
           {pinned.length ? (
-            <ul className="bo-inspiration-hub-grid" aria-label="Highlighted projects">
+            <TileGrid elementType="ul" layout="gallery" aria-label="Highlighted projects">
               {pinned.map(p => card(p, true))}
-            </ul>
+            </TileGrid>
           ) : (
             <EmptyState layout="panel" icon={<Sparkles size={24} />} headingLevel={3} title="Nothing highlighted here yet"
               description="Highlights for this country appear here as the Go Vocal team picks them." />
@@ -203,20 +199,19 @@ export function InspirationHub() {
           }
           footer={rows.length > 0 && <Pagination page={current} pageCount={pageCount} onPageChange={setPage} aria-label="Project pages" />}>
           {rows.length ? (
-            <ul className="bo-inspiration-hub-grid" aria-label="All projects">
+            <TileGrid elementType="ul" layout="gallery" aria-label="All projects">
               {shown.map(p => card(p))}
-            </ul>
+            </TileGrid>
           ) : (
             <EmptyState layout="panel" icon={<SearchX size={24} />} headingLevel={3} title="No projects match"
               description="Try another search, or fewer filters."
               actions={<Button variant="secondary" size={32} onPress={clear}>Clear search and filters</Button>} />
           )}
         </Panel>
-        <GapLegend names={['project images', 'the highlight quote']} />
-      </div>
+        <GapLegend names={['the highlight quote']} />
+      </Stack>
       <ProjectPreview project={preview} copied={preview ? copied.has(preview.id) : false}
         onCopy={() => { if (preview) copy(preview); }} onClose={() => setPreview(null)} />
-      <ToastRegion />
     </Page>
   );
 }

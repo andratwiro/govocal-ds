@@ -30,7 +30,7 @@ test('dashboard is built from the gv cards, stat tiles and charts, with no gaps 
   await expect(page.getByRole('listitem').filter({hasText: /^Under consideration/})).toContainText('15% · 59');
   await expect(page.getByRole('link', {name: /Waiting for feedback/})).toHaveAttribute('href', '#/inputs');
   await expect(page.getByRole('region', {name: 'Events'})).toContainText('Upcoming3');
-  await expect(page.locator('[data-gap]')).toHaveCount(0);
+  await expect(page.locator('[data-missing-part]')).toHaveCount(0);
 });
 
 // ── The first clicks: tabs as routes, the date preset, the metric selects, downloads, the project filter ──

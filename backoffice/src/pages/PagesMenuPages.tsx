@@ -1,8 +1,8 @@
 import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {Eye, FileQuestion} from 'lucide-react';
-import {Banner, Button, Divider, EmptyState, Panel, queue, Radio, RadioGroup, SectionToggle, Tab, TabList, TabPanel,
-  TabPanels, Tabs, TextField, ToastRegion, MultilingualTextField, type Multiloc} from 'govocal-ds';
+import {Banner, Button, Divider, EmptyState, MultilingualTextField, type Multiloc, Panel, Radio, RadioGroup,
+  SectionToggle, Tab, TabList, TabPanel, TabPanels, Tabs, Text, TextField, toast} from 'govocal-ds';
 import {CUSTOM_PAGE_SECTIONS, HOME_SECTIONS, MENU_ENTRIES, NAV_NAMES, PAGE_INTRO, PAGE_META, type PageSection} from '../data-pages-menu';
 import {LOCALES} from '../data-settings';
 import {Gap} from '../Gap';
@@ -18,7 +18,7 @@ const CRUMB = [{key: 'pages-menu', label: 'Pages & menu', href: '#/pages-menu'}]
 function SaveButton({label, isDisabled, done, onSave}: {label: string; isDisabled: boolean; done: string; onSave: () => void}) {
   return (
     <Button variant="primary" size={32} isDisabled={isDisabled}
-      onPress={() => { onSave(); queue.add({title: done}, {timeout: 5000}); }}>{label}</Button>
+      onPress={() => { onSave(); toast(done); }}>{label}</Button>
   );
 }
 
@@ -54,12 +54,11 @@ export function HomepageBuilder() {
         <Panel title="Preview" description="The homepage's sections, top to bottom.">
           <Gap name="Homepage preview">
             <ol className="bo-pages-menu-preview" aria-label="Homepage preview">
-              {shown.map(s => <li key={s.id} className="bo-note">{s.title}</li>)}
+              {shown.map(s => <li key={s.id}><Text kind="small" color="meta">{s.title}</Text></li>)}
             </ol>
           </Gap>
         </Panel>
       </div>
-      <ToastRegion />
     </Page>
   );
 }
@@ -102,7 +101,6 @@ function NavbarItemForm({itemId}: {itemId: string}) {
           ))}
         </div>
       </Panel>
-      <ToastRegion />
     </Page>
   );
 }
@@ -145,7 +143,7 @@ function CustomPageForm({pageId}: {pageId?: string}) {
           <Tab id="content">Content</Tab>
         </TabList>
         <TabPanels>
-          <TabPanel id="settings" className="react-aria-TabPanel bo-pages-menu-panel">
+          <TabPanel id="settings" className="bo-pages-menu-panel">
             <Panel title="Page settings" description="The page's title, its address on the platform, and what it links to.">
               <div className="bo-pages-menu-form">
                 <MultilingualTextField label="Title" isRequired placeholder="Enter a title" locales={LANGUAGES} value={titles}
@@ -165,7 +163,7 @@ function CustomPageForm({pageId}: {pageId?: string}) {
               </div>
             </Panel>
           </TabPanel>
-          <TabPanel id="content" className="react-aria-TabPanel bo-pages-menu-panel">
+          <TabPanel id="content" className="bo-pages-menu-panel">
             <Panel title="Page content" count={`${shown} of ${CUSTOM_PAGE_SECTIONS.length} shown`}
               description="This page consists of the following sections. You can turn them on or off.">
               <SectionList sections={CUSTOM_PAGE_SECTIONS} on={on} onChange={o => { setOn(o); touch(); }} />
@@ -173,7 +171,6 @@ function CustomPageForm({pageId}: {pageId?: string}) {
           </TabPanel>
         </TabPanels>
       </Tabs>
-      <ToastRegion />
     </Page>
   );
 }

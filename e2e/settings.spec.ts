@@ -215,5 +215,5 @@ test('settings is built from the system, with no gaps', async ({page}) => {
   await expect(page.locator('.gv-card')).toHaveCount(0);
   // The platform name is a Multilingual text field (was a Title field under a Segmented control).
   await expect(page.locator('.gv-multilingual-field')).toBeVisible();
-  await expect(page.locator('[data-gap]')).toHaveCount(0);
+  await expect(page.locator('[data-missing-part]')).toHaveCount(0);
 });
