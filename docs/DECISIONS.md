@@ -167,6 +167,15 @@ Calls made while building the component page (the benchmark plan's Task 1: usage
 - Panel read as interactive by the guard (its count Badge can draw a ×) → **Panel joins the guard's `NOT_INTERACTIVE` list; its page says "Not interactive"** → Panel never passes `onRemove`, so the Badge it draws takes no focus; its actions and body keep their own keys on their own pages.
 - Status before Task 5 tags the parts → **the page reads a `status:<stage>` tag and shows "Draft" without one** → nothing is stable until a developer has reviewed its API.
 - Data table's stories named no component, so its page had no Purpose or props and its index line no export → **`component: DataTable` on the stories, and the doc comment moved onto the export with a first sentence saying what it's for**; Button got its first doc comment.
+- Provenance's shape, which each writer would otherwise invent → **three bullets: "Built by agents from …" (Figma's
+  part, the prototype, or both, with what is Not in Figma), "Reviewed by a person: not yet" (no review of a part is
+  recorded in the repo), "Known limits: …"** → the same three facts on every page, honest by default.
+- Map view has no WAI-ARIA pattern to link → **the Button pattern for its pins, and "one Tab stop, arrows inside" as a
+  composite widget, in words** → the guard needs an APG link; the pins are buttons, and the shared Tab stop is React
+  Aria's composite behaviour (docs/DECISIONS.md, "Maps").
+- `e2e/component-page.spec.ts` showed Avatar as "a part with no guide", which stops being true as guides land → **the
+  test finds an unwritten part from the files and skips when none is left; Avatar's written Provenance gets its own
+  check** → the test keeps proving the unwritten page without naming a part that a writer is about to write.
 
 ## Maps (29 Oct 2026)
 
