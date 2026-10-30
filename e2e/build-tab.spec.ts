@@ -84,6 +84,9 @@ test('Phone preview: the hover action is reachable by keyboard and shows on focu
   await page.goto(story('patterns-project-page-phone-preview--hover-cta'));
   const action = page.locator('.gv-phone__action');
   await expect(action).toHaveCSS('opacity', '0');
+  // The countdown's participation button comes first (it is on the screen), then the phone's action.
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', {name: 'Submit your idea'})).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(action).toBeFocused();
   await expect(action).toHaveCSS('opacity', '1');
