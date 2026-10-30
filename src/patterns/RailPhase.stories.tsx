@@ -22,8 +22,9 @@ export default meta;
 type Story = StoryObj<typeof RailPhase>;
 
 /**
- * The three dots, one after another so the guide joins them. Figma draws only the upcoming row; the
- * completed and live colours, the data chip and "N new" are the prototype's (Not in Figma).
+ * A project's phases in order, so the guide line joins their dots: completed, live (the one open on screen), then two
+ * upcoming; the last can be deleted (point at it). Figma draws only the upcoming row; the completed and live colours,
+ * the count chip and "N new" are the prototype's (Not in Figma).
  */
 export const AllVariants: Story = {
   render: () => (
@@ -55,21 +56,22 @@ export const AllVariants: Story = {
       />
       <RailPhase
         status="upcoming"
-        title="Collect ideas"
+        title="Feedback survey"
         statusLabel="Upcoming"
-        meta="Ideation"
-        href="#collect-new"
+        meta="Survey"
+        href="#survey"
         onDelete={() => {}}
       />
     </div>
   )
 };
 
-/** Figma's own row. */
+/** A phase that hasn't started: grey dot, and here no dates, only its method. The only state Figma draws. */
 export const Upcoming: Story = {
   args: {status: 'upcoming', title: 'Collect ideas', statusLabel: 'Upcoming', meta: 'Ideation', href: '#'}
 };
 
+/** The phase running now, open on screen: light green dot, what it has gathered so far, and 18 inputs nobody has read. */
 export const Live: Story = {
   args: {
     status: 'live',
@@ -77,11 +79,13 @@ export const Live: Story = {
     chip: '1,204 votes',
     statusLabel: 'In progress',
     meta: '1 Oct to 30 Nov · Voting',
+    newCount: 18,
     isCurrent: true,
     href: '#'
   }
 };
 
+/** A phase that has ended: green dot, what it gathered, its dates. */
 export const Completed: Story = {
   args: {
     status: 'completed',
@@ -93,15 +97,18 @@ export const Completed: Story = {
   }
 };
 
-/** A plain meta line, no state word: the line is all one colour. */
+/**
+ * A meta line given whole, with no separate status word: it never turns green. On an upcoming phase it looks the same
+ * as Upcoming (whose word is grey anyway); on a live or completed phase only the status word would be green.
+ */
 export const MetaOnly: Story = {
   name: 'Meta only',
   args: {status: 'upcoming', title: 'Share what we heard', meta: 'Upcoming · Information', href: '#'}
 };
 
 /**
- * Not in Figma (the prototype's rail): hover the row, or Tab to it, and a delete button shows at its end ("Delete
- * phase" on hover); it takes "N new"'s place while it shows.
+ * Not in Figma (the prototype's rail): point at the row, or Tab to its delete, and a delete button shows at its end,
+ * with the tooltip "Delete phase"; it takes "N new"'s place while it shows. Nothing shows until you do.
  */
 export const WithDelete: Story = {
   name: 'With delete',
@@ -111,8 +118,9 @@ export const WithDelete: Story = {
 };
 
 /**
- * The rail composed as the prototype's Participation panel: 264 of content, the phase rows reaching 10
- * past it on both sides, each phase in its own list item; hover a phase for its delete.
+ * The whole rail, as on a project's screens: the column on the left with the project's phases (the prototype's
+ * Participation panel). Its content is 264px wide; the phase rows reach 10px past it on both sides so their hover
+ * colour has room. Point at a phase for its delete.
  */
 export const Rail: StoryObj = {
   render: () => (

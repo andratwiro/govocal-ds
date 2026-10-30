@@ -78,9 +78,9 @@ export interface RailPhaseProps extends PlacementProps {
 }
 
 /**
- * A phase in the project rail. Phases placed one after another (siblings, or
- * each in its own `<li>`) are joined by a guide line through their dots, green
- * after a completed phase.
+ * One phase of a project in the project rail, the column of phases on the left of a project's admin screens: its dot,
+ * name, count, status, dates and method, and "N new". Phases placed one after another (siblings, or each in its own
+ * `<li>`) are joined by a guide line through their dots, green after a completed phase.
  */
 export function RailPhase({
   title,

@@ -258,8 +258,8 @@ part's `<Name>.guide.md`) names the part to use instead.
   - Not for: For a single phase row, or a phase that can be deleted from the rail: use **Rail phase** (the timeline takes no For steps of a setup checklist: use **Setup step**. For a page's trail: use **Breadcrumbs**.
 - **Rail header** `RailHeader`: The rail's header row: 18 tall (Figma), its 28 buttons hanging 5 above and below and 6 past the right edge so their icons line up with the rail. Stories: All Variants, With Action, With Panel Toggle, Without Action, Keyboard.
   - Not for: For a label over a group inside the rail ("Spotlight"): use **Section label**. For the head of a page: use **Page header**, or **Project header** on a project. For the head of a panel: use **Panel**'s head.
-- **Rail phase** `RailPhase` (not in Figma): A phase in the project rail. Stories: All Variants, Upcoming, Live, Completed, Meta Only, With Delete, Keyboard.
-  - Not for: For a whole timeline without deletes: use **Phase timeline**, which builds the rows from data. For a step of a setup checklist: use **Setup step**. For a row in a list of records: use **List row**.
+- **Rail phase** `RailPhase` (not in Figma): One phase of a project in the project rail, the column of phases on the left of a project's admin screens: its dot, name, count, status, dates and method, an… Stories: All Variants, Upcoming, Live, Completed, Meta Only, With Delete, Keyboard.
+  - Not for: For the phase list where no phase can be deleted: use **Phase timeline**. It looks the same, but a developer gives it For a step of a setup checklist, with a done tick and no dates: use **Setup step**. For one idea or input in a list of many, with its own columns: use **List row**.
 
 ## Patterns / Recipes
 - **Form validation** `Form` (not in Figma): Form validation, a recipe: every field in its invalid state, and a form that checks itself on submit and moves focus to the first field to fix. Stories: All Invalid, Submit To Validate.
