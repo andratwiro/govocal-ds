@@ -1,17 +1,21 @@
 'use client';
 import type {CSSProperties, ReactNode} from 'react';
 import {clsx} from 'clsx';
-import {mergeLabels} from '../labels';
 import './PageHeader.css';
 
 /** The words Page header says itself (docs/API.md rule 11). */
 export interface PageHeaderLabels {
-  /** The name of the `nav` around the breadcrumbs. */
-  breadcrumbs: string;
+  /**
+   * No longer used: Breadcrumbs draws and names its own `nav` (`<Breadcrumbs labels={{nav: '…'}} />`). Kept until the
+   * next release so pages that pass it still compile.
+   *
+   * @deprecated Name the nav on Breadcrumbs.
+   */
+  breadcrumbs?: string;
 }
 
 /** Page header's English words; a page passes its own over them with `labels`. */
-export const pageHeaderLabels: PageHeaderLabels = {breadcrumbs: 'Breadcrumbs'};
+export const pageHeaderLabels: PageHeaderLabels = {};
 
 export interface PageHeaderProps {
   /** The page's title: Title type, the page's first heading. */
@@ -22,10 +26,9 @@ export interface PageHeaderProps {
   description?: ReactNode;
   /** The page's actions, at the end of the title's row: a primary Button, a Menu button. */
   actions?: ReactNode;
-  /** The trail back to the parent pages, above the title: a `Breadcrumbs`. It is put in a `nav` named by
-   * `labels.breadcrumbs`. */
+  /** The trail back to the parent pages, above the title: a `Breadcrumbs`, which draws its own `nav` landmark. */
   breadcrumbs?: ReactNode;
-  /** Its own words (the breadcrumbs' `nav` name), over `pageHeaderLabels`. */
+  /** Its own words, over `pageHeaderLabels` (none today: the breadcrumbs name their own nav). */
   labels?: Partial<PageHeaderLabels>;
   /** Places the header (its margin below, a grid area); never paints it. */
   className?: string;
@@ -45,12 +48,12 @@ export interface PageHeaderProps {
  * ```
  */
 export function PageHeader({
-  title, headingLevel = 1, description, actions, breadcrumbs, labels, className, style
+  title, headingLevel = 1, description, actions, breadcrumbs, className, style
 }: PageHeaderProps) {
   const Heading = `h${headingLevel}` as const;
   return (
     <header className={clsx('gv-page-header', className)} style={style}>
-      {breadcrumbs != null && <nav aria-label={mergeLabels(pageHeaderLabels, labels).breadcrumbs} className="gv-page-header__breadcrumbs">{breadcrumbs}</nav>}
+      {breadcrumbs != null && <div className="gv-page-header__breadcrumbs">{breadcrumbs}</div>}
       <div className="gv-page-header__row">
         <Heading className="gv-page-header__title">{title}</Heading>
         {actions != null && <div className="gv-page-header__actions">{actions}</div>}

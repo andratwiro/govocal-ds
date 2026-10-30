@@ -76,6 +76,8 @@ badge in words, a mode switch read as one choice, and menu buttons whose menus r
 
 ## Changes
 
+- 30 Oct 2026: the breadcrumb `nav` is Breadcrumbs' own (named by `labels.breadcrumb`); the project level's panel
+  toggle sits before it, outside the landmark.
 - 30 Oct 2026: `status="archived"`: Archived ▾ in place of Publish, with the way back in its menu (docs/DECISIONS.md, "Small
   fixes").
 - 30 Oct 2026: an unread dot per mode (`hasUnread`), `saveState` for Save → saving → Back to project, a `share` slot,

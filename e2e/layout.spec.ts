@@ -62,3 +62,13 @@ test('app frame: with the nav hidden, the page takes the full width', async ({pa
   expect(Math.round(box.width)).toBe(1200);
   await expect(page.getByRole('navigation', {name: 'Main'})).toHaveCount(0);
 });
+
+test('breadcrumbs own their nav landmark; Page header adds none of its own', async ({page}) => {
+  await page.goto('/storybook/iframe.html?id=components-navigation-breadcrumbs--project&viewMode=story');
+  await expect(page.getByRole('navigation', {name: 'Breadcrumbs'}).getByRole('link').first()).toBeVisible();
+  await page.goto('/storybook/iframe.html?id=components-layout-containers-page-header--with-breadcrumbs&viewMode=story');
+  const nav = page.getByRole('navigation');
+  await expect(nav).toHaveCount(1);
+  await expect(nav).toHaveAccessibleName('Breadcrumbs');
+  await expect(nav.getByRole('link', {name: 'Tools'})).toBeVisible();
+});

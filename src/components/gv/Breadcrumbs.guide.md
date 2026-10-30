@@ -16,6 +16,7 @@
 
 ## Anatomy
 
+0. **Nav**: the whole part is a `nav` landmark named "Breadcrumbs" (`labels.nav`, or `aria-label`).
 1. **Crumbs**: links to each level above, in order, then the current page in strong text (not a link).
 2. **Separators**: a chevron (default) or a slash (editor), hidden from screen readers.
 3. **Panel toggle and back arrow** (editor only): two ghost Icon buttons, split by a divider, before the trail.
@@ -40,11 +41,12 @@ link, and the last one is the current page (`aria-current="page"`).
 
 ## Accessibility
 
-**The breadcrumbs give you:** a list of links, the current page marked `aria-current="page"` and left out of the tab
+**The breadcrumbs give you:** their own `nav` landmark, named "Breadcrumbs", a list of links, the current page marked `aria-current="page"` and left out of the tab
 order, separators hidden from screen readers, and named editor buttons.
 
 **You still own:**
-- The landmark: wrap it in `<nav aria-label="Breadcrumbs">` (the back office's Page does); the part draws no `nav`.
+- Wrapping it in nothing: it draws its own `nav`, so a second one around it would be a landmark twice. Name it for
+  the place when a page has two trails (`aria-label`).
 - Crumb names that match the pages they lead to.
 - Words in the page's language (`labels`).
 
@@ -60,10 +62,12 @@ order, separators hidden from screen readers, and named editor buttons.
 - **Built by:** AI agents, from Figma (Breadcrumbs, node 14:875: Project, Phase · Draft, Phase · Live) and the prototype
   (`.pj-bc`).
 - **Reviewed by a person:** not yet.
-- **Known limits:** no landmark of its own (the page wraps it); long trails don't collapse into "…".
+- **Known limits:** long trails don't collapse into "…".
 
 ## Changes
 
+- 30 Oct 2026: draws its own `nav` landmark, named "Breadcrumbs" (`labels.nav`); Page header and Project header no
+  longer wrap it in theirs.
 - 30 Oct 2026: this page written; a play function proves Tab and Enter.
 - 29 Oct 2026: `level="phase"` and `phaseState` became `variant="editor"` and `status` (docs/DECISIONS.md, "Public API and
   prop names").

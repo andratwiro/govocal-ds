@@ -29,10 +29,11 @@ describe('VisuallyHidden', () => {
 });
 
 describe('PageHeader', () => {
-  it('breadcrumbs in a nav, the title as h1 with the actions, then the description', () => {
+  it('the breadcrumbs (which draw their own nav, so none here), the title as h1 with the actions, then the description', () => {
     const html = renderToStaticMarkup(h(PageHeader, {title: 'Tokens', description: 'About', actions: h('button', null, 'New'),
       breadcrumbs: h('ol', null, 'trail')}));
-    const order = ['<nav aria-label="Breadcrumbs"', '<h1 class="gv-page-header__title">Tokens</h1>', '<button>New</button>',
+    expect(html).not.toContain('<nav');
+    const order = ['<div class="gv-page-header__breadcrumbs"><ol>trail</ol></div>', '<h1 class="gv-page-header__title">Tokens</h1>', '<button>New</button>',
       '<p class="gv-page-header__description">About</p>'].map(s => html.indexOf(s));
     expect(order.every(i => i >= 0)).toBe(true);
     expect([...order].sort((a, b) => a - b)).toEqual(order);

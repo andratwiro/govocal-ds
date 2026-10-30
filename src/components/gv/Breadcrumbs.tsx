@@ -13,8 +13,10 @@ import type {PlacementProps} from '../className';
 import {mergeLabels} from '../labels';
 import './Breadcrumbs.css';
 
-/** The words Breadcrumbs says itself (docs/API.md rule 11), all `editor` only. */
+/** The words Breadcrumbs says itself (docs/API.md rule 11): its nav's name, and the `editor` variant's words. */
 export interface BreadcrumbsLabels {
+  /** The name of the `nav` landmark the breadcrumbs draw, when no `aria-label` is given. */
+  nav: string;
   /** The panel toggle's name. */
   togglePanel: string;
   /** The back arrow's name. */
@@ -26,7 +28,7 @@ export interface BreadcrumbsLabels {
 }
 
 /** Breadcrumbs' English words; a page passes its own over them with `labels`. */
-export const breadcrumbsLabels: BreadcrumbsLabels = {togglePanel: 'Toggle panel', back: 'Back', live: 'Live', draft: 'Draft'};
+export const breadcrumbsLabels: BreadcrumbsLabels = {nav: 'Breadcrumbs', togglePanel: 'Toggle panel', back: 'Back', live: 'Live', draft: 'Draft'};
 
 export interface BreadcrumbItem {
   /** A stable id for the crumb. */
@@ -54,14 +56,17 @@ export interface BreadcrumbsProps extends Omit<RACBreadcrumbsProps<object>, 'chi
   onTogglePanel?: () => void;
   /** `editor` only: fires when the back arrow is pressed. */
   onBack?: () => void;
-  /** Its own words (the toggle's and back arrow's names, Live, Draft), over `breadcrumbsLabels`. */
+  /** Its own words (the nav's name, the toggle's and back arrow's names, Live, Draft), over `breadcrumbsLabels`. */
   labels?: Partial<BreadcrumbsLabels>;
+  /** The nav landmark's name, over `labels.nav` ("Breadcrumbs"). */
+  'aria-label'?: string;
 }
 
 /**
  * Breadcrumbs (Figma node 14:875, Level=Project/Phase·Draft/Phase·Live; prototype `.pj-bc`).
  * The phase levels lead with two ghost Icon buttons split by a divider and end with a Status badge,
- * as Figma's instances do. The last crumb is the current page (`aria-current="page"`).
+ * as Figma's instances do. The last crumb is the current page (`aria-current="page"`). It draws its own `nav`
+ * landmark, named "Breadcrumbs" (`labels.nav` or `aria-label`), so the page wraps it in nothing.
  */
 export function Breadcrumbs({
   variant = 'default',
@@ -70,6 +75,7 @@ export function Breadcrumbs({
   onTogglePanel,
   onBack,
   labels,
+  'aria-label': ariaLabel,
   className,
   style,
   ...rest
@@ -77,7 +83,7 @@ export function Breadcrumbs({
   const l = mergeLabels(breadcrumbsLabels, labels);
   const last = items.length - 1;
   return (
-    <div className={clsx('gv-breadcrumb', className)} style={style} data-variant={variant}>
+    <nav className={clsx('gv-breadcrumb', className)} style={style} data-variant={variant} aria-label={ariaLabel ?? l.nav}>
       {variant === 'editor' && (
         <>
           <IconButton onPress={onTogglePanel} aria-label={l.togglePanel}>
@@ -110,6 +116,6 @@ export function Breadcrumbs({
         ))}
       </RACBreadcrumbs>
       {variant === 'editor' && <StatusBadge status={status}>{status === 'live' ? l.live : l.draft}</StatusBadge>}
-    </div>
+    </nav>
   );
 }

@@ -198,7 +198,7 @@ export function ProjectHeader({
   const isProject = level === 'project';
   const isBar = modes != null || people != null || onSave != null || (level === 'project' && status != null) || shareMenu != null || share != null;
   const crumbs = (
-    <nav className={clsx('gv-header', !isBar && className)} style={isBar ? undefined : style} data-level={level} aria-label={l.breadcrumb}>
+    <div className={clsx('gv-header', !isBar && className)} style={isBar ? undefined : style} data-level={level}>
       {isProject && onTogglePanel && (
         <>
           <IconButton onPress={onTogglePanel} aria-label={l.toggleSetup}>
@@ -213,6 +213,7 @@ export function ProjectHeader({
             {key: 'parent', label: parentLabel ?? l.projects, href: parentHref, onPress: onParentPress},
             {key: 'project', label: projectName}
           ]}
+          labels={{nav: l.breadcrumb}}
         />
       ) : (
         <Breadcrumbs
@@ -224,11 +225,11 @@ export function ProjectHeader({
           ]}
           onTogglePanel={onTogglePanel}
           onBack={onBack}
-          labels={{togglePanel: l.toggleTimeline, back: l.backToProject(projectName), live: l.live,
+          labels={{nav: l.breadcrumb, togglePanel: l.toggleTimeline, back: l.backToProject(projectName), live: l.live,
             draft: status === 'archived' ? l.archived : l.draft}}
         />
       )}
-    </nav>
+    </div>
   );
 
   if (!isBar) return crumbs;

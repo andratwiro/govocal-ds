@@ -668,13 +668,14 @@ Interface, from `src/components/gv/Breadcrumbs.tsx`.
 
 Component, from `src/components/gv/Breadcrumbs.tsx`.
 
+- `aria-label?: string`
 - `items: BreadcrumbItem[]`
 - `labels?: Partial<BreadcrumbsLabels>`
 - `onBack?: () => void`
 - `onTogglePanel?: () => void`
 - `status?: 'draft' | 'live'`
 - `variant?: 'default' | 'editor'`
-- Passed through from @react-types/shared (75): `aria-describedby`, `aria-details`, `aria-label`, `aria-labelledby`, `dir`, `hidden`, `id`, `inert`, `lang`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`
+- Passed through from @react-types/shared (74): `aria-describedby`, `aria-details`, `aria-labelledby`, `dir`, `hidden`, `id`, `inert`, `lang`, `onAnimationEnd`, `onAnimationEndCapture`, `onAnimationIteration`, `onAnimationIterationCapture`, `onAnimationStart`, `onAnimationStartCapture`, `onAuxClick`, `onAuxClickCapture`, `onClick`, `onClickCapture`, `onContextMenu`, `onContextMenuCapture`, `onDoubleClick`, `onDoubleClickCapture`, `onGotPointerCapture`, `onGotPointerCaptureCapture`, `onLostPointerCapture`, `onLostPointerCaptureCapture`, `onMouseDown`, `onMouseDownCapture`, `onMouseEnter`, `onMouseLeave`, `onMouseMove`, `onMouseMoveCapture`, `onMouseOut`, `onMouseOutCapture`, `onMouseOver`, `onMouseOverCapture`, `onMouseUp`, `onMouseUpCapture`, `onPointerCancel`, `onPointerCancelCapture`, `onPointerDown`, `onPointerDownCapture`, `onPointerEnter`, `onPointerLeave`, `onPointerMove`, `onPointerMoveCapture`, `onPointerOut`, `onPointerOutCapture`, `onPointerOver`, `onPointerOverCapture`, `onPointerUp`, `onPointerUpCapture`, `onScroll`, `onScrollCapture`, `onTouchCancel`, `onTouchCancelCapture`, `onTouchEnd`, `onTouchEndCapture`, `onTouchMove`, `onTouchMoveCapture`, `onTouchStart`, `onTouchStartCapture`, `onTransitionCancel`, `onTransitionCancelCapture`, `onTransitionEnd`, `onTransitionEndCapture`, `onTransitionRun`, `onTransitionRunCapture`, `onTransitionStart`, `onTransitionStartCapture`, `onWheel`, `onWheelCapture`, `suppressHydrationWarning`, `translate`
 - Passed through from react-aria-components (7): `className`, `dependencies`, `isDisabled`, `onAction`, `render`, `slot`, `style`
 
 ### `breadcrumbsLabels`
@@ -692,6 +693,7 @@ Interface, from `src/components/gv/Breadcrumbs.tsx`.
 - `back: string`
 - `draft: string`
 - `live: string`
+- `nav: string`
 - `togglePanel: string`
 
 ### `BreadcrumbsProps`
@@ -3677,7 +3679,7 @@ PageHeaderLabels
 
 Interface, from `src/components/gv/PageHeader.tsx`.
 
-- `breadcrumbs: string`
+- `breadcrumbs?: string`
 
 ### `PageHeaderProps`
 

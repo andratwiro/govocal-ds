@@ -16,7 +16,7 @@
 
 ## Anatomy
 
-1. **Breadcrumbs** (optional): above the title, 12 above it, in a `nav` named "Breadcrumbs".
+1. **Breadcrumbs** (optional): above the title, 12 above it; Breadcrumbs draws its own `nav`, named "Breadcrumbs".
 2. **Title**: Title type, the page's `h1` unless `headingLevel` says otherwise.
 3. **Actions** (optional): at the end of the title's row.
 4. **Description** (optional): Small, meta grey, 8 under the title.
@@ -34,11 +34,11 @@ Not interactive itself: it can't be reached with Tab and answers no keys. The br
   full stop.
 - The description is one sentence saying what the page is for, ending with a full stop.
 - One primary action at most; the rest secondary, or in a menu.
-- The breadcrumbs' `nav` name is "Breadcrumbs" (`labels.breadcrumbs`).
+- The breadcrumbs' `nav` name is "Breadcrumbs", set on Breadcrumbs (`labels.nav`).
 
 ## Accessibility
 
-**The header gives you:** the page's first heading (an `h1` by default), and breadcrumbs inside a named `nav` landmark.
+**The header gives you:** the page's first heading (an `h1` by default), and a place for the breadcrumbs, which bring their own named `nav` landmark.
 
 **You still own:**
 - One `h1` per page: set `headingLevel` when the header sits under another `h1`.
@@ -61,6 +61,8 @@ Not interactive itself: it can't be reached with Tab and answers no keys. The br
 
 ## Changes
 
+- 30 Oct 2026: no `nav` of its own around the breadcrumbs: Breadcrumbs draws it; `labels.breadcrumbs` is ignored and
+  goes in the next release.
 - 30 Oct 2026: this page written.
 - 29 Oct 2026: added from the back office's local page head (16 pages); the title is an `h1` unless `headingLevel` says
   otherwise (docs/DECISIONS.md, "Composition contracts in code").
