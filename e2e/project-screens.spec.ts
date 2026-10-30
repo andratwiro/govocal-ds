@@ -81,3 +81,15 @@ test('Card, the link rows: each next action is one link by its name', async ({pa
   await expect(page.getByRole('link', {name: /Create report/})).toContainText('Reading the results of this phase');
   await report(page);
 });
+
+test('Stat card: a flat sparkline under a light numeral; pressing it opens its detail by keyboard', async ({page}) => {
+  await page.goto(story('patterns-project-page-stat-card--pressable'));
+  const card = page.getByRole('button', {name: /Participants/});
+  await expect(card.locator('.gv-sparkline__area')).toHaveCount(1);
+  await expect(card.locator('linearGradient')).toHaveCount(0);
+  const weight = await card.getByText('215', {exact: true}).evaluate(e => getComputedStyle(e).fontWeight);
+  expect(Number(weight)).toBeLessThan(500);
+  await card.focus();
+  await expect(card).toBeFocused();
+  await report(page);
+});

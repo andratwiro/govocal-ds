@@ -74,7 +74,8 @@ export interface StatTileProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
    * @default 'default'
    */
   size?: 'default' | 'large';
-  /** Optional slot under the value and note, e.g. a `Sparkline`. */
+  /** Optional slot under the value and note. For a number with its trend line, use Stat card (`StatCard`), not a
+   * Sparkline here. */
   children?: ReactNode;
   /** Its own words (the trend's direction, the help icon's name), over `statTileLabels`. */
   labels?: Partial<StatTileLabels>;

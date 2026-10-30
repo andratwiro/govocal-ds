@@ -45,3 +45,21 @@ export const Keyboard: Story = {
     await expect(canvas.getByRole('status')).toHaveTextContent('Audience opened');
   }
 };
+
+/**
+ * Insights' tiles, which drew their trend with a Stat tile and a Sparkline in its slot: a Stat card is the one part for
+ * a number with its trend line. Flat fill, straight segments, a light numeral.
+ */
+export const InInsights: Story = {
+  name: 'In Insights',
+  decorators: [Story => <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, 240px)', gap: 16}}><Story /></div>],
+  render: () => (
+    <>
+      <StatCard label="Participants" value="873" series={[20, 24, 31, 28, 35, 44, 52, 61]} caption="Last 30 days: +61" />
+      <StatCard label="Votes" value="1,240" series={[0, 120, 380, 610, 820, 990, 1130, 1240]} caption="Since 19 Oct" />
+    </>
+  )
+};
+
+/** Right to left: the chevron at the left; the line still runs oldest to newest, left to right, as charts do. */
+export const RightToLeft: Story = {name: 'Right to left', globals: {direction: 'rtl'}, args: {...Pressable.args}};

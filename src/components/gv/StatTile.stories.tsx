@@ -1,6 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {StatTile} from './StatTile';
-import {Sparkline} from './Chart';
 import {Divider} from './Divider';
 import {Grid} from './Grid';
 import {Inline} from './Inline';
@@ -65,18 +64,6 @@ export const Band: Story = {
       <StatTile label="Comments" value="1,105" />
       <StatTile label="Reactions" value="4,060" />
       <StatTile label="Participation rate" value="56.5%" />
-    </div>
-  )
-};
-
-/** The slot under the value takes a Sparkline: the prototype's "stat card with sparkline". */
-export const WithSparkline: Story = {
-  name: 'With note and sparkline',
-  render: () => (
-    <div style={{width: 240}}>
-      <StatTile layout="with-note" label="Participants" value="873" note="Last 30 days: +61">
-        <Sparkline values={[20, 24, 31, 28, 35, 44, 52, 61]} height={34} showGrid={false} />
-      </StatTile>
     </div>
   )
 };

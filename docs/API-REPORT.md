@@ -5261,6 +5261,7 @@ type Space = '0' | '2' | '4' | '6' | '8' | '10' | '12' | '16' | '20' | '24' | '2
 
 Component, from `src/components/gv/Chart.tsx`.
 
+- `areaFill?: 'gradient' | 'flat'`
 - `aria-label?: string`
 - `className?: string`
 - `color?: ChartColor`

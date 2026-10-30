@@ -459,6 +459,13 @@ export interface SparklineProps extends PlacementProps {
   showGrid?: boolean;
   /** The soft fill under the line. @default true */
   showArea?: boolean;
+  /**
+   * The fill's look. `gradient` fades from the line's colour to nothing (Figma). `flat` is one quiet tint, as a Stat
+   * card draws it (the prototype's "Collecting now"). Not in Figma.
+   *
+   * @default 'gradient'
+   */
+  areaFill?: 'gradient' | 'flat';
   /** The line's colour. @default 'line-primary' */
   color?: ChartColor;
   /**
@@ -474,7 +481,7 @@ export interface SparklineProps extends PlacementProps {
 }
 
 /** Figma "Chart" · Sparkline: a bare trend line with a fading fill, no axes. Plain SVG. */
-export function Sparkline({values, label: labelProp, xAxis, height = 110, showGrid: grid = true, showArea: area = true, color = 'line-primary', isInteractive: interactive = xAxis != null, labels, className, style, ...rest}: SparklineProps) {
+export function Sparkline({values, label: labelProp, xAxis, height = 110, showGrid: grid = true, showArea: area = true, areaFill = 'gradient', color = 'line-primary', isInteractive: interactive = xAxis != null, labels, className, style, ...rest}: SparklineProps) {
   const l = mergeLabels(chartLabels, labels);
   const label = labelProp ?? l.trend;
   const id = 'gv-spark-' + useId().replace(/[^a-zA-Z0-9_-]/g, '');
@@ -498,7 +505,7 @@ export function Sparkline({values, label: labelProp, xAxis, height = 110, showGr
       role="img"
       aria-label={words}
       focusable="false">
-      {area && (
+      {area && areaFill === 'gradient' && (
         <defs>
           <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="currentColor" stopOpacity={0.16} />
@@ -509,7 +516,9 @@ export function Sparkline({values, label: labelProp, xAxis, height = 110, showGr
       {grid && [0.25, 0.5, 0.75].map(f => (
         <line key={f} className="gv-sparkline__grid" x1={0} x2={VB_W} y1={height * f} y2={height * f} vectorEffect="non-scaling-stroke" />
       ))}
-      {area && n > 1 && <path d={`${line} L${VB_W} ${height} L0 ${height} Z`} fill={`url(#${id})`} />}
+      {area && n > 1 && (areaFill === 'flat'
+        ? <path className="gv-sparkline__area" d={`${line} L${VB_W} ${height} L0 ${height} Z`} />
+        : <path d={`${line} L${VB_W} ${height} L0 ${height} Z`} fill={`url(#${id})`} />)}
       {n > 0 && <path className="gv-sparkline__line" data-highlighted={hovered === 0 || undefined} d={line} vectorEffect="non-scaling-stroke" />}
     </svg>
   );

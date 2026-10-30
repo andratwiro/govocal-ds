@@ -54,8 +54,10 @@
   color: var(--gv-text-secondary);
 }
 
+/* A lighter numeral than Stat tile's (the prototype's "Collecting now"): Stat small at the regular weight. */
 .gv-stat-card__value {
   font: var(--gv-type-stat-small);
+  font-weight: var(--gv-font-weight-regular);
   color: var(--gv-text-primary);
 }
 

@@ -176,6 +176,10 @@
   stroke-linecap: round;
   transition: stroke-width var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 }
+/* The flat fill (a Stat card's sparkline): one quiet tint under the line. */
+.gv-sparkline__area {
+  fill: var(--gv-surface-neutral);
+}
 .gv-sparkline__line[data-highlighted] {
   stroke-width: 2.8;
 }

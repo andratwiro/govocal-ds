@@ -23,8 +23,9 @@ export interface StatCardProps extends PlacementProps {
 }
 
 /**
- * A stat with its sparkline (prototype `.pj-aud`, "Collecting now"): label over a number, the Sparkline, a caption,
- * and a chevron when it opens a detail. Not in Figma yet.
+ * A stat with its sparkline (prototype `.pj-aud`, "Collecting now"; Insights' tiles): label over a light number, a
+ * flat sparkline of straight segments, a caption, and a chevron when it opens a detail. The one part for a number
+ * with its trend line: Stat tile draws none. Not in Figma yet.
  */
 export function StatCard({label, value, series, caption, onPress, labels, className, style}: StatCardProps) {
   const body = (
@@ -36,7 +37,7 @@ export function StatCard({label, value, series, caption, onPress, labels, classN
         </span>
         {onPress && <ChevronRight className="gv-stat-card__chevron" aria-hidden size={16} />}
       </span>
-      {series && series.length > 1 && <Sparkline className="gv-stat-card__spark" values={series} label={label} height={34} showGrid={false} labels={labels} />}
+      {series && series.length > 1 && <Sparkline className="gv-stat-card__spark" values={series} label={label} height={34} showGrid={false} areaFill="flat" labels={labels} />}
       {caption && <span className="gv-stat-card__caption">{caption}</span>}
     </>
   );

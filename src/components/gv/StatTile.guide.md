@@ -7,14 +7,14 @@
 - In a band of tiles at the top of a phase's Insights tab: five or six side by side, the same height (`tall` lines a
   plain tile up with tiles that have a note).
 - With a `note` under the number ("updating live", "Took part in the last 90 days"), a `trend` ("↑ 12% 7-day
-  change"), a Sparkline in its slot, or `info` behind a help icon when the number needs explaining ("Representativeness
+  change"), or `info` behind a help icon when the number needs explaining ("Representativeness
   score").
 - With 0 when nothing is counted yet: the same tile, so the band keeps its shape and fills in place.
 
 ## When not to use
 
 - For a count that leads somewhere or filters a list: use **Stat row**.
-- For a stat with its sparkline that opens a detail on a project page: use **Stat card**.
+- For a number with its trend line (a sparkline), on a project page or in Insights: use **Stat card**.
 - For a chart with a title, a legend and a footer: use **Dashboard card**.
 - For how several numbers compare: use **Bar row** or a **Chart**.
 - For a label and value about one record: use **Property list**.
@@ -26,7 +26,7 @@
 3. **Value**: the number, large, on a 28 line.
 4. **Trend** (optional): an arrow, the change and what it covers; green up, red down, grey flat.
 5. **Note** (`with-note` layout): a line under the number.
-6. **Slot** (optional): under the value and note, such as a Sparkline.
+6. **Slot** (optional): under the value and note. Not for a sparkline: that is a Stat card.
 
 Layouts (Figma's Type): `default`, `tall`, `with-note` (picked for you when there is a note).
 
@@ -72,7 +72,7 @@ screen readers.
 ## Related
 
 - **Stat row**: the smaller count that leads somewhere.
-- **Stat card**: the project page's stat with a sparkline.
+- **Stat card**: a number with its trend line.
 - **Help popover**: what the help icon opens.
 - **Tile grid**: lays a band of tiles out.
 - **Dashboard card**: the chart tiles beside or under a band.
@@ -88,6 +88,8 @@ screen readers.
 
 - 30 Oct 2026: a `plain` look for a report's key figures on a Page stage, with `size="large"` and `isHighlighted`
   (docs/DECISIONS.md, "Report parts").
+- 30 Oct 2026: the "With note and sparkline" story is gone: a number with its trend line is a Stat card, which
+  draws it flat (docs/DECISIONS.md, "Project screens").
 - 30 Oct 2026: this page written.
 - 29 Oct 2026: its words come through `labels`.
 - 29 Oct 2026: `type` became `layout`, Figma's values kept (docs/DECISIONS.md, "Public API and prop names").
