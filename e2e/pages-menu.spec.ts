@@ -1,13 +1,30 @@
 import {test, expect, type Page} from '@playwright/test';
 import {axeViolations, a11yReport} from './axe';
 
-// Pages & menu on the current components: each tab a Panel over a Data table (the header row is the grid's first
-// row, so items are counted in its body), row actions in the "…" menu, instant changes in a Toast with Undo, a
+// Pages & menu on the current components: the Menu tab a Panel over a Sortable list, the Pages tab a Panel over a
+// Data table (the header row is the grid's first row, so pages are counted in its body), row actions in the "…" menu, instant changes in a Toast with Undo, a
 // page's delete confirmed in an Alert dialog, saves said in a Toast.
 const MENU = ['Home', 'All projects', 'All input', 'Events', 'About', 'FAQ'];
 const DEFAULTS = ['Home', 'All projects', 'All input', 'Events'];
 
 const body = (page: Page, name: string) => page.getByRole('grid', {name}).getByRole('rowgroup').last().getByRole('row');
+// The navbar is a Sortable list (a grid list: rows, no header); Home sits pinned above it.
+const items = (page: Page) => page.getByRole('grid', {name: 'Menu items'}).getByRole('row');
+const MOVABLE = MENU.slice(1);
+// Sortable list from the keyboard (as e2e/report-parts.spec.ts): Enter picks the row up, the arrow walks the drop
+// places until the one named `to` has focus, Enter drops it there.
+async function carry(page: Page, key: 'ArrowUp' | 'ArrowDown', to: RegExp) {
+  await page.keyboard.press('Enter');
+  const place = page.locator('[aria-roledescription="drop indicator"]:focus');
+  await expect(place).toHaveCount(1);
+  for (let i = 0; i < 8 && !to.test((await place.getAttribute('aria-label')) ?? ''); i++) {
+    await page.keyboard.press(key);
+    await expect(place).toHaveCount(1);
+  }
+  await expect(place).toHaveAttribute('aria-label', to);
+  await page.keyboard.press('Enter');
+}
+
 const toast = (page: Page) => page.locator('.react-aria-Toast');
 const option = async (page: Page, menu: string, item: string) => {
   await page.getByRole('button', {name: menu}).click();
@@ -25,42 +42,48 @@ test('pages & menu follows the real admin: Menu and Pages tabs, the menu items i
   await expect(panel.getByText('Organise the menu that appears across your site.')).toBeVisible();
   await expect(panel.getByRole('button', {name: 'New menu item'})).toBeVisible();
 
-  const rows = body(page, 'Menu items');
-  await expect(rows).toHaveCount(MENU.length);
-  for (const [i, label] of MENU.entries()) await expect(rows.nth(i)).toContainText(label);
-  for (const label of DEFAULTS) await expect(rows.filter({hasText: label}).getByText('Default')).toBeVisible();
+  const panelText = panel.getByText('Home', {exact: true});
+  await expect(panelText).toBeVisible();
+  const rows = items(page);
+  await expect(rows).toHaveCount(MOVABLE.length);
+  for (const [i, label] of MOVABLE.entries()) await expect(rows.nth(i)).toContainText(label);
+  for (const label of DEFAULTS.slice(1)) await expect(rows.filter({hasText: label}).getByText('Default')).toBeVisible();
   for (const label of ['About', 'FAQ']) await expect(rows.filter({hasText: label}).getByText('Custom page')).toBeVisible();
   a11yReport(await axeViolations(page, '.gv-panel'));
 });
 
-test('home is locked and opens the homepage editor; other items move with the arrows and leave with Undo', async ({page}) => {
+test('home is locked and opens the homepage editor; other items drag into order and leave with Undo', async ({page}) => {
   await page.goto('/backoffice/#/pages-menu');
-  const rows = body(page, 'Menu items');
-  const home = rows.first();
-  await expect(home.getByLabel('Always first')).toBeVisible();
-  await expect(home.getByRole('button', {name: /^Move Home/})).toHaveCount(0);
-  await expect(page.getByRole('button', {name: 'Move All projects up'})).toBeDisabled();
-  await expect(page.getByRole('button', {name: 'Move FAQ down'})).toBeDisabled();
+  const rows = items(page);
+  // Home is pinned above the list: a lock, no handle.
+  await expect(page.getByLabel('Always first')).toBeVisible();
+  await expect(page.getByRole('button', {name: 'Move Home'})).toHaveCount(0);
+  await expect(page.getByRole('button', {name: 'Move All projects'})).toBeVisible();
+  // No arrows and no Position column any more.
+  await expect(page.getByRole('button', {name: /^Move .* (up|down)$/})).toHaveCount(0);
+  await expect(page.getByRole('columnheader', {name: 'Position'})).toHaveCount(0);
   await page.getByRole('button', {name: 'Options for Home'}).click();
   await expect(page.getByRole('menuitem', {name: 'Edit homepage'})).toBeVisible();
   await expect(page.getByRole('menuitem', {name: 'Remove from menu'})).toHaveCount(0);
   await page.keyboard.press('Escape');
 
-  // Move FAQ above About.
-  await page.getByRole('button', {name: 'Move FAQ up'}).click();
-  await expect(rows.nth(4)).toContainText('FAQ');
+  // Move FAQ above About from the keyboard: its handle, Enter, up to the place between Events and About, Enter.
+  await page.getByRole('button', {name: 'Move FAQ'}).focus();
+  await carry(page, 'ArrowUp', /between Events and About/);
+  await expect(rows.nth(3)).toContainText('FAQ');
+  await expect(rows.nth(4)).toContainText('About');
 
   // Remove Events, take it back with Undo; remove it again, then add it back from New menu item.
   await option(page, 'Options for Events', 'Remove from menu');
-  await expect(rows).toHaveCount(MENU.length - 1);
+  await expect(rows).toHaveCount(MOVABLE.length - 1);
   await toast(page).filter({hasText: 'Events removed from the menu'}).getByRole('button', {name: 'Undo'}).click();
-  await expect(rows).toHaveCount(MENU.length);
-  await expect(rows.nth(3)).toContainText('Events');
+  await expect(rows).toHaveCount(MOVABLE.length);
+  await expect(rows.nth(2)).toContainText('Events');
   await option(page, 'Options for Events', 'Remove from menu');
-  await expect(rows).toHaveCount(MENU.length - 1);
+  await expect(rows).toHaveCount(MOVABLE.length - 1);
   await page.getByRole('button', {name: 'New menu item'}).click();
   await page.getByRole('menuitem', {name: /Events/}).click();
-  await expect(rows).toHaveCount(MENU.length);
+  await expect(rows).toHaveCount(MOVABLE.length);
   await expect(rows.last()).toContainText('Events');
   await expect(toast(page).filter({hasText: 'Events added to the menu'})).toBeVisible();
 });
@@ -91,9 +114,9 @@ test('pages lists the custom pages; the switch puts a page in the menu, with Und
   await expect(grants.getByText('In menu', {exact: true})).toBeVisible();
   await expect(page.getByRole('tab', {name: 'Menu (7)'})).toBeVisible();
   await page.getByRole('tab', {name: /^Menu/}).click();
-  await expect(body(page, 'Menu items').last()).toContainText('Neighbourhood grants');
+  await expect(items(page).last()).toContainText('Neighbourhood grants');
   await toast(page).filter({hasText: 'Neighbourhood grants added to the menu'}).getByRole('button', {name: 'Undo'}).click();
-  await expect(body(page, 'Menu items')).toHaveCount(MENU.length);
+  await expect(items(page)).toHaveCount(MOVABLE.length);
 });
 
 test('deleting a page asks first; with none left the Panel shows an Empty state', async ({page}) => {
@@ -215,8 +238,9 @@ test('a custom page\'s Edit and View open the page; an unknown page says so', as
   await expect(page.getByRole('heading', {level: 1, name: 'Pages & menu'})).toBeVisible();
 });
 
-test('pages & menu names what the system still lacks', async ({page}) => {
+test('pages & menu names what the system still lacks: the navbar\'s reordering is the Sortable list now', async ({page}) => {
   await page.goto('/backoffice/#/pages-menu');
+  await expect(page.getByRole('grid', {name: 'Menu items'})).toBeVisible();
   const gaps = await page.locator('[data-missing-part]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-missing-part')))]);
-  expect(gaps).toEqual(expect.arrayContaining(['Drag-and-drop reordering']));
+  expect(gaps).not.toContain('Drag-and-drop reordering');
 });

@@ -1,11 +1,10 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router';
-import {ArrowDown, ArrowUp, Eye, FileText, GripVertical, Lock, Pencil, Plus, Trash2, X} from 'lucide-react';
+import {Eye, FileText, Lock, MoreHorizontal, Pencil, Plus, Trash2, X} from 'lucide-react';
 import {AlertDialog, Badge, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
-  DataTableOptions, DataTableRow, DataTableStack, EmptyState, IconButton, Inline, Menu, MenuItem, MenuTrigger, Panel,
-  Stack, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, toast} from 'govocal-ds';
+  DataTableOptions, DataTableRow, DataTableStack, EmptyState, IconButton, Menu, MenuItem, MenuTrigger, Panel,
+  SortableList, Stack, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, toast} from 'govocal-ds';
 import {MENU_ENTRIES, MENU_START, PAGE_META, PAGES_START, type MenuEntry} from '../data-pages-menu';
-import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
 
 const entry = (id: string) => MENU_ENTRIES.find(e => e.id === id)!;
@@ -23,17 +22,15 @@ function useStored<K extends keyof typeof store>(key: K) {
 
 type Update = (f: (v: string[]) => string[]) => void;
 
-/** The navigation bar: a Panel over a Data table, Home pinned first, the rest moved with the arrows. */
+/** The navigation bar: a Panel over a Sortable list, Home pinned first above it, the rest dragged into their order. */
 function MenuTab({menu, setMenu, pages}: {menu: string[]; setMenu: Update; pages: string[]}) {
   const navigate = useNavigate();
   const addable = MENU_ENTRIES.filter(e => !menu.includes(e.id) && (e.kind !== 'page' || pages.includes(e.id)));
   const items = menu.map(entry);
-  // Home stays first, as in the real admin.
-  const swap = (i: number, j: number) => setMenu(m => {
-    const next = [...m];
-    [next[i], next[j]] = [next[j], next[i]];
-    return next;
-  });
+  // Home stays first, as in the real admin: it sits above the list, and the list holds the rest.
+  const home = items.find(i => i.kind === 'home');
+  const movable = items.filter(i => i.kind !== 'home');
+  const reorder = (next: MenuEntry[]) => setMenu(() => [...(home ? [home.id] : []), ...next.map(i => i.id)]);
   const remove = (item: MenuEntry) => {
     const at = menu.indexOf(item.id);
     setMenu(m => m.filter(id => id !== item.id));
@@ -45,6 +42,22 @@ function MenuTab({menu, setMenu, pages}: {menu: string[]; setMenu: Update; pages
   };
   const edit = (item: MenuEntry) =>
     navigate(item.kind === 'home' ? '/pages-menu/homepage-builder' : `/pages-menu/navbar-items/edit/${item.id}`);
+  // A row: the item, its kind, its "…" menu (Edit; Remove for every item but Home).
+  const row = (item: MenuEntry) => {
+    const pinned = item.kind === 'home';
+    return <>
+      <span>{item.label}</span>
+      {item.kind === 'page' ? <Badge variant="outlined">Custom page</Badge> : <Badge>Default</Badge>}
+      <span className="bo-push" />
+      <MenuTrigger>
+        <IconButton aria-label={`Options for ${item.label}`}>{icon(MoreHorizontal)}</IconButton>
+        <Menu aria-label={`Options for ${item.label}`} onAction={k => k === 'edit' ? edit(item) : remove(item)}>
+          <MenuItem id="edit" icon={icon(Pencil)}>{pinned ? 'Edit homepage' : 'Edit menu item'}</MenuItem>
+          {!pinned && <MenuItem id="remove" icon={icon(X)}>Remove from menu</MenuItem>}
+        </Menu>
+      </MenuTrigger>
+    </>;
+  };
   return (
     <Panel title="Navigation bar" count={items.length} isFlush
       description="Organise the menu that appears across your site. Add new items and drag to reorder."
@@ -56,48 +69,17 @@ function MenuTab({menu, setMenu, pages}: {menu: string[]; setMenu: Update; pages
               description={e.kind === 'page' ? 'Custom page' : 'Platform page'}>{e.label}</MenuItem>)}
           </Menu>
         </MenuTrigger>
-      }
-      footer={<GapLegend names={['drag-and-drop reordering (the arrows stand in)']} />}>
-      <DataTable aria-label="Menu items">
-        <DataTableHeader>
-          <DataTableColumn align="number">Position</DataTableColumn>
-          <DataTableColumn isRowHeader>Item</DataTableColumn>
-          <DataTableColumn>Type</DataTableColumn>
-          <DataTableColumn align="options" showLabel={false}>Move</DataTableColumn>
-          <DataTableColumn align="options" showLabel={false}>Actions</DataTableColumn>
-        </DataTableHeader>
-        <DataTableBody>
-          {items.map((item, i) => {
-            const pinned = item.kind === 'home';
-            return (
-              <DataTableRow key={item.id} id={item.id}>
-                <DataTableCell align="number">{i + 1}</DataTableCell>
-                <DataTableCell textValue={item.label}>
-                  <Inline elementType="span" gap="8">
-                    {pinned
-                      ? <Lock aria-label="Always first" size={16} />
-                      : <Gap name="Drag-and-drop reordering" inline><GripVertical aria-hidden size={16} /></Gap>}
-                    {item.label}
-                  </Inline>
-                </DataTableCell>
-                <DataTableCell>{item.kind === 'page' ? <Badge variant="outlined">Custom page</Badge> : <Badge>Default</Badge>}</DataTableCell>
-                <DataTableCell align="options">
-                  {!pinned && <Inline elementType="span" gap="4" wrap="nowrap" justifyContent="end">
-                    <IconButton aria-label={`Move ${item.label} up`} isDisabled={i <= 1} onPress={() => swap(i, i - 1)}>{icon(ArrowUp)}</IconButton>
-                    <IconButton aria-label={`Move ${item.label} down`} isDisabled={i === items.length - 1} onPress={() => swap(i, i + 1)}>{icon(ArrowDown)}</IconButton>
-                  </Inline>}
-                </DataTableCell>
-                <DataTableCell align="options">
-                  <DataTableOptions aria-label={`Options for ${item.label}`} onAction={k => k === 'edit' ? edit(item) : remove(item)}>
-                    <MenuItem id="edit" icon={icon(Pencil)}>{pinned ? 'Edit homepage' : 'Edit menu item'}</MenuItem>
-                    {!pinned && <MenuItem id="remove" icon={icon(X)}>Remove from menu</MenuItem>}
-                  </DataTableOptions>
-                </DataTableCell>
-              </DataTableRow>
-            );
-          })}
-        </DataTableBody>
-      </DataTable>
+      }>
+      {/* Home: the lock where the others have their handle, in the list's row rhythm (Sortable list's 4 + 24 + 8). */}
+      {home && (
+        <div className="bo-pages-menu-home">
+          <span className="bo-pages-menu-lock"><Lock aria-label="Always first" size={16} /></span>
+          {row(home)}
+        </div>
+      )}
+      <SortableList aria-label="Menu items" items={movable} onReorder={reorder} itemLabel={i => i.label}>
+        {row}
+      </SortableList>
     </Panel>
   );
 }

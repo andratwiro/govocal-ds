@@ -58,3 +58,4 @@ while carrying (picked up, where it will drop, dropped), and a drop line that do
 ## Changes
 
 - 30 Oct 2026: built (drag by handle, keyboard reordering, trailing controls, disabled), with this page.
+- 30 Oct 2026: candidate, its second and third screens in the back office (Arrange projects, the navigation bar).

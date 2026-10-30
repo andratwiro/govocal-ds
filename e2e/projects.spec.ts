@@ -105,11 +105,12 @@ test('projects names what the system still lacks', async ({page}) => {
   await page.goto('/backoffice/#/projects');
   const gaps = await page.locator('[data-missing-part]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-missing-part')))]);
   // The project thumbnail is the Data table's DataTableThumbnail now.
-  // Arrange projects reorders with buttons until the system has drag and drop.
+  // Arrange projects is a Sortable list now: no drag-and-drop gap.
   expect(gaps).toEqual([]);
   // Templates are Choice cards with their method's tile in the media slot: no "Template image" gap any more.
   await page.getByRole('tab', {name: 'Arrange projects'}).click();
-  await expect(page.locator('[data-missing-part="Drag-and-drop reordering"]').first()).toBeVisible();
+  await expect(page.getByRole('grid', {name: 'Project order'})).toBeVisible();
+  await expect(page.locator('[data-missing-part="Drag-and-drop reordering"]')).toHaveCount(0);
   // The Calendar lists the month's projects where the real admin draws a timeline; templates have no image yet.
   await page.getByRole('tab', {name: 'Calendar'}).click();
   await expect(page.locator('[data-missing-part="Project timeline"]')).toBeVisible();
@@ -299,9 +300,17 @@ test('Folders, Spaces, Calendar and Arrange projects tabs show their views', asy
   await expect(page.getByRole('grid', {name: 'July 2026'})).toHaveCount(0);
   await page.getByRole('tab', {name: 'Arrange projects'}).click();
   await expect(page.getByRole('region', {name: 'Homepage order'})).toBeVisible();
-  const order = page.getByRole('grid', {name: 'Project order'}).getByRole('rowgroup').nth(1).getByRole('row');
+  const order = page.getByRole('grid', {name: 'Project order'}).getByRole('row');
   await expect(order.first()).toContainText('Green Corridors for Larkvale');
-  await page.getByRole('button', {name: 'Move Green Corridors for Larkvale down'}).click();
+  // The Sortable list from the keyboard: the handle, Enter, down to the place after Harbour Plan 2030, Enter.
+  await page.getByRole('button', {name: 'Move Green Corridors for Larkvale'}).focus();
+  await page.keyboard.press('Enter');
+  const place = page.locator('[aria-roledescription="drop indicator"]:focus');
+  for (let i = 0; i < 8 && !/between Harbour Plan 2030 and/.test((await place.getAttribute('aria-label')) ?? ''); i++) {
+    await page.keyboard.press('ArrowDown');
+    await expect(place).toHaveCount(1);
+  }
+  await page.keyboard.press('Enter');
   await expect(order.first()).toContainText('Harbour Plan 2030');
   await expect(order.nth(1)).toContainText('Green Corridors for Larkvale');
 });

@@ -72,6 +72,9 @@ body { margin: 0; }
 
 /* ── Pages & menu ── */
 .bo-pages-menu-panel { padding-block-start: var(--gv-space-16); }
+/* Home, pinned above the navbar's Sortable list, in its row's places: 40 tall, the lock in the handle's 24 box. */
+.bo-pages-menu-home { display: flex; align-items: center; gap: var(--gv-space-8); min-block-size: var(--gv-size-control-40); padding-inline: var(--gv-space-4) var(--gv-space-8); }
+.bo-pages-menu-lock { display: inline-flex; justify-content: center; inline-size: var(--gv-size-control-24); }
 .bo-pages-menu-preview { margin: 0; padding-inline-start: var(--gv-space-20); display: grid; gap: var(--gv-space-8); }
 
 /* ── Feedback: project settings side tabs, phase status ── */

@@ -1,19 +1,19 @@
 import {useMemo, useState, type ComponentProps} from 'react';
 import {useNavigate} from 'react-router';
-import {ArrowDown, ArrowUp, Calendar, Asterisk, ChartColumn, ChevronDown, ChevronLeft, ChevronRight, ClipboardList, Eye,
+import {Calendar, Asterisk, ChartColumn, ChevronDown, ChevronLeft, ChevronRight, ClipboardList, Eye,
   FileText, Folder, FolderPlus, GripVertical, Info, LayoutGrid, Lightbulb, MapPin, Orbit, Plus, UserRound, Users, Vote}
   from 'lucide-react';
 import {AlertDialog, Avatar, Badge, Button, ChoiceCard, DataTable, DataTableAssignee, DataTableBody, DataTableCell,
   DataTableColumn, DataTableEmpty, DataTableHeader, DataTableOptions, DataTableRow, DataTableStack, DataTableThumbnail,
   EmptyState, FilterChips, type FilterFacet, FilterMenu, type FilterValue, IconButton, Inline, Link, Menu, MenuItem,
   MenuTrigger, Modal, MultilingualTextField, type Multiloc, Pagination, Panel, RadioGroup, SearchField, Select,
-  SelectItem, Stack, StatusBadge, Tab, TableToolbar, TabList, TabPanel, TabPanels, Tabs, Text, TextArea, TextField,
+  SelectItem, SortableList, Stack, StatusBadge, Tab, TableToolbar, TabList, TabPanel, TabPanels, Tabs, Text, TextArea, TextField,
   TileGrid, toast, VisuallyHidden} from 'govocal-ds';
 import {DatePicker, DateRangePicker, ToggleButton} from 'govocal-ds/base';
 import {LOCALES} from '../data-settings';
 import {PROJECTS, type Project} from '../data';
 import {CALENDAR_START, FOLDERS, PENDING, SPACES, TEMPLATES, type Folder as FolderRow} from '../data-projects';
-import {Gap, GapLegend} from '../Gap';
+import {Gap} from '../Gap';
 import {Page} from './Page';
 
 // The view tabs, each with its icon as in the prototype's sub-nav.
@@ -373,53 +373,22 @@ function CalendarView({projects}: {projects: Project[]}) {
   );
 }
 
-/** The order of projects on the platform's homepage. Buttons move them until the system has drag and drop. */
+/** The order of projects on the platform's homepage: the Sortable list, dragged by a handle or moved from the keyboard. */
 function ArrangeView({projects}: {projects: Project[]}) {
   const [order, setOrder] = useState(() => projects.map(p => p.id));
   const ids = [...order.filter(id => projects.some(p => p.id === id)), ...projects.map(p => p.id).filter(id => !order.includes(id))];
-  const swap = (i: number, j: number) => {
-    const next = [...ids];
-    [next[i], next[j]] = [next[j], next[i]];
-    setOrder(next);
-  };
+  const items = ids.map(id => projects.find(p => p.id === id)!);
   return (
-    <Panel title="Homepage order" count={ids.length} description="The order projects appear in on the platform's homepage." isFlush
-      footer={<GapLegend names={['Drag-and-drop reordering']} />}>
-      <DataTable aria-label="Project order">
-        <DataTableHeader>
-          <DataTableColumn align="number">Position</DataTableColumn>
-          <DataTableColumn isRowHeader>Project</DataTableColumn>
-          <DataTableColumn>Visibility</DataTableColumn>
-          <DataTableColumn align="options" showLabel={false}>Move</DataTableColumn>
-        </DataTableHeader>
-        <DataTableBody>
-          {ids.map((id, i) => {
-            const p = projects.find(x => x.id === id)!;
-            return (
-              <DataTableRow key={id} id={id}>
-                <DataTableCell align="number">{i + 1}</DataTableCell>
-                <DataTableCell textValue={p.title}>
-                  <Inline gap="8" wrap="nowrap" elementType="span">
-                    <Gap name="Drag-and-drop reordering" inline><GripVertical aria-hidden size={16} /></Gap>
-                    <DataTableStack leading={<ProjectTile p={p} />} sub={p.folder}>{p.title}</DataTableStack>
-                  </Inline>
-                </DataTableCell>
-                <DataTableCell><Visibility p={p} /></DataTableCell>
-                <DataTableCell align="options">
-                  <Inline elementType="span" gap="4" wrap="nowrap" justifyContent="end">
-                    <IconButton aria-label={`Move ${p.title} up`} isDisabled={i === 0} onPress={() => swap(i, i - 1)}>
-                      <ArrowUp aria-hidden size={16} />
-                    </IconButton>
-                    <IconButton aria-label={`Move ${p.title} down`} isDisabled={i === ids.length - 1} onPress={() => swap(i, i + 1)}>
-                      <ArrowDown aria-hidden size={16} />
-                    </IconButton>
-                  </Inline>
-                </DataTableCell>
-              </DataTableRow>
-            );
-          })}
-        </DataTableBody>
-      </DataTable>
+    <Panel title="Homepage order" count={ids.length} isFlush
+      description="The order projects appear in on the platform's homepage. Drag a project by its handle to move it.">
+      <SortableList aria-label="Project order" items={items} onReorder={next => setOrder(next.map(p => p.id))}
+        itemLabel={p => p.title}>
+        {p => <>
+          <DataTableStack leading={<ProjectTile p={p} />} sub={p.folder}>{p.title}</DataTableStack>
+          <span className="bo-push" />
+          <Visibility p={p} />
+        </>}
+      </SortableList>
     </Panel>
   );
 }
