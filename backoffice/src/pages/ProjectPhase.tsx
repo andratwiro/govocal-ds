@@ -175,15 +175,19 @@ export function ProjectRail({project, href, current, added, onAdd, onHide, remov
   );
 }
 
-// "Project · Build": the front-office preview on the stage, the setup checklist in the right panel.
-export const CHECKLIST: {title: string; action: 'open' | 'expand' | 'pick'; body?: string}[] = [
+// The project's setup steps: "Before you publish" while a draft; once published, Project details shows the first five
+// (Plan participation is the rail's job by then), without their marks and with the project's own area and tags.
+export const CHECKLIST: {title: string; action: 'open' | 'expand' | 'pick'; body?: string; draftOnly?: boolean}[] = [
   {title: 'Settings', action: 'open'},
   {title: 'Edit project page', action: 'open'},
   {title: 'Set project card', action: 'expand', body: 'The card residents see on the homepage and in project lists: an image, a title and a one-line summary.'},
   {title: 'Set area', action: 'pick'},
   {title: 'Set topic tags', action: 'pick'},
-  {title: 'Plan participation', action: 'open'}
+  {title: 'Plan participation', action: 'open', draftOnly: true}
 ];
+/** A published project's area and topic tags, as Project details shows them. */
+const SET_AREA = [AREAS[0]];
+const SET_TAGS = TOPICS.slice(0, 2);
 
 const pin = <MapPin aria-hidden size={16} />;
 const counted = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
@@ -193,14 +197,14 @@ const stepMark = (isDone: boolean) => (isDone ? <CircleCheck aria-hidden size={1
 const chosen = (value?: string) => (value ? [{label: value, isSelected: true}] : undefined);
 
 /** Set area, Card's pick row with a Menu: one of three choices, "Selected areas ›" a checklist of areas. */
-function SetArea({onChange}: {onChange?: () => void}) {
-  const [mode, setMode] = useState<string | null>(null);
-  const [areas, setAreas] = useState<Set<string>>(new Set());
+function SetArea({onChange, leading, isSet}: {onChange?: () => void; leading: (isDone: boolean) => ReactNode; isSet?: boolean}) {
+  const [mode, setMode] = useState<string | null>(isSet ? 'selected' : null);
+  const [areas, setAreas] = useState<Set<string>>(new Set(isSet ? SET_AREA : []));
   const names = AREAS.filter(a => areas.has(a));
   const value = mode === 'none' ? 'No specific area' : mode === 'all' ? 'All areas'
     : mode === 'selected' && names.length ? (names.length === 1 ? names[0] : counted(names.length, 'area', 'areas')) : undefined;
   return (
-    <Card title="Set area" control="pick" pickerKind="menu" leading={stepMark(value != null)} pills={chosen(value)} picker={
+    <Card title="Set area" control="pick" pickerKind="menu" leading={leading(value != null)} pills={chosen(value)} picker={
       <Menu aria-label="Area" selectionMode="single" selectedKeys={mode ? [mode] : []}
         onSelectionChange={keys => { setMode(keys === 'all' ? null : [...keys].map(String)[0] ?? null); onChange?.(); }}>
         <MenuItem id="none" icon={pin} description="The project will not show when filtering by area.">No specific area</MenuItem>
@@ -219,10 +223,10 @@ function SetArea({onChange}: {onChange?: () => void}) {
 }
 
 /** Set topic tags, Card's pick row with the Option list, searchable, with its footer and Done. */
-function SetTopicTags({onChange}: {onChange?: () => void}) {
-  const [tags, setTags] = useState<string[]>([]);
+function SetTopicTags({onChange, leading, isSet}: {onChange?: () => void; leading: (isDone: boolean) => ReactNode; isSet?: boolean}) {
+  const [tags, setTags] = useState<string[]>(isSet ? SET_TAGS : []);
   return (
-    <Card title="Set topic tags" control="pick" leading={stepMark(tags.length > 0)}
+    <Card title="Set topic tags" control="pick" leading={leading(tags.length > 0)}
       pills={chosen(tags.length ? counted(tags.length, 'tag', 'tags') : undefined)} picker={
         <OptionList aria-label="Topic tags" items={TOPICS.map(t => ({id: t, label: t}))} value={tags} onChange={t => { setTags(t); onChange?.(); }}
           placeholder="Search tags..." labels={{search: () => 'Search tags'}}
@@ -231,20 +235,21 @@ function SetTopicTags({onChange}: {onChange?: () => void}) {
   );
 }
 
-/** One step of the project's setup, as Card's rows (its "Setup row · link" and "· pick" stories, a `leading` mark):
- * on the project overview, before publishing and in Project details. */
-export function ChecklistStep({step, onOpen, onChange}: {step: typeof CHECKLIST[number]; onOpen: (title: string) => void;
-  onChange?: () => void}): ReactNode {
-  if (step.title === 'Set area') return <SetArea onChange={onChange} />;
-  if (step.title === 'Set topic tags') return <SetTopicTags onChange={onChange} />;
+/** One step of the project's setup, as Card's rows (its "Setup row · link" and "· pick" stories): before publishing
+ * with a `leading` mark (to do, or done); in a published project's Project details bare, its area and tags set. */
+export function ChecklistStep({step, onOpen, onChange, isPublished}: {step: typeof CHECKLIST[number]; onOpen: (title: string) => void;
+  onChange?: () => void; isPublished?: boolean}): ReactNode {
+  const leading = (isDone: boolean) => (isPublished ? undefined : stepMark(isDone));
+  if (step.title === 'Set area') return <SetArea onChange={onChange} leading={leading} isSet={isPublished} />;
+  if (step.title === 'Set topic tags') return <SetTopicTags onChange={onChange} leading={leading} isSet={isPublished} />;
   if (step.action === 'expand') {
     return (
-      <Card title={step.title} control="expand" leading={stepMark(false)}>
+      <Card title={step.title} control="expand" leading={leading(false)}>
         <Text elementType="p" kind="small" color="meta">{step.body}</Text>
       </Card>
     );
   }
-  return <Card title={step.title} control="link" leading={stepMark(false)} onOpen={() => onOpen(step.title)} />;
+  return <Card title={step.title} control="link" leading={leading(false)} onOpen={() => onOpen(step.title)} />;
 }
 
 // Where each checklist card leads: two open a settings tab, the rest a stub until they're drawn.

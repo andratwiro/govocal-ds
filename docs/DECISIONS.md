@@ -31,6 +31,16 @@ Calls made moving the overview and phase screens closer to the prototype with th
 - Insights rows mixing Stat tiles and Stat cards → **one kind per row: four Stat tiles with notes on a vote, six Stat
   tiles on ideas, in a Tile grid; "Who is voting" over the demographics; Download insights joins Recommended
   actions** → the prototype's equal tiles; the trend lives in the chart under them.
+- Live ▾ offered only Archive project; the prototype opens a visibility popover → **Menu sections with single
+  selection that keep the menu open (Who can find it: Public / Private; Who can open it: Everyone / Admins & managers /
+  Selected groups), Done, then Archive project as a last section** → Project header's `publishMenu` takes menu items
+  only, so Done is an item, not the prototype's full-width primary button (a gap for the system); archiving stays one
+  press away.
+- Project details once published: 6 rows with marks, all empty → **the prototype's five rows (Plan participation
+  only before publishing), no marks, the project's area and two tags set** → the marks track a checklist, which a
+  published project has finished.
+- Share popover: 30 of padding (the popover's 6 plus the starter Dialog's 24) vs the prototype's ≈14 → **a flush
+  Dialog with the content's own 8** → the popover's 6 + 8 on the spacing scale.
 
 ## Preview parts and the Gantt chart (30 Oct 2026, deep review 2: S10–S12)
 

@@ -1,7 +1,7 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, type ReactNode} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router';
-import {Archive, ChevronUp, Info, Link, Rocket, RotateCcw, Settings} from 'lucide-react';
-import {ActionRow, AlertDialog, Avatar, AvatarGroup, Badge, Button, Card, Divider, Grid, IconButton, Inline, MenuItem, Panel,
+import {Archive, ChevronUp, Eye, EyeOff, Info, Link, Lock, Rocket, RotateCcw, Settings, Users} from 'lucide-react';
+import {ActionRow, AlertDialog, Avatar, AvatarGroup, Badge, Button, Card, Divider, Grid, Header, IconButton, Inline, type Key, MenuItem, MenuSection, Panel,
   PanelSection, PhoneHeader, PhoneImage, PhonePreview, PhoneStage, ProjectHeader, SectionLabel, Select, SelectItem, Stack, StatCard,
   Text, TextField, toast, useNumberFormatter, VisuallyHidden} from 'govocal-ds';
 import {Dialog, DialogTrigger, Form, Popover} from 'govocal-ds/base';
@@ -39,6 +39,9 @@ function Overview({projectId}: {projectId?: string}) {
   const [removed, deletePhase] = useDeletedPhases();
   const [confirm, setConfirm] = useState<PubStatus | null>(null);
   const [dirty, setDirty] = useState(false);
+  // Who can find the live project, and who can open it (the Live menu).
+  const [find, setFind] = useState<Key>('public');
+  const [open, setOpen] = useState<Key>('everyone');
   const project = PROJECTS.find(p => p.id === projectId);
   const [status, setStatus] = useState<PubStatus>(project?.status === 'Live' ? 'Published' : 'Draft');
   if (!project) return <Navigate to="/projects" replace />;
@@ -58,7 +61,10 @@ function Overview({projectId}: {projectId?: string}) {
         hasChanges={dirty} onSave={() => { setDirty(false); toast('Changes saved'); }}
         share={<SharePopover project={project} canCopy={live} />}
         status={live ? 'live' : status === 'Archived' ? 'archived' : 'draft'}
-        publishMenu={(
+        publishMenu={live ? (
+          <LiveMenu find={find} onFindChange={setFind} open={open} onOpenChange={setOpen}
+            next={<MenuItem id={next.to} textValue={next.label} icon={<NextIcon aria-hidden size={16} />} onAction={() => setConfirm(next.to)}>{next.label}</MenuItem>} />
+        ) : (
           <MenuItem id={next.to} textValue={next.label} icon={<NextIcon aria-hidden size={16} />} onAction={() => setConfirm(next.to)}>
             {next.label}
           </MenuItem>
@@ -92,6 +98,37 @@ function Overview({projectId}: {projectId?: string}) {
   );
 }
 
+// Live ▾, after the prototype's visibility popover: who can find the project and who can open it (one pick each, the
+// menu staying open), Done, then the way to archive it as a last section. Menu sections with single selection; the
+// prototype's full-width primary Done is a plain item (Project header's menu takes items only).
+const FIND = [
+  {id: 'public', label: 'Public', icon: Eye, description: 'Appears on the homepage, in the project list and in search.'},
+  {id: 'private', label: 'Private', icon: EyeOff, description: 'Hidden from those places. Only people with the link can reach it.'}
+];
+const OPEN = [
+  {id: 'everyone', label: 'Everyone', icon: Users, description: 'Any resident can open it and take part.'},
+  {id: 'admins', label: 'Admins & managers', icon: Lock, description: 'Only administrators and project managers.'},
+  {id: 'groups', label: 'Selected groups', icon: Lock, description: 'Only people in the groups you choose.'}
+];
+function LiveMenu({find, onFindChange, open, onOpenChange, next}: {find: Key; onFindChange: (k: Key) => void; open: Key;
+  onOpenChange: (k: Key) => void; next: ReactNode}) {
+  const section = (title: string, items: typeof FIND, value: Key, onChange: (k: Key) => void) => (
+    <MenuSection selectionMode="single" disallowEmptySelection shouldCloseOnSelect={false} selectedKeys={[value]}
+      onSelectionChange={keys => { const [k] = keys === 'all' ? [] : [...keys]; if (k != null) onChange(k); }}>
+      <Header>{title}</Header>
+      {items.map(({id, label, icon: Icon, description}) => (
+        <MenuItem key={id} id={id} textValue={label} icon={<Icon aria-hidden size={16} />} description={description}>{label}</MenuItem>
+      ))}
+    </MenuSection>
+  );
+  return <>
+    {section('Who can find it', FIND, find, onFindChange)}
+    {section('Who can open it', OPEN, open, onOpenChange)}
+    <MenuSection aria-label="Done"><MenuItem id="done">Done</MenuItem></MenuSection>
+    <MenuSection aria-label="Project status">{next}</MenuSection>
+  </>;
+}
+
 // The Access popover recipe (its "Default" story), built here from Stack, Inline and Text so the page's CSS only places
 // it: invite by email, the people with access with their roles, Copy link (on once the project is published).
 const ROLES = [{id: 'edit', label: 'Can edit'}, {id: 'view', label: 'Can view'}];
@@ -116,8 +153,9 @@ function SharePopover({project, canCopy}: {project: Project; canCopy: boolean}) 
     <DialogTrigger>
       <Button variant="secondary" size={32} hasMenu>Share</Button>
       <Popover placement="bottom end" offset={6} showArrow={false}>
-        <Dialog aria-label="Share" className="bo-project-share">
-          <Stack gap="12">
+        {/* Flush, the content's own 8 inside the popover's 6: the prototype's 14 edge. */}
+        <Dialog aria-label="Share" className="bo-project-share" isFlush>
+          <Stack gap="12" padding="8">
             <Form onSubmit={e => { e.preventDefault(); invite(); }}>
               <Stack gap="4">
                 <SectionLabel>Invite people</SectionLabel>
@@ -171,9 +209,9 @@ function Setup({project, o, live, draft, onSettings, onChange}: {project: Projec
   const [stub, setStub] = useState<string | null>(null);
   const steps = (
     <Stack elementType="ul" gap="8" aria-label="Setup steps">
-      {CHECKLIST.map(c => (
+      {CHECKLIST.filter(c => draft || !c.draftOnly).map(c => (
         <li key={c.title} data-gv="setup-card">
-          <ChecklistStep step={c} onChange={onChange}
+          <ChecklistStep step={c} onChange={onChange} isPublished={!draft}
             onOpen={title => { const t = CHECKLIST_TAB[title]; if (t) onSettings(t); else setStub(title); }} />
         </li>
       ))}

@@ -80,9 +80,13 @@ test('collecting now, next actions and the folded project details', async ({page
   await expect(details).toHaveAttribute('aria-expanded', 'true');
   // The details are the project's setup steps, Card's link and pick rows.
   const steps = setup.getByRole('list', {name: 'Setup steps'});
-  await expect(steps.getByRole('listitem')).toHaveCount(6);
+  // Published: the prototype's five rows, no marks, the project's area and tags set.
+  await expect(steps.getByRole('listitem')).toHaveCount(5);
+  await expect(steps.getByRole('link', {name: /Plan participation/})).toHaveCount(0);
+  await expect(steps.locator('.gv-card__leading')).toHaveCount(0);
   await expect(steps.getByRole('link', {name: /Edit project page/})).toBeVisible();
-  await expect(steps.getByRole('button', {name: /Set area/})).toBeVisible();
+  await expect(steps.getByRole('button', {name: /Set area/})).toContainText('Wrenfield');
+  await expect(steps.getByRole('button', {name: /Set topic tags/})).toContainText('2 tags');
   await setup.getByRole('link', {name: 'Message participants'}).click();
   await expect(page).toHaveURL(/#\/messaging$/);
 });
@@ -190,6 +194,17 @@ test('the header: its toggle opens the platform menu, Share opens the Access pop
   await expect(page.getByText('Link copied')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(share).toHaveCount(0);
+
+  // Live ▾: who can find it and who can open it, one pick each with the menu open; Done closes it.
+  await page.getByRole('button', {name: /Live/}).click();
+  const live = page.getByRole('menu', {name: /Live/});
+  await expect(live.getByRole('menuitemradio', {name: /^Public/})).toHaveAttribute('aria-checked', 'true');
+  await expect(live.getByRole('menuitemradio', {name: /^Everyone/})).toHaveAttribute('aria-checked', 'true');
+  await live.getByRole('menuitemradio', {name: /^Admins & managers/}).click();
+  await expect(live.getByRole('menuitemradio', {name: /^Admins & managers/})).toHaveAttribute('aria-checked', 'true');
+  await expect(live.getByRole('menuitemradio', {name: /^Public/})).toHaveAttribute('aria-checked', 'true');
+  await live.getByRole('menuitem', {name: 'Done'}).click();
+  await expect(live).toHaveCount(0);
 
   // A published project, one week in: the next step is to archive it, after a confirmation. The bar then wears
   // Project header's archived state, whose menu offers the way back.
