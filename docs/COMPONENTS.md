@@ -90,10 +90,12 @@ part's `<Name>.guide.md`) names the part to use instead.
 - **Tile grid** `TileGrid` (not in Figma): Tile grid: tiles in as many equal columns as fit, each at least `minTileWidth` wide, wrapping onto new rows, one column on a narrow screen. Stories: Stat Tiles, Gallery, Panels.
 
 ## Components / Navigation
-- **Breadcrumbs** `Breadcrumbs`: Breadcrumbs. Stories: All Variants, Project, Phase Draft, Phase Live.
-- **Link** `Link` (not in Figma): A text link to another page, a section or a file, in a sentence or as a row's or a section's small action. Stories: Example.
-- **Pagination** `Pagination` (not in Figma): The pager at the foot of a table: "‹ 1 2 3 4 5 … 12 ›", the current page filled. Stories: All Variants, First, Middle, Last, Few Pages, One Page, Right To Left.
-- **Tabs** `Tabs` (not in Figma): Tabs: a `TabList` of `Tab`s, then one `TabPanels` holding a `TabPanel` per tab (same `id`). Stories: All Variants, Underline, With Count, With Icons, With Status Dots, Vertical, Vertical With Group Headings.
+- **Breadcrumbs** `Breadcrumbs`: Breadcrumbs. Stories: All Variants, Project, Phase Draft, Phase Live, Keyboard.
+- **Link** `Link` (not in Figma): A text link to another page, a section or a file, in a sentence or as a row's or a section's small action. Stories: Example, Keyboard.
+  - Not for: For an action that stays on the page (save, open a dialog, add a row): use **Button** (quiet for a light one). For a row of links back up the page tree: use **Breadcrumbs**. For the app's main navigation: use **Side nav**. For moving between pages of a list: use **Pagination**. For sections of the same page: use **Tabs**.
+- **Pagination** `Pagination` (not in Figma): The pager at the foot of a table: "‹ 1 2 3 4 5 … 12 ›", the current page filled. Stories: All Variants, First, Middle, Last, Few Pages, One Page, Right To Left, Keyboard.
+- **Tabs** `Tabs` (not in Figma): Tabs: a `TabList` of `Tab`s, then one `TabPanels` holding a `TabPanel` per tab (same `id`). Stories: All Variants, Underline, With Count, With Icons, With Status Dots, Vertical, Vertical With Group Headings, Keyboard.
+  - Not for: To switch between views of the same content (List / Map, a chart's range): use **Segmented control**. To go to another page: use **Link**s or the **Side nav**. For a choice in a form: use **Radio group**. For content that should all be read in order: one long page in **Panel**s reads better than hiding parts.
 
 ## Components / Overlays
 - **Alert dialog** `AlertDialog` (not in Figma): Alert dialog: a destructive or high-stakes confirm, `role="alertdialog"`, with no ×. - **Both buttons close it.** Confirm calls `onConfirm`, Cancel (or Esc,… Stories: All Variants, Confirm, Destructive, Type To Confirm, With Impact List, Keyboard.

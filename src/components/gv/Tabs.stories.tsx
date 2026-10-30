@@ -1,5 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
-import {fn} from 'storybook/test';
+import {expect, fn, userEvent, within} from 'storybook/test';
 import {Building2, CalendarDays, Folder, Menu, Paperclip, Settings, Sparkles, Tag} from 'lucide-react';
 import {
   GroupedTab,
@@ -184,4 +184,30 @@ export const VerticalWithGroupHeadings: Story = {
       <GroupedExample />
     </div>
   )
+};
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Tab reaches the chosen tab; → and ←
+ * choose the next or previous tab and show its panel; End and Home jump to the last and first; Tab moves on into the
+ * panel. */
+export const Keyboard: Story = {
+  render: () => <div style={{width: 640}}>{underline}</div>,
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const participants = canvas.getByRole('tab', {name: 'Participants'});
+    await userEvent.tab();
+    await expect(participants).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+    const demographics = canvas.getByRole('tab', {name: 'Demographics'});
+    await expect(demographics).toHaveFocus();
+    await expect(demographics).toHaveAttribute('aria-selected', 'true');
+    await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Age, gender and where participants live.');
+    await userEvent.keyboard('{End}');
+    await expect(canvas.getByRole('tab', {name: 'Traffic'})).toHaveAttribute('aria-selected', 'true');
+    await userEvent.keyboard('{Home}');
+    await expect(participants).toHaveAttribute('aria-selected', 'true');
+    await userEvent.keyboard('{ArrowLeft}');
+    await expect(canvas.getByRole('tab', {name: 'Traffic'})).toHaveFocus();
+    await userEvent.tab();
+    await expect(canvas.getByRole('tabpanel')).toHaveFocus();
+  }
 };

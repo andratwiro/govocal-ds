@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {Pagination} from './Pagination';
 
 function Pager({start, pages, label}: {start: number; pages: number; label?: string}) {
@@ -47,3 +48,25 @@ export const OnePage: Story = {name: 'One page', render: () => <Pager start={1} 
 
 /** Right to left (Arabic): pages run from the right, ‹ › point the reading way. */
 export const RightToLeft: Story = {name: 'Right to left', globals: {direction: 'rtl'}, render: () => <Pager start={6} pages={12} />};
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Tab walks ‹, the pages and ›; Enter or
+ * Space presses one; pressing ‹ onto the first page moves focus to that page, not to the disabled ‹. */
+export const Keyboard: Story = {
+  render: () => <Pager start={2} pages={4} label="Idea pages" />,
+  play: async ({canvasElement}) => {
+    const pager = within(within(canvasElement).getByRole('navigation', {name: 'Idea pages'}));
+    await userEvent.tab();
+    const previous = pager.getByRole('button', {name: 'Previous page'});
+    await expect(previous).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    const first = pager.getByRole('button', {name: 'Page 1'});
+    await expect(first).toHaveAttribute('aria-current', 'page');
+    await expect(previous).toBeDisabled();
+    await waitFor(() => expect(first).toHaveFocus());
+    await userEvent.tab();
+    const second = pager.getByRole('button', {name: 'Page 2'});
+    await expect(second).toHaveFocus();
+    await userEvent.keyboard(' ');
+    await expect(second).toHaveAttribute('aria-current', 'page');
+  }
+};

@@ -80,10 +80,10 @@ what would survive a change of base library. It decides nothing: the base librar
 | Layout & containers › Panel | through `components/gv/Badge` | – | yes | yes | 8 |
 | Layout & containers › Stack | None: plain React and CSS | – | – | yes | 3 |
 | Layout & containers › Tile grid | None: plain React and CSS | – | – | yes | 3 |
-| Navigation › Breadcrumbs | `Breadcrumbs`, `Breadcrumb`, `Link` through `components/gv/IconButton` | `BreadcrumbsProps` | – | yes | 4 |
-| Navigation › Link | `Link` | `LinkProps` | – | yes | 1 |
-| Navigation › Pagination | `Button` | – | yes | yes | 7 |
-| Navigation › Tabs | `Tabs`, `TabList`, `Tab`, `TabPanels`, `TabPanel`, `SelectionIndicator`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `Header`, `VisuallyHidden` | – | yes | yes | 7 |
+| Navigation › Breadcrumbs | `Breadcrumbs`, `Breadcrumb`, `Link` through `components/gv/IconButton` | `BreadcrumbsProps` | – | yes | 5 |
+| Navigation › Link | `Link` | `LinkProps` | – | yes | 2 |
+| Navigation › Pagination | `Button` | – | yes | yes | 8 |
+| Navigation › Tabs | `Tabs`, `TabList`, `Tab`, `TabPanels`, `TabPanel`, `SelectionIndicator`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `Header`, `VisuallyHidden` | – | yes | yes | 8 |
 | Overlays › Alert dialog | `Heading`, `Dialog` through `components/Modal`, `components/Button`, `components/TextField` | – | yes | yes | 6 |
 | Overlays › Coachmark | `OverlayArrow`, `Popover` | `PopoverProps` | – | yes | 3 |
 | Overlays › Help popover | `Heading`, `Dialog`, `DialogTrigger` through `components/Popover`, `components/Button` | – | – | yes | 4 |

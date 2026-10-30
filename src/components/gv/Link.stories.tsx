@@ -1,6 +1,8 @@
 import {Link} from '../Link';
 import {Plus} from 'lucide-react';
 import type {Meta, StoryFn} from '@storybook/react-vite';
+import {useState} from 'react';
+import {expect, userEvent, within} from 'storybook/test';
 
 const meta: Meta<typeof Link> = {
   title: 'Components/Navigation/Link',
@@ -51,3 +53,23 @@ export const AllStates: StoryFn<typeof Link> = () => (
     </p>
   </div>
 );
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Tab skips a disabled link and reaches
+ * the next; Enter follows it. */
+export const Keyboard: Story = () => {
+  const [said, setSaid] = useState('');
+  return (
+    <div style={{display: 'flex', gap: 24, alignItems: 'center', font: 'var(--gv-type-ui)'}}>
+      <Link size="small" isDisabled onPress={() => setSaid('Copied')}>Copy to phase</Link>
+      <Link size="small" onPress={() => setSaid('Opened How it works')}>How it works</Link>
+      <output>{said}</output>
+    </div>
+  );
+};
+Keyboard.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  await userEvent.tab();
+  await expect(canvas.getByRole('link', {name: 'How it works'})).toHaveFocus();
+  await userEvent.keyboard('{Enter}');
+  await expect(canvas.getByText('Opened How it works')).toBeInTheDocument();
+};
