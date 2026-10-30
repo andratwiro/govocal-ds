@@ -64,6 +64,7 @@ question for each: add a Figma variable (code then names it), or keep the stand-
 ## Patterns
 
 - Notification row: show an email's preview on the phase stage? — the email opens as its own page in the list's place; no preview on the stage — see `patterns-build-tab-notification-row--email-open`.
+- The back office at phone width (400 px): every screen scrolls sideways and the side nav stays open; fold the nav and stack the columns, or keep the back office desktop only? — desktop only, as docs/DECISIONS.md says ("desktop admin; responsive areas wait for a page that needs them") — see `/backoffice/` at 400 px wide.
 
 ## Illustrations
 
