@@ -37,21 +37,38 @@ function scan(file) {
   return result;
 }
 
-// Followed through the system's own files: the React Aria parts reached, and through which system file.
-function reach(file, seen = new Set()) {
-  if (seen.has(file)) return {parts: new Map(), formats: false};
-  seen.add(file);
-  const me = scan(file);
-  const parts = new Map(); // React Aria part → '' (direct) or the system file it comes through
-  for (const orig of me.rac.values()) if (/^[A-Z]/.test(orig) && !/(Context|Provider)$/.test(orig)) parts.set(orig, '');
-  let formats = me.formats || [...me.rac.values()].some(n => /^(Date|Time|Number)(Field|Picker|Input|RangePicker)$|Calendar$/.test(n));
-  for (const f of me.files) {
-    const sub = reach(f, seen);
-    formats ||= sub.formats;
-    const via = f.replace(/^src\//, '').replace(/\.tsx?$/, '');
-    for (const p of sub.parts.keys()) if (!parts.has(p)) parts.set(p, via);
-  }
+// The React Aria parts a file imports itself.
+const own = file => [...scan(file).rac.values()].filter(n => /^[A-Z]/.test(n) && !/(Context|Provider)$/.test(n));
+
+// Every React Aria part a file reaches, itself and through every system file it imports, however deep; and whether
+// anything on the way formats by locale. Each file is visited once per walk, so an import cycle ends.
+function reachAll(file) {
+  const parts = new Set();
+  let formats = false;
+  const seen = new Set();
+  const walk = f => {
+    if (seen.has(f)) return;
+    seen.add(f);
+    const me = scan(f);
+    for (const p of own(f)) parts.add(p);
+    formats ||= me.formats || [...me.rac.values()].some(n => /^(Date|Time|Number)(Field|Picker|Input|RangePicker)$|Calendar$/.test(n));
+    me.files.forEach(walk);
+  };
+  walk(file);
   return {parts, formats};
+}
+
+// A part's React Aria parts: those it imports itself (direct), and, per system file it imports, the ones reached through
+// that file and not imported directly.
+function reach(file) {
+  const direct = own(file);
+  const through = [];
+  for (const f of scan(file).files) {
+    const parts = [...reachAll(f).parts].filter(p => !direct.includes(p));
+    if (parts.length) through.push({file: f, parts});
+  }
+  const all = reachAll(file);
+  return {direct, through, parts: [...all.parts], formats: all.formats};
 }
 
 // The React Aria props type the part's own props extend, if any (straight through: React Aria's docs describe them).
@@ -74,6 +91,24 @@ function passThrough(file, component) {
 }
 
 
+// A system file's name in the sidebar ("components/gv/IconButton" → Icon button), from its stories; a file with no
+// entry of its own (a helper) is named after its file the same way ("ProgressCircle" → Progress circle).
+const names = new Map();
+for (const f of readdirSync('src', {recursive: true}).filter(f => f.endsWith('.stories.tsx')).sort()) {
+  const s = read(`src/${f}`);
+  const meta = s.match(/const meta[^=]*=\s*\{([\s\S]*?)\n\};/)?.[1] ?? '';
+  const title = meta.match(/title:\s*'([^']+)'/)?.[1] ?? (/^components\/\w+\.stories/.test(f) ? `Base/${f.match(/(\w+)\.stories/)[1]}` : null);
+  if (!title || title.includes('/Recipes/')) continue;
+  const named = f.match(/(\w+)\.stories\.tsx$/)[1];
+  const component = meta.match(/component:\s*([A-Z]\w*)/)?.[1] ?? named;
+  const from = s.match(new RegExp(`import\\s*\\{[^}]*\\b${component}\\b[^}]*\\}\\s*from\\s*'(\\.[^']+)'`))?.[1] ?? `./${named}`;
+  const file = [`${from}.tsx`, `${from}/index.tsx`].map(p => normalize(join('src', dirname(f), p))).find(p => existsSync(p));
+  // A Component's name wins over the Base primitive it covers.
+  if (file && (!names.has(file) || !title.startsWith('Base/'))) names.set(file, title.split('/').at(-1));
+}
+const partName = f => names.get(f) ??
+  f.match(/(\w+)\.tsx?$/)[1].replace(/(?<=[a-z0-9])(?=[A-Z])/g, ' ').replace(/ [A-Z](?=[a-z])/g, c => c.toLowerCase());
+
 const rows = [];
 const skipped = []; // entries with no component file of their own (none today)
 for (const f of readdirSync('src', {recursive: true}).filter(f => f.endsWith('.stories.tsx')).sort()) {
@@ -88,11 +123,9 @@ for (const f of readdirSync('src', {recursive: true}).filter(f => f.endsWith('.s
   const from = s.match(new RegExp(`import\\s*\\{[^}]*\\b${component}\\b[^}]*\\}\\s*from\\s*'(\\.[^']+)'`))?.[1] ?? `./${named}`;
   const file = [`${from}.tsx`, `${from}/index.tsx`].map(p => normalize(join('src', dirname(f), p))).find(p => existsSync(p));
   if (!file) { skipped.push(title); continue; }
-  const {parts, formats} = reach(file);
-  const direct = [...parts].filter(([, via]) => !via).map(([p]) => p);
-  const through = [...new Set([...parts].filter(([, via]) => via).map(([, via]) => via))];
+  const {direct, through, parts, formats} = reach(file);
   const stories = [...s.matchAll(/^export const [A-Z]\w*\s*:\s*Story\b/gm)].length;
-  rows.push({title, component, direct, through, parts: [...parts.keys()], pass: passThrough(file, component), formats,
+  rows.push({title, component, direct, through, parts, pass: passThrough(file, component), formats,
     css: scan(file).css, stories});
 }
 
@@ -100,7 +133,8 @@ const TIERS = ['Components', 'Patterns', 'Base'];
 rows.sort((a, b) => TIERS.indexOf(a.title.split('/')[0]) - TIERS.indexOf(b.title.split('/')[0]) || a.title.localeCompare(b.title));
 const code = xs => xs.map(x => `\`${x}\``).join(', ');
 const behaviour = r => !r.parts.length ? 'None: plain React and CSS' :
-  [r.direct.length ? code(r.direct) : '', r.through.length ? `through ${code(r.through)}` : ''].filter(Boolean).join(' ');
+  [r.direct.length ? code(r.direct) : '', ...r.through.map(t => `through ${partName(t.file)}: ${code(t.parts)}`)]
+    .filter(Boolean).join('; ');
 const line = r => `| ${r.title.split('/').slice(1).join(' › ')} | ${behaviour(r)} | ${r.pass ? code(r.pass.split(', ')) : '–'} | ` +
   `${r.formats ? 'yes' : '–'} | ${r.css ? 'yes' : '–'} | ${r.stories} |`;
 
@@ -118,9 +152,10 @@ const body = [
   '',
   '**What comes from React Aria** (would be rewritten on another library):',
   '',
-  '- **Behaviour from React Aria\'s …**: the React Aria parts it is built on, directly or through another system file',
-  '  (`through components/Select` means it wraps the Base Select). Their keyboard behaviour, focus, ARIA roles and',
-  '  right-to-left layout come from React Aria.',
+  '- **Behaviour from React Aria\'s …**: the React Aria parts it is built on: first those it uses itself, then, per',
+  '  system part it is built from, the ones that part brings, followed however deep (`through Icon button: `Button``',
+  '  means its Icon button is a React Aria Button). Their keyboard behaviour, focus, ARIA roles and right-to-left layout',
+  '  come from React Aria.',
   '- **Props straight through**: its props extend that React Aria type, so React Aria\'s docs describe the rest of them',
   '  (`isDisabled`, `onPress`, `selectionMode`…).',
   '- **Locale**: it formats numbers, dates or lists by React Aria\'s locale (`AppProvider`\'s `locale`).',

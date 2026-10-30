@@ -262,7 +262,7 @@ part's `<Name>.guide.md`) names the part to use instead.
   - Not for: For a whole timeline without deletes: use **Phase timeline**, which builds the rows from data. For a step of a setup checklist: use **Setup step**. For a row in a list of records: use **List row**.
 
 ## Patterns / Recipes
-- **Form validation** `Form` (not in Figma): A form wrapper that shows validation errors on its fields (React Aria's Form): for the shape of an invalid form, see Form validation. Stories: All Invalid, Submit To Validate.
+- **Form validation** `Form` (not in Figma): Form validation, a recipe: every field in its invalid state, and a form that checks itself on submit and moves focus to the first field to fix. Stories: All Invalid, Submit To Validate.
 - **Integration seams** (not in Figma): Integration seams, a recipe: the four places where the system stops and an app starts (a router, a form library, translated words, data that loads or fails),… Stories: Router Link, Form Library Field, Translated Strings, Table Loading Error Data.
 
 ## Patterns / Report builder

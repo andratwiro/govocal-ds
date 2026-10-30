@@ -23,8 +23,8 @@
 ## Behaviour
 
 The switch follows the WAI-ARIA [Switch pattern](https://www.w3.org/WAI/ARIA/apg/patterns/switch/); turning it shows
-or hides the section and the badge follows. A locked section's switch is skipped. Behaviour from React Aria's Switch,
-through the system's Switch.
+or hides the section and the badge follows. A locked section's switch is skipped. Behaviour from React Aria's SwitchField
+and SwitchButton, through the system's Switch.
 
 | Key | What it does | Checked by |
 | --- | --- | --- |
@@ -64,6 +64,8 @@ the only signal, and a locked switch that stays on and out of the tab order.
 
 ## Changes
 
+- 30 Oct 2026: Behaviour names React Aria's parts as docs/REACT-ARIA.md now reads them (SwitchField and
+  SwitchButton, through Switch).
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: its words come in through `labels`.
 - 29 Oct 2026: built for the back office's Pages & menu (homepage builder and custom pages).

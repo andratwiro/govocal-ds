@@ -26,7 +26,8 @@ The 28 slots at both ends match those of **List row** and **Common ground row**,
 
 ## Behaviour
 
-Behaviour from React Aria's Button (each sortable column) and Checkbox (select all). The header is a row of column
+Behaviour from React Aria's Button (each sortable column, through List header cell) and CheckboxField and
+CheckboxButton (select all, through Checkbox). The header is a row of column
 heads; with `onSort`, each sortable column holds a button, after the WAI-ARIA
 [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/), and the sorted column's head says its order with
 `aria-sort`, as in the [Sortable table example](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/).

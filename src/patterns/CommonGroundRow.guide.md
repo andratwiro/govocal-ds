@@ -27,7 +27,8 @@
 ## Behaviour
 
 Only the checkbox takes focus, after the WAI-ARIA [Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/);
-the row itself does nothing when pressed. Behaviour from React Aria's Checkbox, through the system's Checkbox.
+the row itself does nothing when pressed. Behaviour from React Aria's CheckboxField and CheckboxButton, through the
+system's Checkbox.
 
 | Key | What it does | Checked by |
 | --- | --- | --- |
@@ -69,6 +70,8 @@ the row itself does nothing when pressed. Behaviour from React Aria's Checkbox, 
 
 ## Changes
 
+- 30 Oct 2026: Behaviour names React Aria's parts as docs/REACT-ARIA.md now reads them (CheckboxField and
+  CheckboxButton, through Checkbox).
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: its words come in through `labels`; numbers follow the locale.
 - 29 Oct 2026: no aliases: `reactionCount` and `visibleCount` went.

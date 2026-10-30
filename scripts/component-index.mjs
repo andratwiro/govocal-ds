@@ -4,6 +4,7 @@
 // it to its root). `--check` fails when either file is stale.
 import {readFileSync, readdirSync, writeFileSync, existsSync} from 'node:fs';
 import {bullets, parseGuide} from './lib/guide.mjs';
+import {purpose} from './lib/doc-comment.mjs';
 
 const OUT = 'docs/COMPONENTS.md';
 const LLMS = 'public/llms.txt';
@@ -11,15 +12,6 @@ const SITE = 'https://andratwiro.github.io/govocal-ds';
 const RAW = 'https://raw.githubusercontent.com/andratwiro/govocal-ds/main';
 const files = readdirSync('src', {recursive: true}).filter(f => f.endsWith('.stories.tsx')).sort();
 
-// The first sentence of the JSDoc right above `export function|const <Name>`, prototype asides dropped.
-function purpose(source, name) {
-  const m = source.match(new RegExp(`/\\*\\*((?:(?!\\*/)[\\s\\S])*)\\*/\\s*export (?:function|const) ${name}\\b`)) ??
-    source.match(new RegExp(`((?:^//.*\\n)+)export (?:function|const) ${name}\\b`, 'm'));
-  if (!m) return '';
-  const text = m[1].replace(/^\s*(?:\*|\/\/)\s?/gm, ' ').replace(/\s+/g, ' ').replace(/\s*\([^)]*prototype[^)]*\)/gi, '').trim();
-  const first = text.match(/^.*?[.;](?=\s+[A-Z`]|$)/)?.[0] ?? text;
-  return first.length > 160 ? first.slice(0, 157).trimEnd() + '…' : first;
-}
 
 const groups = new Map();
 const names = new Map();  // group → the entries' exports (or names), for llms.txt
@@ -33,9 +25,11 @@ for (const f of files) {
   const from = component && s.match(new RegExp(`import\\s*\\{[^}]*\\b${component}\\b[^}]*\\}\\s*from\\s*'(\\.[^']+)'`))?.[1];
   const srcFile = from && [`.tsx`, `/index.tsx`].map(ext => `src/${f.replace(/[^/]+$/, '')}${from}${ext}`)
     .map(p => p.replace(/\/\.\//g, '/')).find(p => existsSync(p));
-  // A recipe (a story file with no component of its own) says what it is for in the doc comment above its meta.
-  const what = (srcFile ? purpose(readFileSync(srcFile, 'utf8'), component) : '') ||
-    purpose(s.replace(/\*\/\s*const meta\b/, '*/\nexport const meta'), 'meta');
+  // A recipe says what it is for in the doc comment above its meta, even when it names a component (Form validation's
+  // is Form); so does a story file with no component of its own.
+  const own = purpose(s.replace(/\*\/\s*const meta\b/, '*/\nexport const meta'), 'meta');
+  const isRecipe = title.split('/').includes('Recipes');
+  const what = (isRecipe && own) || (srcFile ? purpose(readFileSync(srcFile, 'utf8'), component) : '') || own;
   const stories = [...s.matchAll(/^export const ([A-Z]\w*)\s*:\s*Story\b/gm)].map(m => m[1].replace(/(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|(?<=[a-z])(?=[0-9])/g, ' '));
   const parts = title.split('/');
   const group = parts.slice(0, -1).join(' / ');

@@ -41,6 +41,15 @@ Calls made fixing the bugs the component-page writers found (benchmark-gaps plan
 - Map card joined its meta line with a hard-coded " · " → **a `labels.meta` function given the parts, " · " by
   default** → a list format would put "and" before the last count; the dot is a separator the page may want to change,
   which is rule 11's "joins".
+- docs/REACT-ARIA.md's "through" named a system file (`through components/gv/Checkbox`) and only the first file that
+  brought each React Aria part, so List header showed nothing of its List header cell → **per system part it imports,
+  the React Aria parts that part brings, followed however deep, named by its sidebar name (`through List header cell:
+  `Button``)** → a reader looks for parts, not files; listing each part's own set keeps the attribution true where two
+  parts bring the same React Aria part. Five guides named a React Aria part that doesn't exist under that name
+  (Checkbox and Switch are CheckboxField/CheckboxButton and SwitchField/SwitchButton) and now follow the table.
+- A recipe's line in docs/COMPONENTS.md took its component's Purpose (Form validation read as Form) → **a recipe's own
+  comment above its meta wins**; a part's Purpose ends at the first sentence end (". ", "? ", "! "), never at a
+  semicolon.
 
 ## Report parts (30 Oct 2026)
 

@@ -12,3 +12,16 @@ describe('docs/REACT-ARIA.md (Overview › What comes from React Aria)', () => {
       expect(doc).toContain(`| ${part} |`);
   });
 });
+
+describe('what a part reaches through the system\'s own parts', () => {
+  const doc = readFileSync('docs/REACT-ARIA.md', 'utf8');
+  const row = part => doc.split('\n').find(l => l.startsWith(`| ${part} |`)) ?? '';
+  it('follows every local import, however deep, and names the part each comes through', () => {
+    expect(row('Data display › List header')).toContain('through List header cell: `Button`');
+    expect(row('Data display › List header')).toContain('through Checkbox: ');
+    expect(row('Status & feedback › Banner')).toContain('`Link`; through Icon button: `Button`');
+  });
+  it('names parts, never file paths', () => {
+    expect(doc).not.toMatch(/through `?(components|patterns)\//);
+  });
+});

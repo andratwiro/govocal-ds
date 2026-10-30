@@ -10,9 +10,10 @@ what would survive a change of base library. It decides nothing: the base librar
 
 **What comes from React Aria** (would be rewritten on another library):
 
-- **Behaviour from React Aria's …**: the React Aria parts it is built on, directly or through another system file
-  (`through components/Select` means it wraps the Base Select). Their keyboard behaviour, focus, ARIA roles and
-  right-to-left layout come from React Aria.
+- **Behaviour from React Aria's …**: the React Aria parts it is built on: first those it uses itself, then, per
+  system part it is built from, the ones that part brings, followed however deep (`through Icon button: `Button``
+  means its Icon button is a React Aria Button). Their keyboard behaviour, focus, ARIA roles and right-to-left layout
+  come from React Aria.
 - **Props straight through**: its props extend that React Aria type, so React Aria's docs describe the rest of them
   (`isDisabled`, `onPress`, `selectionMode`…).
 - **Locale**: it formats numbers, dates or lists by React Aria's locale (`AppProvider`'s `locale`).
@@ -29,87 +30,87 @@ what would survive a change of base library. It decides nothing: the base librar
 
 | Part | Behaviour from React Aria's … | Props straight through | Locale | CSS | Stories |
 |---|---|---|---|---|---|
-| Actions › Button | `Button` through `components/ProgressCircle` | `ButtonProps` | – | yes | 14 |
+| Actions › Button | `Button`; through Progress circle: `ProgressBar` | `ButtonProps` | – | yes | 14 |
 | Actions › Compact button | `Button` | `ButtonProps` | – | yes | 6 |
 | Actions › Icon button | `Button` | `ButtonProps` | – | yes | 7 |
-| Actions › Menu | `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger` through `components/Popover`, `components/ProgressCircle`, `components/Content` | – | – | yes | 7 |
-| Actions › Segmented control | `ToggleButtonGroup`, `SelectionIndicator`, `ToggleButton` through `components/Tooltip` | `ToggleButtonGroupProps` | – | yes | 8 |
-| AI › Chat message | through `components/Button`, `components/Tooltip`, `components/gv/VisuallyHidden` | – | – | yes | 12 |
-| AI › Chat progress | through `components/gv/VisuallyHidden` | – | – | yes | 6 |
-| AI › Chat thread | through `components/Button` | – | – | yes | 8 |
-| AI › Item chip | `Button` through `components/gv/VisuallyHidden` | – | – | yes | 10 |
-| AI › Prompt composer | `Button`, `FileTrigger`, `TextArea`, `TextField` through `components/Tooltip`, `components/gv/ItemChip` | – | – | yes | 11 |
+| Actions › Menu | `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger`; through Popover: `OverlayArrow`, `Popover`; through Progress circle: `ProgressBar`; through Content: `Heading`, `Text`, `Header`, `Keyboard` | – | – | yes | 7 |
+| Actions › Segmented control | `ToggleButtonGroup`, `SelectionIndicator`, `ToggleButton`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | `ToggleButtonGroupProps` | – | yes | 8 |
+| AI › Chat message | through Button: `Button`, `ProgressBar`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger`; through Icon button: `Button`; through Visually hidden: `VisuallyHidden` | – | – | yes | 12 |
+| AI › Chat progress | through Visually hidden: `VisuallyHidden` | – | – | yes | 6 |
+| AI › Chat thread | through Button: `Button`, `ProgressBar` | – | – | yes | 8 |
+| AI › Item chip | `Button`; through Visually hidden: `VisuallyHidden` | – | – | yes | 10 |
+| AI › Prompt composer | `Button`, `FileTrigger`, `TextArea`, `TextField`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger`; through Item chip: `VisuallyHidden` | – | – | yes | 11 |
 | AI › Prompt suggestions | `Button` | – | – | yes | 7 |
 | Charts › Bar row | `VisuallyHidden` | – | – | yes | 6 |
 | Charts › Chart | None: plain React and CSS | – | yes | yes | 11 |
-| Charts › Dashboard card | `Button` through `components/gv/BarRow` | – | yes | yes | 14 |
+| Charts › Dashboard card | `Button`; through Bar row: `VisuallyHidden`; through Reaction counts: `VisuallyHidden` | – | yes | yes | 14 |
 | Charts › Legend row | None: plain React and CSS | – | yes | yes | 4 |
 | Charts › Statement row | None: plain React and CSS | – | yes | yes | 6 |
-| Data display › Activity feed | `Button` through `components/Button`, `components/Menu`, `components/gv/ItemChip` | – | yes | yes | 7 |
+| Data display › Activity feed | `Button`; through Button: `ProgressBar`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`; through Item chip: `VisuallyHidden` | – | yes | yes | 7 |
 | Data display › Avatar | None: plain React and CSS | – | – | yes | 6 |
-| Data display › File list | `GridList`, `GridListItem` through `components/Link` | – | – | yes | 6 |
+| Data display › File list | `GridList`, `GridListItem`; through Link: `Link` | – | – | yes | 6 |
 | Data display › Illustration | None: plain React and CSS | – | – | yes | 10 |
-| Data display › List header | through `components/gv/Checkbox` | – | – | yes | 10 |
+| Data display › List header | through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text`; through List header cell: `Button` | – | – | yes | 10 |
 | Data display › List header cell | `Button` | – | – | yes | 8 |
-| Data display › List row | through `components/gv/Checkbox` | – | – | yes | 6 |
+| Data display › List row | through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text` | – | – | yes | 6 |
 | Data display › Map view | `Button` | – | yes | yes | 11 |
 | Data display › Property list | `VisuallyHidden` | – | – | yes | 3 |
 | Data display › Reaction counts | `VisuallyHidden` | – | yes | yes | 4 |
 | Data display › Stat row | `Link`, `ToggleButton` | – | – | yes | 7 |
-| Data display › Stat tile | `VisuallyHidden` through `components/gv/HelpPopover` | – | – | yes | 9 |
-| Forms › Checkbox | through `components/Checkbox` | `CheckboxFieldProps` | – | yes | 8 |
-| Forms › Checkbox group | `CheckboxGroup` through `components/Form` | `CheckboxGroupProps` | – | yes | 2 |
-| Forms › Choice card | `RadioField`, `RadioButton`, `CheckboxField`, `CheckboxButton` through `components/gv/SectionLabel` | `RadioFieldProps` | – | yes | 6 |
-| Forms › Date range field | through `components/Button`, `components/DatePicker`, `components/TimeField` | – | yes | yes | 8 |
+| Data display › Stat tile | `VisuallyHidden`; through Help popover: `Heading`, `Dialog`, `DialogTrigger`, `OverlayArrow`, `Popover`, `Button`, `ProgressBar` | – | – | yes | 9 |
+| Forms › Checkbox | through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text` | `CheckboxFieldProps` | – | yes | 8 |
+| Forms › Checkbox group | `CheckboxGroup`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `CheckboxGroupProps` | – | yes | 2 |
+| Forms › Choice card | `RadioField`, `RadioButton`, `CheckboxField`, `CheckboxButton`; through Section label: `Heading` | `RadioFieldProps` | – | yes | 6 |
+| Forms › Date range field | through Button: `Button`, `ProgressBar`; through DatePicker: `DatePicker`, `Group`, `DateField`, `DateInput`, `DateSegment`, `Form`, `Label`, `FieldError`, `Button`, `Text`, `Calendar`, `CalendarCell`, `CalendarGrid`, `CalendarHeading`, `Heading`, `Header`, `Keyboard`, `ProgressBar`, `OverlayArrow`, `Popover`; through TimeField: `TimeField`, `Form`, `Label`, `FieldError`, `Button`, `Text`, `DateField`, `DateInput`, `DateSegment` | – | yes | yes | 8 |
 | Forms › Drop zone | `DropZone`, `FileTrigger`, `Button` | `DropZoneProps` | – | yes | 6 |
-| Forms › Locale switcher | `RadioGroup`, `Radio`, `Select`, `SelectValue`, `Button`, `VisuallyHidden` through `components/Popover`, `components/ListBox` | – | yes | yes | 7 |
-| Forms › Multilingual rich text editor | through `components/Form`, `components/gv/RichTextEditor`, `components/gv/MultilingualTextField` | – | yes | yes | 6 |
-| Forms › Multilingual text field | `Input`, `TextArea`, `TextField` through `components/Form`, `components/gv/LocaleSwitcher` | `TextFieldProps` | yes | yes | 12 |
-| Forms › Number field | `Group`, `Input`, `NumberField` through `components/Button`, `components/Form` | `NumberFieldProps` | yes | yes | 4 |
-| Forms › Option list | `Autocomplete` through `components/Menu`, `components/SearchField` | – | yes | yes | 10 |
-| Forms › Radio group | `RadioGroup`, `RadioField`, `RadioButton` through `components/Form` | `RadioGroupProps` | – | yes | 2 |
+| Forms › Locale switcher | `RadioGroup`, `Radio`, `Select`, `SelectValue`, `Button`, `VisuallyHidden`; through Popover: `OverlayArrow`, `Popover`; through ListBox: `ListBox`, `ListBoxItem`, `ListBoxSection`, `ListBoxLoadMoreItem`, `Heading`, `Text`, `Header`, `Keyboard`, `ProgressBar` | – | yes | yes | 7 |
+| Forms › Multilingual rich text editor | through Form: `Form`, `Label`, `FieldError`, `Button`, `Text`; through Rich text editor: `TextField`, `TextArea`, `Button`, `Toolbar`, `ToggleButton`; through Multilingual text field: `Input`, `TextArea`, `TextField`, `Form`, `Label`, `FieldError`, `Button`, `Text`, `RadioGroup`, `Radio`, `Select`, `SelectValue`, `VisuallyHidden`, `OverlayArrow`, `Popover`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `ListBoxLoadMoreItem`, `Heading`, `Header`, `Keyboard`, `ProgressBar` | – | yes | yes | 6 |
+| Forms › Multilingual text field | `Input`, `TextArea`, `TextField`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text`; through Locale switcher: `RadioGroup`, `Radio`, `Select`, `SelectValue`, `Button`, `VisuallyHidden`, `OverlayArrow`, `Popover`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `ListBoxLoadMoreItem`, `Heading`, `Text`, `Header`, `Keyboard`, `ProgressBar` | `TextFieldProps` | yes | yes | 12 |
+| Forms › Number field | `Group`, `Input`, `NumberField`; through Button: `Button`, `ProgressBar`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `NumberFieldProps` | yes | yes | 4 |
+| Forms › Option list | `Autocomplete`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`; through Content: `Heading`, `Text`, `Header`, `Keyboard`; through Search field: `Button`, `Input`, `SearchField`, `Form`, `Label`, `FieldError`, `Text`, `OverlayArrow`, `Tooltip`, `TooltipTrigger`; through Button: `Button`, `ProgressBar` | – | yes | yes | 10 |
+| Forms › Radio group | `RadioGroup`, `RadioField`, `RadioButton`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `RadioGroupProps` | – | yes | 2 |
 | Forms › Required marker | None: plain React and CSS | – | – | yes | 3 |
-| Forms › Rich text editor | `TextField`, `TextArea` through `components/gv/RichTextToolbar` | – | – | yes | 4 |
-| Forms › Rich text toolbar | `Button`, `Toolbar` through `components/gv/RichTextToolbarButton` | – | – | yes | 3 |
+| Forms › Rich text editor | `TextField`, `TextArea`; through Rich text toolbar: `Button`, `Toolbar`, `ToggleButton` | – | – | yes | 4 |
+| Forms › Rich text toolbar | `Button`, `Toolbar`; through Rich text toolbar button: `ToggleButton` | – | – | yes | 3 |
 | Forms › Rich text toolbar button | `ToggleButton` | `ToggleButtonProps` | – | yes | 5 |
-| Forms › Search field | `Button`, `Input`, `SearchField` through `components/Form`, `components/Tooltip` | `SearchFieldProps` | – | yes | 9 |
-| Forms › Select | `Select`, `SelectValue`, `Autocomplete` through `components/Button`, `components/ListBox`, `components/Popover`, `components/SearchField` | – | yes | yes | 12 |
-| Forms › Switch | `SwitchField`, `SwitchButton` through `components/Form` | `SwitchFieldProps` | – | yes | 6 |
-| Forms › Tag picker | `Button`, `Dialog`, `DialogTrigger`, `Tag`, `TagGroup`, `TagList` through `components/Button`, `components/Popover`, `components/gv/OptionList` | – | yes | yes | 5 |
-| Forms › Text field | `Input`, `TextField`, `TextArea`, `Group` through `components/Form` | `TextFieldProps` | yes | yes | 8 |
-| Forms › Title field | `Input`, `TextField` through `components/Form`, `components/gv/LocaleSwitcher` | `TextFieldProps` | yes | yes | 6 |
-| Layout & containers › App provider | through `components/Toast` | – | – | – | 2 |
-| Layout & containers › Card | `Button`, `Disclosure`, `DisclosurePanel`, `Heading`, `Menu`, `MenuItem`, `MenuTrigger` through `components/Popover`, `components/Tooltip`, `components/RadioGroup`, `components/Switch` | – | – | yes | 30 |
+| Forms › Search field | `Button`, `Input`, `SearchField`; through Form: `Form`, `Label`, `FieldError`, `Text`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | `SearchFieldProps` | – | yes | 9 |
+| Forms › Select | `Select`, `SelectValue`, `Autocomplete`; through Button: `Button`, `ProgressBar`; through ListBox: `ListBox`, `ListBoxItem`, `ListBoxSection`, `ListBoxLoadMoreItem`, `Heading`, `Text`, `Header`, `Keyboard`, `ProgressBar`; through Popover: `OverlayArrow`, `Popover`; through Search field: `Button`, `Input`, `SearchField`, `Form`, `Label`, `FieldError`, `Text`, `OverlayArrow`, `Tooltip`, `TooltipTrigger`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | – | yes | yes | 12 |
+| Forms › Switch | `SwitchField`, `SwitchButton`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `SwitchFieldProps` | – | yes | 6 |
+| Forms › Tag picker | `Button`, `Dialog`, `DialogTrigger`, `Tag`, `TagGroup`, `TagList`; through Button: `ProgressBar`; through Popover: `OverlayArrow`, `Popover`; through Option list: `Autocomplete`, `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`, `Input`, `SearchField`, `Form`, `Label`, `FieldError`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 5 |
+| Forms › Text field | `Input`, `TextField`, `TextArea`, `Group`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `TextFieldProps` | yes | yes | 8 |
+| Forms › Title field | `Input`, `TextField`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text`; through Locale switcher: `RadioGroup`, `Radio`, `Select`, `SelectValue`, `Button`, `VisuallyHidden`, `OverlayArrow`, `Popover`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `ListBoxLoadMoreItem`, `Heading`, `Text`, `Header`, `Keyboard`, `ProgressBar` | `TextFieldProps` | yes | yes | 6 |
+| Layout & containers › App provider | through Toast: `UNSTABLE_ToastRegion`, `UNSTABLE_Toast`, `UNSTABLE_ToastQueue`, `UNSTABLE_ToastContent`, `Text`, `Button`, `ProgressBar` | – | – | – | 2 |
+| Layout & containers › Card | `Button`, `Disclosure`, `DisclosurePanel`, `Heading`, `Menu`, `MenuItem`, `MenuTrigger`; through Popover: `OverlayArrow`, `Popover`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger`; through Radio group: `RadioGroup`, `RadioField`, `RadioButton`, `Form`, `Label`, `FieldError`, `Text`; through Switch: `SwitchField`, `SwitchButton`, `Form`, `Label`, `FieldError`, `Text` | – | – | yes | 30 |
 | Layout & containers › Divider | `Separator` | `SeparatorProps` | – | yes | 3 |
 | Layout & containers › Grid | None: plain React and CSS | – | – | yes | 3 |
 | Layout & containers › Inline | None: plain React and CSS | – | – | yes | 3 |
 | Layout & containers › Page header | None: plain React and CSS | – | – | yes | 3 |
-| Layout & containers › Panel | through `components/gv/Badge` | – | yes | yes | 8 |
+| Layout & containers › Panel | through Badge: `Button` | – | yes | yes | 8 |
 | Layout & containers › Stack | None: plain React and CSS | – | – | yes | 3 |
 | Layout & containers › Tile grid | None: plain React and CSS | – | – | yes | 3 |
-| Navigation › Breadcrumbs | `Breadcrumbs`, `Breadcrumb`, `Link` through `components/gv/IconButton` | `BreadcrumbsProps` | – | yes | 5 |
+| Navigation › Breadcrumbs | `Breadcrumbs`, `Breadcrumb`, `Link`; through Icon button: `Button` | `BreadcrumbsProps` | – | yes | 5 |
 | Navigation › Link | `Link` | `LinkProps` | – | yes | 2 |
 | Navigation › Pagination | `Button` | – | yes | yes | 8 |
 | Navigation › Tabs | `Tabs`, `TabList`, `Tab`, `TabPanels`, `TabPanel`, `SelectionIndicator`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `Header`, `VisuallyHidden` | – | yes | yes | 10 |
-| Overlays › Alert dialog | `Heading`, `Dialog` through `components/Modal`, `components/Button`, `components/TextField` | – | yes | yes | 6 |
+| Overlays › Alert dialog | `Heading`, `Dialog`; through Modal: `Modal`; through Button: `Button`, `ProgressBar`; through Text field: `Input`, `TextField`, `TextArea`, `Group`, `Form`, `Label`, `FieldError`, `Button`, `Text` | – | yes | yes | 6 |
 | Overlays › Coachmark | `OverlayArrow`, `Popover` | `PopoverProps` | – | yes | 3 |
-| Overlays › Help popover | `Heading`, `Dialog`, `DialogTrigger` through `components/Popover`, `components/Button` | – | – | yes | 4 |
-| Overlays › Modal | `Button`, `Heading`, `Dialog` through `components/Modal` | – | – | yes | 9 |
-| Overlays › Side panel | `Dialog`, `Toolbar` through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 15 |
+| Overlays › Help popover | `Heading`, `Dialog`, `DialogTrigger`; through Popover: `OverlayArrow`, `Popover`; through Button: `Button`, `ProgressBar`; through Icon button: `Button` | – | – | yes | 4 |
+| Overlays › Modal | `Button`, `Heading`, `Dialog`; through Modal: `Modal` | – | – | yes | 9 |
+| Overlays › Side panel | `Dialog`, `Toolbar`; through Icon button: `Button`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 15 |
 | Overlays › Tooltip | `OverlayArrow`, `Tooltip`, `TooltipTrigger` | `TooltipProps` | – | yes | 1 |
 | Status & feedback › Badge | `Button` | – | – | yes | 8 |
-| Status & feedback › Banner | `Link` through `components/gv/IconButton` | – | – | yes | 14 |
+| Status & feedback › Banner | `Link`; through Icon button: `Button` | – | – | yes | 14 |
 | Status & feedback › Empty state | None: plain React and CSS | – | – | yes | 10 |
 | Status & feedback › Missing part | None: plain React and CSS | – | – | yes | 2 |
 | Status & feedback › New dot | None: plain React and CSS | – | – | yes | 2 |
 | Status & feedback › Review status | None: plain React and CSS | – | – | yes | 4 |
 | Status & feedback › Skeleton | None: plain React and CSS | – | – | yes | 5 |
 | Status & feedback › Status badge | None: plain React and CSS | – | – | yes | 3 |
-| Status & feedback › Toast | `UNSTABLE_ToastRegion`, `UNSTABLE_Toast`, `UNSTABLE_ToastQueue`, `UNSTABLE_ToastContent`, `Text`, `Button` through `components/Button` | – | – | yes | 6 |
-| Tables & lists › Data table | `Cell`, `Collection`, `Column`, `Row`, `Table`, `TableBody`, `TableHeader`, `TableLoadMoreItem`, `TableLayout`, `Virtualizer` through `components/gv/Checkbox`, `components/Menu` | `TableProps` | yes | yes | 30 |
-| Tables & lists › Filter chips | `Button`, `Tag`, `TagGroup`, `TagList` through `patterns/FilterMenu` | – | yes | yes | 8 |
-| Tables & lists › Filter menu | `MenuTrigger`, `Dialog` through `components/Menu`, `components/Separator`, `components/gv/IconButton`, `components/gv/OptionList` | – | yes | yes | 6 |
-| Tables & lists › Selection bar | `MenuTrigger`, `Toolbar` through `components/Button`, `components/Popover` | – | yes | yes | 7 |
+| Status & feedback › Toast | `UNSTABLE_ToastRegion`, `UNSTABLE_Toast`, `UNSTABLE_ToastQueue`, `UNSTABLE_ToastContent`, `Text`, `Button`; through Button: `ProgressBar` | – | – | yes | 6 |
+| Tables & lists › Data table | `Cell`, `Collection`, `Column`, `Row`, `Table`, `TableBody`, `TableHeader`, `TableLoadMoreItem`, `TableLayout`, `Virtualizer`; through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text`; through Badge: `Button`; through Icon button: `Button`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard` | `TableProps` | yes | yes | 30 |
+| Tables & lists › Filter chips | `Button`, `Tag`, `TagGroup`, `TagList`; through Filter menu: `MenuTrigger`, `Dialog`, `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`, `Separator`, `Autocomplete`, `Input`, `SearchField`, `Form`, `Label`, `FieldError`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 8 |
+| Tables & lists › Filter menu | `MenuTrigger`, `Dialog`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`; through Separator: `Separator`; through Popover: `OverlayArrow`, `Popover`; through Icon button: `Button`; through Option list: `Autocomplete`, `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`, `Button`, `Input`, `SearchField`, `Form`, `Label`, `FieldError`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 6 |
+| Tables & lists › Selection bar | `MenuTrigger`, `Toolbar`; through Button: `Button`, `ProgressBar`; through Popover: `OverlayArrow`, `Popover`; through Icon button: `Button` | – | yes | yes | 7 |
 | Tables & lists › Table toolbar | `Toolbar` | – | – | yes | 7 |
 | Text › Section label | `Heading` | – | – | yes | 4 |
 | Text › Text | `Text` | `TextProps` | – | yes | 4 |
@@ -120,51 +121,51 @@ what would survive a change of base library. It decides nothing: the base librar
 | Part | Behaviour from React Aria's … | Props straight through | Locale | CSS | Stories |
 |---|---|---|---|---|---|
 | App shell › App frame | None: plain React and CSS | – | – | yes | 2 |
-| App shell › Notification list | `Link` through `components/Button` | – | – | yes | 4 |
-| App shell › Side nav | `Button`, `Link` through `components/Tooltip` | – | yes | yes | 3 |
-| Build tab › Access rights | `Button`, `Disclosure`, `DisclosurePanel`, `DisclosureGroup`, `Heading` through `components/Button`, `components/Link`, `components/RadioGroup`, `components/Select`, `components/Switch`, `components/gv/AlertDialog`, `components/gv/ChoiceCard` | – | yes | yes | 9 |
-| Build tab › Notification row | `Button` through `components/Switch`, `components/TextField`, `components/gv/RichTextEditor` | – | yes | yes | 7 |
-| Build tab › Participant action row | `Button` through `components/NumberField`, `components/RadioGroup`, `components/Switch` | – | yes | yes | 8 |
-| Build tab › View option row | `ToggleButton` through `components/Switch` | – | – | yes | 6 |
-| Manage tab › Comment thread | `Button`, `TextArea`, `TextField` through `components/Tabs`, `components/Button` | – | yes | yes | 9 |
-| Manage tab › Official update | `TextArea`, `TextField` through `components/Button`, `components/TextField`, `components/gv/Modal` | – | yes | yes | 5 |
-| Pages & menu › Section toggle | through `components/Switch` | – | – | yes | 5 |
-| Participation methods › Common ground row | through `components/gv/Checkbox` | – | yes | yes | 7 |
-| Participation methods › Proposals row | through `patterns/VoteProgress` | – | yes | yes | 6 |
-| Participation methods › Volunteering row | `ProgressBar` through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 8 |
+| App shell › Notification list | `Link`; through Button: `Button`, `ProgressBar` | – | – | yes | 4 |
+| App shell › Side nav | `Button`, `Link`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 3 |
+| Build tab › Access rights | `Button`, `Disclosure`, `DisclosurePanel`, `DisclosureGroup`, `Heading`; through Button: `ProgressBar`; through Link: `Link`; through Radio group: `RadioGroup`, `RadioField`, `RadioButton`, `Form`, `Label`, `FieldError`, `Text`; through Select: `Select`, `SelectValue`, `Autocomplete`, `ProgressBar`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `ListBoxLoadMoreItem`, `Text`, `Header`, `Keyboard`, `OverlayArrow`, `Popover`, `Input`, `SearchField`, `Form`, `Label`, `FieldError`, `Tooltip`, `TooltipTrigger`; through Switch: `SwitchField`, `SwitchButton`, `Form`, `Label`, `FieldError`, `Text`; through Alert dialog: `Dialog`, `Modal`, `ProgressBar`, `Input`, `TextField`, `TextArea`, `Group`, `Form`, `Label`, `FieldError`, `Text`; through Choice card: `RadioField`, `RadioButton`, `CheckboxField`, `CheckboxButton`; through Modal: `Dialog`, `Modal` | – | yes | yes | 9 |
+| Build tab › Notification row | `Button`; through Switch: `SwitchField`, `SwitchButton`, `Form`, `Label`, `FieldError`, `Text`; through Text field: `Input`, `TextField`, `TextArea`, `Group`, `Form`, `Label`, `FieldError`, `Text`; through Rich text editor: `TextField`, `TextArea`, `Toolbar`, `ToggleButton`; through Rich text toolbar: `Toolbar`, `ToggleButton` | – | yes | yes | 7 |
+| Build tab › Participant action row | `Button`; through Number field: `Group`, `Input`, `NumberField`, `ProgressBar`, `Form`, `Label`, `FieldError`, `Text`; through Radio group: `RadioGroup`, `RadioField`, `RadioButton`, `Form`, `Label`, `FieldError`, `Text`; through Switch: `SwitchField`, `SwitchButton`, `Form`, `Label`, `FieldError`, `Text` | – | yes | yes | 8 |
+| Build tab › View option row | `ToggleButton`; through Switch: `SwitchField`, `SwitchButton`, `Form`, `Label`, `FieldError`, `Button`, `Text` | – | – | yes | 6 |
+| Manage tab › Comment thread | `Button`, `TextArea`, `TextField`; through Tabs: `Tabs`, `TabList`, `Tab`, `TabPanels`, `TabPanel`, `SelectionIndicator`, `ListBox`, `ListBoxItem`, `ListBoxSection`, `Header`, `VisuallyHidden`; through Button: `ProgressBar` | – | yes | yes | 9 |
+| Manage tab › Official update | `TextArea`, `TextField`; through Button: `Button`, `ProgressBar`; through Text field: `Input`, `Group`, `Form`, `Label`, `FieldError`, `Button`, `Text`; through Modal: `Button`, `Heading`, `Dialog`, `Modal` | – | yes | yes | 5 |
+| Pages & menu › Section toggle | through Switch: `SwitchField`, `SwitchButton`, `Form`, `Label`, `FieldError`, `Button`, `Text` | – | – | yes | 5 |
+| Participation methods › Common ground row | through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text`; through List row: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text` | – | yes | yes | 7 |
+| Participation methods › Proposals row | through Vote progress: `ProgressBar` | – | yes | yes | 6 |
+| Participation methods › Volunteering row | `ProgressBar`; through Icon button: `Button`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 8 |
 | Participation methods › Vote progress | `ProgressBar` | – | yes | yes | 4 |
-| Participation methods › Voting row | through `patterns/VoteProgress` | – | yes | yes | 5 |
-| Project page › Action row | `Button`, `MenuTrigger`, `ProgressBar`, `Link` through `components/Menu` | – | – | yes | 13 |
+| Participation methods › Voting row | through Vote progress: `ProgressBar` | – | yes | yes | 5 |
+| Project page › Action row | `Button`, `MenuTrigger`, `ProgressBar`, `Link`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `Heading`, `Text`, `Header`, `Keyboard`; through Popover: `OverlayArrow`, `Popover` | – | – | yes | 13 |
 | Project page › Panel section | `Button`, `Heading`, `Disclosure`, `DisclosurePanel` | – | – | yes | 5 |
-| Project page › Phone preview | `Button`, `Link` through `components/Tooltip` | – | – | yes | 6 |
-| Project page › Project header | `MenuTrigger` through `components/Button`, `components/Menu`, `components/gv/Breadcrumbs`, `components/gv/SegmentedControl` | – | – | yes | 9 |
-| Project page › Setup step | `Button`, `Dialog`, `DialogTrigger`, `Disclosure`, `DisclosurePanel`, `Heading`, `MenuTrigger` through `components/Popover` | – | – | yes | 7 |
+| Project page › Phone preview | `Button`, `Link`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | – | yes | 6 |
+| Project page › Project header | `MenuTrigger`; through Button: `Button`, `ProgressBar`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`; through Popover: `OverlayArrow`, `Popover`; through Breadcrumbs: `Breadcrumbs`, `Breadcrumb`, `Link`, `Button`; through Icon button: `Button`; through Segmented control: `ToggleButtonGroup`, `SelectionIndicator`, `ToggleButton`, `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | – | yes | 9 |
+| Project page › Setup step | `Button`, `Dialog`, `DialogTrigger`, `Disclosure`, `DisclosurePanel`, `Heading`, `MenuTrigger`; through Popover: `OverlayArrow`, `Popover` | – | – | yes | 7 |
 | Project page › Stat card | `Button` | – | yes | yes | 4 |
-| Project rail › Phase timeline | through `patterns/RailPhase` | – | yes | yes | 5 |
-| Project rail › Rail header | through `components/gv/IconButton` | – | – | yes | 5 |
-| Project rail › Rail phase | `Link` through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 7 |
-| Report builder › Assistant panel | through `components/Button`, `components/gv/SidePanel`, `components/gv/ItemChip`, `components/gv/PromptComposer` | – | yes | – | 9 |
+| Project rail › Phase timeline | through Rail phase: `Link`, `Button`, `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 5 |
+| Project rail › Rail header | through Icon button: `Button` | – | – | yes | 5 |
+| Project rail › Rail phase | `Link`; through Icon button: `Button`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 7 |
+| Report builder › Assistant panel | through Button: `Button`, `ProgressBar`; through Side panel: `Dialog`, `Toolbar`, `Button`, `OverlayArrow`, `Tooltip`, `TooltipTrigger`; through Chat thread: `Button`, `ProgressBar`; through Item chip: `Button`, `VisuallyHidden`; through Prompt composer: `Button`, `FileTrigger`, `TextArea`, `TextField`, `OverlayArrow`, `Tooltip`, `TooltipTrigger`, `VisuallyHidden`; through Prompt suggestions: `Button` | – | yes | – | 9 |
 
 ## Base
 
 | Part | Behaviour from React Aria's … | Props straight through | Locale | CSS | Stories |
 |---|---|---|---|---|---|
-| Calendar | `Calendar`, `CalendarCell`, `CalendarGrid`, `CalendarHeading` through `components/Content`, `components/Button` | `CalendarProps` | yes | yes | 1 |
-| ColorField | `ColorField`, `Input` through `components/Form` | `ColorFieldProps` | – | yes | 1 |
+| Calendar | `Calendar`, `CalendarCell`, `CalendarGrid`, `CalendarHeading`; through Content: `Heading`, `Text`, `Header`, `Keyboard`; through Button: `Button`, `ProgressBar` | `CalendarProps` | yes | yes | 1 |
+| ColorField | `ColorField`, `Input`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `ColorFieldProps` | – | yes | 1 |
 | ColorSwatch | `ColorSwatch` | – | – | yes | 1 |
-| DateField | `DateField`, `DateInput`, `DateSegment` through `components/Form` | `DateFieldProps` | yes | yes | 1 |
-| DatePicker | `DatePicker`, `Group` through `components/DateField`, `components/Calendar`, `components/Popover` | `DatePickerProps` | yes | yes | 1 |
-| DateRangePicker | `DateRangePicker`, `Group` through `components/DateField`, `components/Popover`, `components/RangeCalendar` | `DateRangePickerProps` | yes | yes | 1 |
-| Disclosure | `Button`, `Disclosure`, `DisclosurePanel` through `components/Content` | – | – | yes | 1 |
+| DateField | `DateField`, `DateInput`, `DateSegment`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `DateFieldProps` | yes | yes | 1 |
+| DatePicker | `DatePicker`, `Group`; through DateField: `DateField`, `DateInput`, `DateSegment`, `Form`, `Label`, `FieldError`, `Button`, `Text`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text`; through Calendar: `Calendar`, `CalendarCell`, `CalendarGrid`, `CalendarHeading`, `Heading`, `Text`, `Header`, `Keyboard`, `Button`, `ProgressBar`; through Popover: `OverlayArrow`, `Popover` | `DatePickerProps` | yes | yes | 1 |
+| DateRangePicker | `DateRangePicker`, `Group`; through DateField: `DateField`, `DateInput`, `DateSegment`, `Form`, `Label`, `FieldError`, `Button`, `Text`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text`; through Popover: `OverlayArrow`, `Popover`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text`; through RangeCalendar: `CalendarCell`, `RangeCalendar`, `CalendarHeading`, `Text`, `Button`, `ProgressBar`, `Calendar`, `CalendarGrid`, `Heading`, `Header`, `Keyboard` | `DateRangePickerProps` | yes | yes | 1 |
+| Disclosure | `Button`, `Disclosure`, `DisclosurePanel`; through Content: `Heading`, `Text`, `Header`, `Keyboard` | – | – | yes | 1 |
 | DisclosureGroup | `DisclosureGroup` | – | – | yes | 1 |
 | Form | `Form`, `Label`, `FieldError`, `Button`, `Text` | – | – | yes | 1 |
-| GridList | `Button`, `GridList`, `GridListItem`, `GridListLoadMoreItem`, `GridListSection`, `GridListHeader` through `components/Checkbox`, `components/ProgressCircle` | – | – | yes | 2 |
-| ListBox | `ListBox`, `ListBoxItem`, `ListBoxSection`, `ListBoxLoadMoreItem` through `components/Content`, `components/ProgressCircle` | – | – | yes | 2 |
-| Meter | `Meter` through `components/Form` | `MeterProps` | – | yes | 1 |
+| GridList | `Button`, `GridList`, `GridListItem`, `GridListLoadMoreItem`, `GridListSection`, `GridListHeader`; through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Text`; through Progress circle: `ProgressBar` | – | – | yes | 2 |
+| ListBox | `ListBox`, `ListBoxItem`, `ListBoxSection`, `ListBoxLoadMoreItem`; through Content: `Heading`, `Text`, `Header`, `Keyboard`; through Progress circle: `ProgressBar` | – | – | yes | 2 |
+| Meter | `Meter`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `MeterProps` | – | yes | 1 |
 | Popover | `OverlayArrow`, `Popover` | `PopoverProps` | – | yes | 1 |
-| RangeCalendar | `CalendarCell`, `RangeCalendar`, `CalendarHeading`, `Text` through `components/Button`, `components/Calendar` | `RangeCalendarProps` | yes | yes | 1 |
-| TagGroup | `Button`, `Tag`, `TagGroup`, `TagList` through `components/Form`, `components/Content` | `TagGroupProps`, `TagListProps` | – | yes | 1 |
-| TimeField | `TimeField` through `components/Form`, `components/DateField` | `TimeFieldProps` | yes | yes | 1 |
+| RangeCalendar | `CalendarCell`, `RangeCalendar`, `CalendarHeading`, `Text`; through Button: `Button`, `ProgressBar`; through Calendar: `Calendar`, `CalendarGrid`, `Heading`, `Header`, `Keyboard`, `Button`, `ProgressBar` | `RangeCalendarProps` | yes | yes | 1 |
+| TagGroup | `Button`, `Tag`, `TagGroup`, `TagList`; through Form: `Form`, `Label`, `FieldError`, `Text`; through Content: `Heading`, `Text`, `Header`, `Keyboard` | `TagGroupProps`, `TagListProps` | – | yes | 1 |
+| TimeField | `TimeField`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text`; through DateField: `DateField`, `DateInput`, `DateSegment`, `Form`, `Label`, `FieldError`, `Button`, `Text` | `TimeFieldProps` | yes | yes | 1 |
 | ToggleButton | `ToggleButton` | `ToggleButtonProps` | – | yes | 1 |
 | Toolbar | `Toolbar` | – | – | yes | 1 |
-| Tree | `Button`, `Tree`, `TreeItem`, `TreeItemContent`, `TreeLoadMoreItem`, `TreeSection`, `TreeHeader` through `components/Checkbox`, `components/ProgressCircle` | – | – | yes | 1 |
+| Tree | `Button`, `Tree`, `TreeItem`, `TreeItemContent`, `TreeLoadMoreItem`, `TreeSection`, `TreeHeader`; through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Text`; through Progress circle: `ProgressBar` | – | – | yes | 1 |

@@ -27,7 +27,7 @@ A ticked row is tinted.
 
 ## Behaviour
 
-Behaviour from React Aria's Checkbox. The row itself takes no focus; its checkbox does, after the WAI-ARIA
+Behaviour from React Aria's CheckboxField and CheckboxButton, through the system's Checkbox. The row itself takes no focus; its checkbox does, after the WAI-ARIA
 [Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/).
 
 | Key | What it does | Checked by |
@@ -73,6 +73,8 @@ attention", and a decorative thumbnail hidden from assistive tech.
 
 ## Changes
 
+- 30 Oct 2026: Behaviour names React Aria's parts as docs/REACT-ARIA.md now reads them (CheckboxField and
+  CheckboxButton, through Checkbox).
 - 30 Oct 2026: the stories' thumbnail is a local picture (`src/stories/images`), not a photo from the web.
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: "Select" and "Needs attention" come through `labels`.
