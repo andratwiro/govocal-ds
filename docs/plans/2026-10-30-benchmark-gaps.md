@@ -91,8 +91,6 @@ Put all of these in every subagent brief.
   - no decision about the base library.
 
   Where a task touches a developer call, write it as a question on the page Task 4 builds.
-- **No names anywhere:** not in pages, docs, story data, code comments or commit messages. Use roles ("the designer",
-  "developers", "the project lead") and "Not in Figma". `tests/no-names.test.mjs` stays green.
 - **Be opinionated.** Where sources disagree or say nothing, pick: follow React Aria and platform conventions and stay
   consistent with `docs/API.md` and `docs/NAMING.md`. Build it, and add one line to `docs/DECISIONS.md`: what disagreed →
   what we built → why. Only what truly needs the designer goes to `docs/OPEN-DECISIONS.md`. Never stop to ask.

@@ -558,7 +558,7 @@ function ParticipantActionsCard({actions, reviewed, onChange}: {actions: readonl
 }
 
 /** Moderation (the prototype's Rules section): who moderates the phase's inputs, its pill, and whether new inputs wait
- * for approval before they show (the Manage tab's screening). A team member by role, never a person's name. */
+ * for approval before they show (the Manage tab's screening). A team member by role. */
 function ModerationCard({reviewed, screens, onChange}: {reviewed: Reviewed; screens: boolean; onChange: () => void}) {
   const [moderator, setModerator] = useState<string>(MODERATORS[0]);
   const [screening, setScreening] = useState(screens);

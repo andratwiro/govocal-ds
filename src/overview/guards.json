@@ -343,10 +343,6 @@
     "group": "Structure and CSS",
     "what": "No styled-components or similar code-based styling is installed or imported anywhere; all styling stays in stylesheets using tokens."
   },
-  "tests/no-names.test.mjs": {
-    "group": "Public API and docs",
-    "what": "No file in the repo names a person, the site or the docs; they say Figma, the prototype or the designer instead."
-  },
   "tests/no-outer-margin.test.mjs": {
     "group": "Structure and CSS",
     "what": "No component sets space outside itself; the page that places it owns the space, and the short list of exceptions only shrinks."

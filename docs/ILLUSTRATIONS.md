@@ -88,8 +88,6 @@ from the still and ends on it, so it can stop at any time.
 - **A file that animates** declares `--gvi-cycle: calc(var(--gv-motion-duration-loop) * N)` on its root rule and has
   the reduced-motion block. A still file has neither.
 - **Under 60 KB.**
-- **Invented people only** (sticky-note authors, avatars), never a colleague's name: `tests/no-names.test.mjs` reads
-  `.svg` files too.
 
 ## Drawing a method scene
 

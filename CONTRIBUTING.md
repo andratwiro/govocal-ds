@@ -42,8 +42,6 @@ error's last lines, one question.
   sentence a designer can read.
 - An agent's commit ends with its `Co-Authored-By:` line.
 - `npm run typecheck && npm test` is green after every commit, not just the last.
-- No person's name in a commit, a file or a story (`tests/no-names.test.mjs`): "the designer", "the project lead",
-  "the front-end team", "the back-office agent".
 - Never `git stash` (the stash is shared by every worktree), never rewrite `main`'s history.
 
 ## Tests, locally

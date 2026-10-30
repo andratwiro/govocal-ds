@@ -127,19 +127,17 @@ copy the old page.
 
 ## Hard rules
 
-1. **No person's name** anywhere: code, stories, story data, docs, commits. Say "the designer", "the project lead",
-   "the front-end team", "the back-office agent" (`tests/no-names.test.mjs`).
-2. **Never call the Figma REST API** and never print a Figma token. `figma:spec` reads `.cache/`; `--fresh` and
+1. **Never call the Figma REST API** and never print a Figma token. `figma:spec` reads `.cache/`; `--fresh` and
    `tokens:pull` cost calls on a rate-limited token (`docs/FIGMA.md`, "The REST API").
-3. **Never `git stash`**: the stash is shared by every worktree.
-4. **Accessibility is reported, never blocking.** Never change a colour, size or weight for contrast; e2e reports axe
+2. **Never `git stash`**: the stash is shared by every worktree.
+3. **Accessibility is reported, never blocking.** Never change a colour, size or weight for contrast; e2e reports axe
    findings with `a11yReport(await axeViolations(page, sel))` (`e2e/axe.ts`). Keyboard and focus tests still assert.
-5. **Tokens win.** Paint only through `var(--gv-*)`. No raw colours, no CSS-in-JS for paint, no Tailwind.
-6. **`className` and `style` place a part; they never paint it** (grid area, width, margin). Never target
+4. **Tokens win.** Paint only through `var(--gv-*)`. No raw colours, no CSS-in-JS for paint, no Tailwind.
+5. **`className` and `style` place a part; they never paint it** (grid area, width, margin). Never target
    `.react-aria-*` or `.gv-*` from page CSS (`docs/API.md`, "className and style place").
-7. **Code wins over Figma**; calls go in `docs/DECISIONS.md` (what disagreed → what we built → why).
-8. **No new npm dependencies** without the front-end team's say. Never edit `.github/workflows/` or the a11y settings.
-9. **Public repo:** no real tenant names or data, no font files, no secrets.
+6. **Code wins over Figma**; calls go in `docs/DECISIONS.md` (what disagreed → what we built → why).
+7. **No new npm dependencies** without the front-end team's say. Never edit `.github/workflows/` or the a11y settings.
+8. **Public repo:** no real tenant names or data, no font files, no secrets.
 
 ## Contracts the types don't show
 

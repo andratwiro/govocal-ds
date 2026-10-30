@@ -22,7 +22,7 @@ Calls made moving the overview and phase screens closer to the prototype with th
 - The phase status strip opening every Build → **inside the Dates row's body, under the Date range field** → the
   prototype's Dates row opens to the dates and where the phase stands.
 - Ideation's Moderation row: the prototype's pill is a person → **a Select of team members by role (Manager A…) and a
-  Switch for screening new inputs** → no person's name; screening is the product's own (the Manage tab's Approve /
+  Switch for screening new inputs** → screening is the product's own (the Manage tab's Approve /
   Reject).
 - Ideation Manage's list in a Panel with a title and a line vs the prototype's bare "124 ideas" head → **an App frame
   panel holding the toolbar, chips, table and pager; Idea and Status by default, Assignee, Tags, Likes and Comments
@@ -342,7 +342,7 @@ and the copy check (benchmark-gaps plan, Tasks 4 and 5).
   seam with a play function, plus `e2e/seams.spec.ts`** → the story smoke test skips Overview entries, and Form
   validation already set the recipe shape; e2e waits for the state only a finished play function reaches.
 - The seams' stand-ins (router, form library, translate function, server) vs real libraries → **a few lines each, in
-  the story file** → no new dependency (AGENTS.md rule 8); react-hook-form's own recipe stays on For developers.
+  the story file** → no new dependency (AGENTS.md rule 7); react-hook-form's own recipe stays on For developers.
 - The React Aria table written by hand vs read from the code → **generated into `docs/REACT-ARIA.md` by
   `scripts/react-aria-table.mjs`, run by `npm run components:index`, kept fresh by a test, shown as Overview › What
   comes from React Aria** → it follows every new part without anyone remembering to; a component page's "Behaviour from

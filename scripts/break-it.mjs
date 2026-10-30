@@ -96,7 +96,7 @@ async function main() {
       cpSync(join(ROOT, f), join(dir, f));
     }
     symlinkSync(join(ROOT, 'node_modules'), join(dir, 'node_modules'));
-    // Some guards ask git which files exist (tests/no-names.test.mjs).
+    // Some guards ask git which files exist.
     execSync('git init -q && git add -A', {cwd: dir});
     // usage.json is generated (and ignored); the typecheck reads it.
     execSync(`"${process.execPath}" scripts/token-usage.mjs`, {cwd: dir, stdio: 'ignore'});
