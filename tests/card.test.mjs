@@ -1,6 +1,7 @@
 import {describe, it, expect} from 'vitest';
 import {createElement as h} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
+import {readFileSync} from 'node:fs';
 import {Card} from '../src/components/gv/Card.tsx';
 
 describe('Card', () => {
@@ -23,6 +24,20 @@ describe('Card', () => {
     const html = renderToStaticMarkup(h(Card, {title: 'Sorting', control: 'menu', defaultValue: 'recent',
       menuItems: [{id: 'trending', label: 'Trending'}, {id: 'recent', label: 'Most recent'}]}));
     expect(html).toContain('Most recent');
+  });
+  it('a reviewed card tints its pills; a waiting one keeps them grey', () => {
+    const pills = [{label: 'Trending'}];
+    expect(renderToStaticMarkup(h(Card, {title: 'Sorting', status: 'reviewed', pills}))).toContain('data-selected="true"');
+    expect(renderToStaticMarkup(h(Card, {title: 'Sorting', status: 'to-review', pills}))).not.toContain('data-selected');
+  });
+  it('a link row is one link with the title, description and chevron inside', () => {
+    const html = renderToStaticMarkup(h(Card, {title: 'Create report', description: 'Reading the results', control: 'link', href: '#/r'}));
+    expect(html).toMatch(/<a [^>]*href="#\/r"[^>]*>.*Create report.*Reading the results.*<\/a>/s);
+  });
+  it('the title never truncates', () => {
+    const css = readFileSync(new URL('../src/components/gv/Card.css', import.meta.url), 'utf8');
+    const rule = css.match(/\.gv-card__title \{[^}]*\}/)[0];
+    expect(rule).not.toMatch(/text-overflow|nowrap/);
   });
   it('places with className and style, keeping its own class', () => {
     const html = renderToStaticMarkup(h(Card, {title: 'x', className: 'page-card', style: {gridArea: 'a'}}));

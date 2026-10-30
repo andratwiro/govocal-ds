@@ -72,7 +72,13 @@ function Check({isDone}: {isDone?: boolean}) {
   );
 }
 
-/** A setup checklist step: a dashed circle until it's done, then a check; what it is set to in a value badge. */
+/**
+ * A setup checklist step: a dashed circle until it's done, then a check; what it is set to in a value badge.
+ *
+ * @deprecated Use Card, the one setup row: `kind="open"` → `control="link"`, `kind="expand"` → `control="expand"`,
+ *   `kind="pick"` → `control="pick"` with the same `picker` and `pickerKind`; `value` → `pills={[{label, isSelected:
+ *   true}]}`; the ring or check → `leading`. Kept working until the back office's Project details move over.
+ */
 export function SetupStep({
   kind = 'open',
   title,

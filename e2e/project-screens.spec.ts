@@ -35,3 +35,49 @@ test('Badge: a selected badge takes the value tint; Review status: Reviewed is a
   expect(new Set(sizes).size).toBe(1);
   await report(page);
 });
+
+test('Card, the setup row: opening by keyboard marks it Reviewed, hides its pills, and closed the pills come back teal', async ({page}) => {
+  await page.goto(story('components-layout-containers-card--setup-rows'));
+  const row = page.getByRole('button', {name: /^What should an input be called\?/});
+  const pill = page.locator('.gv-card', {has: row}).locator('.gv-pill');
+  await expect(row).toContainText('To review');
+  await expect(pill).not.toHaveAttribute('data-selected');
+  await row.focus();
+  await page.keyboard.press('Enter');
+  await expect(row).toHaveAttribute('aria-expanded', 'true');
+  await expect(row).toContainText('Reviewed');
+  await expect(pill).toBeHidden();
+  await report(page);
+  await page.keyboard.press('Enter');
+  await expect(pill).toBeVisible();
+  await expect(pill).toHaveAttribute('data-selected', 'true');
+  // A "To set" row is one link.
+  await expect(page.getByRole('link', {name: /Collect demographic data/})).toBeVisible();
+});
+
+test('Card, the setup row: the title keeps every word in a narrow column', async ({page}) => {
+  await page.goto(story('components-layout-containers-card--long-title'));
+  const title = page.locator('.gv-card__title');
+  expect(await title.evaluate(e => e.scrollWidth <= e.clientWidth + 1)).toBe(true);
+  await expect(title).toHaveText('What should an input be called?');
+});
+
+test('Card, the pick row: Enter opens the picker under the row, Esc closes it back onto the row', async ({page}) => {
+  await page.goto(story('components-layout-containers-card--pick-row'));
+  const row = page.getByRole('button', {name: /^Set topic tags/});
+  await row.focus();
+  await page.keyboard.press('Enter');
+  const dialog = page.getByRole('dialog', {name: 'Set topic tags'});
+  await expect(dialog).toBeVisible();
+  await report(page, '.gv-card__popover--pick');
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await expect(row).toBeFocused();
+});
+
+test('Card, the link rows: each next action is one link by its name', async ({page}) => {
+  await page.goto(story('components-layout-containers-card--link-rows'));
+  await expect(page.getByRole('link', {name: 'Message participants'})).toHaveAttribute('href', '#/messaging');
+  await expect(page.getByRole('link', {name: /Create report/})).toContainText('Reading the results of this phase');
+  await report(page);
+});

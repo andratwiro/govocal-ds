@@ -3,9 +3,12 @@ import {useState, type CSSProperties, type ReactNode} from 'react';
 import {clsx} from 'clsx';
 import {
   Button,
+  Dialog,
+  DialogTrigger,
   Disclosure,
   DisclosurePanel,
   Heading,
+  Link,
   Menu,
   MenuItem,
   MenuTrigger,
@@ -44,6 +47,8 @@ export interface CardPill {
   label: string;
   /** A 14 lucide icon before the label (Figma "Badge · Icon=Yes"). */
   icon?: LucideIcon;
+  /** Tints the pill as a chosen value (Badge `isSelected`). A reviewed card tints all its pills by itself. */
+  isSelected?: boolean;
 }
 
 export interface CardMenuItem {
@@ -72,8 +77,15 @@ export interface CardIconAction {
 }
 
 export interface CardProps {
-  /** The card's name, in Small type. */
+  /** The card's name, in Small type. It never truncates: the status and the pills give way first. */
   title?: ReactNode;
+  /** A grey line under the title ("Reading the results of this phase"): a next action that says more. */
+  description?: ReactNode;
+  /**
+   * A mark before the title: a setup step's dashed ring or check, a done action's tick. Decorative (`aria-hidden`):
+   * say the same in the title or the status.
+   */
+  leading?: ReactNode;
   /**
    * The card's fill: `outlined` (a border, no fill: on a white panel, e.g. a phase's Build tab) or `filled` (the panel
    * fill and a subtle border: on the grey stage, e.g. Manage and Insights).
@@ -95,7 +107,10 @@ export interface CardProps {
   layout?: 'row' | 'stacked';
   /** The "Required" marker (a dot + the word). */
   isRequired?: boolean;
-  /** Where the card's review stands: the Review status at the end of the title line. */
+  /**
+   * Where the card's review stands: the Review status at the end of the title line. A `reviewed` card tints its pills
+   * (Badge `isSelected`): the page sets it from `onExpandedChange` once the person has opened the card.
+   */
   status?: ReviewStatusProps['status'];
   /** Grey words for the current value, e.g. "Not set". */
   summary?: string;
@@ -105,11 +120,21 @@ export interface CardProps {
    */
   pills?: CardPill[];
   /**
-   * The header's chevron. `expand` opens the body in place (a Disclosure); `open` leads somewhere else (→);
-   * `menu` drops a list to pick one value from (Figma "Review · pill dropdown", the prototype's Sorting card).
-   * `placeholder` keeps the 28 box empty (Figma's "Empty" card).
+   * The header's chevron. `expand` opens the body in place (a Disclosure); open, it hides the pills, puts the chevron
+   * in a filled square and takes a stronger border. `open` leads somewhere else (a → button at the end); `link` makes
+   * the whole row one link (›, or `linkIcon`), as a next action or a "To set" row; `menu` drops a list to pick one
+   * value from (Figma "Review · pill dropdown", the prototype's Sorting card); `pick` opens any `picker` under the row
+   * (▾: Set area, Set topic tags). `placeholder` keeps the 28 box empty (Figma's "Empty" card).
    */
-  control?: 'expand' | 'open' | 'placeholder' | 'menu';
+  control?: 'expand' | 'open' | 'link' | 'menu' | 'pick' | 'placeholder';
+  /** `control="link"`: where the row leads. */
+  href?: string;
+  /** `control="link"`: the action's own icon at the end, in place of › (a report, a link, a sparkle). */
+  linkIcon?: ReactNode;
+  /** `control="pick"`: what opens under the row, as wide as it: an Option list, or a Menu with `pickerKind="menu"`. */
+  picker?: ReactNode;
+  /** `control="pick"`: what kind of picker. @default 'dialog' */
+  pickerKind?: 'dialog' | 'menu';
   /** `control="menu"`: the values to pick from. */
   menuItems?: CardMenuItem[];
   /** `control="menu"`: the chosen value's id (controlled). */
@@ -118,7 +143,7 @@ export interface CardProps {
   defaultValue?: string;
   /** `control="menu"`: called with the id of the value picked. */
   onChange?: (id: string) => void;
-  /** What the → does (`control="open"`). */
+  /** What the → does (`control="open"`), or the whole row (`control="link"`). */
   onOpen?: () => void;
   /** Ghost icon buttons in the header (plus, upload, download, link, sparkles…). */
   iconActions?: CardIconAction[];
@@ -147,6 +172,7 @@ function Status({
   pills,
   labels
 }: Pick<CardProps, 'isRequired' | 'status' | 'summary' | 'pills'> & {labels: CardLabels}) {
+  const reviewed = status === 'reviewed';
   return (
     <>
       {isRequired && <RequiredMarker placement="card" labels={labels} />}
@@ -158,14 +184,25 @@ function Status({
       {summary && <span className="gv-card__summary">{summary}</span>}
       {pills && pills.length > 0 && (
         <span className="gv-card__pills">
-          {pills.map(({label, icon: Icon}) => (
-            <Badge key={label} icon={Icon && <Icon aria-hidden size={14} />}>
+          {pills.map(({label, icon: Icon, isSelected}) => (
+            <Badge key={label} isSelected={isSelected || reviewed} icon={Icon && <Icon aria-hidden size={14} />}>
               {label}
             </Badge>
           ))}
         </span>
       )}
     </>
+  );
+}
+
+/** The title, and the description under it when there is one. */
+function TitleText({title, description}: Pick<CardProps, 'title' | 'description'>) {
+  if (description == null) return <span className="gv-card__title">{title}</span>;
+  return (
+    <span className="gv-card__text">
+      <span className="gv-card__title">{title}</span>
+      <span className="gv-card__description">{description}</span>
+    </span>
   );
 }
 
@@ -200,12 +237,20 @@ function Trailing({iconActions, actions}: Pick<CardProps, 'iconActions' | 'actio
 }
 
 /**
- * Card: a titled box with a status line (Required, review status, summary, pills), a control (chevron, icon buttons,
- * compact buttons, a switch), an optional body and an optional `media` picture on top. One card covers Figma's 23
- * types. `className` and `style` place it; they never paint it.
+ * Card: the one setup row and titled box. A title (never cut short) with an optional mark before it and a line under
+ * it, a status line (Required, review status, summary, pills), a trailing control (expand, open, link, menu, pick,
+ * icon buttons, compact buttons, a switch), an optional body and an optional `media` picture on top. It covers
+ * Figma's 23 types, the Build tab's setup rows, Project details' steps and the next-action rows. `className` and
+ * `style` place it; they never paint it.
  */
 export function Card({
   title,
+  description,
+  leading,
+  href,
+  linkIcon,
+  picker,
+  pickerKind = 'dialog',
   variant = 'outlined',
   media,
   layout = 'row',
@@ -240,6 +285,69 @@ export function Card({
     'data-media': media != null || undefined
   };
   const picture = media != null && <div className="gv-card__media">{media}</div>;
+  const lead = leading != null && (
+    <span className="gv-card__leading" aria-hidden>
+      {leading}
+    </span>
+  );
+  const text = <TitleText title={title} description={description} />;
+
+  if (control === 'link') {
+    return (
+      <div {...root} data-control="link">
+        {picture}
+        <Link href={href} onPress={onOpen} className="gv-card__header gv-card__header--trigger">
+          {lead}
+          {text}
+          {status}
+          <span className="gv-card__chevron" aria-hidden>
+            {linkIcon ?? <ChevronRight size={16} />}
+          </span>
+        </Link>
+      </div>
+    );
+  }
+
+  if (control === 'pick') {
+    const header = (
+      <Button className="gv-card__header gv-card__header--trigger">
+        {lead}
+        {text}
+        {status}
+        <span className="gv-card__chevron" aria-hidden>
+          <ChevronDown size={16} />
+        </span>
+      </Button>
+    );
+    // The picker hangs under the row, as wide as it.
+    const popover = (content: ReactNode) => (
+      <Popover placement="bottom start" offset={6} showArrow={false} className="gv-card__popover gv-card__popover--pick">
+        {content}
+      </Popover>
+    );
+    return (
+      <div {...root} data-control="pick">
+        {picture}
+        <Heading className="gv-card__heading">
+          {pickerKind === 'menu' ? (
+            <MenuTrigger>
+              {header}
+              {popover(picker)}
+            </MenuTrigger>
+          ) : (
+            <DialogTrigger>
+              {header}
+              {popover(
+                <Dialog aria-label={typeof title === 'string' ? title : undefined} className="gv-card__dialog">
+                  {picker}
+                </Dialog>
+              )}
+            </DialogTrigger>
+          )}
+        </Heading>
+      </div>
+    );
+  }
 
   if (control === 'menu') {
     const current = value ?? innerKey;
@@ -250,7 +358,8 @@ export function Card({
         <Heading className="gv-card__heading">
           <MenuTrigger>
             <Button className="gv-card__header gv-card__header--trigger">
-              <span className="gv-card__title">{title}</span>
+              {lead}
+              {text}
               <Status
                 isRequired={isRequired}
                 status={reviewStatus}
@@ -307,7 +416,8 @@ export function Card({
         {picture}
         <Heading className="gv-card__heading">
           <Button slot="trigger" className="gv-card__header gv-card__header--trigger">
-            <span className="gv-card__title">{title}</span>
+            {lead}
+            {text}
             {status}
             <span className="gv-card__chevron" aria-hidden>
               <ChevronDown size={16} />
@@ -341,9 +451,19 @@ export function Card({
     <section {...root}>
       {picture}
       <div className="gv-card__header" data-roomy={roomy || undefined}>
-        <Heading level={3} className="gv-card__title">
-          {title}
-        </Heading>
+        {lead}
+        {description != null ? (
+          <span className="gv-card__text">
+            <Heading level={3} className="gv-card__title">
+              {title}
+            </Heading>
+            <span className="gv-card__description">{description}</span>
+          </span>
+        ) : (
+          <Heading level={3} className="gv-card__title">
+            {title}
+          </Heading>
+        )}
         {status}
         <Trailing iconActions={iconActions} actions={actions} />
         {control === 'open' && (

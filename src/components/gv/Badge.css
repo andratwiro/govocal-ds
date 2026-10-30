@@ -12,6 +12,9 @@
   border-radius: var(--gv-radius-full);
   background: var(--gv-surface-neutral);
   color: var(--gv-text-neutral);
+  /* In a row short of room (a setup row's pills) the badge gives way and cuts its words short. */
+  min-width: 0;
+  max-width: 100%;
 
   /* 14, at Figma's stroke (1.02 at 14 = 1.75 on Lucide's 24 grid, as the prototype draws it). */
   > svg {
@@ -72,7 +75,10 @@
 
 .gv-pill__label {
   font: var(--gv-type-small-strong);
+  min-width: 0;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .gv-pill__remove {

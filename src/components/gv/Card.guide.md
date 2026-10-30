@@ -6,6 +6,9 @@
   ("Dates", "Idea form", "What should an input be called?", "Available views"), with Required, To review or Reviewed.
 - **Expand** (`control="expand"`) to open the setting in place, **open** (→) when it leads to its own page, **menu** to
   pick one value from the header (Sorting), icon actions or a switch for a quick action.
+- As **the one setup row** on all four project screens: the Build tab's setup, Project details' steps (`control="pick"`
+  for Set area and Set topic tags, a `leading` ring or check), the overview's Next actions and the Insights panel's
+  Recommended actions (`control="link"`, a `description`, a `linkIcon`). It replaces Setup step and Action row.
 - **Filled** (`variant="filled"`) on the grey stage of Manage and Insights ("Add an idea", "Exports", "Get an AI
   Sensemaking summary"); **outlined** on a white panel.
 - **With media** (`media`) for a gallery of things to pick: a project in the Inspiration hub, a template, a tool on the
@@ -15,7 +18,7 @@
 
 - For a list or a table with a head, count and actions: use **Panel**.
 - For a choice between options in a form: use **Choice card** (in a Radio group); Card's own radios are deprecated.
-- For a row that leads somewhere or runs one action: use **Action row**.
+- For a row that runs an action in place and shows its progress (Create report → Report ready): use **Action row**.
 - For a number with its label: use **Stat tile**.
 - For a dashboard's chart in a frame: use **Dashboard card**.
 - To lay out a page's columns: use **Grid** or **Tile grid**; a Card is content, not a layout.
@@ -23,23 +26,33 @@
 ## Anatomy
 
 1. **Media** (optional): a picture on top, edge to edge, 2:1.
-2. **Title**: Small type.
-3. **Status line**: a Required marker, a Review status, a grey summary ("Not set") or pills ("6 questions"); pills hide
-   while the card is open.
-4. **Control**: the chevron (expand or menu), the → (open), ghost Icon buttons (`iconActions`, each with an optional
+2. **Leading mark** (optional, `leading`): a setup step's ring or check, a done action's tick.
+3. **Title**: Small type; never cut short (the status and the pills give way first). An optional **description**, a
+   grey line under it.
+4. **Status line**: a Required marker, a Review status, a grey summary ("Not set") or pills ("6 questions"); pills hide
+   while the card is open and come back teal once it is Reviewed.
+5. **Control**: the chevron (expand, menu or pick; in a filled square while open), the → (open), the › or the action's
+   icon (link: the whole row is the link), ghost Icon buttons (`iconActions`, each with an optional
    tooltip), or anything else at the end (`actions`: Compact buttons, a `CardSwitch`).
-5. **Body** (optional): under the header; with expand, only while open. `layout="stacked"` puts it 24 under the title.
+6. **Body** (optional): under the header; with expand, only while open. `layout="stacked"` puts it 24 under the title.
 
 ## Behaviour
 
 An expanding card follows the WAI-ARIA [Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/): its
-whole header is one button. A menu card's header is a menu button.
+whole header is one button. A menu card's header is a menu button; a pick card's opens its picker under the row; a link
+card's whole row is one link.
+
+Open, a row hides its pills, puts the chevron in a filled square and takes a stronger border. The page marks it
+Reviewed from `onExpandedChange` (`status="reviewed"`); closed again, its pills come back teal. Several rows can be open
+at once.
 
 | Key | What it does | Tested by |
 | --- | --- | --- |
 | Tab | Moves to the card's header, then to its actions in order. | `play: Keyboard` |
 | Enter or Space (on an expanding header) | Opens or closes the body. | `play: Keyboard` |
 | Enter (on a menu header) | Opens the values; Esc closes them and puts focus back on the header. | `play: Keyboard` |
+| Enter (on a setup row) | Opens it; the page marks it Reviewed and, closed, its pills turn teal. | `e2e/project-screens.spec.ts` |
+| Enter (on a pick row) | Opens the picker under the row; Esc closes it back onto the row. | `e2e/project-screens.spec.ts` |
 | Tab (onto a disabled action with a tooltip) | Focus still lands on it and the tooltip says why it is off. | `e2e/build-tab.spec.ts` |
 
 ## Content
@@ -50,6 +63,8 @@ whole header is one button. A menu card's header is a menu button.
   questions", "Idea").
 - An icon action's `label` says the action: "Add an attachment", "Download the ideas"; a disabled one's `tooltip` says
   why: "Nobody has signed up yet".
+- A link row's title is the action, a verb first: "Message participants", "Add a report"; its description says what
+  happens ("Reading the results of this phase").
 - The words it says itself come through `labels`: "Required", "To review", "To set", "Reviewed", and the →'s name
   ("Open Collect demographic data").
 
@@ -69,10 +84,11 @@ review status in words, not only colour.
 
 - **Panel**: the frame for lists and tables.
 - **Choice card**: tiles for a choice in a form.
-- **Action row**: a row that leads somewhere.
+- **Action row**: the run-in-place row (working → done).
 - **Review status**: the status a card shows.
 - **Compact button**: the in-card action.
-- **Setup step**: a Build tab step built on a card.
+- **Setup step**: deprecated; a Card with `control="pick"` or `"link"` and a `leading` mark does its job.
+- **Badge**: `isSelected`, the tint a reviewed row's pills take.
 
 ## Provenance
 
@@ -80,10 +96,13 @@ review status in words, not only colour.
   action with its tooltip, Reviewed, the menu with icons).
 - **Reviewed by a person:** not yet.
 - **Known limits:** `CardRadioGroup` and `CardRadio` are deprecated but kept until Reporting and Users move to Choice
-  card; Card's row, Setup step and Action row are close cousins the plan means to merge into one setup row.
+  card; Setup step and Action row are deprecated in favour of Card's setup row but kept until the back office moves.
 
 ## Changes
 
+- 30 Oct 2026: the one setup row. `control="link"` and `"pick"`, `description`, `leading`, `linkIcon`; open rows hide
+  their pills behind a square chevron and a stronger border; reviewed rows tint their pills; the title never truncates.
+  Setup step and Action row (but its working state) are deprecated (docs/DECISIONS.md, "Project screens").
 - 30 Oct 2026: this page written; a play function proves Tab, Enter and Space on an expanding card and the menu card.
 - 29 Oct 2026: `tone="build" | "manage"` became `variant="outlined" | "filled"`; `review` became `status`; the menu
   card takes `value` / `defaultValue` / `onChange` (docs/DECISIONS.md, "Composition contracts in code").

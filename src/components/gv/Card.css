@@ -15,6 +15,11 @@
     border-color: var(--gv-border-subtle);
     background: var(--gv-surface-panel);
   }
+
+  /* An open row takes a stronger border (the prototype's .pjsec.is-open). */
+  &[data-expanded] {
+    border-color: var(--gv-border-strong);
+  }
 }
 
 .gv-card__heading {
@@ -64,14 +69,40 @@
 }
 
 .gv-card__title {
-  flex: 1 1 auto;
-  min-width: 0;
   margin: 0;
   font: var(--gv-type-small);
   color: var(--gv-text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+}
+
+/* The title never truncates: on one line while it fits, wrapping only when it alone is wider than the row; the status
+   and the pills give way first (deep dive, project §3). */
+.gv-card__header > .gv-card__title,
+.gv-card__title-line > .gv-card__title,
+.gv-card__text {
+  flex: 1 0 auto;
+  max-width: 100%;
+}
+
+.gv-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-2);
+}
+
+.gv-card__description {
+  font: var(--gv-type-small);
+  color: var(--gv-text-tertiary);
+}
+
+/* A mark before the title: a setup step's ring or check, a done action's tick. */
+.gv-card__leading {
+  display: inline-flex;
+  flex: none;
+  color: var(--gv-icon-tertiary);
+
+  svg {
+    display: block;
+  }
 }
 
 /* Required: 6 before the chevron (Figma's Actions frame pads it 6; the prototype's .pjfd-req margin-right 6). */
@@ -102,6 +133,7 @@
   gap: var(--gv-space-4);
   flex: 0 1 auto;
   min-width: 0;
+  overflow: hidden;
 }
 
 /* An open card hides its summary: the body says it (prototype .pjsec.is-open). */
@@ -138,9 +170,31 @@
   transition: rotate var(--gv-motion-duration-fast) var(--gv-motion-easing-standard);
 }
 
+/* Open, the chevron sits in a filled square (the prototype's .pjsec.is-open .pjsec__chev). */
+.gv-card[data-expanded] > .gv-card__heading .gv-card__chevron {
+  background: var(--gv-surface-neutral);
+  color: var(--gv-icon-secondary);
+}
+
 .gv-card[data-expanded] .gv-card__chevron svg,
 .gv-card__header--trigger[aria-expanded='true'] .gv-card__chevron svg {
   rotate: 180deg;
+}
+
+/* A pick row's picker hangs under it, as wide as the row. */
+.react-aria-Popover.gv-card__popover--pick {
+  width: var(--trigger-width);
+  padding: 0;
+}
+
+.gv-card__dialog {
+  outline: none;
+  max-height: inherit;
+}
+
+/* A link row: the whole row is the link, no underline. */
+.gv-card[data-control='link'] > .gv-card__header {
+  text-decoration: none;
 }
 
 /* The menu card's list (the prototype's .pjdd__menu): 190 wide, padding 6, radius 12, a border-control hairline;

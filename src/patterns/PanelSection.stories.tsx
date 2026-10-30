@@ -1,7 +1,7 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {PanelSection} from './PanelSection';
-import {ActionRow} from './ActionRow';
+import {Card} from '../components/gv/Card';
 
 const meta: Meta<typeof PanelSection> = {
   title: 'Patterns/Project page/Panel section',
@@ -13,7 +13,7 @@ export default meta;
 type Story = StoryObj<typeof PanelSection>;
 
 export const Default: Story = {
-  args: {title: 'Next actions', children: <><ActionRow href="#">Message participants</ActionRow><ActionRow href="#">Create report</ActionRow></>}
+  args: {title: 'Next actions', children: <><Card control="link" href="#" title="Message participants" /><Card control="link" href="#" title="Create report" /></>}
 };
 
 export const WithNote: Story = {

@@ -753,19 +753,25 @@ Component, from `src/components/gv/Card.tsx`.
 - `actions?: ReactNode`
 - `children?: ReactNode`
 - `className?: string`
-- `control?: 'expand' | 'open' | 'placeholder' | 'menu'`
+- `control?: 'expand' | 'open' | 'link' | 'menu' | 'pick' | 'placeholder'`
 - `defaultExpanded?: boolean`
 - `defaultValue?: string`
+- `description?: ReactNode`
+- `href?: string`
 - `iconActions?: CardIconAction[]`
 - `isExpanded?: boolean`
 - `isRequired?: boolean`
 - `labels?: Partial<CardLabels>`
 - `layout?: 'row' | 'stacked'`
+- `leading?: ReactNode`
+- `linkIcon?: ReactNode`
 - `media?: ReactNode`
 - `menuItems?: CardMenuItem[]`
 - `onChange?: (id: string) => void`
 - `onExpandedChange?: (isExpanded: boolean) => void`
 - `onOpen?: () => void`
+- `picker?: ReactNode`
+- `pickerKind?: 'dialog' | 'menu'`
 - `pills?: CardPill[]`
 - `status?: ReviewStatusProps['status']`
 - `style?: CSSProperties`
@@ -815,6 +821,7 @@ Interface, from `src/components/gv/Card.tsx`.
 Interface, from `src/components/gv/Card.tsx`.
 
 - `icon?: LucideIcon`
+- `isSelected?: boolean`
 - `label: string`
 
 ### `CardProps`

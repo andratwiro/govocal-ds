@@ -72,6 +72,11 @@ export interface ActionRowProps extends PlacementProps {
  * A next-action row (prototype `.pj-ba` in "Next actions", `.pjsec__h--nav` in the Insights panel's "Recommended
  * actions"): a bordered row with a label and a chevron, or the action's icon at the end. It can carry a description,
  * run in place (working → done), or open a menu. Not in Figma yet.
+ *
+ * @deprecated For a row that leads somewhere, use Card, the one setup row: `<Card control="link" href title
+ *   description linkIcon />` (`children` → `title`, `icon` → `linkIcon`, `onPress` → `onOpen`, a done tick →
+ *   `leading`). Action row stays for the run-in-place row (`status="working"`, Create report) until a second page
+ *   needs it, and for `menu` rows. Kept working until the back office's overview and Insights panel move over.
  */
 export function ActionRow({
   children,

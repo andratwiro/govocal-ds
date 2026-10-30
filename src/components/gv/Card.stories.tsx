@@ -1,6 +1,8 @@
+import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {
+  Check,
   CircleAlert,
   CircleHelp,
   Download,
@@ -21,6 +23,7 @@ import {CompactButton} from './CompactButton';
 import {TextField} from '../TextField';
 import {Card, CardRadio, CardRadioGroup, CardSwitch, type CardProps} from './Card';
 import {Badge} from './Badge';
+import {OptionList} from './OptionList';
 import {PICTURES} from '../../stories/images';
 
 const figma = (id: string) => ({
@@ -320,3 +323,101 @@ export const Keyboard: Story = {
     await waitFor(() => expect(sorting).toHaveFocus());
   }
 };
+
+/* ── The setup row (not in Figma: the prototype's project screens) ───────────── */
+
+const SETUP_ROWS: CardProps[] = [
+  {title: 'What should an input be called?', pills: [{label: 'Proposal', icon: FileText}], children: 'Proposal, Idea, Option, Project, Question, Issue or Contribution.'},
+  {title: 'Proposal form', pills: [{label: '6 questions'}], children: '1. Title · 2. Description · 3. Images · 4. Attachments · 5. Location · 6. Tags'},
+  {title: 'Moderation', pills: [{label: 'Assigned'}], children: 'Content screening, anonymous participation and similar proposal detection.'},
+  {title: 'Notifications', pills: [{label: '9 emails on'}], children: 'Who hears about new proposals, comments and status changes.'}
+];
+
+function SetupRowsRender() {
+  // The page sets Reviewed once a row has been opened; the look (pills hidden, the square chevron, the tinted pills
+  // after) stays in Card.
+  const [seen, setSeen] = useState<Set<string>>(new Set(['Proposal form']));
+  return (
+    <div style={{display: 'grid', gap: 8, width: 444}}>
+      {SETUP_ROWS.map(row => {
+        const title = String(row.title);
+        return (
+          <Card key={title} {...row} control="expand" status={seen.has(title) ? 'reviewed' : 'to-review'}
+            onExpandedChange={open => open && setSeen(s => new Set(s).add(title))} />
+        );
+      })}
+      <Card title="Collect demographic data" status="to-set" control="link" href="#" />
+    </div>
+  );
+}
+
+/**
+ * Not in Figma (the prototype's Build tab): the setup rows. Open a row and the page marks it Reviewed; the row hides
+ * its pills, puts the chevron in a filled square and takes a stronger border. Closed again, its pills come back teal
+ * (Badge `isSelected`). A "To set" row leads to its own page with ›.
+ */
+export const SetupRows: Story = {name: 'Setup rows', tags: ['not-in-figma'], render: SetupRowsRender};
+
+/** Not in Figma: an open row, reviewed. The pills hide (the body says it) and the chevron sits in a filled square. */
+export const OpenRow: Story = {
+  name: 'Setup row · open',
+  tags: ['not-in-figma'],
+  decorators: width(444),
+  args: {...SETUP_ROWS[2], control: 'expand', status: 'reviewed', defaultExpanded: true}
+};
+
+/** Not in Figma: closed after a review, the pills are tinted. */
+export const ReviewedRow: Story = {
+  name: 'Setup row · reviewed',
+  tags: ['not-in-figma'],
+  decorators: width(444),
+  args: {...SETUP_ROWS[0], control: 'expand', status: 'reviewed'}
+};
+
+/** Not in Figma: in a narrow column the title keeps every word; the pills are cut short first. */
+export const LongTitle: Story = {
+  name: 'Setup row · long title',
+  tags: ['not-in-figma'],
+  decorators: width(320),
+  args: {title: 'What should an input be called?', status: 'reviewed', control: 'expand',
+    pills: [{label: 'Contribution', icon: FileText}], children: 'Contribution'}
+};
+
+/**
+ * Not in Figma (the overview's Next actions and the Insights panel's Recommended actions): the whole row is one link,
+ * with ›, or the action's own icon (`linkIcon`). A `description` says more; a `leading` tick marks a done action.
+ */
+export const LinkRows: Story = {
+  name: 'Setup row · link',
+  tags: ['not-in-figma'],
+  render: () => (
+    <div style={{display: 'grid', gap: 8, width: 360}}>
+      <Card title="Message participants" control="link" href="#/messaging" />
+      <Card title="Add a report" control="link" href="#/reporting" linkIcon={<FileChartColumn size={16} />} />
+      <Card title="Create report" description="Reading the results of this phase" control="link" onOpen={() => {}} />
+      <Card title="Report ready" control="link" href="#/reporting" leading={<Check size={16} />} />
+    </div>
+  )
+};
+
+// Invented: a platform's topic tags.
+const TOPICS = ['Mobility', 'Cycling', 'Climate', 'Green spaces', 'Water & rivers', 'Air quality'].map(t => ({id: t, label: t}));
+
+function PickRender() {
+  const [tags, setTags] = useState<string[]>(['Green spaces']);
+  return (
+    <div style={{width: 360, minHeight: 420}}>
+      <Card title="Set topic tags" control="pick" pills={tags.length ? [{label: `${tags.length} ${tags.length === 1 ? 'tag' : 'tags'}`, isSelected: true}] : undefined}
+        picker={<OptionList aria-label="Topic tags" items={TOPICS} value={tags} onChange={setTags} placeholder="Search tags..." />} />
+    </div>
+  );
+}
+
+/**
+ * Not in Figma (Project details' Set area and Set topic tags): `control="pick"` opens a picker under the row, as wide
+ * as it (an Option list here; a Menu with `pickerKind="menu"`). Esc closes it back onto the row.
+ */
+export const PickRow: Story = {name: 'Setup row · pick', tags: ['not-in-figma'], render: PickRender};
+
+/** The setup rows, right to left: the chevron and the pills sit at the left, the title at the right. */
+export const RightToLeft: Story = {name: 'Right to left', tags: ['not-in-figma'], globals: {direction: 'rtl'}, render: SetupRowsRender};
