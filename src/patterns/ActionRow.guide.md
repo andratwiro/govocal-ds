@@ -2,6 +2,9 @@
 
 ## When to use
 
+For a row that leads somewhere, use a **Card** with `control="link"` (the one setup row): Action row's link rows are
+deprecated. Action row stays for the row that runs in place (working → done) and for menu rows.
+
 - For the next things a project manager can do, one row each, in a short stack: "Next actions" on the project overview
   ("Message participants", "Create report").
 - For the Insights panel's "Recommended actions", with the action's own icon at the end ("Add a report", "Share results
@@ -80,6 +83,8 @@ the label.
 
 ## Changes
 
+- 30 Oct 2026: its link rows are deprecated in favour of Card's `control="link"`; the run-in-place and menu rows
+  stay (docs/DECISIONS.md, "Project screens").
 - 30 Oct 2026: this page written; a play function proves Tab and Enter.
 - 29 Oct 2026: its words come in through `labels`.
 - 29 Oct 2026: the action's icon, a description, working and done states, a menu under the row and disabled.

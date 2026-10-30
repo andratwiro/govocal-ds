@@ -2,6 +2,9 @@
 
 ## When to use
 
+Deprecated: a **Card** does its job (`control="link"`, `"expand"` or `"pick"`, a `leading` ring or check, `pills`
+with `isSelected` for the value). It keeps working until the back office's pages move over.
+
 - For a step of a project's or a phase's setup checklist ("Before you publish"), each showing whether it is done:
   - **Open** (`kind="open"`, the default) when the step happens somewhere else: "Settings" opens the project settings.
   - **Expand** (`kind="expand"`) when the step fits in the card: "Set project card".
@@ -72,6 +75,7 @@ is open, a picker that returns focus to the card, and decorative circles and che
 
 ## Changes
 
+- 30 Oct 2026: deprecated in favour of Card, the one setup row (docs/DECISIONS.md, "Project screens").
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: its words come in through `labels`; what it does is `kind`.
 - 29 Oct 2026: a teal value badge says what a step is set to; `pick` opens a picker under the card.

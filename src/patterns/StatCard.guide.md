@@ -6,6 +6,7 @@
   weekly since the start).
 - With `onPress` when the figure opens a detail (the audience); the card shows a chevron and becomes one button.
 - Without `onPress` as a display-only figure.
+- For Insights' tiles that show a number with its trend: Stat card is the one part for a number and its sparkline.
 
 ## When not to use
 
@@ -17,9 +18,10 @@
 ## Anatomy
 
 1. **Label**: what is counted ("Participants").
-2. **Value**: the number, large.
+2. **Value**: the number, Stat small at the regular weight (lighter than a Stat tile's).
 3. **Chevron** (with `onPress`): at the end of the head.
-4. **Sparkline** (with two or more values in `series`): 34 high, no grid, no value card.
+4. **Sparkline** (with two or more values in `series`): 34 high, straight segments over one flat tint, no grid, no
+   value card.
 5. **Caption** (optional): the line under it ("Weekly, since 6 May").
 
 ## Behaviour
@@ -66,6 +68,8 @@ sentence for the sparkline, and a decorative chevron.
 
 ## Changes
 
+- 30 Oct 2026: a flat sparkline (`areaFill="flat"`) and a lighter numeral, as the prototype draws "Collecting now";
+  it absorbs Stat tile's sparkline (docs/DECISIONS.md, "Project screens").
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: its words come in through `labels`.
 - 29 Oct 2026: built for the project overview from the prototype.
