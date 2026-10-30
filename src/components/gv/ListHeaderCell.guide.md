@@ -16,20 +16,24 @@
 ## Anatomy
 
 1. **Label**: the column's name; at the start for a label column, at the end for a number column.
-2. **Sort arrow** (when `isSorted`): a 16 down arrow after the label, which turns bold.
+2. **Sort arrow** (when `isSorted`): a 16 arrow after the label, which turns bold; down for most first
+   (`sortDirection="descending"`, the default), up for least first.
 3. **Plus** (`kind="add-column"`): a 16 plus in place of a label.
 
-One line, the height of the List header. A sortable cell darkens on hover; a static one doesn't react.
+One line, the height of the List header. A sortable cell (one with `onPress`) darkens on hover; a static one, or one
+with no `onPress`, doesn't react.
 
 ## Behaviour
 
-Behaviour from React Aria's Button. A sortable cell and the "Add column" cell are buttons, after the WAI-ARIA
-[Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/); a sortable one is a toggle, pressed while the list
-is sorted by it. A static cell is plain text and takes no focus.
+Behaviour from React Aria's Button. Every cell is a column head (`role="columnheader"`). A sortable cell (with
+`onPress`) and the "Add column" cell hold a button, after the WAI-ARIA
+[Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/); the sorted column's head says its order with
+`aria-sort` (ascending or descending), as in the [Sortable table example](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/).
+A static cell, or one with no `onPress`, is plain text and takes no focus.
 
 | Key | What it does | Checked by |
 | --- | --- | --- |
-| Tab | Moves focus to the next sortable or "Add column" cell; static cells are skipped. | `play: Keyboard` |
+| Tab | Moves focus to the next sortable or "Add column" cell; static cells and cells with no `onPress` are skipped. | `play: Keyboard` |
 | Enter | Presses the cell: sorts by its column, or adds a column. | `play: Keyboard` |
 | Space | Presses the cell, as Enter. | `play: Keyboard` |
 
@@ -41,12 +45,13 @@ is sorted by it. A static cell is plain text and takes no focus.
 
 ## Accessibility
 
-**The cell gives you:** a real button with a focus ring inside the cell, a pressed state on the sorted column, a named
-plus, and plain text for static columns.
+**The cell gives you:** a column head with a real button inside when it sorts, `aria-sort` with the direction on the
+sorted column, a named plus, and plain text for static columns and cells with no `onPress`.
 
 **You still own:**
-- An `onPress` on every cell that isn't static; without it, it's a button that does nothing.
-- The sort itself, and saying so when the order matters.
+- The row and table around it (a **List header** is the row); a column head outside a row means nothing to a screen
+  reader.
+- The sort itself, `sortDirection`, and saying so when the order matters.
 
 ## Related
 
@@ -58,11 +63,13 @@ plus, and plain text for static columns.
 
 - Built by agents from Figma's List header cell (its `Type` and `· sorted` variants) and the prototype.
 - Reviewed by a person: not yet.
-- Known limits: one sort direction (the arrow only points down); the sorted state is a pressed toggle, not a column's
-  sort order.
+- Known limits: the cell only reports a press; the page sorts and flips `sortDirection`.
 
 ## Changes
 
+- 30 Oct 2026: a label or number cell is a button only with `onPress` (plain text otherwise, no dead focus stop); every
+  cell is a column head, and the sorted one says its order with `aria-sort` and `sortDirection` (an up arrow for
+  ascending) in place of a pressed toggle (docs/DECISIONS.md, "Component page fixes").
 - 30 Oct 2026: this page written, with its first doc comment; a play function proves the keyboard table.
 - 29 Oct 2026: "Add column" comes through `labels`.
 - 29 Oct 2026: `variant` (label, number, add column) became `kind`; `isStatic` and `isSorted` (docs/DECISIONS.md,

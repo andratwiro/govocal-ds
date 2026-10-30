@@ -28,6 +28,8 @@ export interface ListHeaderColumn {
   isStatic?: boolean;
   /** This column is the one the list is currently sorted by. */
   isSorted?: boolean;
+  /** Which way the sorted column runs (`aria-sort` on its head, the arrow's direction). @default 'descending' */
+  sortDirection?: 'ascending' | 'descending';
   /**
    * Fixed column width in px, matching Figma's spec per method. The first column always
    * takes the room the others leave (at least 160), as in Figma and the prototype.
@@ -50,7 +52,10 @@ export interface ListHeaderSelectAll {
 export interface ListHeaderProps extends PlacementProps {
   /** The column heads, in order. */
   columns: ListHeaderColumn[];
-  /** Fires when a sortable column head is pressed, with that column's `key`. */
+  /**
+   * Fires when a sortable column head is pressed, with that column's `key`. Without it the column heads are plain text
+   * (a button that does nothing is a dead stop for the keyboard).
+   */
   onSort?: (key: string) => void;
   /** Shows the trailing "Add column" cell, e.g. for the Ideation method. */
   onAddColumn?: () => void;
@@ -80,14 +85,15 @@ export function listColumnsTemplate(columns: ListHeaderColumn[]) {
 /**
  * The column heads over a Go Vocal method's list of rows (Figma "List header", one `Method` per column set): a
  * select-all checkbox, the column labels, sortable or static, and an "Add column" button at the end. Pair it with
- * `ListRow` or a method's row pattern; both keep the same 28px lead and trail slots, so the columns line up.
+ * `ListRow` or a method's row pattern; both keep the same 28px lead and trail slots, so the columns line up. It is a
+ * row of column heads (`role="row"`): the list it heads is a table (`role="table"`) whose rows are `role="row"`.
  */
 export function ListHeader({columns, onSort, onAddColumn, selectAll, hasLeadSlot, labels, className, style}: ListHeaderProps) {
   const l = mergeLabels(listHeaderLabels, labels);
   return (
-    <div className={clsx('gv-list-header', className)} style={style}>
+    <div className={clsx('gv-list-header', className)} style={style} role="row">
       {(selectAll || hasLeadSlot) && (
-        <span className="gv-list-header__lead">
+        <span className="gv-list-header__lead" role={selectAll ? 'columnheader' : undefined}>
           {selectAll && (
             <Checkbox
               isSelected={selectAll.isSelected}
@@ -106,6 +112,7 @@ export function ListHeader({columns, onSort, onAddColumn, selectAll, hasLeadSlot
             kind={column.kind}
             isStatic={column.isStatic}
             isSorted={column.isSorted}
+            sortDirection={column.sortDirection}
             onPress={onSort ? () => onSort(column.key) : undefined}>
             {column.label}
           </ListHeaderCell>

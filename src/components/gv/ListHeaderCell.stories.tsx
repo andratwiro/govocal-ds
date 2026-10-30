@@ -19,68 +19,87 @@ const meta: Meta<typeof ListHeaderCell> = {
 export default meta;
 type Story = StoryFn<typeof ListHeaderCell>;
 
+// Each cell is a column head: in the stories, as in a List header, it sits in a row of a table.
+const Row = ({children}: {children: React.ReactNode}) => (
+  <div role="table" aria-label="Ideas">
+    <div role="row" style={{display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap'}}>{children}</div>
+  </div>
+);
+
 export const AllVariants: Story = () => (
-  <div style={{display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap'}}>
-    <ListHeaderCell kind="label">Idea</ListHeaderCell>
+  <Row>
+    <ListHeaderCell kind="label" onPress={() => {}}>Idea</ListHeaderCell>
     <ListHeaderCell kind="add-column" />
     <ListHeaderCell kind="label" isStatic>
       Statement
     </ListHeaderCell>
-    <ListHeaderCell kind="number">Likes</ListHeaderCell>
-    <ListHeaderCell kind="number" isSorted>
+    <ListHeaderCell kind="number" onPress={() => {}}>Likes</ListHeaderCell>
+    <ListHeaderCell kind="number" onPress={() => {}} isSorted>
       Agree
     </ListHeaderCell>
-    <ListHeaderCell kind="label" isSorted>
+    <ListHeaderCell kind="label" onPress={() => {}} isSorted sortDirection="ascending">
       Votes
     </ListHeaderCell>
-  </div>
+  </Row>
 );
 
-export const Label: Story = () => <ListHeaderCell kind="label">Idea</ListHeaderCell>;
+export const Label: Story = () => <Row><ListHeaderCell kind="label" onPress={() => {}}>Idea</ListHeaderCell></Row>;
 
-export const AddColumn: Story = () => <ListHeaderCell kind="add-column" />;
+export const AddColumn: Story = () => <Row><ListHeaderCell kind="add-column" /></Row>;
 AddColumn.storyName = 'Add column';
 
 export const LabelSquare: Story = () => (
-  <ListHeaderCell kind="label" isStatic>
-    Statement
-  </ListHeaderCell>
+  <Row>
+    <ListHeaderCell kind="label" isStatic>
+      Statement
+    </ListHeaderCell>
+  </Row>
 );
 LabelSquare.storyName = 'Label · square';
 
-export const Number_: Story = () => <ListHeaderCell kind="number">Likes</ListHeaderCell>;
+export const Number_: Story = () => <Row><ListHeaderCell kind="number" onPress={() => {}}>Likes</ListHeaderCell></Row>;
 Number_.storyName = 'Number';
 
 export const NumberSorted: Story = () => (
-  <ListHeaderCell kind="number" isSorted>
-    Agree
-  </ListHeaderCell>
+  <Row>
+    <ListHeaderCell kind="number" onPress={() => {}} isSorted>
+      Agree
+    </ListHeaderCell>
+  </Row>
 );
 NumberSorted.storyName = 'Number · sorted';
 
 export const LabelSorted: Story = () => (
-  <ListHeaderCell kind="label" isSorted>
-    Votes
-  </ListHeaderCell>
+  <Row>
+    <ListHeaderCell kind="label" onPress={() => {}} isSorted>
+      Votes
+    </ListHeaderCell>
+  </Row>
 );
 LabelSorted.storyName = 'Label · sorted';
 
-/** The keyboard: a static cell takes no focus; Tab reaches a sortable cell and the add-column cell, and Enter or Space
- * presses them. */
+/** The keyboard: a static cell, and a cell with no `onPress`, take no focus; Tab reaches a sortable cell and the
+ * add-column cell, and Enter or Space presses them. The sorted column's head says its order (`aria-sort`). */
 export const Keyboard: Story = () => {
   const [sorts, setSorts] = useState(0);
   const [added, setAdded] = useState(0);
   return (
     <div style={{display: 'flex', gap: 24, alignItems: 'center'}}>
-      <ListHeaderCell kind="label" isStatic>Statement</ListHeaderCell>
-      <ListHeaderCell kind="number" onPress={() => setSorts(n => n + 1)}>Likes</ListHeaderCell>
-      <ListHeaderCell kind="add-column" onPress={() => setAdded(n => n + 1)} />
+      <Row>
+        <ListHeaderCell kind="label" isStatic>Statement</ListHeaderCell>
+        <ListHeaderCell kind="number">Agree</ListHeaderCell>
+        <ListHeaderCell kind="number" isSorted onPress={() => setSorts(n => n + 1)}>Likes</ListHeaderCell>
+        <ListHeaderCell kind="add-column" onPress={() => setAdded(n => n + 1)} />
+      </Row>
       <span role="status">{`Sorted ${sorts}, added ${added}`}</span>
     </div>
   );
 };
 Keyboard.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
+  await expect(canvas.queryByRole('button', {name: 'Agree'})).toBeNull();
+  await expect(canvas.getByRole('columnheader', {name: 'Likes'})).toHaveAttribute('aria-sort', 'descending');
+  await expect(canvas.getByRole('button', {name: 'Likes'})).not.toHaveAttribute('aria-pressed');
   await userEvent.tab();
   await expect(canvas.getByRole('button', {name: 'Likes'})).toHaveFocus();
   await userEvent.keyboard('{Enter}');

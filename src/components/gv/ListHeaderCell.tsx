@@ -1,6 +1,6 @@
 'use client';
 import {Button} from 'react-aria-components/Button';
-import {Plus, ArrowDown} from 'lucide-react';
+import {Plus, ArrowDown, ArrowUp} from 'lucide-react';
 import clsx from 'clsx';
 import type {PlacementProps} from '../className';
 import {mergeLabels} from '../labels';
@@ -24,22 +24,32 @@ export interface ListHeaderCellProps extends PlacementProps {
    */
   kind?: 'label' | 'number' | 'add-column';
   /**
-   * A static, non-sortable column label (Figma `Label · square`): plain text, no hover affordance. Ignored for
-   * `add-column`.
+   * A static, non-sortable column label (Figma `Label · square`): plain text, no hover affordance, even with an
+   * `onPress`. Ignored for `add-column`.
    *
    * @default false
    */
   isStatic?: boolean;
   /**
-   * The column this cell heads is the one the list is currently sorted by (Figma `· sorted`): bold text + a down
-   * arrow. Implies the cell is not static.
+   * The column this cell heads is the one the list is currently sorted by (Figma `· sorted`): bold text, an arrow, and
+   * `aria-sort` on the column head with `sortDirection`.
    *
    * @default false
    */
   isSorted?: boolean;
+  /**
+   * Which way the sorted column runs: `descending` (most first, the arrow points down) or `ascending` (least first, up).
+   * Only read while `isSorted`.
+   *
+   * @default 'descending'
+   */
+  sortDirection?: 'ascending' | 'descending';
   /** The column label. Ignored for `add-column`. */
   children?: React.ReactNode;
-  /** Sort / add-column press handler. */
+  /**
+   * Sorts by this column, or adds a column. A label or number cell is a button only with it; without it the cell is
+   * plain text and takes no focus.
+   */
   onPress?: () => void;
   /** The add-column button's name, over `labels.addColumn`. A label or number cell is named by its text. */
   'aria-label'?: string;
@@ -49,12 +59,14 @@ export interface ListHeaderCellProps extends PlacementProps {
 
 /**
  * One column head in a List header (Figma "List header cell"): a label or number column that sorts the list when
- * pressed, a static label, or the trailing "Add column" button. Bold with a down arrow when the list is sorted by it.
+ * pressed, a static label, or the trailing "Add column" button. Bold with an arrow when the list is sorted by it.
+ * Each cell is a column head (`role="columnheader"`), so it sits in a List header's row.
  */
 export function ListHeaderCell({
   kind = 'label',
   isStatic = false,
   isSorted: sorted = false,
+  sortDirection = 'descending',
   children,
   onPress,
   'aria-label': ariaLabel,
@@ -64,33 +76,34 @@ export function ListHeaderCell({
 }: ListHeaderCellProps) {
   if (kind === 'add-column') {
     return (
-      <Button
-        className={clsx('gv-list-header-cell', className)} style={style}
-        data-kind="add-column"
-        onPress={onPress}
-        aria-label={ariaLabel ?? mergeLabels(listHeaderCellLabels, labels).addColumn}>
-        <Plus aria-hidden size={16} strokeWidth={1.75} />
-      </Button>
+      <div role="columnheader" className={clsx('gv-list-header-cell', className)} style={style} data-kind="add-column">
+        <Button
+          className="gv-list-header-cell__button"
+          onPress={onPress}
+          aria-label={ariaLabel ?? mergeLabels(listHeaderCellLabels, labels).addColumn}>
+          <Plus aria-hidden size={16} strokeWidth={1.75} />
+        </Button>
+      </div>
     );
   }
 
-  if (isStatic && !sorted) {
-    return (
-      <span className={clsx('gv-list-header-cell', className)} style={style} data-kind={kind} data-static>
-        {children}
-      </span>
-    );
-  }
-
+  const Arrow = sortDirection === 'ascending' ? ArrowUp : ArrowDown;
+  const label = (
+    <>
+      {children}
+      {sorted && <Arrow aria-hidden size={16} strokeWidth={1.75} className="gv-list-header-cell__arrow" />}
+    </>
+  );
+  const isSortable = !isStatic && onPress != null;
   return (
-    <Button
+    <div
+      role="columnheader"
+      aria-sort={sorted ? sortDirection : undefined}
       className={clsx('gv-list-header-cell', className)} style={style}
       data-kind={kind}
       data-sorted={sorted || undefined}
-      onPress={onPress}
-      aria-pressed={sorted}>
-      {children}
-      {sorted && <ArrowDown aria-hidden size={16} strokeWidth={1.75} className="gv-list-header-cell__arrow" />}
-    </Button>
+      data-sortable={isSortable || undefined}>
+      {isSortable ? <Button className="gv-list-header-cell__button" onPress={onPress}>{label}</Button> : label}
+    </div>
   );
 }

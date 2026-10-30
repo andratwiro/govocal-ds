@@ -49,7 +49,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Data display › Avatar | None: plain React and CSS | – | – | yes | 6 |
 | Data display › File list | `GridList`, `GridListItem` through `components/Link` | – | – | yes | 6 |
 | Data display › Illustration | None: plain React and CSS | – | – | yes | 10 |
-| Data display › List header | through `components/gv/Checkbox` | – | – | yes | 8 |
+| Data display › List header | through `components/gv/Checkbox` | – | – | yes | 10 |
 | Data display › List header cell | `Button` | – | – | yes | 8 |
 | Data display › List row | through `components/gv/Checkbox` | – | – | yes | 6 |
 | Data display › Map view | `Button` | – | yes | yes | 10 |

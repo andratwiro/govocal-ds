@@ -4,6 +4,17 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Component page fixes (30 Oct 2026)
+
+Calls made fixing the bugs the component-page writers found (benchmark-gaps plan, overnight fixes).
+
+- List header cell: the sorted column was a pressed toggle (`aria-pressed`), and a column with no `onSort` was still a
+  button → **every cell is a column head (`role="columnheader"`), the sorted one carries `aria-sort` with a new
+  `sortDirection` (`descending` by default, the arrow up for `ascending`), and a label or number cell is a button only
+  with `onPress`; List header is the row (`role="row"`)** → `aria-sort` is only valid on a column head, which needs a
+  row, which needs a table: the list a List header heads is now a table, as WAI-ARIA's sortable table example; a head
+  that does nothing must not take focus.
+
 ## Report parts (30 Oct 2026)
 
 Calls made while building the report builder's missing parts (benchmark-gaps plan, Task 8d; the back office's deep

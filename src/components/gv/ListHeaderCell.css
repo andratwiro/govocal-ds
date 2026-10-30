@@ -1,30 +1,28 @@
 @import '../theme.css';
 
-/* Figma "List header cell" (32 tall, 0 8 padding, 4 gap, Small) and the prototype's .pj-th. */
+/* Figma "List header cell" (32 tall, 0 8 padding, 4 gap, Small) and the prototype's .pj-th. The cell is the column
+   head; a sortable cell and the "Add column" cell hold a button that fills it. */
 .gv-list-header-cell {
-  appearance: none;
   box-sizing: border-box;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: var(--gv-space-4);
   min-width: 0;
   height: 32px;
   padding: 0 var(--gv-space-8);
-  margin: 0;
-  border: none;
-  background: transparent;
-  border-radius: var(--gv-radius-6);
   font: var(--gv-type-small);
   color: var(--gv-text-secondary);
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
 
   &[data-kind='number'] {
     justify-content: flex-end;
     text-align: right;
+  }
+
+  &[data-sortable] {
+    padding: 0;
   }
 
   /* 28 × 28 plus, Icon strong (Figma "Add column"; prototype .pj-th--add). */
@@ -33,47 +31,62 @@
     width: var(--gv-size-control-28);
     height: var(--gv-size-control-28);
     padding: 0;
-    justify-content: center;
-    color: var(--gv-icon-secondary);
-    cursor: pointer;
-
-    &[data-hovered] {
-      background: var(--gv-surface-hovered);
-      color: var(--gv-icon-primary);
-    }
-
-    &[data-pressed] {
-      background: var(--gv-surface-pressed);
-    }
-  }
-
-  &[data-static] {
-    border-radius: 0;
-    cursor: default;
-  }
-
-  /* A sortable column darkens on hover (prototype .pj-th--sort:hover). */
-  &:not([data-static]):not([data-kind='add-column']) {
-    cursor: pointer;
-
-    &[data-hovered] {
-      background: var(--gv-surface-hovered);
-      color: var(--gv-text-primary);
-    }
-
-    &[data-pressed] {
-      background: var(--gv-surface-pressed);
-    }
+    overflow: visible;
   }
 
   &[data-sorted] {
     font: var(--gv-type-small-strong);
     color: var(--gv-text-primary);
   }
+}
+
+/* A sortable column darkens on hover (prototype .pj-th--sort:hover). */
+.gv-list-header-cell__button {
+  appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: inherit;
+  gap: var(--gv-space-4);
+  min-width: 0;
+  height: 100%;
+  padding: 0 var(--gv-space-8);
+  margin: 0;
+  border: none;
+  background: transparent;
+  border-radius: var(--gv-radius-6);
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  outline: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &[data-hovered] {
+    background: var(--gv-surface-hovered);
+    color: var(--gv-text-primary);
+  }
+
+  &[data-pressed] {
+    background: var(--gv-surface-pressed);
+  }
 
   &[data-focus-visible] {
     outline: var(--gv-focus-ring);
     outline-offset: var(--gv-focus-ring-offset-inset);
+  }
+
+  [data-kind='add-column'] > & {
+    padding: 0;
+    justify-content: center;
+    color: var(--gv-icon-secondary);
+
+    &[data-hovered] {
+      color: var(--gv-icon-primary);
+    }
   }
 }
 

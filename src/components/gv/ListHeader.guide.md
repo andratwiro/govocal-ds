@@ -26,16 +26,19 @@ The 28 slots at both ends match those of **List row** and **Common ground row**,
 
 ## Behaviour
 
-Behaviour from React Aria's Button (each sortable column) and Checkbox (select all). Each sortable column is a
-toggle button, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/); select-all is a
-checkbox, after the [Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/). Static columns take no
-focus.
+Behaviour from React Aria's Button (each sortable column) and Checkbox (select all). The header is a row of column
+heads; with `onSort`, each sortable column holds a button, after the WAI-ARIA
+[Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/), and the sorted column's head says its order with
+`aria-sort`, as in the [Sortable table example](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/).
+Select-all is a checkbox, after the [Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/). Static
+columns, and every column when there is no `onSort`, are plain text and take no focus (`play: NotSortable`).
 
 | Key | What it does | Checked by |
 | --- | --- | --- |
 | Tab | Moves focus to the select-all checkbox, then to each sortable column in turn; static columns are skipped. | `play: Keyboard` |
 | Space (on select all) | Ticks or unticks every row. | `play: Keyboard` |
 | Enter or Space (on a column) | Sorts the list by that column. | `play: Keyboard` |
+| Enter (on the sorted column) | Turns the order round, when the page flips `sortDirection`. | `play: Sorting` |
 
 The select-all checkbox shows a dash while only some rows are ticked; the page passes `isIndeterminate`.
 
@@ -48,13 +51,14 @@ The select-all checkbox shows a dash while only some rows are ticked; the page p
 
 ## Accessibility
 
-**The header gives you:** sortable columns as buttons that say whether they're pressed (the sorted one is), a named
-select-all checkbox with its mixed state, and static columns as plain text.
+**The header gives you:** a row of column heads (`role="row"`), sortable columns as buttons only when there is an
+`onSort`, `aria-sort` with the direction on the sorted column, a named select-all checkbox with its mixed state, and
+static columns as plain text.
 
 **You still own:**
-- An `onSort` for every sortable column; without one the columns are still buttons that do nothing.
-- The list semantics around it: the back office wraps the header and its rows in a `role="list"` named for what it
-  lists ("Options", "Proposals").
+- The table around it: the header is a row, so the list it heads is a `role="table"` named for what it lists
+  ("Options", "Proposals"), with its rows as `role="row"`.
+- `sortDirection` on the sorted column, flipped when the page turns the order round.
 - Telling people the list is now sorted by another column (the arrow moves; say it if order matters).
 
 ## Related
@@ -69,11 +73,13 @@ select-all checkbox with its mixed state, and static columns as plain text.
 - Built by agents from Figma's List header (its four `Method` column sets) and the prototype's Manage table (the
   select-all checkbox).
 - Reviewed by a person: not yet.
-- Known limits: the page sorts the rows itself (the header only reports a press); a column with no `onSort` still
-  draws as a button; the sorted column says "pressed", not the sort direction (there is no ascending arrow).
+- Known limits: the page sorts the rows itself (the header only reports a press).
 
 ## Changes
 
+- 30 Oct 2026: with no `onSort` the column heads are plain text (no dead focus stops); the header is a row of column
+  heads and the sorted one says its order with `aria-sort` and `sortDirection`, in place of a pressed toggle; stories
+  use local pictures (docs/DECISIONS.md, "Component page fixes").
 - 30 Oct 2026: this page written, with its first doc comment; a play function proves the keyboard table.
 - 29 Oct 2026: "Select all" and "Add column" come through `labels`.
 - 29 Oct 2026: `isStatic`, `isSorted` and `hasLeadSlot` replace the story-only method prop (docs/DECISIONS.md,

@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {ListHeader, type ListHeaderColumn} from './ListHeader';
 import {ListRow} from './ListRow';
 import {Table, TableHeader, TableBody, Column, Row, Cell} from '../Table';
+import {PICTURES} from '../../stories/images';
 import {expect, userEvent, within} from 'storybook/test';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
@@ -59,47 +60,48 @@ export const AllVariants: Story = () => (
   <div style={{display: 'flex', flexDirection: 'column', gap: 32, width: 764}}>
     <div>
       <Label>Method · Ideation</Label>
-      <ListHeader columns={ideation} selectAll={{}} onAddColumn={() => {}} />
+      <div role="table" aria-label="Inputs"><ListHeader columns={ideation} onSort={() => {}} selectAll={{}} onAddColumn={() => {}} /></div>
     </div>
     <div>
       <Label>Method · Common ground</Label>
-      <ListHeader columns={commonGround} selectAll={{}} />
+      <div role="table" aria-label="Inputs"><ListHeader columns={commonGround} onSort={() => {}} selectAll={{}} /></div>
     </div>
     <div>
       <Label>Method · Proposals</Label>
-      <ListHeader columns={proposals} />
+      <div role="table" aria-label="Inputs"><ListHeader columns={proposals} onSort={() => {}} /></div>
     </div>
     <div>
       <Label>Method · Voting</Label>
-      <ListHeader columns={voting} />
+      <div role="table" aria-label="Inputs"><ListHeader columns={voting} onSort={() => {}} /></div>
     </div>
   </div>
 );
 
-const Wide = ({children}: {children: React.ReactNode}) => <div style={{width: 764}}>{children}</div>;
+// A List header is a row of column heads: it sits in a table.
+const Wide = ({children}: {children: React.ReactNode}) => <div role="table" aria-label="Inputs" style={{width: 764}}>{children}</div>;
 
 export const Ideation: Story = () => (
   <Wide>
-    <ListHeader columns={ideation} selectAll={{}} onAddColumn={() => {}} />
+    <ListHeader columns={ideation} onSort={() => {}} selectAll={{}} onAddColumn={() => {}} />
   </Wide>
 );
 
 export const CommonGround: Story = () => (
   <Wide>
-    <ListHeader columns={commonGround} selectAll={{}} />
+    <ListHeader columns={commonGround} onSort={() => {}} selectAll={{}} />
   </Wide>
 );
 CommonGround.storyName = 'Common ground';
 
 export const Proposals: Story = () => (
   <Wide>
-    <ListHeader columns={proposals} />
+    <ListHeader columns={proposals} onSort={() => {}} />
   </Wide>
 );
 
 export const Voting: Story = () => (
   <Wide>
-    <ListHeader columns={voting} />
+    <ListHeader columns={voting} onSort={() => {}} />
   </Wide>
 );
 
@@ -168,7 +170,7 @@ export const InATable: Story = () => (
     style={{width: 764}}>
     <TableHeader>
       <Column isRowHeader>
-        <ListHeader columns={ideation} hasLeadSlot onAddColumn={() => alert('Add column')} />
+        <ListHeader columns={ideation} hasLeadSlot onAddColumn={() => {}} />
       </Column>
     </TableHeader>
     <TableBody>
@@ -191,7 +193,7 @@ export const InATable: Story = () => (
           <ListRow
             title="More street trees along the canal would cool the area"
             status="Under consideration"
-            thumbnail="https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=64&auto=format&fit=crop"
+            thumbnail={PICTURES.streetTrees}
           />
         </Cell>
       </Row>
@@ -213,7 +215,9 @@ export const Keyboard: Story = () => {
   const columns = commonGround.map(c => ({...c, isSorted: c.key === sortedBy}));
   return (
     <div style={{width: 764}}>
-      <ListHeader columns={columns} onSort={setSortedBy} selectAll={{isSelected: all, onChange: setAll}} />
+      <div role="table" aria-label="Statements">
+        <ListHeader columns={columns} onSort={setSortedBy} selectAll={{isSelected: all, onChange: setAll}} />
+      </div>
       <p role="status">Sorted by {columns.find(c => c.isSorted)?.label}</p>
     </div>
   );
@@ -232,4 +236,44 @@ Keyboard.play = async ({canvasElement}) => {
   await expect(canvas.getByRole('button', {name: 'Agree'})).toHaveFocus();
   await userEvent.keyboard(' ');
   await expect(canvas.getByRole('status')).toHaveTextContent('Sorted by Agree');
+};
+
+/** Sorting: the sorted column says its direction (`aria-sort` on its column head, an arrow down for most first, up for
+ * least first); pressing it again turns the order round. A column is a button only when the list can be sorted. */
+export const Sorting: Story = () => {
+  const [sort, setSort] = useState<{key: string; direction: 'ascending' | 'descending'}>({key: 'votes', direction: 'descending'});
+  const columns = voting.map(c => ({...c, isSorted: !c.isStatic && c.key === sort.key, sortDirection: sort.direction}));
+  return (
+    <div role="table" aria-label="Options" style={{width: 764}}>
+      <ListHeader columns={columns}
+        onSort={key => setSort(s => ({key, direction: s.key === key && s.direction === 'descending' ? 'ascending' : 'descending'}))} />
+    </div>
+  );
+};
+Sorting.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  const votes = canvas.getByRole('columnheader', {name: 'Votes'});
+  await expect(votes).toHaveAttribute('aria-sort', 'descending');
+  await expect(canvas.getByRole('button', {name: 'Votes'})).not.toHaveAttribute('aria-pressed');
+  await expect(canvas.getByRole('columnheader', {name: 'Online'})).not.toHaveAttribute('aria-sort');
+  await userEvent.click(canvas.getByRole('button', {name: 'Votes'}));
+  await expect(votes).toHaveAttribute('aria-sort', 'ascending');
+  await userEvent.click(canvas.getByRole('button', {name: 'Online'}));
+  await expect(canvas.getByRole('columnheader', {name: 'Online'})).toHaveAttribute('aria-sort', 'descending');
+  await expect(votes).not.toHaveAttribute('aria-sort');
+};
+
+/** No `onSort`: the column heads are plain text, so Tab doesn't stop on heads that do nothing. The sorted column still
+ * says its order. */
+export const NotSortable: Story = () => (
+  <div role="table" aria-label="Proposals" style={{width: 764}}>
+    <ListHeader columns={proposals} />
+  </div>
+);
+NotSortable.storyName = 'Not sortable';
+NotSortable.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  await expect(canvas.queryAllByRole('button')).toHaveLength(0);
+  await expect(canvas.getAllByRole('columnheader')).toHaveLength(5);
+  await expect(canvas.getByRole('columnheader', {name: 'Votes'})).toHaveAttribute('aria-sort', 'descending');
 };

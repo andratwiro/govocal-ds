@@ -2419,6 +2419,7 @@ Component, from `src/components/gv/ListHeaderCell.tsx`.
 - `kind?: 'label' | 'number' | 'add-column'`
 - `labels?: Partial<ListHeaderCellLabels>`
 - `onPress?: () => void`
+- `sortDirection?: 'ascending' | 'descending'`
 - `style?: CSSProperties`
 
 ### `listHeaderCellLabels`
@@ -2448,6 +2449,7 @@ Interface, from `src/components/gv/ListHeader.tsx`.
 - `key: string`
 - `kind?: 'label' | 'number'`
 - `label: string`
+- `sortDirection?: 'ascending' | 'descending'`
 - `width?: number`
 
 ### `listHeaderLabels`

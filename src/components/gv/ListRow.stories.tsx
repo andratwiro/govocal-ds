@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {expect, userEvent, within} from 'storybook/test';
 import {ListRow} from './ListRow';
+import {PICTURES} from '../../stories/images';
 import type {Meta, StoryFn} from '@storybook/react-vite';
 
 const meta: Meta<typeof ListRow> = {
@@ -19,7 +20,7 @@ const meta: Meta<typeof ListRow> = {
 export default meta;
 type Story = StoryFn<typeof ListRow>;
 
-const THUMB = 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=64&auto=format&fit=crop';
+const THUMB = PICTURES.streetTrees;
 
 const Frame = ({children}: {children: React.ReactNode}) => (
   <div style={{width: 764, background: 'var(--gv-surface-panel)'}}>{children}</div>

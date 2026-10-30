@@ -73,6 +73,7 @@ attention", and a decorative thumbnail hidden from assistive tech.
 
 ## Changes
 
+- 30 Oct 2026: the stories' thumbnail is a local picture (`src/stories/images`), not a photo from the web.
 - 30 Oct 2026: this page written; a play function proves the keyboard table.
 - 29 Oct 2026: "Select" and "Needs attention" come through `labels`.
 - 29 Oct 2026: closer to Figma and the prototype: a 28 | cells | 28 grid, a three-line title, the warning at the
