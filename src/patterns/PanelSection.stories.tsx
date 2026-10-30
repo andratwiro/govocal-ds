@@ -1,4 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {PanelSection} from './PanelSection';
 import {ActionRow} from './ActionRow';
 
@@ -28,4 +29,24 @@ export const Collapsible: Story = {
 export const CollapsibleOpen: Story = {
   name: 'Collapsible, open',
   args: {title: 'Project details', isCollapsible: true, defaultExpanded: true, children: <p style={{margin: 0}}>Dates, folder, visibility.</p>}
+};
+
+/**
+ * A collapsible section by keyboard: Tab reaches its header, Enter or Space folds and unfolds it. Its play function
+ * proves the component page's keyboard table.
+ */
+export const Keyboard: Story = {
+  args: {title: 'Project details', isCollapsible: true, children: <p style={{margin: 0}}>Dates, folder, visibility.</p>},
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const header = canvas.getByRole('button', {name: 'Project details'});
+    await userEvent.tab();
+    await expect(header).toHaveFocus();
+    await expect(header).toHaveAttribute('aria-expanded', 'false');
+    await userEvent.keyboard('{Enter}');
+    await expect(header).toHaveAttribute('aria-expanded', 'true');
+    await expect(canvas.getByText('Dates, folder, visibility.')).toBeVisible();
+    await userEvent.keyboard(' ');
+    await expect(header).toHaveAttribute('aria-expanded', 'false');
+  }
 };

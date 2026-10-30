@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import type {Selection} from 'react-aria-components';
 import {MapPin} from 'lucide-react';
 import {Menu, MenuItem, SubmenuTrigger} from '../components/Menu';
@@ -121,4 +122,44 @@ export const OpensAPicker: Story = {
       <SetTopicTags />
     </div>
   )
+};
+
+/**
+ * The three kinds by keyboard: Tab moves card to card; Enter on Open runs it, Enter on Expand opens it in place, Enter
+ * on Pick opens its picker and Esc closes it back to the card. Its play function proves the component page's keyboard
+ * table.
+ */
+export const Keyboard: Story = {
+  render: function Render() {
+    const [opened, setOpened] = useState(false);
+    return (
+      <div style={{display: 'flex', flexDirection: 'column', gap: 8, width: 360}}>
+        <SetupStep kind="open" title="Settings" onPress={() => setOpened(true)} />
+        <SetupStep kind="expand" title="Set project card">{cardText}</SetupStep>
+        <SetArea />
+        <span role="status">{opened ? 'Settings opened' : 'Nothing opened'}</span>
+      </div>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Settings'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Settings opened');
+    await userEvent.tab();
+    const card = canvas.getByRole('button', {name: 'Set project card'});
+    await expect(card).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(card).toHaveAttribute('aria-expanded', 'true');
+    await userEvent.tab();
+    const area = canvas.getByRole('button', {name: /Set area/});
+    await expect(area).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    const menu = await screen.findByRole('menu', {name: 'Area'});
+    await expect(menu).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
+    await waitFor(() => expect(area).toHaveFocus());
+  }
 };

@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {Download, FileChartColumn, FileText, Info, Link2, MessageSquare, Sparkles} from 'lucide-react';
 import {Text} from 'react-aria-components/Text';
 import {MenuItem} from '../components/Menu';
@@ -115,4 +116,40 @@ export const RecommendedActions: Story = {
       <ActionRow icon={<Download />} href="#download">Download insights</ActionRow>
     </ActionRowList>
   )
+};
+
+/**
+ * The keys a row takes: Tab reaches each row that does something (a working row is skipped: nothing to press), Enter
+ * runs it, and a menu row opens its menu. Its play function proves the component page's keyboard table.
+ */
+export const Keyboard: Story = {
+  render: function Render() {
+    const [pressed, setPressed] = useState(0);
+    return (
+      <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
+        <ActionRowList aria-label="Next actions">
+          <ActionRow onPress={() => setPressed(n => n + 1)}>Create report</ActionRow>
+          <ActionRow status="working" progress={40} badge="6s">Creating report</ActionRow>
+          <ActionRow icon={<Link2 />} menu={shareMenu}>Share results with participants</ActionRow>
+        </ActionRowList>
+        <span role="status">{pressed ? `Pressed ${pressed}` : 'Not pressed'}</span>
+      </div>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('link', {name: 'Create report'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Pressed 1');
+    await userEvent.tab();
+    const share = canvas.getByRole('button', {name: /Share results with participants/});
+    await expect(share).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    const menu = await screen.findByRole('menu');
+    await waitFor(() => expect(within(menu).getAllByRole('menuitem')[0]).toHaveFocus());
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
+    await waitFor(() => expect(share).toHaveFocus());
+  }
 };

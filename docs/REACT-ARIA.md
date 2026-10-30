@@ -132,12 +132,12 @@ what would survive a change of base library. It decides nothing: the base librar
 | Participation methods › Volunteering row | through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 7 |
 | Participation methods › Vote progress | `ProgressBar` | – | yes | yes | 4 |
 | Participation methods › Voting row | through `patterns/VoteProgress` | – | yes | yes | 4 |
-| Project page › Action row | `Button`, `MenuTrigger`, `ProgressBar`, `Link` through `components/Menu` | – | – | yes | 12 |
-| Project page › Panel section | `Button`, `Heading`, `Disclosure`, `DisclosurePanel` | – | – | yes | 4 |
-| Project page › Phone preview | `Button`, `Link` through `components/Tooltip` | – | – | yes | 5 |
-| Project page › Project header | `MenuTrigger` through `components/Button`, `components/Menu`, `components/gv/Breadcrumbs`, `components/gv/SegmentedControl` | – | – | yes | 8 |
-| Project page › Setup step | `Button`, `Dialog`, `DialogTrigger`, `Disclosure`, `DisclosurePanel`, `Heading`, `MenuTrigger` through `components/Popover` | – | – | yes | 6 |
-| Project page › Stat card | `Button` | – | yes | yes | 3 |
+| Project page › Action row | `Button`, `MenuTrigger`, `ProgressBar`, `Link` through `components/Menu` | – | – | yes | 13 |
+| Project page › Panel section | `Button`, `Heading`, `Disclosure`, `DisclosurePanel` | – | – | yes | 5 |
+| Project page › Phone preview | `Button`, `Link` through `components/Tooltip` | – | – | yes | 6 |
+| Project page › Project header | `MenuTrigger` through `components/Button`, `components/Menu`, `components/gv/Breadcrumbs`, `components/gv/SegmentedControl` | – | – | yes | 9 |
+| Project page › Setup step | `Button`, `Dialog`, `DialogTrigger`, `Disclosure`, `DisclosurePanel`, `Heading`, `MenuTrigger` through `components/Popover` | – | – | yes | 7 |
+| Project page › Stat card | `Button` | – | yes | yes | 4 |
 | Project rail › Phase timeline | through `patterns/RailPhase` | – | yes | yes | 4 |
 | Project rail › Rail header | through `components/gv/IconButton` | – | – | yes | 4 |
 | Project rail › Rail phase | `Link` through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 6 |

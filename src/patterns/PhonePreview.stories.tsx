@@ -1,4 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
+import {useState} from 'react';
 import {ChevronUp, Info, Lock} from 'lucide-react';
 import {Button} from '../components/Button';
 import {AvatarGroup} from '../components/gv/Avatar';
@@ -138,4 +140,30 @@ export const HoverCTA: Story = {
 
 export const Avatars: StoryObj<typeof AvatarGroup> = {
   render: () => <AvatarGroup initials={['A', 'B', 'C']}>215 participants</AvatarGroup>
+};
+
+/**
+ * The phone's action by keyboard: Tab reaches it (it shows on focus), Enter presses it. Its play function proves the
+ * component page's keyboard table.
+ */
+export const Keyboard: Story = {
+  render: function Render() {
+    const [opened, setOpened] = useState(false);
+    return (
+      <div style={{display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'flex-start'}}>
+        <PhonePreview aria-label="What residents see" header={<PhoneHeader />}
+          action={{label: 'Edit project page', onPress: () => setOpened(true)}}>
+          <PhoneImage />
+        </PhonePreview>
+        <span role="status">{opened ? 'Edit project page opened' : 'Nothing opened'}</span>
+      </div>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Edit project page'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('status')).toHaveTextContent('Edit project page opened');
+  }
 };
