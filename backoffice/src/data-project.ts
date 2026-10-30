@@ -47,6 +47,9 @@ export const OVERVIEWS: Record<string, Overview> = {
   }
 };
 
+/** The project's Audience page tiles (invented): who shared an idea, votes cast, the share who gave demographics. */
+export const AUDIENCE = {sharedIdea: 124, votes: 1240, demographics: 0.61};
+
 export const NO_OVERVIEW: Overview = {weeks: [], since: '', spotlight: [], events: [], intro: 'This project has no description yet.', more: [], ways: 1};
 
 // ── Phase screen · Manage (an Ideation phase one week after publishing) ─────────────────────────────────

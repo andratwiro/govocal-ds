@@ -56,6 +56,11 @@ Calls made moving the overview and phase screens closer to the prototype with th
   files); Inputs › Tags (remove, add), Perspectives (what the view does, then an Empty state)** → the prototype's four
   tabs, each doing something; Events, access and messaging live elsewhere in the admin. The phone's Edit project page
   opens the page editor's stub, as the checklist's row does.
+- The Participants card went to the platform Dashboard; the prototype opens the project's Audience → **a page at
+  `projects/:id/audience`: Project header's bar (Project › Audience, Share), the rail, Tabs (Participants /
+  Demographics / Traffic) with Stats overview and User insights as Links, four Stat tiles and a Panel's Data table
+  of participants (the Users page's invented people)** → a one-off from existing parts; the prototype's outlined
+  buttons navigate, so they are Links. The bar shows no Live ▾ here: its menu belongs to the overview.
 
 ## Preview parts and the Gantt chart (30 Oct 2026, deep review 2: S10–S12)
 

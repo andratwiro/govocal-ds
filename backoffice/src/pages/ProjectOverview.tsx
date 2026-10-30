@@ -137,7 +137,7 @@ const ROLES = [{id: 'edit', label: 'Can edit'}, {id: 'view', label: 'Can view'}]
 type Person = {id: string; name: string; email: string; role: string};
 const handle = (name: string) => name.toLowerCase().replace(/\W+/g, '.');
 
-function SharePopover({project, canCopy}: {project: Project; canCopy: boolean}) {
+export function SharePopover({project, canCopy}: {project: Project; canCopy: boolean}) {
   const [people, setPeople] = useState<Person[]>(() => (project.managers?.length ? project.managers : [ME]).map((name, i) => ({
     id: name, name, email: `${handle(name)}@example.org`, role: i === 0 ? 'owner' : 'edit'
   })));
@@ -228,7 +228,7 @@ function Setup({project, o, live, draft, onSettings, onChange}: {project: Projec
             <PanelSection title="Collecting now">
               <StatCard label="Participants" value={number.format(project.participants ?? 0)} series={o.weeks}
                 caption={o.since ? `Weekly, since ${o.since}` : 'Numbers appear here once participants take part'}
-                onPress={() => navigate('/dashboard')} />
+                onPress={() => navigate(`/projects/${project.id}/audience`)} />
             </PanelSection>
             <Divider />
             {/* Card's "Setup row · link": each next action one link; Create report runs in its own row (Action row). */}
