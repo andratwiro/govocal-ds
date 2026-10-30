@@ -25,6 +25,9 @@ Up to seven pages shows them all; past that it keeps seven slots (the first page
 the current one), so it never changes width as you walk it. In right to left, pages run from the right and ‹ › point
 the reading way.
 
+The pager is as wide as its buttons and places nothing itself: a Panel's foot puts it at the end; anywhere else the
+page places it (`<Inline justifyContent="end">`, or a grid's `justifySelf`).
+
 ## Behaviour
 
 It is a `nav` landmark of buttons, after the WAI-ARIA [Landmark regions](https://www.w3.org/WAI/ARIA/apg/patterns/landmarks/)
@@ -71,6 +74,7 @@ turned-off arrow.
 
 ## Changes
 
+- 30 Oct 2026: sizes to its buttons instead of pushing them to the end of whatever holds it; the page places it.
 - 30 Oct 2026: this page written; a play function proves Tab, Enter, Space and the focus move at the first page.
 - 30 Oct 2026: the Users list drops it for one virtualised table; the other admin lists keep their pages
   (docs/DECISIONS.md, "Back office: the project lead's asks").

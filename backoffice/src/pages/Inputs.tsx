@@ -309,7 +309,9 @@ export function Inputs() {
                 </DataTableBody>
               </DataTable>
             </div>
-            <Pagination page={current} pageCount={pages} onPageChange={setPage} aria-label="Input pages" />
+            <Inline justifyContent="end">
+              <Pagination page={current} pageCount={pages} onPageChange={setPage} aria-label="Input pages" />
+            </Inline>
           </Stack>
           {preview && (
             <div className="bo-inputs-side">

@@ -5,10 +5,13 @@
  * the accent colour, the current page filled with the primary action colour, ‹ › as quiet icon buttons that fade
  * when there is nowhere to go. Every button is the square icon-button shape (radius 8), as the system's icon buttons.
  */
+/* As wide as its buttons: the page places it (a Panel's foot puts it at the end), never the pager itself. */
 .gv-pagination {
   display: flex;
+  box-sizing: border-box;
+  inline-size: fit-content;
+  max-inline-size: 100%;
   align-items: center;
-  justify-content: flex-end;
   gap: var(--gv-space-8);
   font-family: var(--gv-font-family);
 }

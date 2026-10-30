@@ -536,7 +536,7 @@ export const ProjectsListCells: Story = {
           ))}
         </DataTableBody>
       </DataTable>
-      <Pagination page={1} pageCount={4} aria-label="Project pages" />
+      <Pagination page={1} pageCount={4} aria-label="Project pages" style={{justifySelf: 'end'}} />
     </div>
   )
 };

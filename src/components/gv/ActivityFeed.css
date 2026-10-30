@@ -144,6 +144,7 @@
 
 .gv-activity-feed__pager {
   display: flex;
+  justify-content: flex-end;
   margin-block-start: var(--gv-space-8);
 }
 

@@ -91,3 +91,12 @@ test('List header › Manage table: each List row is a row of the table, its cel
   await expect(row.locator('[role="row"]')).toHaveCount(0);
   a11yReport(await axeViolations(page, '#storybook-root'));
 });
+
+test('pagination sizes to its buttons; the page places it (here at the end, under the table)', async ({page}) => {
+  await page.setViewportSize({width: 1200, height: 900});
+  await page.goto(story('components-tables-lists-data-table--projects-list-cells'));
+  const pager = (await page.getByRole('navigation', {name: 'Project pages'}).boundingBox())!;
+  const table = (await page.locator('.gv-data-table').first().boundingBox())!;
+  expect(pager.width).toBeLessThan(300);
+  expect(Math.round(pager.x + pager.width)).toBe(Math.round(table.x + table.width));
+});
