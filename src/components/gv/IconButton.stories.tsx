@@ -1,6 +1,8 @@
 import {IconButton} from './IconButton';
-import {Settings, Trash2, ChevronDown} from 'lucide-react';
+import {Settings, Trash2, ChevronDown, ChevronLeft, ChevronRight} from 'lucide-react';
 import type {Meta, StoryFn} from '@storybook/react-vite';
+import {useState} from 'react';
+import {expect, userEvent, within} from 'storybook/test';
 
 const meta: Meta<typeof IconButton> = {
   title: 'Components/Actions/Icon button',
@@ -72,3 +74,27 @@ export const Disabled: Story = () => (
     <Trash2 aria-hidden size={16} />
   </IconButton>
 );
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Tab skips a disabled button and
+ * reaches the next, by its name; Enter and Space press it. */
+export const Keyboard: Story = () => {
+  const [month, setMonth] = useState(0);
+  return (
+    <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
+      <IconButton variant="bordered" emphasis="strong" isDisabled aria-label="Previous month"><ChevronLeft aria-hidden size={16} /></IconButton>
+      <IconButton variant="bordered" emphasis="strong" aria-label="Next month" onPress={() => setMonth(m => m + 1)}>
+        <ChevronRight aria-hidden size={16} />
+      </IconButton>
+      <span role="status">{month === 0 ? 'This month' : `${month} ${month === 1 ? 'month' : 'months'} ahead`}</span>
+    </div>
+  );
+};
+Keyboard.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  await userEvent.tab();
+  await expect(canvas.getByRole('button', {name: 'Next month'})).toHaveFocus();
+  await userEvent.keyboard('{Enter}');
+  await expect(canvas.getByRole('status')).toHaveTextContent('1 month ahead');
+  await userEvent.keyboard(' ');
+  await expect(canvas.getByRole('status')).toHaveTextContent('2 months ahead');
+};

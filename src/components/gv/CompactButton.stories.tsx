@@ -1,6 +1,8 @@
 import {CompactButton} from './CompactButton';
 import {Plus} from 'lucide-react';
 import type {Meta, StoryFn} from '@storybook/react-vite';
+import {useState} from 'react';
+import {expect, userEvent, within} from 'storybook/test';
 
 const meta: Meta<typeof CompactButton> = {
   title: 'Components/Actions/Compact button',
@@ -60,3 +62,25 @@ export const Disabled: Story = () => (
     Import
   </CompactButton>
 );
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Tab skips a disabled button and
+ * reaches the next; Enter and Space press it. */
+export const Keyboard: Story = () => {
+  const [count, setCount] = useState(0);
+  return (
+    <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
+      <CompactButton isDisabled>Import</CompactButton>
+      <CompactButton onPress={() => setCount(n => n + 1)}>Explore</CompactButton>
+      <span role="status">{count === 0 ? 'Not pressed yet' : `Pressed ${count} ${count === 1 ? 'time' : 'times'}`}</span>
+    </div>
+  );
+};
+Keyboard.play = async ({canvasElement}) => {
+  const canvas = within(canvasElement);
+  await userEvent.tab();
+  await expect(canvas.getByRole('button', {name: 'Explore'})).toHaveFocus();
+  await userEvent.keyboard('{Enter}');
+  await expect(canvas.getByRole('status')).toHaveTextContent('Pressed 1 time');
+  await userEvent.keyboard(' ');
+  await expect(canvas.getByRole('status')).toHaveTextContent('Pressed 2 times');
+};

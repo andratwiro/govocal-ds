@@ -1,6 +1,7 @@
 import {List, Map as MapIcon} from 'lucide-react';
 import {SegmentedControl, SegmentedControlItem} from './SegmentedControl';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, userEvent, within} from 'storybook/test';
 
 const meta: Meta<typeof SegmentedControl> = {
   title: 'Components/Actions/Segmented control',
@@ -134,4 +135,36 @@ export const UnreadWithTooltip: Story = {
       <SegmentedControlItem id="insights">Insights</SegmentedControlItem>
     </SegmentedControl>
   )
+};
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Tab reaches the chosen segment; → and
+ * ← move between segments; Enter or Space picks the focused one; Tab leaves the control. */
+export const Keyboard: Story = {
+  render: () => (
+    <SegmentedControl aria-label="View" selectionMode="single" defaultSelectedKeys={['list']} disallowEmptySelection>
+      <SegmentedControlItem id="list">List</SegmentedControlItem>
+      <SegmentedControlItem id="map">Map</SegmentedControlItem>
+      <SegmentedControlItem id="table">Table</SegmentedControlItem>
+    </SegmentedControl>
+  ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const list = canvas.getByRole('radio', {name: 'List'});
+    const map = canvas.getByRole('radio', {name: 'Map'});
+    await userEvent.tab();
+    await expect(list).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect(map).toHaveFocus();
+    await expect(list).toBeChecked();
+    await userEvent.keyboard('{Enter}');
+    await expect(map).toBeChecked();
+    await expect(list).not.toBeChecked();
+    await userEvent.keyboard('{ArrowRight}');
+    await userEvent.keyboard(' ');
+    await expect(canvas.getByRole('radio', {name: 'Table'})).toBeChecked();
+    await userEvent.keyboard('{ArrowLeft}');
+    await expect(map).toHaveFocus();
+    await userEvent.tab();
+    await expect(map).not.toHaveFocus();
+  }
 };

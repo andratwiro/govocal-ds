@@ -18,6 +18,11 @@ export interface CompactButtonProps extends Omit<RACButtonProps, 'children' | 'c
   children: React.ReactNode;
 }
 
+/**
+ * A small 32-tall button for an action inside a card, a panel section or a dashboard card's foot ("Explore", "Add",
+ * "Import", "+ Add a report"): React Aria's Button in Figma's Button · compact. Secondary by default, primary for the
+ * one action of its card; a page's own actions are a Button. `className` and `style` place it; they never paint it.
+ */
 export function CompactButton(props: CompactButtonProps) {
   const {variant, icon, children, className, style, ...rest} = props;
   return (

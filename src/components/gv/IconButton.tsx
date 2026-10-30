@@ -32,6 +32,11 @@ export interface IconButtonProps extends Omit<RACButtonProps, 'children' | 'clas
   'aria-label': string;
 }
 
+/**
+ * A square button with an icon and no words, named by its `aria-label`: settings, a download, ‹ ›, a row's move up
+ * and down, a panel toggle. React Aria's Button in Figma's Icon button: 28 (or 24 in dense toolbars), ghost or
+ * bordered. Add a Tooltip that shows its name when sighted people need it. `className` and `style` place it.
+ */
 export function IconButton(props: IconButtonProps) {
   const {variant, emphasis, size, children, className, style, ...rest} = props;
   return (

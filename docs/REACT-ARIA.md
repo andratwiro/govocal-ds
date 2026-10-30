@@ -30,10 +30,10 @@ what would survive a change of base library. It decides nothing: the base librar
 | Part | Behaviour from React Aria's … | Props straight through | Locale | CSS | Stories |
 |---|---|---|---|---|---|
 | Actions › Button | `Button` through `components/ProgressCircle` | `ButtonProps` | – | yes | 12 |
-| Actions › Compact button | `Button` | `ButtonProps` | – | yes | 5 |
-| Actions › Icon button | `Button` | `ButtonProps` | – | yes | 6 |
-| Actions › Menu | `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger` through `components/Popover`, `components/ProgressCircle`, `components/Content` | – | – | yes | 6 |
-| Actions › Segmented control | `ToggleButtonGroup`, `SelectionIndicator`, `ToggleButton` through `components/Tooltip` | `ToggleButtonGroupProps` | – | yes | 7 |
+| Actions › Compact button | `Button` | `ButtonProps` | – | yes | 6 |
+| Actions › Icon button | `Button` | `ButtonProps` | – | yes | 7 |
+| Actions › Menu | `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger` through `components/Popover`, `components/ProgressCircle`, `components/Content` | – | – | yes | 7 |
+| Actions › Segmented control | `ToggleButtonGroup`, `SelectionIndicator`, `ToggleButton` through `components/Tooltip` | `ToggleButtonGroupProps` | – | yes | 8 |
 | Charts › Bar row | `VisuallyHidden` | – | – | yes | 6 |
 | Charts › Chart | None: plain React and CSS | – | yes | yes | 11 |
 | Charts › Dashboard card | `Button` through `components/gv/BarRow` | – | yes | yes | 14 |

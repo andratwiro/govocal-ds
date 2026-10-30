@@ -1,6 +1,7 @@
 import {useState, type ReactNode} from 'react';
 import type {Selection} from 'react-aria-components/Menu';
 import type {Meta, StoryFn} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {Download, FileText, LayoutGrid, MapPin, Plus} from 'lucide-react';
 import {Menu, MenuItem, MenuSection, MenuTrigger, SubmenuTrigger} from '../Menu';
 import {Header} from '../Content';
@@ -163,3 +164,37 @@ export const WithASubmenuChecklist: Story = () => (
   </MenuTrigger>
 );
 WithASubmenuChecklist.storyName = 'With a submenu checklist';
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Enter on the button opens the menu on
+ * its first item; ↓ ↑ move; → opens a submenu and ← closes it; Esc closes the menu and puts focus back on the button. */
+export const Keyboard: Story = () => (
+  <MenuTrigger>
+    <Button variant="secondary" hasMenu>{icon(MapPin)}Area</Button>
+    <Area />
+  </MenuTrigger>
+);
+Keyboard.play = async ({canvasElement}) => {
+  const trigger = within(canvasElement).getByRole('button', {name: 'Area'});
+  await userEvent.tab();
+  await expect(trigger).toHaveFocus();
+  await userEvent.keyboard('{Enter}');
+  const menu = await screen.findByRole('menu', {name: 'Area'});
+  const none = within(menu).getByRole('menuitemradio', {name: /^No specific area/});
+  await waitFor(() => expect(none).toHaveFocus());
+  await userEvent.keyboard('{ArrowDown}');
+  await expect(within(menu).getByRole('menuitemradio', {name: /^All areas/})).toHaveFocus();
+  await userEvent.keyboard('{ArrowUp}');
+  await expect(none).toHaveFocus();
+  await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+  const selected = within(menu).getByRole('menuitem', {name: /^Selected areas/});
+  await expect(selected).toHaveFocus();
+  await userEvent.keyboard('{ArrowRight}');
+  const areas = await screen.findByRole('menu', {name: 'Areas'});
+  await waitFor(() => expect(within(areas).getByRole('menuitemcheckbox', {name: 'Harbour'})).toHaveFocus());
+  await userEvent.keyboard('{ArrowLeft}');
+  await waitFor(() => expect(screen.queryByRole('menu', {name: 'Areas'})).toBeNull());
+  await expect(selected).toHaveFocus();
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
+  await waitFor(() => expect(trigger).toHaveFocus());
+};

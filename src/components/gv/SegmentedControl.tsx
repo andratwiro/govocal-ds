@@ -36,8 +36,10 @@ export interface SegmentedControlProps extends Omit<ToggleButtonGroupProps, 'cla
 }
 
 /**
- * Segmented control (Figma node 14:883; prototype `.pj-hseg`): React Aria's ToggleButtonGroup, ToggleButton and
- * SelectionIndicator, painted with gv- classes.
+ * A row of two to five joined segments that switches between views or ranges of the same content, one chosen at a
+ * time: Build / Manage / Insights, List / Map, a chart's Daily / Weekly / Monthly. Figma node 14:883, prototype
+ * `.pj-hseg`: React Aria's ToggleButtonGroup, ToggleButton and SelectionIndicator. Choices in a form are a Radio group;
+ * sections of a page with their own panels are Tabs.
  */
 export function SegmentedControl({size = 36, className, style, ...props}: SegmentedControlProps) {
   return <RACToggleButtonGroup {...props} className={clsx('gv-segmented-control', className)} style={style} data-size={size} />;
