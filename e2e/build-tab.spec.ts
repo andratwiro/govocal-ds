@@ -80,8 +80,7 @@ test('Participant action row: Limited reveals the maximum, Unlimited hides it', 
 });
 
 test('Phone preview: the hover action is reachable by keyboard and shows on focus', async ({page}) => {
-  // The countdown's dot pulses forever; reduced motion stops it, so axe can wait for the page to settle.
-  await page.emulateMedia({reducedMotion: 'reduce'});
+  // The countdown's dot pulses forever: axe's wait skips animations that loop (e2e/axe.ts), so no reduced motion here.
   await page.goto(story('patterns-project-page-phone-preview--hover-cta'));
   const action = page.locator('.gv-phone__action');
   await expect(action).toHaveCSS('opacity', '0');

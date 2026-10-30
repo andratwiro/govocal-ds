@@ -62,8 +62,7 @@ test('assistant panel: an empty report offers Generate; generating shows the ste
   await open(page, 'patterns-report-builder-assistant-panel--empty-report');
   await expect(page.getByRole('button', {name: 'Generate a report from the folder'})).toBeVisible();
   await report(page);
-  // The spinner turns for as long as the run lasts, and axe waits for animations to end: hold it still.
-  await page.emulateMedia({reducedMotion: 'reduce'});
+  // The spinner turns for as long as the run lasts: axe's wait skips animations that loop forever (e2e/axe.ts).
   await open(page, 'patterns-report-builder-assistant-panel--generating');
   const steps = page.getByRole('list', {name: 'Steps'});
   await expect(steps.getByRole('listitem')).toHaveCount(3);

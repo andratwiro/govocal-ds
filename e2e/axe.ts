@@ -3,8 +3,11 @@ import {test, type Page} from '@playwright/test';
 
 /** The WCAG 2.2 AA violations inside one part of the page (an open modal, a popover), as "rule: targets". */
 // A dialog fading in is half transparent for a moment, and axe reads that as low contrast: let animations end first.
+// An animation that loops forever (a spinner, a skeleton's shimmer, the countdown's pulse) never ends, so it isn't
+// waited for: only the ones with an end are.
 export async function settled(page: Page) {
-  await page.waitForFunction(() => document.getAnimations().every(a => a.playState !== 'running'));
+  await page.waitForFunction(() => document.getAnimations().every(a =>
+    a.playState !== 'running' || a.effect?.getComputedTiming().iterations === Infinity));
 }
 
 export async function axeViolations(page: Page, within: string) {

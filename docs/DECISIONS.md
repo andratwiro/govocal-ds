@@ -945,10 +945,10 @@ Where the prototype and Figma disagree on the look, the prototype wins; names an
   page.
 
 **Built, not in Figma** (Figma could add them): Stat row selected state, the empty dashboard card, select-all and row
-checkboxes on list rows, Checkbox quiet (dimmed select-all), Tooltip with a tail (step cards only).
+checkboxes on list rows, Checkbox quiet (dimmed select-all), Tooltip with a tail (step cards only), the chosen-value
+teal on a dropdown card's pill (Badge `isSelected`).
 
-**Not built yet:** a grey avatar variant for assignees and commenters; the chosen-value teal on a dropdown card's pill;
-renaming the project from the breadcrumb.
+**Not built yet:** a grey avatar variant for assignees and commenters; renaming the project from the breadcrumb.
 
 ## Project screens (30 Oct 2026)
 
