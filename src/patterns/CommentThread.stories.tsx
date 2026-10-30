@@ -1,4 +1,5 @@
 import {useState, type ReactNode} from 'react';
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {ExternalLink, SquarePen, Trash2} from 'lucide-react';
 import {ToastRegion, queue} from '../components/Toast';
@@ -190,4 +191,33 @@ export const InASidePanel: Story = {
       </div>
     </div>
   )
+};
+
+/**
+ * The keys the thread takes: Tab reaches the tabs, the arrows move between Comments and Internal conversation; Tab
+ * goes on to each comment's actions; Enter on Reply moves focus to the composer, where Enter starts a new line. Its
+ * play function proves the component page's keyboard table.
+ */
+export const Keyboard: Story = {
+  render: () => at512(<DemoThread comments={COMMENTS} internal={INTERNAL} />),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('tab', {name: 'Comments (5)'})).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+    const internal = canvas.getByRole('tab', {name: 'Internal conversation (2)'});
+    await expect(internal).toHaveFocus();
+    await waitFor(() => expect(internal).toHaveAttribute('aria-selected', 'true'));
+    await userEvent.keyboard('{ArrowLeft}');
+    await waitFor(() => expect(canvas.getByRole('tab', {name: 'Comments (5)'})).toHaveAttribute('aria-selected', 'true'));
+    await userEvent.tab();
+    const reply = canvas.getByRole('button', {name: 'Reply to Nadia K.'});
+    await expect(reply).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    const field = canvas.getByRole('textbox', {name: 'Reply to Nadia K.'});
+    await waitFor(() => expect(field).toHaveFocus());
+    await userEvent.keyboard('First line{Enter}second line');
+    await expect(field).toHaveValue('First line\nsecond line');
+    await expect(canvas.getByRole('list', {name: 'Comments'})).not.toHaveTextContent('second line');
+  }
 };

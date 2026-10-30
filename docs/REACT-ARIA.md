@@ -124,9 +124,9 @@ what would survive a change of base library. It decides nothing: the base librar
 | Build tab › Notification row | `Button` through `components/Switch`, `components/TextField`, `components/gv/RichTextEditor` | – | yes | yes | 6 |
 | Build tab › Participant action row | `Button` through `components/NumberField`, `components/RadioGroup`, `components/Switch` | – | yes | yes | 7 |
 | Build tab › View option row | `ToggleButton` through `components/Switch` | – | – | yes | 6 |
-| Manage tab › Comment thread | `Button`, `TextArea`, `TextField` through `components/Tabs`, `components/Button` | – | yes | yes | 8 |
-| Manage tab › Official update | `TextArea`, `TextField` through `components/Button`, `components/TextField`, `components/gv/Modal` | – | yes | yes | 4 |
-| Pages & menu › Section toggle | through `components/Switch` | – | – | yes | 4 |
+| Manage tab › Comment thread | `Button`, `TextArea`, `TextField` through `components/Tabs`, `components/Button` | – | yes | yes | 9 |
+| Manage tab › Official update | `TextArea`, `TextField` through `components/Button`, `components/TextField`, `components/gv/Modal` | – | yes | yes | 5 |
+| Pages & menu › Section toggle | through `components/Switch` | – | – | yes | 5 |
 | Participation methods › Common ground row | through `components/gv/Checkbox` | – | yes | yes | 6 |
 | Participation methods › Proposals row | through `patterns/VoteProgress` | – | yes | yes | 5 |
 | Participation methods › Volunteering row | through `components/gv/IconButton`, `components/Tooltip` | – | yes | yes | 6 |

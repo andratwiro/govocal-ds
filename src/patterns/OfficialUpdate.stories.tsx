@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {expect, userEvent, within} from 'storybook/test';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {MessageSquareText} from 'lucide-react';
 import {Button} from '../components/Button';
@@ -76,5 +77,27 @@ export const Bulk: Story = {
             description: 'The authors and everyone following them will see it.', action: 'Undo'}, {timeout: 6000})} />
       </>
     );
+  }
+};
+
+/**
+ * The keys the form takes: Tab goes from the words to the name, then to Publish; Enter on Publish posts the update.
+ * Its play function proves the component page's keyboard table.
+ */
+export const Keyboard: Story = {
+  render: () => <div style={{width: 512}}><DemoUpdates /></div>,
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    const words = canvas.getByRole('textbox', {name: 'Official update'});
+    await expect(words).toHaveFocus();
+    await userEvent.keyboard('We will test this in July.');
+    await userEvent.tab();
+    await expect(canvas.getByRole('textbox', {name: 'Name shown with the update'})).toHaveFocus();
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Publish'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('article', {name: /^Official update · The project team/})).toHaveTextContent('We will test this in July.');
+    await expect(words).toHaveValue('');
   }
 };

@@ -198,11 +198,14 @@ part's `<Name>.guide.md`) names the part to use instead.
   - Not for: To switch between views on the page itself (List / Map): use **Segmented control**. For a participant action and who can take it: use **Participant action row**. For an email the platform sends: use **Notification row**. For a plain on-or-off setting with a description: use **Switch**.
 
 ## Patterns / Manage tab
-- **Comment thread** `CommentThread` (not in Figma): A thread of comments with replies and a composer: Reply points the composer at a comment. Stories: All Variants, Default, New, Content Warning, Empty, Internal Conversation, Comments Only, In A Side Panel.
-- **Official update** `OfficialUpdate` (not in Figma): Official update: the team's public answer to a record, in the Manage tab's Side panel. Stories: All Variants, Empty, Posted, Bulk.
+- **Comment thread** `CommentThread` (not in Figma): A thread of comments with replies and a composer: Reply points the composer at a comment. Stories: All Variants, Default, New, Content Warning, Empty, Internal Conversation, Comments Only, In A Side Panel, Keyboard.
+  - Not for: For the team's public answer to a record (one official message, with a name): use **Official update**. For a short note that something happened (a status change, a saved edit): use **Toast**. For the record's own facts (status, assignee, tags): use **Property list**. For a list of records with their comment counts: use **Data table** or **List row**.
+- **Official update** `OfficialUpdate` (not in Figma): Official update: the team's public answer to a record, in the Manage tab's Side panel. Stories: All Variants, Empty, Posted, Bulk, Keyboard.
+  - Not for: For a conversation with residents or the team's internal notes: use **Comment thread**. To tell the person at the screen that something happened: use **Toast**. For a notice about the whole page or project: use **Banner**. For an email the platform sends by itself: use **Notification row**.
 
 ## Patterns / Pages & menu
-- **Section toggle** `SectionToggle` (not in Figma): One page section in a builder's section list: the name and a line about it, whether it is shown on the page, and the switch that shows or hides it. Stories: Shown, Hidden, Locked, List.
+- **Section toggle** `SectionToggle` (not in Figma): One page section in a builder's section list: the name and a line about it, whether it is shown on the page, and the switch that shows or hides it. Stories: Shown, Hidden, Locked, List, Keyboard.
+  - Not for: For a setting that isn't a page section (a feature on or off): use **Switch** with its description. To choose one of several looks or layouts: use **Choice card** or **Segmented control**. For a phase's email that sends itself: use **Notification row**. For a menu item in the platform's menu: use **Data table** rows, as Pages & menu does.
 
 ## Patterns / Participation methods
 - **Common ground row** `CommonGroundRow`: The content of one Common Ground list row: Statement · Assignee · Likes · Agree · Reactions, between a leading 28px checkbox slot and a trailing 28px slot, a… Stories: All Variants, Assignee New, New, New Warning, Empty, Selectable.
