@@ -45,7 +45,7 @@
   },
   "e2e/component-page.spec.ts": {
     "group": "Site and Storybook",
-    "what": "A component's docs page shows its thirteen sections in order, each filled in, and a part named in bold links to its page; every part reaches the built Storybook with exactly one lifecycle stage tag, the one its page shows."
+    "what": "A component's docs page shows its thirteen sections in order, each filled in, and a part named in bold links to its page; every part reaches the built Storybook with exactly one lifecycle stage tag, the one its page shows; a default from a part's words reads plainly in its Props table."
   },
   "e2e/dashboard.spec.ts": {
     "group": "Back office screens",
@@ -270,6 +270,10 @@
   "tests/date-range-field.test.mjs": {
     "group": "Components behave",
     "what": "The Date range field reads dates as year-month-day text, offers Add end date, and calls an end before the start invalid in words."
+  },
+  "tests/defaults.test.mjs": {
+    "group": "Public API and docs",
+    "what": "A default written from a part's own words shows in the Props table as plain text (labels.filters (\"Active filters\")), without the backticks and escaped quotes Storybook would leave."
   },
   "tests/figma-spec.test.mjs": {
     "group": "Public API and docs",

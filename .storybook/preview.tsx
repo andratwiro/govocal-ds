@@ -4,6 +4,7 @@ import {I18nProvider} from 'react-aria-components';
 import {LucideProvider} from 'lucide-react';
 import {theme} from './theme';
 import {DocsPage} from './DocsPage';
+import {readableDefault} from '../scripts/lib/defaults.mjs';
 
 /*
  * The locale every story runs in: numbers, dates and lists follow it (React Aria's I18nProvider), as they follow
@@ -20,7 +21,18 @@ const LOCALES = [
 ];
 const RTL_LOCALES = new Set(['ar-SA']);
 
+/** The Props table's defaults in plain text: `labels.field ("Description")`, not Storybook's JSON-quoted
+ * "\`labels.field\` (\"Description\")" (scripts/lib/defaults.mjs). Runs after the docgen has read the props. */
+const plainDefaults: NonNullable<Preview['argTypesEnhancers']>[number] = ({argTypes}) =>
+  Object.fromEntries(Object.entries(argTypes).map(([name, argType]) => {
+    const value = argType.table?.defaultValue;
+    return [name, value?.summary ? {...argType, table: {...argType.table, defaultValue: {...value,
+      summary: readableDefault(value.summary)}}} : argType];
+  }));
+plainDefaults.secondPass = true;
+
 const preview: Preview = {
+  argTypesEnhancers: [plainDefaults],
   globalTypes: {
     locale: {description: 'Locale: numbers and dates (the words stay English)', toolbar: {title: 'Locale', icon: 'globe',
       items: LOCALES, dynamicTitle: true}},

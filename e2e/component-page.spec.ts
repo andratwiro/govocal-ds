@@ -79,3 +79,13 @@ test('a guide with its Provenance shows it in place of "Not yet recorded"', asyn
   await expect(section(page, 'Provenance')).toContainText('Reviewed by a person: not yet');
   await expect(section(page, 'Provenance')).not.toContainText('Not yet recorded');
 });
+
+// A default written from the part's words (`@default \`labels.filters\` ("Active filters")`) reads as plain text in the
+// Props table, without backticks or escaped quotes (scripts/lib/defaults.mjs via .storybook/preview.tsx).
+test('a labels default reads plainly in the Props table', async ({page}) => {
+  await page.goto(docs('components-tables-lists-filter-chips'));
+  const props = section(page, 'Props');
+  await expect(props).toContainText('labels.filters ("Active filters")');
+  await expect(props).not.toContainText('`labels.');
+  await expect(props).not.toContainText('\\"');
+});
