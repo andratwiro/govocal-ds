@@ -313,7 +313,7 @@ export function Inputs() {
           </Stack>
           {preview && (
             <div className="bo-inputs-side">
-              <SidePanel isInline label={title(preview.project)} aria-label={`Input: ${preview.title}`}
+              <SidePanel isInline autoFocus label={title(preview.project)} aria-label={`Input: ${preview.title}`}
                 position={at >= 0 ? {current: at + 1, total: rows.length} : undefined} onPositionChange={walk}
                 onOpenChange={o => !o && setOpen(null)} returnFocus={() => (open ? rowOf(open) : null)}
                 labels={{previous: 'Previous input', next: 'Next input', close: 'Close the input'}}>

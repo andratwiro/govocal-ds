@@ -965,27 +965,14 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
     document.querySelector(`.bo-report-outline [data-key="${selected}"]`)?.scrollIntoView({block: 'nearest'});
   }, [selected]);
 
-  // A settings panel that opens takes focus in its first frame (Side panel's rule); a block picked on the page or in the
-  // outline keeps focus there, so Tab goes on to its toolbar and the outline's arrow keys keep walking.
+  // The settings panel is inline, so it takes no focus when it opens (Side panel's rule): a block picked on the page or
+  // in the outline keeps focus there, so Tab goes on to its toolbar and the outline's arrow keys keep walking. A move
+  // made from the toolbar waits two frames for the block to draw at its new place before focus follows it.
   const afterPanel = (fn: () => void) => requestAnimationFrame(() => requestAnimationFrame(fn));
-  // The last thing focused outside the end column: where focus goes back to.
-  const lastOutside = useRef<HTMLElement | null>(null);
-  useEffect(() => {
-    const onFocus = (e: FocusEvent) => {
-      if (e.target instanceof HTMLElement && !e.target.closest('.bo-report-side')) lastOutside.current = e.target;
-    };
-    document.addEventListener('focusin', onFocus);
-    return () => document.removeEventListener('focusin', onFocus);
-  }, []);
   const select = (id: string | null) => {
     setSelected(id);
     if (!id) return;
     setRight('auto');
-    afterPanel(() => {
-      if (!document.querySelector('.bo-report-side')?.contains(document.activeElement)) return;
-      const back = lastOutside.current;
-      (back?.isConnected ? back : document.getElementById(`block-${id}`))?.focus();
-    });
   };
   const TOOL = {up: 'Move up', down: 'Move down', duplicate: 'Duplicate'};
   const focusBlock = (id: string, action?: keyof typeof TOOL) => afterPanel(() => {

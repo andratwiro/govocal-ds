@@ -36,11 +36,13 @@ The panel floats at the window's end edge (560 wide, or 440 when `narrow`) over 
 
 The panel is a non-modal dialog, after the WAI-ARIA [Dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/):
 focus moves in when it opens and goes back when it closes, but the list behind it stays usable, so a click on another
-row shows that row here.
+row shows that row here. An inline panel is a column of the page: it takes no focus when it shows, so focus stays on
+what was picked (a block, a row), unless the page asks with `autoFocus`.
 
 | Key | What it does | Tested by |
 | --- | --- | --- |
 | Enter (on what opens it) | Opens the panel and moves focus into it. | `play: Keyboard` |
+| (an inline panel shows) | Focus stays where it was, unless `autoFocus`. | `e2e/side-panel.spec.ts` |
 | Tab | Moves through the panel's controls in order: the head's buttons (pager, ×), then the body's fields and buttons. | `play: Keyboard` |
 | Esc (in a field with words) | Keeps the words and leaves the field; the next Esc closes the panel. | `play: Keyboard` |
 | Esc | Closes the panel and puts focus back on what opened it (the row). | `e2e/side-panel.spec.ts` |
@@ -77,6 +79,7 @@ throws away half-written words, a pager whose turned-off end moves focus to the 
 
 ## Changes
 
+- 30 Oct 2026: an inline panel no longer takes focus when it shows; `autoFocus` asks it to (a floating one still does).
 - 30 Oct 2026: `icon` (a kind icon in the head), `headingLevel` (the label as a Title heading; the prototype's 15px
   snaps to Title 16) and `showHead={false}` (an inline column with no head, a region rather than a dialog).
 - 30 Oct 2026: this page written; a play function proves Tab and Esc in a field.

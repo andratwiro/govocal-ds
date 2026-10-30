@@ -97,6 +97,14 @@ export interface SidePanelProps {
   /** Draw the panel in the page's flow (a column beside a list) instead of floating at the window's end edge. */
   isInline?: boolean;
   /**
+   * Whether focus moves into the panel when it shows. A floating panel is a dialog someone opened: focus goes in. An
+   * inline one is a column of the page: focus stays where it was (a block picked on the page, a row in the list),
+   * unless the page asks, e.g. a preview opened from a row that should be read next.
+   *
+   * @default !isInline (true floating, false inline)
+   */
+  autoFocus?: boolean;
+  /**
    * The width preset: `default` is the drawn drawer (560), `narrow` a preview beside a list (440). Floating, the panel
    * is that wide (never wider than the window less 32); inline, it fills its column up to that width.
    *
@@ -115,9 +123,9 @@ export interface SidePanelProps {
 /**
  * Side panel: one record of a list beside the list, the prototype's Manage drawer (`#pj-idrawer`). A non-modal
  * dialog: it floats at the window's end edge, the list behind it stays usable (a row click shows that row here),
- * focus moves in when it opens, and Esc or × closes it and puts focus back on the row that opened it. Its head
- * carries the context label, the record pager and ×; its body scrolls; an optional footer stays put. Changes made
- * in it apply at once (with an Undo toast), so it has no Save. Not in Figma.
+ * focus moves in when it opens (inline, it stays put unless `autoFocus`), and Esc or × closes it and puts focus back
+ * on the row that opened it. Its head carries the context label, the record pager and ×; its body scrolls; an
+ * optional footer stays put. Changes made in it apply at once (with an Undo toast), so it has no Save. Not in Figma.
  *
  * Open or closed: a floating panel is closed until `isOpen` (or `defaultOpen`) says otherwise; an inline one shows.
  * Its width is a preset (`width`), never a class: `className` and `style` place it (a grid area, a margin), never
@@ -141,6 +149,7 @@ export function SidePanel({
   onOpenChange,
   returnFocus,
   isInline,
+  autoFocus = !isInline,
   width = 'default',
   labels,
   className,
@@ -169,11 +178,12 @@ export function SidePanel({
     opener.current = active instanceof HTMLElement && active !== document.body ? active : null;
     // A pointer opens the panel on press, and the browser then focuses what was pressed (the row): once that
     // settles, that is the opener, and focus moves in.
+    // An inline panel that doesn't take focus (`autoFocus` false) leaves it where it is.
     const frame = requestAnimationFrame(() => {
       const panel = panelRef.current, now = document.activeElement;
       if (!panel || panel.contains(now)) return;
       if (now instanceof HTMLElement && now !== document.body) opener.current = now;
-      panel.querySelector<HTMLElement>('[role="dialog"]')?.focus({preventScroll: true});
+      if (autoFocus) panel.querySelector<HTMLElement>('[role="dialog"]')?.focus({preventScroll: true});
     });
     return () => {
       cancelAnimationFrame(frame);
@@ -190,7 +200,7 @@ export function SidePanel({
       }
       focusInside.current = false;
     };
-  }, [isOpen, isColumn]);
+  }, [isOpen, isColumn, autoFocus]);
 
   if (!isOpen) return null;
 

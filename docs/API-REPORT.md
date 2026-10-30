@@ -5128,6 +5128,7 @@ Interface, from `src/patterns/SideNav.tsx`. The props of `SideNav`, listed there
 Component, from `src/components/gv/SidePanel.tsx`.
 
 - `aria-label?: string`
+- `autoFocus?: boolean`
 - `children: ReactNode`
 - `className?: string`
 - `defaultOpen?: boolean`

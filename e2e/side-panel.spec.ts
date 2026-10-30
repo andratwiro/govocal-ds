@@ -135,3 +135,13 @@ for (const name of ['default', 'screening', 'long-body-with-footer']) {
     await report(page, '.gv-side-panel');
   });
 }
+
+test('an inline panel takes no focus when it shows, unless it asks with autoFocus', async ({page}) => {
+  await page.goto(story('with-icon-and-title'));
+  const inline = page.getByRole('dialog', {name: 'By the numbers'});
+  await expect(inline).toBeVisible();
+  // Two frames: the panel's own focus move ran in its first.
+  await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
+  await expect(inline).not.toBeFocused();
+  expect(await page.evaluate(() => document.activeElement === document.body)).toBe(true);
+});
