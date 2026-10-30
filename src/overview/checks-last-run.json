@@ -1,6 +1,6 @@
 {
-  "ranAt": "2026-10-30T00:43:26.090Z",
-  "commit": "8d6a080",
+  "ranAt": "2026-10-30T06:15:24.918Z",
+  "commit": "56d1463",
   "partial": false,
   "steps": [
     {
@@ -13,11 +13,11 @@
       "name": "unit",
       "label": "Unit guards (tests/)",
       "status": "passed",
-      "seconds": 4,
+      "seconds": 5,
       "totals": {
-        "passed": 263,
+        "passed": 280,
         "failed": 0,
-        "skipped": 1
+        "skipped": 0
       },
       "files": {
         "tests/a11y.test.mjs": {
@@ -41,7 +41,7 @@
           "skipped": 0
         },
         "tests/card.test.mjs": {
-          "passed": 5,
+          "passed": 8,
           "failed": 0,
           "skipped": 0
         },
@@ -61,7 +61,7 @@
           "skipped": 0
         },
         "tests/components-index.test.mjs": {
-          "passed": 1,
+          "passed": 4,
           "failed": 0,
           "skipped": 0
         },
@@ -85,13 +85,18 @@
           "failed": 0,
           "skipped": 0
         },
+        "tests/defaults.test.mjs": {
+          "passed": 2,
+          "failed": 0,
+          "skipped": 0
+        },
         "tests/figma-spec.test.mjs": {
           "passed": 5,
           "failed": 0,
           "skipped": 0
         },
         "tests/gv-chart.test.mjs": {
-          "passed": 10,
+          "passed": 12,
           "failed": 0,
           "skipped": 0
         },
@@ -112,6 +117,11 @@
         },
         "tests/layout-text.test.mjs": {
           "passed": 8,
+          "failed": 0,
+          "skipped": 0
+        },
+        "tests/lifecycle.test.mjs": {
+          "passed": 4,
           "failed": 0,
           "skipped": 0
         },
@@ -166,7 +176,7 @@
           "skipped": 0
         },
         "tests/react-aria-table.test.mjs": {
-          "passed": 2,
+          "passed": 4,
           "failed": 0,
           "skipped": 0
         },
@@ -221,9 +231,9 @@
           "skipped": 0
         },
         "tests/tokens.test.mjs": {
-          "passed": 40,
+          "passed": 41,
           "failed": 0,
-          "skipped": 1
+          "skipped": 0
         },
         "tests/words.test.mjs": {
           "passed": 4,
@@ -236,17 +246,17 @@
       "name": "build",
       "label": "Build",
       "status": "passed",
-      "seconds": 40
+      "seconds": 42
     },
     {
       "name": "e2e",
-      "label": "Browser tests (e2e/), port 4807",
+      "label": "Browser tests (e2e/), port 4791",
       "status": "passed",
-      "seconds": 539,
+      "seconds": 346,
       "totals": {
-        "passed": 1220,
+        "passed": 1562,
         "failed": 0,
-        "skipped": 1,
+        "skipped": 2,
         "flaky": 0
       },
       "files": {
@@ -305,9 +315,9 @@
           "flaky": 0
         },
         "e2e/component-page.spec.ts": {
-          "passed": 6,
+          "passed": 7,
           "failed": 0,
-          "skipped": 0,
+          "skipped": 1,
           "flaky": 0
         },
         "e2e/data-table-open.spec.ts": {
@@ -359,13 +369,13 @@
           "flaky": 0
         },
         "e2e/layout.spec.ts": {
-          "passed": 4,
+          "passed": 6,
           "failed": 0,
           "skipped": 0,
           "flaky": 0
         },
         "e2e/locale-toolbar.spec.ts": {
-          "passed": 3,
+          "passed": 4,
           "failed": 0,
           "skipped": 0,
           "flaky": 0
@@ -413,7 +423,19 @@
           "flaky": 0
         },
         "e2e/play.spec.ts": {
-          "passed": 48,
+          "passed": 117,
+          "failed": 0,
+          "skipped": 0,
+          "flaky": 0
+        },
+        "e2e/project-screens.spec.ts": {
+          "passed": 14,
+          "failed": 0,
+          "skipped": 0,
+          "flaky": 0
+        },
+        "e2e/report-parts.spec.ts": {
+          "passed": 13,
           "failed": 0,
           "skipped": 0,
           "flaky": 0
@@ -425,7 +447,7 @@
           "flaky": 0
         },
         "e2e/segmented-control.spec.ts": {
-          "passed": 2,
+          "passed": 3,
           "failed": 0,
           "skipped": 0,
           "flaky": 0
@@ -437,7 +459,7 @@
           "flaky": 0
         },
         "e2e/side-panel.spec.ts": {
-          "passed": 13,
+          "passed": 14,
           "failed": 0,
           "skipped": 0,
           "flaky": 0
@@ -449,24 +471,36 @@
           "flaky": 0
         },
         "e2e/stat-tile.spec.ts": {
-          "passed": 2,
+          "passed": 3,
           "failed": 0,
           "skipped": 0,
           "flaky": 0
         },
         "e2e/stories.spec.ts": {
-          "passed": 741,
+          "passed": 970,
           "failed": 0,
           "skipped": 0,
           "flaky": 0
         },
         "e2e/table.spec.ts": {
-          "passed": 4,
+          "passed": 6,
           "failed": 0,
           "skipped": 0,
           "flaky": 0
         },
         "e2e/tabs.spec.ts": {
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "flaky": 0
+        },
+        "e2e/toast.spec.ts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "flaky": 0
+        },
+        "e2e/toolbars.spec.ts": {
           "passed": 3,
           "failed": 0,
           "skipped": 0,
@@ -539,7 +573,7 @@
           "flaky": 0
         },
         "e2e/report-view.spec.ts": {
-          "passed": 11,
+          "passed": 13,
           "failed": 0,
           "skipped": 0,
           "flaky": 0
@@ -557,7 +591,7 @@
           "flaky": 0
         },
         "e2e/sidebar.spec.ts": {
-          "passed": 11,
+          "passed": 13,
           "failed": 0,
           "skipped": 0,
           "flaky": 0
