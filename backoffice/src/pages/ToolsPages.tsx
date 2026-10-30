@@ -2,8 +2,9 @@ import {useState} from 'react';
 import {useNavigate} from 'react-router';
 import {Bot, Copy, Download, KeyRound, Pencil, Plus, Trash2, Webhook} from 'lucide-react';
 import {AlertDialog, Banner, Button, Checkbox, CheckboxGroup, DataTable, DataTableBody, DataTableCell, DataTableColumn,
-  DataTableHeader, DataTableOptions, DataTableRow, DataTableTags, EmptyState, HelpPopover, IconButton, MenuItem, Modal,
-  NumberField, Panel, Select, SelectItem, StatusBadge, Switch, Text, TextArea, TextField, toast} from 'govocal-ds';
+  DataTableHeader, DataTableOptions, DataTableRow, DataTableTags, EmptyState, HelpPopover, IconButton, Inline, MenuItem,
+  Modal, NumberField, Panel, Select, SelectItem, Stack, StatusBadge, Switch, Text, TextArea, TextField, TileGrid,
+  toast} from 'govocal-ds';
 import {API_TOKENS, MCP_CLIENTS, POWER_BI_TEMPLATES, WEBHOOK_EVENTS, WEBHOOK_PROJECTS, WEBHOOKS,
   type ApiToken, type WebhookItem} from '../data-tools';
 import {Gap} from '../Gap';
@@ -16,10 +17,10 @@ const TOOLS_CRUMB = [{key: 'tools', label: 'Tools', href: '#/tools'}];
 /** "For more information, see our API documentation": the docs live outside the back office, so a popover says what they hold. */
 function DocsNote({lead, docs, about}: {lead: string; docs: string; about: string}) {
   return (
-    <span className="bo-tools-docs">
+    <Inline elementType="span" gap="4">
       {lead} For more information, see the
       <HelpPopover title={docs} triggerText={docs}><p>{about}</p></HelpPopover>
-    </span>
+    </Inline>
   );
 }
 
@@ -86,22 +87,22 @@ export function PublicApiTokens() {
             <Button variant="primary" isDisabled={!name.trim()} onPress={create}>Create token</Button>
           </>}>
         {created
-          ? <div className="bo-tools-form">
-            <p>Your token has been created. Please copy the secret below and store it safely.</p>
+          ? <Stack gap="16">
+            <Text elementType="p" kind="ui">Your token has been created. Please copy the secret below and store it safely.</Text>
             <TextField label="Secret" isReadOnly value={`gv_${created.name.length}a7f3c9e1b2d48f6a0`} />
             <Banner tone="warning" title="Important!">
               You can only copy this secret once. If you close this window you will not be able to see it again.
             </Banner>
-            <div className="bo-tools-row">
+            <Inline gap="8">
               <Button variant="secondary" size={32} isDisabled={copied} onPress={() => setCopied(true)}>
                 <Copy aria-hidden size={16} />{copied ? 'Copied!' : 'Copy secret'}
               </Button>
-            </div>
-          </div>
-          : <div className="bo-tools-form">
-            <p>Create a new token to use with the public API.</p>
+            </Inline>
+          </Stack>
+          : <Stack gap="16">
+            <Text elementType="p" kind="ui">Create a new token to use with the public API.</Text>
             <TextField label="Name" placeholder="Give your token a name" value={name} onChange={setName} />
-          </div>}
+          </Stack>}
       </Modal>
       <AlertDialog tone="danger" isOpen={!!deleting} onOpenChange={o => { if (!o) setDeleting(null); }} title="Delete token?"
         confirmLabel="Delete token" onConfirm={() => { if (deleting) remove(deleting); }}>
@@ -126,18 +127,18 @@ function WebhookModal({draft, isNew, onClose, onSave}: {draft: Draft; isNew: boo
         <Button variant="secondary" onPress={onClose}>Cancel</Button>
         <Button variant="primary" isDisabled={!valid} onPress={() => onSave(d)}>{label}</Button>
       </>}>
-      <div className="bo-tools-form">
-        <p>{isNew ? 'Create a webhook to receive real-time notifications when events occur on your platform.' : 'Update the configuration of this webhook.'}</p>
+      <Stack gap="16">
+        <Text elementType="p" kind="ui">{isNew ? 'Create a webhook to receive real-time notifications when events occur on your platform.' : 'Update the configuration of this webhook.'}</Text>
         <TextField label="Name" placeholder="Give your webhook a name" value={d.name} onChange={v => set({name: v})} />
         <TextField label="URL" type="url" placeholder="https://your-domain.example/webhook" value={d.url} onChange={v => set({url: v})} />
         <CheckboxGroup label="Events" description="Select events to subscribe to" value={d.events} onChange={v => set({events: v})}>
-          <div className="bo-tools-events">{WEBHOOK_EVENTS.map(e => <Checkbox key={e} value={e}>{e}</Checkbox>)}</div>
+          <TileGrid minTileWidth={160} layout="gallery" density="compact">{WEBHOOK_EVENTS.map(e => <Checkbox key={e} value={e}>{e}</Checkbox>)}</TileGrid>
         </CheckboxGroup>
         <Select label="Project" value={d.project} onChange={v => set({project: String(v)})}>
           {WEBHOOK_PROJECTS.map(p => <SelectItem key={p} id={p}>{p}</SelectItem>)}
         </Select>
         <Switch isSelected={d.enabled} onChange={v => set({enabled: v})}>Enabled</Switch>
-      </div>
+      </Stack>
     </Modal>
   );
 }
@@ -229,9 +230,9 @@ export function EsriIntegration() {
       <Panel title="Esri API key" description="You find the key in your ArcGIS developer dashboard."
         actions={<StatusBadge status={connected ? 'live' : 'draft'}>{connected ? 'Connected' : 'Not connected'}</StatusBadge>}
         footer={<Button variant="primary" isDisabled={!key.trim()} onPress={save}>Save key</Button>}>
-        <div className="bo-tools-form">
+        <Stack gap="16">
           <TextField label="Esri API key" placeholder="Paste API key here" value={key} onChange={setKey} />
-        </div>
+        </Stack>
       </Panel>
     </Page>
   );
@@ -242,11 +243,11 @@ export function PowerBi() {
   return (
     <Page title="Power BI templates" crumbs={TOOLS_CRUMB}
       description="Ready-made Power BI templates that read the platform's data through the public API.">
-      <div className="bo-tools-stack">
+      <Stack gap="16">
         <Banner linkLabel="Public API tokens" onLinkPress={() => navigate('/tools/public-api-tokens')}>
           To use either of these Power BI templates, first create a set of credentials for the public API.
         </Banner>
-        <div className="bo-tools-cards">
+        <TileGrid>
           {POWER_BI_TEMPLATES.map(t => (
             <Panel key={t.id} title={t.title}
               footer={(
@@ -255,11 +256,11 @@ export function PowerBi() {
                   <Download aria-hidden size={16} />{t.button}
                 </Button>
               )}>
-              <p className="bo-tools-text">{t.text}</p>
+              <Text elementType="p" kind="ui">{t.text}</Text>
             </Panel>
           ))}
-        </div>
-      </div>
+        </TileGrid>
+      </Stack>
     </Page>
   );
 }
@@ -318,25 +319,25 @@ export function Widget() {
   return (
     <Page title="Widget" crumbs={TOOLS_CRUMB}
       description="Create a widget, customize it and add it to your own website to attract people to this platform.">
-      <div className="bo-tools-split">
+      <TileGrid minTileWidth={360} className="bo-tools-split">
         <Panel title="Settings" description="What the widget shows."
           footer={(
             <Button variant="secondary" size={32} onPress={() => toast('Embed code copied')}>
               <Copy aria-hidden size={16} />Copy embed code
             </Button>
           )}>
-          <div className="bo-tools-form">
+          <Stack gap="16">
             <NumberField label="Number of projects" minValue={1} maxValue={12} value={count} onChange={setCount} />
             <Switch isSelected={header} onChange={setHeader}>Show the header</Switch>
             <TextArea label="Embed code" isReadOnly value={code} description="Paste this into the website that shows the widget." />
-          </div>
+          </Stack>
         </Panel>
         <Panel title="Preview" description="The widget as it shows on another website.">
           <Gap name="Widget preview">
             <Text elementType="p" kind="small" color="meta">{count} project cards{header ? ', under a header' : ''}.</Text>
           </Gap>
         </Panel>
-      </div>
+      </TileGrid>
     </Page>
   );
 }

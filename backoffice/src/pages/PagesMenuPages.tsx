@@ -1,8 +1,8 @@
 import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import {Eye, FileQuestion} from 'lucide-react';
-import {Banner, Button, Divider, EmptyState, MultilingualTextField, type Multiloc, Panel, Radio, RadioGroup,
-  SectionToggle, Tab, TabList, TabPanel, TabPanels, Tabs, Text, TextField, toast} from 'govocal-ds';
+import {Banner, Button, Divider, EmptyState, Grid, MultilingualTextField, type Multiloc, Panel, Radio, RadioGroup,
+  SectionToggle, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, TextField, toast} from 'govocal-ds';
 import {CUSTOM_PAGE_SECTIONS, HOME_SECTIONS, MENU_ENTRIES, NAV_NAMES, PAGE_INTRO, PAGE_META, type PageSection} from '../data-pages-menu';
 import {LOCALES} from '../data-settings';
 import {Gap} from '../Gap';
@@ -25,7 +25,7 @@ function SaveButton({label, isDisabled, done, onSave}: {label: string; isDisable
 /** The section list with a switch per section; `onChange` gets the whole new state. */
 function SectionList({sections, on, onChange}: {sections: PageSection[]; on: Record<string, boolean>; onChange: (on: Record<string, boolean>) => void}) {
   return (
-    <ul className="bo-pages-menu-sections" aria-label="Sections">
+    <Stack elementType="ul" aria-label="Sections">
       {sections.map((s, i) => (
         <li key={s.id}>
           {i > 0 && <Divider />}
@@ -33,7 +33,7 @@ function SectionList({sections, on, onChange}: {sections: PageSection[]; on: Rec
             onChange={v => onChange({...on, [s.id]: v})} />
         </li>
       ))}
-    </ul>
+    </Stack>
   );
 }
 
@@ -45,7 +45,7 @@ export function HomepageBuilder() {
   const shown = HOME_SECTIONS.filter(s => on[s.id]);
   return (
     <Page title="Homepage" crumbs={CRUMB} description="Turn the homepage's sections on and off. The preview follows.">
-      <div className="bo-pages-menu-split">
+      <Grid columns={2} gap="16" alignItems="start">
         <Panel title="Sections" count={`${shown.length} of ${HOME_SECTIONS.length} shown`}
           description="This page consists of the following sections. You can turn them on or off."
           footer={<SaveButton label="Save homepage" isDisabled={!dirty} done="Homepage saved" onSave={() => setDirty(false)} />}>
@@ -58,7 +58,7 @@ export function HomepageBuilder() {
             </ol>
           </Gap>
         </Panel>
-      </div>
+      </Grid>
     </Page>
   );
 }
@@ -91,7 +91,7 @@ function NavbarItemForm({itemId}: {itemId: string}) {
     <Page title={item.label} crumbs={CRUMB}>
       <Panel title="Name in navbar" description="The name of this item in the navigation bar, in every platform language."
         footer={<SaveButton label="Save page" isDisabled={!dirty} done="Page successfully saved" onSave={() => setDirty(false)} />}>
-        <div className="bo-pages-menu-form">
+        <Stack gap="16">
           {missing.length > 0 && <Banner tone="warning" title="Provide a title for all languages.">
             Missing: {missing.map(l => l.label).join(', ')}. Residents using that language see the English name.
           </Banner>}
@@ -99,7 +99,7 @@ function NavbarItemForm({itemId}: {itemId: string}) {
             <TextField key={l.id} label={`Name in navbar (${l.label})`} value={names[l.id] ?? ''}
               onChange={v => { setNames(n => ({...n, [l.id]: v})); setDirty(true); }} />
           ))}
-        </div>
+        </Stack>
       </Panel>
     </Page>
   );
@@ -131,12 +131,12 @@ function CustomPageForm({pageId}: {pageId?: string}) {
   const shown = CUSTOM_PAGE_SECTIONS.filter(s => on[s.id]).length;
   return (
     <Page title={isNew ? 'Create custom page' : page.label} crumbs={CRUMB}
-      actions={<span className="bo-pages-menu-actions">
+      actions={<>
         {!isNew && <Button variant="secondary" size={32} onPress={() => navigate(`/pages-menu/pages/${page.id}/view`)}>
           <Eye aria-hidden size={16} />View page</Button>}
         <SaveButton label="Save custom page" isDisabled={!title.trim() || !dirty}
           done={isNew ? 'Page successfully created' : 'Page successfully saved'} onSave={() => setDirty(false)} />
-      </span>}>
+      </>}>
       <Tabs defaultSelectedKey="settings">
         <TabList aria-label="Custom page sections">
           <Tab id="settings">Settings</Tab>
@@ -145,7 +145,7 @@ function CustomPageForm({pageId}: {pageId?: string}) {
         <TabPanels>
           <TabPanel id="settings" className="bo-pages-menu-panel">
             <Panel title="Page settings" description="The page's title, its address on the platform, and what it links to.">
-              <div className="bo-pages-menu-form">
+              <Stack gap="16">
                 <MultilingualTextField label="Title" isRequired placeholder="Enter a title" locales={LANGUAGES} value={titles}
                   onChange={(v, locale) => {
                     setTitles(v);
@@ -160,7 +160,7 @@ function CustomPageForm({pageId}: {pageId?: string}) {
                   <Radio value="area">By area</Radio>
                   <Radio value="tags">By tag(s)</Radio>
                 </RadioGroup>
-              </div>
+              </Stack>
             </Panel>
           </TabPanel>
           <TabPanel id="content" className="bo-pages-menu-panel">

@@ -5,10 +5,10 @@ import {ArrowDown, ArrowUp, Calendar, Asterisk, ChartColumn, ChevronDown, Chevro
   from 'lucide-react';
 import {AlertDialog, Avatar, Badge, Button, ChoiceCard, DataTable, DataTableAssignee, DataTableBody, DataTableCell,
   DataTableColumn, DataTableEmpty, DataTableHeader, DataTableOptions, DataTableRow, DataTableStack, DataTableThumbnail,
-  EmptyState, FilterChips, type FilterFacet, FilterMenu, type FilterValue, IconButton, Link, Menu, MenuItem,
+  EmptyState, FilterChips, type FilterFacet, FilterMenu, type FilterValue, IconButton, Inline, Link, Menu, MenuItem,
   MenuTrigger, Modal, MultilingualTextField, type Multiloc, Pagination, Panel, RadioGroup, SearchField, Select,
-  SelectItem, StatusBadge, Tab, TableToolbar, TableToolbarHeading, TabList, TabPanel, TabPanels, Tabs, Text, TextArea,
-  TextField, toast, VisuallyHidden} from 'govocal-ds';
+  SelectItem, Stack, StatusBadge, Tab, TableToolbar, TabList, TabPanel, TabPanels, Tabs, Text, TextArea, TextField,
+  TileGrid, toast, VisuallyHidden} from 'govocal-ds';
 import {DatePicker, DateRangePicker, ToggleButton} from 'govocal-ds/base';
 import {LOCALES} from '../data-settings';
 import {PROJECTS, type Project} from '../data';
@@ -135,7 +135,7 @@ function ProjectTable({rows, onRowAction}: {rows: Project[]; onRowAction: (p: Pr
           <DataTableRow key={p.id} id={p.id} onAction={KNOWN.has(p.id) ? () => navigate(`/projects/${p.id}`) : undefined}>
             <DataTableCell textValue={p.title}>
               <DataTableStack leading={<ProjectTile p={p} />}
-                sub={p.folder && <span className="bo-projects-folder"><Folder aria-hidden size={12} />{p.folder}</span>}>
+                sub={p.folder && <Inline elementType="span" gap="4"><Folder aria-hidden size={12} />{p.folder}</Inline>}>
                 {KNOWN.has(p.id) ? <Link href={`#/projects/${p.id}`}>{p.title}</Link> : p.title}
               </DataTableStack>
             </DataTableCell>
@@ -143,8 +143,8 @@ function ProjectTable({rows, onRowAction}: {rows: Project[]; onRowAction: (p: Pr
             <DataTableCell><DataTableStack sub={p.timeLeft}>{p.current}</DataTableStack></DataTableCell>
             <DataTableCell><Managers names={p.managers} /></DataTableCell>
             <DataTableCell><Visibility p={p} /></DataTableCell>
-            <DataTableCell isMuted><span className="bo-projects-nowrap">{p.start}</span></DataTableCell>
-            <DataTableCell isMuted><span className="bo-projects-nowrap">{p.end ?? '—'}</span></DataTableCell>
+            <DataTableCell isMuted>{p.start}</DataTableCell>
+            <DataTableCell isMuted>{p.end ?? '—'}</DataTableCell>
             <DataTableCell align="options">
               <DataTableOptions aria-label={`Actions for ${p.title}`} onAction={k => onRowAction(p, k as RowAction)}>
                 <MenuItem id="duplicate">Duplicate</MenuItem>
@@ -178,8 +178,8 @@ function ScratchModal({folders, spaces, onClose, onCreate}: {folders: FolderRow[
     <Modal title="New project" isOpen onOpenChange={closing(onClose)}
       footer={footer('Create project', () => onCreate(orNone(folder), space === 'none' ? undefined : space))}>
       {/* The prototype's two pills under the title (Select's "With search" and "With icons" stories). */}
-      <div className="bo-projects-form">
-        <div className="bo-projects-pills">
+      <Stack gap="16">
+        <Inline gap="8">
           <Select variant="pill" aria-label="Space" prefix="Space:" isSearchable searchPlaceholder="Search spaces"
             selectedKey={space} onSelectionChange={k => setSpace(String(k))}>
             {[{id: 'none', name: 'No space'}, ...spaces.map(s => ({id: s.name, name: s.name}))].map(s => (
@@ -188,9 +188,9 @@ function ScratchModal({folders, spaces, onClose, onCreate}: {folders: FolderRow[
           </Select>
           <Select variant="pill" aria-label="Folder" prefix="Folder:" isSearchable searchPlaceholder="Search folders"
             selectedKey={folder} onSelectionChange={k => setFolder(String(k))}>{folderItems(folders, true)}</Select>
-        </div>
+        </Inline>
         <Text elementType="p" kind="small" color="meta">Both are optional. The project opens as an untitled draft: name it from its overview.</Text>
-      </div>
+      </Stack>
     </Modal>
   );
 }
@@ -206,20 +206,22 @@ function TemplateGallery({onClose, onUse}: {onClose: () => void; onUse: (templat
   return (
     <Modal title="Start from a template" width="wide" isOpen onOpenChange={closing(onClose)}
       footer={footer('Use template', () => chosen && onUse(chosen), !chosen || !list.some(t => t.title === chosen))}>
-      <div className="bo-projects-gallery">
-        <div className="bo-projects-gallery-head">
+      <Stack gap="16">
+        <Inline gap="12" justifyContent="space-between">
           <Text elementType="p" kind="small" color="meta">{list.length} templates available</Text>
           <SearchField aria-label="Search the templates" placeholder="Search the templates" value={query} onChange={setQuery} />
-        </div>
+        </Inline>
         {list.length ? (
           <RadioGroup aria-label="Templates" className="bo-projects-templates" value={chosen}
             onChange={setChosen}>
-            {list.map(t => (
-              <ChoiceCard key={t.title} value={t.title} media={methodTile(t.method)} description={t.summary}>{t.title}</ChoiceCard>
-            ))}
+            <TileGrid minTileWidth={220} layout="gallery" density="compact">
+              {list.map(t => (
+                <ChoiceCard key={t.title} value={t.title} media={methodTile(t.method)} description={t.summary}>{t.title}</ChoiceCard>
+              ))}
+            </TileGrid>
           </RadioGroup>
         ) : <EmptyState layout="panel" headingLevel="none" title="No templates match" description="Try another word." />}
-      </div>
+      </Stack>
     </Modal>
   );
 }
@@ -237,12 +239,12 @@ function TemplateCreate({template, folders, onClose, onCreate}: {template: strin
   return (
     <Modal title={`Create a project based on the template '${template}'`} isOpen onOpenChange={closing(onClose)}
       footer={footer('Create project', () => onCreate(title.trim() || template, orNone(folder)))}>
-      <div className="bo-projects-form">
+      <Stack gap="16">
         <MultilingualTextField label="The title of your project" placeholder="Type the name of the project"
           locales={LANGUAGES} value={titles} onChange={setTitles} />
         <DatePicker label="The start date of your project" />
         <Select label="Project folder" selectedKey={folder} onSelectionChange={k => setFolder(String(k))}>{folderItems(folders)}</Select>
-      </div>
+      </Stack>
     </Modal>
   );
 }
@@ -253,11 +255,11 @@ function NameModal({kind, onClose, onCreate}: {kind: 'folder' | 'space'; onClose
   return (
     <Modal title={`New ${kind}`} isOpen onOpenChange={closing(onClose)}
       footer={footer(`Create ${kind}`, () => onCreate(name.trim()), !name.trim())}>
-      <div className="bo-projects-form">
+      <Stack gap="16">
         <TextField label={kind === 'folder' ? 'Folder name' : 'Space name'} isRequired value={name} onChange={setName} />
         <TextArea label="Short description"
           description={kind === 'folder' ? 'Shown on the folder card on the platform.' : 'Seen by admins and the space\'s managers.'} />
-      </div>
+      </Stack>
     </Modal>
   );
 }
@@ -358,7 +360,7 @@ function CalendarView({projects}: {projects: Project[]}) {
               {running.map(p => (
                 <DataTableRow key={p.id} id={p.id}>
                   <DataTableCell textValue={p.title}><DataTableStack leading={<ProjectTile p={p} />}>{p.title}</DataTableStack></DataTableCell>
-                  <DataTableCell isMuted><span className="bo-projects-nowrap">{p.start} – {p.end ?? 'no end date'}</span></DataTableCell>
+                  <DataTableCell isMuted>{p.start} – {p.end ?? 'no end date'}</DataTableCell>
                   <DataTableCell><DataTableStack sub={p.timeLeft}>{p.current}</DataTableStack></DataTableCell>
                 </DataTableRow>
               ))}
@@ -397,21 +399,21 @@ function ArrangeView({projects}: {projects: Project[]}) {
               <DataTableRow key={id} id={id}>
                 <DataTableCell align="number">{i + 1}</DataTableCell>
                 <DataTableCell textValue={p.title}>
-                  <span className="bo-projects-name">
+                  <Inline gap="8" wrap="nowrap" elementType="span">
                     <Gap name="Drag-and-drop reordering" inline><GripVertical aria-hidden size={16} /></Gap>
                     <DataTableStack leading={<ProjectTile p={p} />} sub={p.folder}>{p.title}</DataTableStack>
-                  </span>
+                  </Inline>
                 </DataTableCell>
                 <DataTableCell><Visibility p={p} /></DataTableCell>
                 <DataTableCell align="options">
-                  <span className="bo-projects-move">
+                  <Inline elementType="span" gap="4" wrap="nowrap" justifyContent="end">
                     <IconButton aria-label={`Move ${p.title} up`} isDisabled={i === 0} onPress={() => swap(i, i - 1)}>
                       <ArrowUp aria-hidden size={16} />
                     </IconButton>
                     <IconButton aria-label={`Move ${p.title} down`} isDisabled={i === ids.length - 1} onPress={() => swap(i, i + 1)}>
                       <ArrowDown aria-hidden size={16} />
                     </IconButton>
-                  </span>
+                  </Inline>
                 </DataTableCell>
               </DataTableRow>
             );
@@ -538,9 +540,9 @@ export function Projects() {
         <TabList aria-label="Project views">
           {VIEWS.map(({id, icon: Icon}) => (
             <Tab key={id} id={id}>
-              <span className="bo-projects-tab">
+              <Inline elementType="span" gap="6" wrap="nowrap">
                 <Icon aria-hidden size={16} />{id}{id === 'Spaces' && <span aria-hidden><Badge>New</Badge></span>}
-              </span>
+              </Inline>
             </Tab>
           ))}
         </TabList>

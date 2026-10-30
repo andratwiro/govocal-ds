@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {Button, Checkbox, CheckboxGroup, ChoiceCard, DropZone, FileList, type FileListItemData, MultilingualTextField,
-  type Multiloc, NumberField, Panel, RadioGroup, Select, SelectItem, Switch, Tab, TabList, TabPanel, TabPanels, Tabs,
-  TextArea, TextField, toast} from 'govocal-ds';
+  type Multiloc, NumberField, Panel, RadioGroup, Select, SelectItem, Stack, Switch, Tab, TabList, TabPanel, TabPanels,
+  Tabs, TextArea, TextField, toast} from 'govocal-ds';
 import {ColorField} from 'govocal-ds/base';
 import {APPROVERS, LOCALES, PLATFORM_NAME} from '../data-settings';
 import {AreasTab, PoliciesTab, StatusesTab, TagsTab} from './SettingsLists';
@@ -47,7 +47,7 @@ function PlatformConfiguration() {
     <Panel title="Platform configuration" headingLevel={3}
       description="Choose how people will see your organization name, select the languages of your platform and link to your website."
       footer={<SaveButton label="Platform configuration" isDirty={isDirty} onSave={onSave} />}>
-      <div className="bo-settings-fields">
+      <Stack gap="24">
         {/* Multilingual text field: the name in each of the platform's languages (the ones ticked below), the
             language switcher over it marking the languages still without one. */}
         <MultilingualTextField label="Name of city or organization" isRequired placeholder="Name of your platform"
@@ -62,7 +62,7 @@ function PlatformConfiguration() {
         <NumberField label="Population" minValue={0} value={population}
           description="Used to show how many residents took part, as a share of everyone."
           onChange={v => { setPopulation(v); touch(); }} />
-      </div>
+      </Stack>
     </Panel>
   );
 }
@@ -70,12 +70,12 @@ function PlatformConfiguration() {
 function ContentModeration() {
   return (
     <Panel title="Content moderation" headingLevel={3} description="Applies at once to everything posted from now on.">
-      <div className="bo-settings-switches">
+      <Stack gap="16">
         <InstantSwitch label="Profanity blocker" start
           description="Block input, proposals and comments containing the most commonly reported offensive words." />
         <InstantSwitch label="Detect inappropriate content" start
           description="Auto-detect inappropriate content posted on the platform." />
-      </div>
+      </Stack>
     </Panel>
   );
 }
@@ -116,25 +116,25 @@ function ProjectApproval() {
     <Panel title="Project approval settings" headingLevel={3}
       description="Select which admins will receive notifications to approve projects. Folder managers are by default approvers for all projects within their folders."
       footer={<SaveButton label="Project approval settings" isDirty={isDirty} onSave={onSave} />}>
-      <div className="bo-settings-fields">
+      <Stack gap="24">
         <Select label="Select approvers" selectionMode="multiple" placeholder="Choose admins" value={approvers}
           onChange={v => { setApprovers((v as string[]) ?? []); touch(); }}>
           {APPROVERS.map(a => <SelectItem key={a} id={a}>{a}</SelectItem>)}
         </Select>
-      </div>
+      </Stack>
     </Panel>
   );
 }
 
 function General() {
   return (
-    <div className="bo-settings-stack">
+    <Stack gap="16" className="bo-settings-stack">
       <PlatformConfiguration />
       <ContentModeration />
       <Statistics />
       <UserNameDisplay />
       <ProjectApproval />
-    </div>
+    </Stack>
   );
 }
 
@@ -148,12 +148,12 @@ function ImageUpload({title, description, noun}: {title: string; description: st
   };
   return (
     <Panel title={title} headingLevel={3} description={description}>
-      <div className="bo-settings-fields">
+      <Stack gap="24">
         <FileList aria-label={title} items={file ? [file] : []} emptyLabel={`No ${noun.toLowerCase()} yet`}
           onDelete={() => { const was = file; setFile(null); toast(`${noun} removed`, undefined, {action: 'Undo', onAction: () => setFile(was)}); }} />
         <DropZone acceptedFileTypes={['image/*']} onSelect={files => take(files?.[0])}
           onDrop={async e => { const i = e.items.find(x => x.kind === 'file'); if (i && i.kind === 'file') take(await i.getFile()); }} />
-      </div>
+      </Stack>
     </Panel>
   );
 }
@@ -161,33 +161,33 @@ function ImageUpload({title, description, noun}: {title: string; description: st
 function Branding() {
   const {isDirty, touch, onSave} = useDirty();
   return (
-    <div className="bo-settings-stack">
+    <Stack gap="16" className="bo-settings-stack">
       <ImageUpload title="Platform logo" noun="Logo" description="Shown in the top bar of every page. A transparent PNG or SVG works best." />
       <ImageUpload title="Homepage banner" noun="Banner" description="The image behind the homepage's welcome message. At least 1440 × 480 pixels." />
       <Panel title="Colours" headingLevel={3} description="Buttons, links and highlights across the platform follow these colours."
         footer={<SaveButton label="Colours" isDirty={isDirty} onSave={onSave} />}>
-        <div className="bo-settings-fields">
+        <Stack gap="24">
           <ColorField label="Main colour" defaultValue="#0B5563" onChange={touch} />
           <ColorField label="Secondary colour" defaultValue="#1B7D6E" onChange={touch} />
-        </div>
+        </Stack>
       </Panel>
-    </div>
+    </Stack>
   );
 }
 
 function Registration() {
   const {isDirty, touch, onSave} = useDirty();
   return (
-    <div className="bo-settings-stack">
+    <Stack gap="16" className="bo-settings-stack">
       <Panel title="Sign-up" headingLevel={3} description="What residents see and are asked when they create an account."
         footer={<SaveButton label="Sign-up" isDirty={isDirty} onSave={onSave} />}>
-        <div className="bo-settings-fields">
+        <Stack gap="24">
           <TextArea label="Sign-up help text" defaultValue="Create an account to take part in Larkvale's projects." onChange={touch} />
           <Switch defaultSelected onChange={touch} description="Residents confirm their email address with a six-digit code.">Confirm email address</Switch>
           <Switch onChange={touch} description="Ask for first and last name when a resident signs up.">Ask for a full name</Switch>
-        </div>
+        </Stack>
       </Panel>
-    </div>
+    </Stack>
   );
 }
 

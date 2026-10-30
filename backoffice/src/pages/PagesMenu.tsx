@@ -2,8 +2,8 @@ import {useState} from 'react';
 import {useNavigate} from 'react-router';
 import {ArrowDown, ArrowUp, Eye, FileText, GripVertical, Lock, Pencil, Plus, Trash2, X} from 'lucide-react';
 import {AlertDialog, Badge, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
-  DataTableOptions, DataTableRow, DataTableStack, EmptyState, IconButton, Menu, MenuItem, MenuTrigger, Panel, Switch,
-  Tab, TabList, TabPanel, TabPanels, Tabs, toast} from 'govocal-ds';
+  DataTableOptions, DataTableRow, DataTableStack, EmptyState, IconButton, Inline, Menu, MenuItem, MenuTrigger, Panel,
+  Stack, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, toast} from 'govocal-ds';
 import {MENU_ENTRIES, MENU_START, PAGE_META, PAGES_START, type MenuEntry} from '../data-pages-menu';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
@@ -73,19 +73,19 @@ function MenuTab({menu, setMenu, pages}: {menu: string[]; setMenu: Update; pages
               <DataTableRow key={item.id} id={item.id}>
                 <DataTableCell align="number">{i + 1}</DataTableCell>
                 <DataTableCell textValue={item.label}>
-                  <span className="bo-pages-menu-item">
+                  <Inline elementType="span" gap="8">
                     {pinned
                       ? <Lock aria-label="Always first" size={16} />
                       : <Gap name="Drag-and-drop reordering" inline><GripVertical aria-hidden size={16} /></Gap>}
                     {item.label}
-                  </span>
+                  </Inline>
                 </DataTableCell>
                 <DataTableCell>{item.kind === 'page' ? <Badge variant="outlined">Custom page</Badge> : <Badge>Default</Badge>}</DataTableCell>
                 <DataTableCell align="options">
-                  {!pinned && <span className="bo-pages-menu-move">
+                  {!pinned && <Inline elementType="span" gap="4" wrap="nowrap" justifyContent="end">
                     <IconButton aria-label={`Move ${item.label} up`} isDisabled={i <= 1} onPress={() => swap(i, i - 1)}>{icon(ArrowUp)}</IconButton>
                     <IconButton aria-label={`Move ${item.label} down`} isDisabled={i === items.length - 1} onPress={() => swap(i, i + 1)}>{icon(ArrowDown)}</IconButton>
-                  </span>}
+                  </Inline>}
                 </DataTableCell>
                 <DataTableCell align="options">
                   <DataTableOptions aria-label={`Options for ${item.label}`} onAction={k => k === 'edit' ? edit(item) : remove(item)}>
@@ -120,7 +120,7 @@ function PagesTab({menu, setMenu, pages, setPages}: {menu: string[]; setMenu: Up
     <Button variant={variant} size={32} onPress={() => navigate('/pages-menu/pages/new')}>{icon(Plus)}New custom page</Button>
   );
   return (
-    <div className="bo-pages-menu-stack">
+    <Stack gap="16">
       <Panel title="Custom pages" count={pages.length} isFlush={pages.length > 0} actions={create('primary')}
         description="Every custom page you’ve built. Edit content, view, or delete a page.">
         {pages.length ? (
@@ -172,7 +172,7 @@ function PagesTab({menu, setMenu, pages, setPages}: {menu: string[]; setMenu: Up
         confirmLabel="Delete page" onConfirm={() => { if (deleting) remove(deleting); }}>
         <p>{deleting?.label} leaves the platform and the menu. Links to it stop working. This cannot be undone.</p>
       </AlertDialog>
-    </div>
+    </Stack>
   );
 }
 

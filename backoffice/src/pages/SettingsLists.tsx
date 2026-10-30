@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {FileText, MapPin, Pencil, Plus, Tag, Trash2, CircleDot} from 'lucide-react';
 import {AlertDialog, Badge, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
   DataTableOptions, DataTableRow, DataTableStack, EmptyState, MenuItem, Modal, Panel, RichTextEditor, Select,
-  SelectItem, TextArea, TextField, toast} from 'govocal-ds';
+  SelectItem, Stack, TextArea, TextField, toast} from 'govocal-ds';
 import {ColorField, ColorSwatch} from 'govocal-ds/base';
 import {AREAS, INPUT_STATUS_CATEGORIES, INPUT_STATUSES, PLATFORM_TAGS, POLICIES, PROPOSAL_STATUS_CATEGORIES,
   PROPOSAL_STATUSES, type SettingsItem} from '../data-settings';
@@ -51,7 +51,7 @@ function ItemModal({config, item, onClose, onSave}: {config: ListConfig; item: S
         <Button variant="secondary" onPress={onClose}>Cancel</Button>
         <Button variant="primary" isDisabled={!d.name.trim()} onPress={() => onSave(d)}>Save {noun}</Button>
       </>}>
-      <div className="bo-settings-modal">
+      <Stack gap="16">
         <TextField label={`${Noun} name`} isRequired value={d.name} onChange={v => setD({...d, name: v})} />
         <TextArea label={`${Noun} description`} value={d.description} onChange={v => setD({...d, description: v})} />
         {categories && <>
@@ -61,7 +61,7 @@ function ItemModal({config, item, onClose, onSave}: {config: ListConfig; item: S
             {categories.map(c => <SelectItem key={c} id={c}>{c}</SelectItem>)}
           </Select>
         </>}
-      </div>
+      </Stack>
     </Modal>
   );
 }
@@ -140,21 +140,21 @@ function ItemList({config}: {config: ListConfig}) {
 
 export function TagsTab() {
   return (
-    <div className="bo-settings-stack">
+    <Stack gap="16" className="bo-settings-stack">
       <ItemList config={{id: 'tags', title: 'Platform tags', add: 'Add platform tag', edit: 'Edit platform tag', noun: 'tag', column: 'Tag',
         help: 'Platform tags are used to categorize projects, for example on the homepage. You add them to a project in its settings.',
         empty: {icon: Tag, title: 'No platform tags yet', description: 'Tags you add here can be given to projects, so residents find them by theme.'}}} />
-    </div>
+    </Stack>
   );
 }
 
 export function AreasTab() {
   return (
-    <div className="bo-settings-stack">
+    <Stack gap="16" className="bo-settings-stack">
       <ItemList config={{id: 'areas', title: 'Areas', add: 'Add area', edit: 'Edit area', noun: 'area', column: 'Area',
         help: 'Define the geographical areas (neighbourhoods, quarters…) residents can choose when they register. Areas can be linked to projects and used for smart groups.',
         empty: {icon: MapPin, title: 'No areas yet', description: 'Areas you add here are offered to residents when they register.'}}} />
-    </div>
+    </Stack>
   );
 }
 
@@ -162,12 +162,12 @@ export function StatusesTab() {
   const status = {noun: 'status', column: 'Status', edit: 'Edit status',
     empty: {icon: CircleDot, title: 'No statuses yet', description: 'Every input needs a status to move through.'}};
   return (
-    <div className="bo-settings-stack">
+    <Stack gap="16" className="bo-settings-stack">
       <ItemList config={{...status, id: 'input', title: 'Input statuses', add: 'Add input status', categories: INPUT_STATUS_CATEGORIES,
         help: 'Manage the status that can be assigned to participant input within a project. The status is publicly visible and helps in keeping participants informed.'}} />
       <ItemList config={{...status, id: 'proposal', title: 'Proposal statuses', add: 'Add proposal status', categories: PROPOSAL_STATUS_CATEGORIES,
         help: 'Manage the status that can be assigned to proposals within a project. The status is publicly visible and helps in keeping participants informed.'}} />
-    </div>
+    </Stack>
   );
 }
 
@@ -195,7 +195,7 @@ export function PoliciesTab() {
   const [texts, setTexts] = useState<Record<string, string>>(() => Object.fromEntries(POLICIES.map(p => [p.id, p.text])));
   const [editing, setEditing] = useState<Policy | null>(null);
   return (
-    <div className="bo-settings-stack">
+    <Stack gap="16" className="bo-settings-stack">
       <Panel title="Platform policies" headingLevel={3} count={POLICIES.length} isFlush
         description="Edit your platform's terms and conditions and privacy policy. Other pages, including the About and FAQ pages, are edited in Pages & menu.">
         <DataTable aria-label="Platform policies">
@@ -221,6 +221,6 @@ export function PoliciesTab() {
       </Panel>
       {editing && <PolicyModal key={editing.id} policy={editing} text={texts[editing.id]} onClose={() => setEditing(null)}
         onSave={t => { setTexts(x => ({...x, [editing.id]: t})); setEditing(null); toast(`${editing.name} saved`); }} />}
-    </div>
+    </Stack>
   );
 }
