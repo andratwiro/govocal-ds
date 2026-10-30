@@ -32,18 +32,21 @@ export const AllVariants: Story = {
   )
 };
 
-/** Figma's single variant: plain text, no heading. */
+/** Figma's only variant: plain text, not a heading, no icon. The icon below is code's. */
 export const Default: Story = {
   args: {children: 'Timeline'}
 };
 
-/** `headingLevel` makes it a heading (here an h3) a screen reader can jump to; the look doesn't change. */
+/**
+ * A heading (here level 3) that a screen reader can jump to. It looks the same as Default on purpose: the difference is
+ * only heard. In Messaging, each kind of automated email is one.
+ */
 export const AsAHeading: Story = {
   name: 'As a heading',
-  args: {children: 'Phases', headingLevel: 3}
+  args: {children: 'Spotlight', headingLevel: 3}
 };
 
-/** A 16 icon before the words, as Access rights opens its choices. */
+/** A 16px icon before the words, as over Access rights' "Who can participate" choices. */
 export const WithIcon: Story = {
   name: 'With icon',
   args: {children: 'Who can participate', icon: <User aria-hidden />, headingLevel: 3}

@@ -19,8 +19,9 @@ export interface SectionLabelProps extends PlacementProps {
 }
 
 /**
- * A quiet label over a group of rows: the rail's Timeline / Spotlight / Events, Insights' "Who is voting", the Create
- * report checklist's "Project context" (Figma "Rail section label", 4:442: a 32 row in Small, quiet grey). Sentence
+ * A small grey label over a group of rows, such as the rail's "Timeline" and "Spotlight", Insights' "Who is voting" or
+ * the Create report checklist's "Project context"; it can be a heading. (Figma "Rail section label", 4:442: a 32px row
+ * in Small, quiet grey.) Sentence
  * case everywhere, never uppercase tracked (docs/DECISIONS.md).
  */
 export function SectionLabel({children, headingLevel: level, icon, className, style}: SectionLabelProps) {
