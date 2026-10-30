@@ -14,7 +14,7 @@ export interface StatusBadgeProps extends PlacementProps {
   children: ReactNode;
 }
 
-/** Status badge: a small status pill ("Draft" / "Live"). Display-only. */
+/** Status badge: a small rounded label that says where something stands ("Draft", "Published", "Sent"), grey or green. Display-only. */
 export function StatusBadge({status, children, className, style}: StatusBadgeProps) {
   return (
     <span className={clsx('gv-status', className)} style={style} data-status={status}>
