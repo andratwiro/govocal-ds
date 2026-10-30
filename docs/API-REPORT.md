@@ -5,7 +5,7 @@ with each component's props: its own with their types, the ones passed straight 
 (React Aria's behaviour props, React's, the DOM's). An API change shows up here as a diff to review;
 `tests/api-report.test.mjs` fails while this file is stale. The convention it follows: `docs/API.md`.
 
-## `govocal-ds` (718 names)
+## `govocal-ds` (723 names)
 
 ### `ACCESS_WHO_VALUE`
 
@@ -1945,6 +1945,60 @@ Interface, from `src/components/gv/DropZone.tsx`.
 ### `DropZoneProps`
 
 Interface, from `src/components/gv/DropZone.tsx`. The props of `DropZone`, listed there.
+
+### `EmailPreview`
+
+Component, from `src/components/gv/EmailPreview.tsx`.
+
+- `aria-label?: string`
+- `buttonText?: string`
+- `children?: ReactNode`
+- `className?: string`
+- `defaultDevice?: PreviewDevice`
+- `device?: PreviewDevice`
+- `footer?: ReactNode`
+- `footerNote?: ReactNode`
+- `from?: ReactNode`
+- `headingLevel?: 2 | 3 | 4`
+- `labels?: Partial<EmailPreviewLabels>`
+- `logo?: ReactNode`
+- `logoLabel?: string`
+- `onDeviceChange?: (device: PreviewDevice) => void`
+- `replyTo?: ReactNode`
+- `showDeviceSwitch?: boolean`
+- `style?: CSSProperties`
+- `subject: string`
+- `title?: ReactNode`
+- `to?: ReactNode`
+
+### `emailPreviewLabels`
+
+Value, from `src/components/gv/EmailPreview.tsx`.
+
+```ts
+EmailPreviewLabels
+```
+
+### `EmailPreviewLabels`
+
+Interface, from `src/components/gv/EmailPreview.tsx`.
+
+- `desktop: string`
+- `device: string`
+- `from: string`
+- `logo: string`
+- `phone: string`
+- `preview: (subject: string) => string`
+- `privacy: string`
+- `replyTo: string`
+- `subject: string`
+- `terms: string`
+- `to: string`
+- `unsubscribe: string`
+
+### `EmailPreviewProps`
+
+Interface, from `src/components/gv/EmailPreview.tsx`. The props of `EmailPreview`, listed there.
 
 ### `emptyLocales`
 
@@ -4133,6 +4187,14 @@ Interface, from `src/patterns/OfficialUpdate.tsx`.
 - `date?: string`
 - `id: string`
 - `text: ReactNode`
+
+### `PreviewDevice`
+
+Type, from `src/components/gv/previewDevice.tsx`.
+
+```ts
+type PreviewDevice = 'desktop' | 'phone'
+```
 
 ### `ProjectHeader`
 

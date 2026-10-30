@@ -143,6 +143,10 @@
     "group": "Components behave",
     "what": "Every story that acts itself out (the keyboard tables cite them) plays to its end without a failed step."
   },
+  "e2e/preview-parts.spec.ts": {
+    "group": "Components behave",
+    "what": "Email preview shows the envelope and the email, and its Desktop / Phone switch narrows the email to a phone's width."
+  },
   "e2e/project-overview.spec.ts": {
     "group": "Back office screens",
     "what": "A project's overview has its own address and three columns, shows the live phase and next actions, and keeps the publish checklist for drafts."

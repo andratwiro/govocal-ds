@@ -57,6 +57,8 @@ export {
   ActivityFeed, type ActivityEntry, type ActivityChange, type ActivityFeedProps
 } from './components/gv/ActivityFeed';
 export {Avatar, AvatarGroup, type AvatarProps, type AvatarGroupProps} from './components/gv/Avatar';
+export {EmailPreview, type EmailPreviewProps} from './components/gv/EmailPreview';
+export type {PreviewDevice} from './components/gv/previewDevice';
 export {FileList, type FileListItemData, type FileListProps} from './components/gv/FileList';
 export {
   Illustration, type IllustrationName, type IllustrationMotion, type IllustrationGroup, type IllustrationInfo,
@@ -293,6 +295,7 @@ export {
 } from './components/gv/BlockFrame';
 export {figureLabels, type FigureLabels} from './components/gv/Figure';
 export {quoteLabels, type QuoteLabels} from './components/gv/Quote';
+export {emailPreviewLabels, type EmailPreviewLabels} from './components/gv/EmailPreview';
 export {sortableListLabels, type SortableListLabels} from './components/gv/SortableList';
 export {pageStageLabels, type PageStageLabels} from './components/gv/PageStage';
 export {zoomBarLabels, type ZoomBarLabels} from './components/gv/ZoomBar';

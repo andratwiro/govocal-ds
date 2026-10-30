@@ -80,6 +80,7 @@
     "message-square",
     "message-square-text",
     "minus",
+    "monitor",
     "more-horizontal",
     "move-vertical",
     "network",
@@ -126,8 +127,6 @@
     "vote",
     "webhook",
     "x",
-    "zap",
-    "zoom-in",
-    "zoom-out"
+    "zap"
   ]
 }

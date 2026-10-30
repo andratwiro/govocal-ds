@@ -1,0 +1,169 @@
+@import '../theme.css';
+
+/*
+ * Email preview (not in Figma; the real admin's preview frame: the envelope over the email). The envelope: names in
+ * Small secondary, a fixed 96 column, values in UI, the subject in UI strong, 4 apart; the device switch at the end.
+ * The email on the stage grey (Phone stage's surface and radius 12), centred: 600 wide on desktop (an email's width),
+ * 343 on a phone (Phone preview's width and radius 22). Inside: the logo 32 tall, centred; the title in Title, the
+ * body in Body, the button as a primary Button (radius 8, 10 x 16); the footer on the secondary fill, Small tertiary.
+ */
+.gv-email-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-12);
+  min-inline-size: 0;
+  color: var(--gv-text-body);
+  font-family: var(--gv-font-family);
+}
+
+.gv-email-preview__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gv-space-12);
+}
+
+.gv-email-preview__envelope {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-4);
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.gv-email-preview__field {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: var(--gv-space-8);
+  align-items: baseline;
+
+  > dt {
+    font: var(--gv-type-small);
+    color: var(--gv-text-secondary);
+  }
+
+  > dd {
+    margin: 0;
+    font: var(--gv-type-ui);
+    color: var(--gv-text-primary);
+    overflow-wrap: anywhere;
+  }
+
+  &[data-subject] > dd {
+    font: var(--gv-type-ui-strong);
+  }
+}
+
+.gv-email-preview__stage {
+  display: grid;
+  justify-items: center;
+  padding: var(--gv-space-24) var(--gv-space-16);
+  border-radius: var(--gv-radius-12);
+  background: var(--gv-surface-tertiary);
+  overflow-x: auto;
+}
+
+.gv-email-preview__frame {
+  --preview-width: 600px;
+  box-sizing: border-box;
+  inline-size: var(--preview-width);
+  max-inline-size: 100%;
+  overflow: hidden;
+  border: 1px solid var(--gv-border-default);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-panel);
+  box-shadow: var(--gv-shadow-raised);
+  transition: inline-size var(--gv-motion-duration-medium) var(--gv-motion-easing-standard);
+
+  &[data-device='phone'] {
+    --preview-width: 343px;
+    border-color: var(--gv-border-control);
+    border-radius: var(--gv-radius-22);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gv-email-preview__frame {
+    transition: none;
+  }
+}
+
+.gv-email-preview__head {
+  display: flex;
+  justify-content: center;
+  padding: var(--gv-space-24) var(--gv-space-24) var(--gv-space-8);
+}
+
+.gv-email-preview__logo {
+  display: inline-flex;
+  align-items: center;
+  block-size: var(--gv-space-32);
+  color: var(--gv-icon-primary);
+
+  > :is(img, svg) {
+    display: block;
+    block-size: 100%;
+    inline-size: auto;
+  }
+
+  &[data-placeholder] {
+    inline-size: 120px;
+    border-radius: var(--gv-radius-4);
+    background: var(--gv-surface-pressed);
+  }
+}
+
+.gv-email-preview__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gv-space-12);
+  padding: var(--gv-space-16) var(--gv-space-24) var(--gv-space-32);
+  font: var(--gv-type-body);
+  color: var(--gv-text-body);
+
+  > :is(p, ul, ol, blockquote) {
+    margin: 0;
+  }
+}
+
+.gv-email-preview__frame[data-device='phone'] :is(.gv-email-preview__body, .gv-email-preview__head, .gv-email-preview__foot) {
+  padding-inline: var(--gv-space-20);
+}
+
+.gv-email-preview__title {
+  margin: 0;
+  font: var(--gv-type-title);
+  color: var(--gv-text-primary);
+}
+
+.gv-email-preview__button {
+  display: inline-block;
+  margin-block-start: var(--gv-space-4);
+  padding: var(--gv-space-10) var(--gv-space-16);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-brand-strong);
+  color: var(--gv-text-inverse);
+  font: var(--gv-type-ui-strong);
+}
+
+.gv-email-preview__foot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-8);
+  padding: var(--gv-space-24);
+  background: var(--gv-surface-secondary);
+  font: var(--gv-type-small);
+  color: var(--gv-text-tertiary);
+
+  > p {
+    margin: 0;
+  }
+}
+
+.gv-email-preview__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gv-space-4) var(--gv-space-16);
+}

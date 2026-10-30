@@ -4,6 +4,15 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## Preview parts and the Gantt chart (30 Oct 2026, deep review 2: S10–S12)
+
+- Email preview: a Pattern (the emails are Go Vocal's) vs a Component → **a Component (Data display), generic words
+  only: an envelope, a logo slot, a title, a body, a button, a footer whose links come in through `labels`** → any admin
+  that sends email shows it this way; two screens use it (Messaging's automated emails, a phase's notification email).
+  The real admin's frame (To, From, Reply-to, a bold subject over the HTML) and the mail layout (a centred logo, a
+  title, the body, a grey footer of Unsubscribe · Terms · Privacy) give its order; widths are an email's 600px and
+  Phone preview's 343px, the phone frame takes Phone preview's radius 22, not a second phone.
+
 ## Red plays (30 Oct 2026)
 
 Calls made emptying the play check's known-red list: 18 play functions whose component pages cited them as proof.
