@@ -56,8 +56,8 @@ function EmailOpenRender() {
       onBack={() => {}}
       replyTo="support@example.org"
       subject="You've received a reply on your comment"
-      title="Jane Doe replied to your comment"
-      introduction="Jane Doe replied to the comment you wrote on an idea."
+      title="A resident replied to your comment"
+      introduction="A resident replied to the comment you wrote on an idea."
       buttonText="Read the reply"
     />
   );
