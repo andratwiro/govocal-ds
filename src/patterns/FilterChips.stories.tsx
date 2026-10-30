@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {FilterChips} from './FilterChips';
 import type {FilterValue} from './FilterMenu';
 import {IDEA_FACETS} from './FilterMenu.stories';
@@ -55,4 +56,26 @@ export const RightToLeft: Story = {
   name: 'Right to left',
   globals: {direction: 'rtl'},
   render: () => <Demo initial={{assignee: ['Manager A'], tags: ['Cycling', 'Transport']}} />
+};
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Tab enters the chips once; → and ←
+ * move between them; Delete (or Backspace) turns the focused filter off and focus moves to a neighbour; the next Tab
+ * reaches Clear, and Enter on it turns every filter off. */
+export const Keyboard: Story = {
+  render: () => <Demo initial={{assignee: ['Manager A'], tags: ['Cycling']}} />,
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const assignee = canvas.getByRole('row', {name: /^Assignee/});
+    await userEvent.tab();
+    await expect(assignee).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect(canvas.getByRole('row', {name: /^Tags/})).toHaveFocus();
+    await userEvent.keyboard('{Delete}');
+    await waitFor(() => expect(canvas.queryByRole('row', {name: /^Tags/})).toBeNull());
+    await waitFor(() => expect(canvas.getByRole('row', {name: /^Assignee/})).toHaveFocus());
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Clear'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByText('No filter on: the bar is gone.')).toBeInTheDocument();
+  }
 };

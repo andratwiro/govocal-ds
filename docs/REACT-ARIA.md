@@ -99,10 +99,10 @@ what would survive a change of base library. It decides nothing: the base librar
 | Status & feedback › Status badge | None: plain React and CSS | – | – | yes | 3 |
 | Status & feedback › Toast | `UNSTABLE_ToastRegion`, `UNSTABLE_Toast`, `UNSTABLE_ToastQueue`, `UNSTABLE_ToastContent`, `Text`, `Button` through `components/Button` | – | – | yes | 5 |
 | Tables & lists › Data table | `Cell`, `Collection`, `Column`, `Row`, `Table`, `TableBody`, `TableHeader`, `TableLoadMoreItem`, `TableLayout`, `Virtualizer` through `components/gv/Checkbox`, `components/Menu` | `TableProps` | yes | yes | 21 |
-| Tables & lists › Filter chips | `Button`, `Tag`, `TagGroup`, `TagList` through `patterns/FilterMenu` | – | yes | yes | 7 |
-| Tables & lists › Filter menu | `MenuTrigger`, `Dialog` through `components/Menu`, `components/Separator`, `components/gv/IconButton`, `components/gv/OptionList` | – | yes | yes | 5 |
-| Tables & lists › Selection bar | `MenuTrigger`, `Toolbar` through `components/Button`, `components/Popover` | – | yes | yes | 6 |
-| Tables & lists › Table toolbar | `Toolbar` | – | – | yes | 6 |
+| Tables & lists › Filter chips | `Button`, `Tag`, `TagGroup`, `TagList` through `patterns/FilterMenu` | – | yes | yes | 8 |
+| Tables & lists › Filter menu | `MenuTrigger`, `Dialog` through `components/Menu`, `components/Separator`, `components/gv/IconButton`, `components/gv/OptionList` | – | yes | yes | 6 |
+| Tables & lists › Selection bar | `MenuTrigger`, `Toolbar` through `components/Button`, `components/Popover` | – | yes | yes | 7 |
+| Tables & lists › Table toolbar | `Toolbar` | – | – | yes | 7 |
 | Text › Section label | `Heading` | – | – | yes | 4 |
 | Text › Text | `Text` | `TextProps` | – | yes | 4 |
 | Text › Visually hidden | `VisuallyHidden` | – | – | – | 2 |

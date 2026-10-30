@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, userEvent, within} from 'storybook/test';
 import {TableToolbar, TableToolbarHeading} from './TableToolbar';
 import {SearchField} from '../SearchField';
 import {FilterMenu, type FilterValue} from '../../patterns/FilterMenu';
@@ -80,4 +81,24 @@ export const RightToLeft: Story = {
   name: 'Right to left',
   globals: {direction: 'rtl'},
   render: () => <Demo initial={{tags: ['Cycling']}} withExport />
+};
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Tab enters the tools once, on the
+ * first; → and ← move between them; the next Tab leaves the tools. */
+export const Keyboard: Story = {
+  render: () => <Demo initial={{status: ['Proposed', 'Viewed']}} />,
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const tools = canvas.getByRole('toolbar', {name: 'Table tools'});
+    const search = within(tools).getByRole('button', {name: 'Search ideas'});
+    const filter = within(tools).getByRole('button', {name: /^Filter/});
+    await userEvent.tab();
+    await expect(search).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect(filter).toHaveFocus();
+    await userEvent.keyboard('{ArrowLeft}');
+    await expect(search).toHaveFocus();
+    await userEvent.tab();
+    await expect(tools).not.toContainElement(canvasElement.ownerDocument.activeElement as HTMLElement);
+  }
 };

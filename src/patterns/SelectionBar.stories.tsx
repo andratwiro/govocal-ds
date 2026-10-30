@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, userEvent, within} from 'storybook/test';
 import {CircleCheck, Copy, Download, MessageSquareText, Tag, TriangleAlert, User, Users} from 'lucide-react';
 import {Button} from '../components/Button';
 import {Menu, MenuItem} from '../components/Menu';
@@ -74,3 +75,27 @@ export const UsersList: Story = {name: 'Users', render: () => <Demo initial={2} 
 
 /** Right to left (Arabic): the count at the right, actions flowing left, the × last. */
 export const RightToLeft: Story = {name: 'Right to left', globals: {direction: 'rtl'}, render: () => <Demo initial={3} />};
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Tab enters the bar once, on its first
+ * action; → and ← move between the actions and the ×; Enter presses one; Enter on × clears the selection. */
+export const Keyboard: Story = {
+  render: () => <Demo initial={2} actions={USER_ACTIONS} />,
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const bar = within(canvas.getByRole('toolbar', {name: 'Selection actions'}));
+    await userEvent.tab();
+    await expect(bar.getByRole('button', {name: 'Add to group'})).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect(bar.getByRole('button', {name: 'Export selected'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByText('Pressed: export')).toBeInTheDocument();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect(bar.getByRole('button', {name: 'Clear selection'})).toHaveFocus();
+    await userEvent.keyboard('{ArrowLeft}');
+    await expect(bar.getByRole('button', {name: 'Export selected'})).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.queryByRole('toolbar')).toBeNull();
+    await expect(canvas.getByRole('button', {name: 'Select an idea'})).toBeInTheDocument();
+  }
+};

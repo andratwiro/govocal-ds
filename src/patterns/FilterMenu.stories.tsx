@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
 import {CircleCheck, Inbox, MessageSquareText, Tag, User} from 'lucide-react';
 import {Avatar} from '../components/gv/Avatar';
 import {FilterMenu, type FilterFacet, type FilterValue} from './FilterMenu';
@@ -59,4 +60,36 @@ export const RightToLeft: Story = {
   name: 'Right to left',
   globals: {direction: 'rtl'},
   render: () => <Demo open initial={{assignee: ['Manager A'], tags: ['Cycling']}} />
+};
+
+/** The keyboard, proved by this story's play function (the Interactions panel): Enter on the button opens the facets;
+ * ↓ moves; → opens a facet's options; Enter ticks one and the menus stay open; ← goes back to the facets; Esc closes
+ * and focus returns to the button, which now says a filter is on. */
+export const Keyboard: Story = {
+  render: () => <Demo />,
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Filter'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    const facets = await screen.findByRole('menu', {name: 'Filter'});
+    const source = within(facets).getByRole('menuitem', {name: /^Source/});
+    await waitFor(() => expect(source).toHaveFocus());
+    await userEvent.keyboard('{ArrowDown}');
+    await expect(within(facets).getByRole('menuitem', {name: /^Status/})).toHaveFocus();
+    await userEvent.keyboard('{ArrowUp}');
+    await userEvent.keyboard('{ArrowRight}');
+    const options = await screen.findByRole('menu', {name: 'Source'});
+    const online = within(options).getByRole('menuitemcheckbox', {name: /^Online/});
+    await waitFor(() => expect(online).toHaveFocus());
+    await userEvent.keyboard('{Enter}');
+    await expect(online).toHaveAttribute('aria-checked', 'true');
+    await expect(screen.getByRole('menu', {name: 'Source'})).toBeInTheDocument();
+    await userEvent.keyboard('{ArrowLeft}');
+    await waitFor(() => expect(screen.queryByRole('menu', {name: 'Source'})).toBeNull());
+    await expect(source).toHaveFocus();
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
+    await waitFor(() => expect(canvas.getByRole('button', {name: 'Filter (1 on)'})).toHaveFocus());
+  }
 };
