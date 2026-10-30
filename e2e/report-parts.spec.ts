@@ -153,3 +153,21 @@ test('rich text toolbar, floating: a block-type segment, the formatting and the 
   await expect(page.getByRole('group', {name: 'Text'}).getByRole('toolbar', {name: 'Formatting'})).toBeVisible();
   await report(page);
 });
+
+test('figure: named by its finding, with the foot as its caption', async ({page}) => {
+  await open(page, 'components-charts-figure--full-foot');
+  const figure = page.getByRole('figure', {name: 'Cycling leads in every district'});
+  await expect(figure.getByRole('heading', {level: 3, name: 'Cycling leads in every district'})).toHaveCSS('font-size', '19px');
+  await expect(figure.locator('figcaption')).toHaveText(
+    /Showing the top 3 of 5 routes\s*Participants could vote for more than one route\.\s*Source: Go Vocal, Cycle lanes 2026/);
+  await report(page);
+});
+
+test('quote: the words in a blockquote, in the language\'s marks, with the person in the caption', async ({page}) => {
+  await open(page, 'components-data-display-quote--translated');
+  const quote = page.getByRole('figure');
+  await expect(quote.getByRole('blockquote')).toHaveText(/^« Dès juin.* »$/);
+  await expect(quote.locator('figcaption')).toContainText('Résidente A');
+  await open(page, 'components-data-display-quote--in-a-row');
+  await report(page);
+});

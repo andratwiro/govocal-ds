@@ -40,6 +40,7 @@ const INTERACTIVE_ARIA = /^(Button|Link|Menu|Dialog|Modal|Popover|Tooltip|Table|
 const NOT_INTERACTIVE = new Map([
   ['App provider', 'it renders the toast region, whose keys are Toast\'s page'],
   ['Panel', 'its count Badge is never removable; the actions and body it holds keep their own keys'],
+  ['Quote', 'its tag Badge is never removable: a quote is read, never pressed'],
 ]);
 
 function names(spec) {

@@ -1,0 +1,70 @@
+@import '../theme.css';
+
+/*
+ * Quote (not in Figma; the report prototype's `.r-q`): a card on the secondary fill, radius 8, padding 16 (the
+ * prototype's 14 snaps), 10 between its parts. The tag at the start, the words in Document body, the person at the
+ * foot (pushed down, so cards in one row line their people up): a 28 avatar 8 before the name (Small strong) over
+ * the meta (Small secondary). Plain: no fill; a 2 rule at the start in the strong border, padded 16 from it.
+ */
+.gv-quote {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-10);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  margin: 0;
+  padding: var(--gv-space-16);
+  border-radius: var(--gv-radius-8);
+  background: var(--gv-surface-secondary);
+  break-inside: avoid;
+
+  &[data-variant='plain'] {
+    padding-block: 0;
+    padding-inline: var(--gv-space-16) 0;
+    border-radius: 0;
+    background: transparent;
+    border-inline-start: 2px solid var(--gv-border-strong);
+  }
+}
+
+.gv-quote__tag {
+  display: flex;
+}
+
+.gv-quote__words {
+  margin: 0;
+  font: var(--gv-type-document-body);
+  color: var(--gv-text-body);
+
+  > p {
+    margin: 0;
+  }
+}
+
+.gv-quote__who {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+  margin-block-start: auto;
+}
+
+.gv-quote__avatar {
+  display: inline-flex;
+  flex: none;
+}
+
+.gv-quote__person {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.gv-quote__author {
+  font: var(--gv-type-small-strong);
+  color: var(--gv-text-primary);
+}
+
+.gv-quote__meta {
+  font: var(--gv-type-small);
+  color: var(--gv-text-secondary);
+}

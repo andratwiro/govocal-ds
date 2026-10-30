@@ -5,7 +5,7 @@ with each component's props: its own with their types, the ones passed straight 
 (React Aria's behaviour props, React's, the DOM's). An API change shows up here as a diff to review;
 `tests/api-report.test.mjs` fails while this file is stale. The convention it follows: `docs/API.md`.
 
-## `govocal-ds` (692 names)
+## `govocal-ds` (700 names)
 
 ### `ACCESS_WHO_VALUE`
 
@@ -1959,6 +1959,41 @@ Component, from `src/components/gv/EmptyState.tsx`.
 ### `EmptyStateProps`
 
 Interface, from `src/components/gv/EmptyState.tsx`. The props of `EmptyState`, listed there.
+
+### `Figure`
+
+Component, from `src/components/gv/Figure.tsx`.
+
+- `aria-label?: string`
+- `children?: ReactNode`
+- `className?: string`
+- `finding?: ReactNode`
+- `headingLevel?: 2 | 3 | 4 | 5 | 6`
+- `labels?: Partial<FigureLabels>`
+- `legend?: ReactNode`
+- `measure?: ReactNode`
+- `note?: ReactNode`
+- `source?: string`
+- `style?: CSSProperties`
+- `truncation?: ReactNode`
+
+### `figureLabels`
+
+Value, from `src/components/gv/Figure.tsx`.
+
+```ts
+FigureLabels
+```
+
+### `FigureLabels`
+
+Interface, from `src/components/gv/Figure.tsx`.
+
+- `source: (source: string) => string`
+
+### `FigureProps`
+
+Interface, from `src/components/gv/Figure.tsx`. The props of `Figure`, listed there.
 
 ### `FileList`
 
@@ -4255,6 +4290,38 @@ Value, from `src/components/Toast.tsx`.
 ```ts
 ToastQueue<ToastMessage>
 ```
+
+### `Quote`
+
+Component, from `src/components/gv/Quote.tsx`.
+
+- `author: ReactNode`
+- `avatar?: ReactNode`
+- `className?: string`
+- `labels?: Partial<QuoteLabels>`
+- `meta?: ReactNode`
+- `style?: CSSProperties`
+- `tag?: ReactNode`
+- `variant?: 'card' | 'plain'`
+- `words: string`
+
+### `quoteLabels`
+
+Value, from `src/components/gv/Quote.tsx`.
+
+```ts
+QuoteLabels
+```
+
+### `QuoteLabels`
+
+Interface, from `src/components/gv/Quote.tsx`.
+
+- `quoted: (words: string) => string`
+
+### `QuoteProps`
+
+Interface, from `src/components/gv/Quote.tsx`. The props of `Quote`, listed there.
 
 ### `Radio`
 

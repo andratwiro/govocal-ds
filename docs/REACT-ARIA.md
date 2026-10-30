@@ -6,7 +6,7 @@ Every interactive part is built on React Aria Components. This table says, per p
 what would survive a change of base library. It decides nothing: the base library is a question for developers
 (Overview › Questions for developers).
 
-**113 of 132 parts** wire behaviour from React Aria; the rest are plain React and CSS.
+**114 of 134 parts** wire behaviour from React Aria; the rest are plain React and CSS.
 
 **What comes from React Aria** (would be rewritten on another library):
 
@@ -44,6 +44,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Charts › Bar row | `VisuallyHidden` | – | – | yes | 6 |
 | Charts › Chart | None: plain React and CSS | – | yes | yes | 11 |
 | Charts › Dashboard card | `Button`; through Bar row: `VisuallyHidden`; through Reaction counts: `VisuallyHidden` | – | yes | yes | 14 |
+| Charts › Figure | None: plain React and CSS | – | – | yes | 5 |
 | Charts › Legend row | None: plain React and CSS | – | yes | yes | 4 |
 | Charts › Statement row | None: plain React and CSS | – | yes | yes | 6 |
 | Data display › Activity feed | `Button`; through Button: `ProgressBar`; through Menu: `Menu`, `MenuItem`, `MenuLoadMoreItem`, `MenuSection`, `MenuTrigger`, `SubmenuTrigger`, `OverlayArrow`, `Popover`, `ProgressBar`, `Heading`, `Text`, `Header`, `Keyboard`; through Item chip: `VisuallyHidden` | – | yes | yes | 7 |
@@ -55,6 +56,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Data display › List row | through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text` | – | – | yes | 6 |
 | Data display › Map view | `Button` | – | yes | yes | 11 |
 | Data display › Property list | `VisuallyHidden` | – | – | yes | 3 |
+| Data display › Quote | through Badge: `Button` | – | – | yes | 6 |
 | Data display › Reaction counts | `VisuallyHidden` | – | yes | yes | 4 |
 | Data display › Stat row | `Link`, `ToggleButton` | – | – | yes | 7 |
 | Data display › Stat tile | `VisuallyHidden`; through Help popover: `Heading`, `Dialog`, `DialogTrigger`, `OverlayArrow`, `Popover`, `Button`, `ProgressBar` | – | – | yes | 12 |

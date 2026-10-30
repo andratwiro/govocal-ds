@@ -37,6 +37,7 @@ export {PromptSuggestions, type PromptSuggestion, type PromptSuggestionsProps} f
 
 // Components / Charts
 export {BarRow, type BarRowProps} from './components/gv/BarRow';
+export {Figure, type FigureProps} from './components/gv/Figure';
 export {
   ChartLegend, LineChart, Sparkline, type ChartColor, type ChartSeries, type ChartLegendItem,
   type ChartLegendProps, type LineChartProps, type SparklineProps
@@ -75,6 +76,7 @@ export {
 export {
   PropertyList, PropertyListItem, type PropertyListProps, type PropertyListItemProps
 } from './components/gv/PropertyList';
+export {Quote, type QuoteProps} from './components/gv/Quote';
 export {ReactionCounts, type ReactionCountsProps} from './components/gv/ReactionCounts';
 export {StatRow, type StatRowProps} from './components/gv/StatRow';
 export {StatTile, type StatTileLayout, type StatTileTrend, type StatTileProps} from './components/gv/StatTile';
@@ -285,6 +287,8 @@ export {itemChipLabels, type ItemChipLabels} from './components/gv/ItemChip';
 export {
   blockFrameLabels, type BlockFrameLabels, blockInsertLineLabels, type BlockInsertLineLabels
 } from './components/gv/BlockFrame';
+export {figureLabels, type FigureLabels} from './components/gv/Figure';
+export {quoteLabels, type QuoteLabels} from './components/gv/Quote';
 export {pageStageLabels, type PageStageLabels} from './components/gv/PageStage';
 export {zoomBarLabels, type ZoomBarLabels} from './components/gv/ZoomBar';
 export {promptComposerLabels, type PromptComposerLabels} from './components/gv/PromptComposer';
