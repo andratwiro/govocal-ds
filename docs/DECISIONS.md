@@ -162,6 +162,16 @@ benchmark asks that a screen be composed from parts with no CSS of its own.
 - The back office's page bar: a local bar with a body-strong title vs Page header → **Page header (Title type, the trail
   to the parents above it, the line about the page inside the head) in an App frame panel** → one page head; the bar
   keeps its white look.
+- Back-office looks that no part paints, after its CSS went to zero paint → **dropped, not kept as page CSS: dates and
+  statuses in table cells no longer `nowrap` (they may wrap in a narrow cell); report outline names wrap instead of
+  ending in "…"; report zoom scales the sheet's box, not its text (`zoom` is paint-adjacent and only some engines
+  honour it); the inspiration hub quote's and the report prompt's side rule; the settings side list's faint divider
+  (Tabs' vertical list draws its own, in `border-default`); the tools' grey picture tile (a Missing part names the
+  missing illustration); the inspiration hub's "Highlighted" stamp is a Badge in the tags row. Tile widths snap to Tile
+  grid's steps (160, 220, 280, 360): community monitor stat tiles 180 → 160 and cards 420 → 360, project templates
+  240 → 220, the messaging split 380 → 360, tool cards 320 → 280, webhook events 180 → 160, phase tiles 140 → 160** → a look the system can't carry
+  is either a system part to add (as App frame and Missing part were) or a Missing part; keeping it in a page's CSS is
+  what the benchmark counts against us.
 
 ## Words, locale and edge cases (30 Oct 2026)
 
@@ -747,5 +757,5 @@ Where the prototype and Figma disagree on the look, the prototype wins; names an
 **Built, not in Figma** (Figma could add them): Stat row selected state, the empty dashboard card, select-all and row
 checkboxes on list rows, Checkbox quiet (dimmed select-all), Tooltip with a tail (step cards only).
 
-**Not built yet:** a grey avatar variant for assignees and commenters; a language button slot in Title field; the
-chosen-value teal on a dropdown card's pill; renaming the project from the breadcrumb.
+**Not built yet:** a grey avatar variant for assignees and commenters; the chosen-value teal on a dropdown card's pill;
+renaming the project from the breadcrumb.
