@@ -26,7 +26,8 @@
    chevron on a row that opens a menu (`hasMenu`).
 4. **Tooltips** (folded only): each row's name, at the end side.
 
-224 wide open, 52 folded; it runs the window's full height on the dark surface.
+224 wide open, 52 folded; it runs the window's full height on the dark surface. With `isHidden` it takes no room and
+opens over the page (`isOpen`, `onOpenChange`) from the header's toggle.
 
 ## Behaviour
 
@@ -40,6 +41,7 @@ rows with a menu open it.
 | Tab (folded) | Shows the focused row's name as a tooltip. | `play: Keyboard` |
 | Enter (on a row with a menu) | Opens its menu with focus on the first item. | `play: Keyboard` |
 | Esc (in its menu) | Closes the menu and puts focus back on the row. | `play: Keyboard` |
+| Esc (hidden, opened) | Closes the nav and puts focus back on the toggle. | `play: Hidden` |
 
 No hover peek when folded: an edge that opens on hover catches stray pointers and no keyboard reaches it
 (docs/DECISIONS.md, "Building from the prototype review").
@@ -83,6 +85,8 @@ the dark surface.
 
 ## Changes
 
+- 30 Oct 2026: `isHidden`: off the page and opened over it from the header's toggle; a focus nobody asked for (on load) no
+  longer opens a folded row's tooltip (docs/DECISIONS.md, "Small fixes").
 - 30 Oct 2026: this page written; a play function proves the keyboard table; the doc comment moved onto `SideNav` so
   the page has its Purpose.
 - 29 Oct 2026: counts follow the locale; the home band's words come in through `labels`.

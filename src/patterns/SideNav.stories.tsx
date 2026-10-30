@@ -1,9 +1,11 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
+import {useState} from 'react';
 import {expect, screen, userEvent, waitFor, within} from 'storybook/test';
-import {Bell, FolderKanban, Inbox, LayoutDashboard, LifeBuoy, Settings, Users} from 'lucide-react';
+import {Bell, FolderKanban, Inbox, LayoutDashboard, LifeBuoy, PanelLeft, Settings, Users} from 'lucide-react';
 import {SideNav, SideNavGroup, SideNavHome, SideNavLink, SideNavButton} from './SideNav';
 import {Avatar} from '../components/gv/Avatar';
 import {MenuTrigger, Menu, MenuItem} from '../components/Menu';
+import {IconButton} from '../components/gv/IconButton';
 
 const meta: Meta<typeof SideNav> = {
   title: 'Patterns/App shell/Side nav',
@@ -71,5 +73,35 @@ export const Keyboard: Story = {
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
     await waitFor(() => expect(account).toHaveFocus());
+  }
+};
+/** Hidden: the page gets the full width (the prototype's project screens), and the header's panel toggle opens the nav
+ * over the page. Esc, a click outside or the page's own `onOpenChange(false)` closes it, and focus goes back to the
+ * toggle. The play function proves it. */
+export const Hidden: Story = {
+  render: function Render() {
+    const [isOpen, setOpen] = useState(false);
+    return (
+      <div style={{flex: 1}}>
+        <SideNav aria-label="Main" isHidden isOpen={isOpen} onOpenChange={setOpen}><Items /></SideNav>
+        <header style={{display: 'flex', alignItems: 'center', gap: 8, padding: 12}}>
+          <IconButton aria-label="Show the platform menu" onPress={() => setOpen(true)}><PanelLeft aria-hidden size={16} /></IconButton>
+          Projects › Green corridors
+        </header>
+      </div>
+    );
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await expect(screen.queryByRole('navigation', {name: 'Main'})).toBeNull();
+    const toggle = canvas.getByRole('button', {name: 'Show the platform menu'});
+    await userEvent.click(toggle);
+    const nav = await screen.findByRole('navigation', {name: 'Main'});
+    await waitFor(() => expect(within(nav).getByRole('link', {name: 'Projects'})).toBeVisible());
+    await userEvent.tab();
+    await waitFor(() => expect(nav.contains(document.activeElement)).toBe(true));
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('navigation', {name: 'Main'})).toBeNull());
+    await waitFor(() => expect(toggle).toHaveFocus());
   }
 };

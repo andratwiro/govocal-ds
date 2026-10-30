@@ -4929,6 +4929,9 @@ Component, from `src/patterns/SideNav.tsx`.
 - `children: ReactNode`
 - `className?: string`
 - `isFolded?: boolean`
+- `isHidden?: boolean`
+- `isOpen?: boolean`
+- `onOpenChange?: (isOpen: boolean) => void`
 - `style?: CSSProperties`
 
 ### `SideNavButton`

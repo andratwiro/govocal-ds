@@ -214,7 +214,7 @@ part's `<Name>.guide.md`) names the part to use instead.
   - Not for: For a titled region over a hairline, such as a table and its toolbar: use **Panel**. For a box people tick, open or expand: use **Card**. To lay out a page's regions inside the frame: use **Stack**, **Grid** or **Tile grid**. For a record beside a list: use **Side panel**.
 - **Notification list** `NotificationList` (not in Figma): The notifications list the admin sidebar's bell opens (the real admin's notification menu): a title with "Mark all as read", then one row per notification, n… Stories: Default, All Read, Empty, Keyboard.
   - Not for: For a passing confirmation of something the admin just did: use **Toast**. For a message about the page in front of them: use **Banner**. For the emails a phase sends participants: use **Notification row**. For a long, filterable list of records: use **Data table**.
-- **Side nav** `SideNav` (not in Figma): The back office's main dark sidebar of links and menu buttons; folds to icons. Stories: Open, Folded, Keyboard.
+- **Side nav** `SideNav` (not in Figma): The back office's main dark sidebar of links and menu buttons; folds to icons, or hides and opens over the page. Stories: Open, Folded, Keyboard, Hidden.
   - Not for: To switch between views or sections inside a page: use **Tabs**. For the phases of a project: use **Phase timeline** or **Rail phase** in the project rail. To show where the page sits in the hierarchy: use **Breadcrumbs**. For a list of actions: use **Menu** (opened from a `SideNavButton` with `hasMenu`).
 
 ## Patterns / Build tab

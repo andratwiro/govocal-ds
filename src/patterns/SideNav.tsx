@@ -3,6 +3,8 @@ import {Children, createContext, forwardRef, useContext, type ReactNode} from 'r
 import {Button as RACButton, type ButtonProps as RACButtonProps} from 'react-aria-components/Button';
 import {ChevronRight, CircleArrowLeft} from 'lucide-react';
 import {Link} from 'react-aria-components/Link';
+import {Dialog} from 'react-aria-components/Dialog';
+import {Modal, ModalOverlay} from 'react-aria-components/Modal';
 import {Tooltip, TooltipTrigger} from '../components/Tooltip';
 import clsx from 'clsx';
 import type {PlacementProps} from '../components/className';
@@ -15,6 +17,7 @@ import './SideNav.css';
  * a "To platform" band, groups of items, and button rows that open menus (notifications,
  * account, support). `isFolded` turns it into the 52px icon rail the prototype uses inside a
  * project: labels become visually hidden (they stay the controls' names) and show as tooltips.
+ * `isHidden` takes it off the page, and the header's panel toggle opens it over the page (`isOpen`).
  * Not in Figma yet.
  */
 export interface SideNavProps extends PlacementProps {
@@ -22,18 +25,42 @@ export interface SideNavProps extends PlacementProps {
   'aria-label': string;
   /** The icon-only rail (inside a project or phase). @default false */
   isFolded?: boolean;
+  /**
+   * Hidden: the nav leaves the page, which gets the full width (the prototype's project screens), and the header's
+   * panel toggle opens it over the page with `isOpen`. Esc and a click outside call `onOpenChange(false)`; focus goes
+   * back to the toggle.
+   *
+   * @default false
+   */
+  isHidden?: boolean;
+  /** Hidden only: the nav is open over the page, at full width. Pair it with `onOpenChange`. @default false */
+  isOpen?: boolean;
+  /** Hidden only: called with `false` on Esc or a click outside, for the page to close it. */
+  onOpenChange?: (isOpen: boolean) => void;
   /** The rail's contents: `SideNavHome`, `SideNavGroup`s. */
   children: ReactNode;
 }
 
 const Folded = createContext(false);
 
-/** The back office's main dark sidebar of links and menu buttons; folds to icons. For tabs inside a page, use `Tabs`. */
-export function SideNav({'aria-label': ariaLabel, isFolded: folded = false, children, className, style}: SideNavProps) {
-  return (
+/** The back office's main dark sidebar of links and menu buttons; folds to icons, or hides and opens over the page.
+ * For tabs inside a page, use `Tabs`. */
+export function SideNav({'aria-label': ariaLabel, isFolded = false, isHidden = false, isOpen = false, onOpenChange, children,
+  className, style}: SideNavProps) {
+  // Open over the page, the nav has room for its labels: never folded.
+  const folded = isFolded && !isHidden;
+  const nav = (
     <Folded.Provider value={folded}>
       <nav className={clsx('gv-side-nav', className)} style={style} aria-label={ariaLabel} data-folded={folded || undefined}>{children}</nav>
     </Folded.Provider>
+  );
+  if (!isHidden) return nav;
+  return (
+    <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} isDismissable className="gv-side-nav-overlay">
+      <Modal className="gv-side-nav-drawer">
+        <Dialog aria-label={ariaLabel} className="gv-side-nav-drawer__dialog">{nav}</Dialog>
+      </Modal>
+    </ModalOverlay>
   );
 }
 

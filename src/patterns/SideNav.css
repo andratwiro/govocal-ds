@@ -192,3 +192,39 @@
     inset-inline-end: calc(-1 * var(--gv-space-8));
   }
 }
+
+/* Hidden (`isHidden`): open over the page from the header's toggle, at the open width, with the overlay shadow. The
+   rest of the page stays as it is: a click on it closes the nav. */
+.gv-side-nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--gv-layer-overlay);
+}
+
+.gv-side-nav-drawer {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 224px;
+  box-shadow: var(--gv-shadow-overlay);
+  outline: none;
+
+  &[data-entering] {
+    animation: gv-side-nav-in var(--gv-motion-duration-medium) var(--gv-motion-easing-enter);
+  }
+
+  &[data-exiting] {
+    animation: gv-side-nav-in var(--gv-motion-duration-fast) var(--gv-motion-easing-exit) reverse;
+  }
+}
+
+.gv-side-nav-drawer__dialog {
+  block-size: 100%;
+  outline: none;
+}
+
+@keyframes gv-side-nav-in {
+  from {
+    opacity: 0;
+  }
+}
