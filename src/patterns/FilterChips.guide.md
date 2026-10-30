@@ -93,6 +93,8 @@ Backspace to remove, each × named for its facet, and values joined in the page'
 
 ## Changes
 
+- 30 Oct 2026: a chip's × leaves the Tab order (React Aria's tag group put each × in it), so the strip is the one
+  Tab stop this page promised; Delete removes from the keyboard, the × from a pointer.
 - 30 Oct 2026: when the last chip goes with focus on it, focus moves to the Filter menu's button (docs/DECISIONS.md,
   "Small fixes").
 - 30 Oct 2026: values join with "or" in every language (Arabic and French said "and" before); the page reworded after

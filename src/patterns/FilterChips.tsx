@@ -96,7 +96,7 @@ export function FilterChips({
           {metric && (
             <Tag id={METRIC} textValue={metric} className="gv-filter-chip" data-metric>
               <span className="gv-filter-chip__key">{metric}</span>
-              <Button slot="remove" className="gv-filter-chip__remove" aria-label={l.remove(metric)}>
+              <Button slot="remove" excludeFromTabOrder className="gv-filter-chip__remove" aria-label={l.remove(metric)}>
                 <X aria-hidden size={14} />
               </Button>
             </Tag>
@@ -110,7 +110,7 @@ export function FilterChips({
                 <span className="gv-filter-chip__key"><span className="gv-filter-chip__icon" aria-hidden>{f.icon}</span>{f.label}</span>
                 <span className="gv-filter-chip__op">{op}</span>
                 <span className="gv-filter-chip__value">{words}</span>
-                <Button slot="remove" className="gv-filter-chip__remove" aria-label={l.remove(f.label)}>
+                <Button slot="remove" excludeFromTabOrder className="gv-filter-chip__remove" aria-label={l.remove(f.label)}>
                   <X aria-hidden size={14} />
                 </Button>
               </Tag>

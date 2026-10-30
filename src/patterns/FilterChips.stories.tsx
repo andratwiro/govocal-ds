@@ -65,14 +65,18 @@ export const Keyboard: Story = {
   render: () => <Demo initial={{assignee: ['Manager A'], tags: ['Cycling']}} />,
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const assignee = canvas.getByRole('row', {name: /^Assignee/});
+    // React Aria draws the chips a moment after the strip: wait for them before Tab.
+    const assignee = await canvas.findByRole('row', {name: /^Assignee/});
     await userEvent.tab();
     await expect(assignee).toHaveFocus();
     await userEvent.keyboard('{ArrowRight}');
     await expect(canvas.getByRole('row', {name: /^Tags/})).toHaveFocus();
-    await userEvent.keyboard('{Delete}');
+    // Hold Delete while focus moves on, as a hand does: a key released in the same instant lands before React Aria
+    // has placed focus on the next chip, which a person can't do.
+    await userEvent.keyboard('{Delete>}');
     await waitFor(() => expect(canvas.queryByRole('row', {name: /^Tags/})).toBeNull());
     await waitFor(() => expect(canvas.getByRole('row', {name: /^Assignee/})).toHaveFocus());
+    await userEvent.keyboard('{/Delete}');
     await userEvent.tab();
     await expect(canvas.getByRole('button', {name: 'Clear'})).toHaveFocus();
     await userEvent.keyboard('{Enter}');

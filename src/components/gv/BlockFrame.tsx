@@ -1,5 +1,5 @@
 'use client';
-import type {KeyboardEvent, ReactNode} from 'react';
+import {useEffect, useRef, type KeyboardEvent, type ReactNode} from 'react';
 import {Button as RACButton} from 'react-aria-components/Button';
 import {Toolbar} from 'react-aria-components/Toolbar';
 import {ArrowDown, ArrowUp, Copy, Plus, Sparkles, Trash2} from 'lucide-react';
@@ -118,15 +118,26 @@ export function BlockFrame({
       onSelect?.();
     }
   };
-  // Esc from anywhere inside (React Aria's controls keep their keys to themselves, so listen on the way down).
-  const onKeyDownCapture = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Escape' && isSelected && onDeselect) {
+  // Esc from anywhere inside. Listen on the window, on the way down: a focused tool shows its tooltip, and React Aria's
+  // tooltip takes Esc at the document and stops it, so a listener on the block would need a second Esc.
+  const ref = useRef<HTMLDivElement>(null);
+  const deselect = useRef(onDeselect);
+  deselect.current = onDeselect;
+  const canDeselect = !!onDeselect;
+  useEffect(() => {
+    if (!isSelected || !canDeselect) return;
+    const onEsc = (e: globalThis.KeyboardEvent) => {
+      const block = ref.current;
+      if (e.key !== 'Escape' || !block?.contains(block.ownerDocument.activeElement)) return;
       e.preventDefault();
       e.stopPropagation();
-      onDeselect();
-      e.currentTarget.focus();
-    }
-  };
+      deselect.current?.();
+      block.focus();
+    };
+    const win = ref.current?.ownerDocument.defaultView ?? window;
+    win.addEventListener('keydown', onEsc, true);
+    return () => win.removeEventListener('keydown', onEsc, true);
+  }, [isSelected, canDeselect]);
   const tool = (name: string, onPress: () => void, glyph: ReactNode, isDisabled = false) => (
     <TooltipTrigger>
       <IconButton size={24} aria-label={name} onPress={onPress} isDisabled={isDisabled}>{glyph}</IconButton>
@@ -142,11 +153,11 @@ export function BlockFrame({
     </Toolbar>
   );
   return (
-    <div id={id} className={clsx('gv-block-frame', className)} style={style} role="group" tabIndex={0}
+    <div ref={ref} id={id} className={clsx('gv-block-frame', className)} style={style} role="group" tabIndex={0}
       aria-label={ariaLabel ?? label} aria-current={isSelected || undefined}
       data-selected={isSelected || undefined} data-highlighted={isHighlighted || undefined}
       data-dragging={isDragging || undefined} data-custom-toolbar={toolbar != null || undefined}
-      onClickCapture={() => { if (!isSelected) onSelect?.(); }} onKeyDown={onKeyDown} onKeyDownCapture={onKeyDownCapture}
+      onClickCapture={() => { if (!isSelected) onSelect?.(); }} onKeyDown={onKeyDown}
       onPointerEnter={onHoverChange && (() => onHoverChange(true))}
       onPointerLeave={onHoverChange && (() => onHoverChange(false))}>
       <span className="gv-block-frame__tag" aria-hidden>
