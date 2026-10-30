@@ -34,8 +34,15 @@ export interface TimelinePhase {
   status: TimelineStatus;
   /** "19 Oct to 16 Nov". */
   dates: string;
-  /** The method's name as residents read it ("Voting", "Sharing"). */
-  method: string;
+  /** The method's name as residents read it ("Voting", "Sharing"). An event has none. */
+  method?: string;
+  /**
+   * `event`: a dated event, for the rail's Events section (a timeline of its own): no dot, no guide line, no count;
+   * "Done · 10 Sep".
+   *
+   * @default 'phase'
+   */
+  kind?: 'phase' | 'event';
   /** What the phase has gathered, shown as a pill after the name ("312 ideas"). */
   count?: string;
   /** How many of those nobody has looked at yet: a red "• 18 new" at the end of the row. */
@@ -73,7 +80,8 @@ export function PhaseTimeline({phases, onDelete, labels, className, style}: Phas
       {phases.map(p => (
         <li key={p.id}>
           <RailPhase status={DOT[p.status]} isCurrent={p.isCurrent} href={p.href} title={p.title}
-            chip={p.count} newCount={p.fresh} statusLabel={l[WORD[p.status]]} meta={`${p.dates} · ${p.method}`} labels={l}
+            chip={p.count} newCount={p.fresh} statusLabel={l[WORD[p.status]]}
+            kind={p.kind} meta={p.method ? `${p.dates} · ${p.method}` : p.dates} labels={l}
             onDelete={onDelete && !p.isCurrent ? () => onDelete(p) : undefined} />
         </li>
       ))}

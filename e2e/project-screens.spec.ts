@@ -154,3 +154,14 @@ test('Phone preview: a logo mark, the stage toolbar switches by keyboard, the co
   await expect(page.getByText('2 weeks left')).toBeInViewport();
   await report(page);
 });
+
+test('Phase timeline: the Events section lists events as links, with no dot and no guide line', async ({page}) => {
+  await page.goto(story('patterns-project-rail-phase-timeline--events'));
+  const event = page.getByRole('link', {name: /Walk along the river/});
+  await expect(event).toContainText('Done · 10 Sep');
+  const dot = page.locator('.gv-rail-phase[data-kind="event"] .gv-rail-phase__dot').first();
+  await expect(dot).toBeHidden();
+  await event.focus();
+  await expect(event).toBeFocused();
+  await report(page);
+});

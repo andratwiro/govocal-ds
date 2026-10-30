@@ -41,7 +41,8 @@ Two icon buttons, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARI
 
 **You still own:**
 - Specific button names in the page's language (`labels`).
-- A way back once the rail is hidden (the overview shows a "Show the participation rail" button).
+- The hide-panel button on every screen, the overview and each phase (the deep dive found it missing on phases), and a
+  way back once the rail is hidden: **Workspace layout** collapses the rail to a strip with a button that opens it.
 - The title's `headingLevel` fitting the page's outline (an h2 by default).
 
 ## Related
@@ -59,6 +60,8 @@ Two icon buttons, after the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARI
 
 ## Changes
 
+- 30 Oct 2026: give it `onTogglePanel` on every project screen; Workspace layout's strip opens the rail again
+  (docs/DECISIONS.md, "Project screens").
 - 30 Oct 2026: the title is a heading (`headingLevel`, h2 by default); the buttons' default names say what they do
   ("Add a phase", "Hide the participation rail").
 - 30 Oct 2026: this page written; a play function proves the keyboard table.

@@ -30,6 +30,14 @@ export const railPhaseLabels: RailPhaseLabels = {
 export type RailPhaseStatus = 'upcoming' | 'live' | 'completed';
 
 export interface RailPhaseProps extends PlacementProps {
+  /**
+   * `phase`: a step of the timeline, its dot on the guide line. `event`: a dated event in the rail's Events section
+   * (a meeting, a walk), with no dot, no guide line and no chip: its name, then "Done · 10 Sep". Not in Figma: the
+   * prototype's rail.
+   *
+   * @default 'phase'
+   */
+  kind?: 'phase' | 'event';
   /** The phase name, e.g. "Collect ideas". */
   title: ReactNode;
   /**
@@ -83,6 +91,7 @@ export interface RailPhaseProps extends PlacementProps {
  * `<li>`) are joined by a guide line through their dots, green after a completed phase.
  */
 export function RailPhase({
+  kind = 'phase',
   title,
   status,
   statusLabel: state,
@@ -103,15 +112,16 @@ export function RailPhase({
     <div
       className={clsx('gv-rail-phase', className)} style={style}
       data-status={status}
+      data-kind={kind === 'event' ? 'event' : undefined}
       data-current={current || undefined}
       data-deletable={onDelete ? true : undefined}>
       <Link href={href} onPress={onPress} aria-current={current ? 'page' : undefined} className="gv-rail-phase__link">
         <span className="gv-rail-phase__dot" aria-hidden />
         <span className="gv-rail-phase__body">
           <span className="gv-rail-phase__name">{title}</span>
-          {chip != null && <span className="gv-rail-phase__chip">{chip}</span>}
+          {chip != null && kind === 'phase' && <span className="gv-rail-phase__chip">{chip}</span>}
           {(state != null || meta != null) && (
-            <span className="gv-rail-phase__meta" data-after-chip={chip != null || undefined}>
+            <span className="gv-rail-phase__meta" data-after-chip={(chip != null && kind === 'phase') || undefined}>
               {state != null && <span className="gv-rail-phase__state">{state}</span>}
               {state != null && meta != null && ' · '}
               {meta}

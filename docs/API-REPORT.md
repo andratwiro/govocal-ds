@@ -4446,6 +4446,7 @@ Component, from `src/patterns/RailPhase.tsx`.
 - `className?: string`
 - `href?: string`
 - `isCurrent?: boolean`
+- `kind?: 'phase' | 'event'`
 - `labels?: Partial<RailPhaseLabels>`
 - `meta?: ReactNode`
 - `newCount?: number`
@@ -5826,7 +5827,8 @@ Interface, from `src/patterns/PhaseTimeline.tsx`.
 - `href?: string`
 - `id: string`
 - `isCurrent?: boolean`
-- `method: string`
+- `kind?: 'phase' | 'event'`
+- `method?: string`
 - `status: TimelineStatus`
 - `title: string`
 

@@ -203,3 +203,10 @@ export const Keyboard: Story = {
     await expect(canvas.getByRole('status')).toHaveTextContent('Collect ideas deleted');
   }
 };
+
+/** Not in Figma (the prototype's Events section): an event, with no dot, no guide line and no chip. */
+export const Event: Story = {
+  tags: ['not-in-figma'],
+  decorators: [Story => <div style={{width: 284}}><Story /></div>],
+  args: {kind: 'event', status: 'completed', title: 'Walk along the river', statusLabel: 'Done', meta: '10 Sep', href: '#'}
+};

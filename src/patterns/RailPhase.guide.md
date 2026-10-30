@@ -33,6 +33,9 @@
 The open phase looks like the others (the prototype dropped its tinted card); only screen readers hear which one it
 is. Pointing at a row gives it a grey background.
 
+An event (`kind="event"`, the rail's Events section) has no dot, no guide line and no chip; its name keeps the phases'
+indent, then "Done · 10 Sep".
+
 ## Behaviour
 
 The row is a link that opens the phase (WAI-ARIA [Link pattern](https://www.w3.org/WAI/ARIA/apg/patterns/link/)); the
@@ -88,6 +91,7 @@ dot screen readers skip.
 
 ## Changes
 
+- 30 Oct 2026: `kind="event"` for the rail's Events section (docs/DECISIONS.md, "Project screens").
 - 30 Oct 2026: the stories say what each shows; the page reworded after a fresh-eyes read.
 - 30 Oct 2026: this page written; a play function proves Enter on the phase and on delete.
 - 29 Oct 2026: its words come in through `labels`.

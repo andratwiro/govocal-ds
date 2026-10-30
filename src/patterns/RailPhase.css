@@ -161,3 +161,13 @@ li:has(+ li) > .gv-rail-phase[data-status='completed']::after {
     opacity: 0;
   }
 }
+
+/* An event (the rail's Events section): no dot and no guide line; its name keeps the phases' indent. */
+.gv-rail-phase[data-kind='event'] .gv-rail-phase__dot {
+  visibility: hidden;
+}
+
+li > .gv-rail-phase[data-kind='event'][data-status]::after,
+.gv-rail-phase[data-kind='event'][data-status]::after {
+  content: none;
+}

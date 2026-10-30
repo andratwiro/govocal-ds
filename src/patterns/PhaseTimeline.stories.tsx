@@ -67,3 +67,28 @@ export const Deletable: Story = {
     await expect(canvas.getAllByRole('link')).toHaveLength(3);
   }
 };
+
+/* Invented: a project's events. */
+const EVENTS: TimelinePhase[] = [
+  {id: 'e1', kind: 'event', title: 'Walk along the river', status: 'done', dates: '10 Sep', href: '#e1'},
+  {id: 'e2', kind: 'event', title: 'Parks budget workshop', status: 'upcoming', dates: '22 Oct', href: '#e2'}
+];
+
+/**
+ * Not in Figma (the prototype's rail): the Events section, a timeline of events (`kind: 'event'`) under its Section
+ * label, after Timeline and Spotlight. An event has no dot, no guide line and no count: its name, then "Done · 10 Sep".
+ */
+export const Events: Story = {
+  tags: ['not-in-figma'],
+  render: () => (
+    <>
+      <SectionLabel>Timeline</SectionLabel>
+      <PhaseTimeline phases={PHASES} />
+      <SectionLabel>Events</SectionLabel>
+      <PhaseTimeline phases={EVENTS} />
+    </>
+  )
+};
+
+/** The timeline and its events, right to left: the dots and the guide line at the right. */
+export const RightToLeft: Story = {name: 'Right to left', globals: {direction: 'rtl'}, render: Events.render};
