@@ -124,10 +124,9 @@ function CreateReportModal({onClose, onCreate}: {onClose: () => void; onCreate: 
     </>
   );
   return (
-    <Modal title="Create a report" width="wide" isOpen onOpenChange={open => !open && onClose()} footer={footer}>
+    <Modal description="Turn a project's results into a report you can share. Start from scratch, pick a template, or let the assistant draft it from your data." title="Create a report" width="wide" isOpen onOpenChange={open => !open && onClose()} footer={footer}>
       <Grid columns={2} gap="24" alignItems="start">
         <Stack gap="16">
-          <Text elementType="p" kind="small" color="meta">Turn a project's results into a report you can share. Start from scratch, pick a template, or let the assistant draft it from your data.</Text>
           <TextField label="Report title" placeholder="Larkvale park renewal: project report" value={title} onChange={setTitle} autoFocus />
           {/* One pick: Choice cards in a RadioGroup (Choice card's "With icon" story). */}
           <RadioGroup label="Report template" value={template} onChange={v => setTemplate(v as Template)}>

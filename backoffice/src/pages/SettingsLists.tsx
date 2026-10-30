@@ -107,7 +107,7 @@ function ItemList({config}: {config: ListConfig}) {
                 <DataTableRow key={item.id} id={item.id} textValue={item.name}>
                   <DataTableCell textValue={item.name}>
                     <DataTableStack isStrong sub={item.description || undefined}
-                      leading={item.color && <ColorSwatch color={item.color} aria-label={`Colour of ${item.name}`} />}>
+                      leading={item.color && <ColorSwatch size={16} color={item.color} aria-label={`Colour of ${item.name}`} />}>
                       {item.name}
                     </DataTableStack>
                   </DataTableCell>

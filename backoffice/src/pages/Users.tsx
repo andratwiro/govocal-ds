@@ -357,13 +357,12 @@ function AddToGroupModal({person, groups, onClose, onAdd}: {
   const manual = groups.filter(g => g.kind === 'manual');
   const [groupId, setGroupId] = useState(manual[0]?.id);
   return (
-    <Modal title="Add to group" isOpen onOpenChange={open => !open && onClose()} footer={
+    <Modal description={`Add ${person.name} to a manual group.`} title="Add to group" isOpen onOpenChange={open => !open && onClose()} footer={
       <>
         <Button variant="quiet" size={32} onPress={onClose}>Cancel</Button>
         <Button variant="primary" size={32} isDisabled={!groupId} onPress={() => groupId && onAdd(groupId)}>Add to group</Button>
       </>}>
       <Stack gap="16">
-        <p>Add {person.name} to a manual group.</p>
         <Select label="Group" selectedKey={groupId} onSelectionChange={k => setGroupId(String(k))}>
           {manual.map(g => <SelectItem key={g.id} id={g.id}>{g.label}</SelectItem>)}
         </Select>

@@ -155,10 +155,9 @@ function Participants({quarter}: {quarter: number}) {
 /** View survey: the survey as residents get it, its questions in order with the sentiment scale. */
 function SurveyModal({isOpen, onOpenChange}: {isOpen: boolean; onOpenChange: (o: boolean) => void}) {
   return (
-    <Modal title="Community monitor survey" width="wide" isOpen={isOpen} onOpenChange={onOpenChange}
+    <Modal description="How residents see it: a short popup, eleven questions, each answered on the same five-point scale." title="Community monitor survey" width="wide" isOpen={isOpen} onOpenChange={onOpenChange}
       footer={<Button variant="secondary" slot="close">Close</Button>}>
       <Stack gap="12">
-        <Text elementType="p" kind="small" color="meta">How residents see it: a short popup, eleven questions, each answered on the same five-point scale.</Text>
         {CATEGORIES.map(c => (
           <Stack elementType="section" key={c.id} gap="12" aria-label={c.label}>
             <Text elementType="h3" kind="body" isStrong color="primary" className="bo-community-monitor-heading">{c.label}</Text>
@@ -337,13 +336,12 @@ function ImportModal({isOpen, onOpenChange, onImport}: {isOpen: boolean; onOpenC
   const [file, setFile] = useState<string | null>(null);
   const shut = (o: boolean) => { onOpenChange(o); if (!o) setFile(null); };
   return (
-    <Modal title="Import answers" isOpen={isOpen} onOpenChange={shut}
+    <Modal description="Answers collected on paper or at an event: fill in the template, one row per respondent, then upload it." title="Import answers" isOpen={isOpen} onOpenChange={shut}
       footer={<>
         <Button variant="secondary" slot="close">Cancel</Button>
         <Button variant="primary" isDisabled={!file} onPress={() => { if (file) onImport(file); shut(false); }}>Import</Button>
       </>}>
       <Stack gap="12">
-        <Text elementType="p" kind="small" color="meta">Answers collected on paper or at an event: fill in the template, one row per respondent, then upload it.</Text>
         <Inline gap="8">
           <Button variant="secondary" size={32} onPress={() => toast('Template downloaded', 'community-monitor-template.xlsx')}>
             <Download aria-hidden size={16} />Download the template</Button>
@@ -367,13 +365,12 @@ function AddManagerModal({isOpen, onOpenChange, options, onAdd}: {isOpen: boolea
   // Someone already added drops out of the list, so fall back to the first one still there.
   const person = picked && options.includes(picked) ? picked : options[0] ?? null;
   return (
-    <Modal title="Add a manager" isOpen={isOpen} onOpenChange={onOpenChange}
+    <Modal description="Managers can edit the survey and its permissions, see the answers and create reports." title="Add a manager" isOpen={isOpen} onOpenChange={onOpenChange}
       footer={<>
         <Button variant="secondary" slot="close">Cancel</Button>
         <Button variant="primary" isDisabled={!person} onPress={() => { if (person) onAdd(person); onOpenChange(false); }}>Add</Button>
       </>}>
       <Stack gap="12">
-        <Text elementType="p" kind="small" color="meta">Managers can edit the survey and its permissions, see the answers and create reports.</Text>
         <Select label="Person" selectedKey={person} onSelectionChange={k => setPerson(k === null ? null : String(k))}>
           {options.map(o => <SelectItem key={o} id={o} icon={<Avatar size={16} initials={initials(o)} />}>{o}</SelectItem>)}
         </Select>
