@@ -5,7 +5,7 @@ with each component's props: its own with their types, the ones passed straight 
 (React Aria's behaviour props, React's, the DOM's). An API change shows up here as a diff to review;
 `tests/api-report.test.mjs` fails while this file is stale. The convention it follows: `docs/API.md`.
 
-## `govocal-ds` (716 names)
+## `govocal-ds` (717 names)
 
 ### `ACCESS_WHO_VALUE`
 
@@ -4601,6 +4601,14 @@ Interface, from `src/components/gv/ReviewStatus.tsx`.
 ### `ReviewStatusProps`
 
 Interface, from `src/components/gv/ReviewStatus.tsx`. The props of `ReviewStatus`, listed there.
+
+### `RichTextBlockType`
+
+Type, from `src/components/gv/RichTextToolbar.tsx`.
+
+```ts
+type RichTextBlockType = 'section' | 'subsection' | 'text'
+```
 
 ### `RichTextEditor`
 

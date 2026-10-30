@@ -1,31 +1,31 @@
-import {Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode} from 'react';
-import {useLocation, useParams} from 'react-router';
-import {ArrowDown, ArrowUp, Bold, CalendarDays, ChartBar, ChartColumn, ChartLine, Clock, Copy, Download, FileText,
-  Hash, Heading, Italic, Languages, Lightbulb, List, ListOrdered, Map as MapIcon, Minus, MoveVertical, Plus, Quote,
-  SeparatorHorizontal, Send, Sparkles, Trash2, Type, X, ZoomIn, ZoomOut, Folder, LayoutGrid, FileType} from 'lucide-react';
-import {Avatar, Badge, Banner, BarRow, Button, type ChartColor, ChartLegend, type ChartLegendItem, ChoiceCard,
-  DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableRow, Divider, EmptyState, Grid,
-  GridItem, IconButton, Inline, LineChart, Menu, MenuItem, MenuTrigger, Modal, MultilingualTextField, Panel, PropertyList,
-  PropertyListItem, RadioGroup, RichTextToolbarButton, SegmentedControl, SegmentedControlItem, Select, SelectItem,
-  SidePanel, SidePanelSection, Skeleton, Stack, StatTile, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Text, TextArea,
-  TextField, TileGrid, toast, Tooltip, TooltipTrigger} from 'govocal-ds';
-import {Disclosure, DisclosureGroup, DisclosureHeader, DisclosurePanel, GridList, GridListHeader, GridListItem,
-  GridListSection, Toolbar, Tree, TreeItem, TreeItemContent} from 'govocal-ds/base';
+import {Fragment, useEffect, useMemo, useRef, useState, type ReactNode} from 'react';
+import {useLocation, useParams, useSearchParams} from 'react-router';
+import {ArrowDown, ArrowUp, CalendarDays, ChartBar, ChartColumn, ChartLine, ChevronDown, ChevronUp, Clock, Download,
+  FileText, Globe, Hash, Heading, Languages, Lightbulb, ListOrdered, Map as MapIcon, Minus, MoveVertical, Plus, Quote as QuoteIcon,
+  SeparatorHorizontal, Sparkles, Trash2, Type, X, Folder, LayoutGrid, FileType} from 'lucide-react';
+import {ActivityFeed, type ActivityEntry, AssistantPanel, Avatar, Badge, Banner, BarRow, BlockFrame, BlockInsertLine,
+  Button, type ChartColor, ChartLegend, type ChartLegendItem, ChatMessage, ChatProgress, type ChatProgressStep, ChoiceCard,
+  DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader, DataTableRow, Divider, EmptyState, Figure,
+  Grid, IconButton, Inline, ItemChip, LineChart, Menu, MenuItem, MenuTrigger, Modal, MultilingualTextField, PageStage,
+  PageStageSheet, Panel, PropertyList, PropertyListItem, Quote, RadioGroup, type RichTextBlockType, RichTextEditor,
+  RichTextToolbar, SegmentedControl, SegmentedControlItem, Select, SelectItem, SidePanel, SidePanelSection, Skeleton,
+  SortableList, Stack, StatTile, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Text, TextArea, TextField, toast,
+  Tooltip, TooltipTrigger, useNumberFormatter, ZoomBar} from 'govocal-ds';
+import {GridList, GridListHeader, GridListItem, GridListSection, Tree, TreeItem, TreeItemContent} from 'govocal-ds/base';
 import {REPORTS} from '../data-reporting';
 import {HISTORY, INSIGHTS, LANGUAGES, LIBRARY, REPORT, SNAPSHOT, SOURCES, SUGGESTIONS, TEMPLATE, type Block,
-  type BlockKind, type Figure, type FigureWords, type HistoryEntry, type Lang, type SourceNode} from '../data-report';
+  type BlockKind, type Figure as FigureData, type FigureWords, type HistoryEntry, type Lang, type SourceNode} from '../data-report';
 import {Gap, GapLegend} from '../Gap';
 import {Page} from './Page';
 
 /*
  * The report view (the prototype's single report, rebuilt from the system). Three columns: the outline (Panel + Tree)
- * or the widget library (Panel + GridList), the report's pages, and an inline Side panel holding the assistant, the
- * selected block's settings, or the version history. The parts the system lacks are Gaps, named as the proposals
- * name them: Page stage, Block frame, Figure, Quote, Map, Chat, Activity feed, Sortable list.
+ * or the widget library (Panel + GridList), the report's pages on a Page stage, and the end column: the Assistant
+ * panel at rest, or an inline Side panel with the selected block's settings or the version history (Activity feed).
+ * The one part the system still lacks is a Gap: Map.
  */
 
-const GAPS = ['Page stage', 'Block frame', 'Figure', 'Quote', 'Map', 'Chat', 'Activity feed', 'Sortable list'];
-const n = (v: number) => v.toLocaleString('en');
+const GAPS = ['Map'];
 
 const KIND: Record<BlockKind, {label: string; icon: typeof Type}> = {
   title: {label: 'Title page', icon: FileText},
@@ -40,17 +40,28 @@ const KIND: Record<BlockKind, {label: string; icon: typeof Type}> = {
   compare: {label: 'Comparison', icon: ChartColumn},
   line: {label: 'Line chart', icon: ChartLine},
   insight: {label: 'Insight from analysis', icon: Lightbulb},
-  quotes: {label: 'Quotes', icon: Quote},
+  quotes: {label: 'Quotes', icon: QuoteIcon},
   map: {label: 'Map', icon: MapIcon},
   events: {label: 'Events', icon: CalendarDays}
 };
+const kindIcon = (kind: BlockKind) => { const Icon = KIND[kind].icon; return <Icon aria-hidden />; };
 /** Pinned blocks open the report: they keep their place (no move, no duplicate). */
 const PINNED: BlockKind[] = ['title', 'contents'];
 /** Blocks whose settings have a Data tab: what they count, how, and from where. */
 const DATA_KINDS: BlockKind[] = ['numbers', 'bars', 'compare', 'line', 'insight', 'quotes', 'map', 'events'];
 const STRUCTURE: BlockKind[] = ['space', 'divider', 'break'];
-const ZOOMS = [50, 67, 75, 83, 90, 100, 110, 125];
 const LANG_NAME = (l: Lang) => LANGUAGES.find(x => x.id === l)!.label;
+/** What the assistant could do, shown while it is switched off (the Assistant panel's "Off" story). */
+const PREVIEW = [
+  {id: 'ask', icon: <Type aria-hidden />, label: 'Change it by asking',
+    description: '“Make the summary shorter”, “Turn what happens next into decisions”.'},
+  {id: 'translate', icon: <Globe aria-hidden />, label: 'Translate the whole report',
+    description: 'French for every page in one go, ready to check.'},
+  {id: 'charts', icon: <MapIcon aria-hidden />, label: 'Charts the widgets don’t have',
+    description: 'A map by area, how people feel per project, before and after.'}
+];
+const BLOCK_PROMPTS = ['Make it shorter', 'Explain it in plain words'];
+const GENERATE_STEPS = ['Reading the 6 projects across 3 spaces', 'Counting identifiable participants', 'Writing 8 sections'];
 
 /** The blocks cut into pages: a page break ends its page. */
 function paginate(blocks: Block[]) {
@@ -91,7 +102,7 @@ function newBlock(kind: BlockKind): Block {
   const id = newId(kind);
   switch (kind) {
     case 'section': return {id, kind, name: 'New section', num: '', heading: 'New section', body: 'Write what this section shows.'};
-    case 'text': return {id, kind, name: 'Text', body: 'New text. Write it in the settings.'};
+    case 'text': return {id, kind, name: 'Text', body: 'New text. Type it on the page.'};
     case 'space': return {id, kind, name: 'White space', size: 'small'};
     case 'divider': return {id, kind, name: 'Divider'};
     case 'break': return {id, kind, name: 'Page break'};
@@ -102,59 +113,47 @@ function newBlock(kind: BlockKind): Block {
   }
 }
 
-// ── Figure (proposed: Components/Charts/Figure) ─────────────────────────────────────────────────────────────────
+// ── Blocks ──────────────────────────────────────────────────────────────────────────────────────────────────────
 
 /** What the editing language shows for one of a figure's words: its own, else the English. */
-const words = (f: Figure, lang: Lang, k: keyof FigureWords) => (lang === 'en' ? f[k] : f.fr?.[k] || f[k]);
+const words = (f: FigureData, lang: Lang, k: keyof FigureWords) => (lang === 'en' ? f[k] : f.fr?.[k] || f[k]);
 
-/** The stand-in for Figure: finding, measure, body, legend, then one foot (truncation, note, "Source: …"). */
-function FigureStandIn({figure, lang, legend, truncation, showFinding = true, showSource = true, children}: {
-  figure: Figure; lang: Lang; legend?: ReactNode; truncation?: string; showFinding?: boolean; showSource?: boolean; children: ReactNode;
+/** A Figure from a block's figure words: finding, measure, body, legend, then one foot. */
+function BlockFigure({figure, lang, legend, truncation, showFinding = true, showSource = true, children}: {
+  figure: FigureData; lang: Lang; legend?: ReactNode; truncation?: string; showFinding?: boolean; showSource?: boolean; children: ReactNode;
 }) {
-  const note = words(figure, lang, 'note');
   return (
-    <Gap name="Figure">
-      <figure className="bo-report-figure">
-        {showFinding && <Text elementType="h4" kind="body" isStrong color="primary">{words(figure, lang, 'finding')}</Text>}
-        <Text elementType="p" kind="small" color="meta">{words(figure, lang, 'measure')}</Text>
-        <Stack gap="8" paddingBlock="4">{children}</Stack>
-        {legend}
-        <figcaption>
-          <Stack gap="4">
-            {truncation && <Text kind="small" color="meta">{truncation}</Text>}
-            {note && <Text kind="small" color="meta">{note}</Text>}
-            {showSource && <Text kind="small" color="meta">Source: {figure.source}</Text>}
-          </Stack>
-        </figcaption>
-      </figure>
-    </Gap>
+    <Figure headingLevel={4} finding={showFinding ? words(figure, lang, 'finding') : undefined}
+      aria-label={words(figure, lang, 'measure')} measure={words(figure, lang, 'measure')} legend={legend}
+      truncation={truncation} note={words(figure, lang, 'note') || undefined} source={showSource ? figure.source : undefined}>
+      {children}
+    </Figure>
   );
 }
-
-// ── Blocks ──────────────────────────────────────────────────────────────────────────────────────────────────────
 
 const SHOWN = {top3: 3, top5: 5, all: Infinity};
 /** Bars: one row per value, the rows the finding names in the accent and the rest grey (one rule, one token). */
 function Bars({block, lang}: {block: Extract<Block, {kind: 'bars'}>; lang: Lang}) {
+  const {format: n} = useNumberFormatter();
   const rows = block.rows.slice(0, SHOWN[block.show]);
   const max = Math.max(...block.rows.map(r => r.value ?? 0));
   const cut = rows.length < block.rows.length ? `Showing top ${rows.length} of ${block.rows.length}` : undefined;
   return (
-    <FigureStandIn figure={block.figure} lang={lang} truncation={cut}>
+    <BlockFigure figure={block.figure} lang={lang} truncation={cut}>
       <Stack gap="2">
         {rows.map(r => r.value === undefined
           ? <BarRow key={r.label} label={<>{r.label} <Text kind="small" color="meta">{r.missing}</Text></>} />
           : <BarRow key={r.label} label={r.label} percent={(r.value / max) * 100} value={block.showValues ? n(r.value) : ''}
               barColor={r.named ? '--gv-chart-bar' : '--gv-chart-pass'} />)}
       </Stack>
-    </FigureStandIn>
+    </BlockFigure>
   );
 }
 
 function Comparison({block, lang}: {block: Extract<Block, {kind: 'compare'}>; lang: Lang}) {
   const max = Math.max(...block.groups.flatMap(g => g.rows.map(r => r.percent)));
   return (
-    <FigureStandIn figure={block.figure} lang={lang}>
+    <BlockFigure figure={block.figure} lang={lang}>
       <Stack gap="12">
         {block.groups.map((g, i) => (
           <Fragment key={g.finding}>
@@ -170,34 +169,22 @@ function Comparison({block, lang}: {block: Extract<Block, {kind: 'compare'}>; la
           </Fragment>
         ))}
       </Stack>
-    </FigureStandIn>
+    </BlockFigure>
   );
 }
 
-/** Quotes as cards, as many to a row as fit; plain, one under another. */
-const QuoteGrid = ({isPlain, children}: {isPlain: boolean; children: ReactNode}) =>
-  isPlain ? <Stack gap="12">{children}</Stack> : <TileGrid minTileWidth={160} density="compact">{children}</TileGrid>;
-
+/** Quotes as cards side by side, or plain, one under another. */
 function Quotes({block, lang}: {block: Extract<Block, {kind: 'quotes'}>; lang: Lang}) {
+  const isPlain = block.layout === 'plain';
   return (
-    <FigureStandIn figure={block.figure} lang={lang}>
-      <QuoteGrid isPlain={block.layout === 'plain'}>
+    <BlockFigure figure={block.figure} lang={lang}>
+      <Grid columns={isPlain ? 1 : Math.min(3, block.quotes.length)} gap="10">
         {block.quotes.map(q => (
-          <Gap key={q.author} name="Quote" className="bo-report-start">
-            <blockquote className="bo-report-quote">
-              <Stack gap="8" alignItems="start">
-                <Badge variant="outlined">{q.tag}</Badge>
-                <Text elementType="p" kind="ui">“{q.words}”</Text>
-                <Inline elementType="footer" gap="8" wrap="nowrap">
-                  {block.showFaces && <Avatar initials={q.initials} size={28} />}
-                  <Stack gap="2"><span>{q.author}</span><Text kind="small" color="meta">{q.meta}</Text></Stack>
-                </Inline>
-              </Stack>
-            </blockquote>
-          </Gap>
+          <Quote key={q.author} variant={block.layout} tag={q.tag} words={q.words} author={q.author} meta={q.meta}
+            avatar={block.showFaces ? <Avatar initials={q.initials} size={28} /> : undefined} />
         ))}
-      </QuoteGrid>
-    </FigureStandIn>
+      </Grid>
+    </BlockFigure>
   );
 }
 
@@ -215,7 +202,7 @@ function MapBlock({block, lang}: {block: Extract<Block, {kind: 'map'}>; lang: La
   if (block.layers.events) layers.push({label: 'Upcoming events · 4', color: 'green'});
   const tag = TAGS.find(t => t.id === block.tag)!;
   return (
-    <FigureStandIn figure={block.figure} lang={lang} legend={
+    <BlockFigure figure={block.figure} lang={lang} legend={
       <Stack gap="8">
         {block.shade !== 'none' && (
           <Inline gap="12"><Text kind="small" color="meta">Districts: {SHADES[block.shade]}</Text>
@@ -235,20 +222,36 @@ function MapBlock({block, lang}: {block: Extract<Block, {kind: 'map'}>; lang: La
           </Text>
         </div>
       </Gap>
-    </FigureStandIn>
+    </BlockFigure>
   );
 }
 
+/** Key figures as printed: plain Stat tiles split by hairlines; the lead layout makes the first large and highlighted. */
 function Numbers({block}: {block: Extract<Block, {kind: 'numbers'}>}) {
-  const tiles = block.items.map(i => <StatTile key={i.label} label={i.label} value={i.value} note={i.note} />);
-  if (block.layout === 'grid') return <Grid columns={2} gap="12">{tiles}</Grid>;
-  if (block.layout === 'lead') {
-    return <Grid columns="minmax(0, 1.4fr) minmax(0, 1fr)" gap="12"><GridItem rowSpan={3}>{tiles[0]}</GridItem>{tiles.slice(1)}</Grid>;
+  const tile = (i: typeof block.items[number], lead = false) => (
+    <StatTile key={i.id} variant="plain" size={lead ? 'large' : 'default'} isHighlighted={lead} label={i.label}
+      value={i.value} note={i.note} />
+  );
+  const split = (items: typeof block.items, vertical: boolean) => items.map((i, k) => (
+    <Fragment key={i.id}>{k > 0 && <Divider orientation={vertical ? 'vertical' : 'horizontal'} />}{tile(i)}</Fragment>
+  ));
+  if (block.layout === 'lead' && block.items.length > 1) {
+    return (
+      <Grid columns="minmax(0, 1fr) auto minmax(0, 1fr)" gap="24">
+        {tile(block.items[0], true)}
+        <Divider orientation="vertical" />
+        <Stack gap="16">{split(block.items.slice(1), false)}</Stack>
+      </Grid>
+    );
   }
-  return <TileGrid minTileWidth={160} density="compact">{tiles}</TileGrid>;
+  if (block.layout === 'grid') return <Grid columns={2} gap="24">{block.items.map(i => tile(i))}</Grid>;
+  return <Inline gap="24" alignItems="stretch" wrap="nowrap">{split(block.items, true)}</Inline>;
 }
 
-function Formatted({body, format}: {body: string; format?: {bold?: boolean; italic?: boolean; list?: boolean}}) {
+type Format = {bold?: boolean; italic?: boolean; list?: boolean};
+const formatOf = (b: Block): Format => ((b as {format?: Format}).format ?? {});
+
+function Formatted({body, format}: {body: string; format?: Format}) {
   const wrap = (t: string) => {
     let el: ReactNode = t;
     if (format?.italic) el = <em>{el}</em>;
@@ -259,11 +262,8 @@ function Formatted({body, format}: {body: string; format?: {bold?: boolean; ital
     const items = body.split(/(?<=\.)\s+/).filter(Boolean);
     return <ul className="bo-report-bullets">{items.map(t => <li key={t}>{wrap(t)}</li>)}</ul>;
   }
-  return <Text elementType="p" kind="ui">{wrap(body)}</Text>;
+  return <Text elementType="p" kind="document-body">{wrap(body)}</Text>;
 }
-
-type Format = {bold?: boolean; italic?: boolean; list?: boolean};
-const formatOf = (b: Block): Format => ((b as {format?: Format}).format ?? {});
 
 /** One line of the contents: the section's number, its heading, its page, on the text's baseline. */
 function TocRow({num, page, children}: {num?: string; page?: number; children: ReactNode}) {
@@ -275,17 +275,64 @@ function TocRow({num, page, children}: {num?: string; page?: number; children: R
   );
 }
 
-function BlockBody({block, lang, nums, pageOf, blocks, reportTitle}: {
+type TextBlock = Extract<Block, {kind: 'section' | 'text'}>;
+const isTextBlock = (b: Block): b is TextBlock => b.kind === 'text' || b.kind === 'section';
+/** A text block's type in the format bar: a section, a text with a heading (sub-section), or plain text. */
+const blockTypeOf = (b: TextBlock): RichTextBlockType => (b.kind === 'section' ? 'section' : b.heading ? 'subsection' : 'text');
+
+/** A text block's words in the editing language, and how to write them back. */
+function textWords(block: TextBlock, lang: Lang) {
+  const fr = block.fr ?? {};
+  const isFr = lang === 'fr';
+  return {
+    heading: isFr ? fr.heading ?? '' : block.heading ?? '',
+    body: isFr ? fr.body ?? '' : block.body,
+    shownHeading: isFr && fr.heading ? fr.heading : block.heading,
+    shownBody: isFr && fr.body ? fr.body : block.body,
+    patch: (k: 'heading' | 'body', v: string): Partial<Block> => (isFr ? {fr: {...fr, [k]: v}} : {[k]: v}) as Partial<Block>
+  };
+}
+
+/** A selected text block, typed on the page: its heading and words in Rich text editors, in the document's type. */
+function TextEditing({block, lang, num, patch}: {block: TextBlock; lang: Lang; num?: string; patch: (p: Partial<Block>) => void}) {
+  const w = textWords(block, lang);
+  const hint = (en?: string) => (lang === 'en' ? undefined : en);
+  const bullets = block.kind === 'section' && block.bullets?.length ? block.bullets : null;
+  return (
+    <Stack gap="8">
+      {block.kind === 'section' && <Text kind="body" color="secondary">{num}</Text>}
+      {(block.kind === 'section' || block.heading != null) && (
+        <Text elementType="div" kind={block.kind === 'section' ? 'document-heading' : 'document-body'} isStrong={block.kind === 'text'} color="primary">
+          <RichTextEditor variant="inline" aria-label={block.kind === 'section' ? 'Section heading' : 'Heading'}
+            value={w.heading} onChange={v => patch(w.patch('heading', v))} placeholder={hint(block.heading) ?? 'Heading'} />
+        </Text>
+      )}
+      <Text elementType="div" kind="document-body">
+        {bullets ? (
+          <RichTextEditor variant="inline" aria-label="Points, one per line" value={bullets.join('\n')}
+            onChange={v => patch({bullets: v.split('\n')} as Partial<Block>)} />
+        ) : (
+          <RichTextEditor variant="inline" aria-label={block.kind === 'section' ? 'Section text' : 'Text'} value={w.body}
+            onChange={v => patch(w.patch('body', v))} placeholder={hint(block.body) ?? 'Type here, or ask the assistant to write this part'} />
+        )}
+      </Text>
+    </Stack>
+  );
+}
+
+function BlockBody({block, lang, nums, pageOf, blocks, reportTitle, isEditing, patch}: {
   block: Block; lang: Lang; nums: Map<string, string>; pageOf: Map<string, number>; blocks: Block[]; reportTitle: string;
+  isEditing: boolean; patch: (p: Partial<Block>) => void;
 }) {
+  if (isEditing && isTextBlock(block)) return <TextEditing block={block} lang={lang} num={nums.get(block.id)} patch={patch} />;
   switch (block.kind) {
     case 'title':
       return (
         <Grid rows="auto 1fr auto" gap="48" className="bo-report-title-page">
           <Text elementType="p" kind="small" color="meta">{block.kicker}</Text>
-          <Stack gap="12" justifyContent="center">
-            <Text elementType="h2" kind="title" color="primary">{block.title || reportTitle}</Text>
-            <Text elementType="p" kind="body">{block.subtitle}</Text>
+          <Stack gap="16" justifyContent="center">
+            <Text elementType="h2" kind="document-display" color="primary">{block.title || reportTitle}</Text>
+            <Text elementType="p" kind="document-lead" color="secondary">{block.subtitle}</Text>
           </Stack>
           <PropertyList aria-label="About this report">
             {block.facts.map(f => <PropertyListItem key={f.label} label={f.label}>{f.value}</PropertyListItem>)}
@@ -295,7 +342,7 @@ function BlockBody({block, lang, nums, pageOf, blocks, reportTitle}: {
     case 'contents':
       return (
         <Stack gap="16">
-          <Text elementType="h3" kind="title" color="primary">Contents</Text>
+          <Text elementType="h3" kind="document-heading" color="primary">Contents</Text>
           <Stack elementType="ol" gap="12">
             {outlineOf(blocks).filter(o => o.block.kind === 'section').map(({block: s, children}) => (
               <Stack elementType="li" key={s.id} gap="4">
@@ -313,25 +360,23 @@ function BlockBody({block, lang, nums, pageOf, blocks, reportTitle}: {
         </Stack>
       );
     case 'section': {
-      const heading = lang === 'fr' && block.fr?.heading ? block.fr.heading : block.heading;
-      const body = lang === 'fr' && block.fr?.body ? block.fr.body : block.body;
+      const w = textWords(block, lang);
       return (
         <Stack gap="8">
-          <Text elementType="p" kind="small" color="meta">{nums.get(block.id)}</Text>
-          <Text elementType="h3" kind="title" color="primary">{heading}</Text>
+          <Text elementType="p" kind="body" color="secondary">{nums.get(block.id)}</Text>
+          <Text elementType="h3" kind="document-heading" color="primary">{w.shownHeading}</Text>
           {block.bullets?.length
-            ? <ul className="bo-report-bullets">{block.bullets.map(t => <li key={t}>{t}</li>)}</ul>
-            : body && <Formatted body={body} format={formatOf(block)} />}
+            ? <ul className="bo-report-bullets">{block.bullets.map(t => <li key={t}><Text kind="document-body">{t}</Text></li>)}</ul>
+            : w.shownBody && <Formatted body={w.shownBody} format={formatOf(block)} />}
         </Stack>
       );
     }
     case 'text': {
-      const heading = lang === 'fr' && block.fr?.heading ? block.fr.heading : block.heading;
-      const body = lang === 'fr' && block.fr?.body ? block.fr.body : block.body;
+      const w = textWords(block, lang);
       return (
         <Stack gap="8">
-          {heading && <Text elementType="h4" kind="body" isStrong color="primary">{heading}</Text>}
-          <Formatted body={body} format={formatOf(block)} />
+          {w.shownHeading && <Text elementType="h4" kind="document-body" isStrong color="primary">{w.shownHeading}</Text>}
+          <Formatted body={w.shownBody} format={formatOf(block)} />
         </Stack>
       );
     }
@@ -344,28 +389,28 @@ function BlockBody({block, lang, nums, pageOf, blocks, reportTitle}: {
     case 'compare': return <Comparison block={block} lang={lang} />;
     case 'line':
       return (
-        <FigureStandIn figure={block.figure} lang={lang}>
+        <BlockFigure figure={block.figure} lang={lang}>
           <LineChart xAxis={block.labels} showLegend height={160}
             series={[{label: 'Observed', values: block.observed, color: 'line-primary'},
               ...(block.showEstimate ? [{label: 'Estimated at close', values: block.estimate, color: 'line-secondary' as const}] : [])]} />
-        </FigureStandIn>
+        </BlockFigure>
       );
     case 'insight': {
       const ins = INSIGHTS.find(i => i.id === block.insight) ?? INSIGHTS[0];
       return (
-        <FigureStandIn figure={{...block.figure, finding: ins.question}} lang="en" showFinding={block.showQuestion} showSource={block.showOrigin}>
+        <BlockFigure figure={{...block.figure, finding: ins.question}} lang="en" showFinding={block.showQuestion} showSource={block.showOrigin}>
           <Stack gap="8">
-            <Text elementType="p" kind="ui">{ins.lead}</Text>
-            {ins.points.length > 0 && <ul className="bo-report-bullets">{ins.points.map(p => <li key={p}>{p}</li>)}</ul>}
+            <Text elementType="p" kind="document-body">{ins.lead}</Text>
+            {ins.points.length > 0 && <ul className="bo-report-bullets">{ins.points.map(p => <li key={p}><Text kind="document-body">{p}</Text></li>)}</ul>}
           </Stack>
-        </FigureStandIn>
+        </BlockFigure>
       );
     }
     case 'quotes': return <Quotes block={block} lang={lang} />;
     case 'map': return <MapBlock block={block} lang={lang} />;
     case 'events':
       return (
-        <FigureStandIn figure={block.figure} lang={lang}>
+        <BlockFigure figure={block.figure} lang={lang}>
           <DataTable aria-label={block.figure.measure}>
             <DataTableHeader showSelectAll={false}>
               <DataTableColumn>When</DataTableColumn>
@@ -382,90 +427,41 @@ function BlockBody({block, lang, nums, pageOf, blocks, reportTitle}: {
               ))}
             </DataTableBody>
           </DataTable>
-        </FigureStandIn>
+        </BlockFigure>
       );
   }
 }
 
-// ── Block frame (proposed: Components/Layout & containers/Block frame) ───────────────────────────────────────
+// ── The block's tools ───────────────────────────────────────────────────────────────────────────────────────────
 
-interface BlockActions {
-  canUp: boolean;
-  canDown: boolean;
-  onMove: (d: -1 | 1) => void;
-  onDuplicate: () => void;
-  onDelete: () => void;
-  onFormat: (f: Format) => void;
-}
-
-function Tool({label, action, isDisabled, onPress, children}: {
-  label: string; action: string; isDisabled?: boolean; onPress: () => void; children: ReactNode;
-}) {
+/** One 24 icon button with its tooltip, as Block frame draws its own. */
+function Tool({label, isDisabled, onPress, children}: {label: string; isDisabled?: boolean; onPress: () => void; children: ReactNode}) {
   return (
     <TooltipTrigger>
-      <IconButton aria-label={label} size={24} data-action={action} isDisabled={isDisabled} onPress={onPress}>{children}</IconButton>
-      <Tooltip placement="top">{label}</Tooltip>
+      <IconButton aria-label={label} size={24} isDisabled={isDisabled} onPress={onPress}>{children}</IconButton>
+      <Tooltip>{label}</Tooltip>
     </TooltipTrigger>
   );
 }
 
-/** One toolbar for every block: move, duplicate, delete; text adds formatting; pinned blocks only delete. */
-function BlockToolbar({block, actions}: {block: Block; actions: BlockActions}) {
-  const pinned = PINNED.includes(block.kind);
-  const format = formatOf(block);
-  const isText = block.kind === 'text' || (block.kind === 'section' && !block.bullets?.length);
-  return (
-    <Toolbar aria-label={`${block.name}: block tools`} className="bo-report-tools">
-      {isText && (
-        <>
-          <RichTextToolbarButton aria-label="Bold" isSelected={!!format.bold} onChange={v => actions.onFormat({...format, bold: v})}>
-            <Bold aria-hidden size={14} strokeWidth={1.75} />
-          </RichTextToolbarButton>
-          <RichTextToolbarButton aria-label="Italic" isSelected={!!format.italic} onChange={v => actions.onFormat({...format, italic: v})}>
-            <Italic aria-hidden size={14} strokeWidth={1.75} />
-          </RichTextToolbarButton>
-          <RichTextToolbarButton aria-label="List" isSelected={!!format.list} onChange={v => actions.onFormat({...format, list: v})}>
-            <List aria-hidden size={14} strokeWidth={1.75} />
-          </RichTextToolbarButton>
-        </>
-      )}
-      {!pinned && (
-        <>
-          <Tool label="Move up" action="up" isDisabled={!actions.canUp} onPress={() => actions.onMove(-1)}><ArrowUp aria-hidden size={16} /></Tool>
-          <Tool label="Move down" action="down" isDisabled={!actions.canDown} onPress={() => actions.onMove(1)}><ArrowDown aria-hidden size={16} /></Tool>
-          <Tool label="Duplicate" action="duplicate" onPress={actions.onDuplicate}><Copy aria-hidden size={16} /></Tool>
-        </>
-      )}
-      <Tool label="Delete" action="delete" onPress={actions.onDelete}><Trash2 aria-hidden size={16} /></Tool>
-    </Toolbar>
-  );
-}
-
-function BlockFrame({block, isSelected, onSelect, onDeselect, actions, children}: {
-  block: Block; isSelected: boolean; onSelect: () => void; onDeselect: () => void; actions: BlockActions; children: ReactNode;
+/** A text block's floating format bar: block type, bold, italic, list; then ask, move and delete. */
+function TextToolbar({block, canUp, canDown, onMove, onAsk, onDelete, onType, onFormat}: {
+  block: TextBlock; canUp: boolean; canDown: boolean; onMove: (d: -1 | 1) => void; onAsk?: () => void; onDelete: () => void;
+  onType: (t: RichTextBlockType) => void; onFormat: (f: Format) => void;
 }) {
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onSelect(); }
-  };
-  // Esc from anywhere in the block (React Aria's controls keep their keys to themselves, so listen on the way down).
-  const onKeyDownCapture = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Escape' && isSelected) { e.preventDefault(); e.stopPropagation(); onDeselect(); e.currentTarget.focus(); }
-  };
+  const format = formatOf(block);
   return (
-    <div id={`block-${block.id}`} data-block={block.id} className="bo-report-block" role="group" tabIndex={0}
-      aria-label={`${KIND[block.kind].label}: ${block.name}`} aria-current={isSelected || undefined}
-      data-selected={isSelected || undefined} data-kind={block.kind}
-      onClickCapture={() => !isSelected && onSelect()} onKeyDown={onKeyDown} onKeyDownCapture={onKeyDownCapture}>
-      {isSelected ? (
-        <Gap name="Block frame" className="bo-report-frame">
-          <Inline gap="8" wrap="nowrap" className="bo-report-chrome">
-            <Badge variant="value">{block.name}</Badge>
-            <BlockToolbar block={block} actions={actions} />
-          </Inline>
-          {children}
-        </Gap>
-      ) : children}
-    </div>
+    <RichTextToolbar variant="floating" labels={{toolbar: `${block.name}: block tools`}}
+      blockType={blockTypeOf(block)} onBlockTypeChange={onType}
+      isBold={!!format.bold} onBoldChange={bold => onFormat({...format, bold})}
+      isItalic={!!format.italic} onItalicChange={italic => onFormat({...format, italic})}
+      isList={!!format.list} onListChange={list => onFormat({...format, list})}
+      actions={<>
+        {onAsk && <Tool label="Ask the assistant" onPress={onAsk}><Sparkles aria-hidden /></Tool>}
+        <Tool label="Move up" isDisabled={!canUp} onPress={() => onMove(-1)}><ArrowUp aria-hidden /></Tool>
+        <Tool label="Move down" isDisabled={!canDown} onPress={() => onMove(1)}><ArrowDown aria-hidden /></Tool>
+        <Tool label="Delete" onPress={onDelete}><Trash2 aria-hidden /></Tool>
+      </>} />
   );
 }
 
@@ -474,11 +470,10 @@ function BlockFrame({block, isSelected, onSelect, onDeselect, actions, children}
 function OutlineRow({block, num, page}: {block: Block; num?: string; page?: number}) {
   const Icon = KIND[block.kind].icon;
   return (
-    <TreeItemContent>
+    <TreeItemContent trailing={page}>
       <Inline elementType="span" gap="8" wrap="nowrap" className="bo-report-row">
         {num ? <Text kind="small" color="meta">{num}</Text> : <Icon aria-hidden size={16} />}
         <span className="bo-report-row-name">{block.name}</span>
-        {page !== undefined && <Text kind="small" color="meta">{page}</Text>}
       </Inline>
     </TreeItemContent>
   );
@@ -501,9 +496,9 @@ function Outline({blocks, nums, pageOf, selected, onSelect, onAdd}: {
           <Tooltip placement="bottom">Add widget</Tooltip>
         </TooltipTrigger>
       )}>
-      <Stack padding="20" className="bo-report-scroll">
+      <div className="bo-report-scroll">
         {blocks.length ? (
-          <Tree aria-label="Report outline" className="bo-report-tree" selectionMode="single" selectionBehavior="replace" selectedKeys={selected ? [selected] : []}
+          <Tree aria-label="Report outline" isFlush className="bo-report-tree" selectionMode="single" selectionBehavior="replace" selectedKeys={selected ? [selected] : []}
             onSelectionChange={k => onSelect(k === 'all' || !k.size ? null : String([...k][0]))}
             expandedKeys={shown} onExpandedChange={k => setCollapsed(new Set(outline.filter(o => o.children.length && !k.has(o.block.id)).map(o => o.block.id)))}>
             {outline.map(({block, children}) => (
@@ -516,12 +511,12 @@ function Outline({blocks, nums, pageOf, selected, onSelect, onAdd}: {
             ))}
           </Tree>
         ) : (
-          <Stack gap="12" alignItems="start">
+          <Stack gap="12" alignItems="start" padding="20">
             <Text elementType="p" kind="small" color="meta">No widgets in this report yet.</Text>
             <Button variant="secondary" size={32} onPress={onAdd}><Plus aria-hidden size={16} />Add widget</Button>
           </Stack>
         )}
-      </Stack>
+      </div>
     </Panel>
   );
 }
@@ -570,86 +565,34 @@ function Library({onAdd, onClose}: {onAdd: (kind: BlockKind) => void; onClose: (
   );
 }
 
-// ── Right column: assistant, settings, history ──────────────────────────────────────────────────────────────────
+// ── End column: settings, history ───────────────────────────────────────────────────────────────────────────────
 
 /** A Side panel section whose parts stand 12 apart, under its heading. */
 function Section({title, children}: {title?: string; children: ReactNode}) {
   return <SidePanelSection title={title}><Stack gap="12">{children}</Stack></SidePanelSection>;
 }
 
-interface Message {from: 'you' | 'assistant'; text: string; meta?: string}
-
-function Assistant({messages, suggestions, onAsk}: {messages: Message[]; suggestions: string[]; onAsk: (text: string) => void}) {
-  const [draft, setDraft] = useState('');
-  const send = () => { if (draft.trim()) { onAsk(draft.trim()); setDraft(''); } };
-  return (
-    <Gap name="Chat" className="bo-report-start">
-      <Stack gap="16">
-        {/* The live region stays in the page; it takes no room until the first message. */}
-        <div aria-live="polite" className="bo-report-messages">
-          {messages.length > 0 && (
-            <Stack elementType="ol" aria-label="Conversation" gap="12">
-              {messages.map((m, i) => (
-                <Stack elementType="li" key={i} gap="4" alignItems={m.from === 'you' ? 'end' : 'start'}>
-                  {m.from === 'you' ? <Badge>{m.text}</Badge> : <Text elementType="p" kind="ui">{m.text}</Text>}
-                  {m.meta && <Text kind="small" color="meta">{m.meta}</Text>}
-                </Stack>
-              ))}
-            </Stack>
-          )}
-        </div>
-        <Section title="What should it change?">
-          <Stack gap="2" alignItems="start">
-            {suggestions.map(s => (
-              <Button key={s} variant="quiet" size={32} onPress={() => onAsk(s)}><Sparkles aria-hidden size={16} />{s}</Button>
-            ))}
-          </Stack>
-        </Section>
-        <form onSubmit={e => { e.preventDefault(); send(); }}>
-          <Grid columns="minmax(0, 1fr) auto" alignItems="end" gap="8">
-            <TextArea aria-label="Ask the assistant" placeholder="Ask the assistant…" value={draft} onChange={setDraft} />
-            <IconButton aria-label="Send" variant="bordered" emphasis="strong" type="submit" isDisabled={!draft.trim()}><Send aria-hidden size={16} /></IconButton>
-          </Grid>
-        </form>
-      </Stack>
-    </Gap>
-  );
-}
-
-function HistoryFeed({entries, onRestore}: {entries: HistoryEntry[]; onRestore: (e: HistoryEntry) => void}) {
-  const days = [...new Set(entries.map(e => e.day))];
-  return (
-    <Gap name="Activity feed" className="bo-report-start">
-      {days.map(d => (
-        <Section key={d} title={d}>
-          <Stack elementType="ol" gap="16">
-            {entries.filter(e => e.day === d).map(e => (
-              <li key={e.id}>
-                <Grid columns="auto minmax(0, 1fr)" gap="12">
-                  <Avatar initials={e.initials} size={28} />
-                  <Stack gap="4" alignItems="start">
-                    <Text elementType="p" kind="ui"><strong>{e.who}</strong> {e.what}</Text>
-                    <Text kind="small" color="meta">{e.when}{e.current ? ' · Showing now' : ''}</Text>
-                    {e.prompt && <blockquote className="bo-report-prompt"><Text elementType="p" kind="ui">“{e.prompt}”</Text></blockquote>}
-                    {e.blocks && <Inline elementType="span" gap="6">{e.blocks.map(b => <Badge key={b} variant="outlined">{b}</Badge>)}</Inline>}
-                    {e.detail && <Text kind="small" color="meta">{e.detail}</Text>}
-                    {!e.current && <Button variant="quiet" size={32} onPress={() => onRestore(e)}>Restore this version</Button>}
-                  </Stack>
-                </Grid>
-              </li>
-            ))}
-          </Stack>
-        </Section>
-      ))}
-    </Gap>
-  );
+/** The version history as Activity feed entries: an assistant's count is its summary, anyone else's a note. */
+function historyItems(entries: HistoryEntry[], blocks: Block[]): ActivityEntry[] {
+  return entries.map(e => {
+    const isAssistant = e.who === 'Assistant';
+    return {
+      id: e.id, day: e.day, actor: e.who, action: e.what, time: e.when, isCurrent: e.current, isAssistant,
+      avatar: <Avatar initials={e.initials} size={28} />, prompt: e.prompt,
+      summary: isAssistant ? e.detail : undefined, note: isAssistant ? undefined : e.detail,
+      changes: e.blocks?.map(name => {
+        const b = blocks.find(x => x.name === name);
+        return {id: name, label: name, icon: kindIcon(b?.kind ?? 'text'), status: b ? undefined : 'removed' as const};
+      })
+    };
+  });
 }
 
 const REPORT_LOCALES = LANGUAGES.map(l => l.id);
 const missingIn = (lang: Lang, has: boolean) => (lang !== 'en' && !has ? `Missing in ${LANG_NAME(lang)}: readers see the English.` : undefined);
 
 /** A figure's words in the editing language; a field the language lacks says so and shows the English as a hint. */
-function FigureFields({block, lang, onChange}: {block: Block & {figure: Figure}; lang: Lang; onChange: (f: Figure) => void}) {
+function FigureFields({block, lang, onChange}: {block: Block & {figure: FigureData}; lang: Lang; onChange: (f: FigureData) => void}) {
   const f = block.figure;
   const value = (k: keyof FigureWords) => (lang === 'en' ? f[k] : f.fr?.[k] ?? '');
   const set = (k: keyof FigureWords, v: string) => onChange(lang === 'en' ? {...f, [k]: v} : {...f, fr: {...f.fr, [k]: v}});
@@ -679,9 +622,52 @@ function Pick<K extends string>({label, value, options, onChange}: {label: strin
   );
 }
 
+/** The key figures in their order (drag or keyboard), and the one opened with its chevron, in fields under the list. */
+function NumbersEditor({block, lang, patch}: {block: Extract<Block, {kind: 'numbers'}>; lang: Lang; patch: (p: Partial<Block>) => void}) {
+  const [open, setOpen] = useState<string | null>(null);
+  const item = block.items.find(i => i.id === open);
+  const set = (k: 'label' | 'value' | 'note', v: string) => patch({items: block.items.map(x => (x.id === open ? {...x, [k]: v} : x))});
+  return (
+    <Stack gap="16">
+      <SortableList aria-label="Numbers" items={block.items} onReorder={items => patch({items})} itemLabel={i => `${i.value} ${i.label}`}>
+        {i => (
+          <>
+            <Text kind="ui" isStrong color="primary">{i.value}</Text>
+            <Text kind="ui" color="secondary">{i.label}</Text>
+            <IconButton aria-label={`Edit ${i.label}`} aria-expanded={open === i.id} size={24} className="bo-push-end"
+              onPress={() => setOpen(o => (o === i.id ? null : i.id))}>
+              {open === i.id ? <ChevronUp aria-hidden /> : <ChevronDown aria-hidden />}
+            </IconButton>
+          </>
+        )}
+      </SortableList>
+      {item && (
+        <Stack gap="12">
+          <TextField label="Number" value={item.value} onChange={v => set('value', v)} />
+          <TextField label="What it counts" value={item.label} onChange={v => set('label', v)} description={missingIn(lang, false)} />
+          <TextField label="Line under it" value={item.note} onChange={v => set('note', v)} description={missingIn(lang, false)} />
+        </Stack>
+      )}
+    </Stack>
+  );
+}
+
+/** The key figures' layouts, named for screen readers and drawn in the thumbnail. */
+const LAYOUTS = {row: 'Row: the numbers side by side', lead: 'Lead: the first number leads, the rest stack beside it', grid: 'Grid: two by two'};
+const LAYOUT_BOXES: Record<keyof typeof LAYOUTS, [number, number, number, number][]> = {
+  row: [[4, 12, 11, 16], [19, 12, 11, 16], [34, 12, 11, 16], [49, 12, 11, 16]],
+  lead: [[4, 4, 30, 32], [38, 4, 22, 8], [38, 16, 22, 8], [38, 28, 22, 8]],
+  grid: [[4, 4, 26, 14], [34, 4, 26, 14], [4, 22, 26, 14], [34, 22, 26, 14]]
+};
+const LayoutThumb = ({layout}: {layout: keyof typeof LAYOUTS}) => (
+  <svg viewBox="0 0 64 40" aria-hidden>
+    {LAYOUT_BOXES[layout].map(([x, y, w, h]) => <rect key={`${x}-${y}`} x={x} y={y} width={w} height={h} rx={2} fill="currentColor" />)}
+  </svg>
+);
+
 function Settings({block, lang, patch}: {block: Block; lang: Lang; patch: (p: Partial<Block>) => void}) {
   const figure = 'figure' in block && block.figure
-    ? <FigureFields block={block as Block & {figure: Figure}} lang={lang} onChange={figure => patch({figure} as Partial<Block>)} /> : null;
+    ? <FigureFields block={block as Block & {figure: FigureData}} lang={lang} onChange={figure => patch({figure} as Partial<Block>)} /> : null;
   const written = <Text elementType="p" kind="small" color="meta">Written by the assistant from platform data on 2 October 2026. The bars named in the finding are highlighted; the rest stay grey.</Text>;
   switch (block.kind) {
     case 'title':
@@ -702,24 +688,17 @@ function Settings({block, lang, patch}: {block: Block; lang: Lang; patch: (p: Pa
     case 'section':
     case 'text': {
       const fr = block.fr ?? {};
-      const words = lang === 'en' ? {heading: block.heading ?? '', body: block.body} : {heading: fr.heading ?? '', body: fr.body ?? ''};
-      const set = (k: 'heading' | 'body', v: string) => patch(lang === 'en' ? {[k]: v} : {fr: {...fr, [k]: v}} as Partial<Block>);
       return (
         <Section>
-          <Text elementType="p" kind="small" color="meta">Edit the words here; the block’s toolbar on the page sets bold, italic and a list.</Text>
+          <Text elementType="p" kind="small" color="meta">Type the words on the page; the format bar above the block sets its type, bold, italic and a list.</Text>
           {/* The heading in every report language; the page's editing-language Select picks the one shown. */}
           <MultilingualTextField label={block.kind === 'section' ? 'Section heading' : 'Heading (optional)'}
             locales={REPORT_LOCALES} locale={lang} showLocaleSwitcher={false}
-            value={{en: block.heading ?? '', fr: fr.heading ?? ''}} onChange={(v, l) => set('heading', v[l] ?? '')}
+            value={{en: block.heading ?? '', fr: fr.heading ?? ''}}
+            onChange={(v, l) => patch((l === 'en' ? {heading: v[l] ?? ''} : {fr: {...fr, heading: v[l] ?? ''}}) as Partial<Block>)}
             placeholder={lang === 'en' ? undefined : block.heading}
             description={block.heading ? missingIn(lang, !!fr.heading) : undefined} />
-          {block.kind === 'section' && block.bullets?.length ? (
-            <TextArea label="Points, one per line" value={block.bullets.join('\n')}
-              onChange={v => patch({bullets: v.split('\n')} as Partial<Block>)} description={missingIn(lang, false)} />
-          ) : (
-            <TextArea label="Text" value={words.body} onChange={v => set('body', v)}
-              placeholder={lang === 'en' ? undefined : block.body} description={missingIn(lang, !!fr.body)} />
-          )}
+          {lang !== 'en' && <Text elementType="p" kind="small" color="meta">{missingIn(lang, !!fr.body) ?? `The words on the page are in ${LANG_NAME(lang)}.`}</Text>}
         </Section>
       );
     }
@@ -742,33 +721,14 @@ function Settings({block, lang, patch}: {block: Block; lang: Lang; patch: (p: Pa
       return (
         <>
           <Section title="Layout">
-            <RadioGroup aria-label="Layout" value={block.layout} onChange={v => patch({layout: v as typeof block.layout})}>
-              <ChoiceCard value="row" description="The numbers side by side">Row</ChoiceCard>
-              <ChoiceCard value="lead" description="The first number leads, the rest stack beside it">Lead</ChoiceCard>
-              <ChoiceCard value="grid" description="Two by two">Grid</ChoiceCard>
+            <RadioGroup aria-label="Layout" value={block.layout} orientation="horizontal" onChange={v => patch({layout: v as typeof block.layout})}>
+              {(Object.keys(LAYOUTS) as (keyof typeof LAYOUTS)[]).map(k => (
+                <ChoiceCard key={k} value={k} layout="thumbnail" media={<LayoutThumb layout={k} />}>{LAYOUTS[k]}</ChoiceCard>
+              ))}
             </RadioGroup>
           </Section>
           <Section title={`Numbers · ${block.items.length} of 4`}>
-            <Gap name="Sortable list" className="bo-report-start">
-              <DisclosureGroup>
-                {block.items.map((it, i) => {
-                  const set = (k: 'label' | 'value' | 'note', v: string) =>
-                    patch({items: block.items.map((x, j) => (j === i ? {...x, [k]: v} : x))});
-                  return (
-                    <Disclosure key={i} id={String(i)}>
-                      <DisclosureHeader>{`${it.value} · ${it.label}`}</DisclosureHeader>
-                      <DisclosurePanel>
-                        <Stack gap="12" paddingBlock="8">
-                          <TextField label="Number" value={it.value} onChange={v => set('value', v)} />
-                          <TextField label="What it counts" value={it.label} onChange={v => set('label', v)} description={missingIn(lang, false)} />
-                          <TextField label="Line under it" value={it.note} onChange={v => set('note', v)} description={missingIn(lang, false)} />
-                        </Stack>
-                      </DisclosurePanel>
-                    </Disclosure>
-                  );
-                })}
-              </DisclosureGroup>
-            </Gap>
+            <NumbersEditor block={block} lang={lang} patch={patch} />
           </Section>
         </>
       );
@@ -895,11 +855,10 @@ function DataTab({block, onSource, onRefresh}: {block: Block; onSource: (s: Sour
     const Icon = SOURCE_ICON[s.kind];
     return (
       <TreeItem key={s.id} id={s.id} textValue={s.name}>
-        <TreeItemContent>
+        <TreeItemContent trailing={s.kind !== 'project' ? all(s.children ?? []).filter(c => c.kind === 'project').length : undefined}>
           <Inline elementType="span" gap="8" wrap="nowrap" className="bo-report-row">
             <Icon aria-hidden size={16} />
             <span className="bo-report-row-name">{s.name}</span>
-            {s.kind !== 'project' && <Text kind="small" color="meta">{all(s.children ?? []).filter(c => c.kind === 'project').length}</Text>}
           </Inline>
         </TreeItemContent>
         {s.children?.map(renderNode)}
@@ -932,6 +891,19 @@ function DataTab({block, onSource, onRefresh}: {block: Block; onSource: (s: Sour
 
 type Right = 'auto' | 'history';
 interface Created {title: string; template: 'blank' | 'template' | 'ai'}
+/** One turn of the conversation; an assistant's change carries its own Undo and the block it shows. */
+interface Message {
+  id: number;
+  from: 'you' | 'assistant';
+  text?: string;
+  /** The block the question was about (its name and kind), for the chip above your bubble. */
+  about?: {label: string; kind: BlockKind};
+  change?: string;
+  status?: 'done' | 'undone' | 'stopped';
+  undo?: () => void;
+  /** The block "Show what changed" scrolls to. */
+  show?: string;
+}
 
 export function ReportView() {
   const {reportId} = useParams();
@@ -949,28 +921,42 @@ export function ReportView() {
     generate={reportId === 'new' && created?.template === 'ai'} />;
 }
 
+let said = 0;
+
 function ReportEditor({title, blank, generate}: {title: string; blank: boolean; generate: boolean}) {
+  // `?assistant=off`: the platform without the assistant (the Assistant panel's off state, and no ✦ on the blocks).
+  const assistantOn = useSearchParams()[0].get('assistant') !== 'off';
   const [blocks, setBlocks] = useState<Block[]>(() => (blank ? [] : TEMPLATE.map(b => (b.kind === 'title' ? {...b, title} : b))));
   const [selected, setSelected] = useState<string | null>(null);
   const [right, setRight] = useState<Right>('auto');
-  const [assistantOpen, setAssistantOpen] = useState(true);
   const [library, setLibrary] = useState(false);
+  const [insertAt, setInsertAt] = useState<number | null>(null);
   const [lang, setLang] = useState<Lang>('en');
-  const [zoom, setZoom] = useState(100);
-  const [fit, setFit] = useState(false);
+  const [zoom, setZoom] = useState(83);
+  const [fitZoom, setFitZoom] = useState<number>();
   const [page, setPage] = useState(1);
   const [saved, setSaved] = useState(`Saved ${REPORT.savedAt} by you`);
   const [history, setHistory] = useState(HISTORY);
   const [status, setStatus] = useState<'ready' | 'generating'>('ready');
+  const [steps, setSteps] = useState<ChatProgressStep[]>([]);
   const [askGenerate, setAskGenerate] = useState(generate);
   const [source, setSource] = useState<SourceNode | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const stage = useRef<HTMLDivElement>(null);
+  const [replying, setReplying] = useState(false);
+  const [scopeId, setScopeId] = useState<string | null>(null);
+  const [aiMade, setAiMade] = useState<Set<string>>(new Set());
+  const [flash, setFlash] = useState<string | null>(null);
+  const timers = useRef<number[]>([]);
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
+  const later = (fn: () => void, ms: number) => { timers.current.push(window.setTimeout(fn, ms)); };
 
   const {pages, pageOf} = useMemo(() => paginate(blocks), [blocks]);
   const nums = useMemo(() => sectionNumbers(blocks), [blocks]);
   const block = blocks.find(b => b.id === selected) ?? null;
+  const scope = blocks.find(b => b.id === scopeId) ?? null;
   const touched = () => setSaved('Saved just now by you');
+  const say = (m: Omit<Message, 'id'>) => { const id = ++said; setMessages(ms => [...ms, {...m, id}]); return id; };
+  const isWorking = status === 'generating' || replying;
 
   // A selection made anywhere shows its block on the page and its row in the outline.
   useEffect(() => {
@@ -979,24 +965,34 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
     document.querySelector(`.bo-report-outline [data-key="${selected}"]`)?.scrollIntoView({block: 'nearest'});
   }, [selected]);
 
-  // The page bar's "Page 3 of 12": the last sheet whose top is in the upper third of the stage.
-  const onScroll = () => {
-    const root = stage.current;
-    if (!root) return;
-    const line = root.getBoundingClientRect().top + root.clientHeight / 3;
-    const sheets = [...root.querySelectorAll('.bo-report-sheet')];
-    const i = sheets.filter(s => s.getBoundingClientRect().top <= line).length;
-    setPage(Math.max(1, i));
-  };
-
+  // A settings panel that opens takes focus in its first frame (Side panel's rule); a block picked on the page or in the
+  // outline keeps focus there, so Tab goes on to its toolbar and the outline's arrow keys keep walking.
+  const afterPanel = (fn: () => void) => requestAnimationFrame(() => requestAnimationFrame(fn));
+  // The last thing focused outside the end column: where focus goes back to.
+  const lastOutside = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    const onFocus = (e: FocusEvent) => {
+      if (e.target instanceof HTMLElement && !e.target.closest('.bo-report-side')) lastOutside.current = e.target;
+    };
+    document.addEventListener('focusin', onFocus);
+    return () => document.removeEventListener('focusin', onFocus);
+  }, []);
   const select = (id: string | null) => {
     setSelected(id);
-    if (id) setRight('auto');
+    if (!id) return;
+    setRight('auto');
+    afterPanel(() => {
+      if (!document.querySelector('.bo-report-side')?.contains(document.activeElement)) return;
+      const back = lastOutside.current;
+      (back?.isConnected ? back : document.getElementById(`block-${id}`))?.focus();
+    });
   };
-  const focusBlock = (id: string, action?: string) => requestAnimationFrame(() => {
+  const TOOL = {up: 'Move up', down: 'Move down', duplicate: 'Duplicate'};
+  const focusBlock = (id: string, action?: keyof typeof TOOL) => afterPanel(() => {
     const el = document.getElementById(`block-${id}`);
-    const btn = action ? el?.querySelector<HTMLElement>(`[data-action="${action}"]:not([disabled])`) : null;
-    (btn ?? el?.querySelector<HTMLElement>('[data-action]:not([disabled])') ?? el)?.focus();
+    const tools = el?.querySelector('[role="toolbar"]');
+    const btn = action ? tools?.querySelector<HTMLElement>(`button[aria-label="${TOOL[action]}"]:not([disabled])`) : null;
+    (btn ?? tools?.querySelector<HTMLElement>('button:not([disabled])') ?? el)?.focus();
   });
 
   const patch = (id: string, p: Partial<Block>) => {
@@ -1014,10 +1010,11 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
     if (next) focusBlock(next.id);
     toast(`${gone.name} deleted`, undefined, {action: 'Undo', onAction: () => { insert(gone, at); setSelected(gone.id); focusBlock(gone.id); }});
   };
+  const free = (i: number) => i >= 0 && i < blocks.length && !PINNED.includes(blocks[i].kind);
   const move = (id: string, d: -1 | 1) => {
     const at = blocks.findIndex(b => b.id === id);
     const to = at + d;
-    if (to < 0 || to >= blocks.length || PINNED.includes(blocks[to].kind)) return;
+    if (!free(to)) return;
     setBlocks(bs => { const c = [...bs]; [c[at], c[to]] = [c[to], c[at]]; return c; });
     touched();
     focusBlock(id, d === -1 ? 'up' : 'down');
@@ -1031,39 +1028,80 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
     focusBlock(copy.id, 'duplicate');
     toast(`${copy.name} duplicated`, 'The copy is right under it.', {action: 'Undo', onAction: () => { setBlocks(bs => bs.filter(b => b.id !== copy.id)); setSelected(id); }});
   };
+  /** A text block's type from its format bar: a section, a sub-section (a text with a heading), or plain text. */
+  const retype = (b: TextBlock, type: RichTextBlockType) => {
+    const {id, name, body, fr, format} = b;
+    const heading = b.heading || name;
+    const next: Block = type === 'section'
+      ? {id, kind: 'section', name, num: '', heading, body, fr, format}
+      : {id, kind: 'text', name, heading: type === 'subsection' ? heading : undefined, body, fr, format};
+    setBlocks(bs => bs.map(x => (x.id === id ? next : x)));
+    touched();
+  };
+  const openLibrary = (at: number | null) => { setInsertAt(at); setLibrary(true); };
+  const closeLibrary = () => {
+    setLibrary(false);
+    setInsertAt(null);
+    requestAnimationFrame(() => document.querySelector<HTMLElement>('.bo-report-outline [aria-label="Add widget"]')?.focus());
+  };
   const add = (kind: BlockKind) => {
     const b = newBlock(kind);
-    const at = selected ? blocks.findIndex(x => x.id === selected) + 1 : blocks.length;
+    const at = insertAt ?? (selected ? blocks.findIndex(x => x.id === selected) + 1 : blocks.length);
     insert(b, at);
     setLibrary(false);
+    setInsertAt(null);
     select(b.id);
     touched();
     focusBlock(b.id);
     toast(`${KIND[kind].label} added`, undefined, {action: 'Undo', onAction: () => { setBlocks(bs => bs.filter(x => x.id !== b.id)); setSelected(null); }});
   };
 
+  // The assistant: a generate run ticks its steps off; a reply thinks a moment, then changes the report or answers.
+  const stop = () => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+    setStatus('ready');
+    setReplying(false);
+    say({from: 'assistant', status: 'stopped'});
+  };
   const runGenerate = () => {
     setAskGenerate(false);
     setStatus('generating');
-    window.setTimeout(() => {
-      setBlocks(TEMPLATE.map(b => (b.kind === 'title' ? {...b, title} : b)));
+    say({from: 'you', text: 'Generate a report from the folder'});
+    setSteps(GENERATE_STEPS.map((label, i) => ({id: String(i), label, status: i === 0 ? 'running' : undefined})));
+    GENERATE_STEPS.forEach((_, i) => later(() => setSteps(s => s.map((x, j) => ({...x, status: j <= i ? 'done' : j === i + 1 ? 'running' : undefined}))), 500 * (i + 1)));
+    later(() => {
+      const fresh = TEMPLATE.map(b => (b.kind === 'title' ? {...b, title} : b));
+      setBlocks(fresh);
       setStatus('ready');
       touched();
+      say({from: 'assistant', text: 'I wrote a first version: a summary, the numbers, the charts and what happens next. Check every figure before sharing.',
+        change: `${fresh.length} widgets added. You can change everything.`});
       toast('Report generated', 'The assistant wrote a first version. Check every figure before sharing.');
-    }, 1500);
+    }, 500 * GENERATE_STEPS.length + 100);
   };
 
   const ask = (text: string) => {
     if (/^generate/i.test(text) || !blocks.length) { setAskGenerate(true); return; }
-    const you: Message = {from: 'you', text};
+    const about = scope ? {label: scope.name, kind: scope.kind} : undefined;
+    say({from: 'you', text, about});
+    setReplying(true);
+    later(() => { setReplying(false); answer(text, about?.label); }, 900);
+  };
+  const answer = (text: string, about?: string) => {
     const summary = blocks.find(b => b.kind === 'section' && (b.bullets?.length ?? 0) > 3) as Extract<Block, {kind: 'section'}> | undefined;
     const reach = blocks.find(b => b.kind === 'section' && b.heading === 'Reach');
+    // The reply's id, for its own Undo to mark it undone (set as the reply is said, read when Undo is pressed).
+    let id = 0;
+    const undone = () => setMessages(ms => ms.map(m => (m.id === id ? {...m, status: 'undone'} : m)));
     if (/summary shorter/i.test(text) && summary) {
       const before = summary.bullets!;
       patch(summary.id, {bullets: before.slice(0, 3)} as Partial<Block>);
-      setMessages(m => [...m, you, {from: 'assistant', text: `I cut the executive summary from ${before.length} points to 3, keeping the findings with the strongest evidence.`, meta: '1 section changed. The version before is kept.'}]);
-      setHistory(h => [{id: `h-${Date.now()}`, day: 'Today', who: 'Assistant', initials: 'AI', what: 'changed the report', when: 'Today, just now · asked by you', prompt: text, blocks: [summary.name]}, ...h.map(e => ({...e, current: false}))]);
-      toast('The assistant changed 1 section', undefined, {action: 'Undo', onAction: () => patch(summary.id, {bullets: before} as Partial<Block>)});
+      setAiMade(s => new Set(s).add(summary.id));
+      id = say({from: 'assistant', text: `I cut the executive summary from ${before.length} points to 3, keeping the findings with the strongest evidence.`,
+        change: '1 section changed. The version before is kept.', show: summary.id,
+        undo: () => { patch(summary.id, {bullets: before} as Partial<Block>); undone(); }});
+      setHistory(h => [{id: `h-${Date.now()}`, day: 'Today', who: 'Assistant', initials: 'AI', what: 'changed the report', when: 'Today, just now · asked by you', prompt: text, blocks: [summary.name], current: true}, ...h.map(e => ({...e, current: false}))]);
       return;
     }
     if (/remove the reach/i.test(text) && reach) {
@@ -1072,29 +1110,107 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
       const cut = blocks.slice(at, end < 0 ? blocks.length : end);
       setBlocks(bs => bs.filter(b => !cut.includes(b)));
       touched();
-      setMessages(m => [...m, you, {from: 'assistant', text: `I removed the Reach section and its ${cut.length - 1} widgets. The contents and page numbers follow.`, meta: `${cut.length} widgets removed. The version before is kept.`}]);
-      toast('The assistant removed 1 section', undefined, {action: 'Undo', onAction: () => setBlocks(bs => [...bs.slice(0, at), ...cut, ...bs.slice(at)])});
+      id = say({from: 'assistant', text: `I removed the Reach section and its ${cut.length - 1} widgets. The contents and page numbers follow.`,
+        change: `${cut.length} widgets removed. The version before is kept.`,
+        undo: () => { setBlocks(bs => [...bs.slice(0, at), ...cut, ...bs.slice(at)]); undone(); }});
       return;
     }
-    setMessages(m => [...m, you, {from: 'assistant', text: 'Who took part is in section 05: 3,600 identifiable participants, with recorded rates highest in North Quarter. Two districts are suppressed or have no data, and the report says why.', meta: 'Nothing changed.'}]);
+    say({from: 'assistant', text: about
+      ? `I can’t change ${about} from here yet. Type the change on the page, or ask about the whole report. I did not change the report.`
+      : 'Who took part is in section 05: 3,600 identifiable participants, with recorded rates highest in North Quarter. Two districts are suppressed or have no data, and the report says why. I did not change the report.'});
+  };
+  const showChange = (id: string) => {
+    if (!blocks.some(b => b.id === id)) { toast('That widget is no longer in the report'); return; }
+    document.getElementById(`block-${id}`)?.scrollIntoView({block: 'center'});
+    setFlash(id);
+    later(() => setFlash(f => (f === id ? null : f)), 1200);
+  };
+  const askAbout = (b: Block) => {
+    setScopeId(b.id);
+    setSelected(null);
+    setRight('auto');
+    requestAnimationFrame(() => document.querySelector<HTMLElement>('.bo-report-side textarea')?.focus());
   };
 
   const closePanel = () => {
     if (right === 'history') { setRight('auto'); return; }
-    if (block) { const id = block.id; setSelected(null); focusBlock(id); return; }
-    setAssistantOpen(false);
+    if (block) { const id = block.id; setSelected(null); focusBlock(id); }
   };
 
-  const panelLabel = right === 'history' ? 'Version history' : block ? block.name : 'Assistant';
-  const showRight = right === 'history' || !!block || assistantOpen;
-  const actionsFor = (b: Block): BlockActions => {
-    const at = blocks.indexOf(b);
-    const free = (i: number) => i >= 0 && i < blocks.length && !PINNED.includes(blocks[i].kind);
-    return {
-      canUp: free(at - 1), canDown: free(at + 1),
-      onMove: d => move(b.id, d), onDuplicate: () => duplicate(b.id), onDelete: () => remove(b.id),
-      onFormat: format => patch(b.id, {format} as Partial<Block>)
-    };
+  const panel = right === 'history' ? (
+    <SidePanel isInline isOpen label="Version history" icon={<Clock aria-hidden />} headingLevel={2} onOpenChange={closePanel}
+      labels={{close: 'Close the version history'}}>
+      <ActivityFeed items={historyItems(history, blocks)}
+        onRestore={id => { const e = history.find(x => x.id === id)!; toast('Version restored', `The report is back as it was ${e.when.split(' · ')[0].toLowerCase()}.`, {action: 'Undo', onAction: () => {}}); }} />
+    </SidePanel>
+  ) : block ? (
+    <SidePanel isInline isOpen label={block.name} icon={kindIcon(block.kind)} headingLevel={2} onOpenChange={closePanel}
+      labels={{close: 'Close the widget settings'}}
+      footer={(
+        <Inline justifyContent="space-between" gap="8" wrap="nowrap" className="bo-report-panel-foot">
+          {!STRUCTURE.includes(block.kind) && (assistantOn ? (
+            <Button variant="quiet" size={32} onPress={() => askAbout(block)}><Sparkles aria-hidden size={16} />Ask the assistant</Button>
+          ) : (
+            <TooltipTrigger>
+              <Button variant="quiet" size={32} isDisabled><Sparkles aria-hidden size={16} />Ask the assistant</Button>
+              <Tooltip>The assistant is not switched on for this platform</Tooltip>
+            </TooltipTrigger>
+          ))}
+          <Button variant="quiet" size={32} tone="danger" onPress={() => remove(block.id)}><Trash2 aria-hidden size={16} />Delete</Button>
+        </Inline>
+      )}>
+      {DATA_KINDS.includes(block.kind) ? (
+        <Tabs key={block.id}>
+          <TabList aria-label="Widget settings">
+            <Tab id="settings">Settings</Tab>
+            <Tab id="data">Data</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel id="settings" className="bo-report-tab"><Settings block={block} lang={lang} patch={p => patch(block.id, p)} /></TabPanel>
+            <TabPanel id="data" className="bo-report-tab">
+              <DataTab block={block} onSource={setSource}
+                onRefresh={() => toast('Data refreshed', `${block.name} now shows today’s numbers.`, {action: 'Undo', onAction: () => {}})} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      ) : <Settings key={block.id} block={block} lang={lang} patch={p => patch(block.id, p)} />}
+    </SidePanel>
+  ) : (
+    <AssistantPanel onSend={ask} isWorking={isWorking} onStop={stop} isEmpty={!blocks.length} onGenerate={() => setAskGenerate(true)}
+      suggestions={(scope ? BLOCK_PROMPTS : SUGGESTIONS).map(s => ({id: s, label: s}))} onSuggestion={ask}
+      scope={scope ? {label: scope.name, icon: kindIcon(scope.kind)} : undefined} onClearScope={() => setScopeId(null)}
+      isEnabled={assistantOn} previewItems={PREVIEW}
+      onAskAccountManager={() => toast('Request sent', 'Your account manager will be in touch about the assistant.')}>
+      {messages.map(m => (
+        <ChatMessage key={m.id} from={m.from} change={m.change} status={m.status}
+          context={m.about && <ItemChip variant="quiet" icon={kindIcon(m.about.kind)} label={m.about.label} />}
+          labels={{stopped: 'Stopped. The report was not changed.'}}
+          onUndo={m.undo} onShowChange={m.show ? () => showChange(m.show!) : undefined}>
+          {m.text}
+        </ChatMessage>
+      ))}
+      {isWorking && <ChatProgress steps={status === 'generating' ? steps : undefined} />}
+    </AssistantPanel>
+  );
+
+  const frame = (b: Block, at: number) => {
+    const isSelected = selected === b.id;
+    const pinned = PINNED.includes(b.kind);
+    return (
+      <BlockFrame id={`block-${b.id}`} label={b.name} icon={kindIcon(b.kind)} aria-label={`${KIND[b.kind].label}: ${b.name}`}
+        isSelected={isSelected} onSelect={() => select(b.id)} onDeselect={() => setSelected(null)} isPinned={pinned}
+        isAiMade={aiMade.has(b.id)} isHighlighted={flash === b.id}
+        onMoveUp={() => move(b.id, -1)} onMoveDown={() => move(b.id, 1)} canMoveUp={free(at - 1)} canMoveDown={free(at + 1)}
+        onDuplicate={() => duplicate(b.id)} onDelete={() => remove(b.id)}
+        toolbar={isTextBlock(b) && !(b.kind === 'section' && b.bullets?.length) ? (
+          <TextToolbar block={b} canUp={free(at - 1)} canDown={free(at + 1)} onMove={d => move(b.id, d)}
+            onAsk={assistantOn ? () => askAbout(b) : undefined} onDelete={() => remove(b.id)} onType={t => retype(b, t)}
+            onFormat={format => patch(b.id, {format} as Partial<Block>)} />
+        ) : undefined}>
+        <BlockBody block={b} lang={lang} nums={nums} pageOf={pageOf} blocks={blocks} reportTitle={title} isEditing={isSelected}
+          patch={p => patch(b.id, p)} />
+      </BlockFrame>
+    );
   };
 
   return (
@@ -1104,7 +1220,6 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
           <Button variant="quiet" size={32} aria-pressed={right === 'history'} onPress={() => setRight(r => (r === 'history' ? 'auto' : 'history'))}>
             <Clock aria-hidden size={16} />{saved}
           </Button>
-          {!showRight && <Button variant="quiet" size={32} onPress={() => setAssistantOpen(true)}><Sparkles aria-hidden size={16} />Assistant</Button>}
           <Select aria-label="Editing language" variant="pill" size={28} icon={<Languages size={16} />} selectedKey={lang}
             onSelectionChange={k => setLang(k as Lang)} items={LANGUAGES}>
             {l => <SelectItem id={l.id}>{l.label}</SelectItem>}
@@ -1119,104 +1234,49 @@ function ReportEditor({title, blank, generate}: {title: string; blank: boolean; 
         </Inline>
       )}>
       <GapLegend names={GAPS} />
-      <div className="bo-report" data-right={showRight || undefined}>
+      <div className="bo-report">
         {library
-          ? <Library onAdd={add} onClose={() => { setLibrary(false); requestAnimationFrame(() => document.querySelector<HTMLElement>('.bo-report-outline [aria-label="Add widget"]')?.focus()); }} />
-          : <Outline blocks={blocks} nums={nums} pageOf={pageOf} selected={selected} onSelect={select} onAdd={() => setLibrary(true)} />}
+          ? <Library onAdd={add} onClose={closeLibrary} />
+          : <Outline blocks={blocks} nums={nums} pageOf={pageOf} selected={selected} onSelect={select} onAdd={() => openLibrary(null)} />}
 
-        <section className="bo-report-canvas" aria-label="Report pages">
-          <Gap name="Page stage" className="bo-report-stage-frame">
-            <Toolbar aria-label="Zoom and pages" className="bo-report-pagebar">
-              <TooltipTrigger>
-                <IconButton aria-label="Zoom out" isDisabled={zoom === ZOOMS[0]} onPress={() => { setFit(false); setZoom(ZOOMS[Math.max(0, ZOOMS.indexOf(zoom) - 1)]); }}><ZoomOut aria-hidden size={16} /></IconButton>
-                <Tooltip placement="bottom">Zoom out</Tooltip>
-              </TooltipTrigger>
-              <Text kind="small" color="meta" aria-live="polite">{fit ? 'Fit' : `${zoom}%`}</Text>
-              <TooltipTrigger>
-                <IconButton aria-label="Zoom in" isDisabled={zoom === ZOOMS[ZOOMS.length - 1]} onPress={() => { setFit(false); setZoom(ZOOMS[Math.min(ZOOMS.length - 1, ZOOMS.indexOf(zoom) + 1)]); }}><ZoomIn aria-hidden size={16} /></IconButton>
-                <Tooltip placement="bottom">Zoom in</Tooltip>
-              </TooltipTrigger>
-              <Button variant="quiet" size={32} aria-pressed={fit} onPress={() => setFit(f => !f)}>Fit</Button>
-              <Text kind="small" color="meta">{pages.length ? `Page ${Math.min(page, pages.length)} of ${pages.length}` : 'No pages'}</Text>
-            </Toolbar>
-            <div ref={stage} className="bo-report-stage" onScroll={onScroll}>
-              {/* Zoom sets the sheets' width (the words keep their size); Fit fills the stage. */}
-              <Stack gap="48" padding="16" alignItems="center"
-                style={{[fit ? '--bo-report-sheet-width' : '--bo-report-zoom']: fit ? '100%' : zoom / 100} as CSSProperties}>
-                {status === 'generating' ? (
-                  <article className="bo-report-sheet" aria-label="Generating the report" aria-busy>
-                    <Skeleton width="40%" height={16} />
-                    <Skeleton width="70%" height={32} />
-                    <Skeleton width="100%" />
-                    <Skeleton width="90%" />
-                    <Skeleton width="100%" height={160} variant="block" />
-                    <Skeleton width="60%" />
-                  </article>
-                ) : pages.length ? pages.map((p, i) => (
-                  <article key={i} className="bo-report-sheet" aria-label={`Page ${i + 1}`}>
-                    <Stack gap="16" className="bo-report-sheet-body">
-                      {p.map(b => (
-                        <BlockFrame key={b.id} block={b} isSelected={selected === b.id} onSelect={() => select(b.id)}
-                          onDeselect={() => setSelected(null)} actions={actionsFor(b)}>
-                          <BlockBody block={b} lang={lang} nums={nums} pageOf={pageOf} blocks={blocks} reportTitle={title} />
-                        </BlockFrame>
-                      ))}
-                    </Stack>
-                    {i > 0 && (
-                      <Inline justifyContent="space-between" gap="12" wrap="nowrap">
-                        <Text kind="small" color="meta">{title}</Text><Text kind="small" color="meta">{i + 1}</Text>
-                      </Inline>
-                    )}
-                  </article>
-                )) : (
-                  <article className="bo-report-sheet" aria-label="Page 1">
-                    <EmptyState title="No widgets in this report yet" icon={<Plus size={24} />} headingLevel={2}
-                      description="Choose a widget from the library, or ask the assistant to generate a first version."
-                      actions={<Button variant="primary" size={32} onPress={() => setLibrary(true)}><Plus aria-hidden size={16} />Add widget</Button>} />
-                  </article>
-                )}
+        <PageStage aria-label="Report pages" className="bo-report-canvas" zoom={zoom} onFitZoomChange={setFitZoom} onPageChange={setPage}
+          zoomBar={<ZoomBar zoom={zoom} onZoomChange={setZoom} fitZoom={fitZoom} page={pages.length ? Math.min(page, pages.length) : undefined} pageCount={pages.length || undefined}
+            isDisabled={status === 'generating'} />}>
+          {status === 'generating' ? (
+            <PageStageSheet isBusy aria-label="Generating the report">
+              <Stack gap="12">
+                <Skeleton width="40%" height={16} />
+                <Skeleton width="70%" height={32} />
+                <Skeleton width="100%" />
+                <Skeleton width="90%" />
+                <Skeleton width="100%" height={160} variant="block" />
+                <Skeleton width="60%" />
               </Stack>
-            </div>
-          </Gap>
-        </section>
+            </PageStageSheet>
+          ) : pages.length ? pages.map((p, i) => (
+            <PageStageSheet key={i} pageNumber={i + 1} isCover={i === 0} footer={title}>
+              <Stack gap="16">
+                {p.map(b => {
+                  const at = blocks.indexOf(b);
+                  return (
+                    <Fragment key={b.id}>
+                      {frame(b, at)}
+                      <BlockInsertLine onInsert={() => openLibrary(at + 1)} isTarget={library && insertAt === at + 1} />
+                    </Fragment>
+                  );
+                })}
+              </Stack>
+            </PageStageSheet>
+          )) : (
+            <PageStageSheet pageNumber={1}>
+              <EmptyState title="No widgets in this report yet" icon={<Plus aria-hidden size={24} />} headingLevel={2}
+                description="Choose a widget from the library, or ask the assistant to generate a first version."
+                actions={<Button variant="primary" size={32} onPress={() => openLibrary(null)}><Plus aria-hidden size={16} />Add widget</Button>} />
+            </PageStageSheet>
+          )}
+        </PageStage>
 
-        {showRight && (
-          <div className="bo-report-column bo-report-side">
-            <SidePanel isInline isOpen label={panelLabel} onOpenChange={closePanel}
-              labels={{close: right === 'history' ? 'Close the version history' : block ? 'Close the widget settings' : 'Close the assistant'}}
-              footer={right === 'auto' && block ? (
-                <Inline justifyContent="space-between" gap="8" wrap="nowrap" className="bo-report-panel-foot">
-                  {!STRUCTURE.includes(block.kind) && (
-                    <Button variant="quiet" size={32} onPress={() => { setSelected(null); setAssistantOpen(true); }}><Sparkles aria-hidden size={16} />Ask the assistant</Button>
-                  )}
-                  <Button variant="quiet" size={32} tone="danger" onPress={() => remove(block.id)}><Trash2 aria-hidden size={16} />Delete</Button>
-                </Inline>
-              ) : undefined}>
-              {right === 'history' ? (
-                <HistoryFeed entries={history} onRestore={e => toast('Version restored', `The report is back as it was ${e.when.split(' · ')[0].toLowerCase()}.`, {action: 'Undo', onAction: () => {}})} />
-              ) : block ? (
-                DATA_KINDS.includes(block.kind) ? (
-                  <Tabs key={block.id}>
-                    <TabList aria-label="Widget settings">
-                      <Tab id="settings">Settings</Tab>
-                      <Tab id="data">Data</Tab>
-                    </TabList>
-                    <TabPanels>
-                      <TabPanel id="settings" className="bo-report-tab"><Settings block={block} lang={lang} patch={p => patch(block.id, p)} /></TabPanel>
-                      <TabPanel id="data" className="bo-report-tab">
-                        <DataTab block={block} onSource={setSource}
-                          onRefresh={() => toast('Data refreshed', `${block.name} now shows today’s numbers.`, {action: 'Undo', onAction: () => {}})} />
-                      </TabPanel>
-                    </TabPanels>
-                  </Tabs>
-                ) : <Settings key={block.id} block={block} lang={lang} patch={p => patch(block.id, p)} />
-              ) : (
-                <Assistant messages={messages} onAsk={ask}
-                  suggestions={blocks.length ? SUGGESTIONS : ['Generate a report from the folder']} />
-              )}
-            </SidePanel>
-          </div>
-        )}
+        <div className="bo-report-column bo-report-side">{panel}</div>
       </div>
 
       <Modal title="Generate the report" isOpen={askGenerate} onOpenChange={setAskGenerate}

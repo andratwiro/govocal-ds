@@ -95,12 +95,10 @@ body { margin: 0; }
 .bo-phase-empty { display: grid; place-items: center; }
 
 /* ── Report view ── */
-/* Three columns (outline or library · pages · side panel), each scrolling on its own under the page head. The sheets,
-   the block frame, figures, quotes, the map, the chat and the history feed are stand-ins inside their Gaps. */
-.bo-report { --bo-report-sheet: calc(var(--gv-space-104) * 6 + var(--gv-space-16)); --bo-report-side: calc(var(--gv-space-104) * 3 + var(--gv-space-48));
-  display: grid; grid-template-columns: calc(var(--gv-space-104) * 2 + var(--gv-space-48)) minmax(0, 1fr);
+/* Three columns (outline or library · the Page stage · the end column), each scrolling on its own under the page head. */
+.bo-report { --bo-report-side: calc(var(--gv-space-104) * 3 + var(--gv-space-48));
+  display: grid; grid-template-columns: calc(var(--gv-space-104) * 2 + var(--gv-space-48)) minmax(0, 1fr) var(--bo-report-side);
   gap: var(--gv-space-12); height: calc(100vh - var(--gv-space-104) * 2); min-height: calc(var(--gv-space-104) * 5); margin-block-start: var(--gv-space-12); }
-.bo-report[data-right] { grid-template-columns: calc(var(--gv-space-104) * 2 + var(--gv-space-48)) minmax(0, 1fr) var(--bo-report-side); }
 .bo-report-column { min-height: 0; min-width: 0; display: flex; flex-direction: column; }
 /* The outline and library Panels: the head, then a body that fills the column and scrolls on its own. */
 .bo-report .bo-report-outline { flex: 1; min-height: 0; min-width: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); }
@@ -110,42 +108,23 @@ body { margin: 0; }
 .bo-report-row { flex: 1; }
 .bo-report-row-name { flex: 1; min-width: 0; }
 .bo-report-widget { padding: var(--gv-space-12) var(--gv-space-12) 0; }
-/* Pages */
-.bo-report-canvas { min-height: 0; min-width: 0; display: grid; }
-.bo-report-stage-frame { min-height: 0; grid-template-rows: auto auto minmax(0, 1fr); }
-.bo-report-pagebar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--gv-space-8); width: auto; }
-.bo-report-stage { min-height: 0; overflow: auto; }
-/* Zoom scales the sheet's box (--bo-report-zoom, set on the sheets); Fit fills the stage (--bo-report-sheet-width). */
-.bo-report-sheet { box-sizing: border-box; width: var(--bo-report-sheet-width, min(100%, calc(var(--bo-report-sheet) * var(--bo-report-zoom, 1))));
-  min-height: calc(var(--bo-report-sheet) * 1.414 * var(--bo-report-zoom, 1));
-  display: flex; flex-direction: column; gap: var(--gv-space-12); padding: var(--gv-space-40) var(--gv-space-48); }
-.bo-report-sheet-body { flex: 1; }
-/* A block, and the selected block's frame: the Gap's own padding pulled back, so the words don't move sideways. */
-.bo-report-block { position: relative; min-width: 0; }
-.bo-report-frame { margin-inline: calc(-1 * (var(--gv-space-12) + 1px)); grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
-.bo-report-frame > :not(:first-child, .bo-report-chrome) { grid-column: 1 / -1; }
-/* A Missing part that sits at the top of its cell, not stretched over it. */
-.bo-report-start { align-content: start; }
-.bo-report-tools { display: flex; align-items: center; gap: var(--gv-space-2); }
-/* The blocks' insides */
-.bo-report-title-page { min-height: calc(var(--bo-report-sheet) * 1.2); }
+.bo-report-canvas { min-height: 0; min-width: 0; }
+/* The blocks' insides: a title page as tall as most of its sheet. */
+.bo-report-title-page { min-height: calc(var(--gv-space-104) * 8); }
 .bo-report-bullets { margin: 0; padding-inline-start: var(--gv-space-20); display: grid; gap: var(--gv-space-6); }
 .bo-report-toc-row { align-items: baseline; }
 .bo-report-space[data-size="small"] { height: var(--gv-space-16); }
 .bo-report-space[data-size="medium"] { height: var(--gv-space-32); }
 .bo-report-space[data-size="large"] { height: var(--gv-space-56); }
-.bo-report-figure { margin: 0; display: grid; gap: var(--gv-space-8); }
-.bo-report-quote { margin: 0; }
 .bo-report-map { display: grid; place-items: center; min-height: calc(var(--gv-space-104) * 2); }
-/* Side panel: assistant, settings, history */
+.bo-push-end { margin-inline-start: auto; }
+/* End column: settings, history */
 .bo-report-side { min-height: 0; }
 .bo-report-side .bo-report-tab { display: grid; gap: var(--gv-space-16); padding-block-start: var(--gv-space-16); }
 .bo-report-panel-foot { width: 100%; }
-.bo-report-messages:empty { display: none; }
-.bo-report-prompt { margin: 0; padding-inline-start: var(--gv-space-12); }
 @media (max-width: 1180px) {
-  .bo-report, .bo-report[data-right] { grid-template-columns: minmax(0, 1fr); height: auto; }
-  .bo-report-stage { max-height: 100vh; }
+  .bo-report { grid-template-columns: minmax(0, 1fr); height: auto; }
+  .bo-report-canvas { height: 100vh; }
 }
 
 /* ── App shell: side nav, notifications ── */

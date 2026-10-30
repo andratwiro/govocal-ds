@@ -4,6 +4,34 @@ Where Figma and the prototype disagree, or the prototype disagrees with itself, 
 builds it, and logs it here: what disagreed → what we built → why. The project lead and the designer review this
 list; change any line and the agent follows. Newest first within each section.
 
+## The report view on the new parts (30 Oct 2026)
+
+Calls made moving the back office's report view onto Page stage, Block frame, Figure, Quote, Sortable list, Stat
+tile's plain look, the Assistant panel and the Activity feed (benchmark-gaps plan, Task 8's accept).
+
+- The assistant could be closed (a ×, then an "Assistant" button in the head) → **the Assistant panel is the end
+  column's resting state and has no ×; the settings and the history replace it and give it back on close** → the
+  pattern is head-less by design (it can't be closed, Esc does nothing); a page button to reopen something that is
+  always there would be dead weight.
+- The recipe gives a text block's floating format bar only Ask and Delete, which would leave text blocks with no way
+  to move → **the bar keeps ↑ and ↓ after ✦, before Delete (no duplicate)** → keeping the report's behaviour wins over
+  a shorter bar; duplicating a paragraph is rare, moving one is not.
+- Typing on the page vs the formatted text: an inline Rich text editor is a plain text area and can't show bold or a
+  list → **the selected text block is typed in inline editors; once deselected it draws its formatting** → the format
+  bar's toggles still show their state while editing, and the page reads as printed the rest of the time. The
+  executive summary's points are typed one per line in the same editor.
+- Assistant off has no switch in the demo → **`?assistant=off` on the report's address** → the off state (preview,
+  "Ask your account manager", no ✦ in the format bar, the settings' Ask inert with a tooltip) needed a way to be seen
+  and tested without a settings page that doesn't exist.
+- The assistant answered at once → **a reply thinks for under a second (Chat progress, send becomes Stop) and a generate
+  run ticks its three steps off** → the working state and Stop are part of the pattern and were unreachable otherwise.
+  Undo for the assistant's changes moved from a toast into its message (Chat message's own rule).
+- The numbers editor's fields lived in a Disclosure per row → **Sortable list for the order, and a chevron per row that
+  opens that figure's fields under the list** → a grid list row can't hold text fields without fighting its keyboard
+  model; one open figure at a time keeps the column short.
+- The zoom started at 100% with a Fit toggle → **83%, the prototype's, with Zoom bar's steps and its Fit to the stage's
+  width** → at 100% an A4 sheet is wider than the stage at 1440.
+
 ## Component page fixes (30 Oct 2026)
 
 Calls made fixing the bugs the component-page writers found (benchmark-gaps plan, overnight fixes).

@@ -79,7 +79,7 @@ test('editing a report opens the report view (outline, pages, side panel)', asyn
   await expect(page.getByRole('heading', {level: 1, name: 'Bike lanes survey results'})).toBeVisible();
   await expect(page.getByRole('treegrid', {name: 'Report outline'})).toBeVisible();
   await expect(page.getByRole('region', {name: 'Report pages'})).toBeVisible();
-  await expect(page.getByRole('dialog', {name: 'Assistant'})).toBeVisible();
+  await expect(page.getByRole('region', {name: 'Assistant'})).toBeVisible();
 });
 
 test('creating a report starts blank: title, template, contents, then the report view', async ({page}) => {
@@ -128,7 +128,7 @@ test('the report list has no gaps; the report view names its own (e2e/report-vie
   await page.goto('/backoffice/#/reporting/report-builder/r2/editor');
   await expect(page.getByRole('region', {name: 'Report pages'})).toBeVisible();
   const gaps = await page.locator('[data-missing-part]').evaluateAll(els => [...new Set(els.map(e => e.getAttribute('data-missing-part')))]);
-  expect(gaps).toEqual(expect.arrayContaining(['Page stage', 'Figure', 'Chat']));
+  expect(gaps).toEqual(['Map']);
   expect(gaps).not.toContain('Slide stage');
 });
 

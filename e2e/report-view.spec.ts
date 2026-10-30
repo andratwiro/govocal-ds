@@ -20,6 +20,9 @@ const block = (page: Page, name: RegExp | string) => pages(page).getByRole('grou
 // grey margin under the page.
 const rest = (page: Page) => page.mouse.move(700, 895);
 const toast = (page: Page, text: string | RegExp) => page.locator('.react-aria-Toast').filter({hasText: text});
+const assistant = (page: Page) => page.getByRole('region', {name: 'Assistant'});
+/** The blocks on the pages, in order, by their Block frame's id. */
+const order = (page: Page) => pages(page).locator('[id^="block-"]').evaluateAll(els => els.map(e => e.id.replace(/^block-/, '')));
 
 test('the report view: three columns, outline, pages and the assistant', async ({page}) => {
   const errors = watch(page);
@@ -27,7 +30,7 @@ test('the report view: three columns, outline, pages and the assistant', async (
   await page.goto(URL);
   await expect(page.getByRole('heading', {level: 1, name: TITLE})).toBeVisible();
   const outlinePanel = page.getByRole('region', {name: 'Report outline'});
-  const side = page.getByRole('dialog', {name: 'Assistant'});
+  const side = assistant(page);
   for (const col of [outlinePanel, pages(page), side]) await expect(col).toBeVisible();
   // Side by side, left to right.
   const [a, b, c] = await Promise.all([outlinePanel, pages(page), side].map(l => l.boundingBox()));
@@ -36,10 +39,10 @@ test('the report view: three columns, outline, pages and the assistant', async (
   // The outline: sections numbered, with their page; blocks under them.
   await expect(outline(page).getByRole('row', {name: /Executive summary/})).toContainText('01');
   await expect(outline(page).getByRole('row', {name: 'Platform participation'})).toBeVisible();
-  // The pages: title page, contents, sections, a page bar.
+  // The pages: title page, contents, sections, on a Page stage with its Zoom bar.
   await expect(pages(page).getByRole('heading', {level: 2, name: TITLE})).toBeVisible();
   await expect(pages(page).getByRole('article', {name: 'Page 1', exact: true})).toBeVisible();
-  await expect(pages(page).getByRole('toolbar', {name: 'Zoom and pages'})).toContainText(/Page 1 of \d+/);
+  await expect(page.getByRole('toolbar', {name: 'Zoom and pages'})).toContainText(/Page 1 of \d+/);
   // One bar style: Bar rows, the bars the finding names in the accent, the rest grey.
   const bars = block(page, /Platform participation/).locator('.gv-bar-row');
   await expect(bars).toHaveCount(3);
@@ -85,38 +88,49 @@ test('the keyboard: Enter selects a block, its toolbar is next, Esc closes the s
   await page.keyboard.press('Enter');
   await expect(text).toHaveAttribute('aria-current', 'true');
   await expect(page.getByRole('dialog', {name: 'Tree planting and the cycle lane vote'})).toBeVisible();
+  // Next is its floating format bar (the block type first); the arrow keys walk to Bold.
   await page.keyboard.press('Tab');
   const tools = text.getByRole('toolbar', {name: /block tools/});
-  await expect(tools.getByRole('button', {name: 'Bold'})).toBeFocused();
+  await expect(tools.locator(':focus')).toHaveCount(1);
+  await expect(tools.getByRole('radio', {name: 'Text'})).toHaveAttribute('aria-checked', 'true');
+  const bold = tools.getByRole('button', {name: 'Bold'});
+  for (let i = 0; i < 6 && !(await bold.evaluate(el => el === document.activeElement)); i++) await page.keyboard.press('ArrowRight');
+  await expect(bold).toBeFocused();
   await page.keyboard.press('Enter');
-  await expect(text.locator('strong')).toHaveCount(1);
+  await expect(bold).toHaveAttribute('aria-pressed', 'true');
+  // The words are typed on the page, in an inline Rich text editor.
+  await expect(text.getByRole('textbox', {name: 'Text'})).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(text).not.toHaveAttribute('aria-current', 'true');
-  await expect(page.getByRole('dialog', {name: 'Assistant'})).toBeVisible();
+  await expect(text.locator('strong')).toHaveCount(1);
+  await expect(assistant(page)).toBeVisible();
   // Arrow keys in the outline walk the blocks; Esc there clears the selection.
-  await outline(page).getByRole('row', {name: 'Platform participation'}).click();
+  // The settings panel opens beside it, and focus stays on the row.
+  const row = outline(page).getByRole('row', {name: 'Platform participation'});
+  await row.click();
+  await expect(page.getByRole('dialog', {name: 'Platform participation'})).toBeVisible();
+  await expect(row).toBeFocused();
   await page.keyboard.press('ArrowDown');
   await expect(text).toHaveAttribute('aria-current', 'true');
   await page.keyboard.press('Escape');
-  await expect(page.getByRole('dialog', {name: 'Assistant'})).toBeVisible();
+  await expect(assistant(page)).toBeVisible();
   expect(errors).toEqual([]);
 });
 
 test('the block toolbar moves, duplicates and deletes, with Undo', async ({page}) => {
   const errors = watch(page);
   await page.goto(URL);
-  const order = () => page.locator('.bo-report-block').evaluateAll(els => els.map(e => e.getAttribute('data-block')));
-  const before = await order();
+  const before = await order(page);
   const text = block(page, /Tree planting and the cycle lane vote/);
   await text.click();
   const tools = text.getByRole('toolbar', {name: /block tools/});
   await tools.getByRole('button', {name: 'Move down'}).click();
-  const moved = await order();
+  const moved = await order(page);
   const i = before.indexOf('b-text-1');
   expect(moved[i + 1]).toBe('b-text-1');
   await expect(text.getByRole('button', {name: 'Move up'})).toBeVisible();
   await text.getByRole('button', {name: 'Move up'}).click();
-  expect(await order()).toEqual(before);
+  expect(await order(page)).toEqual(before);
   await expect(page.getByRole('button', {name: /^Saved just now/})).toBeVisible();
   // Delete, then Undo.
   await text.getByRole('button', {name: 'Delete'}).click();
@@ -126,7 +140,7 @@ test('the block toolbar moves, duplicates and deletes, with Undo', async ({page}
   await expect(undo).toBeVisible();
   await undo.getByRole('button', {name: 'Undo'}).click();
   await expect(block(page, /Tree planting and the cycle lane vote/)).toHaveCount(1);
-  expect(await order()).toEqual(before);
+  expect(await order(page)).toEqual(before);
   // Pinned blocks keep their place: the title page has Delete only.
   await block(page, /Title page/).click();
   const pinned = block(page, /Title page/).getByRole('toolbar', {name: /block tools/});
@@ -162,7 +176,7 @@ test('widget settings: Settings and Data tabs, the sources and their preview', a
   // The panel's Esc closes the settings and puts focus back on the block.
   await panel.getByRole('tab', {name: 'Data'}).focus();
   await page.keyboard.press('Escape');
-  await expect(page.getByRole('dialog', {name: 'Assistant'})).toBeVisible();
+  await expect(assistant(page)).toBeVisible();
   await expect(block(page, /Platform participation/)).toBeFocused();
   expect(errors).toEqual([]);
 });
@@ -208,13 +222,13 @@ test('the widget library opens in the outline column and adds a block', async ({
   await page.keyboard.press('Escape');
   await expect(library).toHaveCount(0);
   await expect(outline(page)).toBeVisible();
-  const count = await page.locator('.bo-report-block').count();
+  const count = (await order(page)).length;
   await page.getByRole('region', {name: 'Report outline'}).getByRole('button', {name: 'Add widget'}).click();
   await page.getByRole('grid', {name: 'Widgets'}).getByRole('row', {name: /^Divider/}).click();
-  await expect(page.locator('.bo-report-block')).toHaveCount(count + 1);
+  await expect.poll(async () => (await order(page)).length).toBe(count + 1);
   await expect(toast(page, 'Divider added')).toBeVisible();
   // The new block sits right under the selected one, selected.
-  const ids = await page.locator('.bo-report-block').evaluateAll(els => els.map(e => e.getAttribute('data-block')));
+  const ids = await order(page);
   expect(ids[ids.indexOf('b-themes') + 1]).toMatch(/^divider-new/);
   await expect(page.getByRole('dialog', {name: 'Divider'})).toBeVisible();
   expect(errors).toEqual([]);
@@ -226,13 +240,16 @@ test('version history opens in the side panel and Esc closes it', async ({page})
   await page.getByRole('button', {name: /^Saved 10:19 by you/}).click();
   const history = page.getByRole('dialog', {name: 'Version history'});
   await expect(history).toBeVisible();
-  await expect(history.locator('[data-missing-part="Activity feed"]')).toBeVisible();
+  await expect(history.getByRole('heading', {level: 2, name: 'Version history'})).toBeVisible();
+  await expect(history.getByRole('heading', {name: 'Today'})).toBeVisible();
   await expect(history.getByText('Manager A').first()).toBeVisible();
-  await history.getByRole('button', {name: 'Restore this version'}).first().click();
+  await expect(history.getByText('Showing now')).toBeVisible();
+  await history.getByRole('button', {name: 'More'}).first().click();
+  await page.getByRole('menuitem', {name: 'Restore this version'}).click();
   await expect(toast(page, 'Version restored')).toBeVisible();
   await history.getByRole('button', {name: 'Close the version history'}).focus();
   await page.keyboard.press('Escape');
-  await expect(page.getByRole('dialog', {name: 'Assistant'})).toBeVisible();
+  await expect(assistant(page)).toBeVisible();
   expect(errors).toEqual([]);
 });
 
@@ -241,11 +258,17 @@ test('the assistant changes the report, with Undo', async ({page}) => {
   await page.goto(URL);
   const summary = block(page, /Executive summary/);
   await expect(summary.getByRole('listitem')).toHaveCount(4);
-  await page.getByRole('dialog', {name: 'Assistant'}).getByRole('button', {name: 'Make the summary shorter'}).click();
+  await assistant(page).getByRole('button', {name: 'Make the summary shorter'}).click();
+  // It thinks (send becomes stop), then answers with the change, its Undo beside it, never in a toast.
+  await expect(assistant(page).getByRole('button', {name: 'Stop'})).toBeVisible();
   await expect(summary.getByRole('listitem')).toHaveCount(3);
-  await expect(page.getByRole('list', {name: 'Conversation'})).toContainText('I cut the executive summary');
-  await toast(page, 'The assistant changed 1 section').getByRole('button', {name: 'Undo'}).click();
+  const log = assistant(page).getByRole('log', {name: 'Conversation'});
+  await expect(log).toContainText('I cut the executive summary');
+  await expect(summary.getByRole('img', {name: 'Made by the assistant'})).toBeVisible();
+  await expect(toast(page, 'The assistant changed')).toHaveCount(0);
+  await log.getByRole('button', {name: 'Undo this change'}).click();
   await expect(summary.getByRole('listitem')).toHaveCount(4);
+  await expect(log.getByRole('button', {name: 'Undo this change'})).toBeDisabled();
   expect(errors).toEqual([]);
 });
 
@@ -260,12 +283,14 @@ test('a new blank report is empty until the assistant generates it', async ({pag
   await expect(page).toHaveURL(/#\/reporting\/report-builder\/new\/editor$/);
   await expect(page.getByRole('heading', {level: 1, name: 'Harbour walk survey report'})).toBeVisible();
   await expect(pages(page).getByRole('heading', {name: 'No widgets in this report yet'})).toBeVisible();
-  await expect(pages(page).getByRole('toolbar', {name: 'Zoom and pages'})).toContainText('No pages');
+  await expect(pages(page).getByRole('article', {name: 'Page 1'})).toBeVisible();
   await page.getByRole('button', {name: 'Generate a report from the folder'}).click();
   const modal = page.getByRole('dialog', {name: 'Generate the report'});
   await expect(modal).toBeVisible();
   await modal.getByRole('button', {name: 'Generate'}).click();
   await expect(pages(page).getByRole('article', {name: 'Generating the report'}).locator('.gv-skeleton').first()).toBeVisible();
+  await expect(assistant(page).getByRole('list', {name: 'Steps'}).getByRole('listitem')).toHaveCount(3);
+  await expect(page.getByRole('button', {name: 'Zoom in'})).toBeDisabled();
   await expect(toast(page, 'Report generated')).toBeVisible();
   await expect(pages(page).getByRole('heading', {level: 2, name: 'Harbour walk survey report'})).toBeVisible();
   expect(errors).toEqual([]);
@@ -280,10 +305,54 @@ test('the report view names the parts the system lacks', async ({page}) => {
   await block(page, /Platform participation/).click();
   await collect();
   await block(page, /By the numbers/).first().click();
+  // The layouts are thumbnails (Choice card), named for screen readers; the order is a Sortable list.
+  await expect(page.getByRole('radio', {name: /^Lead/})).toBeChecked();
+  await expect(page.getByRole('grid', {name: 'Numbers'})).toBeVisible();
   await collect();
   await page.getByRole('button', {name: /^Saved 10:19 by you/}).click();
   await collect();
-  expect([...seen].sort()).toEqual(['Activity feed', 'Block frame', 'Chat', 'Figure', 'Map', 'Page stage', 'Quote', 'Sortable list']);
+  // The report moved onto Page stage, Block frame, Figure, Quote, Sortable list, the Assistant panel and the Activity
+  // feed: only the map is left.
+  expect([...seen].sort()).toEqual(['Map']);
   // The old slide deck is gone.
   expect(seen.has('Slide stage')).toBe(false);
+});
+
+test('the assistant about one block, and with the assistant switched off', async ({page}) => {
+  const errors = watch(page);
+  await page.goto(URL);
+  // "Ask the assistant" in a widget's settings scopes the chat to it; the chip's × goes back to the whole report.
+  await block(page, /Survey themes/).click();
+  await page.getByRole('dialog', {name: 'Survey themes'}).getByRole('button', {name: 'Ask the assistant'}).click();
+  await expect(assistant(page).getByRole('heading', {name: 'What should change in survey themes?'})).toBeVisible();
+  await expect(assistant(page).getByRole('textbox', {name: 'Ask the assistant'})).toBeFocused();
+  await assistant(page).getByRole('button', {name: 'Ask about the whole report'}).click();
+  await expect(assistant(page).getByRole('heading', {name: 'What should it change?'})).toBeVisible();
+  // Show what changed scrolls to the block the assistant changed.
+  await assistant(page).getByRole('button', {name: 'Make the summary shorter'}).click();
+  await assistant(page).getByRole('button', {name: 'Show what changed'}).click();
+  await expect(block(page, /Executive summary/)).toBeInViewport();
+  // Off: what it could do, whom to ask, no ✦ in the format bar.
+  await page.goto('about:blank');
+  await page.goto(`${URL}?assistant=off`);
+  await expect(assistant(page).getByRole('heading', {name: 'What the assistant could do here'})).toBeVisible();
+  await expect(assistant(page).getByRole('textbox', {name: 'Ask the assistant'})).toBeDisabled();
+  const text = block(page, /Tree planting and the cycle lane vote/);
+  await text.click();
+  await expect(text.getByRole('toolbar', {name: /block tools/}).getByRole('button', {name: 'Ask the assistant'})).toHaveCount(0);
+  expect(errors).toEqual([]);
+});
+
+test('the insert line between blocks opens the library for that place', async ({page}) => {
+  const errors = watch(page);
+  await page.goto(URL);
+  const before = await order(page);
+  const at = before.indexOf('b-themes');
+  await block(page, /Survey themes/).hover();
+  await pages(page).getByRole('button', {name: 'Add widget here'}).nth(at).click();
+  await page.getByRole('grid', {name: 'Widgets'}).getByRole('row', {name: /^Divider/}).click();
+  const after = await order(page);
+  expect(after[at + 1]).toMatch(/^divider-new/);
+  expect(after.length).toBe(before.length + 1);
+  expect(errors).toEqual([]);
 });

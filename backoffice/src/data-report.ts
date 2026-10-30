@@ -77,7 +77,7 @@ export type Block =
   | {id: string; kind: 'space'; name: string; size: 'small' | 'medium' | 'large'}
   | {id: string; kind: 'divider'; name: string}
   | {id: string; kind: 'break'; name: string}
-  | {id: string; kind: 'numbers'; name: string; layout: 'row' | 'lead' | 'grid'; items: {label: string; value: string; note: string}[]; figure?: undefined; included: string; calculated: string; sources: string[]}
+  | {id: string; kind: 'numbers'; name: string; layout: 'row' | 'lead' | 'grid'; items: {id: string; label: string; value: string; note: string}[]; figure?: undefined; included: string; calculated: string; sources: string[]}
   | {id: string; kind: 'bars'; name: string; figure: Figure; rows: BarDatum[]; unit?: string; show: 'top3' | 'top5' | 'all'; showValues: boolean}
   | {id: string; kind: 'compare'; name: string; figure: Figure; groups: ComparisonGroup[]; showCounts: boolean}
   | {id: string; kind: 'line'; name: string; figure: Figure; labels: string[]; observed: number[]; estimate: number[]; showEstimate: boolean}
@@ -139,10 +139,10 @@ export const TEMPLATE: Block[] = [
     ], fr: {heading: 'Synthèse'}},
   {id: 'b-space-1', kind: 'space', name: 'White space', size: 'medium'},
   {id: 'b-numbers-1', kind: 'numbers', name: 'By the numbers', layout: 'lead', ...PLATFORM_DATA, items: [
-    {label: 'Participants', value: '3,600', note: 'Unique identifiable participants, 6 projects'},
-    {label: 'Took part for the first time', value: '61%', note: '2,196 of 3,600 participants'},
-    {label: 'Projects', value: '6', note: '3 spaces, 3 folders'},
-    {label: 'Anonymous submissions', value: '540', note: 'Separate from identifiable participants'}
+    {id: 'participants', label: 'Participants', value: '3,600', note: 'Unique identifiable participants, 6 projects'},
+    {id: 'first', label: 'Took part for the first time', value: '61%', note: '2,196 of 3,600 participants'},
+    {id: 'projects', label: 'Projects', value: '6', note: '3 spaces, 3 folders'},
+    {id: 'anonymous', label: 'Anonymous submissions', value: '540', note: 'Separate from identifiable participants'}
   ]},
   {id: 'b-break-3', kind: 'break', name: 'Page break'},
 
@@ -298,8 +298,8 @@ export const TEMPLATE: Block[] = [
   {id: 'b-s7', kind: 'section', name: 'Reach', num: '07', heading: 'Reach',
     body: 'Most recorded visits came through the city’s newsletter. About 1 recorded visitor in 5 went on to take part.'},
   {id: 'b-numbers-2', kind: 'numbers', name: 'By the numbers', layout: 'row', ...PLATFORM_DATA, items: [
-    {label: 'Visitors', value: '18,000', note: 'Unique recorded visitors to the project pages'},
-    {label: 'Visitors who took part', value: '20%', note: '3,600 of 18,000 · recorded ratio'}
+    {id: 'visitors', label: 'Visitors', value: '18,000', note: 'Unique recorded visitors to the project pages'},
+    {id: 'visitors-part', label: 'Visitors who took part', value: '20%', note: '3,600 of 18,000 · recorded ratio'}
   ]},
   {id: 'b-space-11', kind: 'space', name: 'White space', size: 'small'},
   {id: 'b-traffic', kind: 'bars', name: 'Traffic sources', show: 'all', showValues: true, figure: {

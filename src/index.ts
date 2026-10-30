@@ -107,7 +107,7 @@ export {OptionList, type OptionListItem, type OptionListProps} from './component
 export {RadioGroup, Radio, type RadioGroupProps, type RadioProps} from './components/RadioGroup';
 export {RequiredMarker, type RequiredMarkerProps} from './components/gv/RequiredMarker';
 export {RichTextEditor, type RichTextEditorProps} from './components/gv/RichTextEditor';
-export {RichTextToolbar, type RichTextToolbarProps} from './components/gv/RichTextToolbar';
+export {RichTextToolbar, type RichTextBlockType, type RichTextToolbarProps} from './components/gv/RichTextToolbar';
 export {RichTextToolbarButton, type RichTextToolbarButtonProps} from './components/gv/RichTextToolbarButton';
 export {SearchField, type SearchFieldProps} from './components/SearchField';
 export {Select, SelectItem, type SelectProps, type SelectItemProps} from './components/Select';
