@@ -1,17 +1,17 @@
 import {useCallback, useMemo, useRef, useState, type ComponentProps, type ReactNode} from 'react';
 import {useNavigate, useParams} from 'react-router';
-import {Ban, ChartColumn, Download, Mail, Pencil, Plus, SearchX, ShieldCheck, ShieldOff, Trash2, UserMinus, UserPlus,
-  Users as UsersIcon, Zap} from 'lucide-react';
+import {Ban, ChartColumn, Download, Mail, MoreHorizontal, Pencil, Plus, SearchX, ShieldCheck, ShieldOff, Trash2, UserMinus,
+  UserPlus, Users as UsersIcon, X, Zap} from 'lucide-react';
 import {AlertDialog, Banner, Button, ChoiceCard, DataTable, DataTableBody, DataTableCell, DataTableColumn,
-  DataTableHeader, DataTableOptions, DataTablePerson, DataTableRow, DataTableStack, EmptyState, Inline, type Key, Menu,
-  MenuItem, Modal, MultilingualTextField, type Multiloc, Panel, RadioGroup, SearchField, Select, type SelectionAction,
+  DataTableHeader, DataTableOptions, DataTablePerson, DataTableRow, DataTableStack, EmptyState, IconButton, Inline, type Key,
+  Link, Menu, MenuItem, MenuTrigger, Modal, MultilingualTextField, type Multiloc, OptionList, Panel, RadioGroup, SearchField, Select, type SelectionAction,
   SelectionBar, SelectItem, Separator, Stack, TableToolbar, TableToolbarHeading, Text, TextField, toast, toKeySet,
   VisuallyHidden, useNumberFormatter} from 'govocal-ds';
-import {ListBox, ListBoxItem} from 'govocal-ds/base';
 import {LOCALES} from '../data-settings';
 import {ALL_PEOPLE, GROUPS, SEGMENTS, SMART_RULES, type Person} from '../data-users';
 import {useDay} from '../dates';
-import {Gap} from '../Gap';
+import {PROJECTS} from '../data';
+import {FOLDERS, SPACES} from '../data-projects';
 import {Page} from './Page';
 
 // React Aria's own types, read off the gv DataTable (the back office imports only the system).
@@ -77,48 +77,29 @@ function compare(a: Person, b: Person, column: string) {
   return a.joined.localeCompare(b.joined);
 }
 
-function Count({label, count, icon, kind}: {label: string; count: number; icon?: ReactNode; kind?: string}) {
-  const {format: n} = useNumberFormatter();
-  return (
-    <Inline elementType="span" gap="8" wrap="nowrap" className="bo-users-option">
-      {icon}
-      <span className="bo-users-option-label">{label}{kind && <VisuallyHidden> ({kind})</VisuallyHidden>}</span>
-      <Text kind="small" color="meta" slot={null}>{n(count)}</Text>
-    </Inline>
-  );
-}
-
 function Sidebar({view, setView, all, people, onAddGroup}: {
   view: string; setView: (v: string) => void; all: Group[]; people: Member[]; onAddGroup: () => void;
 }) {
   const navigate = useNavigate();
-  const [query, setQuery] = useState('');
-  const groups = all.filter(g => g.label.toLowerCase().includes(query.toLowerCase()));
-  const pick = (keys: Selection) => keys !== 'all' && keys.size > 0 && setView(String([...keys][0]));
+  const pick = (ids: string[]) => ids[0] && setView(ids[0]);
+  // The role lists and the groups: two single-choice Option lists, each row's count at its end; the groups' list
+  // carries its own search. A row is chosen while its list is the one in view.
+  const segments = SEGMENTS.map(s => ({id: s.id, label: s.label, count: inView(s.id, all, people).length}));
+  const groups = all.map(g => {
+    const Icon = g.kind === 'smart' ? Zap : UsersIcon;
+    return {id: g.id, label: g.label, count: inView(g.id, all, people).length, icon: <Icon aria-hidden size={16} />};
+  });
   return (
     <Stack elementType="aside" gap="12">
-      <ListBox aria-label="Users" selectionMode="single" selectedKeys={[view]} onSelectionChange={pick}>
-        {SEGMENTS.map(s => (
-          <ListBoxItem key={s.id} id={s.id} textValue={s.label}><Count label={s.label} count={inView(s.id, all, people).length} /></ListBoxItem>
-        ))}
-      </ListBox>
+      <OptionList aria-label="Users" selectionMode="single" isSearchable={false} items={segments}
+        value={segments.some(s => s.id === view) ? [view] : []} onChange={pick} />
       <Inline gap="8" wrap="nowrap" justifyContent="space-between">
-        <Text elementType="h2" kind="body" isStrong color="primary" id="bo-users-groups" className="bo-users-groups-title">Groups</Text>
+        <Text elementType="h2" kind="body" isStrong color="primary" className="bo-users-groups-title">Groups</Text>
         <Button variant="quiet" size={32} onPress={onAddGroup}><Plus aria-hidden size={16} />Add a new group</Button>
       </Inline>
-      <SearchField aria-label="Search groups" placeholder="Search groups" value={query} onChange={setQuery} />
-      <ListBox aria-labelledby="bo-users-groups" selectionMode="single" selectedKeys={[view]} onSelectionChange={pick}
-        renderEmptyState={() => <Text elementType="p" kind="small" color="meta" slot={null}>No groups match.</Text>}>
-        {groups.map(g => {
-          const Icon = g.kind === 'smart' ? Zap : UsersIcon;
-          return (
-            <ListBoxItem key={g.id} id={g.id} textValue={g.label}>
-              <Count label={g.label} count={inView(g.id, all, people).length}
-                kind={`${g.kind} group`} icon={<Icon aria-hidden size={16} />} />
-            </ListBoxItem>
-          );
-        })}
-      </ListBox>
+      <OptionList aria-label="Groups" selectionMode="single" isSearchable items={groups} placeholder="Search groups"
+        labels={{search: () => 'Search groups'}} emptyLabel="No groups match."
+        value={groups.some(g => g.id === view) ? [view] : []} onChange={pick} />
       <Button variant="primary" size={36} onPress={() => navigate('/users/invitations')}><Mail aria-hidden size={16} />Invite users</Button>
     </Stack>
   );
@@ -155,6 +136,24 @@ function emptyCopy(view: string, group?: Group): {title: string; description: st
   if (view === 'bounces') return {title: 'No email bounces', description: 'Addresses our emails could not reach show here.'};
   const label = SEGMENTS.find(s => s.id === view)?.label.toLowerCase() ?? 'users';
   return {title: `No ${label} yet`, description: 'Give someone this role from their row or their profile.'};
+}
+
+/** What a manager manages: the projects, folders and spaces that name them (the invented platform's data). */
+export function assignedTo(person: Person): {id: string; label: string; href?: string}[] {
+  if (person.role === 'Registered user' || person.role === 'Platform admin') return [];
+  return [
+    ...PROJECTS.filter(p => p.managers?.includes(person.name)).map(p => ({id: p.id, label: p.title, href: `#/projects/${p.id}`})),
+    ...FOLDERS.filter(f => f.managers.includes(person.name)).map(f => ({id: `folder-${f.name}`, label: f.name})),
+    ...SPACES.filter(s => s.managers.includes(person.name)).map(s => ({id: `space-${s.name}`, label: s.name}))
+  ];
+}
+
+/** Under a manager's role: how many items they manage, a link to the profile that lists them; "No assigned items". */
+function AssignedItems({person}: {person: Person}) {
+  if (person.role === 'Registered user' || person.role === 'Platform admin') return null;
+  const items = assignedTo(person);
+  if (items.length === 0) return <>No assigned items</>;
+  return <Link href={`#/users/${person.id}`}>{items.length === 1 ? '1 assigned item' : `${items.length} assigned items`}</Link>;
 }
 
 function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowAction, onAddToGroup, onRemoveFromGroup}: {
@@ -226,10 +225,18 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
   return (
     <Panel title={title} description={view === 'all' ? DESCRIPTION : undefined} isFlush toolbar={toolbar}
       actions={group && (
-        <>
+        // Edit stays a button; Delete goes in the "…" menu after a separator, as on every other screen's rows.
+        <Inline elementType="span" gap="4" wrap="nowrap">
           <Button variant="quiet" size={32} onPress={onEditGroup}><Pencil aria-hidden size={16} />Edit group</Button>
-          <Button variant="quiet" tone="danger" size={32} onPress={onDeleteGroup}><Trash2 aria-hidden size={16} />Delete group</Button>
-        </>
+          <MenuTrigger>
+            <IconButton aria-label={`More actions for ${group.label}`}><MoreHorizontal aria-hidden size={16} /></IconButton>
+            <Menu aria-label={`More actions for ${group.label}`} onAction={k => (k === 'delete' ? onDeleteGroup() : exportUsers(all.length))}>
+              <MenuItem id="export" icon={icon(Download)}>Export the group</MenuItem>
+              <Separator />
+              <MenuItem id="delete" icon={icon(Trash2)}>Delete group</MenuItem>
+            </Menu>
+          </MenuTrigger>
+        </Inline>
       )}>
       {/* A smart group says why its list can't be edited by hand (the Banner's info tone). */}
       {group?.kind === 'smart' && (
@@ -258,14 +265,14 @@ function UserTable({view, groups, people, onEditGroup, onDeleteGroup, onRowActio
               <DataTableColumn id="role" width="1.5fr">Role</DataTableColumn>
               <DataTableColumn id="lastActive" allowsSorting>Last active</DataTableColumn>
               <DataTableColumn id="joined" allowsSorting>Joined</DataTableColumn>
-              <DataTableColumn id="options" align="options">Options</DataTableColumn>
+              <DataTableColumn id="options" align="options" showLabel={false}>Options</DataTableColumn>
             </DataTableHeader>
             <DataTableBody items={rows} dependencies={[manualGroup, onAct]}>
               {p => (
                 <DataTableRow id={p.id} textValue={p.name} href={`#/users/${p.id}`}>
                   <DataTableCell><DataTablePerson name={p.name} initials={initials(p.name)} sub={p.email} /></DataTableCell>
                   <DataTableCell>
-                    <DataTableStack sub={p.role !== 'Registered user' && 'Assigned items'}>{p.role}</DataTableStack>
+                    <DataTableStack sub={<AssignedItems person={p} />}>{p.role}</DataTableStack>
                   </DataTableCell>
                   <DataTableCell>{ago(p.lastActive)}</DataTableCell>
                   <DataTableCell>{day(p.joined)}</DataTableCell>
@@ -301,11 +308,47 @@ const KINDS = [
   {kind: 'smart' as const, title: 'Create a smart group', note: 'Users who meet its rules join it by themselves.'}
 ];
 
+type Rule = {id: number; rule: string | null; value: string | null};
+let nextRule = 2;
+
+/**
+ * A smart group's rules, composed on the page (one use, so it stays here): a row per rule, the rule and its value as
+ * two Selects, a remove ×, then "Add a rule". Users who meet every rule join the group.
+ */
+function SmartRules({rules, setRules}: {rules: Rule[]; setRules: (f: (r: Rule[]) => Rule[]) => void}) {
+  const set = (id: number, patch: Partial<Rule>) => setRules(rs => rs.map(r => (r.id === id ? {...r, ...patch} : r)));
+  return (
+    <Stack gap="8">
+      {/* slot={null}: inside the Choice card's radio, a Text would otherwise take its description slot. */}
+      <Text elementType="p" kind="small" color="meta" slot={null}>Users who meet every rule join the group, and leave it, by themselves.</Text>
+      {rules.map((r, i) => (
+        <Inline key={r.id} gap="8" wrap="nowrap" alignItems="end">
+          <Select label={`Rule ${i + 1}`} placeholder="Choose a rule" value={r.rule} className="bo-users-rule"
+            onChange={k => set(r.id, {rule: String(k), value: null})}>
+            {SMART_RULES.map(o => <SelectItem key={o.id} id={o.id}>{o.label}</SelectItem>)}
+          </Select>
+          <Select label={`Value ${i + 1}`} placeholder="Choose a value" value={r.value} className="bo-users-rule"
+            isDisabled={!r.rule} onChange={k => set(r.id, {value: String(k)})}>
+            {(SMART_RULES.find(o => o.id === r.rule)?.values ?? []).map(v => <SelectItem key={v} id={v}>{v}</SelectItem>)}
+          </Select>
+          <IconButton aria-label={`Remove rule ${i + 1}`} isDisabled={rules.length === 1}
+            onPress={() => setRules(rs => rs.filter(x => x.id !== r.id))}><X aria-hidden size={16} /></IconButton>
+        </Inline>
+      ))}
+      <span>
+        <Button variant="quiet" size={32} onPress={() => setRules(rs => [...rs, {id: nextRule++, rule: null, value: null}])}>
+          <Plus aria-hidden size={16} />Add a rule</Button>
+      </span>
+    </Stack>
+  );
+}
+
 /** Add a new group (choose the kind, then name it) and Edit group (rename it): one modal, two starts. */
 function GroupModal({editing, onClose, onSave}: {
   editing?: Group; onClose: () => void; onSave: (label: string, kind: Group['kind']) => void;
 }) {
   const [kind, setKind] = useState<Group['kind'] | null>(editing?.kind ?? null);
+  const [rules, setRules] = useState<Rule[]>([{id: 1, rule: null, value: null}]);
   const [names, setNames] = useState<Multiloc>(editing ? {[LANGUAGES[0]]: editing.label} : {});
   // The list shows the name in the platform's first language.
   const name = names[LANGUAGES[0]] ?? '';
@@ -325,13 +368,7 @@ function GroupModal({editing, onClose, onSave}: {
         <RadioGroup label="Kind of group" value={kind} onChange={v => setKind(v as Group['kind'])}>
           {KINDS.map(({kind: k, title: t, note}) => (
             <ChoiceCard key={k} value={k} description={note} media={icon(k === 'smart' ? Zap : UsersIcon)}
-              revealed={k === 'smart' && (
-                <Gap name="Smart group rules">
-                  <Select label="Rule" placeholder="Choose a rule">
-                    {SMART_RULES.map(r => <SelectItem key={r} id={r}>{r}</SelectItem>)}
-                  </Select>
-                </Gap>
-              )}>{t}</ChoiceCard>
+              revealed={k === 'smart' && <SmartRules rules={rules} setRules={setRules} />}>{t}</ChoiceCard>
           ))}
         </RadioGroup>
       )}

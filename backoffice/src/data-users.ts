@@ -88,8 +88,14 @@ export const INVITATIONS: Invitation[] = [
 /** Seats in the plan: admins and managers each have their own count. */
 export const SEATS = {admins: 5, managers: 10};
 
-/** Smart group rules (the real admin's rule picker, shortened). */
-export const SMART_RULES = ['Email domain is', 'Is verified', 'Lives in area', 'Took part in project', 'Registered after'];
+/** Smart group rules (the real admin's rule picker, shortened), each with the values it can take. */
+export const SMART_RULES: {id: string; label: string; values: string[]}[] = [
+  {id: 'domain', label: 'Email domain is', values: ['example.org', 'example.com']},
+  {id: 'verified', label: 'Is verified', values: ['Yes', 'No']},
+  {id: 'area', label: 'Lives in area', values: ['North district', 'Central district', 'South district', 'East district']},
+  {id: 'project', label: 'Took part in project', values: ['Green Corridors for Larkvale', 'Safer School Streets', 'Harbour Plan 2030']},
+  {id: 'registered', label: 'Registered', values: ['In the last 30 days', 'In the last year', 'Over a year ago']}
+];
 
 /** Seats taken a month ago, for the Seats overview's trend. */
 export const SEATS_A_MONTH_AGO = {admins: 1, managers: 2};

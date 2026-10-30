@@ -71,6 +71,7 @@ the arrows move, "No results" in the list, and Esc that empties a search before 
 
 ## Changes
 
+- 30 Oct 2026: candidate, inline on a page too: the back office's Users side lists (the role lists, the searchable groups) are two single-choice Option lists.
 - 30 Oct 2026: this page written; a play function proves Tab, the arrow and Enter on a pick-one list.
 - 29 Oct 2026: a Menu with selection rather than a list box, so it can serve as a Filter menu's submenu; "No results"
   as in Select; pick several = a box at the start, pick one = a check at the end (docs/DECISIONS.md).

@@ -9,12 +9,12 @@ test('users follows the real admin: segments, groups, a selectable user table', 
   for (const b of ['Seats overview', 'User insights', 'Invite users', 'Add a new group']) {
     await expect(page.getByRole('button', {name: b})).toBeVisible();
   }
-  const segments = page.getByRole('listbox', {name: 'Users'});
+  const segments = page.getByRole('menu', {name: 'Users'});
   for (const s of ['Registered users', 'Admins', 'Space managers', 'Folder managers', 'Project managers',
     'Banned emails', 'Email bounces']) {
-    await expect(segments.getByRole('option', {name: new RegExp(`^${s}`)})).toBeVisible();
+    await expect(segments.getByRole('menuitemradio', {name: new RegExp(`^${s}`)})).toBeVisible();
   }
-  await expect(page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Verified residents/})).toBeVisible();
+  await expect(page.getByRole('menu', {name: 'Groups'}).getByRole('menuitemradio', {name: /^Verified residents/})).toBeVisible();
   await expect(page.getByRole('searchbox', {name: 'Search groups'})).toBeVisible();
   await expect(page.getByRole('searchbox', {name: 'Search users'})).toBeVisible();
   await expect(page.getByRole('button', {name: 'Export all'})).toBeVisible();
@@ -24,6 +24,13 @@ test('users follows the real admin: segments, groups, a selectable user table', 
   }
   // One scrolling list, virtualised (the Data table's "Virtualized" story): the twelve and 5,000 invented people,
   // of whom the table draws only the rows in view, and tells assistive tech the whole count.
+  // The options column's name is for screen readers only: no clipped "ptions" on screen.
+  await expect(grid.getByRole('columnheader', {name: 'Options'}).locator('.gv-data-table__hidden')).toHaveText('Options');
+  // A manager's role carries the count of what they manage, a link to the profile that lists it.
+  await grid.getByRole('columnheader', {name: 'Name'}).click();
+  const manager = grid.getByRole('row', {name: /Manager C/});
+  await expect(manager.getByRole('link', {name: '3 assigned items'})).toHaveAttribute('href', '#/users/u3');
+  await grid.getByRole('columnheader', {name: 'Joined'}).click();
   await expect(grid).toHaveAttribute('aria-rowcount', '5013');
   await expect(grid.getByRole('row', {name: /Admin A/})).toBeVisible();
   expect(await grid.getByRole('row').count()).toBeLessThan(100);
@@ -47,11 +54,14 @@ test('the list is a Panel: head, toolbar with the count and search, the table, n
   // The one count follows the search.
   await toolbar.getByRole('searchbox', {name: 'Search users'}).fill('admin');
   await expect(toolbar.getByRole('heading', {level: 3, name: '2 users'})).toBeVisible();
-  // A group's page carries Edit group and Delete group in the head.
-  await page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Youth panel/}).click();
+  // A group's page carries Edit group in the head, and Delete group in its "…" menu.
+  await page.getByRole('menu', {name: 'Groups'}).getByRole('menuitemradio', {name: /^Youth panel/}).click();
   const group = page.getByRole('region', {name: 'Youth panel'});
   await expect(group.locator('.gv-panel__actions').getByRole('button', {name: 'Edit group'})).toBeVisible();
-  await expect(group.locator('.gv-panel__actions').getByRole('button', {name: 'Delete group'})).toBeVisible();
+  await expect(group.locator('.gv-panel__actions').getByRole('button', {name: 'Delete group'})).toHaveCount(0);
+  await group.locator('.gv-panel__actions').getByRole('button', {name: 'More actions for Youth panel'}).click();
+  await expect(page.getByRole('menuitem', {name: 'Delete group'})).toBeVisible();
+  await page.keyboard.press('Escape');
 });
 
 test('one list, no pages: scrolling draws later rows under the pinned header, the page stays put', async ({page}) => {
@@ -126,24 +136,24 @@ test('the header select-all picks every row and shows the selection actions', as
 
 test('segments, groups and search narrow the users', async ({page}) => {
   await page.goto('/backoffice/#/users');
-  const segments = page.getByRole('listbox', {name: 'Users'});
-  const groups = page.getByRole('listbox', {name: 'Groups'});
-  await segments.getByRole('option', {name: /^Admins/}).click();
+  const segments = page.getByRole('menu', {name: 'Users'});
+  const groups = page.getByRole('menu', {name: 'Groups'});
+  await segments.getByRole('menuitemradio', {name: /^Admins/}).click();
   const admins = page.getByRole('grid', {name: 'Admins'});
   await expect(admins.getByRole('row')).toHaveCount(3);
-  await groups.getByRole('option', {name: /^Youth panel/}).click();
+  await groups.getByRole('menuitemradio', {name: /^Youth panel/}).click();
   await expect(page.getByRole('grid', {name: 'Youth panel'}).getByRole('row')).toHaveCount(4);
-  await segments.getByRole('option', {name: /^Banned emails/}).click();
+  await segments.getByRole('menuitemradio', {name: /^Banned emails/}).click();
   // An empty list is the Empty state, not an empty table (docs/DECISIONS.md).
   const banned = page.getByRole('region', {name: 'Banned emails'});
   await expect(banned.locator('.gv-empty-state').getByRole('heading', {name: 'No banned emails'})).toBeVisible();
   await expect(banned.getByRole('grid')).toHaveCount(0);
-  await segments.getByRole('option', {name: /^Registered users/}).click();
+  await segments.getByRole('menuitemradio', {name: /^Registered users/}).click();
   await page.getByRole('searchbox', {name: 'Search users'}).fill('user12@');
   await expect(page.getByRole('grid', {name: 'Registered users'}).getByRole('row')).toHaveCount(2);
   await page.getByRole('searchbox', {name: 'Search groups'}).fill('youth');
-  await expect(groups.getByRole('option', {name: /^Verified residents/})).toHaveCount(0);
-  await expect(groups.getByRole('option', {name: /^Youth panel/})).toBeVisible();
+  await expect(groups.getByRole('menuitemradio', {name: /^Verified residents/})).toHaveCount(0);
+  await expect(groups.getByRole('menuitemradio', {name: /^Youth panel/})).toBeVisible();
 });
 
 test('sorting by name orders the rows, and pressing again flips them', async ({page}) => {
@@ -250,12 +260,25 @@ test('Add a new group: choose normal or smart, name it, and it joins the list wi
   await kinds.getByText('Create a smart group').click();
   await expect(kinds.getByRole('radio', {name: /Create a smart group/})).toBeChecked();
   await modal.getByRole('textbox', {name: 'Name of the group, English'}).fill('Cyclists');
-  // The rules open under the smart card once it is chosen (Choice card's `revealed`), still a Gap.
-  await expect(kinds.locator('.gv-choice-card__revealed').getByRole('button', {name: /Rule/})).toBeVisible();
+  // The rules open under the smart card once it is chosen (Choice card's `revealed`): a row per rule, the rule and
+  // its value as two Selects, then Add a rule. No Gap any more.
+  const rules = kinds.locator('.gv-choice-card__revealed');
+  await expect(rules.locator('[data-missing-part]')).toHaveCount(0);
+  await expect(rules.getByRole('button', {name: /Value 1/})).toBeDisabled();
+  await rules.getByRole('button', {name: /Rule 1/}).click();
+  await page.getByRole('option', {name: 'Lives in area'}).click();
+  await rules.getByRole('button', {name: /Value 1/}).click();
+  await page.getByRole('option', {name: 'North district'}).click();
+  await expect(rules.getByRole('button', {name: /Value 1/})).toContainText('North district');
+  await expect(rules.getByRole('button', {name: 'Remove rule 1'})).toBeDisabled();
+  await rules.getByRole('button', {name: 'Add a rule'}).click();
+  await expect(rules.getByRole('button', {name: /Rule 2/})).toBeVisible();
+  await rules.getByRole('button', {name: 'Remove rule 2'}).click();
+  await expect(rules.getByRole('button', {name: /Rule 2/})).toHaveCount(0);
   await modal.getByRole('button', {name: 'Save group'}).click();
   await expect(modal).toHaveCount(0);
   await expect(page).toHaveURL(/#\/users\/groups\/[\w-]+$/);
-  await expect(page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Cyclists/})).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('menu', {name: 'Groups'}).getByRole('menuitemradio', {name: /^Cyclists/})).toHaveAttribute('aria-checked', 'true');
   // A new smart group: the Banner says why its list fills itself, and the Empty state says nobody is in it yet.
   const cyclists = page.getByRole('region', {name: 'Cyclists'});
   await expect(cyclists.locator('.gv-banner')).toContainText('smart group');
@@ -265,7 +288,7 @@ test('Add a new group: choose normal or smart, name it, and it joins the list wi
 
 test('a group has its own page: its members, Edit group to rename it, Delete group with a confirmation', async ({page}) => {
   await page.goto('/backoffice/#/users');
-  await page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Youth panel/}).click();
+  await page.getByRole('menu', {name: 'Groups'}).getByRole('menuitemradio', {name: /^Youth panel/}).click();
   await expect(page).toHaveURL(/#\/users\/groups\/youth$/);
   await expect(page.getByRole('grid', {name: 'Youth panel'}).getByRole('row')).toHaveCount(4);
   await page.getByRole('button', {name: 'Edit group'}).click();
@@ -273,9 +296,13 @@ test('a group has its own page: its members, Edit group to rename it, Delete gro
   await modal.getByRole('textbox', {name: 'Name of the group, English'}).fill('Youth council');
   await modal.getByRole('button', {name: 'Save group'}).click();
   await expect(page.getByRole('grid', {name: 'Youth council'})).toBeVisible();
-  // Delete group confirms in an Alert dialog: no ×, focus on Cancel, Esc cancels; then Delete group deletes.
-  const deleteGroup = page.getByRole('button', {name: 'Delete group'});
-  await deleteGroup.click();
+  // Delete group, from the head's "…" menu, confirms in an Alert dialog: no ×, focus on Cancel, Esc cancels; then
+  // Delete group deletes.
+  const deleteGroup = async () => {
+    await page.getByRole('button', {name: 'More actions for Youth council'}).click();
+    await page.getByRole('menuitem', {name: 'Delete group'}).click();
+  };
+  await deleteGroup();
   const confirm = page.getByRole('alertdialog', {name: 'Delete this group?'});
   await expect(confirm).toBeVisible();
   await expect(confirm.getByRole('button', {name: 'Cancel'})).toBeFocused();
@@ -283,9 +310,9 @@ test('a group has its own page: its members, Edit group to rename it, Delete gro
   await page.keyboard.press('Escape');
   await expect(confirm).toHaveCount(0);
   await expect(page.getByRole('grid', {name: 'Youth council'})).toBeVisible();
-  await deleteGroup.click();
+  await deleteGroup();
   await confirm.getByRole('button', {name: 'Delete group'}).click();
-  await expect(page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Youth council/})).toHaveCount(0);
+  await expect(page.getByRole('menu', {name: 'Groups'}).getByRole('menuitemradio', {name: /^Youth council/})).toHaveCount(0);
   await expect(page.getByRole('grid', {name: 'Registered users'})).toBeVisible();
 });
 
@@ -299,6 +326,11 @@ test('Seats overview shows seats used and available, with the admins and manager
   }
   await expect(page.getByRole('grid', {name: 'Admins'}).getByRole('row')).toHaveCount(3);
   await expect(page.getByRole('grid', {name: 'Managers'}).getByRole('row', {name: /Manager C/})).toBeVisible();
+  // How full each kind is: a Bar row each, "2 of 5", in the Seats in your plan Panel (no Base meter).
+  const plan = page.getByRole('region', {name: 'Seats in your plan'});
+  await expect(plan.locator('.gv-bar-row')).toHaveCount(2);
+  await expect(plan.locator('.gv-bar-row', {hasText: 'Admin seats'})).toContainText('2 of 5');
+  await expect(page.getByRole('meter')).toHaveCount(0);
   a11yReport(await axeOn(page, 'main'));
   await page.getByRole('link', {name: 'Users'}).first().click();
   await expect(page).toHaveURL(/#\/users$/);
@@ -344,7 +376,7 @@ test('a row menu answers: admin rights toggle, add to group, block and delete as
   const add = page.getByRole('dialog', {name: 'Add to group'});
   await add.getByRole('button', {name: 'Add to group'}).click();
   await expect(toast(page).filter({hasText: '1 user added to Youth panel'})).toBeVisible();
-  await expect(page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Youth panel/})).toContainText('4');
+  await expect(page.getByRole('menu', {name: 'Groups'}).getByRole('menuitemradio', {name: /^Youth panel/})).toContainText('4');
 
   await options('Resident H').click();
   await page.getByRole('menuitem', {name: 'Block user'}).click();
@@ -355,10 +387,10 @@ test('a row menu answers: admin rights toggle, add to group, block and delete as
   await page.getByRole('menuitem', {name: 'Block user'}).click();
   await block.getByRole('button', {name: 'Block user'}).click();
   await expect(grid.getByRole('row', {name: /Resident H/})).toHaveCount(0);
-  await page.getByRole('listbox', {name: 'Users'}).getByRole('option', {name: /^Banned emails/}).click();
+  await page.getByRole('menu', {name: 'Users'}).getByRole('menuitemradio', {name: /^Banned emails/}).click();
   await expect(page.getByRole('grid', {name: 'Banned emails'}).getByRole('row', {name: /Resident H/})).toBeVisible();
 
-  await page.getByRole('listbox', {name: 'Users'}).getByRole('option', {name: /^Registered users/}).click();
+  await page.getByRole('menu', {name: 'Users'}).getByRole('menuitemradio', {name: /^Registered users/}).click();
   await options('Resident K').click();
   await page.getByRole('menuitem', {name: 'Delete user'}).click();
   // An Alert dialog: focus starts on Cancel, no ×, Esc cancels and keeps the user.
@@ -387,7 +419,7 @@ test('the selection actions answer: Add to group adds the users, the exports sta
   await page.getByRole('button', {name: 'Add to group'}).click();
   await page.getByRole('menuitem', {name: 'Youth panel'}).click();
   await expect(toast(page).filter({hasText: '2 users added to Youth panel'})).toBeVisible();
-  await page.getByRole('listbox', {name: 'Groups'}).getByRole('option', {name: /^Youth panel/}).click();
+  await page.getByRole('menu', {name: 'Groups'}).getByRole('menuitemradio', {name: /^Youth panel/}).click();
   await expect(page.getByRole('grid', {name: 'Youth panel'}).getByRole('row')).toHaveCount(6); // header + five
 });
 
@@ -429,10 +461,10 @@ test('instant changes carry Undo: admin rights, add to group', async ({page}) =>
   await grid.getByRole('row', {name: /Resident G/}).locator('.gv-checkbox .indicator').click();
   await page.getByRole('button', {name: 'Add to group'}).click();
   await page.getByRole('menuitem', {name: 'Youth panel'}).click();
-  const groups = page.getByRole('listbox', {name: 'Groups'});
-  await expect(groups.getByRole('option', {name: /^Youth panel/})).toContainText('4');
+  const groups = page.getByRole('menu', {name: 'Groups'});
+  await expect(groups.getByRole('menuitemradio', {name: /^Youth panel/})).toContainText('4');
   await toast(page).filter({hasText: '1 user added to Youth panel'}).getByRole('button', {name: 'Undo'}).click();
-  await expect(groups.getByRole('option', {name: /^Youth panel/})).toContainText('3');
+  await expect(groups.getByRole('menuitemradio', {name: /^Youth panel/})).toContainText('3');
 });
 
 test('a manual group takes users out from the row or the Selection bar, with Undo; empty, it says so', async ({page}) => {
@@ -462,7 +494,7 @@ test('a blocked user is unblocked from their row under Banned emails, with Undo'
   await grid.getByRole('button', {name: 'Options for Resident H'}).click();
   await page.getByRole('menuitem', {name: 'Block user'}).click();
   await page.getByRole('alertdialog', {name: 'Block this user?'}).getByRole('button', {name: 'Block user'}).click();
-  await page.getByRole('listbox', {name: 'Users'}).getByRole('option', {name: /^Banned emails/}).click();
+  await page.getByRole('menu', {name: 'Users'}).getByRole('menuitemradio', {name: /^Banned emails/}).click();
   const banned = page.getByRole('grid', {name: 'Banned emails'});
   await banned.getByRole('button', {name: 'Options for Resident H'}).click();
   await expect(page.getByRole('menuitem', {name: 'Block user', exact: true})).toHaveCount(0);

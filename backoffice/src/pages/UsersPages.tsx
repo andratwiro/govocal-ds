@@ -1,13 +1,12 @@
 import {useState} from 'react';
 import {useParams} from 'react-router';
 import {Download, MailX, RotateCw, SearchX, Send, ShieldCheck, ShieldOff, Trash2, UserX, Users as UsersIcon} from 'lucide-react';
-import {Avatar, Badge, Banner, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
-  DataTableOptions, DataTablePerson, DataTableRow, EmptyState, Inline, MenuItem, Pagination, Panel, PropertyList,
+import {Avatar, Badge, Banner, BarRow, Button, DataTable, DataTableBody, DataTableCell, DataTableColumn, DataTableHeader,
+  DataTableOptions, DataTablePerson, DataTableRow, EmptyState, Inline, Link, MenuItem, Pagination, Panel, PropertyList,
   PropertyListItem, SearchField, Select, SelectItem, Separator, Stack, StatTile, Tab, TableToolbar, TabList, TabPanel,
   TabPanels, Tabs, Text, TextArea, TileGrid, toast} from 'govocal-ds';
-import {Meter} from 'govocal-ds/base';
 import {INVITATIONS, PARTICIPATION, SEATS, SEATS_A_MONTH_AGO, type Invitation, type Person, type Role} from '../data-users';
-import {ago, groupStore, initials, PAGE_SIZE, peopleStore} from './Users';
+import {ago, assignedTo, groupStore, initials, PAGE_SIZE, peopleStore} from './Users';
 import {TODAY, useDay} from '../dates';
 import {Page} from './Page';
 
@@ -100,7 +99,7 @@ function InvitationTable({invitations, onResend, onDelete}: {
             <DataTableColumn>Role</DataTableColumn>
             <DataTableColumn>Invited</DataTableColumn>
             <DataTableColumn>Status</DataTableColumn>
-            <DataTableColumn align="options">Options</DataTableColumn>
+            <DataTableColumn align="options" showLabel={false}>Options</DataTableColumn>
           </DataTableHeader>
           <DataTableBody>
             {shown.map(i => (
@@ -220,10 +219,13 @@ export function SeatsOverview() {
           <StatTile label="Manager seats available" value={SEATS.managers - managers.length} layout="tall"
             info="Manager seats left in your plan before it needs more." />
         </TileGrid>
-        <TileGrid minTileWidth={220}>
-          <Meter label="Admin seats" value={admins.length} maxValue={SEATS.admins} valueLabel={`${admins.length} of ${SEATS.admins}`} />
-          <Meter label="Manager seats" value={managers.length} maxValue={SEATS.managers} valueLabel={`${managers.length} of ${SEATS.managers}`} />
-        </TileGrid>
+        {/* How full each kind of seat is: a Bar row each (the share filled, "2 of 5" at the end), in one Panel. */}
+        <Panel title="Seats in your plan">
+          <Stack gap="8">
+            <BarRow label="Admin seats" percent={(admins.length / SEATS.admins) * 100} value={`${admins.length} of ${SEATS.admins}`} />
+            <BarRow label="Manager seats" percent={(managers.length / SEATS.managers) * 100} value={`${managers.length} of ${SEATS.managers}`} />
+          </Stack>
+        </Panel>
         <Banner tone="info">Need more seats? Your Go Vocal success manager can add them to your plan.</Banner>
         <PeopleTable label="Admins" people={admins} empty="No admins hold a seat" />
         <PeopleTable label="Managers" people={managers} empty="No managers hold a seat" />
@@ -250,6 +252,7 @@ export function UserProfile() {
   }
   const done = PARTICIPATION[person.id] ?? {ideas: 0, comments: 0, votes: 0, projects: 0};
   const groups = groupStore.groups.filter(g => g.members.includes(person.id));
+  const assigned = role ? assignedTo({...person, role}) : [];
   const admin = role === 'Platform admin';
   const setRole = (next: Role) => {
     setRoleState(next);
@@ -275,6 +278,16 @@ export function UserProfile() {
               <PropertyListItem label="Role">{role}</PropertyListItem>
               <PropertyListItem label="Joined">{day(person.joined)}</PropertyListItem>
               <PropertyListItem label="Last active" emptyLabel="Not since joining">{ago(person.lastActive)}</PropertyListItem>
+              {/* What a manager manages: the list the Users table's "assigned items" link leads to. */}
+              {role !== 'Registered user' && role !== 'Platform admin' && (
+                <PropertyListItem label="Assigned items" emptyLabel="No assigned items">
+                  {assigned.length > 0 && (
+                    <Inline elementType="span" gap="4">{assigned.map(a => a.href
+                      ? <Link key={a.id} href={a.href}>{a.label}</Link>
+                      : <Badge key={a.id} variant="value">{a.label}</Badge>)}</Inline>
+                  )}
+                </PropertyListItem>
+              )}
               <PropertyListItem label="Groups" emptyLabel="In no group">
                 {groups.length > 0 && (
                   <Inline elementType="span" gap="4">{groups.map(g => <Badge key={g.id} variant="value">{g.label}</Badge>)}</Inline>
