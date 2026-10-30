@@ -1,3 +1,4 @@
+import {expect, userEvent, within} from 'storybook/test';
 import {TextField} from '../TextField';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 
@@ -92,5 +93,30 @@ export const Arabic: Story = {
     maxLength: 140,
     showCounter: true,
     defaultValue: 'مسارات للدراجات على طول النهر'
+  }
+};
+
+/** The keyboard, proved by this story's play function: Tab lands in the field and typing fills it, the count
+ * following; a read-only field takes focus, so its words can be read and copied, but not typing. */
+export const Keyboard: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16, width: 320}}>
+      <TextField label="Statement" maxLength={140} showCounter />
+      <TextField label="Project URL" isReadOnly defaultValue="green-corridors" />
+    </div>
+  ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const statement = canvas.getByRole('textbox', {name: 'Statement'});
+    await userEvent.tab();
+    await expect(statement).toHaveFocus();
+    await userEvent.keyboard('More trees');
+    await expect(statement).toHaveValue('More trees');
+    await expect(canvas.getByText('10/140')).toBeVisible();
+    const url = canvas.getByRole('textbox', {name: 'Project URL'});
+    await userEvent.tab();
+    await expect(url).toHaveFocus();
+    await userEvent.keyboard('x');
+    await expect(url).toHaveValue('green-corridors');
   }
 };

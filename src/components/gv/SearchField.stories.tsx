@@ -1,3 +1,4 @@
+import {expect, userEvent, waitFor, within} from 'storybook/test';
 import {useState} from 'react';
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {SearchField} from '../SearchField';
@@ -104,4 +105,24 @@ export const RightToLeft: Story = {
       <Collapsible />
     </div>
   )
+};
+
+/** The keyboard, proved by this story's play function: on the collapsible field, Enter on the search button opens it
+ * with focus inside; Esc clears the text; a second Esc folds it and puts focus back on the button. */
+export const Keyboard: Story = {
+  render: () => <Collapsible />,
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', {name: 'Search ideas'})).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    const field = await canvas.findByRole('searchbox', {name: 'Search ideas'});
+    await waitFor(() => expect(field).toHaveFocus());
+    await userEvent.keyboard('depot');
+    await expect(canvas.getByRole('status')).toHaveTextContent('1 of 5 ideas match');
+    await userEvent.keyboard('{Escape}');
+    await expect(field).toHaveValue('');
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(canvas.getByRole('button', {name: 'Search ideas'})).toHaveFocus());
+  }
 };

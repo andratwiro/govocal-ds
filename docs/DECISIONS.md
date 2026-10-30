@@ -191,6 +191,12 @@ Calls made while building the component page (the benchmark plan's Task 1: usage
 - `e2e/component-page.spec.ts` showed Avatar as "a part with no guide", which stops being true as guides land → **the
   test finds an unwritten part from the files and skips when none is left; Avatar's written Provenance gets its own
   check** → the test keeps proving the unwritten page without naming a part that a writer is about to write.
+- Forms pages (Task 2): a plain text input (Text field, Search field) has no WAI-ARIA APG pattern, but the guard asked
+  every interactive part to link one → **the page says "No WAI-ARIA APG pattern covers a plain text field…" and the
+  guard takes that sentence in place of a link; a text part with a list or toolbar in it (Title field, the rich text
+  editors) links that pattern** → linking an unrelated pattern would mislead; saying there is none is the honest page.
+- Forms pages: Select's popup cited as the APG Listbox pattern, not the Select-only combobox → React Aria's Select is a
+  button that opens a list box, which is what the keys do.
 
 ## Maps (29 Oct 2026)
 

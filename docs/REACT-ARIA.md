@@ -65,18 +65,18 @@ what would survive a change of base library. It decides nothing: the base librar
 | Forms › Locale switcher | `RadioGroup`, `Radio`, `Select`, `SelectValue`, `Button`, `VisuallyHidden` through `components/Popover`, `components/ListBox` | – | yes | yes | 7 |
 | Forms › Multilingual rich text editor | through `components/Form`, `components/gv/RichTextEditor`, `components/gv/MultilingualTextField` | – | yes | yes | 5 |
 | Forms › Multilingual text field | `Input`, `TextArea`, `TextField` through `components/Form`, `components/gv/LocaleSwitcher` | `TextFieldProps` | yes | yes | 12 |
-| Forms › Number field | `Group`, `Input`, `NumberField` through `components/Button`, `components/Form` | `NumberFieldProps` | yes | yes | 3 |
+| Forms › Number field | `Group`, `Input`, `NumberField` through `components/Button`, `components/Form` | `NumberFieldProps` | yes | yes | 4 |
 | Forms › Option list | `Autocomplete` through `components/Menu`, `components/SearchField` | – | yes | yes | 9 |
 | Forms › Radio group | `RadioGroup`, `RadioField`, `RadioButton` through `components/Form` | `RadioGroupProps` | – | yes | 2 |
 | Forms › Required marker | None: plain React and CSS | – | – | yes | 3 |
 | Forms › Rich text editor | `TextField`, `TextArea` through `components/gv/RichTextToolbar` | – | – | yes | 3 |
 | Forms › Rich text toolbar | `Button`, `Toolbar` through `components/gv/RichTextToolbarButton` | – | – | yes | 2 |
 | Forms › Rich text toolbar button | `ToggleButton` | `ToggleButtonProps` | – | yes | 4 |
-| Forms › Search field | `Button`, `Input`, `SearchField` through `components/Form`, `components/Tooltip` | `SearchFieldProps` | – | yes | 8 |
+| Forms › Search field | `Button`, `Input`, `SearchField` through `components/Form`, `components/Tooltip` | `SearchFieldProps` | – | yes | 9 |
 | Forms › Select | `Select`, `SelectValue`, `Autocomplete` through `components/Button`, `components/ListBox`, `components/Popover`, `components/SearchField` | – | yes | yes | 12 |
 | Forms › Switch | `SwitchField`, `SwitchButton` through `components/Form` | `SwitchFieldProps` | – | yes | 6 |
 | Forms › Tag picker | `Button`, `Dialog`, `DialogTrigger`, `Tag`, `TagGroup`, `TagList` through `components/Button`, `components/Popover`, `components/gv/OptionList` | – | yes | yes | 5 |
-| Forms › Text field | `Input`, `TextField`, `TextArea`, `Group` through `components/Form` | `TextFieldProps` | yes | yes | 7 |
+| Forms › Text field | `Input`, `TextField`, `TextArea`, `Group` through `components/Form` | `TextFieldProps` | yes | yes | 8 |
 | Forms › Title field | `Input`, `TextField` through `components/Form`, `components/gv/LocaleSwitcher` | `TextFieldProps` | yes | yes | 6 |
 | Layout & containers › App provider | through `components/Toast` | – | – | – | 2 |
 | Layout & containers › Card | `Button`, `Disclosure`, `DisclosurePanel`, `Heading`, `Menu`, `MenuItem`, `MenuTrigger` through `components/Popover`, `components/Tooltip`, `components/RadioGroup`, `components/Switch` | – | – | yes | 30 |
