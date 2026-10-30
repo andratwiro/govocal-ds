@@ -3073,6 +3073,7 @@ Component, from `src/components/gv/Modal.tsx`.
 - `children: ReactNode`
 - `className?: string`
 - `defaultOpen?: boolean`
+- `description?: ReactNode`
 - `footer?: ReactNode`
 - `height?: 'auto' | 'fixed'`
 - `isDismissable?: boolean`

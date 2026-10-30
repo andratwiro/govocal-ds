@@ -22,7 +22,8 @@
 
 ## Anatomy
 
-1. **Head**: the title at the start and × at the end, over a hairline.
+1. **Head**: the title at the start, an optional `description` under it (it describes the dialog to screen readers),
+   and × at the end, over a hairline.
 2. **Body**: padded and scrolling on its own when it is long; `isFlush` drops the padding and scrolling for a body
    that lays out its own (side tabs).
 3. **Footer** (optional): the buttons, at the end, on the toolbar grey. A button with `slot="close"` closes the modal.
@@ -83,6 +84,7 @@ close, the page behind hidden from assistive tech, and a named ×.
 
 ## Changes
 
+- 30 Oct 2026: `description`, a line under the title that describes the dialog (docs/DECISIONS.md, "Small fixes").
 - 30 Oct 2026: this page written; a play function proves Enter, Tab, Shift Tab and Esc.
 - 29 Oct 2026: `padBody` became `isFlush` (default false); `size` became `width` (docs/DECISIONS.md, "Public API and prop
   names").

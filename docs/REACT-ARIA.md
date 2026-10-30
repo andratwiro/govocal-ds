@@ -100,7 +100,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Overlays › Alert dialog | `Heading`, `Dialog`; through Modal: `Modal`; through Button: `Button`, `ProgressBar`; through Text field: `Input`, `TextField`, `TextArea`, `Group`, `Form`, `Label`, `FieldError`, `Button`, `Text` | – | yes | yes | 6 |
 | Overlays › Coachmark | `OverlayArrow`, `Popover` | `PopoverProps` | – | yes | 3 |
 | Overlays › Help popover | `Heading`, `Dialog`, `DialogTrigger`; through Popover: `OverlayArrow`, `Popover`; through Button: `Button`, `ProgressBar`; through Icon button: `Button` | – | – | yes | 4 |
-| Overlays › Modal | `Button`, `Heading`, `Dialog`; through Modal: `Modal` | – | – | yes | 9 |
+| Overlays › Modal | `Button`, `Heading`, `Dialog`; through Modal: `Modal` | – | – | yes | 10 |
 | Overlays › Side panel | `Dialog`, `Toolbar`; through Icon button: `Button`; through Tooltip: `OverlayArrow`, `Tooltip`, `TooltipTrigger` | – | yes | yes | 15 |
 | Overlays › Tooltip | `OverlayArrow`, `Tooltip`, `TooltipTrigger` | `TooltipProps` | – | yes | 1 |
 | Status & feedback › Badge | `Button` | – | – | yes | 8 |

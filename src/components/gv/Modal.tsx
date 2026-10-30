@@ -1,5 +1,5 @@
 'use client';
-import type {ReactNode} from 'react';
+import {useId, type ReactNode} from 'react';
 import {Button, Heading} from 'react-aria-components';
 import {X} from 'lucide-react';
 import {Dialog} from 'react-aria-components/Dialog';
@@ -22,6 +22,9 @@ export const modalLabels: ModalLabels = {close: 'Close'};
 export interface ModalProps extends PlacementProps {
   /** The title in the head, e.g. "Attachments". */
   title: string;
+  /** A line under the title saying what the dialog is for or what happens next; it describes the dialog to screen
+   * readers. */
+  description?: ReactNode;
   /** The body. */
   children: ReactNode;
   /** The footer's buttons, right-aligned (a `slot="close"` button closes the modal). No footer when absent. */
@@ -58,10 +61,11 @@ export interface ModalProps extends PlacementProps {
   labels?: Partial<ModalLabels>;
 }
 
-/** Modal: head (title + ×), a body, and a footer of buttons on the toolbar grey. Wraps the starter Modal + Dialog.
+/** Modal: head (title, an optional description, ×), a body, and a footer of buttons on the toolbar grey. Wraps the starter Modal + Dialog.
  * Its one word, the ×'s name, is `labels.close`. */
 export function Modal({
   title,
+  description,
   children,
   footer,
   width = 'default',
@@ -75,13 +79,18 @@ export function Modal({
   className,
   style
 }: ModalProps) {
+  const descriptionId = useId();
   return (
     <StarterModal isOpen={isOpen} defaultOpen={defaultOpen} onOpenChange={onOpenChange} isDismissable={isDismissable}>
-      <Dialog className={clsx('gv-modal', className)} style={style} data-width={width} data-height={height}>
+      <Dialog className={clsx('gv-modal', className)} style={style} data-width={width} data-height={height}
+        aria-describedby={description ? descriptionId : undefined}>
         <div className="gv-modal__head">
-          <Heading slot="title" className="gv-modal__title">
-            {title}
-          </Heading>
+          <div className="gv-modal__titles">
+            <Heading slot="title" className="gv-modal__title">
+              {title}
+            </Heading>
+            {description && <p id={descriptionId} className="gv-modal__description">{description}</p>}
+          </div>
           <Button slot="close" className="gv-modal__close" aria-label={mergeLabels(modalLabels, labels).close}>
             <X aria-hidden size={20} strokeWidth={1.75} />
           </Button>

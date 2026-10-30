@@ -303,6 +303,28 @@ export const WithSideTabs: Story = {
   render: () => <Open label="With side tabs"><SideTabsModal /></Open>
 };
 
+/** `description`: a line under the title saying what the dialog is for; it describes the dialog to screen readers. The
+ * play function checks it. */
+export const WithDescription: Story = {
+  name: 'With description',
+  render: () => (
+    <Open label="Delete tag" open={false}>
+      <Modal title="Delete tag" description="Ideas keep their other tags. You can't undo this." footer={<>
+        <Button variant="secondary" slot="close">Cancel</Button>
+        <Button tone="danger" slot="close">Delete</Button>
+      </>}>
+        <TextField label="Type the tag's name to confirm" />
+      </Modal>
+    </Open>
+  ),
+  play: async ({canvasElement}) => {
+    await userEvent.click(within(canvasElement).getByRole('button', {name: 'Delete tag'}));
+    const dialog = await screen.findByRole('dialog', {name: 'Delete tag'});
+    await expect(dialog).toHaveAccessibleDescription("Ideas keep their other tags. You can't undo this.");
+    await waitFor(() => expect(within(dialog).getByText("Ideas keep their other tags. You can't undo this.")).toBeVisible());
+  }
+};
+
 /** The keyboard, proved by this story's play function (the Interactions panel): Enter on the button opens the modal
  * with focus on the dialog; Tab walks the ×, the body and the footer, and wraps round without leaving; Esc closes it
  * and puts focus back on the button. */
