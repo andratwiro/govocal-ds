@@ -154,7 +154,7 @@ export interface CommentThreadProps extends PlacementProps {
 const count = (list: ThreadComment[]) => list.reduce((n, c) => n + 1 + (c.replies?.length ?? 0), 0);
 
 /**
- * A thread of comments with replies and a composer; Reply points the composer at a comment. For one comment box, use `CommentComposer`.
+ * A thread of comments with replies and a composer: Reply points the composer at a comment. For one comment box, use `CommentComposer`.
  *
  * It is the conversation under a record in the Manage tab's Side panel (the prototype's `pjDiscussionHTML`).
  * Comments oldest first, each with its avatar, name, time, a "New" mark until the team has seen

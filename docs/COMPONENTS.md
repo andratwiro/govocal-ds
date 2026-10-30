@@ -188,7 +188,7 @@ part's `<Name>.guide.md`) names the part to use instead.
 - **View option row** `ViewOptionRow` (not in Figma): One view in a phase's Available views card: a switch (or a check for the view that is always on), the view's name and words, and Make default. Stories: All Variants, Default, Off, With Options, In A Card.
 
 ## Patterns / Manage tab
-- **Comment thread** `CommentThread` (not in Figma): A thread of comments with replies and a composer; Stories: All Variants, Default, New, Content Warning, Empty, Internal Conversation, Comments Only, In A Side Panel.
+- **Comment thread** `CommentThread` (not in Figma): A thread of comments with replies and a composer: Reply points the composer at a comment. Stories: All Variants, Default, New, Content Warning, Empty, Internal Conversation, Comments Only, In A Side Panel.
 - **Official update** `OfficialUpdate` (not in Figma): Official update: the team's public answer to a record, in the Manage tab's Side panel. Stories: All Variants, Empty, Posted, Bulk.
 
 ## Patterns / Pages & menu
