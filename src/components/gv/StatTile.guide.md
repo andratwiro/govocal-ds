@@ -30,6 +30,10 @@
 
 Layouts (Figma's Type): `default`, `tall`, `with-note` (picked for you when there is a note).
 
+Looks: `card` (the bordered tile) and `plain` (not in Figma: no card, the figure printed on a document's page in the
+document type, for a report's key figures; `size="large"` for the lead figure, `isHighlighted` for the number the
+finding names, a vertical **Divider** between plain tiles).
+
 ## Behaviour
 
 The tile is display only, except its help
@@ -82,6 +86,8 @@ screen readers.
 
 ## Changes
 
+- 30 Oct 2026: a `plain` look for a report's key figures on a Page stage, with `size="large"` and `isHighlighted`
+  (docs/DECISIONS.md, "Report parts").
 - 30 Oct 2026: this page written.
 - 29 Oct 2026: its words come through `labels`.
 - 29 Oct 2026: `type` became `layout`, Figma's values kept (docs/DECISIONS.md, "Public API and prop names").

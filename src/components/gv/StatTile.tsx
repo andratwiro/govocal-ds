@@ -62,6 +62,18 @@ export interface StatTileProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
    * With note tiles in one band). Defaults to `with-note` when a note is given, else `default`.
    */
   layout?: StatTileLayout;
+  /**
+   * The look: `card` (a bordered tile, the dashboard's) or `plain` (no card: the figure printed on a document's page,
+   * in the document type; split plain tiles with a vertical Divider). @default 'card'
+   */
+  variant?: 'card' | 'plain';
+  /** The number the finding names, in the chart highlight colour (a report's lead figure). */
+  isHighlighted?: boolean;
+  /**
+   * The number's size in the plain look: `large` for a lead figure beside smaller ones (the document display type).
+   * @default 'default'
+   */
+  size?: 'default' | 'large';
   /** Optional slot under the value and note, e.g. a `Sparkline`. */
   children?: ReactNode;
   /** Its own words (the trend's direction, the help icon's name), over `statTileLabels`. */
@@ -70,14 +82,22 @@ export interface StatTileProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
 
 const ARROW = {up: ArrowUp, down: ArrowDown, flat: ArrowRight} as const;
 
-/** A labelled number tile (Figma "Stat tile"; prototype `.pj-kpi`). Display only, but for its help icon. */
-export function StatTile({label, value, note, trend, info, infoTitle, layout, children, labels, className, ...rest}: StatTileProps) {
+/**
+ * A labelled number tile (Figma "Stat tile"; prototype `.pj-kpi`). Display only, but for its help icon.
+ * `variant="plain"` prints the figure on a document's page with no card, in the document type: label over value as ever, a
+ * `large` lead figure, `isHighlighted` in the chart highlight (the report prototype's key figures; not in Figma).
+ */
+export function StatTile({
+  label, value, note, trend, info, infoTitle, layout, variant = 'card', isHighlighted, size = 'default', children, labels,
+  className, ...rest
+}: StatTileProps) {
   const l = mergeLabels(statTileLabels, labels);
   const shape: StatTileLayout = layout ?? (note != null ? 'with-note' : 'default');
   const Arrow = trend ? ARROW[trend.direction] : null;
   const title = infoTitle ?? (typeof label === 'string' ? label : l.about);
   return (
-    <div {...rest} className={['gv-kpi', `gv-kpi--${shape}`, className].filter(Boolean).join(' ')}>
+    <div {...rest} className={['gv-kpi', `gv-kpi--${shape}`, className].filter(Boolean).join(' ')} data-variant={variant}
+      data-highlighted={isHighlighted || undefined} data-size={size === 'large' ? size : undefined}>
       <div className="gv-kpi__label">
         {label}
         {info != null && (

@@ -57,7 +57,7 @@ what would survive a change of base library. It decides nothing: the base librar
 | Data display › Property list | `VisuallyHidden` | – | – | yes | 3 |
 | Data display › Reaction counts | `VisuallyHidden` | – | yes | yes | 4 |
 | Data display › Stat row | `Link`, `ToggleButton` | – | – | yes | 7 |
-| Data display › Stat tile | `VisuallyHidden`; through Help popover: `Heading`, `Dialog`, `DialogTrigger`, `OverlayArrow`, `Popover`, `Button`, `ProgressBar` | – | – | yes | 9 |
+| Data display › Stat tile | `VisuallyHidden`; through Help popover: `Heading`, `Dialog`, `DialogTrigger`, `OverlayArrow`, `Popover`, `Button`, `ProgressBar` | – | – | yes | 12 |
 | Forms › Checkbox | through Checkbox: `CheckboxButton`, `CheckboxField`, `Form`, `Label`, `FieldError`, `Button`, `Text` | `CheckboxFieldProps` | – | yes | 8 |
 | Forms › Checkbox group | `CheckboxGroup`; through Form: `Form`, `Label`, `FieldError`, `Button`, `Text` | `CheckboxGroupProps` | – | yes | 2 |
 | Forms › Choice card | `RadioField`, `RadioButton`, `CheckboxField`, `CheckboxButton`; through Section label: `Heading` | `RadioFieldProps` | – | yes | 6 |

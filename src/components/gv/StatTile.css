@@ -85,3 +85,40 @@
   min-inline-size: 0;
   margin-block-start: var(--gv-space-8);
 }
+
+/*
+ * Plain (not in Figma; the report prototype's key figures, `.r-kf`): no card, no padding, the figure printed on the
+ * page. The label over the value, as every Stat tile (docs/DECISIONS.md: Figma's order everywhere), in Document body
+ * primary; the value in Document heading 28/36, or Document display 44/52 when large; the note in Small secondary.
+ * Highlighted: the number in the chart highlight, the one figure the finding names.
+ */
+.gv-kpi[data-variant='plain'] {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-family: var(--gv-font-family-document);
+
+  .gv-kpi__value {
+    margin-block-start: var(--gv-space-4);
+    font: var(--gv-type-document-heading);
+  }
+
+  .gv-kpi__label {
+    font: var(--gv-type-document-body);
+    color: var(--gv-text-primary);
+  }
+
+  .gv-kpi__note {
+    margin-block-start: var(--gv-space-4);
+    font: var(--gv-type-small);
+  }
+}
+
+.gv-kpi[data-variant='plain'][data-size='large'] .gv-kpi__value {
+  font: var(--gv-type-document-display);
+}
+
+.gv-kpi[data-highlighted] .gv-kpi__value {
+  color: var(--gv-chart-highlight);
+}

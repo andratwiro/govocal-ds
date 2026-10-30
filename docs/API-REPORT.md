@@ -5278,12 +5278,15 @@ Component, from `src/components/gv/StatTile.tsx`.
 - `children?: ReactNode`
 - `info?: ReactNode`
 - `infoTitle?: string`
+- `isHighlighted?: boolean`
 - `label: ReactNode`
 - `labels?: Partial<StatTileLabels>`
 - `layout?: StatTileLayout`
 - `note?: ReactNode`
+- `size?: 'default' | 'large'`
 - `trend?: StatTileTrend`
 - `value: ReactNode`
+- `variant?: 'card' | 'plain'`
 - Passed through: 53 of react's AriaAttributes
 - Passed through: 159 of react's DOMAttributes
 - Passed through: 51 of react's HTMLAttributes

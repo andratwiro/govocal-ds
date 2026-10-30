@@ -35,3 +35,17 @@ test('stat tile: the info icon opens a Help popover by press and by keyboard', a
   await page.keyboard.press('Enter');
   await expect(dialog).toBeVisible();
 });
+
+test('stat tile, plain: no card, the document type, the lead figure large and in the chart highlight', async ({page}) => {
+  await open(page, 'components-data-display-stat-tile--plain-lead');
+  const lead = page.locator('.gv-kpi').filter({hasText: 'Participants'}).first();
+  await expect(lead).toHaveCSS('border-top-width', '0px');
+  await expect(lead).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  await expect(lead.getByText('3,600')).toHaveCSS('font-size', '44px');
+  await expect(lead.getByText('3,600')).toHaveCSS('color', 'rgb(20, 121, 133)');
+  const other = page.locator('.gv-kpi').filter({hasText: 'Projects'});
+  await expect(other.getByText('6', {exact: true})).toHaveCSS('font-size', '28px');
+  // Label over value, as every Stat tile: the DOM and the eye agree.
+  await expect(lead).toHaveText(/^Participants3,600/);
+  await report(page, '#storybook-root');
+});

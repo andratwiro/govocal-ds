@@ -1,6 +1,10 @@
 import type {Meta, StoryObj} from '@storybook/react-vite';
 import {StatTile} from './StatTile';
 import {Sparkline} from './Chart';
+import {Divider} from './Divider';
+import {Grid} from './Grid';
+import {Inline} from './Inline';
+import {Stack} from './Stack';
 
 const figma = (id: string) => ({
   design: {type: 'figma', url: `https://www.figma.com/design/OkMTJrzoV6em7gkqribtjA/Go-Vocal-Design-System?node-id=${id}`}
@@ -125,4 +129,46 @@ export const WithInfo: Story = {
       />
     </div>
   )
+};
+
+/** Plain (not in Figma): key figures printed on a report's page, no card, split by hairlines. */
+export const Plain: Story = {
+  tags: ['not-in-figma'],
+  render: () => (
+    <Inline gap="24" alignItems="stretch" wrap="nowrap">
+      <StatTile variant="plain" label="Projects" value="6" note="3 spaces, 3 folders" />
+      <Divider orientation="vertical" />
+      <StatTile variant="plain" label="Took part for the first time" value="61%" note="2,196 of 3,600 participants" />
+      <Divider orientation="vertical" />
+      <StatTile variant="plain" label="Anonymous submissions" value="540" note="Separate from identifiable participants" />
+    </Inline>
+  )
+};
+
+/** The report's lead layout: a large, highlighted lead figure beside three plain ones split by hairlines. */
+export const PlainLead: Story = {
+  name: 'Plain lead',
+  tags: ['not-in-figma'],
+  render: () => (
+    <Grid columns="minmax(0, 1fr) auto minmax(0, 1fr)" gap="24" style={{maxInlineSize: 560}}>
+      <StatTile variant="plain" size="large" isHighlighted label="Participants" value="3,600"
+        note="Unique identifiable participants, 6 projects" />
+      <Divider orientation="vertical" />
+      <Stack gap="16">
+        <StatTile variant="plain" label="Took part for the first time" value="61%" note="2,196 of 3,600 participants" />
+        <Divider />
+        <StatTile variant="plain" label="Projects" value="6" note="3 spaces, 3 folders" />
+        <Divider />
+        <StatTile variant="plain" label="Anonymous submissions" value="540" note="Separate from identifiable participants" />
+      </Stack>
+    </Grid>
+  )
+};
+
+/** Plain, right to left: the hairlines and the words mirror. */
+export const PlainRightToLeft: Story = {
+  name: 'Plain, right to left',
+  tags: ['not-in-figma'],
+  globals: {direction: 'rtl'},
+  render: PlainLead.render
 };
