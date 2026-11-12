@@ -51,10 +51,20 @@ export async function fetchFile(fileKey = config.fileKey, {fresh = process.argv.
   return file;
 }
 
-export const page = (file, name) => {
+/** The pages a config entry names: one name or a list of them, each of which must exist. */
+export const pages = (file, names) => [names].flat().map(name => {
   const p = file.document.children.find(c => c.name === name);
   if (!p) throw new Error(`No page called ${name} in ${file.name}`);
   return p;
+});
+
+/**
+ * The page a config entry names. A list of names (the file keeps one page per Foundations topic and per component
+ * group) reads as one page holding all their children, in the listed order.
+ */
+export const page = (file, names) => {
+  const found = pages(file, names);
+  return found.length === 1 ? found[0] : {type: 'CANVAS', name: found.map(p => p.name).join(' + '), children: found.flatMap(p => p.children ?? [])};
 };
 
 /** A Figma name's last slash segment: what instance layers, search and swap menus show ("Project rail/Rail header"). */

@@ -40,9 +40,9 @@
     color: var(--gv-text-inverse);
     border: none;
 
-    /* Prototype `.btn--primary:hover`: the same fill, a touch lighter. */
+    /* Hover smokes the fill one step darker; it never lightens (Figma "Button", State=Hover). */
     &[data-hovered] {
-      filter: brightness(1.12);
+      background: var(--gv-surface-brand-strong-hovered);
     }
   }
 

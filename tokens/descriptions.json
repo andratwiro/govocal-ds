@@ -111,5 +111,7 @@
   "--gv-shadow-raised-strong": "A raised shape a step stronger: the selected item of a Segmented control.",
   "--gv-shadow-overlay": "Something that floats over the page: a modal, the side panel, a dialog.",
   "--gv-surface-inverse": "The near-black fill that inverts the page: a Switch that is on, a selected toggle button. Text and icons on it are text-inverse and icon-inverse.",
-  "--gv-space-40": "A section's padding on a page, an empty state's room."
+  "--gv-space-40": "A section's padding on a page, an empty state's room.",
+  "--gv-border-focused": "The keyboard focus ring's colour. Components draw the whole ring with --gv-focus-ring.",
+  "--gv-surface-brand-strong-hovered": "A primary Button under the pointer: the brand fill one step darker. A hover smokes, it never lightens."
 }

@@ -1,5 +1,5 @@
 import {readFile} from 'node:fs/promises';
-import {fetchFile, page, config, findComponent} from './lib/figma.mjs';
+import {fetchFile, pages as pagesOf, config, findComponent} from './lib/figma.mjs';
 
 const name = process.argv.slice(2).filter(a => !a.startsWith('--')).join(' ');
 if (!name) { console.error('usage: npm run figma:spec -- "<Name or Group/Name>" [--fresh]'); process.exit(2); }
@@ -30,8 +30,8 @@ function print(n, depth = 0) {
   console.log('  '.repeat(depth) + line(n));
   for (const c of n.children ?? []) if (c.visible !== false) print(c, depth + 1);
 }
-// Components, then Patterns (the Patterns page may not exist yet); a name matches on its last slash segment.
-const pages = [page(file, config.componentsPage), file.document.children.find(c => c.name === config.patternsPage)].filter(Boolean);
+// The component pages, then the pattern pages; a name matches on its last slash segment.
+const pages = [...pagesOf(file, config.componentsPage), ...pagesOf(file, config.patternsPage)];
 const matches = findComponent(pages, name);
 if (!matches.length) { console.error(`No component called "${name}" on ${pages.map(p => p.name).join(' or ')}`); process.exit(1); }
 if (matches.length > 1) console.error(`"${name}" matches ${matches.map(m => `${m.page} › ${m.node.name}`).join(', ')}: the first one`);

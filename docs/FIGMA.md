@@ -10,8 +10,11 @@ Figma → `tokens/` → `src/tokens.css`.
 ## The file
 
 - **Go Vocal Design System.** Its key and the page names the scripts read are in `tokens/figma.config.json`.
-- **Pages:** Cover · Foundations · Icons · Components · Patterns · Screens WIP. The Patterns page is added by the
-  designer during the rename (the checklist in docs/NAMING.md).
+- **Pages** (organised like the Untitled UI kit since 12 Nov 2026): Cover · Getting started · Foundations (Colour,
+  Typography, Spacing, Radius, Shadows, Icons) · Components (one page per Storybook group: Actions, Forms, Status &
+  feedback, Data display, Navigation, Layout & containers, Overlays, Charts, Text) · Patterns (Project rail, Project
+  page, Participation methods) · Examples (Screens WIP). Each page opens with a header and gives every component a
+  section with its one-line purpose. The bare Foundations, Components, Patterns and Examples pages are separators.
 - **Variables:** the colours, spacing, radius and type values. Components bind to them (about 10,000 bound uses).
 - **9 text styles:** the type roles (Stat, Stat small, Title, Body strong, Body, UI strong, UI, Small strong, Small).
 - **3 effect styles:** the shadows.
@@ -28,7 +31,7 @@ Code has things Figma doesn't, marked "Not in Figma":
 ### What the code does today
 
 1. **`npm run tokens:pull`** (`scripts/figma-pull.mjs`) downloads the whole file through Figma's REST API. That is one
-   call, made with your own token. It reads two pages and writes three files:
+   call, made with your own token. It reads the Foundations pages and the Icons page (listed in `tokens/figma.config.json`) and writes three files:
    - `tokens/foundations.tokens.json`: colours (the primitives, then the semantic roles that point at them),
      spacing, radius, the type roles and the shadows, in DTCG form;
    - `tokens/variable-ids.json`: each Figma variable's id → its CSS name (`figma:spec` uses it to name tokens);
@@ -142,7 +145,7 @@ in to Figma with the designer's Full seat.
 | `FIGMA_API` | The API's base address. When set, the scripts talk to a gateway that adds the token itself, and `FIGMA_TOKEN` isn't sent. | `https://api.figma.com/v1` |
 | `FIGMA_CERT`, `FIGMA_KEY`, `FIGMA_CA` | The gateway's client certificate, key and certificate authority. Read only when `FIGMA_API` is set. | `~/.gateway/cert.pem`, `~/.gateway/key.pem`, `/etc/clankers/gateway-ca.pem` (see Known gaps) |
 | `--fresh` | Download instead of reading `.cache/`. | Off for `figma:spec`; `tokens:pull` always downloads. |
-| `tokens/figma.config.json` | The file key and the page names: Foundations, Components, Patterns, Icons. | (tracked) |
+| `tokens/figma.config.json` | The file key and the page names the scripts read: a name or a list of names per entry (Foundations topics, component groups, pattern groups, Icons). | (tracked) |
 | `tokens/variable-ids.json` | Variable id → CSS name, written by `tokens:pull`. | (tracked) |
 
 With plain Figma, set `FIGMA_TOKEN` and nothing else.

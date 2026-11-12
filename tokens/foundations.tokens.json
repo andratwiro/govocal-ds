@@ -1029,6 +1029,10 @@
       "$type": "color",
       "$value": "{color.navy.700}"
     },
+    "brand-strong-hovered": {
+      "$type": "color",
+      "$value": "{color.navy.900}"
+    },
     "selected-strong": {
       "$type": "color",
       "$value": "{color.navy.650}"
@@ -1132,6 +1136,10 @@
       "$value": "{color.slate.50}"
     },
     "selected": {
+      "$type": "color",
+      "$value": "{color.navy.650}"
+    },
+    "focused": {
       "$type": "color",
       "$value": "{color.navy.650}"
     },
