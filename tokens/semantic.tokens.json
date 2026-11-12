@@ -180,11 +180,6 @@
       "$type": "color",
       "$value": "{color.teal.400}",
       "$description": "The accent edge: an item a change added (an added Item chip), the edge of an assistant's entry in an Activity feed."
-    },
-    "focused": {
-      "$type": "color",
-      "$value": "{color.navy.650}",
-      "$description": "The keyboard focus ring's colour. Components draw the whole ring with --gv-focus-ring."
     }
   },
   "chart": {

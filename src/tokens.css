@@ -102,6 +102,7 @@
   --gv-surface-accent-strong: var(--gv-color-teal-500); /* The solid accent fill of a measure: a meter's or progress bar's value, vote progress. */
   --gv-surface-success: var(--gv-color-alpha-green-12); /* A success tint: a success Toast, a live status. Text on it is text-success-strong. */
   --gv-surface-brand-strong: var(--gv-color-navy-700); /* The solid brand fill: a primary Button, a coachmark, the current page in Pagination, an avatar's initials. Text on it is text-inverse. */
+  --gv-surface-brand-strong-hovered: var(--gv-color-navy-900); /* A primary Button under the pointer: the brand fill one step darker. A hover smokes, it never lightens. */
   --gv-surface-selected-strong: var(--gv-color-navy-650); /* The solid fill of something checked or selected: a checked Checkbox, a selected menu box, a selected tag or token, a focused date segment. Text and ticks on it are inverse. */
   --gv-surface-inverse: var(--gv-color-neutral-900); /* The near-black fill that inverts the page: a Switch that is on, a selected toggle button. Text and icons on it are text-inverse and icon-inverse. */
   --gv-surface-neutral-strong: var(--gv-color-neutral-200); /* The solid neutral fill: a Switch that is off, an upcoming phase's dot. */
@@ -158,6 +159,7 @@
   --gv-border-subtle: var(--gv-color-slate-100); /* A quiet line: a divider inside a panel, a list's separators. */
   --gv-border-row: var(--gv-color-slate-50); /* The faintest line: between table rows. */
   --gv-border-selected: var(--gv-color-navy-650); /* The edge of something selected or checked: a selected Choice card, a checked box, the current tab's line, a drop target. */
+  --gv-border-focused: var(--gv-color-navy-650); /* The keyboard focus ring's colour. Components draw the whole ring with --gv-focus-ring. */
   --gv-border-inverse: var(--gv-color-neutral-0); /* A ring that separates a shape from a busy or dark fill: overlapping avatars. */
   --gv-border-strong: var(--gv-color-slate-250); /* A neutral border a step darker than default: a Switch's edge, a Choice card, an empty state's dashed frame. */
   --gv-border-danger: var(--gv-color-red-500); /* An invalid field or control's border. */
@@ -165,7 +167,6 @@
   --gv-border-success: var(--gv-color-alpha-green-30); /* The edge of a success tint: a success Toast and its action. */
   --gv-border-disabled: var(--gv-color-slate-100); /* The border of a control that can't be used. */
   --gv-border-accent: var(--gv-color-teal-400); /* The accent edge: an item a change added (an added Item chip), the edge of an assistant's entry in an Activity feed. */
-  --gv-border-focused: var(--gv-color-navy-650); /* The keyboard focus ring's colour. Components draw the whole ring with --gv-focus-ring. */
   /** @tokens-end */
 
   /** @tokens side-nav @presenter Color */

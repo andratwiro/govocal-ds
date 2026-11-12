@@ -1,1 +1,1 @@
-{"fileKey": "OkMTJrzoV6em7gkqribtjA", "foundationsPage": "Foundations", "componentsPage": "Components", "patternsPage": "Patterns", "iconsPage": "Icons"}
+{"fileKey": "OkMTJrzoV6em7gkqribtjA", "foundationsPage": ["Colour", "Typography", "Spacing", "Radius", "Shadows"], "componentsPage": ["Actions", "Forms", "Status & feedback", "Data display", "Navigation", "Layout & containers", "Overlays", "Charts", "Text"], "patternsPage": ["Project rail", "Project page", "Participation methods"], "iconsPage": "Icons"}

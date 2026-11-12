@@ -129,5 +129,7 @@
   "VariableID:1:139": "--gv-border-width-1",
   "VariableID:1:140": "--gv-border-width-2",
   "VariableID:1:127": "--gv-size-control-24",
-  "VariableID:1:129": "--gv-size-control-28"
+  "VariableID:1:129": "--gv-size-control-28",
+  "VariableID:165:8": "--gv-surface-brand-strong-hovered",
+  "VariableID:165:9": "--gv-border-focused"
 }
